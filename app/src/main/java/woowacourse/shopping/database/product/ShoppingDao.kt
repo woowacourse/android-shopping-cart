@@ -1,12 +1,14 @@
-package woowacourse.shopping.database
+package woowacourse.shopping.database.product
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import woowacourse.shopping.database.DBContract
+import woowacourse.shopping.database.shoppingcart.ShoppingCartDBContract
 
-class ProductDao(
+class ShoppingDao(
     context: Context
-) : SQLiteOpenHelper(context, DB_NAME, null, 1) {
+) : SQLiteOpenHelper(context, DBContract.DB_NAME, null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${ProductDBContract.TABLE_NAME}(" +
@@ -16,13 +18,15 @@ class ProductDao(
                 "${ProductDBContract.PRODUCT_PRICE} int" +
                 ");"
         )
+
+        db?.execSQL(
+            "CREATE TABLE ${ShoppingCartDBContract.TABLE_NAME}(" +
+                "${ShoppingCartDBContract.CART_PRODUCT_ID} int" +
+                ");"
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db?.execSQL("DROP TABLE IF EXISTS ${ProductDBContract.TABLE_NAME}")
-    }
-
-    companion object {
-        private const val DB_NAME = "shopping.db"
     }
 }

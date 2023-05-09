@@ -1,6 +1,7 @@
-package woowacourse.shopping.database
+package woowacourse.shopping.database.product
 
 object ProductDBContract {
+
     const val TABLE_NAME = "product"
     const val PRODUCT_ID = "id"
     const val PRODUCT_IMG = "image"

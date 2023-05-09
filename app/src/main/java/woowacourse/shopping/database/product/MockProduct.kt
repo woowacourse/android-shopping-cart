@@ -1,4 +1,4 @@
-package woowacourse.shopping.database
+package woowacourse.shopping.database.product
 
 import woowacourse.shopping.productdetail.ProductUiModel
 

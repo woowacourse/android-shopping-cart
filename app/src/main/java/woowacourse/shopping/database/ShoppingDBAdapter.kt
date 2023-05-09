@@ -3,18 +3,32 @@ package woowacourse.shopping.database
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.database.product.MockProduct
+import woowacourse.shopping.database.product.ProductDBContract
+import woowacourse.shopping.database.product.ShoppingDao
+import woowacourse.shopping.database.shoppingcart.ShoppingCartDBContract
 import woowacourse.shopping.productdetail.ProductUiModel
 
-class ShoppingDBAdapter(productDao: ProductDao) : ShoppingRepository {
+class ShoppingDBAdapter(
+    shoppingDao: ShoppingDao,
+) : ShoppingRepository {
 
-    private val writableDB: SQLiteDatabase = productDao.writableDatabase
-    private val productCursor = writableDB.query(
+    private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
+    private val productCursor = shoppingDB.query(
         ProductDBContract.TABLE_NAME,
         arrayOf(
             ProductDBContract.PRODUCT_ID,
             ProductDBContract.PRODUCT_IMG,
             ProductDBContract.PRODUCT_NAME,
             ProductDBContract.PRODUCT_PRICE,
+        ),
+        null, null, null, null, null
+    )
+
+    private val shoppingCartCursor = shoppingDB.query(
+        ShoppingCartDBContract.TABLE_NAME,
+        arrayOf(
+            ShoppingCartDBContract.CART_PRODUCT_ID
         ),
         null, null, null, null, null
     )
@@ -27,7 +41,7 @@ class ShoppingDBAdapter(productDao: ProductDao) : ShoppingRepository {
             put(ProductDBContract.PRODUCT_PRICE, product.price)
         }
 
-        writableDB.insert(ProductDBContract.TABLE_NAME, null, values)
+        shoppingDB.insert(ProductDBContract.TABLE_NAME, null, values)
     }
 
     override fun loadProducts(): List<ProductUiModel> {
@@ -44,6 +58,28 @@ class ShoppingDBAdapter(productDao: ProductDao) : ShoppingRepository {
         val name = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_NAME))
         val price = getInt(getColumnIndexOrThrow(ProductDBContract.PRODUCT_PRICE))
         return ProductUiModel(id, name, img, price)
+    }
+
+    override fun findProductById(id: Int): ProductUiModel {
+        val cursor = shoppingDB.rawQuery(
+            "select * from ${ProductDBContract.TABLE_NAME} where ${ProductDBContract.PRODUCT_ID} = ?",
+            arrayOf(id.toString())
+        ).apply {
+            moveToNext()
+        }
+
+        val product = cursor.getProduct()
+        cursor.close()
+
+        return product
+    }
+
+    override fun addToShoppingCart(id: Int) {
+        val values = ContentValues().apply {
+            put(ShoppingCartDBContract.CART_PRODUCT_ID, id)
+        }
+
+        shoppingDB.insert(ShoppingCartDBContract.TABLE_NAME, null, values)
     }
 
     /**
