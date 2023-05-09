@@ -5,13 +5,13 @@ import woowacourse.shopping.feature.list.item.ProductListItem
 import woowacourse.shopping.feature.model.ProductState
 
 fun ProductState.toItem(): ProductListItem {
-    return ProductListItem(imageUrl, name, price)
+    return ProductListItem(id, imageUrl, name, price)
 }
 
 fun ProductListItem.toUi(): ProductState {
-    return ProductState(imageUrl, name, price)
+    return ProductState(id, imageUrl, name, price)
 }
 
 fun Product.toUi(): ProductState {
-    return ProductState(imageUrl, name, price)
+    return ProductState(id, imageUrl, name, price)
 }
