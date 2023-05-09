@@ -1,8 +1,9 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.productlist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 

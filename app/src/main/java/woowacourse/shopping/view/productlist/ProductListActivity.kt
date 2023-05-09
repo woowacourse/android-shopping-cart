@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.productlist
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,7 +6,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.cart.CartActivity
+import woowacourse.shopping.R
+import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
 

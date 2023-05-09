@@ -1,7 +1,8 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.productlist
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.util.PriceFormatter

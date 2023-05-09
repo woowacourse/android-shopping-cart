@@ -1,4 +1,4 @@
-package woowacourse.shopping.cart
+package woowacourse.shopping.view.cart
 
 import android.os.Bundle
 import android.view.MenuItem
