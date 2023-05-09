@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
 
-class ProductMockRepository : ProductRepository {
+object ProductMockRepository : ProductRepository {
     private val products = listOf(
         Product(
             0,
