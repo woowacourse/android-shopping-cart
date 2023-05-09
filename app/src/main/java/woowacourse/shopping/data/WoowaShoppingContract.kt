@@ -18,6 +18,17 @@ object WoowaShoppingContract : BaseColumns {
         const val DELETE_PRODUCT_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
 
+    object RecentlyViewed : BaseColumns {
+        const val TABLE_NAME = "recentlyViewed"
+        const val TABLE_COLUMN_PRODUCT_ID = "productId"
+
+        const val CREATE_RECENTLY_VIEWED_TABLE = "CREATE TABLE $TABLE_NAME (" +
+            "  ${BaseColumns._ID} INTEGER PRIMARY KEY," +
+            "  $TABLE_COLUMN_PRODUCT_ID INTEGER" +
+            ");"
+        const val DELETE_RECENTLY_VIEWED_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME"
+    }
+
     object ShoppingCart : BaseColumns {
         const val TABLE_NAME = "shoppingCart"
         const val TABLE_COLUMN_PRODUCT_ID = "productId"
