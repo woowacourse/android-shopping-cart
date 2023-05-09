@@ -12,12 +12,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="3dp">
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:paddingHorizontal="6dp">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1"
             app:image="@{product.imageUrl}"
             tools:srcCompat="@tools:sample/avatars"
