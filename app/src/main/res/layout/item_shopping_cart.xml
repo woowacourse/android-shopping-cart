@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_round"
+        android:paddingBottom="18dp">
+
+        <TextView
+            android:id="@+id/text_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="아메리카노" />
+
+        <ImageView
+            android:id="@+id/image_remove_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="22dp"
+            android:src="@drawable/cancel_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_product_name"
+            app:tint="@color/black" />
+
+        <ImageView
+            android:id="@+id/image_product"
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="18dp"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintStart_toStartOf="@id/text_product_name"
+            app:layout_constraintTop_toBottomOf="@id/text_product_name" />
+
+        <TextView
+            android:id="@+id/text_product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/image_remove_product"
+            tools:text="99,800원" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
