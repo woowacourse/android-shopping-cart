@@ -3,4 +3,5 @@
 
     <!-- ShoppingActivity -->
     <string name="tb_shopping">Shopping</string>
+    <string name="tv_price">%,d원</string>
 </resources>

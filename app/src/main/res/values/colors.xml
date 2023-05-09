@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="woowa_toolbar_gray">#555555</color>
+    <color name="woowa_text_black">#333333</color>
 </resources>
