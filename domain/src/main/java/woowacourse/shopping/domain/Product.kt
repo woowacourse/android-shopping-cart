@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain
 
-class Product(
+data class Product(
     private val name: String,
     private val price: Price
 )

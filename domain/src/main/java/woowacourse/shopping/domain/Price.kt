@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain
 
-class Price(private val value: Int) {
+data class Price(private val value: Int) {
     init {
         validateValue()
     }
