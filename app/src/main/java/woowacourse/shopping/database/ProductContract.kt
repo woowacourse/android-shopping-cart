@@ -3,6 +3,9 @@ package woowacourse.shopping.database
 import android.provider.BaseColumns
 
 object ProductContract {
+    const val DATABASE_NAME = "product.db"
+    const val DATABASE_VERSION = 1
+
     object ProductEntry : BaseColumns {
         const val TABLE_NAME = "product"
         const val COLUMN_NAME_NAME = "name"
