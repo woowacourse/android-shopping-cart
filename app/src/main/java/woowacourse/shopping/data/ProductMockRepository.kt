@@ -33,7 +33,7 @@ object ProductMockRepository : ProductRepository {
         Product(
             3,
             "키",
-            "https://thumbnail6위coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/1721669748108539-877f91ca-5964-4761-b3e0-bff7b970c31c.jpg",
+            "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/1721669748108539-877f91ca-5964-4761-b3e0-bff7b970c31c.jpg",
             Price(
                 10000,
             ),
