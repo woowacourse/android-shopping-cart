@@ -1,4 +1,3 @@
 package woowacourse.shopping.domain
 
-class MyClass {
-}
+class Product
