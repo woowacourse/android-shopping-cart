@@ -8,10 +8,10 @@
     <!-- ShoppingActivity -->
 
 
-
     <!-- ProductDetailActivity -->
     <string name="tv_price_title">금액</string>
     <string name="btn_basket">장바구니 담기</string>
+    <string name="tv_cart">Cart</string>
 
 
 </resources>
