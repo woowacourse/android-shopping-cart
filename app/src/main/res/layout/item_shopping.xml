@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.ui.shopping.model.Product" />
+            type="woowacourse.shopping.ui.model.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +50,7 @@
             android:textColor="@color/woowa_text_black"
             android:includeFontPadding="false"
             android:textSize="16sp"
-            android:text="@{@string/tv_price(product.price.value)}"
+            android:text="@{@string/price_format(product.price.value)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/tv_price"

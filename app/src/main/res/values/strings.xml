@@ -1,7 +1,17 @@
 <resources>
     <string name="app_name">Shopping</string>
 
-    <!-- ShoppingActivity -->
+    <!-- 공통 -->
+    <string name="price_format">%,d원</string>
     <string name="tb_shopping">Shopping</string>
-    <string name="tv_price">%,d원</string>
+
+    <!-- ShoppingActivity -->
+
+
+
+    <!-- ProductDetailActivity -->
+    <string name="tv_price_title">금액</string>
+    <string name="btn_basket">장바구니 담기</string>
+
+
 </resources>

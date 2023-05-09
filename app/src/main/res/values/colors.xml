@@ -10,4 +10,6 @@
 
     <color name="woowa_toolbar_gray">#555555</color>
     <color name="woowa_text_black">#333333</color>
+    <color name="woowa_divider">#AAAAAA</color>
+    <color name="woowa_button">#04C09E</color>
 </resources>

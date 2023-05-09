@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemShoppingBinding
-import woowacourse.shopping.ui.shopping.model.UiProduct
+import woowacourse.shopping.ui.model.UiProduct
 
 class ShoppingAdapter(private val onItemClick: (UiProduct) -> Unit) :
     ListAdapter<UiProduct, ShoppingViewHolder>(productDiffUtil) {

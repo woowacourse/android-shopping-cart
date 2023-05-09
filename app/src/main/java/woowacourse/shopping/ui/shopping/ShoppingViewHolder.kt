@@ -2,7 +2,7 @@ package woowacourse.shopping.ui.shopping
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingBinding
-import woowacourse.shopping.ui.shopping.model.UiProduct
+import woowacourse.shopping.ui.model.UiProduct
 
 class ShoppingViewHolder(private val binding: ItemShoppingBinding, onItemClick: (UiProduct) -> Unit) :
     RecyclerView.ViewHolder(binding.root) {

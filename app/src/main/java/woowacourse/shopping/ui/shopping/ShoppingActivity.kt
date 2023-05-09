@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.ui.shopping.model.UiPrice
-import woowacourse.shopping.ui.shopping.model.UiProduct
+import woowacourse.shopping.ui.model.UiPrice
+import woowacourse.shopping.ui.model.UiProduct
 
 class ShoppingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingBinding
