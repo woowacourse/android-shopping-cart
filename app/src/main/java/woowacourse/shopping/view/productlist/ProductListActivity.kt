@@ -7,19 +7,25 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.view.cart.CartActivity
 
-class ProductListActivity : AppCompatActivity() {
+class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
+    private lateinit var presenter: ProductListContract.Presenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val products = ProductMockRepository.findAll()
-        binding.gridProducts.adapter = ProductListAdapter(products)
+        presenter = ProductListPresenter(this, ProductMockRepository)
+        presenter.fetchProducts()
         supportActionBar?.setDisplayShowCustomEnabled(true)
+    }
+
+    override fun showProducts(products: List<Product>) {
+        binding.gridProducts.adapter = ProductListAdapter(products)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
