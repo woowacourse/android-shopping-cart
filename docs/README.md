@@ -1,0 +1,50 @@
+# 쇼핑 장바구니 기능 목록
+
+- [ ] MVP
+    - [ ] Shopping
+        - [ ] ProductList (RecyclerView)
+        - [ ] RecentProductList (RecyclerView)
+        - [ ] init { }
+            - [ ] view.updateProductList(products)
+            - [ ] view.updateRecentProductList(recentProducts)
+        - [ ] openProduct(product)
+            - [ ] RecentProduct.add()
+            - [ ] view.showProductDetail()
+        - [ ] openCart()
+            - [ ] view.showCart()
+    - [ ] ProductDetail
+        - [ ] init { }
+            - [ ] view.updateProductDetail(product)
+        - [ ] addToCart(product)
+            - [ ] Cart.add(product)
+            - [ ] view.showCart()
+    - [ ] Cart
+        - [ ] ProductList (RecyclerView)
+        - [ ] init { }
+            - [ ] view.updateCart(cart)
+        - [ ] removeProduct()
+            - [ ] Cart.remove() (domain)
+            - [ ] view.updateCart(cart)
+- [ ] SQLite
+    - [ ] RecentProduct
+        - [ ] product_id (Int)
+    - [ ] Cart
+        - [ ] product_id (Int)
+    - [ ] Product
+        - [ ] id (Int)
+        - [ ] picture (Text)
+        - [ ] title (Text)
+        - [ ] price (Int)
+- [ ] Domain
+    - [ ] Product
+        - [ ] Picture (URL)
+        - [ ] Title
+        - [ ] Price
+    - [ ] Cart
+        - [ ] List<Product>
+        - [ ] add()
+        - [ ] remove()
+    - [ ] RecentProduct
+        - [ ] List<Product>
+        - [ ] add()
+        - [ ] private remove()
