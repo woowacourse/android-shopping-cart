@@ -2,4 +2,7 @@
     <string name="app_name">Shopping</string>
     <string name="toolbar_cart_title">toolbar_cart</string>
     <string name="price_format">%,d원</string>
+    <string name="price_title">금액</string>
+    <string name="put_in_cart_button_text">장바구니 담기</string>
+    <string name="product_detail_close">close</string>
 </resources>
