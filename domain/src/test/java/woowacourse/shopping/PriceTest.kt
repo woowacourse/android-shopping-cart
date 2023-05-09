@@ -1,5 +1,8 @@
+package woowacourse.shopping
+
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import woowacourse.shopping.Price
 
 class PriceTest {
 
