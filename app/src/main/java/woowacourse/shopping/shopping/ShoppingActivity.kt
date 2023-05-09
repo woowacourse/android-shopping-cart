@@ -14,6 +14,7 @@ class ShoppingActivity : AppCompatActivity() {
         setContentView(R.layout.activity_shopping)
 
         val example = ProductUiModel(
+            id = 0,
             imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000002487]_20210426091745467.jpg",
             name = "아메리카노",
             price = 5000
