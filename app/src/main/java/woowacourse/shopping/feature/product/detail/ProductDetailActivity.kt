@@ -5,16 +5,23 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
+import woowacourse.shopping.feature.model.ProductState
 
 class ProductDetailActivity : AppCompatActivity() {
+    private val product: ProductState by lazy { intent.getParcelableExtra(PRODUCT_KEY) ?: ProductState.EMPTY }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_detail)
     }
 
     companion object {
-        fun startActivity(context: Context) {
-            val intent: Intent = Intent(context, ProductDetailActivity::class.java)
+        const val PRODUCT_KEY = "product"
+
+        fun startActivity(context: Context, product: ProductState) {
+            val intent = Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(PRODUCT_KEY, product)
+            }
             context.startActivity(intent)
         }
     }

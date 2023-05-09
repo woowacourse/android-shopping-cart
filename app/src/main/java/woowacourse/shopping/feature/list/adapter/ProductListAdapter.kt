@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.feature.list.item.ItemState
+import woowacourse.shopping.feature.list.item.ListItem
 import woowacourse.shopping.feature.list.viewholder.ItemHolder
 import woowacourse.shopping.feature.list.viewholder.ProductViewHolder
 
 class ProductListAdapter(
-    private val items: List<ItemState>,
-    private val onItemClick: () -> Unit
+    private val items: List<ListItem>,
+    private val onItemClick: (ListItem) -> Unit
 ) : RecyclerView.Adapter<ItemHolder>() {
 
     override fun getItemCount(): Int {
@@ -24,7 +24,6 @@ class ProductListAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        val item = items[position]
-        holder.bind(item, onItemClick)
+        holder.bind(items[position], onItemClick)
     }
 }
