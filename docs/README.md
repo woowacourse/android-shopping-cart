@@ -35,16 +35,19 @@
         - [ ] picture (Text)
         - [ ] title (Text)
         - [ ] price (Int)
-- [ ] Domain
-    - [ ] Product
-        - [ ] Picture (URL)
-        - [ ] Title
-        - [ ] Price
-    - [ ] Cart
-        - [ ] List<Product>
-        - [ ] add()
-        - [ ] remove()
-    - [ ] RecentProduct
-        - [ ] List<Product>
-        - [ ] add()
-        - [ ] private remove()
+- [x] Domain
+    - [x] Product
+        - [x] Picture (URL)
+        - [x] Title
+        - [x] Price
+    - [x] URL
+      - [x] String
+      - [ ] isValid()
+    - [x] Cart
+        - [x] List<Product>
+        - [x] add()
+        - [x] remove()
+    - [x] RecentProduct
+        - [x] List<Product>
+        - [x] add()
+        - [x] private remove()
