@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="13dp"
-            android:background="@color/product_detail_view_line_color"
+            android:background="@color/product_view_line_color"
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_title" />
 
         <TextView
