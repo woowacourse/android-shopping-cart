@@ -33,8 +33,8 @@ class ShoppingPresenterTest {
         val slot = slot<List<ProductUiModel>>()
         every { view.setUpShoppingView(capture(slot)) } just Runs
         every { repository.loadProducts() } returns listOf(
-            ProductUiModel("아메리카노"),
-            ProductUiModel("카페라떼")
+            ProductUiModel(name = "아메리카노"),
+            ProductUiModel(name = "카페라떼")
         )
 
         // when
@@ -43,8 +43,8 @@ class ShoppingPresenterTest {
         // then
         val actual = slot.captured
         val expected = listOf(
-            ProductUiModel("아메리카노"),
-            ProductUiModel("카페라떼")
+            ProductUiModel(name = "아메리카노"),
+            ProductUiModel(name = "카페라떼")
         )
         assertEquals(actual, expected)
         verify { view.setUpShoppingView(actual) }

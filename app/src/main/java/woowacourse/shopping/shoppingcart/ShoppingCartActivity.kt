@@ -1,7 +1,5 @@
 package woowacourse.shopping.shoppingcart
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -26,17 +24,5 @@ class ShoppingCartActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
         binding.recyclerViewCart.adapter = ShoppingCartRecyclerAdapter(exampleList)
-    }
-
-    companion object {
-        private const val CART_PRODUCT_KEY = "cart_product"
-
-        fun getIntent(context: Context, product: ProductUiModel): Intent {
-            val intent = Intent(context, ShoppingCartActivity::class.java).apply {
-                putExtra(CART_PRODUCT_KEY, product)
-            }
-
-            return intent
-        }
     }
 }
