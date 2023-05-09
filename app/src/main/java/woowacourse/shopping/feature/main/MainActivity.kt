@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
 import woowacourse.shopping.feature.list.item.ProductItem
+import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 
 class MainActivity : AppCompatActivity() {
     private var _binding: ActivityMainBinding? = null
@@ -16,7 +17,9 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.productRv.adapter = ProductListAdapter(ProductItem.getDummy())
+        binding.productRv.adapter = ProductListAdapter(
+            ProductItem.getDummy()
+        ) { ProductDetailActivity.startActivity(this) }
     }
 
     override fun onDestroy() {

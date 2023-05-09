@@ -11,7 +11,7 @@ import java.text.DecimalFormat
 class ProductViewHolder(binding: ViewBinding) : ItemHolder(binding) {
     private val binding = binding as ItemProductBinding
 
-    override fun bind(itemState: ItemState) {
+    override fun bind(itemState: ItemState, onClick: () -> Unit) {
         val productItem = itemState as ProductItem
 
         Glide.with(binding.root.context)
@@ -21,5 +21,6 @@ class ProductViewHolder(binding: ViewBinding) : ItemHolder(binding) {
 
         binding.productName.text = productItem.name
         binding.productPrice.text = "${DecimalFormat("#,###").format(productItem.price)}원"
+        binding.root.setOnClickListener { onClick() }
     }
 }
