@@ -2,29 +2,40 @@ package woowacourse.shopping.shopping
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.database.ProductDao
+import woowacourse.shopping.database.ShoppingDBAdapter
+import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.productdetail.ProductUiModel
 
-class ShoppingActivity : AppCompatActivity() {
+class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
+
+    private lateinit var binding: ActivityShoppingBinding
+    private val presenter: ShoppingContract.Presenter by lazy {
+        ShoppingPresenter(
+            view = this,
+            repository = ShoppingDBAdapter(
+                productDao = ProductDao(this)
+            )
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_shopping)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
 
-        val example = ProductUiModel(
-            id = 0,
-            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000002487]_20210426091745467.jpg",
-            name = "아메리카노",
-            price = 5000
+        presenter.loadProducts()
+    }
+
+    override fun setUpShoppingView(products: List<ProductUiModel>) {
+        binding.productRecyclerView.layoutManager = GridLayoutManager(this, 2)
+        binding.productRecyclerView.adapter = ShoppingRecyclerAdapter(
+            products = products,
+            onProductClicked = ::navigateToProductDetailView
         )
-
-        val exampleList = List(10) { example }
-
-        val recyclerView = findViewById<RecyclerView>(R.id.product_recycler_view)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
-        recyclerView.adapter = ShoppingRecyclerAdapter(exampleList, ::navigateToProductDetailView)
     }
 
     private fun navigateToProductDetailView(product: ProductUiModel) {

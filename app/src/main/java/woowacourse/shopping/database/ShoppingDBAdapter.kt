@@ -5,7 +5,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.productdetail.ProductUiModel
 
-class ShoppingDBAdapter(productDao: ProductDao) {
+class ShoppingDBAdapter(productDao: ProductDao) : ShoppingRepository {
 
     private val writableDB: SQLiteDatabase = productDao.writableDatabase
     private val productCursor = writableDB.query(
@@ -30,7 +30,7 @@ class ShoppingDBAdapter(productDao: ProductDao) {
         writableDB.insert(ProductDBContract.TABLE_NAME, null, values)
     }
 
-    fun loadProduct(): List<ProductUiModel> {
+    override fun loadProducts(): List<ProductUiModel> {
         val products = mutableListOf<ProductUiModel>()
         while (productCursor.moveToNext()) {
             products.add(productCursor.getProduct())
@@ -41,8 +41,17 @@ class ShoppingDBAdapter(productDao: ProductDao) {
     fun Cursor.getProduct(): ProductUiModel {
         val id = getInt(getColumnIndexOrThrow(ProductDBContract.PRODUCT_ID))
         val img = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_IMG))
-        val name = getString(getColumnIndexOrThrow(ProductDBContract.TABLE_NAME))
+        val name = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_NAME))
         val price = getInt(getColumnIndexOrThrow(ProductDBContract.PRODUCT_PRICE))
         return ProductUiModel(id, name, img, price)
+    }
+
+    /**
+     * 테스트를 위해 가짜 데이터 insert를 위한 함수
+     */
+    fun setUpDB() {
+        MockProduct.products.forEach {
+            addProduct(it)
+        }
     }
 }
