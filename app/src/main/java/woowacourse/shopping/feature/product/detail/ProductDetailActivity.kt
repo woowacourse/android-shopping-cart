@@ -4,17 +4,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.domain.Product
 import woowacourse.shopping.R
-import woowacourse.shopping.feature.mapper.toUi
+import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.model.ProductState
 
 class ProductDetailActivity : AppCompatActivity() {
-    private val product: ProductState by lazy { intent.getParcelableExtra(PRODUCT_KEY) ?: Product.EMPTY.toUi() }
+    private val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_detail)
+
+        if (product == null) {
+            showToast(getString(R.string.error_intent_message))
+            finish()
+        }
     }
 
     companion object {
