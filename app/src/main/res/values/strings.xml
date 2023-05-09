@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="korean_won">%s원</string>
+    <string name="shoppingcart">장바구니</string>
 </resources>
