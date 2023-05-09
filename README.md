@@ -36,13 +36,10 @@
 ## Domain
 
 ### 상품
-- [ ] 이미지 url (string), 이름 (string), 가격 (int) 정보를 가지고 있다
+- [x] 상품 id (int), 이미지 url (string), 이름 (string), 가격 (int) 정보를 가지고 있다
 
 
 ## Data
-
-### 상품 데이터
-- [ ] 상품 id (int), 이미지 url (string), 이름 (string), 가격 (int) 정보를 가지고 있다
 
 ### 상품 저장소 (repository)
 - [ ] 상품들에 있는 상품 데이터 리스트를 가져온다
