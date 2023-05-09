@@ -13,7 +13,9 @@
 ### Product
 - name : 이름
 - imageUrl : 이미지 URL
-- Price : 가격
+- price : 가격
+### Price
+- price : 가격
 ## View
 - [ ] 앱이 종료돼도 최근 본 상품 목록과 장바구니 데이터는 유지돼야 한다.
 ### ProductListActivity

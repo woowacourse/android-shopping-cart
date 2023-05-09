@@ -1,4 +1,3 @@
 package woowacourse.shopping.domain
 
-class Product {
-}
+data class Product(val id: Int, val name: String, val imageUrl: String, val price: Price)
