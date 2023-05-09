@@ -9,7 +9,7 @@ import woowacourse.shopping.feature.list.viewholder.ItemHolder
 import woowacourse.shopping.feature.list.viewholder.ProductViewHolder
 
 class ProductListAdapter(
-    private val items: List<ListItem>,
+    private var items: List<ListItem> = listOf(),
     private val onItemClick: (ListItem) -> Unit
 ) : RecyclerView.Adapter<ItemHolder>() {
 
@@ -25,5 +25,10 @@ class ProductListAdapter(
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
         holder.bind(items[position], onItemClick)
+    }
+
+    fun setItems(items: List<ListItem>) {
+        this.items = items.toList()
+        notifyDataSetChanged()
     }
 }
