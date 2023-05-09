@@ -17,12 +17,18 @@
 - 이미지 url
 - 가격
 
-### Cart
+### ProductCache
+
+- 불러온 상품 목록들을 캐싱하고 유지한다
+
+
+
+### CartCache
 
 - Product를 받아서 Cart DB에 저장한다
 - Product를 Cart DB에서 삭제한다
 
-### RecentProduct
+### RecentProductCache
 
 - Product를 받아서 RecentProduct DB에 저장한다
 - 남은 공간이 있는지 판단한다(최대 10개)
