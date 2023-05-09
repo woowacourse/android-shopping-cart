@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         tools:context=".shopping.ShoppingActivity">
 
-        <include layout="@layout/toolbar"/>
+        <include layout="@layout/main_toolbar"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/product_recyclerview"

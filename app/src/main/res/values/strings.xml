@@ -2,4 +2,5 @@
     <string name="app_name">Shopping</string>
     <string name="menu_cart_title">cart</string>
     <string name="product_price">%d원</string>
+    <string name="exit">exit</string>
 </resources>

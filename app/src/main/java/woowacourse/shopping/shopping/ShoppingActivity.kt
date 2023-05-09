@@ -11,6 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.contract.ShoppingContract
 import woowacourse.shopping.shopping.contract.presenter.ShoppingPresenter
 
@@ -32,7 +33,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         val spanCount = 2
 
         binding.productRecyclerview.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) { // 1부터 시작
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) { // 1부터 시작
                 val position = parent.getChildAdapterPosition(view)
                 val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
 
@@ -53,6 +59,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun onItemClick(data: ProductUIModel) {
-
+        startActivity(ProductDetailActivity.from(this, data))
     }
 }

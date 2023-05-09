@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:background="@color/toolbar_color"
-    app:menu="@menu/toolbar_menu"
+    app:menu="@menu/cart_menu"
     app:title="Shopping"
     app:titleTextColor="@color/white" />
