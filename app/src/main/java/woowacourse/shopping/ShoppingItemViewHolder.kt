@@ -10,7 +10,7 @@ class ShoppingItemViewHolder(
     private val binding: ItemShoppingProductBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(productUiModel: ProductUiModel) {
+    fun bind(productUiModel: ProductUiModel, onClicked: (ProductUiModel) -> Unit) {
         with(binding) {
             Glide.with(binding.root.context)
                 .load(productUiModel.imageUrl)
@@ -18,6 +18,7 @@ class ShoppingItemViewHolder(
 
             textProductName.text = productUiModel.name
             textProductPrice.text = productUiModel.price.toString()
+            root.setOnClickListener { onClicked(productUiModel) }
         }
     }
 

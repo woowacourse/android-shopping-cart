@@ -20,6 +20,11 @@ class ShoppingActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.product_recycler_view)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
-        recyclerView.adapter = ShoppingRecyclerAdapter(exampleList)
+        recyclerView.adapter = ShoppingRecyclerAdapter(exampleList, ::navigateToProductDetailView)
+    }
+
+    private fun navigateToProductDetailView(product: ProductUiModel) {
+        val intent = ProductDetailActivity.getIntent(this, product)
+        startActivity(intent)
     }
 }

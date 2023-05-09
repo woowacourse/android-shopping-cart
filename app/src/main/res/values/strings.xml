@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="put_to_shopping_cart">장바구니 담기</string>
 </resources>
