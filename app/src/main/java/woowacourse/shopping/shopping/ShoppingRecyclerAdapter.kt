@@ -1,7 +1,8 @@
-package woowacourse.shopping
+package woowacourse.shopping.shopping
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.productdetail.ProductUiModel
 
 class ShoppingRecyclerAdapter(
     private val products: List<ProductUiModel>,
@@ -13,9 +14,9 @@ class ShoppingRecyclerAdapter(
         return ShoppingItemViewHolder.from(parent)
     }
 
-    override fun getItemCount(): Int = products.size
-
     override fun onBindViewHolder(holder: ShoppingItemViewHolder, position: Int) {
         holder.bind(products[position], onProductClicked)
     }
+
+    override fun getItemCount(): Int = products.size
 }

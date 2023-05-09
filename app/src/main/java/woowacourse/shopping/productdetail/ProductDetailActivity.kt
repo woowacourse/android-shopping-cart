@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.productdetail
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.getSerializableCompat
+import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity() {
 
@@ -29,6 +32,10 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.textProductName.text = product.name
         binding.textProductPrice.text = product.price.toString()
         binding.imageCancel.setOnClickListener { finish() }
+        binding.buttonPutToShoppingCart.setOnClickListener {
+            val intent = ShoppingCartActivity.getIntent(this, product)
+            startActivity(intent)
+        }
     }
 
     companion object {
