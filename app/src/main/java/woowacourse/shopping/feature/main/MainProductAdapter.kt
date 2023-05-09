@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemMainProductBinding
-import woowacourse.shopping.model.ProductUiModel
 
 class MainProductAdapter(
     items: List<MainProductItemModel>

@@ -17,15 +17,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="6dp"
         android:onClick="@{()->item.onClick.invoke(position)}">
 
         <ImageView
             android:id="@+id/product_img"
             imgUrl="@{item.product}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -41,6 +42,7 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:text="@{item.product.name}"
             app:layout_constraintTop_toBottomOf="@id/product_img"
             tools:text="상품이름" />
 

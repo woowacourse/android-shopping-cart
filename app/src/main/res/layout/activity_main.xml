@@ -10,12 +10,19 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.main.MainActivity">
+        tools:context=".feature.main.MainActivity"
+        android:padding="14dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/product_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:clipToPadding="true"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            tools:listitem="@layout/item_main_product"
+            tools:layout_editor_absoluteY="-100dp"
+            tools:layout_editor_absoluteX="16dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
