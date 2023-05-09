@@ -21,20 +21,17 @@
 
 - 불러온 상품 목록들을 캐싱하고 유지한다
 
-
-
-### CartCache
-
-- Product를 받아서 Cart DB에 저장한다
-- Product를 Cart DB에서 삭제한다
-
-### RecentProductCache
-
-- Product를 받아서 RecentProduct DB에 저장한다
-- 남은 공간이 있는지 판단한다(최대 10개)
-- 해당 ID의 상품이 있는지 확인한다
-- 해당 ID의 상품이 가장 앞에 있는지 확인한다
-
 ### Price
 
 - 금액은 0 이상이다
+
+### CartRepository
+
+- 전체 상품 목록을 가져온다
+- Product를 받아서 Cart DB에 저장한다
+- Product를 Cart DB에서 삭제한다
+
+### RecentProductRepository
+
+- 전체 상품 목록을 가져온다
+- Product를 받아서 RecentProduct DB에 저장한다
