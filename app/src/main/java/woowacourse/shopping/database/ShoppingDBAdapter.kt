@@ -52,6 +52,21 @@ class ShoppingDBAdapter(
         return products
     }
 
+    override fun loadShoppingCartProducts(): List<ProductUiModel> {
+        val shoppingCartProducts = mutableListOf<ProductUiModel>()
+
+        with(shoppingCartCursor) {
+            while (moveToNext()) {
+                val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
+                val product = findProductById(id)
+
+                shoppingCartProducts.add(product)
+            }
+        }
+
+        return shoppingCartProducts.toList()
+    }
+
     fun Cursor.getProduct(): ProductUiModel {
         val id = getInt(getColumnIndexOrThrow(ProductDBContract.PRODUCT_ID))
         val img = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_IMG))
