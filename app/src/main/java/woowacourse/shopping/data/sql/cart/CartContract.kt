@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.sql
+package woowacourse.shopping.data.sql.cart
 
 object CartContract {
     val TABLE_NAME = "cart_table"

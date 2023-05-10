@@ -3,7 +3,7 @@ package woowacourse.shopping.data
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
-import woowacourse.shopping.data.sql.CartDao
+import woowacourse.shopping.data.sql.cart.CartDao
 
 class CartRepositoryImpl(
     private val cartDao: CartDao

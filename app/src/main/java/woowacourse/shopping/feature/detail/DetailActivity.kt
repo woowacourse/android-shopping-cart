@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.sql.CartDao
+import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.model.ProductUiModel

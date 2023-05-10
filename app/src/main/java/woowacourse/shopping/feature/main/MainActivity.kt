@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.data.RecentProductRepositoryImpl
+import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.detail.DetailActivity
+import woowacourse.shopping.model.RecentProductUiModel
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var binding: ActivityMainBinding
@@ -19,7 +22,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
         presenter = MainPresenter(
             this,
-            ProductMockRepository()
+            ProductMockRepository(),
+            RecentProductRepositoryImpl(RecentDao(this))
         )
         mainProductAdapter = MainProductAdapter(listOf())
         binding.productRv.adapter = mainProductAdapter
