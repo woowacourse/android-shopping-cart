@@ -10,6 +10,7 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = "Cart"
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
