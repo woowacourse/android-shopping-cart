@@ -7,11 +7,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.ProductModel
 
-class CartActivity : AppCompatActivity() {
+class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
+    private lateinit var presenter: CartContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,11 +20,12 @@ class CartActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Cart"
+        presenter = CartPresenter(this, CartDbRepository(this))
+        presenter.fetchProducts()
+    }
 
-        // ID Product로 변환 과정 필요
-        val cartProducts = CartDbRepository(this).findAll().map { ProductMockRepository.find(it.id) }
+    override fun showProducts(cartProducts: List<ProductModel>) {
         binding.recyclerCart.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerCart.setHasFixedSize(true)
         binding.recyclerCart.adapter = CartAdapter(cartProducts)
     }
 

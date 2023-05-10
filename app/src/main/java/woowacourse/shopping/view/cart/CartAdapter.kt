@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.model.ProductModel
 
-class CartAdapter(private val products: List<Product>) : RecyclerView.Adapter<CartViewHolder>() {
+class CartAdapter(private val products: List<ProductModel>) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false)
         return CartViewHolder(ItemCartBinding.bind(view))

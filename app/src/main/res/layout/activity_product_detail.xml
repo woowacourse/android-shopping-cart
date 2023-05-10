@@ -6,6 +6,9 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductModel" />
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.view.productdetail.ProductDetailContract.Presenter" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -75,6 +78,8 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:onClick="@{()->presenter.putInCart(product)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

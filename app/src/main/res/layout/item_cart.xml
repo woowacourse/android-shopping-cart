@@ -6,7 +6,7 @@
     <data>
         <variable
             name="cart_product"
-            type="woowacourse.shopping.domain.Product" />
+            type="woowacourse.shopping.model.ProductModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
