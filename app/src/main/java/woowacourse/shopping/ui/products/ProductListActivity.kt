@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductListAdapter
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
@@ -32,5 +33,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun moveToProductDetailActivity(product: ProductUIState) {
+        ProductDetailActivity.startActivity(this, product.id)
     }
 }
