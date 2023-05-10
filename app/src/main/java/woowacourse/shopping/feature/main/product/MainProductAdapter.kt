@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main
+package woowacourse.shopping.feature.main.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -31,8 +31,16 @@ class MainProductAdapter(
         holder.bind(_items[position])
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return VIEW_TYPE
+    }
+
     fun addItems(newItems: List<MainProductItemModel>) {
         _items.addAll(newItems.toList())
         notifyDataSetChanged()
+    }
+
+    companion object {
+        const val VIEW_TYPE = 222
     }
 }

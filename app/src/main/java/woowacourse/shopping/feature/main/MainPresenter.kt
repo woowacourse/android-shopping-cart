@@ -18,7 +18,7 @@ class MainPresenter(
             product.toPresentation().toItemModel { position ->
                 val now = LocalDateTime.now()
                 recentProductRepository.addRecentProduct(RecentProduct(product, now))
-                Log.d("hash","${recentProductRepository.getAll()}}")
+                Log.d("hash", "${recentProductRepository.getAll()}}")
                 view.showProductDetailScreen(position)
             }
         }
@@ -36,5 +36,14 @@ class MainPresenter(
             }
         }
         view.addProducts(nextProducts)
+    }
+
+    override fun loadRecent() {
+        val recent = recentProductRepository.getAll().map {
+            it.toPresentation().toItemModel {
+                // view.updateRecent()
+            }
+        }
+        view.updateRecent(recent)
     }
 }

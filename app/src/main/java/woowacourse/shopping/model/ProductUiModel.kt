@@ -2,7 +2,7 @@ package woowacourse.shopping.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import woowacourse.shopping.feature.main.MainProductItemModel
+import woowacourse.shopping.feature.main.product.MainProductItemModel
 import java.text.DecimalFormat
 
 @Parcelize

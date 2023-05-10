@@ -6,4 +6,5 @@
     <string name="product_image_description">product image</string>
     <string name="cancel_button">cancel button</string>
     <string name="product_image">product image</string>
+    <string name="recent_product">최근 본 상품</string>
 </resources>

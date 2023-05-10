@@ -10,22 +10,23 @@
             type="int" />
 
         <variable
-            name="item"
-            type="woowacourse.shopping.feature.main.product.MainProductItemModel" />
+            name="itemModel"
+            type="woowacourse.shopping.feature.main.recent.RecentProductItemModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:onClick="@{()->item.onClick.invoke(position)}">
+        android:padding="6dp"
+        android:onClick="@{()->itemModel.onClick.invoke(position)}">
 
         <ImageView
             android:id="@+id/product_img"
-            imgUrl="@{item.product}"
+            imgUrl="@{itemModel.recentProduct.productUiModel}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,20 +43,9 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{item.product.name}"
+            android:text="@{itemModel.recentProduct.productUiModel.name}"
             app:layout_constraintTop_toBottomOf="@id/product_img"
             tools:text="상품이름" />
-
-        <TextView
-            android:id="@+id/product_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@{@string/price_format(item.product.toPriceFormat())}"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@id/product_title"
-            tools:text="상품가격" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
