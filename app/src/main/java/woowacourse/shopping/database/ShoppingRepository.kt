@@ -1,14 +1,14 @@
 package woowacourse.shopping.database
 
-import woowacourse.shopping.model.ProductUiModel
+import model.Product
 
 interface ShoppingRepository {
 
-    fun selectProducts(): List<ProductUiModel>
+    fun selectProducts(): List<Product>
 
-    fun selectShoppingCartProducts(): List<ProductUiModel>
+    fun selectShoppingCartProducts(): List<Product>
 
-    fun selectProductById(id: Int): ProductUiModel
+    fun selectProductById(id: Int): Product
 
     fun insertToShoppingCart(id: Int)
 
@@ -16,5 +16,5 @@ interface ShoppingRepository {
 
     fun insertToRecentViewedProducts(id: Int)
 
-    fun selectRecentViewedProducts(): List<ProductUiModel>
+    fun selectRecentViewedProducts(): List<Product>
 }

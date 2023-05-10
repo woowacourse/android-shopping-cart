@@ -12,6 +12,7 @@ import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.productdetail.ProductDetailPresenter
+import woowacourse.shopping.util.toUiModel
 
 class ProductDetailPresenterTest {
 
@@ -23,7 +24,7 @@ class ProductDetailPresenterTest {
     fun setUp() {
         view = mockk()
         repository = mockk()
-        presenter = ProductDetailPresenter(view, ProductUiModel(id = 1), repository)
+        presenter = ProductDetailPresenter(view, Product(id = 1).toUiModel(), repository)
     }
 
     @Test
@@ -38,7 +39,7 @@ class ProductDetailPresenterTest {
 
         // then
         val actual = slot.captured
-        val expected = ProductUiModel(1)
+        val expected = Product(1)
         assertEquals(expected.id, actual)
         verify { repository.insertToShoppingCart(actual) }
     }

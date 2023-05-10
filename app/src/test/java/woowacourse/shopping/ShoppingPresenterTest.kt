@@ -33,8 +33,8 @@ class ShoppingPresenterTest {
         val slot = slot<List<ProductUiModel>>()
         every { view.setUpShoppingView(capture(slot), any()) } just Runs
         every { repository.selectProducts() } returns listOf(
-            ProductUiModel(name = "아메리카노"),
-            ProductUiModel(name = "카페라떼")
+            Product(name = "아메리카노"),
+            Product(name = "카페라떼")
         )
 
         // when
@@ -56,8 +56,8 @@ class ShoppingPresenterTest {
         val slot = slot<List<ProductUiModel>>()
         every { view.setUpShoppingView(any(), capture(slot)) } just Runs
         every { repository.selectRecentViewedProducts() } returns listOf(
-            ProductUiModel(name = "아메리카노"),
-            ProductUiModel(name = "카페라떼")
+            Product(name = "아메리카노"),
+            Product(name = "카페라떼")
         )
 
         // when

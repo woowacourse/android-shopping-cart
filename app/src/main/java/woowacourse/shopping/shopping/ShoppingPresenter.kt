@@ -1,6 +1,7 @@
 package woowacourse.shopping.shopping
 
 import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.util.toUiModel
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
@@ -8,10 +9,13 @@ class ShoppingPresenter(
 ) : ShoppingContract.Presenter {
 
     override fun loadProducts() {
-        val products = repository.selectProducts()
-        val recentViewedProducts = repository.selectRecentViewedProducts()
+        val products = repository.selectProducts().map { it.toUiModel() }
+        val recentViewedProducts = repository.selectRecentViewedProducts().map { it.toUiModel() }
 
-        view.setUpShoppingView(products = products, recentViewedProducts = recentViewedProducts)
+        view.setUpShoppingView(
+            products = products,
+            recentViewedProducts = recentViewedProducts
+        )
     }
 
     override fun addToRecentViewedProduct(id: Int) {

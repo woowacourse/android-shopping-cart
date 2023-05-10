@@ -36,8 +36,8 @@ class ShoppingCartPresenterTest {
         val slot = slot<List<ProductUiModel>>()
         every { view.setUpShoppingCartView(capture(slot), any()) } just Runs
         every { repository.selectShoppingCartProducts() } returns listOf(
-            ProductUiModel(name = "아메리카노"),
-            ProductUiModel(name = "밀크티"),
+            Product(name = "아메리카노"),
+            Product(name = "밀크티"),
         )
 
         // when
