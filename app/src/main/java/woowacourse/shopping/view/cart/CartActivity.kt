@@ -26,7 +26,18 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun showProducts(cartProducts: List<ProductModel>) {
         binding.recyclerCart.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerCart.adapter = CartAdapter(cartProducts)
+        binding.recyclerCart.adapter = CartAdapter(cartProducts) {
+            onRemoveClick(it)
+        }
+    }
+
+    private fun onRemoveClick(id: Int) {
+        presenter.removeProduct(id)
+    }
+
+    override fun updateProducts() {
+        presenter.fetchProducts()
+        // 데이터를 어떻게 바꿀까?
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

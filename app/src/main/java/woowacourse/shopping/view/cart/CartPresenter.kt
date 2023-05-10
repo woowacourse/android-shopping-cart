@@ -13,7 +13,8 @@ class CartPresenter(
         view.showProducts(cartProducts.map { it.toUiModel() })
     }
 
-    fun removeProduct(id: Int) {
+    override fun removeProduct(id: Int) {
         cartRepository.remove(id)
+        view.updateProducts()
     }
 }

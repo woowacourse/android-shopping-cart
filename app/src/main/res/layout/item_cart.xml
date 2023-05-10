@@ -4,31 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="cart_product"
             type="woowacourse.shopping.model.ProductModel" />
+
         <variable
-            name="presenter"
-            type="woowacourse.shopping.view.cart.CartPresenter" />
+            name="onItemClick"
+            type="woowacourse.shopping.view.cart.CartAdapter.OnItemClick" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="15dp"
         android:background="@drawable/back_rounded"
         android:paddingHorizontal="13dp"
-        android:paddingVertical="26dp"
-        android:layout_marginHorizontal="15dp"
-        android:layout_marginVertical="15dp">
+        android:paddingVertical="26dp">
 
         <TextView
             android:id="@+id/text_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="18sp"
             android:text="@{cart_product.name}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="동원참치" />
@@ -60,7 +62,7 @@
             android:layout_height="26dp"
             android:background="@drawable/ic_close"
             android:backgroundTint="@color/gray"
-            android:onClick="@{()->presenter.removeProduct(cart_product.id)}"
+            android:onClick="@{() -> onItemClick.onRemoveClick(cart_product.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

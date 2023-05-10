@@ -11,7 +11,16 @@ class CartDbRepository(context: Context) : CartRepository {
         return dbHelper.selectAll()
     }
 
+    private fun find(id: Int): List<CartProduct> {
+        return dbHelper.selectWhereId(id)
+    }
+
     override fun add(id: Int, count: Int) {
+        val cardProducts = find(id)
+        if (cardProducts.isNotEmpty()) {
+            dbHelper.update(id, count + cardProducts[0].count)
+            return
+        }
         dbHelper.insert(id, count)
     }
 
