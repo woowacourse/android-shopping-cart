@@ -130,7 +130,8 @@ class ShoppingDBAdapter(
 
         with(recentViewedCursor) {
             while (moveToNext()) {
-                val id = getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
+                val id =
+                    getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
                 val product = selectProductById(id)
 
                 recentViewedProducts.add(product)
@@ -140,11 +141,11 @@ class ShoppingDBAdapter(
         return recentViewedProducts.toList().reversed()
     }
 
-    override fun deleteFromRecentViewedProducts(id: Int) {
+    override fun deleteFromRecentViewedProducts() {
         shoppingDB.delete(
             RecentViewedDBContract.TABLE_NAME,
-            "${RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID} = ?",
-            arrayOf(id.toString())
+            "ROWID = (SELECT MIN(ROWID) FROM ${RecentViewedDBContract.TABLE_NAME})",
+            null
         )
     }
 

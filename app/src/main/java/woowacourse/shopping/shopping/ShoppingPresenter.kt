@@ -28,7 +28,7 @@ class ShoppingPresenter(
         val removedProduct = recentViewedProducts.add(product)
 
         removedProduct?.let {
-            repository.deleteFromRecentViewedProducts(removedProduct.id)
+            repository.deleteFromRecentViewedProducts()
         }
         repository.insertToRecentViewedProducts(id)
         view.refreshShoppingView(
