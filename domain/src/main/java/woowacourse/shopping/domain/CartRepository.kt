@@ -1,8 +1,7 @@
 package woowacourse.shopping.domain
-typealias ID = Int
 
 interface CartRepository {
-    fun findAll(): List<ID>
-    fun add(id: Int)
+    fun findAll(): List<CartProduct>
+    fun add(id: Int, count: Int)
     fun remove(id: Int)
 }

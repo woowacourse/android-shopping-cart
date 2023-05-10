@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.ID
 
 class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
@@ -22,14 +21,14 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1
         onCreate(db)
     }
 
-    fun insert(id: ID, count: Int) {
+    fun insert(id: Int, count: Int) {
         val values = ContentValues()
         values.put(CartConstract.TABLE_COLUMN_ID, id)
         values.put(CartConstract.TABLE_COLUMN_COUNT, count)
         writableDatabase.insert(CartConstract.TABLE_NAME, null, values)
     }
 
-    fun remove(id: ID) {
+    fun remove(id: Int) {
         writableDatabase.execSQL("DELETE FROM ${CartConstract.TABLE_NAME} WHERE ${CartConstract.TABLE_COLUMN_ID}=$id")
     }
 
