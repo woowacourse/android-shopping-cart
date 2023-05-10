@@ -21,8 +21,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var binding: ActivityMainBinding
     private lateinit var presenter: MainContract.Presenter
     private lateinit var mainProductAdapter: MainProductAdapter
-    private lateinit var recentWrapperAdapter: RecentWrapperAdapter
     private lateinit var recentAdapter: RecentAdapter
+    private lateinit var recentWrapperAdapter: RecentWrapperAdapter
 
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
@@ -41,10 +41,20 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             RecentProductRepositoryImpl(RecentDao(this))
         )
 
+        initAdapters()
+        initLayoutManager()
+        binding.productRv.adapter = concatAdapter
+        presenter.loadProducts()
+        presenter.loadRecent()
+    }
+
+    private fun initAdapters() {
         mainProductAdapter = MainProductAdapter(listOf())
         recentAdapter = RecentAdapter(listOf())
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
+    }
 
+    private fun initLayoutManager() {
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -55,18 +65,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                 }
             }
         }
-
         binding.productRv.layoutManager = layoutManager
-        binding.productRv.adapter = concatAdapter
-        presenter.loadProducts()
-        presenter.loadRecent()
     }
 
     override fun showCartScreen() {
         TODO("Not yet implemented")
     }
 
-    override fun showProductDetailScreen(position: Int) {
+    override fun showProductDetailScreenByProduct(position: Int) {
         val product = mainProductAdapter.items[position].product
         startActivity(DetailActivity.getIntent(this, product))
     }
@@ -77,6 +83,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun updateRecent(recent: List<RecentProductItemModel>) {
         recentAdapter.setItems(recent)
+    }
+
+    override fun showProductDetailScreenByRecent(position: Int) {
+        val product = recentAdapter.items[position].recentProduct.productUiModel
+        startActivity(DetailActivity.getIntent(this, product))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

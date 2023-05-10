@@ -35,7 +35,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     companion object {
-        fun newIntent(context: Context): Intent {
+        fun getIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }
     }

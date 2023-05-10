@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.main
 
-import android.util.Log
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
@@ -16,10 +15,8 @@ class MainPresenter(
     override fun loadProducts() {
         val products = productRepository.getFirstProducts().map { product ->
             product.toPresentation().toItemModel { position ->
-                val now = LocalDateTime.now()
-                recentProductRepository.addRecentProduct(RecentProduct(product, now))
-                Log.d("hash", "${recentProductRepository.getAll()}}")
-                view.showProductDetailScreen(position)
+                addRecentProduct(RecentProduct(product, LocalDateTime.now()))
+                view.showProductDetailScreenByProduct(position)
             }
         }
         view.addProducts(products)
@@ -29,10 +26,10 @@ class MainPresenter(
         view.showCartScreen()
     }
 
-    override fun loadMore(lastProductId: Long) {
+    override fun loadMoreProduct(lastProductId: Long) {
         val nextProducts = productRepository.getNextProducts(lastProductId).map { product ->
             product.toPresentation().toItemModel { position ->
-                view.showProductDetailScreen(position)
+                view.showProductDetailScreenByProduct(position)
             }
         }
         view.addProducts(nextProducts)
@@ -40,10 +37,16 @@ class MainPresenter(
 
     override fun loadRecent() {
         val recent = recentProductRepository.getAll().map {
-            it.toPresentation().toItemModel {
-                // view.updateRecent()
+            it.toPresentation().toItemModel { position ->
+                addRecentProduct(it)
+                view.showProductDetailScreenByRecent(position)
             }
         }
         view.updateRecent(recent)
     }
+
+    private fun addRecentProduct(recentProduct: RecentProduct) {
+        recentProductRepository.addRecentProduct(recentProduct.copy(dateTime = LocalDateTime.now()))
+    }
 }
+

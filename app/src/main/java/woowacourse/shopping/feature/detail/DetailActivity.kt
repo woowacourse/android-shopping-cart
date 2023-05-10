@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -13,6 +12,7 @@ import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.getParcelableCompat
+import woowacourse.shopping.util.keyError
 
 class DetailActivity : AppCompatActivity(), DetailContract.View {
 
@@ -28,18 +28,9 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
         binding.presenter = presenter
     }
 
-    override fun showCartScreen() {
-        startActivity(CartActivity.newIntent(this))
-    }
+    override fun showCartScreen() = startActivity(CartActivity.getIntent(this))
 
-    override fun exitDetailScreen() {
-        finish()
-    }
-
-    private fun keyError(key: String) {
-        Log.d("hash", "$key is not exist...")
-        finish()
-    }
+    override fun exitDetailScreen() = finish()
 
     companion object {
         private const val PRODUCT_KEY = "PRODUCT_KEY"
