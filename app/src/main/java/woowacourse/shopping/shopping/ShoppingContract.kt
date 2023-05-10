@@ -17,7 +17,7 @@ interface ShoppingContract {
 
         fun updateRecentProductList(recentProductModels: List<RecentProductModel>)
 
-        fun showProductDetail()
+        fun showProductDetail(productModel: ProductModel)
 
         fun showCart()
     }

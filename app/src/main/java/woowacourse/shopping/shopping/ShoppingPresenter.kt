@@ -52,7 +52,7 @@ class ShoppingPresenter(
         recentProductsState.save(recentProducts)
         recentProductDao.insertRecentProduct(recentProduct.toView())
 
-        view.showProductDetail()
+        view.showProductDetail(productModel)
     }
 
     override fun openCart() {

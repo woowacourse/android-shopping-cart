@@ -8,10 +8,13 @@ import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductAdapter(
     private var products: List<ProductModel>,
+    private val onProductItemClick: (ProductModel) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val onProductItemViewClick: (Int) -> Unit = { onProductItemClick(products[it]) }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding = ItemProductListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding)
+        return ProductViewHolder(binding, onProductItemViewClick)
     }
 
     override fun getItemCount(): Int = products.size

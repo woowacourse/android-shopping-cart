@@ -12,6 +12,7 @@ import woowacourse.shopping.common.data.database.dao.RecentProductDao
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.productdetail.ProductDetailActivity
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
@@ -50,8 +51,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         recentProductAdapter.updateRecentProducts(recentProductModels)
     }
 
-    override fun showProductDetail() {
-        TODO("Not yet implemented")
+    override fun showProductDetail(productModel: ProductModel) {
+        startProductDetailActivity(productModel)
     }
 
     override fun showCart() {
@@ -85,15 +86,23 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     )
 
     var ordinal = 1
+
     fun createRecentProductMock() = RecentProductModel(
         ordinal++,
         createProductMock()
     )
-
     private fun initProductAdapter() {
-        productAdapter = ProductAdapter(emptyList())
+        productAdapter = ProductAdapter(
+            emptyList(),
+            onProductItemClick = { startProductDetailActivity(it) }
+        )
         binding.shoppingProductList.layoutManager = GridLayoutManager(this, 2)
         binding.shoppingProductList.adapter = productAdapter
+    }
+
+    private fun startProductDetailActivity(productModel: ProductModel) {
+        val intent = ProductDetailActivity.createIntent(this, productModel)
+        startActivity(intent)
     }
 
     private fun initRecentProductAdapter() {
