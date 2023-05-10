@@ -17,4 +17,6 @@ interface ShoppingRepository {
     fun insertToRecentViewedProducts(id: Int)
 
     fun selectRecentViewedProducts(): List<Product>
+
+    fun deleteFromRecentViewedProducts(id: Int)
 }

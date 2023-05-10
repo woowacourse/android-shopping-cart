@@ -22,8 +22,13 @@ class ShoppingPresenterTest {
 
     @Before
     fun setUp() {
-        view = mockk()
         repository = mockk(relaxed = true)
+        every { repository.selectRecentViewedProducts() } returns listOf(
+            Product(name = "아메리카노"),
+            Product(name = "카페라떼")
+        )
+
+        view = mockk()
         presenter = ShoppingPresenter(view, repository)
     }
 
@@ -46,7 +51,7 @@ class ShoppingPresenterTest {
             ProductUiModel(name = "아메리카노"),
             ProductUiModel(name = "카페라떼")
         )
-        assertEquals(actual, expected)
+        assertEquals(expected, actual)
         verify { view.setUpShoppingView(actual, any()) }
     }
 
@@ -55,10 +60,6 @@ class ShoppingPresenterTest {
         // given
         val slot = slot<List<ProductUiModel>>()
         every { view.setUpShoppingView(any(), capture(slot)) } just Runs
-        every { repository.selectRecentViewedProducts() } returns listOf(
-            Product(name = "아메리카노"),
-            Product(name = "카페라떼")
-        )
 
         // when
         presenter.loadProducts()
@@ -69,7 +70,7 @@ class ShoppingPresenterTest {
             ProductUiModel(name = "아메리카노"),
             ProductUiModel(name = "카페라떼")
         )
-        assertEquals(actual, expected)
+        assertEquals(expected, actual)
         verify { view.setUpShoppingView(any(), actual) }
     }
 }

@@ -140,6 +140,14 @@ class ShoppingDBAdapter(
         return recentViewedProducts.toList()
     }
 
+    override fun deleteFromRecentViewedProducts(id: Int) {
+        shoppingDB.delete(
+            RecentViewedDBContract.TABLE_NAME,
+            "${RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID} = ?",
+            arrayOf(id.toString())
+        )
+    }
+
     /**
      * 테스트를 위해 가짜 데이터 insert를 위한 함수
      */

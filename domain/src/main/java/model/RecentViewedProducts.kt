@@ -1,6 +1,6 @@
 package model
 
-class RecentProducts(
+class RecentViewedProducts(
     products: List<Product>,
     private val maxSize: Int = 10,
 ) {

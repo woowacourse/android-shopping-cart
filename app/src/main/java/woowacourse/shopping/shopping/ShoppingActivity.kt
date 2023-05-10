@@ -21,7 +21,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             view = this,
             repository = ShoppingDBAdapter(
                 shoppingDao = ShoppingDao(this)
-            )
+            ).apply { setUpDB() }
         )
     }
 
