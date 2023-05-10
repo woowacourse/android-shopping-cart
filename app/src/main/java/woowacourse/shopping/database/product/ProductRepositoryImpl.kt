@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.utils.MockData
 
-class ProductRepositoryImpl : ProductRepository {
+object ProductRepositoryImpl : ProductRepository {
 
     private val products: Map<Long, Product> = MockData.getProductList().associateBy { it.id }
 

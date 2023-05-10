@@ -11,7 +11,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private lateinit var binding: ActivityProductListBinding
     private val presenter: ProductListContract.Presenter by lazy {
-        ProductListPresenter(this, ProductRepositoryImpl())
+        ProductListPresenter(this, ProductRepositoryImpl)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

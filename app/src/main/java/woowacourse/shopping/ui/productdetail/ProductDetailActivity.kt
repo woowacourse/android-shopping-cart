@@ -3,11 +3,14 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.ui.cart.CartActivity
 import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
@@ -15,7 +18,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private val presenter: ProductDetailPresenter by lazy {
         ProductDetailPresenter(
             this,
-            ProductRepositoryImpl(),
+            ProductRepositoryImpl,
+            CartRepositoryImpl(this, ProductRepositoryImpl),
         )
     }
 
@@ -35,7 +39,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.tvProductDetailName.text = product.name
         binding.tvProductDetailPrice.text =
             getString(R.string.product_price).format(DECIMAL_FORMAT.format(product.price))
-//        binding.btnProductDetailAdd.setOnClickListener { }
+        binding.btnProductDetailAdd.setOnClickListener {
+            presenter.addProductToCart(product.id)
+            moveToCartActivity()
+        }
+    }
+
+    override fun showErrorMessage() {
+        Toast.makeText(this, "존재하지 않는 상품입니다", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun moveToCartActivity() {
+        CartActivity.startActivity(this)
     }
 
     companion object {
