@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.main
 
+import android.util.Log
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
@@ -17,6 +18,7 @@ class MainPresenter(
             product.toPresentation().toItemModel { position ->
                 val now = LocalDateTime.now()
                 recentProductRepository.addRecentProduct(RecentProduct(product, now))
+                Log.d("hash","${recentProductRepository.getAll()}}")
                 view.showProductDetailScreen(position)
             }
         }

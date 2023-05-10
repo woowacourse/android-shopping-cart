@@ -26,7 +26,7 @@ class RecentDao(
 
     fun selectAllRecent(): List<RecentProduct> {
         val cursor = readableDatabase.rawQuery(
-            "SELECT * FROM ${RecentContract.TABLE_NAME} ORDER BY ${RecentContract.TABLE_COLUMN_DATE_TIME} DESC LIMIT 10",
+            "SELECT * FROM ${RecentContract.TABLE_NAME} ORDER BY ${RecentContract.TABLE_COLUMN_DATE_TIME} desc LIMIT 10",
             null
         )
 
@@ -40,8 +40,6 @@ class RecentDao(
             val shownDateTime = LocalDateTime.ofEpochSecond(data.dateTimeMills, 0, ZoneOffset.UTC)
             recentlyShownProducts.add(RecentProduct(product, shownDateTime))
         }
-
-        recentlyShownProducts.sortBy { it.dateTime }
 
         cursor.close()
         return recentlyShownProducts
@@ -58,11 +56,6 @@ class RecentDao(
     }
 
     private fun insertRecentProduct(recentProduct: RecentProduct) {
-//        val allRecentProducts = selectAllRecent()
-//        if (allRecentProducts.size >= 10) {
-//            val removeRecentProduct = allRecentProducts.last()
-//            deleteRecentProduct(removeRecentProduct)
-//        }
         val timeSecond = recentProduct.dateTime.toEpochSecond(ZoneOffset.UTC)
         val values = ContentValues().apply {
             put(RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID, recentProduct.product.id)
