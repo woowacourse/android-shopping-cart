@@ -14,19 +14,20 @@ import woowacourse.shopping.ui.shopping.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductsViewHolder
 
 class ShoppingAdapter(
+    private val recentProductAdapter: RecentProductAdapter,
     private val onItemClick: (UiProduct) -> Unit
 ) : ListAdapter<UiProduct, RecyclerView.ViewHolder>(productDiffUtil) {
 
     lateinit var layoutInflater: LayoutInflater
-    private val recentProductAdapter: RecentProductAdapter = RecentProductAdapter(onItemClick)
 
     fun updateRecentProduct(recentProducts: List<UiProduct>) {
         recentProductAdapter.submitList(recentProducts)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) RECENT_PRODUCTS.value
-        else PRODUCT.value
+        return if (recentProductAdapter.itemCount != 0 && position == 0) {
+            RECENT_PRODUCTS.value
+        } else PRODUCT.value
     }
 
     override fun getItemCount(): Int {
@@ -59,7 +60,7 @@ class ShoppingAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is RecentProductsViewHolder -> holder.bind(recentProductAdapter.itemCount != 0)
-            is ShoppingViewHolder -> holder.bind(getItem(position - 1))
+            is ShoppingViewHolder -> holder.bind(getItem(position - if (recentProductAdapter.itemCount != 0) 1 else 0))
         }
     }
 
