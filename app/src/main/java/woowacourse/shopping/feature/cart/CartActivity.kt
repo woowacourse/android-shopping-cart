@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -24,6 +25,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartItemRecyclerview.adapter = cartProductAdapter
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadCartProduct()
+
+        supportActionBar?.title = getString(R.string.cart)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun changeCartProducts(newItems: List<CartProductItemModel>) {
@@ -32,6 +36,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun deleteCartProductFromScreen(position: Int) {
         presenter.deleteCartProduct(cartProductAdapter.items[position].cartProduct)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     companion object {

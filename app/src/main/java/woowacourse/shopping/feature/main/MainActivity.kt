@@ -1,6 +1,8 @@
 package woowacourse.shopping.feature.main
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -10,6 +12,7 @@ import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.data.RecentProductRepositoryImpl
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity
 import woowacourse.shopping.feature.main.load.LoadAdapter
 import woowacourse.shopping.feature.main.product.MainProductAdapter
@@ -75,7 +78,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun showCartScreen() {
-        TODO("Not yet implemented")
+        startActivity(CartActivity.getIntent(this))
     }
 
     override fun showProductDetailScreenByProduct(position: Int) {
@@ -94,6 +97,22 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun showProductDetailScreenByRecent(position: Int) {
         val product = recentAdapter.items[position].recentProduct.productUiModel
         startActivity(DetailActivity.getIntent(this, product))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.app_bar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.cart_action -> {
+                presenter.moveToCart()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -53,4 +53,3 @@ class MainPresenter(
         recentProductRepository.addRecentProduct(recentProduct.copy(dateTime = LocalDateTime.now()))
     }
 }
-

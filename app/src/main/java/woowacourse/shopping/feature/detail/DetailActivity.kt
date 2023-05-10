@@ -3,6 +3,8 @@ package woowacourse.shopping.feature.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -31,6 +33,22 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
     override fun showCartScreen() = startActivity(CartActivity.getIntent(this))
 
     override fun exitDetailScreen() = finish()
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.app_bar_cancel_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.cancel_action -> {
+                finish()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     companion object {
         private const val PRODUCT_KEY = "PRODUCT_KEY"
