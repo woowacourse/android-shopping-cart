@@ -14,6 +14,9 @@ class ShoppingRecyclerAdapter(
     private val recentViewedProducts = recentViewedProducts.toMutableList()
 
     override fun getItemViewType(position: Int): Int {
+        if (recentViewedProducts.isEmpty()) {
+            return ShoppingRecyclerItemViewType.PRODUCT.ordinal
+        }
         return ShoppingRecyclerItemViewType.valueOf(position).ordinal
     }
 

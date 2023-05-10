@@ -36,14 +36,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         products: List<ProductUiModel>,
         recentViewedProducts: List<ProductUiModel>
     ) {
-        binding.productRecyclerView.layoutManager = GridLayoutManager(this, 2).apply {
-            spanSizeLookup = ShoppingRecyclerSpanSizeManager()
-        }
-        binding.productRecyclerView.adapter = ShoppingRecyclerAdapter(
+        val shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView
         )
+        binding.productRecyclerView.layoutManager = GridLayoutManager(this, 2).apply {
+            spanSizeLookup = ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
+        }
+        binding.productRecyclerView.adapter = shoppingRecyclerAdapter
         binding.imgShoppingCart.setOnClickListener {
             startActivity(Intent(this, ShoppingCartActivity::class.java))
         }
