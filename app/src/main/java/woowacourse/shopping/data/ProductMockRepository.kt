@@ -7,7 +7,11 @@ import com.example.domain.repository.ProductRepository
 class ProductMockRepository : ProductRepository {
 
     override fun getFirstProducts(): List<Product> {
-        return productsDatasource.subList(0, LOAD_SIZE)
+        return if (LOAD_SIZE > productsDatasource.size) {
+            productsDatasource
+        } else {
+            productsDatasource.subList(0, LOAD_SIZE)
+        }
     }
 
     override fun getNextProducts(lastProductId: Long): List<Product> {

@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.feature.detail.DetailActivity
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var binding: ActivityMainBinding
@@ -30,7 +31,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun showProductDetailScreen(position: Int) {
-        TODO("Not yet implemented")
+        val product = mainProductAdapter.items[position].product
+        startActivity(DetailActivity.getIntent(this, product))
     }
 
     override fun addProducts(products: List<MainProductItemModel>) {
