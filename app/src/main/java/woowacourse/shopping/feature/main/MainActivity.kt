@@ -1,9 +1,13 @@
 package woowacourse.shopping.feature.main
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.domain.Product
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
 import woowacourse.shopping.feature.list.item.ProductListItem
 import woowacourse.shopping.feature.model.mapper.toItem
@@ -52,5 +56,17 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun setProducts(products: List<Product>) {
         adapter.setItems(products.map { it.toUi().toItem() })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.actionbar_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_cart -> { CartActivity.startActivity(this) }
+        }
+        return true
     }
 }
