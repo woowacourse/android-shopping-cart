@@ -4,7 +4,7 @@
     <item
         android:id="@+id/exit"
         android:enabled="true"
-        android:icon="@drawable/exit"
+        android:icon="@drawable/ic_exit"
         app:showAsAction="always"
         android:title="@string/exit"
         app:theme="@style/DetailMenuIconStyle"/>
