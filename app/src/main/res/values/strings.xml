@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="price_format">%s원</string>
+    <string name="price">금액</string>
+    <string name="add_cart">장바구니 담기</string>
+    <string name="product_image_description">product image</string>
 </resources>

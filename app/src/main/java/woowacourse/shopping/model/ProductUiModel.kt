@@ -13,11 +13,10 @@ data class ProductUiModel(
     val price: Int
 ) : Parcelable {
     fun toPriceFormat(): String {
-        return DecimalFormat("#.###").format(price)
+        return DecimalFormat("#,###").format(price)
     }
 
     fun toItemModel(onClick: (position: Int) -> Unit): MainProductItemModel {
         return MainProductItemModel(this, onClick)
     }
 }
-
