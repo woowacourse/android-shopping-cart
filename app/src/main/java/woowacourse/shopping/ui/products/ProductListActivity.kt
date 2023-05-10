@@ -1,11 +1,15 @@
 package woowacourse.shopping.ui.products
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import woowacourse.shopping.R
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductListAdapter
 import woowacourse.shopping.ui.products.adapter.RecentlyViewedProductListAdapter
@@ -25,6 +29,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbarProductList)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         initProductList()
     }
@@ -32,6 +38,21 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun onResume() {
         super.onResume()
         initRecentlyViewedProductList()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_product_list, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_cart -> {
+                moveToCartActivity()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun initRecentlyViewedProductList() {
@@ -63,5 +84,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun moveToProductDetailActivity(productId: Long) {
         ProductDetailActivity.startActivity(this, productId)
+    }
+
+    private fun moveToCartActivity() {
+        CartActivity.startActivity(this)
     }
 }
