@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.domain.datasource.productsDatasource
-import com.example.domain.model.CartItem
+import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import woowacourse.shopping.data.model.CartEntity
 
@@ -21,7 +21,7 @@ class CartDao(
         onCreate(db)
     }
 
-    fun selectAll(): List<CartItem> {
+    fun selectAll(): List<CartProduct> {
         val cursor = readableDatabase.query(
             CartContract.TABLE_NAME,
             arrayOf(
@@ -32,7 +32,7 @@ class CartDao(
             null, null, null, null, null
         )
 
-        val cart = mutableListOf<CartItem>()
+        val cart = mutableListOf<CartProduct>()
         while (cursor.moveToNext()) {
             val data = CartEntity(
                 cursor.getLong(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CART_ID)),
@@ -40,7 +40,7 @@ class CartDao(
                 cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_COUNT))
             )
             val product: Product = productsDatasource.find { it.id == data.productId } ?: continue
-            cart.add(CartItem(data.cartId, product))
+            cart.add(CartProduct(data.cartId, product))
         }
 
         cursor.close()
@@ -55,12 +55,11 @@ class CartDao(
         writableDatabase.insert(CartContract.TABLE_NAME, null, values)
     }
 
-    fun deleteCartItem(cartItem: CartItem) {
+    fun deleteCartProduct(cartProduct: CartProduct) {
         val selection = "${CartContract.TABLE_COLUMN_CART_ID} = ?"
-        val selectionArgs = arrayOf("${cartItem.cartId}")
+        val selectionArgs = arrayOf("${cartProduct.cartId}")
         writableDatabase.delete(CartContract.TABLE_NAME, selection, selectionArgs)
     }
-
 
     companion object {
         private const val DB_NAME = "cart_db"

@@ -10,6 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.sql.CartDao
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.getParcelableCompat
 
@@ -28,7 +29,7 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
     }
 
     override fun showCartScreen() {
-        //todo
+        startActivity(CartActivity.newIntent(this))
     }
 
     override fun exitDetailScreen() {
@@ -36,10 +37,9 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
     }
 
     private fun keyError(key: String) {
-        Log.d("hash", "${key} is not exist...")
+        Log.d("hash", "$key is not exist...")
         finish()
     }
-
 
     companion object {
         private const val PRODUCT_KEY = "PRODUCT_KEY"

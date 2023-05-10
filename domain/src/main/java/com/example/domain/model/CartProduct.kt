@@ -1,6 +1,6 @@
 package com.example.domain.model
 
-data class CartItem(
+data class CartProduct(
     val cartId: Long,
     val product: Product
 )

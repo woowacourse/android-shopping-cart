@@ -1,6 +1,6 @@
 package woowacourse.shopping.data
 
-import com.example.domain.model.CartItem
+import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.data.sql.CartDao
@@ -8,7 +8,7 @@ import woowacourse.shopping.data.sql.CartDao
 class CartRepositoryImpl(
     private val cartDao: CartDao
 ) : CartRepository {
-    override fun getAll(): List<CartItem> {
+    override fun getAll(): List<CartProduct> {
         return cartDao.selectAll()
     }
 
@@ -16,7 +16,7 @@ class CartRepositoryImpl(
         cartDao.insertProduct(product)
     }
 
-    override fun deleteProduct(cartItem: CartItem) {
-        cartDao.deleteCartItem(cartItem)
+    override fun deleteProduct(cartProduct: CartProduct) {
+        cartDao.deleteCartProduct(cartProduct)
     }
 }

@@ -4,4 +4,6 @@
     <string name="price">금액</string>
     <string name="add_cart">장바구니 담기</string>
     <string name="product_image_description">product image</string>
+    <string name="cancel_button">cancel button</string>
+    <string name="product_image">product image</string>
 </resources>
