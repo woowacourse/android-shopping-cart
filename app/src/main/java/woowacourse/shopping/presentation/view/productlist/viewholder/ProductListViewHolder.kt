@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.view.productlist.adpater
+package woowacourse.shopping.presentation.view.productlist.viewholder
 
 import android.view.LayoutInflater
 import android.view.View

@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.view.productlist.adpater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.view.productlist.viewholder.ProductListViewHolder
 
 class ProductListAdapter(
     private val products: List<ProductModel>,
