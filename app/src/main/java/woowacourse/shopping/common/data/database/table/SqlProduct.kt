@@ -14,7 +14,7 @@ object SqlProduct : SqlTable {
         SqlColumn(ID, SqlType.INTEGER, "PRIMARY KEY AUTOINCREMENT"),
         SqlColumn(PICTURE, SqlType.TEXT),
         SqlColumn(TITLE, SqlType.TEXT),
-        SqlColumn(PRICE, SqlType.TEXT)
+        SqlColumn(PRICE, SqlType.INTEGER)
     )
     override val constraint: String = ""
 }

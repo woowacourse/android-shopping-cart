@@ -13,26 +13,22 @@ import woowacourse.shopping.domain.URL
 
 class CartDao(private val db: SQLiteDatabase) {
     fun insertCartProduct(cartProductModel: CartProductModel) {
-        db.use {
-            val productRow: MutableMap<String, Any> = mutableMapOf()
-            productRow[SqlProduct.PICTURE] = cartProductModel.product.picture
-            productRow[SqlProduct.TITLE] = cartProductModel.product.title
-            productRow[SqlProduct.PRICE] = cartProductModel.product.price
+        val productRow: MutableMap<String, Any> = mutableMapOf()
+        productRow[SqlProduct.PICTURE] = cartProductModel.product.picture
+        productRow[SqlProduct.TITLE] = cartProductModel.product.title
+        productRow[SqlProduct.PRICE] = cartProductModel.product.price
 
-            val row = ContentValues()
-            row.put(SqlCart.ORDINAL, cartProductModel.ordinal)
-            row.put(SqlCart.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
-            it.insert(SqlCart.name, null, row)
-        }
+        val row = ContentValues()
+        row.put(SqlCart.ORDINAL, cartProductModel.ordinal)
+        row.put(SqlCart.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
+        db.insert(SqlCart.name, null, row)
     }
 
     fun selectAll(): Cart {
-        val cursor = db.use {
-            it.rawQuery(
-                "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
-                null
-            )
-        }
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
+            null
+        )
         return Cart(
             cursor.use {
                 val cart = mutableListOf<CartProduct>()
@@ -52,8 +48,6 @@ class CartDao(private val db: SQLiteDatabase) {
     }
 
     fun deleteCartProductByOrdinal(ordinal: Int) {
-        db.use {
-            it.delete(SqlCart.name, "${SqlCart.ORDINAL} = ?", arrayOf(ordinal.toString()))
-        }
+        db.delete(SqlCart.name, "${SqlCart.ORDINAL} = ?", arrayOf(ordinal.toString()))
     }
 }

@@ -10,21 +10,17 @@ import woowacourse.shopping.domain.URL
 
 class ProductDao(private val db: SQLiteDatabase) {
     fun insertProduct(product: ProductModel): Long {
-        return db.use {
-            val row: MutableMap<String, Any> = mutableMapOf()
-            row[SqlProduct.PICTURE] = product.picture
-            row[SqlProduct.TITLE] = product.title
-            row[SqlProduct.PRICE] = product.price
-            SqlProduct.insert(it, row)
-        }
+        val row: MutableMap<String, Any> = mutableMapOf()
+        row[SqlProduct.PICTURE] = product.picture
+        row[SqlProduct.TITLE] = product.title
+        row[SqlProduct.PRICE] = product.price
+        return SqlProduct.insert(db, row)
     }
 
     fun selectAll(): Products {
-        val cursor = db.use {
-            it.rawQuery(
-                "SELECT * FROM ${SqlProduct.name}", null
-            )
-        }
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${SqlProduct.name}", null
+        )
         return Products(
             cursor.use {
                 val products = mutableListOf<Product>()

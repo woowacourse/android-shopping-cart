@@ -2,6 +2,7 @@ package woowacourse.shopping.common.data.database
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.common.data.database.table.SqlProduct
 import woowacourse.shopping.common.data.database.table.SqlTable
 
 fun SqlTable.insert(db: SQLiteDatabase?, row: Map<String, Any>): Long {
@@ -25,12 +26,13 @@ private fun ContentValues.put(column: SqlColumn, value: Any) {
 }
 
 fun SqlTable.selectRowId(db: SQLiteDatabase?, row: Map<String, Any>): Int {
-    val columns = scheme.joinToString {
+    val columns = scheme.filter { it.name != SqlProduct.ID }.joinToString(" and ") {
         when (it.type) {
             SqlType.INTEGER -> "${it.name} = ${row[it.name]}"
             SqlType.TEXT -> "${it.name} LIKE '${row[it.name]}'"
         }
     }
+
     val cursor = db?.rawQuery(
         "SELECT ID FROM $name WHERE $columns", null
     )

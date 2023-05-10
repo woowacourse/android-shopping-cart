@@ -16,7 +16,7 @@ class ShoppingDBOpenHelper(context: Context) :
         tables.forEach {
             val columns =
                 it.scheme.joinToString { scheme -> "${scheme.name} ${scheme.type} ${scheme.constraint}" }
-            db?.execSQL("CREATE TABLE ${it.name} ($columns), ${it.constraint}")
+            db?.execSQL("CREATE TABLE ${it.name} ($columns ${it.constraint})")
         }
     }
 

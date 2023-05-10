@@ -17,7 +17,7 @@ class ShoppingPresenter(
     private var products: Products = Products(emptyList()),
     private var productsState: State<Products> = ProductsState,
     productDao: ProductDao,
-    private var recentProducts: RecentProducts,
+    private var recentProducts: RecentProducts = RecentProducts(emptyList()),
     private var recentProductsState: State<RecentProducts> = RecentProductsState,
     private val recentProductDao: RecentProductDao,
     recentProductSize: Int

@@ -14,5 +14,5 @@ object SqlRecentProduct : SqlTable {
     )
 
     override val constraint: String =
-        "FOREIGN KEY ($PRODUCT_ID) REFERENCES ${SqlProduct.name} (${SqlProduct.ID})"
+        ", FOREIGN KEY ($PRODUCT_ID) REFERENCES ${SqlProduct.name} (${SqlProduct.ID})"
 }
