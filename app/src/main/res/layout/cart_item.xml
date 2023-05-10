@@ -19,17 +19,16 @@
 
         <TextView
             android:id="@+id/product_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="266dp"
+            android:layout_height="40dp"
             android:layout_marginStart="13dp"
             android:layout_marginTop="10dp"
             android:text="@{product.name}"
-            android:textColor="#333333"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:gravity="center_vertical"
+            android:textAppearance="@style/cart_item_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="TITLE" />
+            tools:text="PET보틀-정사각(370ml)" />
 
         <ImageView
             imgResId="@{product.imageUrl}"
@@ -43,10 +42,10 @@
 
         <ImageView
             android:id="@+id/remove_button"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="22dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/ic_cart_close_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -59,6 +58,7 @@
             android:layout_marginBottom="18dp"
             android:text="@{@string/product_price(product.price)}"
             android:textColor="#333333"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99000원" />
