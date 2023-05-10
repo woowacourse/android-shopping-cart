@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.database.dao.product
+package woowacourse.shopping.data.database.dao.recentproduct
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -11,23 +11,15 @@ import woowacourse.shopping.data.model.DataProduct
 class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProductDao {
 
     @SuppressLint("Range")
-    override fun getAll(): List<DataProduct> {
-        val products = mutableListOf<DataProduct>()
+    override fun getSize(): Int {
+        val size: Int
         database.writableDatabase.use { db ->
-            val cursor = db.rawQuery(GET_ALL_QUERY, null)
-            while (cursor.moveToNext()) {
-                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val name: String =
-                    cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_NAME))
-                val price: DataPrice =
-                    DataPrice(cursor.getInt(cursor.getColumnIndex(RecentProductContract.COLUMN_PRICE)))
-                val imageUrl: String =
-                    cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_IMAGE_URL))
-                products.add(DataProduct(id, name, price, imageUrl))
+            db.rawQuery(GET_ALL_QUERY, null).use {
+                it.moveToFirst()
+                size = it.getInt(0)
             }
-            cursor.close()
         }
-        return products
+        return size
     }
 
     @SuppressLint("Range")
@@ -70,7 +62,7 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
 
     companion object {
         private val GET_ALL_QUERY = """
-            SELECT * FROM ${RecentProductContract.TABLE_NAME} ORDER BY ${BaseColumns._ID} DESC
+            SELECT COUNT(*) FROM ${RecentProductContract.TABLE_NAME} 
         """.trimIndent()
 
         private val GET_PARTIALLY_QUERY = """
