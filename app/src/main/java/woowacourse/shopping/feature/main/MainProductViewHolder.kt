@@ -8,6 +8,6 @@ class MainProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(product: MainProductItemModel) {
         binding.item = product
-        binding.position = adapterPosition
+        binding.position = bindingAdapterPosition
     }
 }

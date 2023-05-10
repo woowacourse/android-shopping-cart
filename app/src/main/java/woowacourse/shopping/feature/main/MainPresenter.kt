@@ -9,7 +9,7 @@ class MainPresenter(
 ) : MainContract.Presenter {
 
     override fun loadProducts() {
-        val products = productRepository.getAll().map { product ->
+        val products = productRepository.getFirstProducts().map { product ->
             product.toPresentation().toItemModel { position ->
                 view.showProductDetailScreen(position)
             }

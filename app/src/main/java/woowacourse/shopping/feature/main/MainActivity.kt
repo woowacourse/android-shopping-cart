@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        binding.productRv
         presenter = MainPresenter(
             this,
             ProductMockRepository()

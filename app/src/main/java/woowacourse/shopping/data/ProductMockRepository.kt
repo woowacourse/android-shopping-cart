@@ -6,16 +6,20 @@ import com.example.domain.repository.ProductRepository
 
 class ProductMockRepository : ProductRepository {
 
-    override fun getAll(): List<Product> {
-        return productsDatasource
+    override fun getFirstProducts(): List<Product> {
+        return productsDatasource.subList(0, LOAD_SIZE)
     }
 
     override fun getNextProducts(lastProductId: Long): List<Product> {
-        val toIndex = (lastProductId + 20).toInt()
-        return if (lastProductId + 20 > productsDatasource.size) {
+        val toIndex = (lastProductId + LOAD_SIZE).toInt()
+        return if (lastProductId + LOAD_SIZE > productsDatasource.size) {
             productsDatasource.subList((lastProductId + 1).toInt(), productsDatasource.size)
         } else {
             productsDatasource.subList((lastProductId + 1).toInt(), toIndex)
         }
+    }
+
+    companion object {
+        private const val LOAD_SIZE = 20
     }
 }
