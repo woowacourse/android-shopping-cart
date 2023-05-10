@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductFakeRepository
+import woowacourse.shopping.data.RecentFakeRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.contract.ShoppingContract
 import woowacourse.shopping.shopping.contract.presenter.ShoppingPresenter
@@ -21,7 +23,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
-        presenter = ShoppingPresenter(this, ProductFakeRepository)
+        presenter = ShoppingPresenter(this, ProductFakeRepository, RecentFakeRepository)
         presenter.setUpProducts()
     }
 
@@ -71,9 +73,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         binding.productRecyclerview.layoutManager = layoutManager
     }
 
-    override fun navigateToProductDetail(data: ProductsItemType) {
-        val productItem = data as? ProductItem ?: return
-        startActivity(ProductDetailActivity.from(this, productItem.product))
+    override fun navigateToProductDetail(product: ProductUIModel) {
+        startActivity(ProductDetailActivity.from(this, product))
     }
 
     override fun addProducts(data: List<ProductsItemType>) {

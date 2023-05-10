@@ -2,22 +2,29 @@ package woowacourse.shopping.shopping.contract.presenter
 
 import com.example.domain.model.Product
 import com.example.domain.model.ProductRepository
+import com.example.domain.model.RecentRepository
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.shopping.ProductItem
 import woowacourse.shopping.shopping.ProductReadMore
 import woowacourse.shopping.shopping.ProductsItemType
+import woowacourse.shopping.shopping.RecentProductsItem
 import woowacourse.shopping.shopping.contract.ShoppingContract
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
-    private val repository: ProductRepository
+    private val repository: ProductRepository,
+    private val recentRepository: RecentRepository
 ) : ShoppingContract.Presenter {
     private val productsData: MutableList<ProductsItemType> = mutableListOf()
+    private val recentProductsData: RecentProductsItem = RecentProductsItem(
+        recentRepository.getRecent(10).map { it.toUIModel() }
+    )
 
     override fun setUpProducts() {
-        productsData += repository.getAll().map { product: Product ->
-            ProductItem(product.toUIModel())
-        }
+        productsData += recentProductsData
+        productsData += repository.getAll()
+            .map { product: Product -> ProductItem(product.toUIModel()) }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
@@ -28,7 +35,7 @@ class ShoppingPresenter(
         view.addProducts(productsData.plus(ProductReadMore))
     }
 
-    override fun navigateToItemDetail(data: ProductsItemType) {
+    override fun navigateToItemDetail(data: ProductUIModel) {
         view.navigateToProductDetail(data)
     }
 }
