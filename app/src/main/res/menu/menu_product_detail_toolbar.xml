@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/item1"
+        android:id="@+id/icon_close"
         android:title="@string/product_detail_close"
         android:enabled="true"
         android:icon="@drawable/close_24"
