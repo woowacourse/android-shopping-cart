@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -31,5 +33,9 @@ class CartActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

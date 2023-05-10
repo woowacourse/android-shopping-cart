@@ -10,4 +10,5 @@
     <color name="gray">#555555</color>
     <color name="gray_red">#615758</color>
     <color name="rounded_rectangle_stroke">#AAAAAA</color>
+    <color name="mint">#04C09E</color>
 </resources>
