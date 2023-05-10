@@ -6,3 +6,7 @@ import woowacourse.shopping.feature.list.item.CartProductListItem
 fun CartProduct.toItem(): CartProductListItem {
     return CartProductListItem(productId, productImageUrl, productName, productPrice)
 }
+
+fun CartProductListItem.toDomain(): CartProduct {
+    return CartProduct(productId, productImageUrl, productName, productPrice)
+}

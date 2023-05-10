@@ -10,7 +10,7 @@ class CartDbHandler(
     private val db: SQLiteDatabase
 ) {
 
-    fun getCursor(): Cursor {
+    private fun getCursor(): Cursor {
         return db.query(
             CartContract.TABLE_NAME,
             arrayOf(
@@ -58,11 +58,9 @@ class CartDbHandler(
     }
 
     fun deleteColumn(cartProduct: CartProduct) {
-        db.execSQL(
-            """
-            DELETE FROM ${CartDbHelper.DATABASE_NAME}
-            WHERE TABLE_COLUMN_PRODUCT_ID = ${cartProduct.productId}
-            """.trimIndent()
+        db.delete(
+            CartContract.TABLE_NAME,
+            CartContract.TABLE_COLUMN_PRODUCT_ID + "=" + cartProduct.productId, null
         )
     }
 }

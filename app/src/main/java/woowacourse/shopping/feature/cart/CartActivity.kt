@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.domain.CartProduct
 import woowacourse.shopping.data.CartDbHandler
@@ -11,7 +10,8 @@ import woowacourse.shopping.data.CartDbHelper
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.list.adapter.CartProductListAdapter
 import woowacourse.shopping.feature.list.item.CartProductListItem
-import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.list.item.ListItem
+import woowacourse.shopping.feature.model.mapper.toDomain
 import woowacourse.shopping.feature.model.mapper.toItem
 
 class CartActivity : AppCompatActivity() {
@@ -23,30 +23,31 @@ class CartActivity : AppCompatActivity() {
         CartDbHandler(CartDbHelper(this).writableDatabase)
     }
 
+    lateinit var adapter: CartProductListAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//
-//        val mockkCart = listOf(
-//            CartProductListItem(
-//                1, "", "마스터볼", 2000
-//            )
-//        )
 
         val carts: List<CartProductListItem> = dbHandler.getCartProducts().map(CartProduct::toItem)
 
-        val adapter = CartProductListAdapter(
+        adapter = CartProductListAdapter(
             carts,
-            onXClick = { listItem ->
-                when (listItem) {
-                    is ProductListItem -> {
-                        Log.d("otter", "엑스 클릭")
-                    }
-                }
-            }
+            onXClick = { listItem -> itemXClickEvent(listItem) }
         )
         binding.cartProductRv.adapter = adapter
+    }
+
+    private fun itemXClickEvent(listItem: ListItem) {
+        when (listItem) {
+            is CartProductListItem -> {
+                dbHandler.deleteColumn(listItem.toDomain())
+                val carts: List<CartProductListItem> =
+                    dbHandler.getCartProducts().map(CartProduct::toItem)
+                adapter.setItems(carts)
+            }
+        }
     }
 
     companion object {
