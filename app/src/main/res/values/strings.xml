@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="wrapper_recently_viewed">최근 본 상품</string>
 </resources>
