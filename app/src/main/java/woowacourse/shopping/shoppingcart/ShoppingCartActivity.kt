@@ -28,7 +28,11 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         presenter.loadShoppingCartProducts()
     }
 
-    override fun setUpShoppingCartView(products: List<ProductUiModel>, onRemoved: (id: Int) -> Unit) {
+    override fun setUpShoppingCartView(
+        products: List<ProductUiModel>,
+        onRemoved: (id: Int) -> Unit
+    ) {
         binding.recyclerViewCart.adapter = ShoppingCartRecyclerAdapter(products, onRemoved)
+        binding.imageBack.setOnClickListener { finish() }
     }
 }
