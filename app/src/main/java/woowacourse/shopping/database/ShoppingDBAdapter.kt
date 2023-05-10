@@ -137,7 +137,7 @@ class ShoppingDBAdapter(
             }
         }
 
-        return recentViewedProducts.toList()
+        return recentViewedProducts.toList().reversed()
     }
 
     override fun deleteFromRecentViewedProducts(id: Int) {

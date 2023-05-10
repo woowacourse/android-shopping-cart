@@ -19,18 +19,21 @@ class ShoppingPresenter(
 
         view.setUpShoppingView(
             products = products,
-            recentViewedProducts = recentViewedProducts
+            recentViewedProducts = recentViewedProducts,
         )
     }
 
     override fun addToRecentViewedProduct(id: Int) {
-        val removedProduct = recentViewedProducts.add(
-            product = repository.selectProductById(id)
-        )
+        val product = repository.selectProductById(id)
+        val removedProduct = recentViewedProducts.add(product)
 
         removedProduct?.let {
-            repository.deleteFromRecentViewedProducts(id)
+            repository.deleteFromRecentViewedProducts(removedProduct.id)
         }
         repository.insertToRecentViewedProducts(id)
+        view.refreshShoppingView(
+            toAdd = product.toUiModel(),
+            toRemove = removedProduct?.toUiModel()
+        )
     }
 }

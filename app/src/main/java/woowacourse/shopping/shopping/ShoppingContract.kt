@@ -7,7 +7,15 @@ interface ShoppingContract {
 
     interface View {
 
-        fun setUpShoppingView(products: List<ProductUiModel>, recentViewedProducts: List<ProductUiModel>)
+        fun setUpShoppingView(
+            products: List<ProductUiModel>,
+            recentViewedProducts: List<ProductUiModel>
+        )
+
+        fun refreshShoppingView(
+            toAdd: ProductUiModel,
+            toRemove: ProductUiModel?
+        )
     }
 
     interface Presenter {

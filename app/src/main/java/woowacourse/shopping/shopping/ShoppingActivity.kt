@@ -16,12 +16,13 @@ import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private lateinit var binding: ActivityShoppingBinding
+    private lateinit var shoppingRecyclerAdapter: ShoppingRecyclerAdapter
     private val presenter: ShoppingContract.Presenter by lazy {
         ShoppingPresenter(
             view = this,
             repository = ShoppingDBAdapter(
                 shoppingDao = ShoppingDao(this)
-            ).apply { setUpDB() }
+            ),
         )
     }
 
@@ -34,15 +35,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun setUpShoppingView(
         products: List<ProductUiModel>,
-        recentViewedProducts: List<ProductUiModel>
+        recentViewedProducts: List<ProductUiModel>,
     ) {
-        val shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
+        shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView
         )
         binding.productRecyclerView.layoutManager = GridLayoutManager(this, 2).apply {
-            spanSizeLookup = ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
+            spanSizeLookup =
+                ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
         }
         binding.productRecyclerView.adapter = shoppingRecyclerAdapter
         binding.imgShoppingCart.setOnClickListener {
@@ -50,9 +52,20 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         }
     }
 
+    override fun refreshShoppingView(
+        toAdd: ProductUiModel,
+        toRemove: ProductUiModel?
+    ) {
+
+        shoppingRecyclerAdapter.refresh(
+            toRemove = toRemove,
+            toAdd = toAdd
+        )
+    }
+
     private fun navigateToProductDetailView(product: ProductUiModel) {
+        presenter.addToRecentViewedProduct(product.id)
         val intent = ProductDetailActivity.getIntent(this, product)
         startActivity(intent)
-        presenter.addToRecentViewedProduct(product.id)
     }
 }

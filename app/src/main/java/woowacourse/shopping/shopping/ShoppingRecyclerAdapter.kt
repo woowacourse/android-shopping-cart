@@ -11,7 +11,8 @@ class ShoppingRecyclerAdapter(
     private val onProductClicked: (ProductUiModel) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val recentViewedProducts = recentViewedProducts.toMutableList()
+    private val recentViewedProducts: MutableList<ProductUiModel> =
+        recentViewedProducts.toMutableList()
 
     override fun getItemViewType(position: Int): Int {
         if (recentViewedProducts.isEmpty()) {
@@ -40,7 +41,7 @@ class ShoppingRecyclerAdapter(
             ShoppingRecyclerItemViewType.PRODUCT.ordinal ->
                 (holder as ShoppingItemViewHolder).bind(
                     productUiModel = products[position],
-                    onClicked = ::onProductItemClicked
+                    onClicked = onProductClicked
                 )
         }
     }
@@ -48,9 +49,11 @@ class ShoppingRecyclerAdapter(
     override fun getItemCount(): Int = products.size
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun onProductItemClicked(product: ProductUiModel) {
-        onProductClicked(product)
-        recentViewedProducts.add(product)
+    fun refresh(toRemove: ProductUiModel?, toAdd: ProductUiModel) {
+        recentViewedProducts.add(0, toAdd)
+        toRemove?.let {
+            recentViewedProducts.remove(it)
+        }
         notifyDataSetChanged()
     }
 
