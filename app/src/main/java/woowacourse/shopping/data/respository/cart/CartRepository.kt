@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.respository.cart
 
-import woowacourse.shopping.data.model.CartEntity
+import woowacourse.shopping.presentation.model.CartModel
 
 interface CartRepository {
-    fun getCarts(): List<CartEntity>
+    fun getCarts(): List<CartModel>
     fun deleteCartByProductId(productId: Long)
     fun addCart(productId: Long)
 }
