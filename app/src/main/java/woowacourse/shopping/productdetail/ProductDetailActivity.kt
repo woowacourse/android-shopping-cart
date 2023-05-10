@@ -49,6 +49,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun navigateToShoppingCartView() {
         val intent = Intent(this, ShoppingCartActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     companion object {
