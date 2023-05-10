@@ -5,4 +5,6 @@
     <string name="price_title">금액</string>
     <string name="put_in_cart_button_text">장바구니 담기</string>
     <string name="product_detail_close">close</string>
+    <string name="cart_back_title">cart_back</string>
+    <string name="cart_toolbar_title">Cart</string>
 </resources>
