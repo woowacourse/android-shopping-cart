@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.domain.CartProduct
-import woowacourse.shopping.data.CartDbHandler
-import woowacourse.shopping.data.CartDbHelper
+import woowacourse.shopping.data.cart.CartDbHandler
+import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.list.adapter.CartProductListAdapter
 import woowacourse.shopping.feature.list.item.CartProductListItem

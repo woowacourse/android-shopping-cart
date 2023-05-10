@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.cart
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

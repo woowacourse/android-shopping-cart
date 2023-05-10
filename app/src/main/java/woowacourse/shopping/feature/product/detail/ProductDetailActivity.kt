@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDbHandler
-import woowacourse.shopping.data.CartDbHelper
+import woowacourse.shopping.data.cart.CartDbHandler
+import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.extension.showToast

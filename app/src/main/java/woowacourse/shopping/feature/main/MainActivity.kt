@@ -6,6 +6,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.domain.Product
 import woowacourse.shopping.R
+import woowacourse.shopping.data.product.ProductDbHandler
+import woowacourse.shopping.data.product.ProductDbHelper
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
@@ -18,6 +20,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding
         get() = _binding!!
+    private val dbHandler: ProductDbHandler by lazy {
+        ProductDbHandler(ProductDbHelper(this).writableDatabase)
+    }
 
     lateinit var adapter: ProductListAdapter
     lateinit var presenter: MainContract.Presenter
@@ -26,7 +31,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = MainPresenter(this)
+        presenter = MainPresenter(this, dbHandler)
 
         initAdapter()
     }
