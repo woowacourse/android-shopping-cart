@@ -25,6 +25,6 @@ class CartViewHolder private constructor(
     fun bind(cart: CartModel) {
         Glide.with(binding.root).load(cart.product.imageUrl).into(binding.ivCartListThumbnail)
         binding.tvCartListTitle.text = cart.product.title
-        binding.tvCartListPrice.text = cart.product.price.toString()
+        binding.tvCartListPrice.text = binding.root.context.getString(R.string.product_price_format, cart.product.price)
     }
 }

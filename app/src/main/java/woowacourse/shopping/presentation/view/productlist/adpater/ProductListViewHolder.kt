@@ -31,6 +31,6 @@ class ProductListViewHolder(
     fun bind(product: ProductModel) {
         Glide.with(binding.root).load(product.imageUrl).into(binding.ivProductThumbnail)
         binding.tvProductTitle.text = product.title
-        binding.tvProductPrice.text = product.price.toString()
+        binding.tvProductPrice.text = binding.root.context.getString(R.string.product_price_format, product.price)
     }
 }

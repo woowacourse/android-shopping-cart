@@ -58,7 +58,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             .load(productModel.imageUrl)
             .into(binding.ivProductDetailThumbnail)
         binding.tvProductDetailTitle.text = productModel.title
-        binding.tvProductDetailPrice.text = productModel.price.toString()
+        binding.tvProductDetailPrice.text = getString(R.string.product_price_format, productModel.price)
     }
 
     private fun setAddCart(productId: Long) {

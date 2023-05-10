@@ -2,6 +2,9 @@
     <string name="app_name">Shopping</string>
     <string name="product_detail_button_text">장바구니 담기</string>
     <string name="product_list_recent_product_title">최근 본 상품</string>
+
+    <string name="product_price_format">%,d원</string>
+
     <string name="toolbar_item_cart">장바구니</string>
     <string name="toolbar_item_close">닫기</string>
     <string name="toolbar_title_cart">Cart</string>
