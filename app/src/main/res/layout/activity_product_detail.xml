@@ -39,16 +39,15 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_title" />
 
         <TextView
-            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
+            android:text="@string/product_detail_price_info"
             android:textColor="@color/product_info_text_color"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_product_detail_line"
-            tools:text="금액" />
+            app:layout_constraintTop_toBottomOf="@id/view_product_detail_line" />
 
         <TextView
             android:id="@+id/tv_product_detail_price"

@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.view.productlist
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.view.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.view.productlist.adpater.ProductListAdapter
 
 class ProductListActivity : AppCompatActivity(), ProductContract.View {
@@ -30,13 +30,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun setProductItems(products: List<ProductModel>) {
+    override fun setProductItemsView(products: List<ProductModel>) {
         binding.rvProductList.adapter = ProductListAdapter(products, ::moveToActivity)
     }
 
     private fun moveToActivity(product: ProductModel) {
-        TODO("다음 화면 인텐트 받아오기")
-        val intent = Intent(Intent.ACTION_VIEW)
+        val intent = ProductDetailActivity.createIntent(this, product.id)
         startActivity(intent)
     }
 }

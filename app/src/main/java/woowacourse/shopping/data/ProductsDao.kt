@@ -103,4 +103,15 @@ object ProductsDao {
     )
 
     fun getData(): List<ProductEntity> = items
+
+    fun getDataById(id: Long): ProductEntity? = items.find {
+        it.id == id
+    }
+
+    fun getErrorData() = ProductEntity(
+        id = -1L,
+        "",
+        0,
+        ""
+    )
 }

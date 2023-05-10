@@ -33,7 +33,7 @@ class ProductListPresenterTest {
         // given
         every { productRepository.getData() } returns dummyData
         val slot = slot<List<ProductModel>>()
-        justRun { view.setProductItems(capture(slot)) }
+        justRun { view.setProductItemsView(capture(slot)) }
 
         // when
         presenter.loadProductItems()
@@ -44,7 +44,7 @@ class ProductListPresenterTest {
 
         assertEquals(expected, actual)
         verify { productRepository.getData() }
-        verify { view.setProductItems(actual) }
+        verify { view.setProductItemsView(actual) }
     }
 
     companion object {

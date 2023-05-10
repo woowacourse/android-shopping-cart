@@ -10,6 +10,6 @@ class ProductListPresenter(
 ) : ProductContract.Presenter {
     override fun loadProductItems() {
         val products = repository.getData().map { it.toUIModel() }
-        view.setProductItems(products)
+        view.setProductItemsView(products)
     }
 }
