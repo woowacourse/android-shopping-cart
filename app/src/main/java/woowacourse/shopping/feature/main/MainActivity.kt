@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.example.domain.Product
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductDbHandler
@@ -47,7 +49,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapter() {
+        val dummy = Product(1, "23", "name", 13000).toUi().toItem()
         adapter = ProductListAdapter(
+            recentItems = listOf(dummy),
             onItemClick = { listItem ->
                 when (listItem) {
                     is ProductListItem -> {
@@ -57,6 +61,15 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             }
         )
         binding.productRv.adapter = adapter
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup = object : SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (adapter.getItemViewType(position) == ViewType.HORIZONTAL.ordinal) {
+                    gridLayoutManager.spanCount
+                } else 1
+            }
+        }
+        binding.productRv.layoutManager = gridLayoutManager
     }
 
     override fun setProducts(products: List<Product>) {

@@ -1,15 +1,15 @@
 package com.example.domain
 
 class RecentProductsCache(
-    private val _productIds: MutableList<Int> = mutableListOf(),
+    private val _products: MutableList<Product> = mutableListOf(),
 ) {
-    val productIds: List<Int>
-        get() = _productIds
+    val products: List<Product>
+        get() = _products
 
-    fun addProduct(productId: Int) {
-        if (_productIds.size > 10) {
-            _productIds.removeLast()
+    fun addProduct(product: Product) {
+        if (_products.size > 10) {
+            _products.removeLast()
         }
-        _productIds.add(0, productId)
+        _products.add(0, product)
     }
 }
