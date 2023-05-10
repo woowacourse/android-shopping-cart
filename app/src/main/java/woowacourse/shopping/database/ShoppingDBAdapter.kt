@@ -3,6 +3,8 @@ package woowacourse.shopping.database
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import model.Name
+import model.Price
 import model.Product
 import woowacourse.shopping.database.product.MockProduct
 import woowacourse.shopping.database.product.ProductDBContract
@@ -82,7 +84,7 @@ class ShoppingDBAdapter(
         val img = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_IMG))
         val name = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_NAME))
         val price = getInt(getColumnIndexOrThrow(ProductDBContract.PRODUCT_PRICE))
-        return Product(id, name, img, price)
+        return Product(id, Name(name), img, Price(price))
     }
 
     override fun selectProductById(id: Int): Product {

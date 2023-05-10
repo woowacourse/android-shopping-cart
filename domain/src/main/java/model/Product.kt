@@ -2,7 +2,7 @@ package model
 
 data class Product(
     val id: Int,
-    val name: String,
+    val name: Name,
     val imageUrl: String,
-    val price: Int,
+    val price: Price,
 )
