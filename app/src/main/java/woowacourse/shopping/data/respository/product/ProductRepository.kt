@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.respository.product
 
-import woowacourse.shopping.data.model.ProductEntity
+import woowacourse.shopping.presentation.model.ProductModel
 
 interface ProductRepository {
-    fun getData(): List<ProductEntity>
-    fun getDataById(id: Long): ProductEntity
+    fun getData(): List<ProductModel>
+    fun getDataById(id: Long): ProductModel
 }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.view.productdetail
 
-import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.product.ProductRepositoryImp
@@ -17,7 +16,7 @@ class ProductDetailPresenter(
             view.handleErrorView()
             return
         }
-        view.setProductInfoView(product.toUIModel())
+        view.setProductInfoView(product)
     }
 
     override fun addCart(productId: Long) {

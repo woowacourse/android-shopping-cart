@@ -8,8 +8,6 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.mapper.toUIModel
-import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.view.productlist.ProductContract
@@ -40,7 +38,7 @@ class ProductListPresenterTest {
 
         // then
         val actual = slot.captured
-        val expected = dummyData.map { it.toUIModel() }
+        val expected = dummyData
 
         assertEquals(expected, actual)
         verify { productRepository.getData() }
@@ -49,7 +47,7 @@ class ProductListPresenterTest {
 
     companion object {
         private val dummyData = listOf(
-            ProductEntity(
+            ProductModel(
                 id = 0,
                 title = "[선물세트][밀크바오밥] 퍼퓸 화이트 4종 선물세트 (샴푸+트리트먼트+바디워시+바디로션)",
                 price = 24_900,

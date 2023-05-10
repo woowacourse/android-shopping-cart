@@ -8,7 +8,6 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.presentation.ProductFixture
@@ -44,7 +43,7 @@ class ProductDetailPresenterTest {
 
         // then
         val actual = slot.captured
-        val expected = ProductFixture.getData().toUIModel()
+        val expected = ProductFixture.getData()
 
         assertEquals(expected, actual)
         verify { productRepository.getDataById(actual.id) }

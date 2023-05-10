@@ -1,13 +1,14 @@
 package woowacourse.shopping.data.respository.product
 
-import woowacourse.shopping.data.model.ProductEntity
+import woowacourse.shopping.data.mapper.toUIModel
+import woowacourse.shopping.presentation.model.ProductModel
 
 class ProductRepositoryImp : ProductRepository {
-    override fun getData(): List<ProductEntity> {
-        return ProductsDao.getData()
+    override fun getData(): List<ProductModel> {
+        return ProductsDao.getData().map { it.toUIModel() }
     }
 
-    override fun getDataById(id: Long): ProductEntity {
-        return ProductsDao.getDataById(id) ?: ProductsDao.getErrorData()
+    override fun getDataById(id: Long): ProductModel {
+        return (ProductsDao.getDataById(id) ?: ProductsDao.getErrorData()).toUIModel()
     }
 }
