@@ -28,11 +28,12 @@ class ProductListPresenter(
     }
 
     override fun saveRecentProductId(productId: Int) {
+        recentProductIdRepository.deleteRecentProductId(productId)
         recentProductIdRepository.addRecentProductId(productId)
     }
 
     private fun getRecentProductModels(): List<ProductModel> {
-        val recentProductIds = recentProductIdRepository.getRecentProductIds(10)
+        val recentProductIds = recentProductIdRepository.getRecentProductIds(RECENT_PRODUCTS_SIZE)
         return findProductsById(recentProductIds)
     }
 
@@ -45,5 +46,9 @@ class ProductListPresenter(
 
     private fun productsToPresentation(products: List<Product>): List<ProductModel> {
         return products.map { it.toPresentation() }
+    }
+
+    companion object {
+        private const val RECENT_PRODUCTS_SIZE = 10
     }
 }

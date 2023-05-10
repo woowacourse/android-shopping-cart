@@ -3,6 +3,7 @@ package woowacourse.shopping.data.recentproduct
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import java.lang.String.valueOf
 
 class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepository {
 
@@ -44,5 +45,13 @@ class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepos
         }
 
         writableDb.insert(RecentProductDbContract.TABLE_NAME, null, values)
+    }
+
+    override fun deleteRecentProductId(recentProductId: Int) {
+        writableDb.delete(
+            RecentProductDbContract.TABLE_NAME,
+            "${RecentProductDbContract.PRODUCT_ID}=?",
+            arrayOf<String>(valueOf(recentProductId)),
+        )
     }
 }
