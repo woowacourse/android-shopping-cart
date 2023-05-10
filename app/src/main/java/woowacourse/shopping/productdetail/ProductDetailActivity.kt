@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.common.data.database.dao.CartDao
 import woowacourse.shopping.common.model.ProductModel
@@ -26,6 +27,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         setSupportActionBar(findViewById(R.id.product_detail_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(false)
+
+        setUpProductDetailCartButton()
 
         initPresenter()
     }
@@ -51,7 +54,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun showCart() {
-        TODO("Not yet implemented")
+        startCartActivity()
+    }
+
+    private fun startCartActivity() {
+        val intent = CartActivity.createIntent(this)
+        startActivity(intent)
+    }
+
+    private fun setUpProductDetailCartButton() {
+        binding.productDetailCartButton.setOnClickListener {
+            presenter.addToCart()
+        }
     }
 
     private fun initPresenter() {

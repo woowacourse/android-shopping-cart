@@ -2,10 +2,12 @@ package woowacourse.shopping.shopping
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.common.data.database.dao.ProductDao
 import woowacourse.shopping.common.data.database.dao.RecentProductDao
@@ -38,6 +40,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.shopping_cart_action -> presenter.openCart()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun updateProductList(productModels: List<ProductModel>) {
         productAdapter.updateProducts(productModels)
     }
@@ -56,7 +65,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun showCart() {
-        TODO("Not yet implemented")
+        startCartActivity()
+    }
+
+    private fun startCartActivity() {
+        val intent = CartActivity.createIntent(this)
+        startActivity(intent)
     }
 
     private fun initPresenter() {
