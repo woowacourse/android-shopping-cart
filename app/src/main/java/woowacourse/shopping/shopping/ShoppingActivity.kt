@@ -2,12 +2,15 @@ package woowacourse.shopping.shopping
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.data.ProductFakeRepository
 import woowacourse.shopping.data.RecentFakeRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
@@ -23,8 +26,22 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
+        setSupportActionBar(binding.toolbar)
         presenter = ShoppingPresenter(this, ProductFakeRepository, RecentFakeRepository)
         presenter.setUpProducts()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.cart_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.cart -> navigateToCart()
+            else -> super.onOptionsItemSelected(item)
+        }
+        return true
     }
 
     override fun setProducts(data: List<ProductsItemType>) {
@@ -83,5 +100,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 it.updateData(data)
             }
         }
+    }
+
+    private fun navigateToCart() {
+        startActivity(CartActivity.from(this))
     }
 }

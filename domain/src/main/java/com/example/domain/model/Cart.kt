@@ -6,11 +6,11 @@ class Cart(private val repository: CartRepository) {
         repository.add(product)
     }
 
-    fun remove(product: Product) {
-        repository.remove(product)
+    fun remove(id: Int) {
+        repository.remove(id)
     }
 
-    fun getAll():List<Product>{
+    fun getAll(): List<Product> {
         return repository.getAll()
     }
 }
