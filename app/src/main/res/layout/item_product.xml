@@ -14,8 +14,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="6dp"
-    android:paddingVertical="10dp"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="25dp"
     android:onClick="@{() -> onItemClick.onClick(product)}"
     android:background="?attr/selectableItemBackground">
     <ImageView

@@ -16,8 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/item_product"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="10dp"/>
+        app:spanCount="2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

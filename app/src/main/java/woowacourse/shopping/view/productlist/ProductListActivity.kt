@@ -6,8 +6,10 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.data.RecentViewedMockRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.cart.CartActivity
@@ -20,13 +22,24 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = ProductListPresenter(this, ProductMockRepository)
+        presenter = ProductListPresenter(this, ProductMockRepository, RecentViewedMockRepository)
         presenter.fetchProducts()
         supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 
-    override fun showProducts(products: List<ProductModel>) {
-        binding.gridProducts.adapter = ProductListAdapter(products) {
+    override fun showProducts(recentViewedProducts: List<ProductModel>?, products: List<ProductModel>) {
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (recentViewedProducts != null && position == 0) {
+                    2
+                } else {
+                    1
+                }
+            }
+        }
+        binding.gridProducts.layoutManager = gridLayoutManager
+        binding.gridProducts.adapter = ProductListAdapter(recentViewedProducts, products) {
             onClick(it)
         }
     }
