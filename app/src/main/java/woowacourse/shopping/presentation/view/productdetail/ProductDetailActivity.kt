@@ -9,14 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.data.respository.cart.CartRepository
+import woowacourse.shopping.data.respository.cart.CartRepositoryImp
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.view.util.showToast
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
+    private val cartRepository: CartRepository by lazy {
+        CartRepositoryImp(this)
+    }
+
     private val presenter: ProductDetailContract.Presenter by lazy {
-        ProductDetailPresenter(this)
+        ProductDetailPresenter(this, cartRepository = cartRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,11 +30,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
 
-        supportActionBar?.title = ""
+        supportActionBar?.title = ACTION_BAR_TITLE
 
         val productId = intent.getLongExtra(KEY_PRODUCT_ID, -1)
 
         presenter.loadProductInfoById(productId)
+
+        setAddCart(productId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -53,6 +61,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.tvProductDetailPrice.text = productModel.price.toString()
     }
 
+    private fun setAddCart(productId: Long) {
+        binding.btProductDetailAddToCart.setOnClickListener {
+            presenter.addCart(productId)
+        }
+    }
+
+    override fun addCartSuccessView() {
+        showToast(getString(R.string.toast_message_success_add_cart))
+        finish()
+    }
+
     override fun handleErrorView() {
         showToast(getString(R.string.toast_message_system_error))
         finish()
@@ -60,6 +79,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val KEY_PRODUCT_ID = "KEY_PRODUCT_ID"
+        private const val ACTION_BAR_TITLE = ""
+
         internal fun createIntent(context: Context, id: Long): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(KEY_PRODUCT_ID, id)

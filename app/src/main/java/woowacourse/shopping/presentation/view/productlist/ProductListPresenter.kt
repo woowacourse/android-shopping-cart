@@ -1,8 +1,8 @@
 package woowacourse.shopping.presentation.view.productlist
 
-import woowacourse.shopping.data.ProductRepository
-import woowacourse.shopping.data.ProductRepositoryImp
 import woowacourse.shopping.data.mapper.toUIModel
+import woowacourse.shopping.data.respository.product.ProductRepository
+import woowacourse.shopping.data.respository.product.ProductRepositoryImp
 
 class ProductListPresenter(
     private val view: ProductContract.View,

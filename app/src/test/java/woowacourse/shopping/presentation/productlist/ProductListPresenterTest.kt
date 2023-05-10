@@ -8,9 +8,9 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.ProductRepository
 import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.model.ProductEntity
+import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.view.productlist.ProductContract
 import woowacourse.shopping.presentation.view.productlist.ProductListPresenter
