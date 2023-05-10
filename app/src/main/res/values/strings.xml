@@ -4,4 +4,5 @@
     <string name="product_price">%d원</string>
     <string name="exit">exit</string>
     <string name="product_list_read_more_text">더보기</string>
+    <string name="recent_product_text">최근 본 상품</string>
 </resources>

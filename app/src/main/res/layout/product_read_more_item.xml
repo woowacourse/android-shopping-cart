@@ -4,14 +4,17 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:minWidth="50dp"
-        android:layout_height="46dp">
+        android:layout_height="46dp"
+        android:background="@drawable/layout_border_radius"
+        android:layout_margin="20dp">
 
         <TextView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textSize="16sp"
+            android:textColor="#333333"
             android:text="@string/product_list_read_more_text"
-            android:background="#50909090"
             android:gravity="center" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
