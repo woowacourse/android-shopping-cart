@@ -17,6 +17,7 @@ class MainPresenter(
             product.toPresentation().toItemModel { position ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))
                 view.showProductDetailScreenByProduct(position)
+                loadRecent()
             }
         }
         view.addProducts(products)
@@ -30,6 +31,7 @@ class MainPresenter(
         val nextProducts = productRepository.getNextProducts(lastProductId).map { product ->
             product.toPresentation().toItemModel { position ->
                 view.showProductDetailScreenByProduct(position)
+                loadRecent()
             }
         }
         view.addProducts(nextProducts)
@@ -40,6 +42,7 @@ class MainPresenter(
             it.toPresentation().toItemModel { position ->
                 addRecentProduct(it)
                 view.showProductDetailScreenByRecent(position)
+                loadRecent()
             }
         }
         view.updateRecent(recent)
