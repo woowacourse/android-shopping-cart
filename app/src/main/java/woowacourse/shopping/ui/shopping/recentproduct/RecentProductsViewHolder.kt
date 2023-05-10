@@ -2,21 +2,17 @@ package woowacourse.shopping.ui.shopping.recentproduct
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductsBinding
-import woowacourse.shopping.ui.model.UiProduct
 
 class RecentProductsViewHolder(
-    binding: ItemRecentProductsBinding,
-    onItemClick: (UiProduct) -> Unit
+    private val binding: ItemRecentProductsBinding,
+    recentProductAdapter: RecentProductAdapter
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val adapter: RecentProductAdapter
-
     init {
-        adapter = RecentProductAdapter(onItemClick)
-        binding.rvRecentProduct.adapter = adapter
+        binding.rvRecentProduct.adapter = recentProductAdapter
     }
 
-    fun updateRecentProducts(recentProducts: List<UiProduct>) {
-        adapter.submitList(recentProducts)
+    fun bind(visibility: Boolean) {
+        binding.isVisible = visibility
     }
 }

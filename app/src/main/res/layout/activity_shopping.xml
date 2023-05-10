@@ -43,7 +43,7 @@
             android:id="@+id/rv_shopping"
             tools:listitem="@layout/item_shopping"
             tools:itemCount="10"
-            android:paddingHorizontal="20dp"
+
             app:spanCount="2"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintTop_toBottomOf="@+id/tb_shopping"

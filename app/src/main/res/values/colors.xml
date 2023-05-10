@@ -12,4 +12,6 @@
     <color name="woowa_text_black">#333333</color>
     <color name="woowa_light_gray">#AAAAAA</color>
     <color name="woowa_button">#04C09E</color>
+    <color name="woowa_divider">#EBEBEB</color>
+
 </resources>
