@@ -31,9 +31,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun setUpShoppingView(products: List<ProductUiModel>) {
-        binding.productRecyclerView.layoutManager = GridLayoutManager(this, 2)
+        binding.productRecyclerView.layoutManager = GridLayoutManager(this, 2).apply {
+            spanSizeLookup = ShoppingRecyclerSpanSizeManager()
+        }
         binding.productRecyclerView.adapter = ShoppingRecyclerAdapter(
             products = products,
+            recentViewedProducts = products,
             onProductClicked = ::navigateToProductDetailView
         )
     }

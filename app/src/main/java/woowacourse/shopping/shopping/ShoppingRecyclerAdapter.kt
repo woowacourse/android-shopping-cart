@@ -6,17 +6,42 @@ import woowacourse.shopping.productdetail.ProductUiModel
 
 class ShoppingRecyclerAdapter(
     private val products: List<ProductUiModel>,
+    private val recentViewedProducts: List<ProductUiModel>,
     private val onProductClicked: (ProductUiModel) -> Unit,
-) : RecyclerView.Adapter<ShoppingItemViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingItemViewHolder {
-
-        return ShoppingItemViewHolder.from(parent)
+    override fun getItemViewType(position: Int): Int {
+        return ShoppingRecyclerItemViewType.valueOf(position).ordinal
     }
 
-    override fun onBindViewHolder(holder: ShoppingItemViewHolder, position: Int) {
-        holder.bind(products[position], onProductClicked)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            ShoppingRecyclerItemViewType.RECENT_VIEWED.ordinal ->
+                RecentViewedLayoutViewHolder.from(parent)
+
+            ShoppingRecyclerItemViewType.PRODUCT.ordinal ->
+                ShoppingItemViewHolder.from(parent)
+
+            else -> throw IllegalArgumentException(VIEW_TYPE_ERROR)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            ShoppingRecyclerItemViewType.RECENT_VIEWED.ordinal ->
+                (holder as RecentViewedLayoutViewHolder).bind(recentViewedProducts)
+
+            ShoppingRecyclerItemViewType.PRODUCT.ordinal ->
+                (holder as ShoppingItemViewHolder).bind(
+                    productUiModel = products[position],
+                    onClicked = onProductClicked
+                )
+        }
     }
 
     override fun getItemCount(): Int = products.size
+
+    companion object {
+        private const val VIEW_TYPE_ERROR = "해당 타입의 뷰홀더는 생성할 수 없습니다."
+    }
 }
