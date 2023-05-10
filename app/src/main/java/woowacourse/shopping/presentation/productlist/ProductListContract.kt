@@ -11,8 +11,8 @@ interface ProductListContract {
     }
 
     interface View {
-        fun initProducts(products: List<ProductModel>)
-        fun initRecentProducts(products: List<ProductModel>)
-        fun updateRecentProducts(products: List<ProductModel>)
+        fun initProductModels(productModels: List<ProductModel>)
+        fun initRecentProductModels(productModels: List<ProductModel>)
+        fun setRecentProductModels(productModels: List<ProductModel>)
     }
 }

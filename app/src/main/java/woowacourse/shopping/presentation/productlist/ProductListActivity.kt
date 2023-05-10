@@ -47,16 +47,16 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         presenter.updateRecentProducts()
     }
 
-    override fun updateRecentProducts(products: List<ProductModel>) {
-        recentProductAdapter.setItems(products)
+    override fun setRecentProductModels(productModels: List<ProductModel>) {
+        recentProductAdapter.setItems(productModels)
     }
 
-    override fun initProducts(products: List<ProductModel>) {
-        binding.recyclerProduct.adapter = ProductListAdapter(products, ::productClick)
+    override fun initProductModels(productModels: List<ProductModel>) {
+        binding.recyclerProduct.adapter = ProductListAdapter(productModels, ::productClick)
     }
 
-    override fun initRecentProducts(products: List<ProductModel>) {
-        recentProductAdapter = RecentProductAdapter(products, ::productClick)
+    override fun initRecentProductModels(productModels: List<ProductModel>) {
+        recentProductAdapter = RecentProductAdapter(productModels, ::productClick)
         binding.recyclerRecentProduct.adapter = recentProductAdapter
     }
 

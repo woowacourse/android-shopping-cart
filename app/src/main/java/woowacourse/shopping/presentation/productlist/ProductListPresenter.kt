@@ -14,17 +14,17 @@ class ProductListPresenter(
 
     override fun initProducts() {
         val productModels = productsToPresentation(productRepository.products)
-        view.initProducts(productModels)
+        view.initProductModels(productModels)
     }
 
     override fun initRecentProducts() {
         val recentProductModels = getRecentProductModels()
-        view.initRecentProducts(recentProductModels)
+        view.initRecentProductModels(recentProductModels)
     }
 
     override fun updateRecentProducts() {
         val recentProductModels = getRecentProductModels()
-        view.updateRecentProducts(recentProductModels)
+        view.setRecentProductModels(recentProductModels)
     }
 
     override fun saveRecentProductId(productId: Int) {
