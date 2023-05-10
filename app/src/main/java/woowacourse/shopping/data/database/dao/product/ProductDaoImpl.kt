@@ -30,7 +30,6 @@ class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
     // 데이터 최초 초기화용 (테스트용 로직)
     fun add(product: DataProduct) {
         val contentValues = ContentValues().apply {
-            // put(BaseColumns._ID, product.id)
             put(ProductContract.COLUMN_NAME, product.name)
             put(ProductContract.COLUMN_PRICE, product.price.value)
             put(ProductContract.COLUMN_IMAGE_URL, product.imageUrl)
