@@ -13,7 +13,7 @@ class RecentProductsTest {
 
         // when
         val actualRecentProducts = recentProducts.getRecentProducts(9)
-        val actual = actualRecentProducts.recentProducts.size
+        val actual = actualRecentProducts.value.size
 
         // then
         val expected = 9

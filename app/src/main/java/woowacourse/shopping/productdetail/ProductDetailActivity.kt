@@ -1,8 +1,9 @@
-package woowacourse.shopping
+package woowacourse.shopping.productdetail
 
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 
 class ProductDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

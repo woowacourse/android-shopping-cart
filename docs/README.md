@@ -1,30 +1,41 @@
 # 쇼핑 장바구니 기능 목록
 
-- [ ] MVP
-    - [ ] Shopping
-        - [ ] ProductList (RecyclerView)
-        - [ ] RecentProductList (RecyclerView)
-        - [ ] init { }
-            - [ ] view.updateProductList(products)
-            - [ ] view.updateRecentProductList(recentProducts)
-        - [ ] openProduct(product)
-            - [ ] RecentProduct.add()
-            - [ ] view.showProductDetail()
-        - [ ] openCart()
-            - [ ] view.showCart()
-    - [ ] ProductDetail
-        - [ ] init { }
-            - [ ] view.updateProductDetail(product)
-        - [ ] addToCart(product)
-            - [ ] Cart.add(product)
-            - [ ] view.showCart()
-    - [ ] Cart
-        - [ ] ProductList (RecyclerView)
-        - [ ] init { }
-            - [ ] view.updateCart(cart)
-        - [ ] removeProduct()
-            - [ ] Cart.remove() (domain)
-            - [ ] view.updateCart(cart)
+- [x] MVP
+    - [x] Shopping
+        - [x] ProductList (RecyclerView)
+        - [x] RecentProductList (RecyclerView)
+        - [x] init { }
+            - [x] productDao.select()
+            - [x] recentProductDao.select()
+            - [x] view.updateProductList(products)
+            - [x] view.updateRecentProductList(recentProducts)
+        - [x] resumeView()
+            - [x] view.updateProductList(products)
+            - [x] view.updateRecentProductList(recentProducts)
+        - [x] openProduct(product)
+            - [x] RecentProducts.add()
+            - [x] view.showProductDetail()
+        - [x] openCart()
+            - [x] view.showCart()
+    - [x] ProductDetail
+        - [x] init { }
+            - [x] view.updateProductDetail(product)
+        - [x] addToCart(product)
+            - [x] cartState.load()
+            - [x] Cart.add(product)
+            - [x] cartDao.insert(product)
+            - [x] view.showCart()
+    - [x] Cart
+        - [x] ProductList (RecyclerView)
+        - [x] init { }
+            - [x] cartDao.select()
+            - [x] view.updateCart(cart)
+        - [x] resumeView()
+          - [x] cartState.load()
+          - [x] view.updateCart(cart)
+        - [x] removeProduct()
+            - [x] Cart.remove() (domain)
+            - [x] view.updateCart(cart)
 - [x] SQLite
     - [x] RecentProduct
         - [x] ordinal (Primary Key, Int)

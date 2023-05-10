@@ -1,11 +1,20 @@
 package woowacourse.shopping.domain
 
-data class RecentProducts(val recentProducts: List<RecentProduct>) {
+data class RecentProducts(val value: List<RecentProduct> = emptyList()) {
     fun add(recentProduct: RecentProduct): RecentProducts {
-        return RecentProducts(recentProducts + recentProduct)
+        return RecentProducts(value + recentProduct)
+    }
+
+    fun makeRecentProduct(product: Product): RecentProduct {
+        val ordinal = getCurrentOrdinal()
+        return RecentProduct(ordinal, product)
+    }
+
+    private fun getCurrentOrdinal(): Int {
+        return if (value.isEmpty()) 0 else value.last().ordinal + 1
     }
 
     fun getRecentProducts(size: Int): RecentProducts {
-        return RecentProducts(recentProducts.take(size))
+        return RecentProducts(value.take(size))
     }
 }
