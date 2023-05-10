@@ -1,16 +1,18 @@
 package woowacourse.shopping.shopping.contract
 
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.shopping.ProductsItemType
 
 interface ShoppingContract {
     interface View {
-        var presenter: Presenter
-        fun initProductsRecyclerView(data: List<ProductUIModel>)
-        fun onItemClick(data: ProductUIModel)
+        fun setProducts(data: List<ProductsItemType>)
+        fun navigateToProductDetail(data: ProductsItemType)
+
+        fun addProducts(data: List<ProductsItemType>)
     }
 
     interface Presenter {
-        fun initProductsRecyclerView()
-        fun onItemClick(data: ProductUIModel)
+        fun setUpProducts()
+        fun fetchMoreProducts()
+        fun navigateToItemDetail(data: ProductsItemType)
     }
 }

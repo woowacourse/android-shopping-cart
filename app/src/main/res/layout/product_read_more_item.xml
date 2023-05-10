@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:minWidth="50dp"
+        android:layout_height="46dp">
+
+        <TextView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/product_list_read_more_text"
+            android:background="#50909090"
+            android:gravity="center" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
