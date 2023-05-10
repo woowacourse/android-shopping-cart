@@ -5,57 +5,58 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.model.ProductUiModel" />
+            name="presenter"
+            type="woowacourse.shopping.feature.detail.DetailContract.Presenter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".feature.detail.DetailActivity">
 
         <ImageView
             android:id="@+id/product_img"
+            imgUrl="@{presenter.product}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:contentDescription="@string/product_image_description"
+            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/start_guideline"
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             app:layout_constraintGuide_begin="18dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/end_guideline"
-            android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             app:layout_constraintGuide_end="18dp" />
 
         <TextView
             android:id="@+id/product_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{presenter.product.name}"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
-            android:layout_marginTop="16dp"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:text="@{product.name}"
-            app:layout_constraintTop_toBottomOf="@id/product_img"
-            app:layout_constraintStart_toEndOf="@id/start_guideline"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
+            app:layout_constraintStart_toEndOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@id/product_img"
             tools:text="상품 이름" />
 
         <com.google.android.material.divider.MaterialDivider
@@ -63,8 +64,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_title" />
 
         <TextView
@@ -72,37 +73,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/price"
-            android:textSize="20sp"
             android:textColor="@color/black"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            app:layout_constraintStart_toEndOf="@id/start_guideline" />
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/black"
             android:gravity="end"
-            android:text="@{@string/price_format(product.toPriceFormat())}"
+            android:text="@{@string/price_format(presenter.product.toPriceFormat())}"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
-            app:layout_constraintTop_toBottomOf="@id/divider"
             app:layout_constraintStart_toEndOf="@id/product_price_title"
+            app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="10,000원" />
 
-        <Button
+        <TextView
             android:id="@+id/add_cart_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/mint"
+            android:onClick="@{()->presenter.addCart()}"
             android:text="@string/add_cart"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:padding="0dp"
             android:textSize="20sp"
-            android:backgroundTint="@color/mint"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="12dp"
+            android:textColor="@color/white"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
