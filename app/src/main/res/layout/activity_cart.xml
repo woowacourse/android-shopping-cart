@@ -5,16 +5,15 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.main.MainActivity">
+        tools:context=".feature.cart.CartActivity">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/product_rv"
+            android:id="@+id/cart_product_rv"
+            android:padding="@dimen/margin_large"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
-            android:orientation="vertical"
-            tools:listitem="@layout/item_product" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_cart_product" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
