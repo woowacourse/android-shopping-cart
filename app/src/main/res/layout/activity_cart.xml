@@ -14,11 +14,11 @@
             android:layout_height="0dp"
             android:clipToPadding="false"
             android:padding="18dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/item_cart_product"
-            app:layout_constraintBottom_toTopOf="@id/page_count_text_view"
             android:layout_marginBottom="50dp"
-            />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/page_count_text_view"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_cart_product" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/previous_page_btn"
@@ -27,6 +27,7 @@
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:padding="12dp"
+            android:background="@drawable/selector_arrow_button"
             android:src="@drawable/ic_arrow_back_ios_new_24"
             app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
             app:layout_constraintEnd_toStartOf="@id/page_count_text_view"
@@ -43,12 +44,10 @@
             android:insetBottom="0dp"
             android:padding="12dp"
             android:textSize="22sp"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/next_page_btn"
             app:layout_constraintStart_toEndOf="@id/previous_page_btn"
-            tools:text="0"
-            />
+            tools:text="0" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/next_page_btn"
@@ -57,6 +56,7 @@
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:padding="12dp"
+            android:background="@drawable/selector_arrow_button"
             android:src="@drawable/ic_arrow_forward_ios_24"
             app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
             app:layout_constraintEnd_toEndOf="parent"
