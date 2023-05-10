@@ -7,7 +7,7 @@ object MockData {
         return (1..5).map { index ->
             Product(
                 id = index.toLong(),
-                imageUrl = "",
+                imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvcCPDO5TRkS6bHmemx0262nWeXizH3fD8fJPsLHc2GxDqKCqMWeOYFK3HOJu5VKpaAH0&usqp=CAU",
                 name = "Product $index",
                 price = 10000,
             )
