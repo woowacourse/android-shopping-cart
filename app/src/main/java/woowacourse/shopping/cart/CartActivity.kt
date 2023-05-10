@@ -12,6 +12,7 @@ import woowacourse.shopping.cart.contract.CartContract
 import woowacourse.shopping.cart.contract.presenter.CartPresenter
 import woowacourse.shopping.data.CartFakeRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
 
@@ -41,7 +42,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return true
     }
 
-    override fun setCarts(products: List<CartItem>) {
+    override fun setCarts(products: List<CartItem>, cartUIModel: CartUIModel) {
         binding.cartRecyclerview.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
             this
         )
@@ -53,7 +54,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         )
         binding.cartRecyclerview.adapter = ConcatAdapter(
             cartAdapter,
-            CartNavigationAdapter(presenter::pageUp, presenter::pageDown)
+            CartNavigationAdapter(cartUIModel, presenter::pageUp, presenter::pageDown)
         )
     }
 

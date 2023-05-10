@@ -6,11 +6,10 @@ import woowacourse.shopping.cart.viewHolder.CartViewHolder
 import woowacourse.shopping.model.ProductUIModel
 
 class CartAdapter(
-    cartItemTypes: List<CartItem>,
+    private val cartItems: List<CartItem>,
     private val onItemClick: (ProductUIModel) -> Unit,
     private val onItemRemove: (Int) -> Unit
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private var cartItems: MutableList<CartItem> = cartItemTypes.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return CartViewHolder.from(parent, onItemClick, onItemRemove)

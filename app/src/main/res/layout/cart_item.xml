@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
@@ -14,6 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="324dp"
         android:layout_height="153dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/layout_border_radius">
 
         <TextView
@@ -22,22 +23,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
             android:layout_marginTop="10dp"
+            android:text="@{product.name}"
             android:textColor="#333333"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{product.name}"
             tools:text="TITLE" />
 
         <ImageView
+            imgResId="@{product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="13dp"
-            tools:src="@color/black"
-            imgResId="@{product.imageUrl}"
             app:layout_constraintStart_toStartOf="@+id/product_title"
-            app:layout_constraintTop_toBottomOf="@+id/product_title" />
+            app:layout_constraintTop_toBottomOf="@+id/product_title"
+            tools:ignore="ContentDescription"
+            tools:src="@color/black" />
 
         <ImageView
             android:id="@+id/remove_button"
@@ -47,17 +49,18 @@
             android:layout_marginEnd="22dp"
             android:src="@drawable/ic_cart_close_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#333333"
             android:layout_marginEnd="13dp"
             android:layout_marginBottom="18dp"
+            android:text="@{@string/product_price(product.price)}"
+            android:textColor="#333333"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="@{@string/product_price(product.price)}"
             tools:text="99000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
