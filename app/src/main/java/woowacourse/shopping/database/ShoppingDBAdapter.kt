@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.database.product.MockProduct
 import woowacourse.shopping.database.product.ProductDBContract
 import woowacourse.shopping.database.product.ShoppingDao
+import woowacourse.shopping.database.recentviewed.RecentViewedDBContract
 import woowacourse.shopping.database.shoppingcart.ShoppingCartDBContract
 import woowacourse.shopping.productdetail.ProductUiModel
 
@@ -33,6 +34,14 @@ class ShoppingDBAdapter(
         null, null, null, null, null
     )
 
+    private val recentViewedCursor = shoppingDB.query(
+        RecentViewedDBContract.TABLE_NAME,
+        arrayOf(
+            RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID
+        ),
+        null, null, null, null, null
+    )
+
     private fun addProduct(product: ProductUiModel) {
         val values = ContentValues().apply {
             put(ProductDBContract.PRODUCT_ID, product.id)
@@ -44,7 +53,7 @@ class ShoppingDBAdapter(
         shoppingDB.insert(ProductDBContract.TABLE_NAME, null, values)
     }
 
-    override fun loadProducts(): List<ProductUiModel> {
+    override fun selectProducts(): List<ProductUiModel> {
         val products = mutableListOf<ProductUiModel>()
         while (productCursor.moveToNext()) {
             products.add(productCursor.getProduct())
@@ -52,13 +61,13 @@ class ShoppingDBAdapter(
         return products
     }
 
-    override fun loadShoppingCartProducts(): List<ProductUiModel> {
+    override fun selectShoppingCartProducts(): List<ProductUiModel> {
         val shoppingCartProducts = mutableListOf<ProductUiModel>()
 
         with(shoppingCartCursor) {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
-                val product = findProductById(id)
+                val product = selectProductById(id)
 
                 shoppingCartProducts.add(product)
             }
@@ -67,7 +76,7 @@ class ShoppingDBAdapter(
         return shoppingCartProducts.toList()
     }
 
-    fun Cursor.getProduct(): ProductUiModel {
+    private fun Cursor.getProduct(): ProductUiModel {
         val id = getInt(getColumnIndexOrThrow(ProductDBContract.PRODUCT_ID))
         val img = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_IMG))
         val name = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_NAME))
@@ -75,7 +84,7 @@ class ShoppingDBAdapter(
         return ProductUiModel(id, name, img, price)
     }
 
-    override fun findProductById(id: Int): ProductUiModel {
+    override fun selectProductById(id: Int): ProductUiModel {
         val cursor = shoppingDB.rawQuery(
             "select * from ${ProductDBContract.TABLE_NAME} where ${ProductDBContract.PRODUCT_ID} = ?",
             arrayOf(id.toString())
@@ -89,7 +98,7 @@ class ShoppingDBAdapter(
         return product
     }
 
-    override fun addToShoppingCart(id: Int) {
+    override fun insertToShoppingCart(id: Int) {
         val values = ContentValues().apply {
             put(ShoppingCartDBContract.CART_PRODUCT_ID, id)
         }
@@ -103,6 +112,29 @@ class ShoppingDBAdapter(
             "${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
             arrayOf(id.toString())
         )
+    }
+
+    override fun insertToRecentViewedProducts(id: Int) {
+        val values = ContentValues().apply {
+            put(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID, id)
+        }
+
+        shoppingDB.insert(RecentViewedDBContract.TABLE_NAME, null, values)
+    }
+
+    override fun selectRecentViewedProducts(): List<ProductUiModel> {
+        val recentViewedProducts = mutableListOf<ProductUiModel>()
+
+        with(recentViewedCursor) {
+            while (moveToNext()) {
+                val id = getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
+                val product = selectProductById(id)
+
+                recentViewedProducts.add(product)
+            }
+        }
+
+        return recentViewedProducts.toList()
     }
 
     /**

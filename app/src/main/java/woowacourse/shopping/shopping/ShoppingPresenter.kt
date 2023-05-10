@@ -8,8 +8,13 @@ class ShoppingPresenter(
 ) : ShoppingContract.Presenter {
 
     override fun loadProducts() {
-        val products = repository.loadProducts()
+        val products = repository.selectProducts()
+        val recentViewedProducts = repository.selectRecentViewedProducts()
 
-        view.setUpShoppingView(products)
+        view.setUpShoppingView(products = products, recentViewedProducts = recentViewedProducts)
+    }
+
+    override fun addToRecentViewedProduct(id: Int) {
+        repository.insertToRecentViewedProducts(id)
     }
 }

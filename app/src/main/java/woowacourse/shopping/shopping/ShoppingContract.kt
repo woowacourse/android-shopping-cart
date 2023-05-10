@@ -6,11 +6,13 @@ interface ShoppingContract {
 
     interface View {
 
-        fun setUpShoppingView(products: List<ProductUiModel>)
+        fun setUpShoppingView(products: List<ProductUiModel>, recentViewedProducts: List<ProductUiModel>)
     }
 
     interface Presenter {
 
         fun loadProducts()
+
+        fun addToRecentViewedProduct(id: Int)
     }
 }

@@ -30,7 +30,7 @@ class ProductDetailPresenterTest {
     fun `장바구니에 추가하면 저장소에 상품정보를 저장하고 장바구니 화면으로 넘어간다`() {
         // given
         val slot = slot<Int>()
-        every { repository.addToShoppingCart(capture(slot)) } just Runs
+        every { repository.insertToShoppingCart(capture(slot)) } just Runs
         every { view.navigateToShoppingCartView() } just Runs
 
         // when
@@ -40,6 +40,6 @@ class ProductDetailPresenterTest {
         val actual = slot.captured
         val expected = ProductUiModel(1)
         assertEquals(expected.id, actual)
-        verify { repository.addToShoppingCart(actual) }
+        verify { repository.insertToShoppingCart(actual) }
     }
 }

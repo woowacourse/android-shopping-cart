@@ -8,7 +8,7 @@ class ShoppingCartPresenter(
 ) : ShoppingCartContract.Presenter {
 
     override fun loadShoppingCartProducts() {
-        val products = repository.loadShoppingCartProducts()
+        val products = repository.selectShoppingCartProducts()
         view.setUpShoppingCartView(products, ::removeShoppingCartProduct)
     }
 

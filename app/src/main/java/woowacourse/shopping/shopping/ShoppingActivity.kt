@@ -30,13 +30,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter.loadProducts()
     }
 
-    override fun setUpShoppingView(products: List<ProductUiModel>) {
+    override fun setUpShoppingView(
+        products: List<ProductUiModel>,
+        recentViewedProducts: List<ProductUiModel>
+    ) {
         binding.productRecyclerView.layoutManager = GridLayoutManager(this, 2).apply {
             spanSizeLookup = ShoppingRecyclerSpanSizeManager()
         }
         binding.productRecyclerView.adapter = ShoppingRecyclerAdapter(
             products = products,
-            recentViewedProducts = products,
+            recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView
         )
     }
@@ -44,5 +47,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun navigateToProductDetailView(product: ProductUiModel) {
         val intent = ProductDetailActivity.getIntent(this, product)
         startActivity(intent)
+        presenter.addToRecentViewedProduct(product.id)
     }
 }

@@ -9,7 +9,7 @@ class ProductDetailPresenter(
 ) : ProductDetailContract.Presenter {
 
     override fun addToShoppingCart() {
-        repository.addToShoppingCart(product.id)
+        repository.insertToShoppingCart(product.id)
         view.navigateToShoppingCartView()
     }
 }

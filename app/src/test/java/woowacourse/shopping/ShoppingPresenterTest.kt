@@ -23,7 +23,7 @@ class ShoppingPresenterTest {
     @Before
     fun setUp() {
         view = mockk()
-        repository = mockk()
+        repository = mockk(relaxed = true)
         presenter = ShoppingPresenter(view, repository)
     }
 
@@ -31,8 +31,8 @@ class ShoppingPresenterTest {
     fun `저장소로부터 상품 목록을 받아와서 뷰를 초기화한다`() {
         // given
         val slot = slot<List<ProductUiModel>>()
-        every { view.setUpShoppingView(capture(slot)) } just Runs
-        every { repository.loadProducts() } returns listOf(
+        every { view.setUpShoppingView(capture(slot), any()) } just Runs
+        every { repository.selectProducts() } returns listOf(
             ProductUiModel(name = "아메리카노"),
             ProductUiModel(name = "카페라떼")
         )
@@ -47,6 +47,29 @@ class ShoppingPresenterTest {
             ProductUiModel(name = "카페라떼")
         )
         assertEquals(actual, expected)
-        verify { view.setUpShoppingView(actual) }
+        verify { view.setUpShoppingView(actual, any()) }
+    }
+
+    @Test
+    fun `저장소로부터 최근 본 상품을 받아와서 뷰를 초기화한다`() {
+        // given
+        val slot = slot<List<ProductUiModel>>()
+        every { view.setUpShoppingView(any(), capture(slot)) } just Runs
+        every { repository.selectRecentViewedProducts() } returns listOf(
+            ProductUiModel(name = "아메리카노"),
+            ProductUiModel(name = "카페라떼")
+        )
+
+        // when
+        presenter.loadProducts()
+
+        // then
+        val actual = slot.captured
+        val expected = listOf(
+            ProductUiModel(name = "아메리카노"),
+            ProductUiModel(name = "카페라떼")
+        )
+        assertEquals(actual, expected)
+        verify { view.setUpShoppingView(any(), actual) }
     }
 }

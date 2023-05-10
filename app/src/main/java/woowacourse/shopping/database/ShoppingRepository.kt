@@ -4,13 +4,17 @@ import woowacourse.shopping.productdetail.ProductUiModel
 
 interface ShoppingRepository {
 
-    fun loadProducts(): List<ProductUiModel>
+    fun selectProducts(): List<ProductUiModel>
 
-    fun loadShoppingCartProducts(): List<ProductUiModel>
+    fun selectShoppingCartProducts(): List<ProductUiModel>
 
-    fun findProductById(id: Int): ProductUiModel
+    fun selectProductById(id: Int): ProductUiModel
 
-    fun addToShoppingCart(id: Int)
+    fun insertToShoppingCart(id: Int)
 
     fun deleteFromShoppingCart(id: Int)
+
+    fun insertToRecentViewedProducts(id: Int)
+
+    fun selectRecentViewedProducts(): List<ProductUiModel>
 }

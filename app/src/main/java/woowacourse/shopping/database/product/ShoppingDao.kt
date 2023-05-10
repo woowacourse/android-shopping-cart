@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import woowacourse.shopping.database.DBContract
+import woowacourse.shopping.database.recentviewed.RecentViewedDBContract
 import woowacourse.shopping.database.shoppingcart.ShoppingCartDBContract
 
 class ShoppingDao(
@@ -22,6 +23,12 @@ class ShoppingDao(
         db?.execSQL(
             "CREATE TABLE ${ShoppingCartDBContract.TABLE_NAME}(" +
                 "${ShoppingCartDBContract.CART_PRODUCT_ID} int" +
+                ");"
+        )
+
+        db?.execSQL(
+            "CREATE TABLE ${RecentViewedDBContract.TABLE_NAME}(" +
+                "${RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID} int" +
                 ");"
         )
     }
