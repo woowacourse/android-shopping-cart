@@ -1,6 +1,8 @@
 package woowacourse.shopping.domain.repository
 
+import woowacourse.shopping.domain.Product
+
 interface RecentProductRepository {
     fun add()
-    fun getAll()
+    fun getAll(): List<Product>
 }
