@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDbRepository
+import woowacourse.shopping.data.RecentViewedDbRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.PriceFormatter
@@ -25,7 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        presenter = ProductDetailPresenter(this, CartDbRepository(this))
+        presenter = ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
         val product = intent.getParcelableCompat<ProductModel>(PRODUCT)
         if (product == null) {
             Toast.makeText(this, NOT_EXIST_DATA_ERROR, Toast.LENGTH_LONG).show()
@@ -36,6 +37,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.presenter = presenter
         Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
         binding.textPrice.text = getString(R.string.korean_won, PriceFormatter.format(product.price))
+
+        presenter.updateRecentViewedProducts(product.id)
     }
 
     override fun startCartActivity() {

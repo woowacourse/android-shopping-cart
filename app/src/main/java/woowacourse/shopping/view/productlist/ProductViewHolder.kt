@@ -14,8 +14,8 @@ import woowacourse.shopping.view.productlist.recentviewed.RecentViewedAdapter
 
 sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class RecentViewedViewHolder(private val binding: ItemRecentViewedBinding) : ProductViewHolder(binding.root) {
-        fun bind(recentViewedProducts: List<ProductModel>?, onItemClick: ProductListAdapter.OnItemClick) {
-            binding.recyclerRecentViewed.adapter = RecentViewedAdapter(recentViewedProducts ?: emptyList(), onItemClick)
+        fun bind(recentViewedProducts: List<ProductModel>, onItemClick: ProductListAdapter.OnItemClick) {
+            binding.recyclerRecentViewed.adapter = RecentViewedAdapter(recentViewedProducts, onItemClick)
         }
     }
 

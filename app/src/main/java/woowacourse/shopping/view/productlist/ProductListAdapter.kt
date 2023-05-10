@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.ProductModel
 
 class ProductListAdapter(
-    private val recentViewedProducts: List<ProductModel>?,
+    private val recentViewedProducts: List<ProductModel>,
     private val products: List<ProductModel>,
     private val onItemClick: OnItemClick,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
@@ -39,5 +39,5 @@ class ProductListAdapter(
         }
     }
 
-    private fun isRecentViewedExist(): Boolean = recentViewedProducts != null
+    private fun isRecentViewedExist(): Boolean = recentViewedProducts.isNotEmpty()
 }

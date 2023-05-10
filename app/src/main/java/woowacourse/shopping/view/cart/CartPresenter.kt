@@ -12,4 +12,8 @@ class CartPresenter(
         val cartProducts = cartRepository.findAll().map { ProductMockRepository.find(it.id) }
         view.showProducts(cartProducts.map { it.toUiModel() })
     }
+
+    fun removeProduct(id: Int) {
+        cartRepository.remove(id)
+    }
 }

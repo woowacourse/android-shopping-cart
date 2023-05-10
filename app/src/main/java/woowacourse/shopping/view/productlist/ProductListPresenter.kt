@@ -7,10 +7,12 @@ import woowacourse.shopping.model.toUiModel
 class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductRepository,
-    private val recentViewedRepository: RecentViewedRepository
+    private val recentViewedRepository: RecentViewedRepository,
 ) : ProductListContract.Presenter {
     override fun fetchProducts() {
-        val products = productRepository.findAll()
-        view.showProducts(recentViewedRepository.findAll().map { productRepository.find(it).toUiModel() }, products.map { it.toUiModel() })
+        val productsUiModel = productRepository.findAll().map { it.toUiModel() }
+        val viewedProducts = recentViewedRepository.findAll()
+        val viewedProductsUiModel = viewedProducts.map { productRepository.find(it).toUiModel() }.reversed()
+        view.showProducts(viewedProductsUiModel, productsUiModel)
     }
 }

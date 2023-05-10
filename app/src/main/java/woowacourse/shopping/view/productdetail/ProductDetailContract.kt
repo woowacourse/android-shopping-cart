@@ -9,5 +9,6 @@ interface ProductDetailContract {
 
     interface Presenter {
         fun putInCart(product: ProductModel)
+        fun updateRecentViewedProducts(id: Int)
     }
 }

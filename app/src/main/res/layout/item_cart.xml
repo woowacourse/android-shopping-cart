@@ -7,6 +7,9 @@
         <variable
             name="cart_product"
             type="woowacourse.shopping.model.ProductModel" />
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.view.cart.CartPresenter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,6 +60,7 @@
             android:layout_height="26dp"
             android:background="@drawable/ic_close"
             android:backgroundTint="@color/gray"
+            android:onClick="@{()->presenter.removeProduct(cart_product.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
