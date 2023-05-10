@@ -9,8 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
@@ -24,8 +25,15 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 
-    override fun showProducts(products: List<Product>) {
-        binding.gridProducts.adapter = ProductListAdapter(products)
+    override fun showProducts(products: List<ProductModel>) {
+        binding.gridProducts.adapter = ProductListAdapter(products) {
+            onClick(it)
+        }
+    }
+
+    private fun onClick(product: ProductModel) {
+        val intent = ProductDetailActivity.newIntent(binding.root.context, product)
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

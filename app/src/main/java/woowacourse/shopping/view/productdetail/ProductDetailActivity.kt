@@ -1,11 +1,15 @@
 package woowacourse.shopping.view.productdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.util.getParcelableCompat
@@ -28,12 +32,21 @@ class ProductDetailActivity : AppCompatActivity() {
         Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
         binding.textPrice.text = getString(R.string.korean_won, PriceFormatter.format(product.price))
         binding.btnPutInCart.setOnClickListener {
-            CartActivity.newIntent(this)
+            val cartRepository: CartRepository = CartDbRepository(this)
+            cartRepository.add(product.id, 1)
+            val intent = CartActivity.newIntent(this)
+            startActivity(intent)
         }
     }
 
     companion object {
         const val PRODUCT = "PRODUCT"
         private const val NOT_EXIST_DATA_ERROR = "데이터가 넘어오지 않았습니다."
+
+        fun newIntent(context: Context, product: ProductModel): Intent {
+            val intent = Intent(context, ProductDetailActivity::class.java)
+            intent.putExtra(PRODUCT, product)
+            return intent
+        }
     }
 }

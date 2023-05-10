@@ -5,14 +5,19 @@
     <data>
         <variable
             name="product"
-            type="woowacourse.shopping.domain.Product" />
+            type="woowacourse.shopping.model.ProductModel" />
+        <variable
+            name="onItemClick"
+            type="woowacourse.shopping.view.productlist.ProductListAdapter.OnItemClick" />
     </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="6dp"
-    android:paddingVertical="10dp">
+    android:paddingVertical="10dp"
+    android:onClick="@{() -> onItemClick.onClick(product)}"
+    android:background="?attr/selectableItemBackground">
     <ImageView
         android:id="@+id/img_product"
         android:layout_width="0dp"

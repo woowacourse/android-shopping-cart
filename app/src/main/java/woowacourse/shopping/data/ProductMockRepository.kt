@@ -50,4 +50,8 @@ object ProductMockRepository : ProductRepository {
     override fun findAll(): List<Product> {
         return products
     }
+
+    override fun find(id: Int): Product {
+        return products[id]
+    }
 }
