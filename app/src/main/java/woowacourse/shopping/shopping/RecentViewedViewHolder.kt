@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemRecentViewedProductBinding
-import woowacourse.shopping.productdetail.ProductUiModel
+import woowacourse.shopping.model.ProductUiModel
 
 class RecentViewedViewHolder(
     private val binding: ItemRecentViewedProductBinding

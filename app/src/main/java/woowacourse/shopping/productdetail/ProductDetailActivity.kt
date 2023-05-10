@@ -11,6 +11,7 @@ import woowacourse.shopping.database.ShoppingDBAdapter
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
+import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {

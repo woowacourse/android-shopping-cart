@@ -1,6 +1,6 @@
 package woowacourse.shopping.shoppingcart
 
-import woowacourse.shopping.productdetail.ProductUiModel
+import woowacourse.shopping.model.ProductUiModel
 
 interface ShoppingCartContract {
 

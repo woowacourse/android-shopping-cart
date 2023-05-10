@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemShoppingProductBinding
-import woowacourse.shopping.productdetail.ProductUiModel
+import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingItemViewHolder(
     private val binding: ItemShoppingProductBinding

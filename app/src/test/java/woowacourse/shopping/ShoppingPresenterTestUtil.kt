@@ -1,6 +1,6 @@
 package woowacourse.shopping
 
-import woowacourse.shopping.productdetail.ProductUiModel
+import woowacourse.shopping.model.ProductUiModel
 
 fun ProductUiModel(id: Int = 0, name: String = "밀크티"): ProductUiModel = ProductUiModel(
     id = id,

@@ -7,7 +7,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.ShoppingDBAdapter
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.productdetail.ProductUiModel
+import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 

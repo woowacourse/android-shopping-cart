@@ -8,8 +8,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.ShoppingDBAdapter
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
-import woowacourse.shopping.productdetail.ProductUiModel
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 

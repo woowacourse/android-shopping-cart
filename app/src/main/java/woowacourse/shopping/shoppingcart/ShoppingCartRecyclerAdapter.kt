@@ -3,7 +3,7 @@ package woowacourse.shopping.shoppingcart
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.productdetail.ProductUiModel
+import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingCartRecyclerAdapter(
     products: List<ProductUiModel>,

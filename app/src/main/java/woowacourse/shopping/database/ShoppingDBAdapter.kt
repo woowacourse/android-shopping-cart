@@ -8,7 +8,7 @@ import woowacourse.shopping.database.product.ProductDBContract
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.database.recentviewed.RecentViewedDBContract
 import woowacourse.shopping.database.shoppingcart.ShoppingCartDBContract
-import woowacourse.shopping.productdetail.ProductUiModel
+import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingDBAdapter(
     shoppingDao: ShoppingDao,
