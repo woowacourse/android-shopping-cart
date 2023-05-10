@@ -3,14 +3,25 @@ package woowacourse.shopping.view.cart
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityCartBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_cart)
+        binding = ActivityCartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Cart"
+
+        // ID Product로 변환 과정 필요
+        val cartProducts = ProductMockRepository.findAll()
+        binding.recyclerCart.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerCart.setHasFixedSize(true)
+        binding.recyclerCart.adapter = CartAdapter(cartProducts)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
