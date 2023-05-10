@@ -15,16 +15,23 @@
         android:layout_height="match_parent"
         tools:context=".productdetail.ProductDetailActivity">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/detail_toolbar" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/toolbar_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/exit_menu"
+            app:titleTextColor="@color/white" />
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="360dp"
             app:imgResId="@{product.imageUrl}"
-            app:layout_constraintTop_toBottomOf="@+id/include" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <TextView
             android:id="@+id/textView"
