@@ -4,9 +4,19 @@ import com.example.domain.model.Product
 import woowacourse.shopping.model.ProductUIModel
 
 fun Product.toUIModel(): ProductUIModel {
-    return ProductUIModel(this.id, this.name, this.price, this.imageUrl)
+    return ProductUIModel(
+        id = this.id,
+        name = this.name,
+        price = this.price,
+        imageUrl = this.imageUrl
+    )
 }
 
 fun ProductUIModel.toDomain(): Product {
-    return Product(this.id, this.name, this.price, this.imageUrl)
+    return Product(
+        id = this.id,
+        name = this.name,
+        price = this.price,
+        imageUrl = this.imageUrl
+    )
 }
