@@ -12,46 +12,45 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginVertical="10dp">
 
         <ImageView
             android:id="@+id/iv_product"
             android:layout_width="155dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="1"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tv_product_name"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:src="@mipmap/ic_launcher_round" />
 
         <TextView
             android:id="@+id/tv_product_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/iv_product"
-            app:layout_constraintBottom_toTopOf="@id/tv_product_price"
-            app:layout_constraintStart_toStartOf="@id/iv_product"
-            app:layout_constraintEnd_toEndOf="@id/iv_product"
             android:layout_marginTop="10dp"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:text="@{product.name}"
-            android:maxLines="1"
             android:ellipsize="end"
-            tools:text="Product Name Product Name Product Name Product Name"/>
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_product_price"
+            app:layout_constraintEnd_toEndOf="@id/iv_product"
+            app:layout_constraintStart_toStartOf="@id/iv_product"
+            app:layout_constraintTop_toBottomOf="@id/iv_product"
+            tools:text="Product Name Product Name Product Name Product Name" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/iv_product"
-            app:layout_constraintEnd_toEndOf="@id/iv_product"
             android:textSize="16sp"
-            tools:text="10000 won"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_product"
+            app:layout_constraintStart_toStartOf="@id/iv_product"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_name"
+            tools:text="10000 won" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
