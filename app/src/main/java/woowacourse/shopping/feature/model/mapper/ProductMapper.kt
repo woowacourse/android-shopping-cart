@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.mapper
+package woowacourse.shopping.feature.model.mapper
 
 import com.example.domain.Product
 import woowacourse.shopping.feature.list.item.ProductListItem
@@ -6,6 +6,10 @@ import woowacourse.shopping.feature.model.ProductState
 
 fun ProductState.toItem(): ProductListItem {
     return ProductListItem(id, imageUrl, name, price)
+}
+
+fun ProductState.toDomain(): Product {
+    return Product(id, imageUrl, name, price)
 }
 
 fun ProductListItem.toUi(): ProductState {

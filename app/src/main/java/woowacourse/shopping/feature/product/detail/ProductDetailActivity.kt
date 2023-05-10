@@ -6,10 +6,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartDbHandler
+import woowacourse.shopping.data.CartDbHelper
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.model.ProductState
+import woowacourse.shopping.feature.model.mapper.toDomain
 import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -18,6 +21,9 @@ class ProductDetailActivity : AppCompatActivity() {
         get() = _binding!!
 
     private val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
+    private val dbHandler: CartDbHandler by lazy {
+        CartDbHandler(CartDbHelper(this).writableDatabase)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +44,12 @@ class ProductDetailActivity : AppCompatActivity() {
                 .into(binding.productImage)
 
             binding.productPrice.text = "${DecimalFormat("#,###").format(product.price)}원"
-        }
 
-        binding.navigateCartTv.setOnClickListener { CartActivity.startActivity(this) }
+            binding.navigateCartTv.setOnClickListener {
+                dbHandler.addColumn(product.toDomain())
+                CartActivity.startActivity(this)
+            }
+        }
     }
 
     override fun onDestroy() {

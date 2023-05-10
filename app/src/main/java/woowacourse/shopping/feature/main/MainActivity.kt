@@ -6,8 +6,8 @@ import com.example.domain.Product
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
 import woowacourse.shopping.feature.list.item.ProductListItem
-import woowacourse.shopping.feature.mapper.toItem
-import woowacourse.shopping.feature.mapper.toUi
+import woowacourse.shopping.feature.model.mapper.toItem
+import woowacourse.shopping.feature.model.mapper.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 
 class MainActivity : AppCompatActivity(), MainContract.View {

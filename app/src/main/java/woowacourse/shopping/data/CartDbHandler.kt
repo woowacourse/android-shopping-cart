@@ -1,6 +1,7 @@
 package woowacourse.shopping.data
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.example.domain.CartProduct
 import com.example.domain.Product
@@ -8,6 +9,42 @@ import com.example.domain.Product
 class CartDbHandler(
     private val db: SQLiteDatabase
 ) {
+
+    fun getCursor(): Cursor {
+        return db.query(
+            CartContract.TABLE_NAME,
+            arrayOf(
+                CartContract.TABLE_COLUMN_PRODUCT_ID,
+                CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL,
+                CartContract.TABLE_COLUMN_PRODUCT_NAME,
+                CartContract.TABLE_COLUMN_PRODUCT_PRICE
+            ),
+            "", arrayOf(), null, null, ""
+        )
+    }
+
+    fun getCartProducts(): List<CartProduct> {
+        val cursor = getCursor()
+        val list = mutableListOf<CartProduct>()
+
+        with(cursor) {
+            while (moveToNext()) {
+                val productId = getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_ID))
+                val productImageUrl = getString(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
+                val productName = getString(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_NAME))
+                val productPrice = getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_PRICE))
+
+                list.add(
+                    CartProduct(
+                        productId, productImageUrl, productName, productPrice
+                    )
+                )
+            }
+        }
+
+        cursor.close()
+        return list
+    }
 
     fun addColumn(product: Product) {
         val values = ContentValues().apply {
