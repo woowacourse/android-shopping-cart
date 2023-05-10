@@ -11,6 +11,7 @@ import woowacourse.shopping.data.RecentProductRepositoryImpl
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.detail.DetailActivity
+import woowacourse.shopping.feature.main.load.LoadAdapter
 import woowacourse.shopping.feature.main.product.MainProductAdapter
 import woowacourse.shopping.feature.main.product.MainProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentAdapter
@@ -23,12 +24,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var mainProductAdapter: MainProductAdapter
     private lateinit var recentAdapter: RecentAdapter
     private lateinit var recentWrapperAdapter: RecentWrapperAdapter
+    private lateinit var loadAdapter: LoadAdapter
 
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
             setIsolateViewTypes(false)
         }.build()
-        ConcatAdapter(config, recentWrapperAdapter, mainProductAdapter)
+        ConcatAdapter(config, recentWrapperAdapter, mainProductAdapter, loadAdapter)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +54,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         mainProductAdapter = MainProductAdapter(listOf())
         recentAdapter = RecentAdapter(listOf())
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
+        loadAdapter = LoadAdapter {
+            presenter.loadMoreProduct(mainProductAdapter.items.lastOrNull()?.product?.id ?: 0)
+        }
     }
 
     private fun initLayoutManager() {
@@ -61,6 +66,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                 return when (concatAdapter.getItemViewType(position)) {
                     RecentWrapperAdapter.VIEW_TYPE -> 2
                     MainProductAdapter.VIEW_TYPE -> 1
+                    LoadAdapter.VIEW_TYPE -> 2
                     else -> 2
                 }
             }

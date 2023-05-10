@@ -17,13 +17,13 @@ class ProductMockRepository : ProductRepository {
     override fun getNextProducts(lastProductId: Long): List<Product> {
         val toIndex = (lastProductId + LOAD_SIZE).toInt()
         return if (lastProductId + LOAD_SIZE > productsDatasource.size) {
-            productsDatasource.subList((lastProductId + 1).toInt(), productsDatasource.size)
+            productsDatasource.subList((lastProductId).toInt(), productsDatasource.size)
         } else {
-            productsDatasource.subList((lastProductId + 1).toInt(), toIndex)
+            productsDatasource.subList((lastProductId).toInt(), toIndex)
         }
     }
 
     companion object {
-        private const val LOAD_SIZE = 20
+        private const val LOAD_SIZE = 10
     }
 }

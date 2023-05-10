@@ -30,6 +30,7 @@ class MainPresenter(
     override fun loadMoreProduct(lastProductId: Long) {
         val nextProducts = productRepository.getNextProducts(lastProductId).map { product ->
             product.toPresentation().toItemModel { position ->
+                addRecentProduct(RecentProduct(product, LocalDateTime.now()))
                 view.showProductDetailScreenByProduct(position)
                 loadRecent()
             }
