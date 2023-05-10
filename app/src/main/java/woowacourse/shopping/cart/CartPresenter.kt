@@ -14,7 +14,7 @@ class CartPresenter(
     private val cartDao: CartDao
 ) : CartContract.Presenter {
     init {
-        // cart = cartDao.select
+        cart = cartDao.selectAll()
         view.updateCart(cart.cartProducts.map { it.toView() })
     }
 

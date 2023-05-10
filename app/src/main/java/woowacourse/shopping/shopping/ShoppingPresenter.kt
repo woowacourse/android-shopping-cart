@@ -16,7 +16,7 @@ class ShoppingPresenter(
     private val view: ShoppingContract.View,
     private var products: Products = Products(emptyList()),
     private var productsState: State<Products> = ProductsState,
-    private val productDao: ProductDao,
+    productDao: ProductDao,
     private var recentProducts: RecentProducts,
     private var recentProductsState: State<RecentProducts> = RecentProductsState,
     private val recentProductDao: RecentProductDao,
@@ -24,8 +24,8 @@ class ShoppingPresenter(
 ) : ShoppingContract.Presenter {
 
     init {
-        // products = productDao.select()
-        // recentProducts = recentProductDao.select
+        products = productDao.selectAll()
+        recentProducts = recentProductDao.selectAll()
         view.updateProductList(products.value.map { it.toView() })
         view.updateRecentProductList(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }

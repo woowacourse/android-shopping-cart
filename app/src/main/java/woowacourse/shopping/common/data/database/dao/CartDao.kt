@@ -6,6 +6,10 @@ import woowacourse.shopping.common.data.database.selectRowId
 import woowacourse.shopping.common.data.database.table.SqlCart
 import woowacourse.shopping.common.data.database.table.SqlProduct
 import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.URL
 
 class CartDao(private val db: SQLiteDatabase) {
     fun insertCartProduct(cartProductModel: CartProductModel) {
@@ -20,6 +24,31 @@ class CartDao(private val db: SQLiteDatabase) {
             row.put(SqlCart.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
             it.insert(SqlCart.name, null, row)
         }
+    }
+
+    fun selectAll(): Cart {
+        val cursor = db.use {
+            it.rawQuery(
+                "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
+                null
+            )
+        }
+        return Cart(
+            cursor.use {
+                val cart = mutableListOf<CartProduct>()
+                while (it.moveToNext()) cart.add(
+                    CartProduct(
+                        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)),
+                        Product(
+                            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+                            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
+                            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
+                        )
+                    )
+                )
+                cart
+            }
+        )
     }
 
     fun deleteCartProductByOrdinal(ordinal: Int) {
