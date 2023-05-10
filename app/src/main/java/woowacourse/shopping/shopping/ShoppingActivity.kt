@@ -3,8 +3,8 @@ package woowacourse.shopping.shopping
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
@@ -15,12 +15,23 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.shopping.recyclerview.ProductAdapter
+import woowacourse.shopping.shopping.recyclerview.RecentProductAdapter
+import woowacourse.shopping.shopping.recyclerview.RecentProductWrapperAdapter
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
+    private val concatAdapter: ConcatAdapter by lazy {
+        val config = ConcatAdapter.Config.Builder().apply {
+            setIsolateViewTypes(false)
+        }.build()
+        ConcatAdapter(
+            config, RecentProductWrapperAdapter(recentProductAdapter), productAdapter
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +40,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
         setSupportActionBar(findViewById(R.id.shopping_toolbar))
 
-        initProductAdapter()
         initRecentProductAdapter()
+        initProductAdapter()
 
         initPresenter()
     }
@@ -52,11 +63,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun updateRecentProductList(recentProductModels: List<RecentProductModel>) {
-        println(recentProductModels.size)
-        binding.shoppingRecentProductLayout.visibility =
-            if (recentProductModels.isEmpty()) View.GONE
-            else View.VISIBLE
-
         recentProductAdapter.updateRecentProducts(recentProductModels)
     }
 
@@ -74,44 +80,35 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initPresenter() {
-        deleteDatabase(ShoppingDBOpenHelper.DB_NAME)
         val db = ShoppingDBOpenHelper(this).writableDatabase
-        val productDao = ProductDao(db)
-        repeat(10) {
-            productDao.insertProduct(createProductMock())
-        }
-
-        val recentProductDao = RecentProductDao(db)
-        repeat(10) {
-            recentProductDao.insertRecentProduct(createRecentProductMock())
-        }
         presenter = ShoppingPresenter(
             this,
-            productDao = productDao,
-            recentProductDao = recentProductDao,
+            productDao = ProductDao(db),
+            recentProductDao = RecentProductDao(db),
             recentProductSize = 10
         )
     }
 
-    fun createProductMock() = ProductModel(
-        "https://blog.kakaocdn.net/dn/bmaMSZ/btqHq1wiJXa/tkGODWI7E0pvCf8NnA8Kp1/img.png",
-        "asdfasdfasdfasdfasdfasdf",
-        100000
-    )
-
-    var ordinal = 1
-
-    fun createRecentProductMock() = RecentProductModel(
-        ordinal++,
-        createProductMock()
-    )
     private fun initProductAdapter() {
-        productAdapter = ProductAdapter(
-            emptyList(),
-            onProductItemClick = { startProductDetailActivity(it) }
-        )
-        binding.shoppingProductList.layoutManager = GridLayoutManager(this, 2)
-        binding.shoppingProductList.adapter = productAdapter
+        productAdapter =
+            ProductAdapter(emptyList(), onProductItemClick = { startProductDetailActivity(it) })
+
+        binding.shoppingProductList.layoutManager = makeLayoutManager()
+        binding.shoppingProductList.adapter = concatAdapter
+    }
+
+    private fun makeLayoutManager(): GridLayoutManager {
+        return GridLayoutManager(this, 2).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (concatAdapter.getItemViewType(position)) {
+                        ProductAdapter.VIEW_TYPE -> 1
+                        RecentProductWrapperAdapter.VIEW_TYPE -> 2
+                        else -> 2
+                    }
+                }
+            }
+        }
     }
 
     private fun startProductDetailActivity(productModel: ProductModel) {
@@ -121,6 +118,5 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initRecentProductAdapter() {
         recentProductAdapter = RecentProductAdapter(emptyList())
-        binding.shoppingRecentProductList.adapter = recentProductAdapter
     }
 }

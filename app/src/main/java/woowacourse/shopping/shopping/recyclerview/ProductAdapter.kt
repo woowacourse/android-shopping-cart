@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,22 +9,30 @@ import woowacourse.shopping.databinding.ItemProductListBinding
 class ProductAdapter(
     private var products: List<ProductModel>,
     private val onProductItemClick: (ProductModel) -> Unit,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<ProductViewHolder>() {
     private val onProductItemViewClick: (Int) -> Unit = { onProductItemClick(products[it]) }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
+        println(1)
         val binding = ItemProductListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ProductViewHolder(binding, onProductItemViewClick)
     }
 
     override fun getItemCount(): Int = products.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ProductViewHolder).bind(products[position])
+    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+        println(2)
+        holder.bind(products[position])
     }
 
     fun updateProducts(products: List<ProductModel>) {
         this.products = products
         notifyDataSetChanged()
+    }
+
+    override fun getItemViewType(position: Int): Int = VIEW_TYPE
+
+    companion object {
+        const val VIEW_TYPE = 0
     }
 }

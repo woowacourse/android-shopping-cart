@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.recyclerview
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide

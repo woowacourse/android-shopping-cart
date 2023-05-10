@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,8 +8,8 @@ import woowacourse.shopping.databinding.ItemRecentProductListBinding
 
 class RecentProductAdapter(
     private var recentProducts: List<RecentProductModel>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+) : RecyclerView.Adapter<RecentProductViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
         val binding =
             ItemRecentProductListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecentProductViewHolder(binding)
@@ -17,12 +17,18 @@ class RecentProductAdapter(
 
     override fun getItemCount(): Int = recentProducts.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as RecentProductViewHolder).bind(recentProducts[position])
+    override fun onBindViewHolder(holder: RecentProductViewHolder, position: Int) {
+        holder.bind(recentProducts[position])
     }
 
     fun updateRecentProducts(recentProducts: List<RecentProductModel>) {
         this.recentProducts = recentProducts
         notifyDataSetChanged()
+    }
+
+    override fun getItemViewType(position: Int): Int = VIEW_TYPE
+
+    companion object {
+        const val VIEW_TYPE = 2
     }
 }

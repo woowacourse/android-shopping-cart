@@ -19,54 +19,12 @@
             app:menu="@menu/toolbar_shopping"
             app:titleTextColor="@color/white" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/shopping_recent_product_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/shopping_toolbar"
-            android:paddingTop="20dp">
-
-            <TextView
-                android:id="@+id/shopping_recent_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:text="@string/shopping_recent_text"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/shopping_recent_product_list"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/shopping_recent_text" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="7dp"
-                android:layout_marginTop="40dp"
-                android:background="#EBEBEB"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/shopping_recent_product_list" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/shopping_product_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:paddingHorizontal="14dp"
-            app:layout_constraintTop_toBottomOf="@id/shopping_recent_product_layout"
+            app:layout_constraintTop_toBottomOf="@id/shopping_toolbar"
             app:layout_constraintBottom_toBottomOf="parent"
             android:paddingVertical="10dp" />
 
