@@ -13,8 +13,10 @@ class CartPresenter(
     }
 
     override fun deleteCartItem(position: Int) {
-        cartRepository.deleteCartByProductId(carts[position].product.id)
-        carts.removeAt(position)
-        view.updateToDeleteCartItemView(position)
+        if (position >= 0) {
+            cartRepository.deleteCartByProductId(carts[position].product.id)
+            carts.removeAt(position)
+            view.updateToDeleteCartItemView(position)
+        }
     }
 }
