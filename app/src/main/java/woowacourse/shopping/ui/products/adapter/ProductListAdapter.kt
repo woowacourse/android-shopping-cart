@@ -42,14 +42,14 @@ class ProductListAdapter(
         fun bind(product: ProductUIState) {
             binding.product = product
             binding.tvProductPrice.text = itemView.context.getString(R.string.product_price)
-                .format(PRICE_FORMATTER.format(product.price))
+                .format(PRICE_FORMAT.format(product.price))
             Glide.with(itemView)
                 .load(product.imageUrl)
                 .into(binding.ivProduct)
         }
 
         companion object {
-            private val PRICE_FORMATTER = DecimalFormat("#,###")
+            private val PRICE_FORMAT = DecimalFormat("#,###")
         }
     }
 }

@@ -48,11 +48,22 @@ class CartRepositoryImpl(
     }
 
     override fun save(product: Product) {
+        val cursor =
+            db.rawQuery(
+                "Select * from ${ProductContract.CartEntry.TABLE_NAME} WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = ${product.id}",
+                null,
+            )
+        if (cursor.count > 0) {
+            cursor.close()
+            return
+        }
+
         val value = ContentValues().apply {
             put(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID, product.id)
         }
 
         db.insert(ProductContract.CartEntry.TABLE_NAME, null, value)
+        cursor.close()
     }
 
     override fun deleteById(productId: Long) {
