@@ -11,21 +11,21 @@ class CartTest {
         val cart = Cart(emptyList())
 
         // when
-        val product = createProduct()
+        val product = createCartProduct()
         val actual = cart.add(product)
 
         // then
-        val expected = Cart(listOf(createProduct()))
+        val expected = Cart(listOf(createCartProduct()))
         assertEquals(expected, actual)
     }
 
     @Test
     fun 장바구니에서_상품을_삭제하면_상품이_사라진다() {
         // given
-        val cart = Cart(listOf(createProduct()))
+        val cart = Cart(listOf(createCartProduct()))
 
         // when
-        val product = createProduct()
+        val product = createCartProduct()
         val actual = cart.remove(product)
 
         // then

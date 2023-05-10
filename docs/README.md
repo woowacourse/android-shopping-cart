@@ -25,29 +25,34 @@
         - [ ] removeProduct()
             - [ ] Cart.remove() (domain)
             - [ ] view.updateCart(cart)
-- [ ] SQLite
-    - [ ] RecentProduct
-        - [ ] product_id (Int)
-    - [ ] Cart
-        - [ ] product_id (Int)
-    - [ ] Product
-        - [ ] id (Int)
-        - [ ] picture (Text)
-        - [ ] title (Text)
-        - [ ] price (Int)
+- [x] SQLite
+    - [x] RecentProduct
+        - [x] ordinal (Primary Key, Int)
+        - [x] product_id (Int)
+    - [x] Cart
+        - [x] ordinal (Primary Key, Int)
+        - [x] product_id (Int)
+    - [x] Product
+        - [x] id (Primary Key, Int)
+        - [x] picture (Text)
+        - [x] title (Text)
+        - [x] price (Int)
 - [x] Domain
     - [x] Product
         - [x] Picture (URL)
         - [x] Title
         - [x] Price
-    - [x] URL
-      - [x] String
-      - [ ] isValid()
     - [x] Cart
-        - [x] List<Product>
-        - [x] add()
-        - [x] remove()
+        - [x] List<CartProduct>
+        - [x] add(CartProduct)
+        - [x] remove(CartProduct)
+    - [x] CartProduct
+        - [x] Ordinal
+        - [x] Product
+    - [x] RecentProducts
+        - [x] List<RecentProduct>
+        - [x] add(RecentProduct)
+        - [x] getRecentProducts(Int)
     - [x] RecentProduct
-        - [x] List<Product>
-        - [x] add()
-        - [x] private remove()
+        - [x] Ordinal
+        - [x] Product

@@ -1,11 +1,11 @@
 package woowacourse.shopping.domain
 
-data class Cart(val products: List<Product>) {
-    fun add(product: Product): Cart {
-        return Cart(products + product)
+data class Cart(val cartProducts: List<CartProduct>) {
+    fun add(cartProduct: CartProduct): Cart {
+        return Cart(cartProducts + cartProduct)
     }
 
-    fun remove(product: Product): Cart {
-        return Cart(products - product)
+    fun remove(cartProduct: CartProduct): Cart {
+        return Cart(cartProducts - cartProduct)
     }
 }
