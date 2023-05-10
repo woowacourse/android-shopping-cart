@@ -9,6 +9,10 @@ class ShoppingCartPresenter(
 
     override fun loadShoppingCartProducts() {
         val products = repository.loadShoppingCartProducts()
-        view.setUpShoppingCartView(products)
+        view.setUpShoppingCartView(products, ::removeShoppingCartProduct)
+    }
+
+    override fun removeShoppingCartProduct(id: Int) {
+        repository.deleteFromShoppingCart(id)
     }
 }

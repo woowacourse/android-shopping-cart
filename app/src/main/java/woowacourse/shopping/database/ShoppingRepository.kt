@@ -11,4 +11,6 @@ interface ShoppingRepository {
     fun findProductById(id: Int): ProductUiModel
 
     fun addToShoppingCart(id: Int)
+
+    fun deleteFromShoppingCart(id: Int)
 }

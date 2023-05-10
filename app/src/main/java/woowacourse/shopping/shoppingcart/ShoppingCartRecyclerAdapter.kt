@@ -7,7 +7,7 @@ import woowacourse.shopping.productdetail.ProductUiModel
 
 class ShoppingCartRecyclerAdapter(
     products: List<ProductUiModel>,
-//    private val onRemoveClicked: (product: ProductUiModel) -> Unit
+    private val onRemoved: (id: Int) -> Unit
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
     private val products: MutableList<ProductUiModel> = products.toMutableList()
 
@@ -26,7 +26,8 @@ class ShoppingCartRecyclerAdapter(
     override fun getItemCount(): Int = products.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun removeItem(position: Int) {
+    private fun removeItem(position: Int) {
+        onRemoved(products[position].id)
         products.removeAt(position)
         notifyDataSetChanged()
     }

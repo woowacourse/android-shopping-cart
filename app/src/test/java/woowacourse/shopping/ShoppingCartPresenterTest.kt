@@ -34,7 +34,7 @@ class ShoppingCartPresenterTest {
     fun `저장소에서 장바구니에 담긴 상품들을 받아와서 뷰를 초기화한다`() {
         // given
         val slot = slot<List<ProductUiModel>>()
-        every { view.setUpShoppingCartView(capture(slot)) } just Runs
+        every { view.setUpShoppingCartView(capture(slot), any()) } just Runs
         every { repository.loadShoppingCartProducts() } returns listOf(
             ProductUiModel(name = "아메리카노"),
             ProductUiModel(name = "밀크티"),
@@ -51,6 +51,6 @@ class ShoppingCartPresenterTest {
         )
 
         assertEquals(expected, actual)
-        verify { view.setUpShoppingCartView(actual) }
+        verify { view.setUpShoppingCartView(actual, any()) }
     }
 }

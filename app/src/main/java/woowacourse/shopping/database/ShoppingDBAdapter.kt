@@ -33,7 +33,7 @@ class ShoppingDBAdapter(
         null, null, null, null, null
     )
 
-    fun addProduct(product: ProductUiModel) {
+    private fun addProduct(product: ProductUiModel) {
         val values = ContentValues().apply {
             put(ProductDBContract.PRODUCT_ID, product.id)
             put(ProductDBContract.PRODUCT_IMG, product.imageUrl)
@@ -95,6 +95,14 @@ class ShoppingDBAdapter(
         }
 
         shoppingDB.insert(ShoppingCartDBContract.TABLE_NAME, null, values)
+    }
+
+    override fun deleteFromShoppingCart(id: Int) {
+        shoppingDB.delete(
+            ShoppingCartDBContract.TABLE_NAME,
+            "${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
+            arrayOf(id.toString())
+        )
     }
 
     /**
