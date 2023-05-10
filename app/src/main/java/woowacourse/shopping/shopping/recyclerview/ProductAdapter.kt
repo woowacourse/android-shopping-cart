@@ -13,15 +13,17 @@ class ProductAdapter(
     private val onProductItemViewClick: (Int) -> Unit = { onProductItemClick(products[it]) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        println(1)
-        val binding = ItemProductListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding, onProductItemViewClick)
+        return ProductViewHolder(
+            ItemProductListBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false
+            ),
+            onProductItemViewClick
+        )
     }
 
     override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        println(2)
         holder.bind(products[position])
     }
 

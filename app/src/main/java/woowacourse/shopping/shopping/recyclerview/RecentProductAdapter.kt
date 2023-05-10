@@ -10,9 +10,14 @@ class RecentProductAdapter(
     private var recentProducts: List<RecentProductModel>
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
-        val binding =
-            ItemRecentProductListBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return RecentProductViewHolder(binding)
+        return RecentProductViewHolder(
+            ItemRecentProductListBinding.inflate(
+                LayoutInflater.from(
+                    parent.context
+                ),
+                parent, false
+            )
+        )
     }
 
     override fun getItemCount(): Int = recentProducts.size
