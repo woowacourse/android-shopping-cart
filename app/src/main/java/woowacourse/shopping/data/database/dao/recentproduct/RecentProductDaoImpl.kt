@@ -71,8 +71,7 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
 
         private val REMOVE_LAST_QUERY = """
             DELETE FROM ${RecentProductContract.TABLE_NAME}
-            WHERE ${BaseColumns._ID} = (SELECT MAX(${BaseColumns._ID})
-            FROM ${RecentProductContract.TABLE_NAME})
+            WHERE ${BaseColumns._ID} = (SELECT MAX(${BaseColumns._ID}) FROM ${RecentProductContract.TABLE_NAME})
         """.trimIndent()
     }
 }

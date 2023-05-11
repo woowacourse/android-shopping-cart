@@ -11,9 +11,11 @@ import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.util.getParcelableExtraCompat
 import woowacourse.shopping.util.intentDataNullProcess
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
+
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var product: UiProduct
+    override lateinit var presenter: ProductDetailContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
