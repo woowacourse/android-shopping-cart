@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
+import android.util.Log
 import woowacourse.shopping.data.model.CartEntity
 
 class CartDao(context: Context) {
@@ -24,9 +25,9 @@ class CartDao(context: Context) {
         )
     }
 
-    fun getAll(): List<CartEntity> {
+    fun getItems(startPosition: Int): List<CartEntity> {
         val result = mutableListOf<CartEntity>()
-        val cursor = getCursor()
+        val cursor = getCursor(startPosition)
         with(cursor) {
             while (moveToNext()) {
                 val cartId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
@@ -40,7 +41,8 @@ class CartDao(context: Context) {
         return result.toList()
     }
 
-    private fun getCursor(): Cursor {
+    private fun getCursor(startPosition: Int): Cursor {
+        Log.d("test", "startPosi : " + startPosition.toString())
         return db.query(
             CartContract.Cart.TABLE_NAME,
             null,
@@ -48,7 +50,8 @@ class CartDao(context: Context) {
             null,
             null,
             null,
-            null
+            null,
+            "$startPosition,3"
         )
     }
 
