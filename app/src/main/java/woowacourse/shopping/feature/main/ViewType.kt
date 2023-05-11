@@ -2,11 +2,13 @@ package woowacourse.shopping.feature.main
 
 enum class ViewType() {
     HORIZONTAL,
-    PRODUCT;
+    PRODUCT,
+    ADD;
 
     companion object {
         fun getType(position: Int): ViewType {
             if (position == 0) return HORIZONTAL
+            if ((position + 1) % 20 == 0) return ADD
             return PRODUCT
         }
 

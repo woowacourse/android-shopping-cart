@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
     }
 
-    lateinit var productListadapter: ProductListAdapter
+    lateinit var productListAdapter: ProductListAdapter
     lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +42,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         presenter = MainPresenter(this, productDbHandler, recentProductDbHandler)
-
         initAdapter()
     }
 
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     private fun initAdapter() {
         // todo 최근 상품이 앱 재시작해야 반영되는 문제 수정 필요 (최근 상품 어댑터의 아이템 업데이트 호출 필요)
-        productListadapter = ProductListAdapter(
+        productListAdapter = ProductListAdapter(
             onItemClick = { listItem ->
                 when (listItem) {
                     is ProductListItem -> {
@@ -65,13 +65,18 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                         ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
                     }
                 }
+            },
+            onMoreItemClick = {
+                presenter.addProducts()
             }
         )
-        binding.productRv.adapter = productListadapter
+        binding.productRv.adapter = productListAdapter
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup = object : SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (productListadapter.getItemViewType(position) == ViewType.HORIZONTAL.ordinal) {
+                return if (productListAdapter.getItemViewType(position) == ViewType.HORIZONTAL.ordinal ||
+                    productListAdapter.getItemViewType(position) == ViewType.ADD.ordinal
+                ) {
                     gridLayoutManager.spanCount
                 } else 1
             }
@@ -79,8 +84,15 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding.productRv.layoutManager = gridLayoutManager
     }
 
+    override fun addProducts(products: List<Product>) {
+        Log.d("otter", products.toString())
+        productListAdapter.addItems(
+            products.map { it.toUi().toItem() }
+        )
+    }
+
     override fun setProducts(products: List<Product>, recentProducts: RecentProducts) {
-        productListadapter.setItems(
+        productListAdapter.setItems(
             products.map { it.toUi().toItem() },
             recentProducts.products.map { it.toUi().toItem() }
         )

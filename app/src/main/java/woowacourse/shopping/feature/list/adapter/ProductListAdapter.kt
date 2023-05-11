@@ -3,10 +3,12 @@ package woowacourse.shopping.feature.list.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.databinding.ItemMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductListBinding
 import woowacourse.shopping.feature.list.item.ListItem
 import woowacourse.shopping.feature.list.viewholder.ItemHolder
+import woowacourse.shopping.feature.list.viewholder.ProductMoreViewHolder
 import woowacourse.shopping.feature.list.viewholder.ProductViewHolder
 import woowacourse.shopping.feature.list.viewholder.RecentListItemViewHolder
 import woowacourse.shopping.feature.main.ViewType
@@ -14,7 +16,8 @@ import woowacourse.shopping.feature.main.ViewType
 class ProductListAdapter(
     private var items: List<ListItem> = listOf(),
     private var recentItems: List<ListItem> = listOf(),
-    private val onItemClick: (ListItem) -> Unit
+    private val onItemClick: (ListItem) -> Unit,
+    private val onMoreItemClick: (ListItem) -> Unit,
 ) : RecyclerView.Adapter<ItemHolder>() {
 
     override fun getItemCount(): Int {
@@ -28,6 +31,9 @@ class ProductListAdapter(
             }
             ViewType.PRODUCT -> {
                 ViewType.PRODUCT.ordinal
+            }
+            ViewType.ADD -> {
+                ViewType.ADD.ordinal
             }
         }
     }
@@ -44,11 +50,31 @@ class ProductListAdapter(
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
                 ProductViewHolder(binding)
             }
+            ViewType.ADD -> {
+                val binding = ItemMoreBinding.inflate(inflater, parent, false)
+                ProductMoreViewHolder(binding)
+            }
         }
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        holder.bind(items[position], onItemClick)
+        when (holder) {
+            is ProductMoreViewHolder -> {
+                holder.bind(items[position], onMoreItemClick)
+            }
+            else -> {
+                holder.bind(items[position], onItemClick)
+            }
+        }
+    }
+
+    fun addItems(newItems: List<ListItem>) {
+        val items = this.items.toMutableList()
+        newItems.forEach {
+            items.add(it)
+        }
+        this.items = items.toList()
+        notifyItemRangeChanged(items.size, newItems.size)
     }
 
     fun setItems(items: List<ListItem>, recentItems: List<ListItem>) {
