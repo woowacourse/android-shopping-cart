@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.productlist.product
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.databinding.ItemMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductContainerBinding
 import woowacourse.shopping.presentation.model.ProductModel
@@ -11,18 +12,24 @@ import woowacourse.shopping.presentation.productlist.recentproduct.RecentProduct
 
 class ProductListAdapter(
     products: List<ProductModel>,
+    private val showMoreProductItem: () -> Unit,
     private val showProductDetail: (ProductModel) -> Unit,
     private val recentProductAdapter: RecentProductAdapter,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var itemProductBinding: ItemProductBinding
-    private lateinit var containerBinding: ItemRecentProductContainerBinding
+    private lateinit var inflater: LayoutInflater
+
     private val _products = products.toMutableList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (!::inflater.isInitialized) {
+            inflater = LayoutInflater.from(parent.context)
+        }
+
         return when (ProductListViewType.find(viewType)) {
             ProductListViewType.RECENT_PRODUCT -> {
-                containerBinding = ItemRecentProductContainerBinding.inflate(
-                    LayoutInflater.from(parent.context),
+                val containerBinding = ItemRecentProductContainerBinding.inflate(
+                    inflater,
                     parent,
                     false,
                 )
@@ -34,29 +41,38 @@ class ProductListAdapter(
             }
             ProductListViewType.PRODUCT -> {
                 itemProductBinding = ItemProductBinding.inflate(
-                    LayoutInflater.from(parent.context),
+                    inflater,
                     parent,
                     false,
                 )
 
                 ProductItemViewHolder(itemProductBinding, showProductDetail)
             }
+            ProductListViewType.MORE_ITEM -> {
+                val itemMoreBinding = ItemMoreBinding.inflate(
+                    inflater,
+                    parent,
+                    false,
+                )
+                MoreItemViewHolder(itemMoreBinding, showMoreProductItem)
+            }
         }
     }
 
-    override fun getItemCount(): Int = _products.size
+    override fun getItemCount(): Int = _products.size + ADDITIONAL_VIEW_COUNT
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is ProductItemViewHolder) {
-            holder.bind(_products[position])
+            holder.bind(_products[position - 1])
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (position == RECENT_PRODUCT_VIEW_POSITION) {
-            return ProductListViewType.RECENT_PRODUCT.number
+        return when (position) {
+            RECENT_PRODUCT_VIEW_POSITION -> ProductListViewType.RECENT_PRODUCT.number
+            _products.size + 1 -> ProductListViewType.MORE_ITEM.number
+            else -> ProductListViewType.PRODUCT.number
         }
-        return ProductListViewType.PRODUCT.number
     }
 
     fun setItems(products: List<ProductModel>) {
@@ -67,5 +83,6 @@ class ProductListAdapter(
 
     companion object {
         const val RECENT_PRODUCT_VIEW_POSITION = 0
+        private const val ADDITIONAL_VIEW_COUNT = 2
     }
 }

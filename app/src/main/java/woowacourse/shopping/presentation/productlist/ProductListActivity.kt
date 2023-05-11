@@ -15,12 +15,12 @@ import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.productlist.product.ProductListAdapter
-import woowacourse.shopping.presentation.productlist.product.ProductListAdapter.Companion.RECENT_PRODUCT_VIEW_POSITION
 import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductAdapter
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
 
+    private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
 
     private val recentProductRepository: RecentProductIdRepository by lazy {
@@ -41,9 +41,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initRecyclerView() {
-        setLayoutManager()
         presenter.initRecentProducts()
         presenter.initProducts()
+        setLayoutManager()
     }
 
     override fun onStart() {
@@ -51,20 +51,27 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         presenter.updateRecentProducts()
     }
 
-    override fun setRecentProductModels(productModels: List<ProductModel>) {
-        recentProductAdapter.setItems(productModels)
+    override fun initProductModels(productModels: List<ProductModel>) {
+        productListAdapter = ProductListAdapter(
+            products = productModels,
+            showMoreProductItem = presenter::updateProducts,
+            showProductDetail = ::productClick,
+            recentProductAdapter = recentProductAdapter,
+        )
+
+        binding.recyclerProduct.adapter = productListAdapter
     }
 
-    override fun initProductModels(productModels: List<ProductModel>) {
-        binding.recyclerProduct.adapter = ProductListAdapter(
-            productModels,
-            ::productClick,
-            recentProductAdapter,
-        )
+    override fun setProductModels(productModels: List<ProductModel>) {
+        productListAdapter.setItems(productModels)
     }
 
     override fun initRecentProductModels(productModels: List<ProductModel>) {
         recentProductAdapter = RecentProductAdapter(productModels, ::productClick)
+    }
+
+    override fun setRecentProductModels(productModels: List<ProductModel>) {
+        recentProductAdapter.setItems(productModels)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -91,18 +98,12 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun setLayoutManager() {
         val layoutManager = GridLayoutManager(this, SPAN_COUNT)
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                if (position == RECENT_PRODUCT_VIEW_POSITION) return RECENT_PRODUCT_SPAN_SIZE
-                return PRODUCT_SPAN_SIZE
-            }
+        binding.recyclerProduct.layoutManager = layoutManager.apply {
+            spanSizeLookup = GridLayoutSizeManager(productListAdapter::getItemViewType)
         }
-        binding.recyclerProduct.layoutManager = layoutManager
     }
 
     companion object {
-        private const val RECENT_PRODUCT_SPAN_SIZE = 2
-        private const val PRODUCT_SPAN_SIZE = 1
         private const val SPAN_COUNT = 2
     }
 }

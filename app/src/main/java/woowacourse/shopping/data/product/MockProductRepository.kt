@@ -9,7 +9,6 @@ object MockProductRepository : ProductRepository {
 
     private fun getProducts(size: Int): List<Product> {
         return (1..size).map {
-            val randomNumber = (1..200).random()
             Product(
                 it,
                 "https://mediahub.seoul.go.kr/uploads/2016/09/952e8925ec41cc06e6164d695d776e51.jpg",
@@ -20,4 +19,7 @@ object MockProductRepository : ProductRepository {
     }
 
     override fun findProductById(id: Int): Product? = products.find { it.id == id }
+
+    override fun getProductsWithRange(startIndex: Int, size: Int): List<Product> =
+        products.subList(startIndex, startIndex + size)
 }

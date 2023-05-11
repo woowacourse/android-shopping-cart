@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.productlist
 
 import woowacourse.shopping.Product
+import woowacourse.shopping.Products
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.presentation.mapper.toPresentation
@@ -12,9 +13,18 @@ class ProductListPresenter(
     private val recentProductIdRepository: RecentProductIdRepository,
 ) : ProductListContract.Presenter {
 
+    private val products = Products()
+
     override fun initProducts() {
-        val productModels = productsToPresentation(productRepository.products)
-        view.initProductModels(productModels)
+        val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
+        products.addProducts(receivedProducts)
+        view.initProductModels(products.toPresentation())
+    }
+
+    override fun updateProducts() {
+        val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
+        products.addProducts(receivedProducts)
+        view.setProductModels(products.toPresentation())
     }
 
     override fun initRecentProducts() {
@@ -48,7 +58,12 @@ class ProductListPresenter(
         return products.map { it.toPresentation() }
     }
 
+    private fun Products.toPresentation(): List<ProductModel> {
+        return items.map { it.toPresentation() }
+    }
+
     companion object {
+        private const val PRODUCTS_SIZE = 20
         private const val RECENT_PRODUCTS_SIZE = 10
     }
 }

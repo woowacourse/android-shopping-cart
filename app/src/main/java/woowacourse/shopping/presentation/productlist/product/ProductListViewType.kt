@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.productlist.product
 enum class ProductListViewType(val number: Int) {
     RECENT_PRODUCT(0),
     PRODUCT(1),
+    MORE_ITEM(2),
     ;
 
     companion object {
