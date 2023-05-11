@@ -75,19 +75,28 @@ class ShoppingDBAdapter(
         return products
     }
 
-    override fun selectShoppingCartProducts(): List<Product> {
+    override fun selectShoppingCartProducts(from: Int, count: Int): List<Product> {
         val shoppingCartProducts = mutableListOf<Product>()
+        val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
+            count, from
+        )
+        val cursor = shoppingDB.rawQuery(query, null)
 
-        with(shoppingCartCursor) {
-            while (moveToNext()) {
-                val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
-                val product = selectProductById(id)
-
-                shoppingCartProducts.add(product)
+        cursor?.apply {
+            if (moveToFirst()) {
+                do {
+                    shoppingCartProducts.add(cursor.getShoppingCartProductById())
+                } while (moveToNext())
             }
         }
+        cursor?.close()
 
         return shoppingCartProducts.toList()
+    }
+
+    private fun Cursor.getShoppingCartProductById(): Product {
+        val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
+        return selectProductById(id)
     }
 
     private fun Cursor.getProduct(): Product {

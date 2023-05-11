@@ -12,6 +12,8 @@ import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
+    private lateinit var shoppingCartRecyclerAdapter: ShoppingCartRecyclerAdapter
+
     private val presenter: ShoppingCartContract.Presenter by lazy {
         ShoppingCartPresenter(
             view = this,
@@ -48,8 +50,27 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun setUpShoppingCartView(
         products: List<ProductUiModel>,
-        onRemoved: (id: Int) -> Unit
+        onRemoved: (id: Int) -> Unit,
     ) {
-        binding.recyclerViewCart.adapter = ShoppingCartRecyclerAdapter(products, onRemoved)
+        shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
+            products = products,
+            onRemoved = onRemoved,
+            showingRule = ShowingShoppingCartProducts()
+        )
+
+        with(binding) {
+            recyclerViewCart.adapter = shoppingCartRecyclerAdapter
+
+            buttonNextPage.setOnClickListener {
+                presenter.readMoreShoppingCartProducts()
+            }
+            buttonPreviousPage.setOnClickListener {
+                shoppingCartRecyclerAdapter.toPreviousPage()
+            }
+        }
+    }
+
+    override fun showMoreShoppingCartProducts(products: List<ProductUiModel>) {
+        shoppingCartRecyclerAdapter.toNextPage(products)
     }
 }

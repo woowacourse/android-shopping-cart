@@ -82,7 +82,7 @@
             android:id="@+id/button_put_to_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#04C09E"
+            android:background="@color/button_color"
             android:onClick="@{()->presenter.addToShoppingCart()}"
             android:text="@string/put_to_shopping_cart"
             android:textColor="@color/white"

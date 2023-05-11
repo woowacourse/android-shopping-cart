@@ -85,7 +85,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         toAdd: ProductUiModel,
         toRemove: ProductUiModel?
     ) {
-
         shoppingRecyclerAdapter.refreshRecentViewedItems(
             toRemove = toRemove,
             toAdd = toAdd
@@ -93,7 +92,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {
-
         shoppingRecyclerAdapter.refreshShoppingItems(toAdd = toAdd)
     }
 

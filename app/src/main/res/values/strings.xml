@@ -6,4 +6,6 @@
     <string name="recent_viewed_product">최근 본 상품</string>
     <string name="price_description">금액</string>
     <string name="read_more">더보기</string>
+    <string name="previous_page"><![CDATA[<]]></string>
+    <string name="next_page"><![CDATA[>]]></string>
 </resources>
