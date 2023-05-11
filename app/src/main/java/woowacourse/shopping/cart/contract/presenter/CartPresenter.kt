@@ -43,6 +43,9 @@ class CartPresenter(
 
     override fun removeItem(id: Int) {
         repository.remove(id)
+        if (offset == repository.getAll().size) {
+            offset -= STEP
+        }
         setUpCarts()
     }
 
