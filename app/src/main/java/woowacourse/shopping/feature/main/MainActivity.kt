@@ -1,12 +1,10 @@
 package woowacourse.shopping.feature.main
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.example.domain.Product
 import com.example.domain.RecentProducts
 import woowacourse.shopping.R
@@ -18,10 +16,10 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
 import woowacourse.shopping.feature.list.item.ProductListItem
-import woowacourse.shopping.feature.model.mapper.toDomain
 import woowacourse.shopping.feature.model.mapper.toItem
 import woowacourse.shopping.feature.model.mapper.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
+import woowacourse.shopping.feature.util.SpanSizeLookUpManager
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     private var _binding: ActivityMainBinding? = null
@@ -56,12 +54,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapter() {
-        // todo 최근 상품이 앱 재시작해야 반영되는 문제 수정 필요 (최근 상품 어댑터의 아이템 업데이트 호출 필요)
         productListAdapter = ProductListAdapter(
             onItemClick = { listItem ->
                 when (listItem) {
                     is ProductListItem -> {
-                        recentProductDbHandler.addColumn(listItem.toUi().toDomain())
+                        presenter.storeRecentProduct(listItem)
                         ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
                     }
                 }
@@ -71,21 +68,17 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             }
         )
         binding.productRv.adapter = productListAdapter
+        initLayout()
+    }
+
+    private fun initLayout() {
         val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.spanSizeLookup = object : SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (productListAdapter.getItemViewType(position) == ViewType.HORIZONTAL.ordinal ||
-                    productListAdapter.getItemViewType(position) == ViewType.ADD.ordinal
-                ) {
-                    gridLayoutManager.spanCount
-                } else 1
-            }
-        }
+        gridLayoutManager.spanSizeLookup =
+            SpanSizeLookUpManager(productListAdapter, gridLayoutManager.spanCount)
         binding.productRv.layoutManager = gridLayoutManager
     }
 
     override fun addProducts(products: List<Product>) {
-        Log.d("otter", products.toString())
         productListAdapter.addItems(
             products.map { it.toUi().toItem() }
         )

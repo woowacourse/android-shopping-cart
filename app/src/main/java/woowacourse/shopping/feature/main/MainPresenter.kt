@@ -4,6 +4,9 @@ import com.example.domain.Product
 import com.example.domain.RecentProducts
 import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
+import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.model.mapper.toDomain
+import woowacourse.shopping.feature.model.mapper.toUi
 
 class MainPresenter(
     val view: MainContract.View,
@@ -31,6 +34,10 @@ class MainPresenter(
             currentItemIndex += ADD_SIZE
         }
         view.addProducts(addItems)
+    }
+
+    override fun storeRecentProduct(product: ProductListItem) {
+        recentProductDbHandler.addColumn(product.toUi().toDomain())
     }
 
     companion object {
