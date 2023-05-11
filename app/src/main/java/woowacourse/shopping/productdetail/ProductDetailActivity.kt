@@ -3,6 +3,8 @@ package woowacourse.shopping.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
@@ -32,8 +34,29 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+
         binding.presenter = presenter
+        setUpProductDetailToolbar()
         setUpProductDetailView()
+    }
+
+    private fun setUpProductDetailToolbar() {
+        setSupportActionBar(binding.toolbarProductDetail)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_close, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.item_close -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun setUpProductDetailView() {
@@ -43,7 +66,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         binding.textProductName.text = product.name
         binding.textProductPrice.text = product.price.toString()
-        binding.imageCancel.setOnClickListener { finish() }
     }
 
     override fun navigateToShoppingCartView() {
