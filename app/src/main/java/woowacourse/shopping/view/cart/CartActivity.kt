@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.data.CartDbRepository
+import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.ProductModel
 
@@ -20,28 +21,29 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Cart"
-        presenter = CartPresenter(this, CartDbRepository(this))
+        presenter = CartPresenter(this, CartDbRepository(this), ProductMockRepository)
         presenter.fetchProducts()
-
-        binding.nextPage.setOnClickListener {
-            presenter.showMoreProducts()
-        }
     }
 
     override fun showProducts(cartProducts: List<ProductModel>) {
         binding.recyclerCart.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerCart.adapter = CartAdapter(cartProducts) {
-            onRemoveClick(it)
-        }
+        binding.recyclerCart.adapter = CartAdapter(cartProducts, object: CartAdapter.OnItemClick {
+            override fun onRemoveClick(id: Int) {
+                presenter.removeProduct(id)
+            }
+
+            override fun onNextClick() {
+                presenter.fetchNextPage()
+            }
+
+            override fun onUndoClick() {
+                presenter.fetchUndoPage()
+            }
+        })
     }
 
-    override fun notifyAddProducts(position: Int, size: Int) {
-        binding.recyclerCart.adapter?.notifyItemRangeChanged(0, size)
-//        binding.recyclerCart.adapter?.notifyItemRangeInserted(position, size)
-    }
-
-    private fun onRemoveClick(id: Int) {
-        presenter.removeProduct(id)
+    override fun showOtherPage(size: Int) {
+        binding.recyclerCart.adapter?.notifyItemRangeChanged(0, size + 1)
     }
 
     override fun notifyRemoveItem(position: Int) {

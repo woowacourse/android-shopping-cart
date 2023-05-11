@@ -15,16 +15,16 @@ class ProductListAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        return ProductViewHolder.of(parent, ItemViewType.values()[viewType], onItemClick)
+        return ProductViewHolder.of(parent, ProductListViewType.values()[viewType], onItemClick)
     }
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0 && isRecentViewedExist()) {
-            ItemViewType.RECENT_VIEWED_ITEM.ordinal
+            ProductListViewType.RECENT_VIEWED_ITEM.ordinal
         } else if (position == itemCount - 1) {
-            ItemViewType.SHOW_MORE_ITEM.ordinal
+            ProductListViewType.SHOW_MORE_ITEM.ordinal
         } else {
-            ItemViewType.PRODUCT_ITEM.ordinal
+            ProductListViewType.PRODUCT_ITEM.ordinal
         }
     }
 

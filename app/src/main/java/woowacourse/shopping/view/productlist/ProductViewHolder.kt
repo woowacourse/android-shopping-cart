@@ -38,12 +38,12 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     companion object {
-        fun of(parent: ViewGroup, type: ItemViewType, onItemClick: ProductListAdapter.OnItemClick): ProductViewHolder {
+        fun of(parent: ViewGroup, type: ProductListViewType, onItemClick: ProductListAdapter.OnItemClick): ProductViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(type.id, parent, false)
             return when (type) {
-                ItemViewType.RECENT_VIEWED_ITEM -> RecentViewedViewHolder(ItemRecentViewedBinding.bind(view))
-                ItemViewType.PRODUCT_ITEM -> ProductItemViewHolder(ItemProductBinding.bind(view), onItemClick)
-                ItemViewType.SHOW_MORE_ITEM -> ShowMoreViewHolder(ItemShowMoreBinding.bind(view), onItemClick)
+                ProductListViewType.RECENT_VIEWED_ITEM -> RecentViewedViewHolder(ItemRecentViewedBinding.bind(view))
+                ProductListViewType.PRODUCT_ITEM -> ProductItemViewHolder(ItemProductBinding.bind(view), onItemClick)
+                ProductListViewType.SHOW_MORE_ITEM -> ShowMoreViewHolder(ItemShowMoreBinding.bind(view), onItemClick)
             }
         }
     }

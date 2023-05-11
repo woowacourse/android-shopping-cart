@@ -1,28 +1,38 @@
 package woowacourse.shopping.view.cart
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.model.ProductModel
 
 class CartAdapter(
     private val products: List<ProductModel>,
     private val onItemClick: OnItemClick,
-) : RecyclerView.Adapter<CartViewHolder>() {
+) : RecyclerView.Adapter<CartItemViewHolder>() {
 
-    fun interface OnItemClick {
+    interface OnItemClick {
         fun onRemoveClick(id: Int)
-    }
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false)
-        return CartViewHolder(ItemCartBinding.bind(view))
+        fun onNextClick()
+        fun onUndoClick()
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
+        return CartItemViewHolder.of(parent, CartViewType.values()[viewType], onItemClick)
+    }
 
-    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        holder.bind(products[position], onItemClick)
+    override fun getItemViewType(position: Int): Int {
+        return if (position == products.size) {
+            CartViewType.PAGINATION_ITEM.ordinal
+        } else {
+            CartViewType.CART_PRODUCT_ITEM.ordinal
+        }
+    }
+
+    override fun getItemCount(): Int = products.size + 1
+
+    override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
+        when (holder) {
+            is CartItemViewHolder.CartProductViewHolder -> holder.bind(products[position], onItemClick)
+            is CartItemViewHolder.CartPaginationViewHolder -> holder.bind(1) // TO-DO :: 수정해야함
+        }
     }
 }

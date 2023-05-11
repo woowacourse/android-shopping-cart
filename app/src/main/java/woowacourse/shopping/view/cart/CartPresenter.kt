@@ -1,19 +1,21 @@
 package woowacourse.shopping.view.cart
 
 import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository
 ) : CartContract.Presenter {
     private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
 
-    // private val cartProducts = cartRepository.findAll().map { ProductMockRepository.find(it.id) }.map { it.toUiModel() }.toMutableList()
-    private val currentCartProducts = cartPagination.nextItems().map { ProductMockRepository.find(it.id) }.map { it.toUiModel() }.toMutableList()
-    private var undoCartProducts = emptyList<ProductModel>()
+    private val currentCartProducts = convertIdToProductModel(cartPagination.nextItems()).toMutableList()
+
     override fun fetchProducts() {
         view.showProducts(currentCartProducts)
     }
@@ -25,13 +27,25 @@ class CartPresenter(
         currentCartProducts.remove(removedItem)
     }
 
-    override fun showMoreProducts() {
-        val mark = currentCartProducts.size
-        undoCartProducts = currentCartProducts.toList()
-        currentCartProducts.clear()
-        currentCartProducts.addAll(cartPagination.nextItems().map { ProductMockRepository.find(it.id) }.map { it.toUiModel() })
-        view.notifyAddProducts(mark, PAGINATION_SIZE)
+    override fun fetchNextPage() {
+        val getItems = cartPagination.nextItems()
+        if (getItems.isNotEmpty()) {
+            currentCartProducts.clear()
+            currentCartProducts.addAll(convertIdToProductModel(getItems))
+            view.showOtherPage(PAGINATION_SIZE)
+        }
     }
+
+    override fun fetchUndoPage() {
+        val getItems = cartPagination.undoItems()
+        if (getItems.isNotEmpty()) {
+            currentCartProducts.clear()
+            currentCartProducts.addAll(convertIdToProductModel(getItems))
+            view.showOtherPage(PAGINATION_SIZE)
+        }
+    }
+
+    private fun convertIdToProductModel(cartProducts: List<CartProduct>) = cartProducts.map { productRepository.find(it.id) }.map { it.toUiModel() }
 
     companion object {
         private const val PAGINATION_SIZE = 5

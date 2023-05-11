@@ -5,13 +5,14 @@ import woowacourse.shopping.model.ProductModel
 interface CartContract {
     interface View {
         fun showProducts(cartProducts: List<ProductModel>)
-        fun notifyRemoveItem(id: Int)
-        fun notifyAddProducts(position: Int, size: Int)
+        fun notifyRemoveItem(position: Int)
+        fun showOtherPage(size: Int)
     }
 
     interface Presenter {
         fun fetchProducts()
         fun removeProduct(id: Int)
-        fun showMoreProducts()
+        fun fetchNextPage()
+        fun fetchUndoPage()
     }
 }
