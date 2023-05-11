@@ -60,4 +60,22 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1
         }
         return null
     }
+
+    fun selectRange(mark: Int, rangeSize: Int): List<CartProduct> {
+        val products = mutableListOf<CartProduct>()
+        val sql = "select * from ${CartConstract.TABLE_NAME} limit $rangeSize offset $mark;"
+        val cursor = readableDatabase.rawQuery(sql, null)
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartConstract.TABLE_COLUMN_ID))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartConstract.TABLE_COLUMN_COUNT))
+            products.add(CartProduct(id, count))
+        }
+        cursor.close()
+        return products
+    }
+
+    fun getSize(mark: Int): Boolean {
+        val itemsSize = selectAll().size
+        return itemsSize > mark
+    }
 }

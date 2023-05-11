@@ -22,6 +22,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         supportActionBar?.title = "Cart"
         presenter = CartPresenter(this, CartDbRepository(this))
         presenter.fetchProducts()
+
+        binding.nextPage.setOnClickListener {
+            presenter.showMoreProducts()
+        }
     }
 
     override fun showProducts(cartProducts: List<ProductModel>) {
@@ -29,6 +33,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.recyclerCart.adapter = CartAdapter(cartProducts) {
             onRemoveClick(it)
         }
+    }
+
+    override fun notifyAddProducts(position: Int, size: Int) {
+        binding.recyclerCart.adapter?.notifyItemRangeChanged(0, size)
+//        binding.recyclerCart.adapter?.notifyItemRangeInserted(position, size)
     }
 
     private fun onRemoveClick(id: Int) {

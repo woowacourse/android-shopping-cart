@@ -9,8 +9,8 @@ class ProductListPresenter(
     private val productRepository: ProductRepository,
     recentViewedRepository: RecentViewedRepository,
 ) : ProductListContract.Presenter {
-    private val pagination = Pagination(PAGINATION_SIZE, productRepository)
-    private val products = pagination.nextItems().map { it.toUiModel() }.toMutableList()
+    private val productListPagination = ProductListPagination(PAGINATION_SIZE, productRepository)
+    private val products = productListPagination.nextItems().map { it.toUiModel() }.toMutableList()
     private val viewedProducts = recentViewedRepository.findAll()
     override fun fetchProducts() {
         val viewedProductsUiModel = viewedProducts.map { productRepository.find(it).toUiModel() }.reversed()
@@ -19,7 +19,7 @@ class ProductListPresenter(
 
     override fun showMoreProducts() {
         val mark = if (viewedProducts.isNotEmpty()) products.size + 1 else products.size
-        products.addAll(pagination.nextItems().map { it.toUiModel() })
+        products.addAll(productListPagination.nextItems().map { it.toUiModel() })
         view.notifyAddProducts(mark, PAGINATION_SIZE)
     }
 

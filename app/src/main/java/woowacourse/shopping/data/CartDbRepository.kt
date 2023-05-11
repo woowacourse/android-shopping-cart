@@ -27,4 +27,12 @@ class CartDbRepository(context: Context) : CartRepository {
     override fun remove(id: Int) {
         dbHelper.remove(id)
     }
+
+    override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
+        return dbHelper.selectRange(mark, rangeSize)
+    }
+
+    override fun isExistByMark(mark: Int): Boolean {
+        return dbHelper.getSize(mark)
+    }
 }
