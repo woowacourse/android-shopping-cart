@@ -16,13 +16,13 @@ class ShoppingPresenter(
     private val repository: ProductRepository,
     private val recentRepository: RecentRepository
 ) : ShoppingContract.Presenter {
-    private val productsData: MutableList<ProductsItemType> = mutableListOf()
-    private val recentProductsData: RecentProductsItem = RecentProductsItem(
-        recentRepository.getRecent(10).map { it.toUIModel() }
-    )
+    private var productsData: MutableList<ProductsItemType> = mutableListOf()
 
     override fun setUpProducts() {
-        productsData += recentProductsData
+        val recentProductsData = RecentProductsItem(
+            recentRepository.getRecent(10).map { it.toUIModel() }
+        )
+        productsData = mutableListOf(recentProductsData)
         productsData += repository.getAll()
             .map { product: Product -> ProductItem(product.toUIModel()) }
         view.setProducts(productsData.plus(ProductReadMore))

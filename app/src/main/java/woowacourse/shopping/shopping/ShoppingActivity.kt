@@ -28,7 +28,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         setSupportActionBar(binding.toolbar)
         presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
-        presenter.setUpProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -44,7 +43,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         return true
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.setUpProducts()
+    }
+
     override fun setProducts(data: List<ProductsItemType>) {
+        println((data[0] as RecentProductsItem).product.map { it.name })
         binding.productRecyclerview.adapter = ProductsAdapter(
             data,
             presenter::navigateToItemDetail,
