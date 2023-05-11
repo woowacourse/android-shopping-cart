@@ -11,6 +11,7 @@ import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_IMAGE_URL
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_NAME
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_PRICE
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_SAVE_TIME
 import woowacourse.shopping.database.cart.CartConstant.TABLE_NAME
 
 class CartDatabase(
@@ -45,6 +46,7 @@ class CartDatabase(
             put(TABLE_COLUMN_PRODUCT_NAME, product.name)
             put(TABLE_COLUMN_PRODUCT_PRICE, product.price)
             put(TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
+            put(TABLE_COLUMN_PRODUCT_SAVE_TIME, System.currentTimeMillis())
         }
         shoppingDb.insertWithOnConflict(
             TABLE_NAME,
@@ -67,7 +69,7 @@ class CartDatabase(
     }
 
     private fun getCartCursor(): Cursor {
-        val query = "SELECT * FROM $TABLE_NAME"
+        val query = "SELECT * FROM $TABLE_NAME ORDER BY $TABLE_COLUMN_PRODUCT_SAVE_TIME"
         return shoppingDb.rawQuery(query, null)
     }
 }

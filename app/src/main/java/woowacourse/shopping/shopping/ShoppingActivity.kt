@@ -30,6 +30,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
 
         initLayoutManager()
+        presenter.setUpProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,7 +48,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.setUpProducts()
+        presenter.updateProducts()
     }
 
     private fun initLayoutManager() {

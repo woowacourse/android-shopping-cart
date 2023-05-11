@@ -32,6 +32,13 @@ class ShoppingPresenter(
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
+    override fun updateProducts() {
+        productsData[0] = RecentProductsItem(
+            recentRepository.getRecent(10).map { it.toUIModel() }
+        )
+        view.setProducts(productsData.plus(ProductReadMore))
+    }
+
     override fun fetchMoreProducts() {
         productsData += repository.getNext(20)
             .map { ProductItem(it.toUIModel()) }
