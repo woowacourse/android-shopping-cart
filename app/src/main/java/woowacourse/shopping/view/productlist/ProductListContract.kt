@@ -5,7 +5,7 @@ import woowacourse.shopping.model.ProductModel
 interface ProductListContract {
     interface View {
         fun showProducts(recentViewedProducts: List<ProductModel>, products: List<ProductModel>)
-        fun addProducts()
+        fun addProducts(position: Int, size: Int)
     }
 
     interface Presenter {

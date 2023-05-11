@@ -23,7 +23,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         presenter = ProductListPresenter(this, ProductMockRepository, RecentViewedDbRepository(this))
-        presenter.fetchProducts()
         supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 
@@ -36,7 +35,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (recentViewedProducts.isNotEmpty() && position == 0) {
+                val isHeader = recentViewedProducts.isNotEmpty() && position == 0
+                val isFooter = if (recentViewedProducts.isNotEmpty()) position == products.size + 1 else position == products.size
+                return if (isHeader || isFooter) {
                     2
                 } else {
                     1
@@ -44,16 +45,26 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             }
         }
         binding.gridProducts.layoutManager = gridLayoutManager
-        binding.gridProducts.adapter = ProductListAdapter(recentViewedProducts, products) {
-            onClick(it)
-        }
+        binding.gridProducts.adapter = ProductListAdapter(
+            recentViewedProducts,
+            products,
+            object : ProductListAdapter.OnItemClick {
+                override fun onProductClick(product: ProductModel) {
+                    showProductDetail(product)
+                }
+
+                override fun onShowMoreClick() {
+                    presenter.showMoreProducts()
+                }
+            },
+        )
     }
 
-    override fun addProducts() {
-        binding.gridProducts.adapter?.notifyDataSetChanged()
+    override fun addProducts(position: Int, size: Int) {
+//        binding.gridProducts.adapter?.notifyItemRangeInserted(position, size)
     }
 
-    private fun onClick(product: ProductModel) {
+    private fun showProductDetail(product: ProductModel) {
         val intent = ProductDetailActivity.newIntent(binding.root.context, product)
         startActivity(intent)
     }

@@ -16,7 +16,7 @@
     android:layout_height="wrap_content"
     android:paddingHorizontal="20dp"
     android:paddingVertical="25dp"
-    android:onClick="@{() -> onItemClick.onClick(product)}"
+    android:onClick="@{() -> onItemClick.onProductClick(product)}"
     android:background="?attr/selectableItemBackground">
     <ImageView
         android:id="@+id/img_product"

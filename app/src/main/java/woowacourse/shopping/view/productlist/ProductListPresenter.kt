@@ -22,5 +22,12 @@ class ProductListPresenter(
     }
 
     override fun showMoreProducts() {
+        val mark = products.size
+        products.addAll(pagination.nextItems().map { it.toUiModel() })
+        view.addProducts(mark, PAGINATION_SIZE)
+    }
+
+    companion object {
+        private const val PAGINATION_SIZE = 20
     }
 }
