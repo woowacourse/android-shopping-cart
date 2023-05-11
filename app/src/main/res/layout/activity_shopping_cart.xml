@@ -8,36 +8,17 @@
         android:layout_height="match_parent"
         tools:context=".shoppingcart.ShoppingCartActivity">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cart_tool_bar"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="#555555"
+            android:background="@color/toolbar_color"
+            android:theme="@style/ToolbarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="21dp"
-                android:text="@string/cart"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/image_back"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/image_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="11dp"
-                android:layout_marginEnd="25dp"
-                android:src="@drawable/arrow_back_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/cart"
+            app:titleTextColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_cart"
@@ -48,7 +29,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cart_tool_bar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_shopping_cart" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

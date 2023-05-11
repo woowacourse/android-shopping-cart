@@ -6,6 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/item_round"
         android:paddingBottom="18dp">
 
@@ -29,7 +30,7 @@
             android:src="@drawable/close_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/text_product_name"
-            app:tint="@color/black" />
+            app:tint="@color/gray" />
 
         <ImageView
             android:id="@+id/image_product"
@@ -37,6 +38,7 @@
             android:layout_height="72dp"
             android:layout_marginTop="13dp"
             android:layout_marginBottom="18dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_launcher_background"
             app:layout_constraintStart_toStartOf="@id/text_product_name"
             app:layout_constraintTop_toBottomOf="@id/text_product_name" />

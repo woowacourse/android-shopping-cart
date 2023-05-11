@@ -1,6 +1,7 @@
 package woowacourse.shopping.shoppingcart
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -25,7 +26,24 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
+
+        setUpShoppingCartToolbar()
+
         presenter.loadShoppingCartProducts()
+    }
+
+    private fun setUpShoppingCartToolbar() {
+        setSupportActionBar(binding.toolbarShoppingCart)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun setUpShoppingCartView(
@@ -33,6 +51,5 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         onRemoved: (id: Int) -> Unit
     ) {
         binding.recyclerViewCart.adapter = ShoppingCartRecyclerAdapter(products, onRemoved)
-        binding.imageBack.setOnClickListener { finish() }
     }
 }
