@@ -16,7 +16,7 @@ class RecentProductDBHelper(context: Context) :
                 "  ${RecentProductConstant.TABLE_COLUMN_PRICE} int not null," +
                 "  ${RecentProductConstant.TABLE_COLUMN_IMAGE_URL} varchar(255) not null," +
                 "  ${RecentProductConstant.TABLE_COLUMN_SAVE_TIME} long not null" +
-                ");"
+                ");",
         )
     }
 

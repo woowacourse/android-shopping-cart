@@ -29,7 +29,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter = CartPresenter(
             this,
             CartDatabase(CartDBHelper(this).writableDatabase),
-            savedInstanceState?.getInt(KEY_OFFSET) ?: 0
+            savedInstanceState?.getInt(KEY_OFFSET) ?: 0,
         )
         presenter.setUpCarts()
         setToolbar()
@@ -50,17 +50,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setCarts(products: List<CartItem>, cartUIModel: CartUIModel) {
         binding.cartRecyclerview.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-            this
+            this,
         )
 
         val cartAdapter = CartAdapter(
             products.map { it },
             presenter::navigateToItemDetail,
-            presenter::removeItem
+            presenter::removeItem,
         )
         binding.cartRecyclerview.adapter = ConcatAdapter(
             cartAdapter,
-            CartNavigationAdapter(cartUIModel, presenter::pageUp, presenter::pageDown)
+            CartNavigationAdapter(cartUIModel, presenter::pageUp, presenter::pageDown),
         )
     }
 
@@ -74,6 +74,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             outState.putInt(KEY_OFFSET, it)
         }
     }
+
     companion object {
         private const val KEY_OFFSET = "KEY_OFFSET"
         fun from(context: Context): Intent {

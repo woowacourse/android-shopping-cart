@@ -11,11 +11,12 @@ import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_SAVE
 import woowacourse.shopping.database.cart.CartConstant.TABLE_NAME
 
 class CartDBHelper(
-    context: Context?
+    context: Context?,
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     init {
         onCreate(writableDatabase)
     }
+
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
@@ -23,7 +24,7 @@ class CartDBHelper(
                 "$TABLE_COLUMN_PRODUCT_NAME TEXT," +
                 "$TABLE_COLUMN_PRODUCT_PRICE INTEGER," +
                 "$TABLE_COLUMN_PRODUCT_IMAGE_URL TEXT," +
-                "$TABLE_COLUMN_PRODUCT_SAVE_TIME long not null)"
+                "$TABLE_COLUMN_PRODUCT_SAVE_TIME LONG not null)",
         )
     }
 
@@ -33,7 +34,7 @@ class CartDBHelper(
     }
 
     companion object {
-        const val DATABASE_VERSION = 7
+        const val DATABASE_VERSION = 8
         const val DATABASE_NAME = "shopping_db"
     }
 }
