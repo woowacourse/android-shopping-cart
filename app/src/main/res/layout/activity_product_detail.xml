@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailPresenter" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,6 +42,7 @@
             android:id="@+id/iv_detail_product"
             android:layout_width="0dp"
             android:layout_height="360dp"
+            app:glideSrc="@{presenter.selectedProduct.itemImage}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cl_detail_toolbar"
@@ -51,7 +56,7 @@
             app:layout_constraintTop_toBottomOf="@+id/iv_detail_product">
 
             <TextView
-                android:id="@+id/btn_detail_add"
+                android:id="@+id/btn_detail_add_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@color/woowa_dealer_blue_600"
@@ -72,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="16dp"
-                android:text="[든든] 제네시스"
+                android:text="@{presenter.selectedProduct.name}"
                 android:textColor="@color/woowa_dealer_black_400"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -97,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="18dp"
-                android:text="70,000,000원"
+                android:text="@{String.format(@string/detail_price_format, presenter.selectedProduct.price)}"
                 android:textColor="@color/woowa_dealer_black_400"
                 android:textSize="20sp"
                 android:textStyle="normal"
