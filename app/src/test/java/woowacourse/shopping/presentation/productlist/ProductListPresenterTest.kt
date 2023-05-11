@@ -91,6 +91,25 @@ class ProductListPresenterTest {
         verify { recentProductRepository.getRecentProducts() }
         verify { view.updateRecentProductItemsView(actualPreSize, actualDiffSize) }
     }
+    @Test
+    fun `데이터가 더 존재한다면 추가 데이터를 가져와 갱신한다`() {
+        // given
+        every { productRepository.getData(0, 20) } returns dummyData
+        val slotPreSize = slot<Int>()
+        val slotDiffSize = slot<Int>()
+        justRun { view.updateMoreProductsView(capture(slotPreSize), capture(slotDiffSize)) }
+
+        // when
+        presenter.loadMoreData(0)
+
+        // then
+        val actualPreSize = slotPreSize.captured
+        val actualDiffSize = slotDiffSize.captured
+        assertEquals(1, actualPreSize)
+        assertEquals(1, actualDiffSize)
+        verify { productRepository.getData(0, 20) }
+        verify { view.updateMoreProductsView(actualPreSize, actualDiffSize) }
+    }
 
     companion object {
         private val dummyData = listOf(
