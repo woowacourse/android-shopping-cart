@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.main
 
+import com.example.domain.ProductCache
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
@@ -13,14 +14,28 @@ class MainPresenter(
 ) : MainContract.Presenter {
 
     override fun loadProducts() {
-        val products = productRepository.getFirstProducts().map { product ->
+        val firstProducts = productRepository.getFirstProducts()
+        val productItems = firstProducts.map { product ->
             product.toPresentation().toItemModel { position ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))
                 view.showProductDetailScreenByProduct(position)
                 loadRecent()
             }
         }
-        view.addProducts(products)
+        view.addProducts(productItems)
+        ProductCache.addProducts(firstProducts)
+    }
+
+    override fun loadProductsFromCache() {
+        val cacheProducts = ProductCache.productList
+        val cacheItems = cacheProducts.map { product ->
+            product.toPresentation().toItemModel { position ->
+                addRecentProduct(RecentProduct(product, LocalDateTime.now()))
+                view.showProductDetailScreenByProduct(position)
+                loadRecent()
+            }
+        }
+        view.addProducts(cacheItems)
     }
 
     override fun moveToCart() {
@@ -28,14 +43,16 @@ class MainPresenter(
     }
 
     override fun loadMoreProduct(lastProductId: Long) {
-        val nextProducts = productRepository.getNextProducts(lastProductId).map { product ->
+        val nextProducts = productRepository.getNextProducts(lastProductId)
+        val nextProductItems = nextProducts.map { product ->
             product.toPresentation().toItemModel { position ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))
                 view.showProductDetailScreenByProduct(position)
                 loadRecent()
             }
         }
-        view.addProducts(nextProducts)
+        view.addProducts(nextProductItems)
+        ProductCache.addProducts(nextProducts)
     }
 
     override fun loadRecent() {

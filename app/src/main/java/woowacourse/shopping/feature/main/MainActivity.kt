@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.domain.ProductCache
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.data.RecentProductRepositoryImpl
@@ -49,7 +50,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         initAdapters()
         initLayoutManager()
         binding.productRv.adapter = concatAdapter
-        presenter.loadProducts()
+        if (savedInstanceState == null) {
+            presenter.loadProducts()
+        } else {
+            presenter.loadProductsFromCache()
+        }
+
         presenter.loadRecent()
     }
 
@@ -123,5 +129,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         recentWrapperAdapter.onRestoreState(savedInstanceState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (isFinishing) {
+            ProductCache.clear()
+        }
     }
 }
