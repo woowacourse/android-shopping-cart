@@ -1,5 +1,6 @@
 package woowacourse.shopping.shopping
 
+import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
@@ -28,7 +29,7 @@ class ProductDetailPresenterTest {
         justRun { view.updateProductDetail(any()) }
 
         // when
-        presenter = ProductDetailPresenter(view, mockk(relaxed = true), mockk(), mockk(), mockk())
+        presenter = ProductDetailPresenter(view, mockk(relaxed = true), mockk(), mockk())
 
         // then
         verify {
@@ -39,14 +40,29 @@ class ProductDetailPresenterTest {
     @Test
     fun 카트에_상품을_담으면_카트에_상품을_추가하고_카트를_보여준다() {
         // given
-        justRun { view.showCart() }
         val cartState: State<Cart> = mockk(relaxed = true)
-        presenter = ProductDetailPresenter(view, mockk(relaxed = true), mockk(), mockk(), mockk())
+
+        every {
+            cartState.load()
+        } returns Cart(mockk(relaxed = true))
+
+        justRun {
+            cartState.load()
+            cartState.save(any())
+            cartDao.insertCartProduct(any())
+            view.showCart()
+        }
+        presenter = ProductDetailPresenter(view, mockk(relaxed = true), cartState, cartDao)
 
         // when
         presenter.addToCart()
 
         // then
-        verify { view.showCart() }
+        verify {
+            cartState.load()
+            cartState.save(any())
+            cartDao.insertCartProduct(any())
+            view.showCart()
+        }
     }
 }
