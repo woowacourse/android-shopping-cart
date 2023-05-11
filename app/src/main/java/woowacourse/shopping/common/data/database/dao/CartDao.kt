@@ -24,9 +24,20 @@ class CartDao(private val db: SQLiteDatabase) {
         db.insert(SqlCart.name, null, row)
     }
 
-    fun selectAll(): Cart {
+    fun selectAllCount(): Int {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
+            "SELECT COUNT(*) FROM ${SqlCart.name}",
+            null
+        )
+        return cursor.use {
+            it.moveToNext()
+            it.getInt(0)
+        }
+    }
+
+    fun selectPage(page: Int, sizePerPage: Int): Cart {
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * sizePerPage}, $sizePerPage",
             null
         )
         return Cart(

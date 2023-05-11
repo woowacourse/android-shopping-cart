@@ -36,27 +36,34 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateCart(cartProducts: List<CartProductModel>) {
-        cartAdapter.updateCartProducts(cartProducts)
+    override fun updateCart(cartProducts: List<CartProductModel>, currentPage: Int) {
+        cartAdapter.updateCartProducts(cartProducts, currentPage)
+    }
+
+    override fun updateNavigationVisibility(visibility: Boolean) {
+        cartAdapter.updateNavigationVisible(visibility)
     }
 
     private fun initPresenter() {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = CartPresenter(
-            this,
-            cartDao = CartDao(db)
+            this, cartDao = CartDao(db), sizePerPage = SIZE_PER_PAGE
         )
     }
 
     private fun initCartAdapter() {
         cartAdapter = CartAdapter(
             emptyList(),
-            onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) }
+            onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) },
+            onPreviousButtonClick = { presenter.goToPreviousPage() },
+            onNextButtonClick = { presenter.goToNextPage() }
         )
         binding.cartProductList.adapter = cartAdapter
     }
 
     companion object {
+        private const val SIZE_PER_PAGE = 5
+
         fun createIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }
