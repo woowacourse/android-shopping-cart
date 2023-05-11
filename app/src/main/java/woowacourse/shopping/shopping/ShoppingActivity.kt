@@ -65,9 +65,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
         }
         binding.productRecyclerView.adapter = shoppingRecyclerAdapter
-        binding.imgShoppingCart.setOnClickListener {
-            startActivity(Intent(this, ShoppingCartActivity::class.java))
+        binding.button.setOnClickListener {
+            binding.button.visibility = View.GONE
         }
+        binding.productRecyclerView.addOnScrollListener(
+            ShoppingRecyclerScrollListener(
+                scrollPossible = { binding.button.visibility = View.GONE },
+                scrollImpossible = { binding.button.visibility = View.VISIBLE }
+            )
+        )
     }
 
     override fun refreshShoppingView(

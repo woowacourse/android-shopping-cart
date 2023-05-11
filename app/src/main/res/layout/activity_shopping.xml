@@ -32,10 +32,14 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <Button
+            android:layout_margin="20dp"
+            android:background="@drawable/item_round"
             android:id="@+id/button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:text="더보기"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="@string/read_more"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_recycler_view" />
