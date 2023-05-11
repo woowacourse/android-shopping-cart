@@ -8,4 +8,8 @@
     <!-- 상품 상세 -->
     <string name="add_to_cart">장바구니 담기</string>
     <string name="price_title">금액</string>
+
+    <!-- App Bar -->
+    <string name="app_bar_title_product_list">Shopping</string>
+    <string name="app_bar_title_cart">Cart</string>
 </resources>

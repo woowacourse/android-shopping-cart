@@ -29,8 +29,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbarProductList)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        setActionBar()
 
         initProductList()
     }
@@ -53,6 +52,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun setActionBar() {
+        setSupportActionBar(binding.toolbarProductList)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun initRecentlyViewedProductList() {
