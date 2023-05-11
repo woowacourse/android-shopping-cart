@@ -82,9 +82,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         outState.putInt(ALL_SIZE_KEY, presenter.page.allSize)
     }
 
-    override fun onRestoreInstanceState(
-        savedInstanceState: Bundle
-    ) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val currentPage = savedInstanceState.getInt(CURRENT_PAGE_KEY)
         val allSize = savedInstanceState.getInt(ALL_SIZE_KEY)
