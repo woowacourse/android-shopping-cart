@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text_cart_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="50dp"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            tools:text="1" />
+
+        <ImageView
+            android:id="@+id/button_left_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_left_page_true"
+            app:layout_constraintTop_toTopOf="@+id/text_cart_page"
+            app:layout_constraintEnd_toStartOf="@+id/text_cart_page"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_cart_page" />
+
+        <ImageView
+            android:id="@+id/button_right_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_right_page_true"
+            app:layout_constraintTop_toTopOf="@+id/text_cart_page"
+            app:layout_constraintStart_toEndOf="@+id/text_cart_page"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_cart_page" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -24,7 +24,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setToolBar()
+        initLeftClick()
+        initRightClick()
         presenter.initCart()
+    }
+
+    override fun setPage(count: Int) {
+        binding.textCartPage.text = count.toString()
     }
 
     private fun setToolBar() {
@@ -50,6 +56,36 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setCartProductModels(productModels: List<ProductModel>) {
         cartAdapter.setItems(productModels)
+    }
+
+    private fun initRightClick() {
+        binding.buttonRightPage.setOnClickListener {
+            presenter.plusPage()
+        }
+    }
+
+    private fun initLeftClick() {
+        binding.buttonLeftPage.setOnClickListener {
+            presenter.minusPage()
+        }
+    }
+
+    override fun setRightPageEnable(isEnable: Boolean) {
+        binding.buttonRightPage.isClickable = isEnable
+        if (isEnable) {
+            binding.buttonRightPage.setImageResource(R.drawable.icon_right_page_true)
+        } else {
+            binding.buttonRightPage.setImageResource(R.drawable.icon_right_page_false)
+        }
+    }
+
+    override fun setLeftPageEnable(isEnable: Boolean) {
+        binding.buttonLeftPage.isClickable = isEnable
+        if (isEnable) {
+            binding.buttonLeftPage.setImageResource(R.drawable.icon_left_page_true)
+        } else {
+            binding.buttonLeftPage.setImageResource(R.drawable.icon_left_page_false)
+        }
     }
 
     companion object {

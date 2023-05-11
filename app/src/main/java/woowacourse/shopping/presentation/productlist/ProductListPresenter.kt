@@ -54,10 +54,6 @@ class ProductListPresenter(
         }
     }
 
-    private fun productsToPresentation(products: List<Product>): List<ProductModel> {
-        return products.map { it.toPresentation() }
-    }
-
     private fun Products.toPresentation(): List<ProductModel> {
         return items.map { it.toPresentation() }
     }
