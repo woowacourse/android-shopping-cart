@@ -10,14 +10,13 @@ import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.ProductMapper.toView
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
-    private var products: Products = Products(emptyList()),
     private var productsState: State<Products> = ProductsState,
     private val productDao: ProductDao,
-    private var recentProducts: RecentProducts = RecentProducts(emptyList()),
     private var recentProductsState: State<RecentProducts> = RecentProductsState,
     private val recentProductDao: RecentProductDao,
     private val recentProductSize: Int,
@@ -26,7 +25,7 @@ class ShoppingPresenter(
 
     init {
         loadMoreProduct()
-        recentProducts = recentProductDao.selectAll()
+        val recentProducts = recentProductDao.selectAll()
         recentProductsState.save(recentProducts)
     }
 
@@ -35,10 +34,10 @@ class ShoppingPresenter(
     }
 
     override fun openProduct(productModel: ProductModel) {
+        val recentProducts = recentProductsState.load()
         val recentProduct = recentProducts.makeRecentProduct(productModel.toDomain())
 
-        recentProducts = recentProducts.add(recentProduct)
-        recentProductsState.save(recentProducts)
+        recentProductsState.save(recentProducts.add(recentProduct))
         recentProductDao.insertRecentProduct(recentProduct.toView())
 
         view.showProductDetail(productModel)
@@ -55,13 +54,12 @@ class ShoppingPresenter(
         view.addProducts(loadedProducts.value.map { it.toView() })
     }
 
-    private fun updateProducts() {
-        products = productsState.load()
-        view.updateProducts(products.value.map { it.toView() })
-    }
-
     private fun updateRecentProducts() {
-        recentProducts = recentProductsState.load()
-        view.updateRecentProducts(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
+        val recentProducts = recentProductsState.load()
+        val recentProductsDesc =
+            recentProducts.getRecentProducts(recentProductSize).value.sortedByDescending(
+                RecentProduct::ordinal
+            )
+        view.updateRecentProducts(recentProductsDesc.map { it.toView() })
     }
 }

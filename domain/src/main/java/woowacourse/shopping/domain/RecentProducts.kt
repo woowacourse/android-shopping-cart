@@ -11,10 +11,10 @@ data class RecentProducts(val value: List<RecentProduct> = emptyList()) {
     }
 
     private fun getCurrentOrdinal(): Int {
-        return if (value.isEmpty()) 0 else value.last().ordinal + 1
+        return if (value.isEmpty()) 0 else value.maxOf { it.ordinal } + 1
     }
 
     fun getRecentProducts(size: Int): RecentProducts {
-        return RecentProducts(value.take(size))
+        return RecentProducts(value.takeLast(size))
     }
 }
