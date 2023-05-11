@@ -13,7 +13,8 @@ class ProductListPresenter(
 
     override fun loadRecentlyViewedProducts() {
         view.setRecentlyViewedProducts(
-            recentlyViewedProductRepository.findAll().map(RecentlyViewedProductUIState::from).reversed(),
+            recentlyViewedProductRepository.findAll().map(RecentlyViewedProductUIState::from)
+                .reversed().take(10),
         )
     }
 

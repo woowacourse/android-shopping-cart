@@ -41,29 +41,5 @@ class RecentlyViewedProductRepositoryImpl(
             put(ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID, product.id)
         }
         db.insert(ProductContract.RecentlyViewedProductEntry.TABLE_NAME, null, value)
-
-        // 10개를 넘어가면 오래된 상품 삭제
-        val cursor: Cursor = db.rawQuery(
-            "SELECT COUNT(*) FROM ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME}",
-            null,
-        )
-        cursor.moveToNext()
-        cursor.getInt(0).takeIf { it > 10 }?.run {
-            val selection1 =
-                "${ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} = ?"
-            val cursor1: Cursor = db.rawQuery(
-                "SELECT * FROM ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME} LIMIT 1",
-                null,
-            )
-            val firstProductId = cursor1.getInt(0)
-            val selectionArgs1 = arrayOf(firstProductId.toString())
-            db.delete(
-                ProductContract.RecentlyViewedProductEntry.TABLE_NAME,
-                selection1,
-                selectionArgs1,
-            )
-        }
-
-        cursor.close()
     }
 }
