@@ -15,6 +15,7 @@ import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.util.getParcelableExtraCompat
 import woowacourse.shopping.util.intentDataNullProcess
+import woowacourse.shopping.util.setOnSingleClickListener
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
@@ -28,6 +29,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         initExtraData()
         initPresenter()
         initBindingData()
+        initButtonCloseClickListener()
     }
 
     private fun initExtraData() {
@@ -46,6 +48,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             BasketRepository(LocalBasketDataSource(BasketDaoImpl(ShoppingDatabase(this)))),
             product
         )
+    }
+
+    private fun initButtonCloseClickListener() {
+        binding.ivClose.setOnSingleClickListener {
+            finish()
+        }
     }
 
     override fun showBasket() {
