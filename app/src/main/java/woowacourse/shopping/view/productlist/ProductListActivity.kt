@@ -32,7 +32,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     override fun showProducts(recentViewedProducts: List<ProductModel>, products: List<ProductModel>) {
-        val gridLayoutManager = GridLayoutManager(this, 2)
+        val gridLayoutManager = GridLayoutManagerWrapper(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 val isHeader = recentViewedProducts.isNotEmpty() && position == 0
@@ -60,8 +60,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         )
     }
 
-    override fun addProducts(position: Int, size: Int) {
-//        binding.gridProducts.adapter?.notifyItemRangeInserted(position, size)
+    override fun notifyAddProducts(position: Int, size: Int) {
+        binding.gridProducts.adapter?.notifyItemRangeInserted(position, size)
     }
 
     private fun showProductDetail(product: ProductModel) {

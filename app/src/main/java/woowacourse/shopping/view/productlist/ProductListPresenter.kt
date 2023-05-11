@@ -2,29 +2,25 @@ package woowacourse.shopping.view.productlist
 
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
-import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 
 class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductRepository,
-    private val recentViewedRepository: RecentViewedRepository,
+    recentViewedRepository: RecentViewedRepository,
 ) : ProductListContract.Presenter {
-    private val pagination = Pagination(20, productRepository)
-    private val products = mutableListOf<ProductModel>()
-
+    private val pagination = Pagination(PAGINATION_SIZE, productRepository)
+    private val products = pagination.nextItems().map { it.toUiModel() }.toMutableList()
+    private val viewedProducts = recentViewedRepository.findAll()
     override fun fetchProducts() {
-        val productsUiModel = pagination.nextItems().map { it.toUiModel() }
-        val viewedProducts = recentViewedRepository.findAll()
         val viewedProductsUiModel = viewedProducts.map { productRepository.find(it).toUiModel() }.reversed()
-        products.addAll(productsUiModel)
-        view.showProducts(viewedProductsUiModel, productsUiModel)
+        view.showProducts(viewedProductsUiModel, products)
     }
 
     override fun showMoreProducts() {
-        val mark = products.size
+        val mark = if (viewedProducts.isNotEmpty()) products.size + 1 else products.size
         products.addAll(pagination.nextItems().map { it.toUiModel() })
-        view.addProducts(mark, PAGINATION_SIZE)
+        view.notifyAddProducts(mark, PAGINATION_SIZE)
     }
 
     companion object {
