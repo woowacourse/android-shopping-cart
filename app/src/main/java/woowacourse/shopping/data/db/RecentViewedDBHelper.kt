@@ -29,16 +29,15 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, "recent
         writableDatabase.execSQL("DELETE FROM ${RecentViewedContract.TABLE_NAME} WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id")
     }
 
-    fun selectWhereId(id: Int): List<Int> {
-        val viewedProducts = mutableListOf<Int>()
+    fun selectWhereId(id: Int): Int? {
         val sql = "select * from ${RecentViewedContract.TABLE_NAME} WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id"
         val cursor = readableDatabase.rawQuery(sql, null)
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
-            viewedProducts.add(id)
+            cursor.close()
+            return id
         }
-        cursor.close()
-        return viewedProducts
+        return null
     }
 
     fun selectAll(): List<Int> {

@@ -13,7 +13,7 @@ class RecentViewedDbRepository(context: Context) :
     }
 
     override fun add(id: Int) {
-        if (find(id).isNotEmpty()) {
+        if (find(id) != null) {
             dbHelper.remove(id)
         }
         if (findAll().size == 10) {
@@ -22,7 +22,7 @@ class RecentViewedDbRepository(context: Context) :
         dbHelper.insert(id)
     }
 
-    private fun find(id: Int): List<Int> {
+    private fun find(id: Int): Int? {
         return dbHelper.selectWhereId(id)
     }
 
