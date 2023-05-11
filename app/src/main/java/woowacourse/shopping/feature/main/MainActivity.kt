@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
     }
 
-    lateinit var adapter: ProductListAdapter
+    lateinit var productListadapter: ProductListAdapter
     lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,23 +56,22 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapter() {
-        adapter = ProductListAdapter(
+        // todo 최근 상품이 앱 재시작해야 반영되는 문제 수정 필요 (최근 상품 어댑터의 아이템 업데이트 호출 필요)
+        productListadapter = ProductListAdapter(
             onItemClick = { listItem ->
                 when (listItem) {
                     is ProductListItem -> {
                         recentProductDbHandler.addColumn(listItem.toUi().toDomain())
                         ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
-                        // todo 앱 재시작해야 반영되는 문제 수정 필요
-                        setProducts(productDbHandler.getAll(), recentProductDbHandler.getRecentProducts())
                     }
                 }
             }
         )
-        binding.productRv.adapter = adapter
+        binding.productRv.adapter = productListadapter
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup = object : SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (adapter.getItemViewType(position) == ViewType.HORIZONTAL.ordinal) {
+                return if (productListadapter.getItemViewType(position) == ViewType.HORIZONTAL.ordinal) {
                     gridLayoutManager.spanCount
                 } else 1
             }
@@ -81,7 +80,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun setProducts(products: List<Product>, recentProducts: RecentProducts) {
-        adapter.setItems(
+        productListadapter.setItems(
             products.map { it.toUi().toItem() },
             recentProducts.products.map { it.toUi().toItem() }
         )

@@ -8,7 +8,7 @@ import woowacourse.shopping.feature.list.item.ListItem
 import woowacourse.shopping.feature.list.viewholder.RecentItemViewHolder
 
 class RecentProductListAdapter(
-    private val items: List<ListItem>
+    private var items: List<ListItem>
 ) : RecyclerView.Adapter<RecentItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentItemViewHolder {
@@ -23,5 +23,10 @@ class RecentProductListAdapter(
 
     override fun getItemCount(): Int {
         return items.size
+    }
+
+    fun setItems(items: List<ListItem>) {
+        this.items = items.toList()
+        notifyDataSetChanged()
     }
 }

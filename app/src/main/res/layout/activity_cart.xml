@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".feature.cart.CartActivity">
@@ -12,8 +15,46 @@
             android:padding="@dimen/margin_large"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_cart_product" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="160dp">
+
+            <TextView
+                android:id="@+id/page_before_tv"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@color/teal_200"
+                android:gravity="center"
+                android:text="@string/left_charactor"
+                android:textColor="@color/white"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:id="@+id/page_number_tv"
+                android:gravity="center"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                tools:text="0" />
+
+            <TextView
+                android:id="@+id/page_after_tv"
+                android:textSize="22sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@color/teal_200"
+                android:text="@string/right_charactor"
+                app:layout_constraintStart_toStartOf="@id/page_number_tv"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 </layout>
