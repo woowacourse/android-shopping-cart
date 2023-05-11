@@ -8,12 +8,15 @@ interface ProductContract {
         fun setProductItemsView(products: List<ProductModel>)
         fun setRecentProductItemsView(recentProducts: List<RecentProductModel>)
         fun updateRecentProductItemsView(preSize: Int, diffSize: Int)
+        fun updateMoreProductsView(preSize: Int, diffSize: Int)
     }
+
     interface Presenter {
         fun initRecentProductItems()
         fun loadProductItems()
         fun loadRecentProductItems()
         fun updateRecentProductItems()
         fun saveRecentProduct(productId: Long)
+        fun loadMoreData(startPosition: Int)
     }
 }

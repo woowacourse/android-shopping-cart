@@ -14,6 +14,7 @@ import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.RecentProductModel
 import woowacourse.shopping.presentation.view.cart.CartActivity
 import woowacourse.shopping.presentation.view.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.view.productlist.adpater.MoreProductListAdapter
 import woowacourse.shopping.presentation.view.productlist.adpater.ProductListAdapter
 import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductListAdapter
 import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductWrapperAdapter
@@ -31,6 +32,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductListAdapter: RecentProductListAdapter
     private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
+    private lateinit var moreProductListAdapter: MoreProductListAdapter
+
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
             setIsolateViewTypes(false)
@@ -46,6 +49,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
             addAdapter(recentProductWrapperAdapter)
         }
         addAdapter(productListAdapter)
+        addAdapter(moreProductListAdapter)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +60,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         presenter.initRecentProductItems()
         presenter.loadProductItems()
         presenter.loadRecentProductItems()
+        setMoreProductListAdapter()
         setConcatAdapter()
     }
 
@@ -86,6 +91,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
             override fun getSpanSize(position: Int): Int {
                 return when (concatAdapter.getItemViewType(position)) {
                     ProductListAdapter.VIEW_TYPE -> 1
+                    MoreProductListAdapter.VIEW_TYPE -> 1
                     else -> 2
                 }
             }
@@ -100,6 +106,10 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
         recentProductListAdapter = RecentProductListAdapter(recentProducts, ::moveToActivity)
         recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductListAdapter)
+    }
+
+    private fun setMoreProductListAdapter() {
+        moreProductListAdapter = MoreProductListAdapter(productListAdapter, ::onMoreProductList)
     }
 
     private fun setConcatAdapter() {
@@ -122,5 +132,13 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private fun moveToActivity(productId: Long) {
         val intent = ProductDetailActivity.createIntent(this, productId)
         startActivity(intent)
+    }
+
+    private fun onMoreProductList() {
+        presenter.loadMoreData(productListAdapter.itemCount - 1)
+    }
+
+    override fun updateMoreProductsView(preSize: Int, diffSize: Int) {
+        productListAdapter.notifyItemRangeInserted(preSize, diffSize)
     }
 }

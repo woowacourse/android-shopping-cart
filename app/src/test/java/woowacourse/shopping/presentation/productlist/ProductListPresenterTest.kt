@@ -33,7 +33,7 @@ class ProductListPresenterTest {
     @Test
     fun `데이터를 받아와 상품 목록 어댑터를 설정한다`() {
         // given
-        every { productRepository.getData() } returns dummyData
+        every { productRepository.getData(0, 20) } returns dummyData
         val slot = slot<List<ProductModel>>()
         justRun { view.setProductItemsView(capture(slot)) }
 
@@ -45,7 +45,7 @@ class ProductListPresenterTest {
         val expected = dummyData
 
         assertEquals(expected, actual)
-        verify { productRepository.getData() }
+        verify { productRepository.getData(0, 20) }
         verify { view.setProductItemsView(actual) }
     }
 
