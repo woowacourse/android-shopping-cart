@@ -67,7 +67,7 @@ class ShoppingAdapter(
     companion object {
         private val productDiffUtil = object : DiffUtil.ItemCallback<UiProduct>() {
             override fun areItemsTheSame(oldItem: UiProduct, newItem: UiProduct): Boolean =
-                oldItem === newItem
+                oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: UiProduct, newItem: UiProduct): Boolean =
                 oldItem == newItem
