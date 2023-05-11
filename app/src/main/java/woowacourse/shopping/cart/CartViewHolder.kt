@@ -11,7 +11,7 @@ class CartViewHolder(
     onCartItemRemoveButtonViewClick: (Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.root.setOnClickListener { onCartItemRemoveButtonViewClick(adapterPosition) }
+        binding.cartProductListRemoveButton.setOnClickListener { onCartItemRemoveButtonViewClick(adapterPosition) }
     }
 
     fun bind(cartProduct: CartProductModel) {
