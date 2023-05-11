@@ -14,11 +14,13 @@ import woowacourse.shopping.data.datasource.recentproduct.LocalRecentProductData
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.ShoppingViewHolderType.PRODUCT
 import woowacourse.shopping.ui.shopping.ShoppingViewHolderType.RECENT_PRODUCTS
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductAdapter
+import woowacourse.shopping.util.setOnSingleClickListener
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
@@ -33,6 +35,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         initPresenter()
         initAdapter()
+        initButtonBasketClickListener()
     }
 
     private fun initPresenter() {
@@ -76,5 +79,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun showProductDetail(product: UiProduct) {
         startActivity(ProductDetailActivity.getIntent(this, product))
+    }
+
+    private fun initButtonBasketClickListener() {
+        binding.ivBasket.setOnSingleClickListener {
+            startActivity(BasketActivity.getIntent(this))
+        }
     }
 }

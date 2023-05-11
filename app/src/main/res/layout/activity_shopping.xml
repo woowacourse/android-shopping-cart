@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_cart"
-                android:id="@+id/iv_cart"
+                android:id="@+id/iv_basket"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@+id/tb_shopping"
                 app:layout_constraintTop_toTopOf="@+id/tb_shopping"
