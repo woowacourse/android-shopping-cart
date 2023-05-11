@@ -5,6 +5,10 @@ data class Cart(val cartProducts: List<CartProduct>) {
         return Cart(cartProducts + cartProduct)
     }
 
+    fun remove(cartProduct: CartProduct): Cart {
+        return Cart(cartProducts - cartProduct)
+    }
+
     fun makeCartProduct(product: Product): CartProduct {
         val ordinal = getCurrentOrdinal()
         return CartProduct(ordinal, product)
@@ -12,9 +16,5 @@ data class Cart(val cartProducts: List<CartProduct>) {
 
     private fun getCurrentOrdinal(): Int {
         return if (cartProducts.isEmpty()) 0 else cartProducts.last().ordinal + 1
-    }
-
-    fun remove(cartProduct: CartProduct): Cart {
-        return Cart(cartProducts - cartProduct)
     }
 }
