@@ -19,4 +19,19 @@ class CartRepositoryImpl(
     override fun deleteProduct(cartProduct: CartProduct) {
         cartDao.deleteCartProduct(cartProduct)
     }
+
+    override fun getPreviousProducts(size: Int, topId: Long): List<CartProduct> {
+        val all = getAll()
+        val lower = all.filter { it.cartId < topId }.takeLast(size)
+        if (lower.size != size) return all.take(size)
+        return lower
+    }
+
+    override fun getNextProducts(size: Int, bottomId: Long): List<CartProduct> {
+        return getAll().asSequence().filter { it.cartId > bottomId }.take(size).toList()
+    }
+
+    override fun getProductFromId(size: Int, startId: Long): List<CartProduct> {
+        return getAll().asSequence().filter { it.cartId >= startId }.take(size).toList()
+    }
 }
