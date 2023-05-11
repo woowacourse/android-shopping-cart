@@ -28,6 +28,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         setSupportActionBar(binding.toolbar)
         presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
+
+        initLayoutManager()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -48,13 +50,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter.setUpProducts()
     }
 
-    override fun setProducts(data: List<ProductsItemType>) {
-        println((data[0] as RecentProductsItem).product.map { it.name })
-        binding.productRecyclerview.adapter = ProductsAdapter(
-            data,
-            presenter::navigateToItemDetail,
-            presenter::fetchMoreProducts
-        )
+    private fun initLayoutManager() {
         val layoutManager = GridLayoutManager(this@ShoppingActivity, 2)
         val spacing = resources.getDimensionPixelSize(R.dimen.item_spacing)
         val spanCount = 2
@@ -81,8 +77,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
                 if (spanSize == spanCount) {
                     // 첫 번째 아이템인 경우
-//                    outRect.left = (parent.width - view.layoutParams.width) / 2
-//                    outRect.right = (parent.width - view.layoutParams.width) / 2
+                    // outRect.left = (parent.width - view.layoutParams.width) / 2
+                    // outRect.right = (parent.width - view.layoutParams.width) / 2
                 } else {
                     // 나머지 아이템인 경우
                     outRect.left = spacing
@@ -93,6 +89,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             }
         })
         binding.productRecyclerview.layoutManager = layoutManager
+    }
+
+    override fun setProducts(data: List<ProductsItemType>) {
+        binding.productRecyclerview.adapter = ProductsAdapter(
+            data,
+            presenter::navigateToItemDetail,
+            presenter::fetchMoreProducts
+        )
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {
