@@ -49,6 +49,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
     }
 
+    override fun addProducts() {
+        binding.gridProducts.adapter?.notifyDataSetChanged()
+    }
+
     private fun onClick(product: ProductModel) {
         val intent = ProductDetailActivity.newIntent(binding.root.context, product)
         startActivity(intent)
