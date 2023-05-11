@@ -13,6 +13,7 @@
 
     <color name="woowa_dealer_gray_200">#EBEBEB</color>
     <color name="woowa_dealer_gray_500">#AAAAAA</color>
+    <color name="woowa_dealer_gray_700">#555555</color>
 
     <color name="woowa_dealer_black_400">#333333</color>
 </resources>

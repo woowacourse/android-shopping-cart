@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="wrapper_recently_viewed">최근 본 상품</string>
+
+    <string name="detail_price_format">%d원</string>
+
+    <string name="shoppingCart_title">Cart</string>
+
 </resources>
