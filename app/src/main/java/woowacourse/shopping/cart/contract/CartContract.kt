@@ -17,5 +17,6 @@ interface CartContract {
         fun pageDown()
         fun removeItem(id: Int)
         fun navigateToItemDetail(product: ProductUIModel)
+        fun getOffset(): Int
     }
 }

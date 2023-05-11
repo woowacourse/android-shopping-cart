@@ -25,7 +25,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        presenter = CartPresenter(this, CartDatabase(CartDBHelper(this).writableDatabase))
+
+        presenter = CartPresenter(
+            this,
+            CartDatabase(CartDBHelper(this).writableDatabase),
+            savedInstanceState?.getInt(KEY_OFFSET) ?: 0
+        )
         presenter.setUpCarts()
         setToolbar()
     }
@@ -63,7 +68,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         startActivity(ProductDetailActivity.from(this, product))
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        presenter.getOffset().let {
+            outState.putInt(KEY_OFFSET, it)
+        }
+    }
     companion object {
+        private const val KEY_OFFSET = "KEY_OFFSET"
         fun from(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }

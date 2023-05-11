@@ -9,9 +9,10 @@ import woowacourse.shopping.model.ProductUIModel
 
 class CartPresenter(
     val view: CartContract.View,
-    val repository: CartRepository
+    val repository: CartRepository,
+    offset: Int = 0
 ) : CartContract.Presenter {
-    private var offset = 0
+    private var offset = offset
         set(value) {
             when {
                 value < 0 -> field = 0
@@ -51,6 +52,10 @@ class CartPresenter(
 
     override fun navigateToItemDetail(product: ProductUIModel) {
         view.navigateToItemDetail(product)
+    }
+
+    override fun getOffset(): Int {
+        return offset
     }
 
     companion object {
