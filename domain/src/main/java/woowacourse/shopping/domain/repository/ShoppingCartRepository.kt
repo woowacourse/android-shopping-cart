@@ -7,4 +7,6 @@ interface ShoppingCartRepository {
     fun getShoppingCart(unit: Int, pageNumber: Int): List<ProductInCart>
     fun addProductInCart(productInCart: ProductInCart): Long
     fun deleteProductInCart(id: Long): Boolean
+
+    fun getShoppingCartSize(): Int
 }

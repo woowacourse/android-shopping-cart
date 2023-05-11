@@ -39,6 +39,16 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
         return shoppingDb.insert(TABLE_NAME, null, data)
     }
 
+    override fun getShoppingCartSize(): Int {
+        val query = "SELECT COUNT(*) FROM $TABLE_NAME"
+        val cursor = shoppingDb.rawQuery(query, null)
+        var shoppingCartSize = 0
+        if (cursor.moveToFirst()) {
+            shoppingCartSize = cursor.getInt(0)
+        }
+        return shoppingCartSize
+    }
+
     private fun readProductInCart(cursor: Cursor): ProductInCartEntity {
         val productId = cursor.getLong(cursor.getColumnIndexOrThrow(TABLE_COLUMN_PRODUCT_ID))
         val productQuantity =

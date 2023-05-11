@@ -31,4 +31,8 @@ class ShoppingCartRepositoryImpl(
     override fun deleteProductInCart(id: Long): Boolean {
         return shoppingCartDataSource.deleteProductInShoppingCart(id)
     }
+
+    override fun getShoppingCartSize(): Int {
+        return shoppingCartDataSource.getShoppingCartSize()
+    }
 }
