@@ -17,7 +17,7 @@ class CartPresenter(
     private val currentCartProducts = convertIdToProductModel(cartPagination.nextItems()).toMutableList()
 
     override fun fetchProducts() {
-        view.showProducts(currentCartProducts)
+        view.showProducts(currentCartProducts, cartPagination.isUndoItemsEnabled, cartPagination.isNextItemsEnabled, cartPagination.mark / PAGINATION_SIZE + 1)
     }
 
     override fun removeProduct(id: Int) {
@@ -32,7 +32,7 @@ class CartPresenter(
         if (getItems.isNotEmpty()) {
             currentCartProducts.clear()
             currentCartProducts.addAll(convertIdToProductModel(getItems))
-            view.showOtherPage(PAGINATION_SIZE)
+            fetchProducts()
         }
     }
 
@@ -41,7 +41,7 @@ class CartPresenter(
         if (getItems.isNotEmpty()) {
             currentCartProducts.clear()
             currentCartProducts.addAll(convertIdToProductModel(getItems))
-            view.showOtherPage(PAGINATION_SIZE)
+            fetchProducts()
         }
     }
 

@@ -76,6 +76,6 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1
 
     fun getSize(mark: Int): Boolean {
         val itemsSize = selectAll().size
-        return itemsSize > mark
+        return mark in 0 until itemsSize
     }
 }

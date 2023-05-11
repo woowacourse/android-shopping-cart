@@ -37,6 +37,6 @@ class CartPagination(private val rangeSize: Int, private val cartRepository: Car
         return cartRepository.isExistByMark(mark)
     }
     private fun undoItemExist(): Boolean {
-        return cartRepository.isExistByMark(mark - rangeSize)
+        return cartRepository.isExistByMark(mark - rangeSize - 1)
     }
 }

@@ -18,10 +18,10 @@
             android:paddingVertical="32dp">
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_next_page"
+                    android:id="@+id/btn_undo_page"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
-                    android:enabled="true"
+                    android:enabled="false"
                     android:background="@drawable/selector_page_left_button"
                     app:layout_constraintEnd_toStartOf="@id/text_page_count"
                     app:layout_constraintTop_toTopOf="parent"
@@ -45,7 +45,7 @@
                     tools:text="1"/>
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_undo_page"
+                    android:id="@+id/btn_next_page"
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:enabled="true"
