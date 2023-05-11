@@ -25,11 +25,22 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
-        setSupportActionBar(binding.toolbar)
-        presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
-
+        initBinding()
+        initToolbar()
+        initPresenter()
         initLayoutManager()
+    }
+
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.toolbar)
+    }
+
+    private fun initPresenter() {
+        presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
         presenter.setUpProducts()
     }
 
