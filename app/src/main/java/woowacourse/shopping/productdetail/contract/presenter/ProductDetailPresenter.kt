@@ -12,6 +12,10 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository,
     private val recentRepository: RecentRepository
 ) : ProductDetailContract.Presenter {
+    init {
+        setUpProductDetail()
+        addProductToRecent()
+    }
 
     override fun setUpProductDetail() {
         view.setProductDetail(product)

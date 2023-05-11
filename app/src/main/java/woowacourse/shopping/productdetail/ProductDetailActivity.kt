@@ -26,19 +26,30 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        setSupportActionBar(binding.toolbar)
+        initBinding()
+        initPresenter()
+        initToolbar()
+        initCartButton()
+    }
 
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.toolbar)
+    }
+
+    private fun initPresenter() {
         presenter = ProductDetailPresenter(
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
             CartDatabase(CartDBHelper(this).writableDatabase),
             RecentProductDatabase(this)
         )
+    }
 
-        presenter.setUpProductDetail()
-        presenter.addProductToRecent()
-
+    private fun initCartButton() {
         binding.cartButton.setOnClickListener {
             presenter.addProductToCart()
             navigateToCart()
