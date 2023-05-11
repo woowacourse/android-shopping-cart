@@ -25,7 +25,7 @@ class CartPresenter(
         changePageState(updateItems)
     }
 
-    override fun loadCartProductFromId(startId: Long) {
+    private fun loadCartProductFromId(startId: Long) {
         val updatedProducts = cartRepository.getProductFromId(PageUiModel.PAGE_LOAD_SIZE, startId)
         if (updatedProducts.isEmpty() && _page.currentPage != 1) return loadPreviousPage(startId)
         val updateItems = updatedProducts.map {
