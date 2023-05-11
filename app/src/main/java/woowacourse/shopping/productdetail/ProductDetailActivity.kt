@@ -48,6 +48,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun updateProductDetail(productModel: ProductModel) {
         Glide.with(this)
             .load(productModel.picture)
+            .centerCrop()
             .into(binding.productDetailPicture)
         binding.productDetailTitle.text = productModel.title
         binding.productDetailPrice.text = productModel.price.toString()

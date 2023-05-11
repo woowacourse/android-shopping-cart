@@ -18,6 +18,10 @@ class ShoppingDBOpenHelper(context: Context) :
                 it.scheme.joinToString { scheme -> "${scheme.name} ${scheme.type} ${scheme.constraint}" }
             db?.execSQL("CREATE TABLE ${it.name} ($columns ${it.constraint})")
         }
+
+        repeat(30) {
+            db?.execSQL("INSERT INTO ${SqlProduct.name} VALUES($it, 'https://picsum.photos/seed/picsum/200/300', 'ui test ui test', 10000)")
+        }
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {

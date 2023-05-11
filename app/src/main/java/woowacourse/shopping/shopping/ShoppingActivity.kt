@@ -46,6 +46,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         initPresenter()
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.resumeView()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_shopping, menu)
         return super.onCreateOptionsMenu(menu)
@@ -91,7 +96,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initProductAdapter() {
         productAdapter =
-            ProductAdapter(emptyList(), onProductItemClick = { startProductDetailActivity(it) })
+            ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it) })
 
         binding.shoppingProductList.layoutManager = makeLayoutManager()
         binding.shoppingProductList.adapter = concatAdapter

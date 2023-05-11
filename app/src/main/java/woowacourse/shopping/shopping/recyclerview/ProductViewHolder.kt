@@ -16,6 +16,7 @@ class ProductViewHolder(
     fun bind(product: ProductModel) {
         Glide.with(binding.root.context)
             .load(product.picture)
+            .centerCrop()
             .into(binding.productListPicture)
         binding.productListTitle.text = product.title
         binding.productListPrice.text = product.price.toString()

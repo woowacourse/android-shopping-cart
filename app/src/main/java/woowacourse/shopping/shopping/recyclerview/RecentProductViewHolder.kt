@@ -11,6 +11,7 @@ class RecentProductViewHolder(
     fun bind(recentProduct: RecentProductModel) {
         Glide.with(binding.root.context)
             .load(recentProduct.product.picture)
+            .centerCrop()
             .into(binding.recentProductListPicture)
         binding.recentProductListTitle.text = recentProduct.product.title
     }

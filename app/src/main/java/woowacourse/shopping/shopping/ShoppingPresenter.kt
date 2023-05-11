@@ -26,6 +26,8 @@ class ShoppingPresenter(
     init {
         products = productDao.selectAll()
         recentProducts = recentProductDao.selectAll()
+        productsState.save(products)
+        recentProductsState.save(recentProducts)
         view.updateProductList(products.value.map { it.toView() })
         view.updateRecentProductList(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }
