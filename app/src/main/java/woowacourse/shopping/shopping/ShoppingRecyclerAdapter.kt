@@ -24,6 +24,7 @@ class ShoppingRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+
         return when (viewType) {
             ShoppingRecyclerItemViewType.RECENT_VIEWED.ordinal ->
                 RecentViewedLayoutViewHolder.from(parent)

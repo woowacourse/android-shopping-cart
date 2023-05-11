@@ -18,25 +18,6 @@ class ShoppingDBAdapter(
 ) : ShoppingRepository {
 
     private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
-    private val productCursor = shoppingDB.query(
-        ProductDBContract.TABLE_NAME,
-        arrayOf(
-            ProductDBContract.PRODUCT_ID,
-            ProductDBContract.PRODUCT_IMG,
-            ProductDBContract.PRODUCT_NAME,
-            ProductDBContract.PRODUCT_PRICE,
-        ),
-        null, null, null, null, null
-    )
-
-    private val shoppingCartCursor = shoppingDB.query(
-        ShoppingCartDBContract.TABLE_NAME,
-        arrayOf(
-            ShoppingCartDBContract.CART_PRODUCT_ID
-        ),
-        null, null, null, null, null
-    )
-
     private val recentViewedCursor = shoppingDB.query(
         RecentViewedDBContract.TABLE_NAME,
         arrayOf(

@@ -26,6 +26,7 @@ class ShoppingCartRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartItemViewHolder {
+
         return ShoppingCartItemViewHolder.from(parent)
     }
 

@@ -7,6 +7,7 @@ class ShoppingRecyclerSpanSizeManager(
 ) : GridLayoutManager.SpanSizeLookup() {
 
     override fun getSpanSize(position: Int): Int {
+
         return when (getViewType(position)) {
             ShoppingRecyclerItemViewType.PRODUCT.ordinal -> DEFAULT_SIZE
             else -> RECENT_VIEWED_LAYOUT_SIZE

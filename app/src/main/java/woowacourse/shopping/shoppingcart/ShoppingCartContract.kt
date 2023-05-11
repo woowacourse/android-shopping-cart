@@ -14,7 +14,9 @@ interface ShoppingCartContract {
     interface Presenter {
 
         fun loadShoppingCartProducts()
+
         fun removeShoppingCartProduct(id: Int)
+
         fun readMoreShoppingCartProducts()
     }
 }

@@ -20,6 +20,7 @@ class ShoppingCartPresenter(
 
     override fun loadShoppingCartProducts() {
         val products = selectShoppingCartProducts()
+
         view.setUpShoppingCartView(products, ::removeShoppingCartProduct)
     }
 
@@ -29,6 +30,7 @@ class ShoppingCartPresenter(
 
     override fun readMoreShoppingCartProducts() {
         val products = selectShoppingCartProducts()
+
         view.showMoreShoppingCartProducts(products)
     }
 }

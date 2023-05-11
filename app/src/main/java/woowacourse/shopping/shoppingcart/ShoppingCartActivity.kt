@@ -25,11 +25,9 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
 
         setUpShoppingCartToolbar()
-
         presenter.loadShoppingCartProducts()
     }
 
@@ -44,6 +42,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
                 finish()
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 

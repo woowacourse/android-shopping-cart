@@ -32,13 +32,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
-        setSupportActionBar(binding.toolbarShopping)
 
+        setSupportActionBar(binding.toolbarShopping)
         presenter.loadProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_shopping, menu)
+
         return true
     }
 
@@ -48,6 +49,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 startActivity(Intent(this, ShoppingCartActivity::class.java))
             }
         }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -98,6 +100,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun navigateToProductDetailView(product: ProductUiModel) {
         presenter.addToRecentViewedProduct(product.id)
         val intent = ProductDetailActivity.getIntent(this, product)
+
         startActivity(intent)
     }
 }

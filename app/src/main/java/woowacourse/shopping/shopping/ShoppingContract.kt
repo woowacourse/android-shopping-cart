@@ -28,7 +28,9 @@ interface ShoppingContract {
         val recentViewedProducts: RecentViewedProducts
 
         fun loadProducts()
+
         fun addToRecentViewedProduct(id: Int)
+
         fun readMoreShoppingProducts()
     }
 }
