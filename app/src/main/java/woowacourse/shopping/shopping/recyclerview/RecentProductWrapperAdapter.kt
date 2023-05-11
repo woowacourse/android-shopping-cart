@@ -16,13 +16,20 @@ class RecentProductWrapperAdapter(private val recentProductAdapter: RecentProduc
         )
     }
 
-    override fun getItemCount(): Int = 1
+    override fun getItemCount(): Int {
+        return if (recentProductAdapter.itemCount == 0) 0
+        else 1
+    }
 
     override fun onBindViewHolder(holder: RecentProductWrapperViewHolder, position: Int) {
         holder.bind(recentProductAdapter)
     }
 
     override fun getItemViewType(position: Int): Int = VIEW_TYPE
+
+    fun updateRecentProduct() {
+        notifyDataSetChanged()
+    }
 
     companion object {
         const val VIEW_TYPE = 1

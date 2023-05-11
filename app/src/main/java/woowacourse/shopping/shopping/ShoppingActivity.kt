@@ -24,12 +24,17 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var presenter: ShoppingContract.Presenter
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
+
+    private val recentProductWrapperAdapter: RecentProductWrapperAdapter by lazy {
+        RecentProductWrapperAdapter(recentProductAdapter)
+    }
+
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
             setIsolateViewTypes(false)
         }.build()
         ConcatAdapter(
-            config, RecentProductWrapperAdapter(recentProductAdapter), productAdapter
+            config, recentProductWrapperAdapter, productAdapter
         )
     }
 
@@ -69,6 +74,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun updateRecentProductList(recentProductModels: List<RecentProductModel>) {
         recentProductAdapter.updateRecentProducts(recentProductModels)
+        recentProductWrapperAdapter.updateRecentProduct()
     }
 
     override fun showProductDetail(productModel: ProductModel) {
