@@ -14,8 +14,8 @@ class CartViewHolder private constructor(
 ) : RecyclerView.ViewHolder(view) {
     private val binding = ItemCartListBinding.bind(view)
 
-    constructor(view: ViewGroup, onCloseClick: (Int) -> Unit) : this(
-        LayoutInflater.from(view.context).inflate(R.layout.item_cart_list, view, false),
+    constructor(parent: ViewGroup, onCloseClick: (Int) -> Unit) : this(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_cart_list, parent, false),
     ) {
         binding.btIvCartListClose.setOnClickListener {
             onCloseClick(absoluteAdapterPosition)

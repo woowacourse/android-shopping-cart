@@ -14,9 +14,9 @@ class ProductListViewHolder private constructor(
 ) : RecyclerView.ViewHolder(view) {
     private val binding = ItemProductListBinding.bind(view)
 
-    constructor(view: ViewGroup, onClick: (Int) -> Unit) : this(
-        LayoutInflater.from((view.context)).inflate(
-            R.layout.item_product_list, view, false
+    constructor(parent: ViewGroup, onClick: (Int) -> Unit) : this(
+        LayoutInflater.from((parent.context)).inflate(
+            R.layout.item_product_list, parent, false
         )
     ) {
         binding.root.setOnClickListener {
