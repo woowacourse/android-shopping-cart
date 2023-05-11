@@ -10,10 +10,14 @@ import woowacourse.shopping.data.model.DataProduct
 
 class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     @SuppressLint("Range")
-    override fun getPartially(size: Int): List<DataProduct> {
+    override fun getPartially(size: Int, lastId: Int, isNext: Boolean): List<DataProduct> {
         val products = mutableListOf<DataProduct>()
+        val start = if (isNext) {
+            lastId
+        } else lastId - size
         database.writableDatabase.use { db ->
-            val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(size.toString()))
+            val cursor =
+                db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(start.toString(), size.toString()))
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val name: String =
@@ -53,7 +57,9 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
 
     companion object {
         private val GET_PARTIALLY_QUERY = """
-            SELECT * FROM ${BasketContract.TABLE_NAME} ORDER BY ${BaseColumns._ID} LIMIT ?        
+            SELECT * FROM ${BasketContract.TABLE_NAME}
+            WHERE ${BaseColumns._ID} > ?
+            ORDER BY ${BaseColumns._ID} LIMIT ?        
         """.trimIndent()
     }
 }

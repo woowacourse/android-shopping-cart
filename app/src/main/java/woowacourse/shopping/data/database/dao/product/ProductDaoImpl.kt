@@ -13,7 +13,8 @@ class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
     override fun getPartially(size: Int, lastId: Int): List<DataProduct> {
         val products = mutableListOf<DataProduct>()
         database.writableDatabase.use { db ->
-            val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(lastId.toString(), size.toString()))
+            val cursor =
+                db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(lastId.toString(), size.toString()))
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val name: String =

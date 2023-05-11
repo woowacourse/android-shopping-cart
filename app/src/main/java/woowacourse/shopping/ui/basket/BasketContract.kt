@@ -7,12 +7,13 @@ interface BasketContract {
         val presenter: Presenter
 
         fun updateBasketProducts(products: List<UiProduct>)
+        fun updateNavigatorEnabled(previous: Boolean, next: Boolean)
     }
 
     interface Presenter {
         val view: View
 
-        fun fetchBasketProducts()
+        fun fetchBasketProducts(isNext: Boolean = true)
 
         fun removeBasketProduct(product: UiProduct)
     }

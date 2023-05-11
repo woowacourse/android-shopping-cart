@@ -25,6 +25,7 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         initPresenter()
         initAdapter()
         initToolbarBackButton()
+        navigatorClickListener()
     }
 
     private fun initPresenter() {
@@ -46,8 +47,18 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         }
     }
 
+    private fun navigatorClickListener() {
+        binding.btnPrevious.setOnClickListener { presenter.fetchBasketProducts(isNext = false) }
+        binding.btnNext.setOnClickListener { presenter.fetchBasketProducts(isNext = true) }
+    }
+
     override fun updateBasketProducts(products: List<UiProduct>) {
         basketAdapter.submitList(products)
+    }
+
+    override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {
+        binding.btnPrevious.isEnabled = previous
+        binding.btnNext.isEnabled = next
     }
 
     companion object {

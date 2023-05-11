@@ -20,6 +20,7 @@ class ShoppingPresenter(
             .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, lastId)
             .map { it.toUi() }
         lastId = products.maxOfOrNull { it.id } ?: -1
+        lastId -= if (checkHasNext(products)) 1 else 0
         hasNext = checkHasNext(products)
         view.updateProducts(products)
     }

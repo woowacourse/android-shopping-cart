@@ -66,6 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="1"
+                android:text="@string/default_page"
                 android:layout_marginHorizontal="16dp"
                 android:textColor="@color/woowa_text_black"
                 app:layout_constraintTop_toTopOf="@+id/btn_previous"
