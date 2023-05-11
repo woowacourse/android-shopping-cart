@@ -51,6 +51,7 @@ class ShoppingPresenterTest {
         // then
         val capturedProducts = slot.captured
         assertTrue(capturedProducts.size == 12)
+        verify(exactly = 1) { view.setProducts(capturedProducts) }
     }
 
     @Test
@@ -67,6 +68,7 @@ class ShoppingPresenterTest {
         // then
         val capturedProducts = slot.captured
         assertTrue(capturedProducts.size == 11)
+        verify(exactly = 1) { view.setProducts(capturedProducts) }
     }
 
     @Test
@@ -84,6 +86,7 @@ class ShoppingPresenterTest {
         // then
         val capturedProducts = slot.captured
         assertTrue(capturedProducts.size == 12)
+        verify(exactly = 2) { view.setProducts(capturedProducts) }
     }
 
     @Test
@@ -97,7 +100,7 @@ class ShoppingPresenterTest {
         presenter.navigateToItemDetail(fakeProduct.toUIModel())
 
         // then
-        verify { view.navigateToProductDetail(fakeProduct.toUIModel()) }
+        verify(exactly = 1) { view.navigateToProductDetail(fakeProduct.toUIModel()) }
     }
 
     @Test
@@ -116,5 +119,6 @@ class ShoppingPresenterTest {
 
         val capturedProducts = slot.captured
         assertTrue(capturedProducts.size == 22)
+        verify(exactly = 1) { view.addProducts(capturedProducts) }
     }
 }
