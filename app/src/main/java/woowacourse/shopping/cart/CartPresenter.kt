@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.Cart
 
 class CartPresenter(
     private val view: CartContract.View,
+    private var cart: Cart = Cart(emptyList()),
     private val cartState: State<Cart> = CartState,
     private val cartDao: CartDao,
     private var currentPage: Int = 0,
@@ -21,7 +22,7 @@ class CartPresenter(
     }
 
     override fun removeCartProduct(cartProductModel: CartProductModel) {
-        val cart = cartState.load().remove(cartProductModel.toDomain())
+        cart = cartState.load().remove(cartProductModel.toDomain())
         cartState.save(cart)
         cartDao.deleteCartProductByOrdinal(cartProductModel.ordinal)
         view.updateNavigationVisibility(determineNavigationVisibility())
@@ -39,6 +40,7 @@ class CartPresenter(
     }
 
     private fun updateCartPage() {
+        cartState.save(cartDao.selectAll())
         val cart = cartDao.selectPage(currentPage, sizePerPage)
         view.updateCart(
             cart = cart.cartProducts.map { it.toView() },

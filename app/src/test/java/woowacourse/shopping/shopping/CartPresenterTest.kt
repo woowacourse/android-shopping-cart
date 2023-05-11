@@ -29,7 +29,7 @@ class CartPresenterTest {
         } returns Cart(emptyList())
 
         presenter = CartPresenter(
-            view, cartState, cartDao, 0, 0
+            view, mockk(relaxed = true), cartState, cartDao, 0, 0
         )
     }
 

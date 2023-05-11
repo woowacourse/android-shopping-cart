@@ -24,6 +24,29 @@ class CartDao(private val db: SQLiteDatabase) {
         db.insert(SqlCart.name, null, row)
     }
 
+    fun selectAll(): Cart {
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
+            null
+        )
+        return Cart(
+            cursor.use {
+                val cart = mutableListOf<CartProduct>()
+                while (it.moveToNext()) cart.add(
+                    CartProduct(
+                        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)),
+                        Product(
+                            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+                            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
+                            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
+                        )
+                    )
+                )
+                cart
+            }
+        )
+    }
+
     fun selectAllCount(): Int {
         val cursor = db.rawQuery(
             "SELECT COUNT(*) FROM ${SqlCart.name}",
