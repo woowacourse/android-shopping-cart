@@ -19,13 +19,6 @@ class ShoppingPresenter(
     private var productsData: MutableList<ProductsItemType> = mutableListOf()
 
     override fun setUpProducts() {
-        val recentProductsData = RecentProductsItem(
-            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
-        )
-
-        if (recentProductsData.product.isNotEmpty()) {
-            productsData = mutableListOf(recentProductsData)
-        }
 
         productsData += repository.getNext(PRODUCT_COUNT)
             .map { product: Product -> ProductItem(product.toUIModel()) }
@@ -33,9 +26,13 @@ class ShoppingPresenter(
     }
 
     override fun updateProducts() {
-        productsData[0] = RecentProductsItem(
+        val recentProductsData = RecentProductsItem(
             recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
         )
+        when {
+            productsData[0] is RecentProductsItem -> productsData[0] = recentProductsData
+            recentProductsData.product.isNotEmpty() -> productsData.add(0, recentProductsData)
+        }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
