@@ -8,13 +8,15 @@ class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
 ) : CartContract.Presenter {
+    private val cartProducts = cartRepository.findAll().map { ProductMockRepository.find(it.id) }.map { it.toUiModel() }.toMutableList()
     override fun fetchProducts() {
-        val cartProducts = cartRepository.findAll().map { ProductMockRepository.find(it.id) }
-        view.showProducts(cartProducts.map { it.toUiModel() })
+        view.showProducts(cartProducts)
     }
 
     override fun removeProduct(id: Int) {
+        val removedItem = cartProducts.find { it.id == id }
         cartRepository.remove(id)
-        view.updateProducts()
+        view.notifyRemoveItem(cartProducts.indexOf(removedItem))
+        cartProducts.remove(removedItem)
     }
 }

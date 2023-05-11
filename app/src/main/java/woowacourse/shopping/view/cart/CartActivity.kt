@@ -35,9 +35,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.removeProduct(id)
     }
 
-    override fun updateProducts() {
-        presenter.fetchProducts()
-        // 데이터를 어떻게 바꿀까?
+    override fun notifyRemoveItem(position: Int) {
+        binding.recyclerCart.adapter?.notifyItemRemoved(position)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

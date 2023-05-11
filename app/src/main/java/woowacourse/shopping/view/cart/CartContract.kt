@@ -5,7 +5,7 @@ import woowacourse.shopping.model.ProductModel
 interface CartContract {
     interface View {
         fun showProducts(cartProducts: List<ProductModel>)
-        fun updateProducts()
+        fun notifyRemoveItem(id: Int)
     }
 
     interface Presenter {
