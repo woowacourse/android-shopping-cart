@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/loadMoreButton"
             android:layout_width="154dp"
             android:layout_height="154dp"
             app:imgResId="@{product.imageUrl}"
@@ -36,7 +36,7 @@
             android:textStyle="bold"
             android:layout_marginStart="6dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/loadMoreButton"
             tools:text="가나다라마바사아차자창ㄹ망ㄹ" />
 
         <TextView

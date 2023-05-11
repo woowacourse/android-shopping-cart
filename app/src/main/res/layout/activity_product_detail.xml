@@ -34,7 +34,7 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/productTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
@@ -48,35 +48,35 @@
             tools:text="TITLE" />
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/divideBar"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="14dp"
-            android:background="#AAAAAA"
+            android:background="@color/divide_bar_color"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/productTitle" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/productPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="금액"
-            android:textColor="#333333"
+            android:text="@string/price_text"
+            android:textColor="@color/price_text_color"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/divideBar" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
             android:text="@{@string/product_price(product.price)}"
-            android:textColor="#333333"
+            android:textColor="@color/price_text_color"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView3"
+            app:layout_constraintTop_toTopOf="@+id/productPrice"
             tools:text="10000원" />
 
         <TextView
@@ -85,7 +85,7 @@
             android:layout_height="50dp"
             android:background="#04C09E"
             android:gravity="center"
-            android:text="장바구니 담기"
+            android:text="@string/insert_cart_texgt"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
