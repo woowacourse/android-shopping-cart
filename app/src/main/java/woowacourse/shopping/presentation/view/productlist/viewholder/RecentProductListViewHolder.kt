@@ -20,7 +20,7 @@ class RecentProductListViewHolder private constructor(
         )
     ) {
         binding.root.setOnClickListener {
-            onProductClick(absoluteAdapterPosition)
+            onProductClick(bindingAdapterPosition)
         }
     }
 

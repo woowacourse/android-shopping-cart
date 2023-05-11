@@ -20,7 +20,7 @@ class ProductListViewHolder private constructor(
         )
     ) {
         binding.root.setOnClickListener {
-            onClick(absoluteAdapterPosition)
+            onClick(bindingAdapterPosition)
         }
     }
 

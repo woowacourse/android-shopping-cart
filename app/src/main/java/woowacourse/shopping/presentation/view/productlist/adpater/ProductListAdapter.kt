@@ -21,4 +21,10 @@ class ProductListAdapter(
     }
 
     override fun getItemCount(): Int = products.size
+
+    override fun getItemViewType(position: Int): Int = VIEW_TYPE
+
+    companion object {
+        internal const val VIEW_TYPE = 100
+    }
 }

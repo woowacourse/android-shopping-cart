@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
 import woowacourse.shopping.data.model.RecentProductEntity
+import java.time.LocalDateTime
 
 class RecentProductDao(context: Context) {
     private val db = RecentProductHelper(context).writableDatabase
@@ -12,16 +13,16 @@ class RecentProductDao(context: Context) {
     fun insertRecentProduct(productId: Long) {
         val value = ContentValues().apply {
             put(RecentProductContract.RecentProduct.PRODUCT_ID, productId)
+            put(RecentProductContract.RecentProduct.CREATE_DATE, LocalDateTime.now().toString())
         }
         db.insert(RecentProductContract.RecentProduct.TABLE_NAME, null, value)
     }
 
-    fun deleteAll() {
-        db.delete(
-            CartContract.Cart.TABLE_NAME,
-            "",
-            arrayOf()
-        )
+    fun deleteNotToday(today: String) {
+        val sql =
+            "DELETE FROM ${RecentProductContract.RecentProduct.TABLE_NAME} WHERE ${RecentProductContract.RecentProduct.CREATE_DATE} NOT LIKE '$today%'"
+
+        db.execSQL(sql)
     }
 
     fun getAll(): List<RecentProductEntity> {
@@ -48,7 +49,8 @@ class RecentProductDao(context: Context) {
             null,
             null,
             null,
-            null
+            null,
+            "10"
         )
     }
 }

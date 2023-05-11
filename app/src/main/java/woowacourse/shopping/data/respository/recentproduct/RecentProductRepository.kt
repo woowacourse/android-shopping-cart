@@ -4,6 +4,6 @@ import woowacourse.shopping.presentation.model.RecentProductModel
 
 interface RecentProductRepository {
     fun getRecentProducts(): List<RecentProductModel>
-    fun deleteAllRecentProducts()
+    fun deleteNotTodayRecentProducts(today: String)
     fun addCart(productId: Long)
 }

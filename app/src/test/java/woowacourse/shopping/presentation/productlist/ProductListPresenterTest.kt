@@ -68,6 +68,30 @@ class ProductListPresenterTest {
         verify { view.setRecentProductItemsView(actual) }
     }
 
+    @Test
+    fun `업데이트 된 데이터를 받아와 최근 본 상품을 갱신한다`() {
+        // given
+        every { recentProductRepository.getRecentProducts() } returns dummyRecentProduct
+        val slotPreSize = slot<Int>()
+        val slotDiffSize = slot<Int>()
+        justRun { view.updateRecentProductItemsView(capture(slotPreSize), capture(slotDiffSize)) }
+        presenter.loadRecentProductItems()
+
+        // when
+        presenter.updateRecentProductItems()
+
+        // then
+        val actualPreSize = slotPreSize.captured
+        val actualDiffSize = slotDiffSize.captured
+        val expectedPreSize = dummyRecentProduct.size
+        val expectedDiffSize = 0
+
+        assertEquals(expectedPreSize, actualPreSize)
+        assertEquals(expectedDiffSize, actualDiffSize)
+        verify { recentProductRepository.getRecentProducts() }
+        verify { view.updateRecentProductItemsView(actualPreSize, actualDiffSize) }
+    }
+
     companion object {
         private val dummyData = listOf(
             ProductModel(

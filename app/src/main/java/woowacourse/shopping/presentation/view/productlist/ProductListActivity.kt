@@ -5,6 +5,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ConcatAdapter
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepositoryImp
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -14,6 +16,7 @@ import woowacourse.shopping.presentation.view.cart.CartActivity
 import woowacourse.shopping.presentation.view.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.view.productlist.adpater.ProductListAdapter
 import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductListAdapter
+import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductWrapperAdapter
 
 class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private lateinit var binding: ActivityProductListBinding
@@ -25,17 +28,40 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         )
     }
 
+    private lateinit var productListAdapter: ProductListAdapter
+    private lateinit var recentProductListAdapter: RecentProductListAdapter
+    private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
+    private val concatAdapter: ConcatAdapter by lazy {
+        val config = ConcatAdapter.Config.Builder().apply {
+            setIsolateViewTypes(false)
+        }.build()
+
+        ConcatAdapter(config).apply {
+            setConcatAdapter()
+        }
+    }
+
+    private fun ConcatAdapter.setConcatAdapter() {
+        if (recentProductListAdapter.itemCount != 0) {
+            addAdapter(recentProductWrapperAdapter)
+        }
+        addAdapter(productListAdapter)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
 
+        initLayoutManager()
+        presenter.initRecentProductItems()
         presenter.loadProductItems()
+        presenter.loadRecentProductItems()
+        setConcatAdapter()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        presenter.loadRecentProductItems()
+    override fun onRestart() {
+        presenter.updateRecentProductItems()
+        super.onRestart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -54,13 +80,38 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun initLayoutManager() {
+        val layoutManager = GridLayoutManager(this, 2)
+        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (concatAdapter.getItemViewType(position)) {
+                    ProductListAdapter.VIEW_TYPE -> 1
+                    else -> 2
+                }
+            }
+        }
+        binding.rvProductList.layoutManager = layoutManager
+    }
+
     override fun setProductItemsView(products: List<ProductModel>) {
-        binding.rvProductList.adapter = ProductListAdapter(products, ::onProductClickEvent)
+        productListAdapter = ProductListAdapter(products, ::onProductClickEvent)
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
-        binding.rvRecentProductList.adapter =
-            RecentProductListAdapter(recentProducts, ::moveToActivity)
+        recentProductListAdapter = RecentProductListAdapter(recentProducts, ::moveToActivity)
+        recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductListAdapter)
+    }
+
+    private fun setConcatAdapter() {
+        binding.rvProductList.adapter = concatAdapter
+    }
+
+    override fun updateRecentProductItemsView(preSize: Int, diffSize: Int) {
+        if (!concatAdapter.adapters.contains(recentProductWrapperAdapter)) {
+            concatAdapter.addAdapter(0, recentProductWrapperAdapter)
+            binding.rvProductList.scrollToPosition(0)
+        }
+        recentProductListAdapter.notifyItemRangeChanged(preSize, diffSize)
     }
 
     private fun onProductClickEvent(product: ProductModel) {

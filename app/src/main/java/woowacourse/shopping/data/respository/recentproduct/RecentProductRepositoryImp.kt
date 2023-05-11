@@ -14,8 +14,8 @@ class RecentProductRepositoryImp(
         return recentProductDao.getAll().map { it.toUIModel() }
     }
 
-    override fun deleteAllRecentProducts() {
-        recentProductDao.deleteAll()
+    override fun deleteNotTodayRecentProducts(today: String) {
+        recentProductDao.deleteNotToday(today)
     }
 
     override fun addCart(productId: Long) {
