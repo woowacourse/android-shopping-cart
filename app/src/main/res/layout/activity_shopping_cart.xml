@@ -56,13 +56,13 @@
             android:layout_marginBottom="62dp"
             android:textColor="@color/woowa_dealer_gray_700"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/iv_shoppingCart_right_button"
+            app:layout_constraintEnd_toStartOf="@+id/iv_shopping_cart_next_page"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iv_shoppingCart_left_button"
+            app:layout_constraintStart_toEndOf="@+id/iv_shopping_cart_previous_button"
             tools:text="1" />
 
         <ImageView
-            android:id="@+id/iv_shoppingCart_left_button"
+            android:id="@+id/iv_shopping_cart_previous_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="116dp"
@@ -74,7 +74,7 @@
             app:srcCompat="@drawable/icon_left_page_selector" />
 
         <ImageView
-            android:id="@+id/iv_shoppingCart_right_button"
+            android:id="@+id/iv_shopping_cart_next_page"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="116dp"

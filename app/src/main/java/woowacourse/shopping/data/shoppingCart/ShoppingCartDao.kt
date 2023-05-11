@@ -3,7 +3,6 @@ package woowacourse.shopping.data.shoppingCart
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.provider.BaseColumns
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_QUANTITY
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_NAME
@@ -25,7 +24,7 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
     }
 
     override fun deleteProductInShoppingCart(productId: Long): Boolean {
-        val selection = "${BaseColumns._ID} = ?"
+        val selection = "$TABLE_COLUMN_PRODUCT_ID = ?"
         val selectionArgs = arrayOf("$productId")
         val deletedRows = shoppingDb.delete(TABLE_NAME, selection, selectionArgs)
         if (deletedRows == 0) return false

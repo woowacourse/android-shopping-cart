@@ -7,6 +7,7 @@ import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.domain.model.ProductInCart
+import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartContract
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartPresenter
@@ -14,10 +15,61 @@ import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartP
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private lateinit var binding: ActivityShoppingCartBinding
     override val presenter: ShoppingCartContract.Presenter by lazy { initPresenter() }
-    private val shoppingCartAdapter = ShoppingCartAdapter(::setClickEventOnProduct)
+    private val shoppingCartAdapter = ShoppingCartAdapter(::clickItem, ::clickItemDelete)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityShoppingCartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        initView()
+        initClickListeners()
+        binding.rvShoppingCart.adapter = shoppingCartAdapter
+    }
+
+    private fun initView() {
+        presenter.getShoppingCart(INIT_PAGE)
+        presenter.setPageNumber()
+        presenter.checkPageMovement()
+    }
+
+    private fun initClickListeners() {
+        clickNextPage()
+        clickPreviousPage()
+    }
 
     override fun setShoppingCart(shoppingCart: List<ProductInCart>) {
         shoppingCartAdapter.initProducts(shoppingCart)
+    }
+
+    override fun setPage(pageNumber: Int) {
+        binding.tvShoppingCartPageNumber.text = pageNumber.toString()
+    }
+
+    override fun clickNextPage() {
+        binding.ivShoppingCartNextPage.setOnClickListener {
+            presenter.goNextPage()
+        }
+    }
+
+    override fun clickPreviousPage() {
+        binding.ivShoppingCartPreviousButton.setOnClickListener {
+            presenter.goPreviousPage()
+        }
+    }
+
+    override fun setPageButtonEnable(previous: Boolean, next: Boolean) {
+        binding.ivShoppingCartNextPage.isEnabled = next
+        binding.ivShoppingCartPreviousButton.isEnabled = previous
+    }
+
+    private fun clickItem(productInCart: ProductInCart) {
+        val intent = ProductDetailActivity.getIntent(this, productInCart.product.id)
+        startActivity(intent)
+    }
+
+    private fun clickItemDelete(productInCart: ProductInCart): Boolean {
+        return presenter.deleteProductInCart(productInCart.product.id)
     }
 
     private fun initPresenter(): ShoppingCartPresenter {
@@ -28,22 +80,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
                 productDataSource = ProductDao(this),
             ),
         )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityShoppingCartBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        initView()
-        binding.rvShoppingCart.adapter = shoppingCartAdapter
-    }
-
-    private fun setClickEventOnProduct(position: Int) {
-    }
-
-    private fun initView() {
-        presenter.getShoppingCart(INIT_PAGE)
     }
 
     companion object {

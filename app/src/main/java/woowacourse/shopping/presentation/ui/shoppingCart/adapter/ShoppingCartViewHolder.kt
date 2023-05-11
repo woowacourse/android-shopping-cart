@@ -8,6 +8,7 @@ import woowacourse.shopping.domain.model.ProductInCart
 
 class ShoppingCartViewHolder(
     private val onClick: (Int) -> Unit,
+    private val clickDelete: (position: Int) -> Unit,
     private val binding: ItemShoppingCartProductBinding,
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -15,6 +16,9 @@ class ShoppingCartViewHolder(
     init {
         binding.root.setOnClickListener {
             onClick(absoluteAdapterPosition)
+        }
+        binding.ivCartProductDelete.setOnClickListener {
+            clickDelete(bindingAdapterPosition)
         }
     }
 
