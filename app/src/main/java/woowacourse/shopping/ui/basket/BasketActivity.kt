@@ -24,6 +24,7 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_basket)
         initPresenter()
         initAdapter()
+        initToolbarBackButton()
     }
 
     private fun initPresenter() {
@@ -37,6 +38,12 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         basketAdapter = BasketAdapter(presenter::removeBasketProduct)
         binding.rvBasket.adapter = basketAdapter
         presenter.fetchBasketProducts()
+    }
+
+    private fun initToolbarBackButton() {
+        binding.tbBasket.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     override fun updateBasketProducts(products: List<UiProduct>) {
