@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.BundleKeys
-import woowacourse.shopping.CartActivity
 import woowacourse.shopping.MainProductCatalogueAdapter
 import woowacourse.shopping.MainProductCatalogueUIModel
 import woowacourse.shopping.ProductDBHelper
@@ -16,6 +15,7 @@ import woowacourse.shopping.ProductMockData
 import woowacourse.shopping.ProductUIModel
 import woowacourse.shopping.R
 import woowacourse.shopping.RecentProductCatalogueUIModel
+import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 

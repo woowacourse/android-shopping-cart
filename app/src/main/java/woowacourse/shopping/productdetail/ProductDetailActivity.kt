@@ -9,10 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.BundleKeys
+import woowacourse.shopping.CartDBHelper
 import woowacourse.shopping.ProductDBHelper
 import woowacourse.shopping.ProductDBRepository
 import woowacourse.shopping.ProductUIModel
 import woowacourse.shopping.R
+import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 
@@ -38,6 +40,19 @@ class ProductDetailActivity : AppCompatActivity() {
             .into(binding.ivProductImage)
         binding.tvProductName.text = productData.name
         binding.tvPrice.text = productData.price.toString()
+
+        setOnClickAddToCart(productData)
+    }
+
+    private fun setOnClickAddToCart(productData: ProductUIModel) {
+        binding.btAddToCart.setOnClickListener {
+            val dbHelper = CartDBHelper(this)
+            val db = dbHelper.writableDatabase
+            val repository = ProductDBRepository(db)
+            repository.insert(productData)
+
+            startActivity(CartActivity.intent(binding.root.context))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

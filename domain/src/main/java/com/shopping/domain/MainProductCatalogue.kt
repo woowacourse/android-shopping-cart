@@ -1,6 +1,6 @@
 package com.shopping.domain
 
-class MainProductCatalogue(private val items: List<Product> = emptyList()) : ProductCatalogue {
+class MainProductCatalogue(val items: List<Product> = emptyList()) : ProductCatalogue {
     override val size: Int = items.size
 
     override fun addAll(products: List<Product>): ProductCatalogue =

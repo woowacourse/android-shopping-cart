@@ -32,6 +32,10 @@ class ProductDBRepository(private val database: SQLiteDatabase) {
         database.insert(TABLE_NAME, null, record)
     }
 
+    fun remove(productUIModel: ProductUIModel) {
+        database.rawQuery("DELETE FROM $TABLE_NAME WHERE $KEY_NAME = ${productUIModel.name}", null)
+    }
+
     fun clear() {
         database.execSQL("DELETE FROM $TABLE_NAME")
     }
