@@ -28,9 +28,14 @@ class ProductAdapter(
     }
 
     fun updateProducts(products: List<ProductModel>) {
-        val lastPosition = itemCount
         this.products = products
-        notifyItemRangeInserted(lastPosition, products.size - lastPosition)
+        notifyDataSetChanged()
+    }
+
+    fun addProducts(products: List<ProductModel>) {
+        val lastPosition = itemCount
+        this.products += products
+        notifyItemRangeInserted(lastPosition, products.size)
     }
 
     override fun getItemViewType(position: Int): Int = VIEW_TYPE

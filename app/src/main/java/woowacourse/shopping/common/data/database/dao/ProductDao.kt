@@ -1,25 +1,15 @@
 package woowacourse.shopping.common.data.database.dao
 
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.common.data.database.insert
 import woowacourse.shopping.common.data.database.table.SqlProduct
-import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.URL
 
 class ProductDao(private val db: SQLiteDatabase) {
-    fun insertProduct(product: ProductModel): Long {
-        val row: MutableMap<String, Any> = mutableMapOf()
-        row[SqlProduct.PICTURE] = product.picture
-        row[SqlProduct.TITLE] = product.title
-        row[SqlProduct.PRICE] = product.price
-        return SqlProduct.insert(db, row)
-    }
-
-    fun selectAll(): Products {
+    fun selectByRange(start: Int, range: Int): Products {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlProduct.name}", null
+            "SELECT * FROM ${SqlProduct.name} LIMIT $start, $range", null
         )
         return Products(
             cursor.use {

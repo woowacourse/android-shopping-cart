@@ -80,11 +80,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateProductList(productModels: List<ProductModel>) {
+    override fun updateProducts(productModels: List<ProductModel>) {
         productAdapter.updateProducts(productModels)
     }
 
-    override fun updateRecentProductList(recentProductModels: List<RecentProductModel>) {
+    override fun addProducts(productModels: List<ProductModel>) {
+        productAdapter.addProducts(productModels)
+    }
+
+    override fun updateRecentProducts(recentProductModels: List<RecentProductModel>) {
         recentProductAdapter.updateRecentProducts(recentProductModels)
         recentProductWrapperAdapter.updateRecentProduct()
     }
@@ -114,8 +118,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             productDao = ProductDao(db),
             recentProductDao = RecentProductDao(db),
             recentProductSize = 10,
-            productLoadSize = 20,
-            productCount = 20
+            productLoadSize = 20
         )
     }
 

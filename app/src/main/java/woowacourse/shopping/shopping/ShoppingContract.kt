@@ -15,9 +15,11 @@ interface ShoppingContract {
     }
 
     interface View {
-        fun updateProductList(productModels: List<ProductModel>)
+        fun updateProducts(productModels: List<ProductModel>)
 
-        fun updateRecentProductList(recentProductModels: List<RecentProductModel>)
+        fun addProducts(productModels: List<ProductModel>)
+
+        fun updateRecentProducts(recentProductModels: List<RecentProductModel>)
 
         fun showProductDetail(productModel: ProductModel)
 

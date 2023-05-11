@@ -16,35 +16,22 @@ class ShoppingPresenter(
     private val view: ShoppingContract.View,
     private var products: Products = Products(emptyList()),
     private var productsState: State<Products> = ProductsState,
-    productDao: ProductDao,
+    private val productDao: ProductDao,
     private var recentProducts: RecentProducts = RecentProducts(emptyList()),
     private var recentProductsState: State<RecentProducts> = RecentProductsState,
     private val recentProductDao: RecentProductDao,
     private val recentProductSize: Int,
     private val productLoadSize: Int,
-    private var productCount: Int
 ) : ShoppingContract.Presenter {
 
     init {
-        products = productDao.selectAll()
+        loadMoreProduct()
         recentProducts = recentProductDao.selectAll()
-        productsState.save(products)
         recentProductsState.save(recentProducts)
     }
 
     override fun resumeView() {
-        updateProducts()
         updateRecentProducts()
-    }
-
-    private fun updateProducts() {
-        products = productsState.load()
-        view.updateProductList(products.value.take(productCount).map { it.toView() })
-    }
-
-    private fun updateRecentProducts() {
-        recentProducts = recentProductsState.load()
-        view.updateRecentProductList(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }
 
     override fun openProduct(productModel: ProductModel) {
@@ -62,7 +49,19 @@ class ShoppingPresenter(
     }
 
     override fun loadMoreProduct() {
-        productCount += productLoadSize
-        updateProducts()
+        val products = productsState.load()
+        val loadedProducts = productDao.selectByRange(products.value.size, productLoadSize)
+        productsState.save(products + loadedProducts)
+        view.addProducts(loadedProducts.value.map { it.toView() })
+    }
+
+    private fun updateProducts() {
+        products = productsState.load()
+        view.updateProducts(products.value.map { it.toView() })
+    }
+
+    private fun updateRecentProducts() {
+        recentProducts = recentProductsState.load()
+        view.updateRecentProducts(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }
 }
