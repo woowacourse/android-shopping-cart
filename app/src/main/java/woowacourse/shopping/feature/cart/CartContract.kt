@@ -19,5 +19,6 @@ interface CartContract {
         fun deleteCartProduct(cartProduct: CartProductUiModel, topId: Long)
         fun loadPreviousPage(topId: Long)
         fun loadNextPage(bottomId: Long)
+        fun setPage(page: PageUiModel)
     }
 }

@@ -10,6 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.PageUiModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
 
@@ -75,7 +76,25 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(CURRENT_PAGE_KEY, presenter.page.currentPage)
+        outState.putInt(ALL_SIZE_KEY, presenter.page.allSize)
+    }
+
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle
+    ) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val currentPage = savedInstanceState.getInt(CURRENT_PAGE_KEY)
+        val allSize = savedInstanceState.getInt(ALL_SIZE_KEY)
+        presenter.setPage(PageUiModel(allSize, currentPage))
+    }
+
     companion object {
+        private const val CURRENT_PAGE_KEY = "CURRENT_PAGE_KEY"
+        private const val ALL_SIZE_KEY = "ALL_SIZE_KEY"
+
         fun getIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }
