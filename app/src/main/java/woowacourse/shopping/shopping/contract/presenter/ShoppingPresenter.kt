@@ -20,32 +20,37 @@ class ShoppingPresenter(
 
     override fun setUpProducts() {
         val recentProductsData = RecentProductsItem(
-            recentRepository.getRecent(10).map { it.toUIModel() }
+            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
         )
 
         if (recentProductsData.product.isNotEmpty()) {
             productsData = mutableListOf(recentProductsData)
         }
 
-        productsData += repository.getNext(20)
+        productsData += repository.getNext(PRODUCT_COUNT)
             .map { product: Product -> ProductItem(product.toUIModel()) }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
     override fun updateProducts() {
         productsData[0] = RecentProductsItem(
-            recentRepository.getRecent(10).map { it.toUIModel() }
+            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
         )
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
     override fun fetchMoreProducts() {
-        productsData += repository.getNext(20)
+        productsData += repository.getNext(PRODUCT_COUNT)
             .map { ProductItem(it.toUIModel()) }
         view.addProducts(productsData.plus(ProductReadMore))
     }
 
     override fun navigateToItemDetail(data: ProductUIModel) {
         view.navigateToProductDetail(data)
+    }
+
+    companion object {
+        private const val RECENT_PRODUCT_COUNT = 10
+        private const val PRODUCT_COUNT = 20
     }
 }
