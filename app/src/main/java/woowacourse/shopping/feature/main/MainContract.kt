@@ -12,7 +12,6 @@ interface MainContract {
     }
 
     interface Presenter {
-        fun loadProducts()
         fun addProducts()
         fun storeRecentProduct(product: ProductListItem)
     }

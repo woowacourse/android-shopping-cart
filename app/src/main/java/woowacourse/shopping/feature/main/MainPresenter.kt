@@ -13,9 +13,11 @@ class MainPresenter(
     val productDbHandler: ProductDbHandler,
     val recentProductDbHandler: RecentProductDbHandler
 ) : MainContract.Presenter {
+
+    val products: List<Product> = productDbHandler.getAll()
     private var currentItemIndex = 0
 
-    override fun loadProducts() {
+    fun loadProducts() {
         val products: List<Product> =
             productDbHandler.getAll().subList(currentItemIndex, currentItemIndex + ADD_SIZE)
         currentItemIndex += ADD_SIZE
@@ -24,8 +26,11 @@ class MainPresenter(
     }
 
     override fun addProducts() {
-        val products: List<Product> = productDbHandler.getAll()
         val addItems: List<Product>
+        if (currentItemIndex == 0) {
+            loadProducts()
+            return
+        }
         if (products.size < currentItemIndex + ADD_SIZE) {
             addItems = products.subList(currentItemIndex, products.size - 1)
             currentItemIndex += products.size - 1 - currentItemIndex

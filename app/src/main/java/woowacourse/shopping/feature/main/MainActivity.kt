@@ -41,11 +41,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         setContentView(binding.root)
         presenter = MainPresenter(this, productDbHandler, recentProductDbHandler)
         initAdapter()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.loadProducts()
+        presenter.addProducts()
     }
 
     override fun onDestroy() {
