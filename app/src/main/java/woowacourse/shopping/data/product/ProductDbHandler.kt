@@ -22,7 +22,7 @@ class ProductDbHandler(
         )
     }
 
-    fun getCartProducts(): List<Product> {
+    fun getAll(): List<Product> {
         val cursor = getCursor()
         val list = mutableListOf<Product>()
 

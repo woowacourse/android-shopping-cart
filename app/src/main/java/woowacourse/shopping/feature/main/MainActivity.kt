@@ -7,13 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.example.domain.Product
+import com.example.domain.RecentProducts
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.product.ProductDbHelper
+import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
+import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
 import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.model.mapper.toDomain
 import woowacourse.shopping.feature.model.mapper.toItem
 import woowacourse.shopping.feature.model.mapper.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
@@ -22,8 +26,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding
         get() = _binding!!
-    private val dbHandler: ProductDbHandler by lazy {
+    private val productDbHandler: ProductDbHandler by lazy {
         ProductDbHandler(ProductDbHelper(this).writableDatabase)
+    }
+    private val recentProductDbHandler: RecentProductDbHandler by lazy {
+        RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
     }
 
     lateinit var adapter: ProductListAdapter
@@ -33,7 +40,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = MainPresenter(this, dbHandler)
+        presenter = MainPresenter(this, productDbHandler, recentProductDbHandler)
 
         initAdapter()
     }
@@ -49,13 +56,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapter() {
-        val dummy = Product(1, "23", "name", 13000).toUi().toItem()
         adapter = ProductListAdapter(
-            recentItems = listOf(dummy),
             onItemClick = { listItem ->
                 when (listItem) {
                     is ProductListItem -> {
+                        recentProductDbHandler.addColumn(listItem.toUi().toDomain())
                         ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
+                        // todo 앱 재시작해야 반영되는 문제 수정 필요
+                        setProducts(productDbHandler.getAll(), recentProductDbHandler.getRecentProducts())
                     }
                 }
             }
@@ -72,8 +80,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding.productRv.layoutManager = gridLayoutManager
     }
 
-    override fun setProducts(products: List<Product>) {
-        adapter.setItems(products.map { it.toUi().toItem() })
+    override fun setProducts(products: List<Product>, recentProducts: RecentProducts) {
+        adapter.setItems(
+            products.map { it.toUi().toItem() },
+            recentProducts.products.map { it.toUi().toItem() }
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -83,7 +94,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.item_cart -> { CartActivity.startActivity(this) }
+            R.id.item_cart -> {
+                CartActivity.startActivity(this)
+            }
         }
         return true
     }

@@ -8,12 +8,12 @@ import woowacourse.shopping.databinding.ItemRecentProductListBinding
 import woowacourse.shopping.feature.list.item.ListItem
 import woowacourse.shopping.feature.list.viewholder.ItemHolder
 import woowacourse.shopping.feature.list.viewholder.ProductViewHolder
-import woowacourse.shopping.feature.list.viewholder.RecentListViewHolder
+import woowacourse.shopping.feature.list.viewholder.RecentListItemViewHolder
 import woowacourse.shopping.feature.main.ViewType
 
 class ProductListAdapter(
     private var items: List<ListItem> = listOf(),
-    private var recentItems: List<ListItem>,
+    private var recentItems: List<ListItem> = listOf(),
     private val onItemClick: (ListItem) -> Unit
 ) : RecyclerView.Adapter<ItemHolder>() {
 
@@ -38,7 +38,7 @@ class ProductListAdapter(
         return when (ViewType.get(viewType)) {
             ViewType.HORIZONTAL -> {
                 val binding = ItemRecentProductListBinding.inflate(inflater, parent, false)
-                RecentListViewHolder(binding, recentItems)
+                RecentListItemViewHolder(binding, recentItems)
             }
             ViewType.PRODUCT -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
@@ -51,8 +51,9 @@ class ProductListAdapter(
         holder.bind(items[position], onItemClick)
     }
 
-    fun setItems(items: List<ListItem>) {
+    fun setItems(items: List<ListItem>, recentItems: List<ListItem>) {
         this.items = items.toList()
+        this.recentItems = recentItems.toList()
         notifyDataSetChanged()
     }
 }

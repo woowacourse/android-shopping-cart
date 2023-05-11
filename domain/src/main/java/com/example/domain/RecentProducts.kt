@@ -1,6 +1,6 @@
 package com.example.domain
 
-class RecentProductsCache(
+class RecentProducts(
     private val _products: MutableList<Product> = mutableListOf(),
 ) {
     val products: List<Product>
