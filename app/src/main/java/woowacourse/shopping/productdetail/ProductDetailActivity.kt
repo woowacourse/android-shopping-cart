@@ -51,7 +51,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             .centerCrop()
             .into(binding.productDetailPicture)
         binding.productDetailTitle.text = productModel.title
-        binding.productDetailPrice.text = productModel.price.toString()
+        binding.productDetailPrice.text =
+            getString(R.string.product_price, productModel.price)
     }
 
     override fun showCart() {
