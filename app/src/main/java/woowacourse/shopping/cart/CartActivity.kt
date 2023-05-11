@@ -24,18 +24,24 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initBinding()
+        initToolbar()
+        initPresenter(savedInstanceState)
+    }
+    private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+    }
 
+    private fun initPresenter(savedInstanceState: Bundle?) {
         presenter = CartPresenter(
             this,
             CartDatabase(CartDBHelper(this).writableDatabase),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0
         )
         presenter.setUpCarts()
-        setToolbar()
     }
 
-    private fun setToolbar() {
+    private fun initToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
