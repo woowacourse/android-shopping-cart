@@ -12,4 +12,5 @@
     <!-- App Bar -->
     <string name="app_bar_title_product_list">Shopping</string>
     <string name="app_bar_title_cart">Cart</string>
+    <string name="button_load_more">더보기</string>
 </resources>

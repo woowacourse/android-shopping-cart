@@ -6,12 +6,12 @@ import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 interface ProductListContract {
     interface Presenter {
         fun loadRecentlyViewedProducts()
-        fun loadProducts()
+        fun loadProducts(limit: Int, offset: Int)
         fun addRecentlyViewedProduct(productId: Long)
     }
 
     interface View {
         fun setRecentlyViewedProducts(recentlyViewedProducts: List<RecentlyViewedProductUIState>)
-        fun setProducts(products: List<ProductUIState>)
+        fun addProducts(products: List<ProductUIState>)
     }
 }

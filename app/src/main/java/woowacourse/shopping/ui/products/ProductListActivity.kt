@@ -26,6 +26,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             ProductRepositoryImpl,
         )
     }
+    private var offset: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         setActionBar()
 
         initProductList()
+        initLoadingButton()
     }
 
     override fun onResume() {
@@ -66,7 +68,20 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initProductList() {
-        presenter.loadProducts()
+        val products = mutableListOf<ProductUIState>()
+        binding.recyclerViewMainProduct.adapter = ProductListAdapter(mutableListOf()) {
+            presenter.addRecentlyViewedProduct(products[it].id)
+            moveToProductDetailActivity(products[it].id)
+        }
+        presenter.loadProducts(PAGE_SIZE, offset)
+        offset += PAGE_SIZE
+    }
+
+    private fun initLoadingButton() {
+        binding.btnLoading.setOnClickListener {
+            presenter.loadProducts(PAGE_SIZE, offset)
+            offset += PAGE_SIZE
+        }
     }
 
     override fun setRecentlyViewedProducts(recentlyViewedProducts: List<RecentlyViewedProductUIState>) {
@@ -81,11 +96,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             }
     }
 
-    override fun setProducts(products: List<ProductUIState>) {
-        binding.recyclerViewMainProduct.adapter = ProductListAdapter(products) {
-            presenter.addRecentlyViewedProduct(products[it].id)
-            moveToProductDetailActivity(products[it].id)
-        }
+    override fun addProducts(products: List<ProductUIState>) {
+        val adapter = binding.recyclerViewMainProduct.adapter as ProductListAdapter
+        adapter.addItems(products)
+        adapter.notifyDataSetChanged()
     }
 
     private fun moveToProductDetailActivity(productId: Long) {
@@ -94,5 +108,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun moveToCartActivity() {
         CartActivity.startActivity(this)
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }

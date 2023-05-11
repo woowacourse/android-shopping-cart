@@ -10,7 +10,7 @@ import woowacourse.shopping.ui.products.uistate.ProductUIState
 import java.text.DecimalFormat
 
 class ProductListAdapter(
-    private val products: List<ProductUIState>,
+    private val products: MutableList<ProductUIState>,
     private val onClick: (Int) -> Unit,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
 
@@ -28,6 +28,10 @@ class ProductListAdapter(
 
     override fun onBindViewHolder(holder: ProductListViewHolder, position: Int) {
         holder.bind(products[position])
+    }
+
+    fun addItems(newProducts: List<ProductUIState>) {
+        products.addAll(newProducts)
     }
 
     class ProductListViewHolder(
