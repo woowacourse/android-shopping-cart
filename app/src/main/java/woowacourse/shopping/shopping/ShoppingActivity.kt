@@ -15,6 +15,7 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.shopping.recyclerview.LoadMoreAdapter
 import woowacourse.shopping.shopping.recyclerview.ProductAdapter
 import woowacourse.shopping.shopping.recyclerview.RecentProductAdapter
 import woowacourse.shopping.shopping.recyclerview.RecentProductWrapperAdapter
@@ -22,11 +23,23 @@ import woowacourse.shopping.shopping.recyclerview.RecentProductWrapperAdapter
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
-    private lateinit var productAdapter: ProductAdapter
-    private lateinit var recentProductAdapter: RecentProductAdapter
+
+    private val productAdapter: ProductAdapter by lazy {
+        ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it) })
+    }
+
+    private val recentProductAdapter: RecentProductAdapter by lazy {
+        RecentProductAdapter(emptyList())
+    }
 
     private val recentProductWrapperAdapter: RecentProductWrapperAdapter by lazy {
         RecentProductWrapperAdapter(recentProductAdapter)
+    }
+
+    private val loadMoreAdapter: LoadMoreAdapter by lazy {
+        LoadMoreAdapter {
+            presenter.loadMoreProduct()
+        }
     }
 
     private val concatAdapter: ConcatAdapter by lazy {
@@ -34,7 +47,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             setIsolateViewTypes(false)
         }.build()
         ConcatAdapter(
-            config, recentProductWrapperAdapter, productAdapter
+            config, recentProductWrapperAdapter, productAdapter, loadMoreAdapter
         )
     }
 
@@ -45,8 +58,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
         setSupportActionBar(findViewById(R.id.shopping_toolbar))
 
-        initRecentProductAdapter()
-        initProductAdapter()
+        initProductList()
 
         initPresenter()
     }
@@ -90,22 +102,21 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         startActivity(intent)
     }
 
+    private fun initProductList() {
+        binding.shoppingProductList.layoutManager = makeLayoutManager()
+        binding.shoppingProductList.adapter = concatAdapter
+    }
+
     private fun initPresenter() {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ShoppingPresenter(
             this,
             productDao = ProductDao(db),
             recentProductDao = RecentProductDao(db),
-            recentProductSize = 10
+            recentProductSize = 10,
+            productLoadSize = 20,
+            productCount = 20
         )
-    }
-
-    private fun initProductAdapter() {
-        productAdapter =
-            ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it) })
-
-        binding.shoppingProductList.layoutManager = makeLayoutManager()
-        binding.shoppingProductList.adapter = concatAdapter
     }
 
     private fun makeLayoutManager(): GridLayoutManager {
@@ -125,9 +136,5 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun startProductDetailActivity(productModel: ProductModel) {
         val intent = ProductDetailActivity.createIntent(this, productModel)
         startActivity(intent)
-    }
-
-    private fun initRecentProductAdapter() {
-        recentProductAdapter = RecentProductAdapter(emptyList())
     }
 }

@@ -20,7 +20,9 @@ class ShoppingPresenter(
     private var recentProducts: RecentProducts = RecentProducts(emptyList()),
     private var recentProductsState: State<RecentProducts> = RecentProductsState,
     private val recentProductDao: RecentProductDao,
-    recentProductSize: Int
+    private val recentProductSize: Int,
+    private val productLoadSize: Int,
+    private var productCount: Int
 ) : ShoppingContract.Presenter {
 
     init {
@@ -28,8 +30,6 @@ class ShoppingPresenter(
         recentProducts = recentProductDao.selectAll()
         productsState.save(products)
         recentProductsState.save(recentProducts)
-        view.updateProductList(products.value.map { it.toView() })
-        view.updateRecentProductList(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }
 
     override fun resumeView() {
@@ -39,12 +39,12 @@ class ShoppingPresenter(
 
     private fun updateProducts() {
         products = productsState.load()
-        view.updateProductList(products.value.map { it.toView() })
+        view.updateProductList(products.value.take(productCount).map { it.toView() })
     }
 
     private fun updateRecentProducts() {
         recentProducts = recentProductsState.load()
-        view.updateRecentProductList(recentProducts.value.map { it.toView() })
+        view.updateRecentProductList(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }
 
     override fun openProduct(productModel: ProductModel) {
@@ -59,5 +59,10 @@ class ShoppingPresenter(
 
     override fun openCart() {
         view.showCart()
+    }
+
+    override fun loadMoreProduct() {
+        productCount += productLoadSize
+        updateProducts()
     }
 }

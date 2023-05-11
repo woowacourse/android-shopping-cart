@@ -10,6 +10,8 @@ interface ShoppingContract {
         fun openProduct(productModel: ProductModel)
 
         fun openCart()
+
+        fun loadMoreProduct()
     }
 
     interface View {

@@ -19,8 +19,8 @@ class ShoppingDBOpenHelper(context: Context) :
             db?.execSQL("CREATE TABLE ${it.name} ($columns ${it.constraint})")
         }
 
-        repeat(30) {
-            db?.execSQL("INSERT INTO ${SqlProduct.name} VALUES($it, 'https://picsum.photos/seed/picsum/200/300', 'ui test ui test', 10000)")
+        repeat(100) {
+            db?.execSQL("INSERT INTO ${SqlProduct.name} VALUES($it, 'https://picsum.photos/seed/picsum/200/300', ${(0..1000).random()}, 10000)")
         }
     }
 
