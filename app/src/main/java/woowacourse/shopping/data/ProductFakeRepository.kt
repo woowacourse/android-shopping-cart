@@ -24,9 +24,9 @@ object ProductFakeRepository : ProductRepository {
     override fun getNext(count: Int): List<Product> {
         val from = offset
         val to = min(offset + count, products.size)
-        val a = products.subList(from, to)
+        val subList = products.subList(from, to)
         offset = to
-        return a
+        return subList
     }
 
     override fun findById(id: Int): Product {

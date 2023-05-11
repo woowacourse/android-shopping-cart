@@ -76,12 +76,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 val position = parent.getChildAdapterPosition(view)
                 val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
 
-                if (spanSize == spanCount) {
-                    // 첫 번째 아이템인 경우
-                    // outRect.left = (parent.width - view.layoutParams.width) / 2
-                    // outRect.right = (parent.width - view.layoutParams.width) / 2
-                } else {
-                    // 나머지 아이템인 경우
+                if (spanSize != spanCount) {
                     outRect.left = spacing
                     outRect.right = spacing
                 }
