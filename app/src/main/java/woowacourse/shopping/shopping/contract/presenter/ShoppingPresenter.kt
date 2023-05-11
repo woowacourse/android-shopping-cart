@@ -27,15 +27,14 @@ class ShoppingPresenter(
             productsData = mutableListOf(recentProductsData)
         }
 
-        productsData += repository.getAll()
+        productsData += repository.getNext(20)
             .map { product: Product -> ProductItem(product.toUIModel()) }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
     override fun fetchMoreProducts() {
-        productsData += repository.getAll().map { product: Product ->
-            ProductItem(product.toUIModel())
-        }
+        productsData += repository.getNext(20)
+            .map { ProductItem(it.toUIModel()) }
         view.addProducts(productsData.plus(ProductReadMore))
     }
 

@@ -2,6 +2,7 @@ package woowacourse.shopping.data
 
 import com.example.domain.model.Product
 import com.example.domain.model.ProductRepository
+import java.lang.Integer.min
 
 object ProductFakeRepository : ProductRepository {
 
@@ -14,8 +15,18 @@ object ProductFakeRepository : ProductRepository {
         )
     }
 
+    private var offset = 0
+
     override fun getAll(): List<Product> {
         return products.toList()
+    }
+
+    override fun getNext(count: Int): List<Product> {
+        val from = offset
+        val to = min(offset + count, products.size)
+        val a = products.subList(from, to)
+        offset = to
+        return a
     }
 
     override fun findById(id: Int): Product {
