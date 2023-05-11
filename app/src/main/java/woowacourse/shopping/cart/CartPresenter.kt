@@ -40,7 +40,16 @@ class CartPresenter(
 
     private fun updateCartPage() {
         val cart = cartDao.selectPage(currentPage, sizePerPage)
-        view.updateCart(cart.cartProducts.map { it.toView() }, currentPage)
+        view.updateCart(
+            cart = cart.cartProducts.map { it.toView() },
+            currentPage = currentPage + 1,
+            isNextButtonEnabled = determineNextButtonEnabled(cart)
+        )
+    }
+
+    private fun determineNextButtonEnabled(cart: Cart): Boolean {
+        val cartCount = cartDao.selectAllCount()
+        return (currentPage * sizePerPage) + cart.cartProducts.size < cartCount
     }
 
     private fun determineNavigationVisibility(): Boolean {

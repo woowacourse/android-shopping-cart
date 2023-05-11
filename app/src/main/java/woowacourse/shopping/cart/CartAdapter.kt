@@ -12,8 +12,9 @@ class CartAdapter(
     private val onCartItemRemoveButtonClick: (CartProductModel) -> Unit,
     private val onPreviousButtonClick: () -> Unit,
     private val onNextButtonClick: () -> Unit,
-    private var currentPage: Int = 0,
-    private var isNavigationVisible: Boolean = false
+    private var currentPage: Int = 1,
+    private var isNavigationVisible: Boolean = false,
+    private var isNextButtonEnabled: Boolean = false
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val onCartItemRemoveButtonViewClick: (Int) -> Unit =
         { onCartItemRemoveButtonClick(cartProducts[it]) }
@@ -40,7 +41,7 @@ class CartAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (CartViewType.values()[getItemViewType(position)]) {
             CartViewType.CART -> (holder as CartViewHolder).bind(cartProducts[position])
-            CartViewType.NAVIGATION -> (holder as NavigationViewHolder).bind(currentPage)
+            CartViewType.NAVIGATION -> (holder as NavigationViewHolder).bind(currentPage, isNextButtonEnabled)
         }
     }
 
@@ -49,9 +50,10 @@ class CartAdapter(
         return CartViewType.NAVIGATION.ordinal
     }
 
-    fun updateCartProducts(cartProducts: List<CartProductModel>, currentPage: Int) {
+    fun updateCartProducts(cartProducts: List<CartProductModel>, currentPage: Int, isNextButtonEnabled: Boolean) {
         this.cartProducts = cartProducts
         this.currentPage = currentPage
+        this.isNextButtonEnabled = isNextButtonEnabled
         notifyDataSetChanged()
     }
 

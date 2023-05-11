@@ -12,7 +12,7 @@ interface CartContract {
     }
 
     interface View {
-        fun updateCart(cart: List<CartProductModel>, currentPage: Int)
+        fun updateCart(cart: List<CartProductModel>, currentPage: Int, isNextButtonEnabled: Boolean)
 
         fun updateNavigationVisibility(visibility: Boolean)
     }

@@ -36,8 +36,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateCart(cartProducts: List<CartProductModel>, currentPage: Int) {
-        cartAdapter.updateCartProducts(cartProducts, currentPage)
+    override fun updateCart(cartProducts: List<CartProductModel>, currentPage: Int, isNextButtonEnabled: Boolean) {
+        cartAdapter.updateCartProducts(cartProducts, currentPage, isNextButtonEnabled)
     }
 
     override fun updateNavigationVisibility(visibility: Boolean) {
