@@ -15,5 +15,7 @@
 
     <!-- item_recent_products -->
     <string name="tv_recent_product_title">최근 본 상품</string>
+    <string name="tv_previous"><![CDATA[<]]></string>
+    <string name="tv_next"><![CDATA[>]]></string>
 
 </resources>

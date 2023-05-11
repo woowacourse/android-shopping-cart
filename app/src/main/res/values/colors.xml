@@ -13,5 +13,7 @@
     <color name="woowa_light_gray">#AAAAAA</color>
     <color name="woowa_button">#04C09E</color>
     <color name="woowa_divider">#EBEBEB</color>
+    <color name="woowa_previous_disable">#E6E6E6</color>
+    <color name="woowa_previous_enable">#04C09E</color>
 
 </resources>
