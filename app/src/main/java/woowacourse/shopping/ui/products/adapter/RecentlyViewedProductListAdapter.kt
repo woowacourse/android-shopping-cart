@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentlyViewedProductBinding
-import woowacourse.shopping.ui.products.RecentlyViewedProductUIState
+import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class RecentlyViewedProductListAdapter(
     private val recentlyViewedProducts: List<RecentlyViewedProductUIState>,

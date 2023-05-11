@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.ui.products.ProductUIState
+import woowacourse.shopping.ui.products.uistate.ProductUIState
 import java.text.DecimalFormat
 
 class ProductListAdapter(

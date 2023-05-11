@@ -11,6 +11,7 @@ import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
+import woowacourse.shopping.ui.cart.uistate.CartUIState
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding

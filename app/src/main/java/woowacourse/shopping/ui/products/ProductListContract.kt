@@ -1,5 +1,8 @@
 package woowacourse.shopping.ui.products
 
+import woowacourse.shopping.ui.products.uistate.ProductUIState
+import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
+
 interface ProductListContract {
     interface Presenter {
         fun loadRecentlyViewedProducts()

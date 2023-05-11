@@ -2,6 +2,8 @@ package woowacourse.shopping.ui.products
 
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentlyViewedProductRepository
+import woowacourse.shopping.ui.products.uistate.ProductUIState
+import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class ProductListPresenter(
     private val view: ProductListContract.View,

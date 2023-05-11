@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.productdetail
 
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,

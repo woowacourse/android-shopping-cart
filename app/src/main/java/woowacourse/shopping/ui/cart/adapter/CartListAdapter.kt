@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.ui.cart.CartUIState
+import woowacourse.shopping.ui.cart.uistate.CartUIState
 import java.text.DecimalFormat
 
 class CartListAdapter(

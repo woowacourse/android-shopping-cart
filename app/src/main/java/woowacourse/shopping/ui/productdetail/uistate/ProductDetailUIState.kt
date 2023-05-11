@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productdetail
+package woowacourse.shopping.ui.productdetail.uistate
 
 import woowacourse.shopping.domain.Product
 

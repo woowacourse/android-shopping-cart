@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.cart
 
+import woowacourse.shopping.ui.cart.uistate.CartUIState
+
 interface CartContract {
     interface Presenter {
         fun loadCartItems()

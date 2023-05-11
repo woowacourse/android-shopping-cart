@@ -13,6 +13,7 @@ import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
 import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {

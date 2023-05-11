@@ -13,6 +13,8 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductListAdapter
 import woowacourse.shopping.ui.products.adapter.RecentlyViewedProductListAdapter
+import woowacourse.shopping.ui.products.uistate.ProductUIState
+import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
