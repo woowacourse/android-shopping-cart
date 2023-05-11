@@ -11,7 +11,7 @@ object BindingAdapter {
     fun setGlideImage(imageview: ImageView, image: String) {
         imageview.clipToOutline = true
         imageview.background =
-            ContextCompat.getDrawable(imageview.context, R.drawable.rect_radius_8)
+            ContextCompat.getDrawable(imageview.context, R.drawable.rectangle_radius_8dp)
         Glide.with(imageview.context)
             .load(image)
             .fallback(R.drawable.logo_square)

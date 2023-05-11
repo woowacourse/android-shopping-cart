@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.ui.home.presenter
 
 import woowacourse.shopping.domain.repository.ProductRepository
 
-class Presenter(
+class HomePresenter(
     private val view: HomeContract.View,
     private val productRepository: ProductRepository,
 ) : HomeContract.Presenter {

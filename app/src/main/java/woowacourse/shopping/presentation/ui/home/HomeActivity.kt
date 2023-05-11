@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.ui.home
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.data.product.ProductDao
@@ -12,20 +12,20 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.presenter.HomeContract
-import woowacourse.shopping.presentation.ui.home.presenter.Presenter
+import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
+import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
+import woowacourse.shopping.util.initProducts
 
 class HomeActivity : AppCompatActivity(), HomeContract.View {
     private lateinit var binding: ActivityHomeBinding
     override val presenter: HomeContract.Presenter by lazy { initPresenter() }
-    private val homeAdapter = HomeAdapter { clickProduct(it) }
+    private val homeAdapter = HomeAdapter(::setClickEventOnProduct)
     override fun setProducts(products: List<Product>) {
-        Log.d("asdf", "products: $products")
         homeAdapter.initProducts(products)
     }
 
     override fun setRecentlyViewed(products: List<Product>) {
-        Log.d("asdf", "recycledViews: $products")
         homeAdapter.initRecentlyViewedProduct(products)
     }
 
@@ -33,8 +33,8 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
         return homeAdapter.productsCount
     }
 
-    private fun initPresenter(): Presenter {
-        return Presenter(
+    private fun initPresenter(): HomePresenter {
+        return HomePresenter(
             this,
             ProductRepositoryImpl(
                 productDataSource = ProductDao(this),
@@ -49,17 +49,23 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
         setContentView(binding.root)
         binding.rvMainProducts.adapter = homeAdapter
         initLayoutManager()
-        // initProducts(this)
+        initProducts(this)
+        setClickEventOnShoppingCartButton()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         presenter.getProducts()
         presenter.getRecentlyViewed()
     }
 
-    private fun clickProduct(productId: Long) {
-        Log.d("asdf", "productid: $productId")
+    private fun setClickEventOnShoppingCartButton() {
+        binding.ivMainShoppingCart.setOnClickListener {
+            startActivity(Intent(this, ShoppingCartActivity::class.java))
+        }
+    }
+
+    private fun setClickEventOnProduct(productId: Long) {
         startActivity(ProductDetailActivity.getIntent(this, productId))
     }
 

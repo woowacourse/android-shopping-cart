@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.home.adapter
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Product
@@ -22,8 +23,10 @@ class HomeAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == HomeViewType.RECENTLY_VIEWED.ordinal) {
+            Log.d("123123", "Recently view holder")
             return RecentlyViewedViewHolder(RecentlyViewedViewHolder.getView(parent), clickProduct)
         }
+        Log.d("123123", "Home view holder")
         return HomeViewHolder(HomeViewHolder.getView(parent)) { clickProduct(items[it].id) }
     }
 
