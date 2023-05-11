@@ -80,6 +80,7 @@
             tools:text="10000원" />
 
         <TextView
+            android:id="@+id/cart_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#04C09E"
