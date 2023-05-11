@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingRecyclerAdapter(
-    private val products: List<ProductUiModel>,
+    products: List<ProductUiModel>,
     recentViewedProducts: List<ProductUiModel>,
     private val onProductClicked: (ProductUiModel) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val products: MutableList<ProductUiModel> =
+        products.toMutableList()
     private val recentViewedProducts: MutableList<ProductUiModel> =
         recentViewedProducts.toMutableList()
 
@@ -49,11 +51,17 @@ class ShoppingRecyclerAdapter(
     override fun getItemCount(): Int = products.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun refresh(toRemove: ProductUiModel?, toAdd: ProductUiModel) {
+    fun refreshRecentViewedItems(toRemove: ProductUiModel?, toAdd: ProductUiModel) {
         recentViewedProducts.add(0, toAdd)
         toRemove?.let {
             recentViewedProducts.remove(it)
         }
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
+        products.addAll(toAdd)
         notifyDataSetChanged()
     }
 

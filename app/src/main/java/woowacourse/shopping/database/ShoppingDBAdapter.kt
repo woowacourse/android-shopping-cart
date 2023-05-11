@@ -56,11 +56,22 @@ class ShoppingDBAdapter(
         shoppingDB.insert(ProductDBContract.TABLE_NAME, null, values)
     }
 
-    override fun selectProducts(): List<Product> {
+    override fun selectProducts(from: Int, count: Int): List<Product> {
         val products = mutableListOf<Product>()
-        while (productCursor.moveToNext()) {
-            products.add(productCursor.getProduct())
+        val query = "SELECT * FROM ${ProductDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
+            count, from
+        )
+        val cursor = shoppingDB.rawQuery(query, null)
+
+        cursor?.apply {
+            if (moveToFirst()) {
+                do {
+                    products.add(cursor.getProduct())
+                } while (moveToNext())
+            }
         }
+        cursor?.close()
+
         return products
     }
 

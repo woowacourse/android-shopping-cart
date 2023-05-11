@@ -9,12 +9,17 @@ interface ShoppingContract {
 
         fun setUpShoppingView(
             products: List<ProductUiModel>,
-            recentViewedProducts: List<ProductUiModel>
+            recentViewedProducts: List<ProductUiModel>,
+            showMoreShoppingProducts: () -> Unit
         )
 
-        fun refreshShoppingView(
+        fun refreshRecentViewedProductsView(
             toAdd: ProductUiModel,
             toRemove: ProductUiModel?
+        )
+
+        fun refreshShoppingProductsView(
+            toAdd: List<ProductUiModel>
         )
     }
 
@@ -23,7 +28,7 @@ interface ShoppingContract {
         val recentViewedProducts: RecentViewedProducts
 
         fun loadProducts()
-
         fun addToRecentViewedProduct(id: Int)
+        fun readMoreShoppingProducts()
     }
 }

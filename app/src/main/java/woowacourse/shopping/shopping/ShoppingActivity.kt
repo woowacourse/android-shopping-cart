@@ -25,7 +25,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             view = this,
             repository = ShoppingDBAdapter(
                 shoppingDao = ShoppingDao(this)
-            ),
+            )
         )
     }
 
@@ -54,37 +54,47 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun setUpShoppingView(
         products: List<ProductUiModel>,
         recentViewedProducts: List<ProductUiModel>,
+        showMoreShoppingProducts: () -> (Unit)
     ) {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView
         )
-        binding.productRecyclerView.layoutManager = GridLayoutManager(this, 2).apply {
-            spanSizeLookup =
-                ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
-        }
-        binding.productRecyclerView.adapter = shoppingRecyclerAdapter
-        binding.button.setOnClickListener {
-            binding.button.visibility = View.GONE
-        }
-        binding.productRecyclerView.addOnScrollListener(
-            ShoppingRecyclerScrollListener(
-                scrollPossible = { binding.button.visibility = View.GONE },
-                scrollImpossible = { binding.button.visibility = View.VISIBLE }
+
+        with(binding) {
+            productRecyclerView.layoutManager = GridLayoutManager(root.context, 2).apply {
+                spanSizeLookup =
+                    ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
+            }
+            productRecyclerView.adapter = shoppingRecyclerAdapter
+            buttonShowMore.setOnClickListener {
+                buttonShowMore.visibility = View.GONE
+                showMoreShoppingProducts()
+            }
+            productRecyclerView.addOnScrollListener(
+                ShoppingRecyclerScrollListener(
+                    scrollPossible = { buttonShowMore.visibility = View.GONE },
+                    scrollImpossible = { buttonShowMore.visibility = View.VISIBLE }
+                )
             )
-        )
+        }
     }
 
-    override fun refreshShoppingView(
+    override fun refreshRecentViewedProductsView(
         toAdd: ProductUiModel,
         toRemove: ProductUiModel?
     ) {
 
-        shoppingRecyclerAdapter.refresh(
+        shoppingRecyclerAdapter.refreshRecentViewedItems(
             toRemove = toRemove,
             toAdd = toAdd
         )
+    }
+
+    override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {
+
+        shoppingRecyclerAdapter.refreshShoppingItems(toAdd = toAdd)
     }
 
     private fun navigateToProductDetailView(product: ProductUiModel) {

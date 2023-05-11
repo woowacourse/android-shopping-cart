@@ -36,8 +36,14 @@ class ShoppingPresenterTest {
     fun `저장소로부터 상품 목록을 받아와서 뷰를 초기화한다`() {
         // given
         val slot = slot<List<ProductUiModel>>()
-        every { view.setUpShoppingView(capture(slot), any()) } just Runs
-        every { repository.selectProducts() } returns listOf(
+        every {
+            view.setUpShoppingView(
+                products = capture(slot),
+                any(),
+                any()
+            )
+        } just Runs
+        every { repository.selectProducts(any(), any()) } returns listOf(
             Product(name = "아메리카노"),
             Product(name = "카페라떼")
         )
@@ -52,14 +58,26 @@ class ShoppingPresenterTest {
             ProductUiModel(name = "카페라떼")
         )
         assertEquals(expected, actual)
-        verify { view.setUpShoppingView(actual, any()) }
+        verify {
+            view.setUpShoppingView(
+                products = actual,
+                any(),
+                any()
+            )
+        }
     }
 
     @Test
     fun `저장소로부터 최근 본 상품을 받아와서 뷰를 초기화한다`() {
         // given
         val slot = slot<List<ProductUiModel>>()
-        every { view.setUpShoppingView(any(), capture(slot)) } just Runs
+        every {
+            view.setUpShoppingView(
+                any(),
+                recentViewedProducts = capture(slot),
+                any()
+            )
+        } just Runs
 
         // when
         presenter.loadProducts()
@@ -71,6 +89,12 @@ class ShoppingPresenterTest {
             ProductUiModel(name = "카페라떼")
         )
         assertEquals(expected, actual)
-        verify { view.setUpShoppingView(any(), actual) }
+        verify {
+            view.setUpShoppingView(
+                any(),
+                recentViewedProducts = actual,
+                any()
+            )
+        }
     }
 }

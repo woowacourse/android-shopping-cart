@@ -4,7 +4,7 @@ import model.Product
 
 interface ShoppingRepository {
 
-    fun selectProducts(): List<Product>
+    fun selectProducts(from: Int, count: Int): List<Product>
 
     fun selectShoppingCartProducts(): List<Product>
 

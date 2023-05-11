@@ -19,6 +19,7 @@ import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
+    // todo
     private val product: ProductUiModel by lazy { intent.getSerializableCompat(PRODUCT_KEY)!! }
     private val presenter: ProductDetailPresenter by lazy {
         ProductDetailPresenter(
