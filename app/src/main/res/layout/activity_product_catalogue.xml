@@ -8,6 +8,18 @@
         android:layout_height="match_parent"
         tools:context=".productcatalogue.ProductCatalogueActivity">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_product_catalogue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="#555555"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/tool_bar_product_catalogue"
+            app:title="Shopping"
+            app:titleTextColor="@color/white" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_product_catalogue"
             android:layout_width="0dp"
@@ -16,7 +28,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tb_product_catalogue"
             app:spanCount="2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

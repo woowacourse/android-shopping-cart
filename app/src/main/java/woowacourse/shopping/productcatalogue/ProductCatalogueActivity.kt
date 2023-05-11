@@ -1,10 +1,13 @@
 package woowacourse.shopping.productcatalogue
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.BundleKeys
+import woowacourse.shopping.CartActivity
 import woowacourse.shopping.MainProductCatalogueAdapter
 import woowacourse.shopping.MainProductCatalogueUIModel
 import woowacourse.shopping.ProductDBHelper
@@ -37,17 +40,20 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
         val db = dbHelper.writableDatabase
         val repository = ProductDBRepository(db)
         val recentProducts = repository.getAll()
-
         adapter.update(
             RecentProductCatalogueUIModel(
                 MainProductCatalogueUIModel(recentProducts)
             )
         )
+        adapter.notifyDataSetChanged()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_catalogue)
+
+        setSupportActionBar(binding.tbProductCatalogue)
+
         presenter = ProductCataloguePresenter(this)
 
         binding.rvProductCatalogue.adapter = adapter
@@ -62,5 +68,20 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
         binding.rvProductCatalogue.layoutManager = gridLayoutManager
 
         adapter.notifyDataSetChanged()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.tool_bar_product_catalogue, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_cart -> {
+                startActivity(CartActivity.intent(this))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
