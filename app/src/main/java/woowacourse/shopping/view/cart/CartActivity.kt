@@ -27,19 +27,25 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun showProducts(cartProducts: List<ProductModel>, isExistUndo: Boolean, isExistNext: Boolean, count: Int) {
         binding.recyclerCart.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerCart.adapter = CartAdapter(cartProducts, object: CartAdapter.OnItemClick {
-            override fun onRemoveClick(id: Int) {
-                presenter.removeProduct(id)
-            }
+        binding.recyclerCart.adapter = CartAdapter(
+            cartProducts,
+            object : CartAdapter.OnItemClick {
+                override fun onRemoveClick(id: Int) {
+                    presenter.removeProduct(id)
+                }
 
-            override fun onNextClick() {
-                presenter.fetchNextPage()
-            }
+                override fun onNextClick() {
+                    presenter.fetchNextPage()
+                }
 
-            override fun onUndoClick() {
-                presenter.fetchUndoPage()
-            }
-        }, isExistUndo, isExistNext, count)
+                override fun onUndoClick() {
+                    presenter.fetchUndoPage()
+                }
+            },
+            isExistUndo,
+            isExistNext,
+            count,
+        )
     }
 
     override fun showOtherPage(size: Int) {
