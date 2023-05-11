@@ -2,7 +2,10 @@ package woowacourse.shopping.ui.shopping
 
 import woowacourse.shopping.domain.repository.DomainProductRepository
 import woowacourse.shopping.domain.repository.DomainRecentProductRepository
+import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
+import woowacourse.shopping.ui.model.UiProduct
+import kotlin.concurrent.thread
 
 class ShoppingPresenter(
     override val view: ShoppingContract.View,
@@ -19,6 +22,11 @@ class ShoppingPresenter(
         view.updateRecentProducts(
             recentProductRepository.getPartially(RECENT_PRODUCT_SIZE).map { it.toUi() }
         )
+    }
+
+    override fun inquiryRecentProduct(product: UiProduct) {
+        view.showProductDetail(product)
+        thread { recentProductRepository.add(product.toDomain()) }
     }
 
     companion object {

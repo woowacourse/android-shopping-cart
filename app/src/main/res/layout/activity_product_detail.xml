@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.ui.model.Product" />
@@ -42,6 +43,7 @@
             app:image="@{product.imageUrl}"
             app:layout_constraintDimensionRatio="1"
             tools:srcCompat="@tools:sample/avatars"
+            android:scaleType="centerCrop"
             android:id="@+id/iv_product"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -52,6 +54,8 @@
             android:layout_width="0dp"
             android:text="@{product.name}"
             android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/woowa_text_black"
             android:textSize="24sp"
             android:includeFontPadding="false"

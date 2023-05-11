@@ -15,6 +15,7 @@ import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.ShoppingViewHolderType.PRODUCT
 import woowacourse.shopping.ui.shopping.ShoppingViewHolderType.RECENT_PRODUCTS
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductAdapter
@@ -56,8 +57,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initAdapter() {
-        recentProductAdapter = RecentProductAdapter { }
-        shoppingAdapter = ShoppingAdapter(recentProductAdapter) { product -> } // start Activity
+        recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProduct)
+        shoppingAdapter = ShoppingAdapter(recentProductAdapter, presenter::inquiryRecentProduct)
         binding.rvShopping.adapter = shoppingAdapter
         val gridLayoutManager = GridLayoutManager(this, 2).apply {
             spanSizeLookup = object : SpanSizeLookup() {
@@ -71,5 +72,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         binding.rvShopping.layoutManager = gridLayoutManager
         presenter.fetchRecentProducts()
         presenter.fetchProducts()
+    }
+
+    override fun showProductDetail(product: UiProduct) {
+        startActivity(ProductDetailActivity.getIntent(this, product))
     }
 }

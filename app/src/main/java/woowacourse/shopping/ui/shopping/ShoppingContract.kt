@@ -8,6 +8,8 @@ interface ShoppingContract {
 
         fun updateProducts(products: List<UiProduct>)
         fun updateRecentProducts(recentProducts: List<UiProduct>)
+
+        fun showProductDetail(product: UiProduct)
     }
 
     interface Presenter {
@@ -15,5 +17,7 @@ interface ShoppingContract {
 
         fun fetchProducts()
         fun fetchRecentProducts()
+
+        fun inquiryRecentProduct(product: UiProduct)
     }
 }
