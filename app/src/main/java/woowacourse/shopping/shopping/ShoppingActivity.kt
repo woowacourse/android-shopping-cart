@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.data.ProductFakeRepository
-import woowacourse.shopping.data.RecentFakeRepository
+import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
@@ -27,7 +27,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         setSupportActionBar(binding.toolbar)
-        presenter = ShoppingPresenter(this, ProductFakeRepository, RecentFakeRepository)
+        presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
         presenter.setUpProducts()
     }
 

@@ -9,6 +9,7 @@ interface ProductDetailContract {
 
     interface Presenter {
         fun setUpProductDetail()
-        fun addProductToBasket()
+        fun addProductToCart()
+        fun addProductToRecent()
     }
 }

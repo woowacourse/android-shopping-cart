@@ -1,4 +1,4 @@
-package woowacourse.shopping.database
+package woowacourse.shopping.database.cart
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -7,11 +7,11 @@ import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.example.domain.model.CartRepository
 import com.example.domain.model.Product
-import woowacourse.shopping.database.CartConstant.TABLE_COLUMN_PRODUCT_ID
-import woowacourse.shopping.database.CartConstant.TABLE_COLUMN_PRODUCT_IMAGE_URL
-import woowacourse.shopping.database.CartConstant.TABLE_COLUMN_PRODUCT_NAME
-import woowacourse.shopping.database.CartConstant.TABLE_COLUMN_PRODUCT_PRICE
-import woowacourse.shopping.database.CartConstant.TABLE_NAME
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_ID
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_IMAGE_URL
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_NAME
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_PRICE
+import woowacourse.shopping.database.cart.CartConstant.TABLE_NAME
 
 class CartDatabase(
     private val shoppingDb: SQLiteDatabase

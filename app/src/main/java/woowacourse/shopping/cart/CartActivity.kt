@@ -1,6 +1,5 @@
 package woowacourse.shopping.cart
 
-import ShoppingDBHelper
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +10,8 @@ import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.contract.CartContract
 import woowacourse.shopping.cart.contract.presenter.CartPresenter
-import woowacourse.shopping.database.CartDatabase
+import woowacourse.shopping.database.cart.CartDBHelper
+import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
@@ -25,7 +25,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        presenter = CartPresenter(this, CartDatabase(ShoppingDBHelper(this).writableDatabase))
+        presenter = CartPresenter(this, CartDatabase(CartDBHelper(this).writableDatabase))
         presenter.setUpCarts()
         setToolbar()
     }

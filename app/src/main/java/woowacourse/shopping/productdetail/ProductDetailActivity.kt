@@ -1,6 +1,5 @@
 package woowacourse.shopping.productdetail
 
-import ShoppingDBHelper
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
-import woowacourse.shopping.database.CartDatabase
+import woowacourse.shopping.database.cart.CartDBHelper
+import woowacourse.shopping.database.cart.CartDatabase
+import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.model.ProductUIModel.Companion.KEY_PRODUCT
@@ -31,13 +32,15 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
-            CartDatabase(ShoppingDBHelper(this).writableDatabase)
+            CartDatabase(CartDBHelper(this).writableDatabase),
+            RecentProductDatabase(this)
         )
 
         presenter.setUpProductDetail()
+        presenter.addProductToRecent()
 
         binding.cartButton.setOnClickListener {
-            presenter.addProductToBasket()
+            presenter.addProductToCart()
             navigateToCart()
         }
     }
