@@ -24,6 +24,6 @@ class ProductMockRepository : ProductRepository {
     }
 
     companion object {
-        private const val LOAD_SIZE = 10
+        private const val LOAD_SIZE = 20
     }
 }
