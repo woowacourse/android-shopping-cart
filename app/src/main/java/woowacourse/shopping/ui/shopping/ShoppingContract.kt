@@ -10,6 +10,8 @@ interface ShoppingContract {
         fun updateRecentProducts(recentProducts: List<UiProduct>)
 
         fun showProductDetail(product: UiProduct)
+
+        fun updateMoreButtonVisibility(isVisible: Boolean)
     }
 
     interface Presenter {

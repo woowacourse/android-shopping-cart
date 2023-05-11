@@ -10,20 +10,23 @@ import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.DataProduct
 
 class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
-    @SuppressLint("Range") // 컬럼 index가 -1이 나올 수도 있는 상황을 무시하는 Annotation
-    override fun getAll(): List<DataProduct> {
+    @SuppressLint("Range")
+    override fun getPartially(size: Int): List<DataProduct> {
         val products = mutableListOf<DataProduct>()
-        val cursor = database.writableDatabase.rawQuery(GET_ALL_QUERY, null)
-        while (cursor.moveToNext()) {
-            val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val name: String = cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
-            val price: DataPrice =
-                DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
-            val imageUrl: String =
-                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-            products.add(DataProduct(id, name, price, imageUrl))
+        database.writableDatabase.use { db ->
+            val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(size.toString()))
+            while (cursor.moveToNext()) {
+                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val name: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
+                val price: DataPrice =
+                    DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
+                val imageUrl: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
+                products.add(DataProduct(id, name, price, imageUrl))
+            }
+            cursor.close()
         }
-
         return products
     }
 
@@ -41,8 +44,8 @@ class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
     }
 
     companion object {
-        private const val GET_ALL_QUERY = """
-            SELECT * FROM $TABLE_NAME ORDER BY ${BaseColumns._ID}
-        """
+        private val GET_PARTIALLY_QUERY = """
+            SELECT * FROM ${ProductContract.TABLE_NAME} ORDER BY ${BaseColumns._ID} DESC LIMIT ?        
+        """.trimIndent()
     }
 }

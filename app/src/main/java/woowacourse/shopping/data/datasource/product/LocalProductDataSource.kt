@@ -4,5 +4,5 @@ import woowacourse.shopping.data.database.dao.product.ProductDao
 import woowacourse.shopping.data.model.DataProduct
 
 class LocalProductDataSource(private val dao: ProductDao) : ProductDataSource.Local {
-    override fun getAll(): List<DataProduct> = dao.getAll()
+    override fun getPartially(size: Int): List<DataProduct> = dao.getPartially(size)
 }

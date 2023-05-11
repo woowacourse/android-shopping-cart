@@ -13,10 +13,14 @@ class ShoppingPresenter(
     private val recentProductRepository: DomainRecentProductRepository
 ) : ShoppingContract.Presenter {
     override fun fetchProducts() {
-        view.updateProducts(
-            productRepository.getAll().map { it.toUi() }
-        )
+        val products =
+            productRepository.getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE).map { it.toUi() }
+        view.updateProducts(products)
+        view.updateMoreButtonVisibility(checkHasNext(products))
     }
+
+    private fun checkHasNext(products: List<UiProduct>): Boolean =
+        products.size == TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE
 
     override fun fetchRecentProducts() {
         view.updateRecentProducts(
@@ -31,5 +35,9 @@ class ShoppingPresenter(
 
     companion object {
         private const val RECENT_PRODUCT_SIZE = 10
+        private const val LOAD_PRODUCT_SIZE_AT_ONCE = 20
+        private const val PRODUCT_SIZE_FOR_HAS_NEXT = 1
+        private const val TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE =
+            LOAD_PRODUCT_SIZE_AT_ONCE + PRODUCT_SIZE_FOR_HAS_NEXT
     }
 }

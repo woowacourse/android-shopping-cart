@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.shopping
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -79,6 +80,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun showProductDetail(product: UiProduct) {
         startActivity(ProductDetailActivity.getIntent(this, product))
+    }
+
+    override fun updateMoreButtonVisibility(isVisible: Boolean) {
+        // 어댑터 접근해서 visibility 설정
     }
 
     private fun initButtonBasketClickListener() {

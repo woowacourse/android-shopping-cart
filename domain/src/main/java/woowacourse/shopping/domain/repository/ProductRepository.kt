@@ -5,5 +5,5 @@ import woowacourse.shopping.domain.Product
 typealias DomainProductRepository = ProductRepository
 
 interface ProductRepository {
-    fun getAll(): List<Product>
+    fun getPartially(size: Int): List<Product>
 }
