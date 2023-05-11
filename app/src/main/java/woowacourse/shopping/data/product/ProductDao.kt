@@ -32,13 +32,13 @@ class ProductDao(context: Context) : ProductDataSource {
 
     override fun addProductEntity(
         name: String,
-        itemImage: String,
         price: Int,
+        itemImage: String,
     ): Long {
         val data = ContentValues()
         data.put(TABLE_COLUMN_NAME, name)
-        data.put(TABLE_COLUMN_ITEM_IMAGE, itemImage)
         data.put(TABLE_COLUMN_PRICE, price)
+        data.put(TABLE_COLUMN_ITEM_IMAGE, itemImage)
         return shoppingDb.insert(TABLE_NAME, null, data)
     }
 

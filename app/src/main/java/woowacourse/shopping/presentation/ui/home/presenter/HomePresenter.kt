@@ -17,7 +17,7 @@ class HomePresenter(
         view.setRecentlyViewed(recentlyViewed)
     }
 
-    override fun getMoreProducts() {
+    override fun getMoreProducts(productId: Long) {
         val products = productRepository.getProducts(20, view.getProductCount())
         view.setProducts(products)
     }

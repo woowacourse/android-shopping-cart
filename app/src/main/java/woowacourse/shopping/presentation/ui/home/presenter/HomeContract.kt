@@ -13,6 +13,6 @@ interface HomeContract {
     interface Presenter {
         fun getProducts()
         fun getRecentlyViewed()
-        fun getMoreProducts()
+        fun getMoreProducts(productId: Long)
     }
 }

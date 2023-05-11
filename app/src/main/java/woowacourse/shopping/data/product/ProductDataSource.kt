@@ -5,7 +5,7 @@ interface ProductDataSource {
     fun getProductEntities(unit: Int, lastIndex: Int): List<ProductEntity>
     fun addProductEntity(
         name: String,
-        itemImage: String,
         price: Int,
+        itemImage: String,
     ): Long
 }

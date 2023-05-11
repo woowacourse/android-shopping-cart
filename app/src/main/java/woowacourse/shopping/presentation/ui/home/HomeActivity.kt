@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
@@ -20,7 +21,7 @@ import woowacourse.shopping.util.initProducts
 class HomeActivity : AppCompatActivity(), HomeContract.View {
     private lateinit var binding: ActivityHomeBinding
     override val presenter: HomeContract.Presenter by lazy { initPresenter() }
-    private val homeAdapter = HomeAdapter(::setClickEventOnProduct)
+    private val homeAdapter = HomeAdapter(::setClickEventOnProduct, ::setEventOnShowMoreButton)
     override fun setProducts(products: List<Product>) {
         homeAdapter.initProducts(products)
     }
@@ -47,10 +48,46 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.rvMainProducts.adapter = homeAdapter
+
+        initAdapter()
+
         initLayoutManager()
+        // 목 데이터 추가 함수 :
         initProducts(this)
         setClickEventOnShoppingCartButton()
+    }
+
+    private fun setEventOnShowMoreButton(productId: Long) {
+        presenter.getMoreProducts(productId)
+    }
+
+    private fun initAdapter() {
+        binding.rvMainProducts.apply {
+            adapter = homeAdapter
+            addOnScrollListener(setScrollListener())
+        }
+    }
+
+    private fun setScrollListener(): RecyclerView.OnScrollListener {
+        return object : RecyclerView.OnScrollListener() {
+            var scrollState: Int = 0
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (scrollState == 1) {
+                    super.onScrolled(recyclerView, dx, dy)
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!binding.rvMainProducts.canScrollVertically(1) &&
+                    newState == RecyclerView.SCROLL_STATE_IDLE
+                ) {
+                    if (scrollState == 1) return
+                    scrollState = 1
+                    homeAdapter.initShowMoreButton()
+                }
+            }
+        }
     }
 
     override fun onStart() {
