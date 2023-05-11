@@ -13,5 +13,7 @@ interface BasketContract {
         val view: View
 
         fun fetchBasketProducts()
+
+        fun removeBasketProduct(product: UiProduct)
     }
 }

@@ -43,18 +43,17 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
 
     override fun remove(product: DataProduct) {
         database.writableDatabase.use { db ->
-            db.rawQuery(REMOVE_QUERY, arrayOf(product.id.toString()))
+            db.delete(
+                BasketContract.TABLE_NAME,
+                "${BaseColumns._ID} = ?",
+                arrayOf(product.id.toString())
+            )
         }
     }
 
     companion object {
         private val GET_PARTIALLY_QUERY = """
             SELECT * FROM ${BasketContract.TABLE_NAME} ORDER BY ${BaseColumns._ID} LIMIT ?        
-        """.trimIndent()
-
-        private val REMOVE_QUERY = """
-            DELETE FROM ${BasketContract.TABLE_NAME}
-            WHERE ${BaseColumns._ID} = ?
         """.trimIndent()
     }
 }
