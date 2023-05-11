@@ -22,7 +22,11 @@ class ShoppingPresenter(
         val recentProductsData = RecentProductsItem(
             recentRepository.getRecent(10).map { it.toUIModel() }
         )
-        productsData = mutableListOf(recentProductsData)
+
+        if (recentProductsData.product.isNotEmpty()) {
+            productsData = mutableListOf(recentProductsData)
+        }
+
         productsData += repository.getAll()
             .map { product: Product -> ProductItem(product.toUIModel()) }
         view.setProducts(productsData.plus(ProductReadMore))
