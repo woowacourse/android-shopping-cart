@@ -14,28 +14,24 @@ import woowacourse.shopping.shopping.contract.ShoppingContract
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
     private val repository: ProductRepository,
-    private val recentRepository: RecentRepository
+    private val recentRepository: RecentRepository,
 ) : ShoppingContract.Presenter {
     private var productsData: MutableList<ProductsItemType> = mutableListOf()
 
     override fun setUpProducts() {
-        val recentProductsData = RecentProductsItem(
-            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
-        )
-
-        if (recentProductsData.product.isNotEmpty()) {
-            productsData = mutableListOf(recentProductsData)
-        }
-
         productsData += repository.getNext(PRODUCT_COUNT)
             .map { product: Product -> ProductItem(product.toUIModel()) }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
     override fun updateProducts() {
-        productsData[0] = RecentProductsItem(
-            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
+        val recentProductsData = RecentProductsItem(
+            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() },
         )
+        when {
+            productsData[0] is RecentProductsItem -> productsData[0] = recentProductsData
+            recentProductsData.product.isNotEmpty() -> productsData.add(0, recentProductsData)
+        }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
