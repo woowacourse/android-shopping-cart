@@ -11,7 +11,7 @@ import java.text.DecimalFormat
 
 class ProductListAdapter(
     private val products: MutableList<ProductUIState>,
-    private val onClick: (Int) -> Unit,
+    private val onClick: (Long) -> Unit,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
@@ -36,12 +36,8 @@ class ProductListAdapter(
 
     class ProductListViewHolder(
         private val binding: ItemProductBinding,
-        private val onClick: (Int) -> Unit,
+        private val onClick: (Long) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-
-        init {
-            binding.root.setOnClickListener { onClick(adapterPosition) }
-        }
 
         fun bind(product: ProductUIState) {
             binding.product = product
@@ -50,6 +46,7 @@ class ProductListAdapter(
             Glide.with(itemView)
                 .load(product.imageUrl)
                 .into(binding.ivProduct)
+            binding.root.setOnClickListener { onClick(product.id) }
         }
 
         companion object {

@@ -68,10 +68,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initProductList() {
-        val products = mutableListOf<ProductUIState>()
         binding.recyclerViewMainProduct.adapter = ProductListAdapter(mutableListOf()) {
-            presenter.addRecentlyViewedProduct(products[it].id)
-            moveToProductDetailActivity(products[it].id)
+            presenter.addRecentlyViewedProduct(it)
+            moveToProductDetailActivity(it)
         }
         presenter.loadProducts(PAGE_SIZE, offset)
         offset += PAGE_SIZE
