@@ -72,7 +72,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 view: View,
                 parent: RecyclerView,
                 state: RecyclerView.State
-            ) { // 1부터 시작
+            ) {
                 val position = parent.getChildAdapterPosition(view)
                 val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
 
