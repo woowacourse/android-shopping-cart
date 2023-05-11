@@ -46,7 +46,6 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@color/button_color"
-                android:enabled="false"
                 android:text="@string/previous_page"
                 android:textColor="@color/white"
                 android:textSize="22sp" />

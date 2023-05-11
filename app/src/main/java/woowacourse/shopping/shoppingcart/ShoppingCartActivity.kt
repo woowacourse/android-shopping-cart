@@ -13,7 +13,6 @@ import woowacourse.shopping.model.ProductUiModel
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private lateinit var shoppingCartRecyclerAdapter: ShoppingCartRecyclerAdapter
-
     private val presenter: ShoppingCartContract.Presenter by lazy {
         ShoppingCartPresenter(
             view = this,
@@ -22,7 +21,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             )
         )
     }
-    lateinit var binding: ActivityShoppingCartBinding
+    private lateinit var binding: ActivityShoppingCartBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,12 +54,12 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
             products = products,
             onRemoved = onRemoved,
-            showingRule = ShowingShoppingCartProducts()
+            showingRule = ShowingShoppingCartProducts(),
+            onPageChanged = ::setUpTextPageNumber
         )
 
         with(binding) {
             recyclerViewCart.adapter = shoppingCartRecyclerAdapter
-
             buttonNextPage.setOnClickListener {
                 presenter.readMoreShoppingCartProducts()
             }
@@ -71,6 +70,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     override fun showMoreShoppingCartProducts(products: List<ProductUiModel>) {
-        shoppingCartRecyclerAdapter.toNextPage(products)
+        shoppingCartRecyclerAdapter.toNextPage(products = products)
+    }
+
+    private fun setUpTextPageNumber(pageNumber: Int) {
+        binding.textPageNumber.text = pageNumber.toString()
     }
 }
