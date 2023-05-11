@@ -40,7 +40,7 @@ class CartDatabase(
         return Product(productId, productTitle, productPrice, productImgUrl)
     }
 
-    override fun add(product: Product) {
+    override fun insert(product: Product) {
         val values = ContentValues().apply {
             put(TABLE_COLUMN_PRODUCT_ID, product.id)
             put(TABLE_COLUMN_PRODUCT_NAME, product.name)

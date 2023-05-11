@@ -54,11 +54,11 @@ class ProductDetailPresenterTest {
     @Test
     fun `상품을 장바구니에 추가한다`() {
         // given
-        every { cartRepository.add(any()) } answers { nothing }
+        every { cartRepository.insert(any()) } answers { nothing }
         // when
         presenter.addProductToCart()
         // then
-        verify(exactly = 1) { cartRepository.add(fakeProduct) }
+        verify(exactly = 1) { cartRepository.insert(fakeProduct) }
     }
 
     @Test

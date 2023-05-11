@@ -18,7 +18,7 @@ class ProductDetailPresenter(
     }
 
     override fun addProductToCart() {
-        cartRepository.add(product.toDomain())
+        cartRepository.insert(product.toDomain())
     }
 
     override fun addProductToRecent() {
