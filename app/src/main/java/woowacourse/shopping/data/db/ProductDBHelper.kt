@@ -1,10 +1,10 @@
-package woowacourse.shopping
+package woowacourse.shopping.data.db
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class CartDBHelper(context: Context) : SQLiteOpenHelper(
+class ProductDBHelper(context: Context) : SQLiteOpenHelper(
     context,
     DB_NAME,
     null,
@@ -19,7 +19,7 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(
     }
 
     companion object {
-        const val DB_NAME = "CartDB"
+        const val DB_NAME = "ProductDB"
         private const val DB_VERSION: Int = 1
         const val TABLE_NAME = "products"
         const val KEY_NAME = "name"

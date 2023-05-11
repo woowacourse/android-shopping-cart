@@ -1,9 +1,11 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.productcatalogue
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductCatalogueRecentBinding
+import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.RecentProductCatalogueUIModel
 
 class RecentProductCatalogueAdapter(
     private val recentProducts: RecentProductCatalogueUIModel,

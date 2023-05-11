@@ -1,4 +1,4 @@
-package woowacourse.shopping.productcatalogue
+package woowacourse.shopping.view.productcatalogue
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,18 +6,17 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import woowacourse.shopping.BundleKeys
-import woowacourse.shopping.MainProductCatalogueAdapter
-import woowacourse.shopping.MainProductCatalogueUIModel
-import woowacourse.shopping.ProductDBHelper
-import woowacourse.shopping.ProductDBRepository
-import woowacourse.shopping.ProductMockData
-import woowacourse.shopping.ProductUIModel
 import woowacourse.shopping.R
-import woowacourse.shopping.RecentProductCatalogueUIModel
-import woowacourse.shopping.cart.CartActivity
+import woowacourse.shopping.data.BundleKeys
+import woowacourse.shopping.data.ProductMockData
+import woowacourse.shopping.data.db.ProductDBHelper
+import woowacourse.shopping.data.db.ProductDBRepository
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
-import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.uimodel.MainProductCatalogueUIModel
+import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.RecentProductCatalogueUIModel
+import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
 class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.View {
     private lateinit var binding: ActivityProductCatalogueBinding
@@ -39,7 +38,8 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
         val dbHelper = ProductDBHelper(this)
         val db = dbHelper.writableDatabase
         val repository = ProductDBRepository(db)
-        val recentProducts = repository.getAll()
+        val recentProducts = repository.getAll(ProductDBHelper.TABLE_NAME)
+
         adapter.update(
             RecentProductCatalogueUIModel(
                 MainProductCatalogueUIModel(recentProducts)

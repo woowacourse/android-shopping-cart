@@ -1,11 +1,13 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductInCartBinding
-import woowacourse.shopping.mapper.toDomain
-import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.uimodel.CartUIModel
+import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.mapper.toDomain
+import woowacourse.shopping.uimodel.mapper.toUIModel
 
 class CartRecyclerViewAdapter(
     private var cartProducts: CartUIModel,

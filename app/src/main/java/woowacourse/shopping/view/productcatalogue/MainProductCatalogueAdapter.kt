@@ -1,10 +1,13 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.productcatalogue
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductCatalogueBinding
 import woowacourse.shopping.databinding.RecentProductCatalogueBinding
+import woowacourse.shopping.uimodel.MainProductCatalogueUIModel
+import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.RecentProductCatalogueUIModel
 
 class MainProductCatalogueAdapter(
     private var mainProducts: MainProductCatalogueUIModel,

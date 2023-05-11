@@ -1,16 +1,17 @@
-package woowacourse.shopping
+package woowacourse.shopping.data.db
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.ProductDBHelper.Companion.KEY_IMAGE
-import woowacourse.shopping.ProductDBHelper.Companion.KEY_NAME
-import woowacourse.shopping.ProductDBHelper.Companion.KEY_PRICE
-import woowacourse.shopping.ProductDBHelper.Companion.TABLE_NAME
+import woowacourse.shopping.data.db.ProductDBHelper.Companion.KEY_IMAGE
+import woowacourse.shopping.data.db.ProductDBHelper.Companion.KEY_NAME
+import woowacourse.shopping.data.db.ProductDBHelper.Companion.KEY_PRICE
+import woowacourse.shopping.data.db.ProductDBHelper.Companion.TABLE_NAME
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductDBRepository(private val database: SQLiteDatabase) {
-    fun getAll(): List<ProductUIModel> {
+    fun getAll(tableName: String): List<ProductUIModel> {
         val products = mutableListOf<ProductUIModel>()
-        database.rawQuery("SELECT * FROM $TABLE_NAME", null).use {
+        database.rawQuery("SELECT * FROM $tableName", null).use {
             while (it.moveToNext()) {
                 val productUIModel = ProductUIModel(
                     name = it.getString(it.getColumnIndexOrThrow(KEY_NAME)),
@@ -32,8 +33,10 @@ class ProductDBRepository(private val database: SQLiteDatabase) {
         database.insert(TABLE_NAME, null, record)
     }
 
-    fun remove(productUIModel: ProductUIModel) {
-        database.rawQuery("DELETE FROM $TABLE_NAME WHERE $KEY_NAME = ${productUIModel.name}", null)
+    fun remove(tableName: String, productUIModel: ProductUIModel) {
+        val whereClause = "$KEY_NAME = ?"
+        val whereArgs = arrayOf(productUIModel.name)
+        database.delete(tableName, whereClause, whereArgs)
     }
 
     fun clear() {

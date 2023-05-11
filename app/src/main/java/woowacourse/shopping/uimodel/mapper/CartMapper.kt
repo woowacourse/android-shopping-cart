@@ -1,7 +1,7 @@
-package woowacourse.shopping.mapper
+package woowacourse.shopping.uimodel.mapper
 
 import com.shopping.domain.Cart
-import woowacourse.shopping.CartUIModel
+import woowacourse.shopping.uimodel.CartUIModel
 
 fun Cart.toUIModel(): CartUIModel = CartUIModel(products.map { it.toUIModel() })
 

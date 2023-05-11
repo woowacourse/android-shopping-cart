@@ -1,17 +1,16 @@
-package woowacourse.shopping.cart
+package woowacourse.shopping.view.cart
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import woowacourse.shopping.CartDBHelper
-import woowacourse.shopping.CartRecyclerViewAdapter
-import woowacourse.shopping.CartUIModel
-import woowacourse.shopping.ProductDBRepository
-import woowacourse.shopping.ProductUIModel
 import woowacourse.shopping.R
+import woowacourse.shopping.data.db.CartDBHelper
+import woowacourse.shopping.data.db.ProductDBRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.uimodel.CartUIModel
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
@@ -24,7 +23,7 @@ class CartActivity : AppCompatActivity() {
         val dbHelper = CartDBHelper(this)
         val db = dbHelper.readableDatabase
         val repository = ProductDBRepository(db)
-        val cartProducts = repository.getAll()
+        val cartProducts = repository.getAll(CartDBHelper.TABLE_NAME)
         adapter = CartRecyclerViewAdapter(
             CartUIModel(cartProducts),
             setOnClickRemove()
@@ -37,8 +36,7 @@ class CartActivity : AppCompatActivity() {
         val dbHelper = CartDBHelper(this)
         val db = dbHelper.writableDatabase
         val repository = ProductDBRepository(db)
-        repository.remove(it)
-
+        repository.remove(CartDBHelper.TABLE_NAME, it)
         adapter.remove(it)
     }
 

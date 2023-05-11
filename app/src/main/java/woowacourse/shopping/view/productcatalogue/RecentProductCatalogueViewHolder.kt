@@ -1,8 +1,9 @@
-package woowacourse.shopping
+package woowacourse.shopping.view.productcatalogue
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.RecentProductCatalogueBinding
+import woowacourse.shopping.uimodel.RecentProductCatalogueUIModel
 
 class RecentProductCatalogueViewHolder(
     private val binding: RecentProductCatalogueBinding,

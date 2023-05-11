@@ -1,4 +1,4 @@
-package woowacourse.shopping.productcatalogue
+package woowacourse.shopping.view.productcatalogue
 
 class ProductCataloguePresenter(private val view: ProductCatalogueContract.View) :
     ProductCatalogueContract.Presenter {
