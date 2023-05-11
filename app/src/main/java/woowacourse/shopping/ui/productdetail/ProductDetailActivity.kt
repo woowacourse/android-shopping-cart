@@ -6,7 +6,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.data.database.ShoppingDatabase
+import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
+import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
+import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.util.getParcelableExtraCompat
 import woowacourse.shopping.util.intentDataNullProcess
@@ -21,6 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         initExtraData()
+        initPresenter()
         initBindingData()
     }
 
@@ -31,6 +37,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun initBindingData() {
         binding.product = product
+        binding.productDetailPresenter = presenter
+    }
+
+    private fun initPresenter() {
+        presenter = ProductDetailPresenter(
+            this,
+            BasketRepository(LocalBasketDataSource(BasketDaoImpl(ShoppingDatabase(this)))),
+            product
+        )
+    }
+
+    override fun showBasket() {
+        startActivity(BasketActivity.getIntent(this))
+        finish()
     }
 
     companion object {

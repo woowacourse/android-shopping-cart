@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.basket
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -32,12 +34,16 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
     }
 
     private fun initAdapter() {
-        basketAdapter = BasketAdapter { }
+        basketAdapter = BasketAdapter(presenter::removeBasketProduct)
         binding.rvBasket.adapter = basketAdapter
         presenter.fetchBasketProducts()
     }
 
     override fun updateBasketProducts(products: List<UiProduct>) {
         basketAdapter.submitList(products)
+    }
+
+    companion object {
+        fun getIntent(context: Context) = Intent(context, BasketActivity::class.java)
     }
 }
