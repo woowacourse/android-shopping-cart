@@ -4,7 +4,7 @@ import woowacourse.shopping.data.model.DataProduct
 
 interface ProductDataSource {
     interface Local {
-        fun getPartially(size: Int): List<DataProduct>
+        fun getPartially(size: Int, lastId: Int): List<DataProduct>
     }
 
     interface Remote

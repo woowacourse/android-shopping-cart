@@ -1,11 +1,13 @@
 package woowacourse.shopping.ui.shopping
 
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
@@ -18,6 +20,7 @@ import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.shopping.ShoppingViewHolderType.MORE_BUTTON
 import woowacourse.shopping.ui.shopping.ShoppingViewHolderType.PRODUCT
 import woowacourse.shopping.ui.shopping.ShoppingViewHolderType.RECENT_PRODUCTS
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductAdapter
@@ -30,6 +33,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private lateinit var shoppingAdapter: ShoppingAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
+    private lateinit var moreButtonAdapter: MoreButtonAdapter
+    private lateinit var concatAdapter: ConcatAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +58,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun updateProducts(products: List<UiProduct>) {
-        shoppingAdapter.submitList(products)
+        shoppingAdapter.submitList(shoppingAdapter.currentList + products)
     }
 
     override fun updateRecentProducts(recentProducts: List<UiProduct>) {
@@ -63,19 +68,34 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initAdapter() {
         recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProduct)
         shoppingAdapter = ShoppingAdapter(recentProductAdapter, presenter::inquiryRecentProduct)
-        binding.rvShopping.adapter = shoppingAdapter
+        moreButtonAdapter = MoreButtonAdapter(presenter::fetchProducts)
+        val config = ConcatAdapter.Config.Builder()
+            .setIsolateViewTypes(false)
+            .build()
+        concatAdapter = ConcatAdapter(config, shoppingAdapter, moreButtonAdapter)
+
+        binding.rvShopping.adapter = concatAdapter
         val gridLayoutManager = GridLayoutManager(this, 2).apply {
             spanSizeLookup = object : SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int =
-                    when (ShoppingViewHolderType.getName(shoppingAdapter.getItemViewType(position))) {
+                    when (ShoppingViewHolderType.getName(concatAdapter.getItemViewType(position))) {
                         RECENT_PRODUCTS -> 2
                         PRODUCT -> 1
+                        MORE_BUTTON -> 2
                     }
             }
         }
         binding.rvShopping.layoutManager = gridLayoutManager
         presenter.fetchRecentProducts()
         presenter.fetchProducts()
+
+        binding.rvShopping.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (!recyclerView.canScrollVertically(1)) {
+                    presenter.fetchHasNext()
+                }
+            }
+        })
     }
 
     override fun showProductDetail(product: UiProduct) {
@@ -83,7 +103,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun updateMoreButtonVisibility(isVisible: Boolean) {
-        // 어댑터 접근해서 visibility 설정
+        moreButtonAdapter.updateVisibility(isVisible)
     }
 
     private fun initButtonBasketClickListener() {

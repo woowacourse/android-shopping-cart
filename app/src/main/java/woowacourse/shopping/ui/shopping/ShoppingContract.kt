@@ -21,5 +21,7 @@ interface ShoppingContract {
         fun fetchRecentProducts()
 
         fun inquiryRecentProduct(product: UiProduct)
+
+        fun fetchHasNext()
     }
 }

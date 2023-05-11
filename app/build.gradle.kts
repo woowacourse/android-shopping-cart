@@ -35,10 +35,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    dataBinding{
+    dataBinding {
         enable = true
     }
-    viewBinding{
+    viewBinding {
         enable = true
     }
 }
@@ -60,4 +60,7 @@ dependencies {
 
     // Mockk
     testImplementation("io.mockk:mockk:1.13.5")
+
+    // concatAdapter
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
 }

@@ -54,6 +54,7 @@ class ShoppingAdapter(
                     onItemClick
                 )
             }
+            else -> throw IllegalArgumentException("콘캣 어댑터 추가 예정")
         }
     }
 

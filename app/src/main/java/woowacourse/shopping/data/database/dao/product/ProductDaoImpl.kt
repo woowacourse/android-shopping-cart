@@ -5,16 +5,15 @@ import android.content.ContentValues
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import woowacourse.shopping.data.database.contract.ProductContract
-import woowacourse.shopping.data.database.contract.ProductContract.TABLE_NAME
 import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.DataProduct
 
 class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
     @SuppressLint("Range")
-    override fun getPartially(size: Int): List<DataProduct> {
+    override fun getPartially(size: Int, lastId: Int): List<DataProduct> {
         val products = mutableListOf<DataProduct>()
         database.writableDatabase.use { db ->
-            val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(size.toString()))
+            val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(lastId.toString(), size.toString()))
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val name: String =
@@ -40,12 +39,14 @@ class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
 
         // No Add운동 / 쿼리 짤 필요 없이 SQLiteDatabase에서 제공
         // ContentValue를 통해 일치하는 Column명에 데이터 알아서 넣어줌.
-        database.writableDatabase.insert(TABLE_NAME, null, contentValues)
+        database.writableDatabase.insert(ProductContract.TABLE_NAME, null, contentValues)
     }
 
     companion object {
         private val GET_PARTIALLY_QUERY = """
-            SELECT * FROM ${ProductContract.TABLE_NAME} ORDER BY ${BaseColumns._ID} DESC LIMIT ?        
+            SELECT * FROM ${ProductContract.TABLE_NAME}
+            WHERE ${BaseColumns._ID} > ? 
+            ORDER BY ${BaseColumns._ID} LIMIT ?        
         """.trimIndent()
     }
 }

@@ -12,11 +12,16 @@ class ShoppingPresenter(
     private val productRepository: DomainProductRepository,
     private val recentProductRepository: DomainRecentProductRepository
 ) : ShoppingContract.Presenter {
+    private var hasNext: Boolean = false
+    private var lastId: Int = -1
+
     override fun fetchProducts() {
-        val products =
-            productRepository.getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE).map { it.toUi() }
+        val products = productRepository
+            .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, lastId)
+            .map { it.toUi() }
+        lastId = products.maxOfOrNull { it.id } ?: -1
+        hasNext = checkHasNext(products)
         view.updateProducts(products)
-        view.updateMoreButtonVisibility(checkHasNext(products))
     }
 
     private fun checkHasNext(products: List<UiProduct>): Boolean =
@@ -31,6 +36,10 @@ class ShoppingPresenter(
     override fun inquiryRecentProduct(product: UiProduct) {
         view.showProductDetail(product)
         thread { recentProductRepository.add(product.toDomain()) }
+    }
+
+    override fun fetchHasNext() {
+        view.updateMoreButtonVisibility(hasNext)
     }
 
     companion object {
