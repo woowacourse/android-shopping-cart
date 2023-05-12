@@ -11,51 +11,59 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
 import woowacourse.shopping.data.db.CartProductDBHelper
-import woowacourse.shopping.data.db.CartProductDBRepository
 import woowacourse.shopping.data.db.RecentProductDBHelper
-import woowacourse.shopping.data.db.RecentProductDBRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
-import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductUIModel
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
-class ProductDetailActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityProductDetailBinding
+class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
+    override lateinit var presenter: ProductDetailContract.Presenter
+
+    private var _binding: ActivityProductDetailBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+
+        _binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
 
         setSupportActionBar(binding.tbProductDetail)
-
-        val productData =
-            intent.getSerializableCompat(BundleKeys.KEY_PRODUCT) ?: ProductUIModel.dummy
-
-        val dbHelper = RecentProductDBHelper(this)
-        val db = dbHelper.writableDatabase
-        val repository = RecentProductDBRepository(db)
-        repository.insert(RecentProductUIModel(productData))
-
-        Glide.with(binding.root.context)
-            .load(productData.url)
-            .into(binding.ivProductImage)
-        binding.tvProductName.text = productData.name
-        binding.tvPrice.text = productData.price.toString()
-
-        setOnClickAddToCart(productData)
+        setPresenter()
+        setProductDetailView()
+        saveRecentProduct()
+        setAddToCartClick()
     }
 
-    private fun setOnClickAddToCart(productData: ProductUIModel) {
-        binding.btAddToCart.setOnClickListener {
-            val dbHelper = CartProductDBHelper(this)
-            val db = dbHelper.writableDatabase
-            val repository = CartProductDBRepository(db)
-            repository.insert(CartProductUIModel(productData))
+    private fun setPresenter() {
+        val product = intent.getSerializableCompat<ProductUIModel>(BundleKeys.KEY_PRODUCT)
+            ?: throw IllegalStateException(NON_FOUND_KEY_ERROR)
 
-            startActivity(ShoppingCartActivity.intent(binding.root.context))
+        presenter = ProductDetailPresenter(this, product)
+    }
+
+    override fun setProductDetailView() {
+        Glide.with(this)
+            .load(presenter.product.url)
+            .into(binding.ivProductImage)
+        binding.product = presenter.product
+    }
+
+    private fun saveRecentProduct() {
+        val db = RecentProductDBHelper(this).writableDatabase
+        presenter.saveRecentProduct(db)
+    }
+
+    private fun setAddToCartClick() {
+        val db = CartProductDBHelper(this).writableDatabase
+        binding.btnAddToCart.setOnClickListener {
+            presenter.saveCartProduct(db)
         }
+    }
+
+    override fun showCartPage() {
+        startActivity(ShoppingCartActivity.intent(binding.root.context))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,6 +82,7 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val NON_FOUND_KEY_ERROR = "일치하는 키가 없습니다."
         fun intent(context: Context): Intent {
             return Intent(context, ProductDetailActivity::class.java)
         }

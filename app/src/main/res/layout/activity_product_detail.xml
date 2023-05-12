@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="product"
+            type="woowacourse.shopping.uimodel.ProductUIModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -38,6 +44,7 @@
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
+            android:text="@{product.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_product_image"
@@ -73,12 +80,13 @@
             android:layout_marginEnd="18dp"
             android:textColor="@color/black"
             android:textSize="20sp"
+            android:text="@{@string/price_format(product.price)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/v_line_separator"
             tools:text="99,800원" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/bt_add_to_cart"
+            android:id="@+id/btn_add_to_cart"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="@color/add_to_cart_button_color"
