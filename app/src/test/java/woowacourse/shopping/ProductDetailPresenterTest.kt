@@ -10,21 +10,49 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.productdetail.ProductDetailPresenter
 import woowacourse.shopping.util.toUiModel
 
 class ProductDetailPresenterTest {
 
-    private lateinit var presenter: ProductDetailContract.Presenter
     private lateinit var view: ProductDetailContract.View
     private lateinit var repository: ShoppingRepository
+    private lateinit var presenter: ProductDetailPresenter
 
     @Before
     fun setUp() {
+        view = mockk(relaxed = true)
+        repository = mockk()
+        presenter = ProductDetailPresenter(
+            view = view,
+            product = Product(id = 1).toUiModel(),
+            repository = repository
+        )
+    }
+
+    @Test
+    fun `프레젠터가 생성될 때 주입받은 상품에 대한 정보를 가지고 화면을 초기화한다`() {
+        // given
+        val slot = slot<ProductUiModel>()
         view = mockk()
         repository = mockk()
-        presenter = ProductDetailPresenter(view, Product(id = 1).toUiModel(), repository)
+        every { view.setUpProductDetailView(capture(slot)) } just Runs
+
+        // when
+        ProductDetailPresenter(
+            view = view,
+            product = Product(id = 1).toUiModel(),
+            repository = repository
+        )
+
+        // then
+        val actual = slot.captured
+        val expected = Product(id = 1).toUiModel()
+
+        assertEquals(expected, actual)
+        verify { view.setUpProductDetailView(actual) }
     }
 
     @Test
