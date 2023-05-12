@@ -65,7 +65,7 @@
 
         <ImageView
             android:id="@+id/product_img"
-            imgUrl="@{itemModel.cartProduct.productUiModel}"
+            imgUrl="@{itemModel.cartProduct.productUiModel.imgUrl}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
