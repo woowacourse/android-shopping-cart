@@ -7,8 +7,4 @@ class ProductUIModel(
     val name: String,
     val url: String,
     val price: Int,
-) : Serializable {
-    companion object {
-        val dummy = ProductUIModel(0, "", "", 0)
-    }
-}
+) : Serializable
