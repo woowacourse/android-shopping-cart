@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             },
             onMoreItemClick = {
                 presenter.addProducts()
-            }
+            },
         )
         binding.productRv.adapter = productListAdapter
         initLayout()
@@ -76,14 +76,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun addProducts(products: List<Product>) {
         productListAdapter.addItems(
-            products.map { it.toUi().toItem() }
+            products.map { it.toUi().toItem() },
         )
     }
 
     override fun setProducts(products: List<Product>, recentProducts: RecentProducts) {
         productListAdapter.setItems(
             products.map { it.toUi().toItem() },
-            recentProducts.products.map { it.toUi().toItem() }
+            recentProducts.products.map { it.toUi().toItem() },
         )
     }
 
