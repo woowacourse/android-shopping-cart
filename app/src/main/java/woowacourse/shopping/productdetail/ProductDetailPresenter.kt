@@ -19,7 +19,7 @@ class ProductDetailPresenter(
     }
 
     override fun addToCart() {
-        val cart = cartState.load()
+        val cart = cartDao.selectAll()
         val cartProduct = cart.makeCartProduct(product)
         cartState.save(cart.add(cartProduct))
         cartDao.insertCartProduct(cartProduct.toView())
