@@ -13,7 +13,6 @@ class RecentViewedRecyclerAdapter(private val products: List<ProductUiModel>) :
     }
 
     override fun onBindViewHolder(holder: RecentViewedViewHolder, position: Int) {
-
         holder.bind(products[position])
     }
 

@@ -15,31 +15,33 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.util.handleMissingSerializableData
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
-
-    // todo null인 경우 처리하기
-    private val product: ProductUiModel by lazy { intent.getSerializableCompat(PRODUCT_KEY)!! }
-    private val presenter: ProductDetailPresenter by lazy {
-        ProductDetailPresenter(
-            view = this,
-            product = product,
-            repository = ShoppingDBAdapter(
-                shoppingDao = ShoppingDao(this),
-            )
-        )
-    }
+    private lateinit var presenter: ProductDetailPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
 
-        binding.presenter = presenter
+        setUpPresenter()
         setUpProductDetailToolbar()
-        setUpProductDetailView()
+    }
+
+    private fun setUpPresenter() {
+        intent.getSerializableCompat<ProductUiModel>(PRODUCT_KEY)?.let {
+            presenter = ProductDetailPresenter(
+                view = this,
+                product = it,
+                repository = ShoppingDBAdapter(
+                    shoppingDao = ShoppingDao(this)
+                )
+            )
+        } ?: return handleMissingSerializableData()
+
+        binding.presenter = presenter
     }
 
     private fun setUpProductDetailToolbar() {
@@ -61,7 +63,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setUpProductDetailView() {
+    override fun setUpProductDetailView(product: ProductUiModel) {
         Glide.with(this)
             .load(product.imageUrl)
             .into(binding.imageProductDetail)
@@ -84,6 +86,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_KEY, product)
             }
+
             return intent
         }
     }

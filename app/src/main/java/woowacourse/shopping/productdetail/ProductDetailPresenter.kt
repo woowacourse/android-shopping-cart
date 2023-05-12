@@ -9,6 +9,10 @@ class ProductDetailPresenter(
     val repository: ShoppingRepository
 ) : ProductDetailContract.Presenter {
 
+    init {
+        view.setUpProductDetailView(product)
+    }
+
     override fun addToShoppingCart() {
         repository.insertToShoppingCart(product.id)
         view.navigateToShoppingCartView()
