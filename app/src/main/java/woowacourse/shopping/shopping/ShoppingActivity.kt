@@ -3,9 +3,8 @@ package woowacourse.shopping.shopping
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -63,7 +62,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
-            onProductClicked = ::navigateToProductDetailView
+            onProductClicked = ::navigateToProductDetailView,
+            onShowMoreButtonClicked = showMoreShoppingProducts
         )
 
         with(binding) {
@@ -72,16 +72,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                     ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
             }
             productRecyclerView.adapter = shoppingRecyclerAdapter
-            buttonShowMore.setOnClickListener {
-                buttonShowMore.visibility = View.GONE
-                showMoreShoppingProducts()
-            }
-            productRecyclerView.addOnScrollListener(
-                ShoppingRecyclerScrollListener(
-                    scrollPossible = { buttonShowMore.isVisible = false },
-                    scrollImpossible = { buttonShowMore.isVisible = true }
-                )
-            )
         }
     }
 
@@ -96,6 +86,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {
+        if (toAdd.isEmpty()) {
+            return Toast.makeText(
+                this,
+                getString(R.string.message_last_product),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
         shoppingRecyclerAdapter.refreshShoppingItems(toAdd = toAdd)
     }
 

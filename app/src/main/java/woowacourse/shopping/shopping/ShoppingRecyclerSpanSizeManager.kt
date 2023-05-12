@@ -9,13 +9,14 @@ class ShoppingRecyclerSpanSizeManager(
     override fun getSpanSize(position: Int): Int {
 
         return when (getViewType(position)) {
-            ShoppingRecyclerItemViewType.PRODUCT.ordinal -> DEFAULT_SIZE
-            else -> RECENT_VIEWED_LAYOUT_SIZE
+            ShoppingRecyclerItemViewType.RECENT_VIEWED.ordinal -> WIDE
+            ShoppingRecyclerItemViewType.READ_MORE.ordinal -> WIDE
+            else -> DEFAULT
         }
     }
 
     companion object {
-        private const val DEFAULT_SIZE = 1
-        private const val RECENT_VIEWED_LAYOUT_SIZE = 2
+        private const val DEFAULT = 1
+        private const val WIDE = 2
     }
 }

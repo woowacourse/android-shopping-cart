@@ -9,6 +9,7 @@ class ShoppingRecyclerAdapter(
     products: List<ProductUiModel>,
     recentViewedProducts: List<ProductUiModel>,
     private val onProductClicked: (ProductUiModel) -> Unit,
+    private val onShowMoreButtonClicked: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val products: MutableList<ProductUiModel> =
@@ -20,7 +21,10 @@ class ShoppingRecyclerAdapter(
         if (recentViewedProducts.isEmpty()) {
             return ShoppingRecyclerItemViewType.PRODUCT.ordinal
         }
-        return ShoppingRecyclerItemViewType.valueOf(position).ordinal
+        return ShoppingRecyclerItemViewType.valueOf(
+            position,
+            products.size
+        ).ordinal
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -31,23 +35,33 @@ class ShoppingRecyclerAdapter(
 
             ShoppingRecyclerItemViewType.PRODUCT ->
                 ShoppingItemViewHolder.from(parent)
+
+            ShoppingRecyclerItemViewType.READ_MORE ->
+                ReadMoreItemViewHolder.from(parent)
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ShoppingRecyclerItemViewType.RECENT_VIEWED.ordinal ->
-                (holder as RecentViewedLayoutViewHolder).bind(recentViewedProducts)
+                (holder as RecentViewedLayoutViewHolder).bind(
+                    recentViewedProducts = recentViewedProducts
+                )
 
             ShoppingRecyclerItemViewType.PRODUCT.ordinal ->
                 (holder as ShoppingItemViewHolder).bind(
                     productUiModel = products[position],
                     onClicked = onProductClicked
                 )
+
+            ShoppingRecyclerItemViewType.READ_MORE.ordinal ->
+                (holder as ReadMoreItemViewHolder).bind(
+                    onClicked = onShowMoreButtonClicked
+                )
         }
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = products.size + 1
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshRecentViewedItems(toRemove: ProductUiModel?, toAdd: ProductUiModel) {

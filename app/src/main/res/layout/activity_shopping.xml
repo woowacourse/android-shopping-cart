@@ -24,26 +24,11 @@
             android:id="@+id/product_recycler_view"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/button_show_more"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_shopping"
             tools:listitem="@layout/item_shopping_product" />
-
-        <Button
-            android:id="@+id/button_show_more"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_margin="20dp"
-            android:background="@drawable/item_round"
-            android:text="@string/read_more"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/product_recycler_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

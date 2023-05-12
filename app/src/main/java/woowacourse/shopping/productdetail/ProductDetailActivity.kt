@@ -83,11 +83,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         private const val PRODUCT_KEY = "product"
 
         fun getIntent(context: Context, product: ProductUiModel): Intent {
-            val intent = Intent(context, ProductDetailActivity::class.java).apply {
+
+            return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_KEY, product)
             }
-
-            return intent
         }
     }
 }
