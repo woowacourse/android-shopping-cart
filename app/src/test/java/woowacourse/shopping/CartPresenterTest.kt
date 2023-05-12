@@ -9,10 +9,10 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.cart.contract.CartContract
-import woowacourse.shopping.cart.contract.presenter.CartPresenter
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.CartUIModel
+import woowacourse.shopping.ui.cart.contract.CartContract
+import woowacourse.shopping.ui.cart.contract.presenter.CartPresenter
 
 class CartPresenterTest {
 
