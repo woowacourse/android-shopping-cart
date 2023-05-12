@@ -4,7 +4,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
-import android.util.Log
 import woowacourse.shopping.data.model.CartEntity
 
 class CartDao(context: Context) {
@@ -42,7 +41,6 @@ class CartDao(context: Context) {
     }
 
     private fun getCursor(startPosition: Int): Cursor {
-        Log.d("test", "startPosi : " + startPosition.toString())
         return db.query(
             CartContract.Cart.TABLE_NAME,
             null,

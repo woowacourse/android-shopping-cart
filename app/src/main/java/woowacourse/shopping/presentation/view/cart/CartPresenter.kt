@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.view.cart
 
-import android.util.Log
 import woowacourse.shopping.data.respository.cart.CartRepository
 
 class CartPresenter(
@@ -17,18 +16,17 @@ class CartPresenter(
         if (position >= 0) {
             cartRepository.deleteCartByProductId(carts[position].product.id)
             carts.removeAt(position)
-            Log.d("test", "position: $position")
-            Log.d("test", "calc po: ${position % 3}")
             view.updateToDeleteCartItemView(position % 3 - 1)
         }
     }
 
     override fun updateCartItem(currentPage: Int) {
         val startPosition = (currentPage - 1) * 3
-        if (currentPage * 3 > carts.size) {
-            carts.addAll(cartRepository.getCarts(currentPage))
+        if (carts.getOrNull(startPosition) == null) {
+            carts.addAll(cartRepository.getCarts(startPosition))
         }
-        val endIndex = if (carts.size > startPosition + 3) 3 else carts.size - 1
-        view.updateCartItemView(carts.subList(startPosition, endIndex))
+        val endPosition =
+            if (carts.size in (startPosition..startPosition + 3)) carts.size else startPosition + 3
+        view.updateCartItemView(carts.subList(startPosition, endPosition))
     }
 }
