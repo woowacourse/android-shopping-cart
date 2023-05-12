@@ -10,7 +10,6 @@ import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.ProductViewType
 import woowacourse.shopping.presentation.model.ProductViewType.ProductItem
 import woowacourse.shopping.presentation.model.ProductViewType.RecentProductModels
-import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductContainerViewHolder
 
 class ProductListAdapter(
     productItems: List<ProductViewType>,
@@ -68,7 +67,8 @@ class ProductListAdapter(
                 )
             }
             is ProductItemViewHolder -> {
-                holder.bind(_productItems[position] as ProductItem)
+                val productItem = _productItems[position] as ProductItem
+                holder.bind(productItem.productModel)
             }
             is MoreItemViewHolder -> {}
         }

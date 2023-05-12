@@ -27,10 +27,4 @@ class RecentProductAdapter(
     override fun onBindViewHolder(holder: RecentProductItemViewHolder, position: Int) {
         holder.bind(_recentProducts[position])
     }
-
-    fun setItems(products: List<ProductModel>) {
-        _recentProducts.clear()
-        _recentProducts.addAll(products)
-        notifyDataSetChanged()
-    }
 }
