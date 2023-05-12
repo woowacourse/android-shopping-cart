@@ -13,6 +13,6 @@ interface CartContract {
         fun fetchProducts()
         fun removeProduct(id: Int)
         fun fetchNextPage()
-        fun fetchUndoPage()
+        fun fetchPrevPage()
     }
 }

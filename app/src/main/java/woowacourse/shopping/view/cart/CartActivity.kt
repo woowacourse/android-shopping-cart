@@ -36,8 +36,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 presenter.fetchNextPage()
             }
 
-            override fun onUndoClick() {
-                presenter.fetchUndoPage()
+            override fun onPrevClick() {
+                presenter.fetchPrevPage()
             }
         }, isExistUndo, isExistNext, count)
     }
