@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.recentProduct
+package woowacourse.shopping.ui.shopping.recentProductAdapter
 
 import woowacourse.shopping.model.ProductUIModel
 

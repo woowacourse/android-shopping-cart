@@ -12,8 +12,9 @@ import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.cart.contract.CartContract
-import woowacourse.shopping.ui.cart.contract.presenter.CartPresenter
+import woowacourse.shopping.ui.cart.cartAdapter.CartAdapter
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
+import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {

@@ -1,11 +1,11 @@
-package woowacourse.shopping.ui.shopping
+package woowacourse.shopping.ui.shopping.productAdapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.ui.shopping.viewHolder.ItemViewHolder
-import woowacourse.shopping.ui.shopping.viewHolder.ProductsViewHolder
-import woowacourse.shopping.ui.shopping.viewHolder.ReadMoreViewHolder
-import woowacourse.shopping.ui.shopping.viewHolder.RecentViewHolder
+import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ItemViewHolder
+import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ProductsViewHolder
+import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ReadMoreViewHolder
+import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.RecentViewHolder
 
 class ProductsAdapter(
     private var datas: List<ProductsItemType>,

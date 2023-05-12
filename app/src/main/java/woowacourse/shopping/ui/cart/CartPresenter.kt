@@ -1,11 +1,10 @@
-package woowacourse.shopping.ui.cart.contract.presenter
+package woowacourse.shopping.ui.cart
 
 import com.example.domain.model.CartRepository
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.cart.CartItemType
-import woowacourse.shopping.ui.cart.contract.CartContract
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 
 class CartPresenter(
     val view: CartContract.View,

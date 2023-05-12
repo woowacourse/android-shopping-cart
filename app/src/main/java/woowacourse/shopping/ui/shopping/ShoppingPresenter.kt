@@ -1,12 +1,11 @@
-package woowacourse.shopping.ui.shopping.contract.presenter
+package woowacourse.shopping.ui.shopping
 
 import com.example.domain.model.Product
 import com.example.domain.model.ProductRepository
 import com.example.domain.model.RecentRepository
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.shopping.ProductsItemType
-import woowacourse.shopping.ui.shopping.contract.ShoppingContract
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,

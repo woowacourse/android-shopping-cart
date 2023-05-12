@@ -1,12 +1,12 @@
-package woowacourse.shopping.ui.shopping.viewHolder
+package woowacourse.shopping.ui.shopping.productAdapter.viewHolder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.RecentProductItemBinding
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.recentProduct.RecentProductItem
-import woowacourse.shopping.ui.recentProduct.RecentProductsAdapter
-import woowacourse.shopping.ui.shopping.ProductsItemType
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
+import woowacourse.shopping.ui.shopping.recentProductAdapter.RecentProductItem
+import woowacourse.shopping.ui.shopping.recentProductAdapter.RecentProductsAdapter
 
 class RecentViewHolder(
     private val binding: RecentProductItemBinding,

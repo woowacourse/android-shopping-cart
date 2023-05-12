@@ -1,9 +1,9 @@
-package woowacourse.shopping.ui.shopping.viewHolder
+package woowacourse.shopping.ui.shopping.productAdapter.viewHolder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ProductReadMoreItemBinding
-import woowacourse.shopping.ui.shopping.ProductsItemType
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 
 class ReadMoreViewHolder private constructor(
     binding: ProductReadMoreItemBinding,

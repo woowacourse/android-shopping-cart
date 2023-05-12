@@ -1,8 +1,8 @@
-package woowacourse.shopping.ui.cart.contract
+package woowacourse.shopping.ui.cart
 
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.cart.CartItemType
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 
 interface CartContract {
 

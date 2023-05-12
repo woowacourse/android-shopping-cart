@@ -1,7 +1,7 @@
-package woowacourse.shopping.ui.shopping.contract
+package woowacourse.shopping.ui.shopping
 
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.shopping.ProductsItemType
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 
 interface ShoppingContract {
     interface View {

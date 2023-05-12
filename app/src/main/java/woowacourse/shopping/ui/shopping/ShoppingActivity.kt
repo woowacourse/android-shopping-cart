@@ -16,8 +16,9 @@ import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.shopping.contract.ShoppingContract
-import woowacourse.shopping.ui.shopping.contract.presenter.ShoppingPresenter
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapter
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding

@@ -1,10 +1,10 @@
-package woowacourse.shopping.ui.cart.viewHolder
+package woowacourse.shopping.ui.cart.cartAdapter.viewHolder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.CartItemBinding
-import woowacourse.shopping.ui.cart.CartItemType
-import woowacourse.shopping.ui.cart.CartListener
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
+import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 
 class CartViewHolder private constructor(
     private val binding: CartItemBinding,

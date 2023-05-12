@@ -11,8 +11,8 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.CartUIModel
-import woowacourse.shopping.ui.cart.contract.CartContract
-import woowacourse.shopping.ui.cart.contract.presenter.CartPresenter
+import woowacourse.shopping.ui.cart.CartContract
+import woowacourse.shopping.ui.cart.CartPresenter
 
 class CartPresenterTest {
 

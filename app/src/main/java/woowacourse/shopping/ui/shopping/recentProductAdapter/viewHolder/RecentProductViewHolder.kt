@@ -1,10 +1,10 @@
-package woowacourse.shopping.ui.recentProduct.viewHolder
+package woowacourse.shopping.ui.shopping.recentProductAdapter.viewHolder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.RecentProductItemItemBinding
-import woowacourse.shopping.ui.recentProduct.RecentProductItem
+import woowacourse.shopping.ui.shopping.recentProductAdapter.RecentProductItem
 
 class RecentProductViewHolder(
     private val binding: RecentProductItemItemBinding,
@@ -12,9 +12,7 @@ class RecentProductViewHolder(
 ) :
     RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.root.setOnClickListener {
-            onClickItem(adapterPosition)
-        }
+        binding.root.setOnClickListener { onClickItem(adapterPosition) }
     }
 
     fun bind(recentProduct: RecentProductItem) {

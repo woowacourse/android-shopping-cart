@@ -1,10 +1,9 @@
-package woowacourse.shopping.ui.productdetail.contract.presenter
+package woowacourse.shopping.ui.productdetail
 
 import com.example.domain.model.CartRepository
 import com.example.domain.model.RecentRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,

@@ -12,8 +12,8 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
-import woowacourse.shopping.ui.productdetail.contract.presenter.ProductDetailPresenter
+import woowacourse.shopping.ui.productdetail.ProductDetailContract
+import woowacourse.shopping.ui.productdetail.ProductDetailPresenter
 
 class ProductDetailPresenterTest {
 

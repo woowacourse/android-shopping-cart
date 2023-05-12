@@ -15,8 +15,6 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.model.ProductUIModel.Companion.KEY_PRODUCT
 import woowacourse.shopping.ui.cart.CartActivity
-import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
-import woowacourse.shopping.ui.productdetail.contract.presenter.ProductDetailPresenter
 import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.utils.keyError
 

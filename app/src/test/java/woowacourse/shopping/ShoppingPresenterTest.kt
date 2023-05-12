@@ -11,9 +11,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
-import woowacourse.shopping.ui.shopping.ProductsItemType
-import woowacourse.shopping.ui.shopping.contract.ShoppingContract
-import woowacourse.shopping.ui.shopping.contract.presenter.ShoppingPresenter
+import woowacourse.shopping.ui.shopping.ShoppingContract
+import woowacourse.shopping.ui.shopping.ShoppingPresenter
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 
 class ShoppingPresenterTest {
 

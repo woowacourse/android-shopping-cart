@@ -1,10 +1,10 @@
-package woowacourse.shopping.ui.cart
+package woowacourse.shopping.ui.cart.cartAdapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.ui.cart.viewHolder.CartItemViewHolder
-import woowacourse.shopping.ui.cart.viewHolder.CartViewHolder
-import woowacourse.shopping.ui.cart.viewHolder.NavigationViewHolder
+import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartItemViewHolder
+import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartViewHolder
+import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.NavigationViewHolder
 
 class CartAdapter(
     private val cartItems: List<CartItemType>,

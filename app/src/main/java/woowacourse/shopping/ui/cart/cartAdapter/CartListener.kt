@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.cart
+package woowacourse.shopping.ui.cart.cartAdapter
 
 import woowacourse.shopping.model.ProductUIModel
 

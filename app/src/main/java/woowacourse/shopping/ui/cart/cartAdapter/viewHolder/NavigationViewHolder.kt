@@ -1,12 +1,12 @@
-package woowacourse.shopping.ui.cart.viewHolder
+package woowacourse.shopping.ui.cart.cartAdapter.viewHolder
 
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.CartNavigationItemBinding
-import woowacourse.shopping.ui.cart.CartItemType
-import woowacourse.shopping.ui.cart.CartListener
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
+import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 
 class NavigationViewHolder private constructor(
     private val binding: CartNavigationItemBinding,

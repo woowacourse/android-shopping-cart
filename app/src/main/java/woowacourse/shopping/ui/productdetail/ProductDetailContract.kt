@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productdetail.contract
+package woowacourse.shopping.ui.productdetail
 
 import woowacourse.shopping.model.ProductUIModel
 
