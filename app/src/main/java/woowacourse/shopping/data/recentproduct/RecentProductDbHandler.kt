@@ -3,8 +3,7 @@ package woowacourse.shopping.data.recentproduct
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import com.example.domain.Product
-import com.example.domain.RecentProducts
+import com.example.domain.RecentProduct
 
 class RecentProductDbHandler(
     private val db: SQLiteDatabase
@@ -14,29 +13,25 @@ class RecentProductDbHandler(
         return db.query(
             RecentProductContract.TABLE_NAME,
             arrayOf(
-                RecentProductContract.TABLE_COLUMN_ID,
-                RecentProductContract.TABLE_COLUMN_IMAGE_URL,
-                RecentProductContract.TABLE_COLUMN_NAME,
-                RecentProductContract.TABLE_COLUMN_PRICE
+                RecentProductContract.TABLE_COLUMN_PRODUCT_ID,
+                RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL,
+                RecentProductContract.TABLE_COLUMN_PRODUCT_NAME
             ),
             "", arrayOf(), null, null, ""
         )
     }
 
-    fun getRecentProducts(): RecentProducts {
-        val cursor = getCursor()
-        val recentProducts = RecentProducts()
+    fun getAll(): List<RecentProduct> {
+        val cursor: Cursor = getCursor()
+        val recentProducts: MutableList<RecentProduct> = mutableListOf()
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_ID))
-                val imageUrl = getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_IMAGE_URL))
-                val name = getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_NAME))
-                val price = getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRICE))
+                val id = getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_ID))
+                val imageUrl = getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
+                val name = getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME))
 
-                recentProducts.addProduct(
-                    Product(id, imageUrl, name, price)
-                )
+                recentProducts.add(RecentProduct(id, imageUrl, name))
             }
         }
 
@@ -44,21 +39,32 @@ class RecentProductDbHandler(
         return recentProducts
     }
 
-    fun addColumn(product: Product) {
+    fun addColumn(recentProduct: RecentProduct) {
         val values = ContentValues().apply {
-            put(RecentProductContract.TABLE_COLUMN_ID, product.id)
-            put(RecentProductContract.TABLE_COLUMN_IMAGE_URL, product.imageUrl)
-            put(RecentProductContract.TABLE_COLUMN_NAME, product.name)
-            put(RecentProductContract.TABLE_COLUMN_PRICE, product.price)
+            put(RecentProductContract.TABLE_COLUMN_PRODUCT_ID, recentProduct.productId)
+            put(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, recentProduct.productImageUrl)
+            put(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME, recentProduct.productName)
         }
 
         db.insert(RecentProductContract.TABLE_NAME, null, values)
     }
 
-    fun deleteColumn(product: Product) {
+    fun deleteColumn(productId: Int) {
         db.delete(
             RecentProductContract.TABLE_NAME,
-            RecentProductContract.TABLE_COLUMN_ID + "=" + product.id, null
+            RecentProductContract.TABLE_COLUMN_PRODUCT_ID + "=" + productId, null
+        )
+    }
+
+    fun createTable() {
+        db.execSQL(
+            """
+                CREATE TABLE ${RecentProductContract.TABLE_NAME} (
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL} TEXT,
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_NAME} TEXT
+                )
+            """.trimIndent()
         )
     }
 }

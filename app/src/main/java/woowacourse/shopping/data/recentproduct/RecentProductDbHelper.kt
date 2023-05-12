@@ -12,10 +12,9 @@ class RecentProductDbHelper(
         db.execSQL(
             """
                 CREATE TABLE ${RecentProductContract.TABLE_NAME} (
-                    ${RecentProductContract.TABLE_COLUMN_ID} INTEGER,
-                    ${RecentProductContract.TABLE_COLUMN_IMAGE_URL} TEXT,
-                    ${RecentProductContract.TABLE_COLUMN_NAME} TEXT, 
-                    ${RecentProductContract.TABLE_COLUMN_PRICE} INTEGER
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL} TEXT,
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_NAME} TEXT
                 )
             """.trimIndent()
         )

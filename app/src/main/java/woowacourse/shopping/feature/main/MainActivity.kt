@@ -6,7 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.Product
-import com.example.domain.RecentProducts
+import com.example.domain.RecentProduct
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.product.ProductDbHelper
@@ -17,6 +17,7 @@ import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
 import woowacourse.shopping.feature.list.item.ProductListItem
 import woowacourse.shopping.feature.model.mapper.toItem
+import woowacourse.shopping.feature.model.mapper.toRecentProduct
 import woowacourse.shopping.feature.model.mapper.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 import woowacourse.shopping.feature.util.SpanSizeLookUpManager
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             onItemClick = { listItem ->
                 when (listItem) {
                     is ProductListItem -> {
-                        presenter.storeRecentProduct(listItem)
+                        presenter.storeRecentProduct(listItem.toRecentProduct())
                         ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
                     }
                 }
@@ -80,10 +81,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         )
     }
 
-    override fun setProducts(products: List<Product>, recentProducts: RecentProducts) {
+    override fun setProducts(products: List<Product>, recentProducts: List<RecentProduct>) {
         productListAdapter.setItems(
             products.map { it.toUi().toItem() },
-            recentProducts.products.map { it.toUi().toItem() }
+            recentProducts.map { it.toUi().toItem() }
         )
     }
 

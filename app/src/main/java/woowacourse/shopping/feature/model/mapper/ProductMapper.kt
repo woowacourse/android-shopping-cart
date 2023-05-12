@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.model.mapper
 
 import com.example.domain.Product
 import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.list.item.RecentProductListItem
 import woowacourse.shopping.feature.model.ProductState
 
 fun ProductState.toItem(): ProductListItem {
@@ -18,4 +19,8 @@ fun ProductListItem.toUi(): ProductState {
 
 fun Product.toUi(): ProductState {
     return ProductState(id, imageUrl, name, price)
+}
+
+fun ProductListItem.toRecentProduct(): RecentProductListItem {
+    return RecentProductListItem(id, imageUrl, name)
 }
