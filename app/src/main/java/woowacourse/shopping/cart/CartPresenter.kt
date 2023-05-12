@@ -17,7 +17,6 @@ class CartPresenter(
     private val sizePerPage: Int
 ) : CartContract.Presenter {
     init {
-        view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
     }
 
@@ -25,7 +24,6 @@ class CartPresenter(
         cart = cartState.load().remove(cartProductModel.toDomain())
         cartState.save(cart)
         cartDao.deleteCartProductByOrdinal(cartProductModel.ordinal)
-        view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
     }
 
@@ -42,20 +40,11 @@ class CartPresenter(
     private fun updateCartPage() {
         cartState.save(cartDao.selectAll())
         val cart = cartDao.selectPage(currentPage, sizePerPage)
-        view.updateCart(
-            cart = cart.cartProducts.map { it.toView() },
-            currentPage = currentPage + 1,
-            isNextButtonEnabled = determineNextButtonEnabled(cart)
+        view.updateCart(cartProductsModel = cart.cartProducts.map { it.toView() })
+        view.updateNavigator(
+            currentPage = currentPage + 1, maxPage = calculateMaxPage() + 1
         )
     }
 
-    private fun determineNextButtonEnabled(cart: Cart): Boolean {
-        val cartCount = cartDao.selectAllCount()
-        return (currentPage * sizePerPage) + cart.cartProducts.size < cartCount
-    }
-
-    private fun determineNavigationVisibility(): Boolean {
-        val cartCount = cartDao.selectAllCount()
-        return cartCount > sizePerPage
-    }
+    private fun calculateMaxPage(): Int = (cartDao.selectAllCount() - 1) / sizePerPage
 }

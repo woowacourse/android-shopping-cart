@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.common.data.database.dao.CartDao
@@ -21,6 +22,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         initBinding()
         initToolbar()
         initCartAdapter()
+        initNavigator()
         initPresenter()
     }
 
@@ -32,16 +34,23 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun updateCart(
-        cartProducts: List<CartProductModel>,
-        currentPage: Int,
-        isNextButtonEnabled: Boolean
+        cartProductsModel: List<CartProductModel>
     ) {
-        cartAdapter.updateCartProducts(cartProducts, currentPage, isNextButtonEnabled)
+        cartAdapter.updateCartProducts(cartProductsModel)
     }
 
-    override fun updateNavigationVisibility(visibility: Boolean) {
-        cartAdapter.updateNavigationVisible(visibility)
+    override fun updateNavigator(currentPage: Int, maxPage: Int) {
+        binding.cartNavigatorLayout.visibility = isNavigatorVisible(maxPage)
+        binding.cartNavigatorPreviousButton.isEnabled = isFirstPage(currentPage)
+        binding.cartNavigatorNextButton.isEnabled = isLastPage(currentPage, maxPage)
+        binding.cartNavigatorPageText.text = currentPage.toString()
     }
+
+    private fun isLastPage(currentPage: Int, maxPage: Int) = currentPage == maxPage - 1
+
+    private fun isFirstPage(currentPage: Int) = currentPage != 1
+
+    private fun isNavigatorVisible(maxPage: Int) = if (maxPage <= 1) View.GONE else View.VISIBLE
 
     private fun initBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)
@@ -56,11 +65,18 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initCartAdapter() {
         cartAdapter = CartAdapter(
             emptyList(),
-            onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) },
-            onPreviousButtonClick = { presenter.goToPreviousPage() },
-            onNextButtonClick = { presenter.goToNextPage() }
+            onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) }
         )
         binding.cartProductList.adapter = cartAdapter
+    }
+
+    private fun initNavigator() {
+        binding.cartNavigatorPreviousButton.setOnClickListener {
+            presenter.goToPreviousPage()
+        }
+        binding.cartNavigatorNextButton.setOnClickListener {
+            presenter.goToNextPage()
+        }
     }
 
     private fun initPresenter() {

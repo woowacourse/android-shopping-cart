@@ -54,7 +54,9 @@ class CartDao(private val db: SQLiteDatabase) {
         )
         return cursor.use {
             it.moveToNext()
-            it.getInt(0)
+            it.getInt(0).also { c ->
+                println(c)
+            }
         }
     }
 
