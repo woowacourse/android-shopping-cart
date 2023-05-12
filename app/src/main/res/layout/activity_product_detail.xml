@@ -2,14 +2,18 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductModel" />
+
         <variable
             name="presenter"
             type="woowacourse.shopping.view.productdetail.ProductDetailContract.Presenter" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,9 +23,9 @@
             android:id="@+id/img_product"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             tools:src="@drawable/cart" />
 
         <TextView
@@ -44,9 +48,9 @@
             android:layout_height="1dp"
             android:layout_marginTop="13dp"
             android:background="@color/gray"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_product_name"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/text_product_name" />
 
         <TextView
             android:id="@+id/text_price_label"
@@ -76,13 +80,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/mint"
+            android:onClick="@{()->presenter.putInCart(product)}"
             android:text="@string/put_in_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:onClick="@{()->presenter.putInCart(product)}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -2,10 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductModel" />
+
         <variable
             name="onItemClick"
             type="woowacourse.shopping.view.productlist.ProductListAdapter.OnItemClick" />
