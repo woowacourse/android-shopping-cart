@@ -1,28 +1,35 @@
 package woowacourse.shopping.view.shoppingcart
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ShoppingCartViewHolder(
-    private val binding: ItemCartProductBinding,
-    cartProducts: List<CartProductUIModel>,
-    onClickRemove: (ProductUIModel) -> Unit
-) : RecyclerView.ViewHolder(binding.root) {
+    parent: ViewGroup,
+    private val  onClickRemove: (ProductUIModel) -> Unit
+) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(R.layout.item_cart_product, parent, false)
+) {
+    private val binding = ItemCartProductBinding.bind(itemView)
+    private lateinit var cartProduct: CartProductUIModel
 
     init {
         binding.ivCancel.setOnClickListener {
-            onClickRemove(cartProducts[adapterPosition].productUIModel)
+            onClickRemove(cartProduct.productUIModel)
         }
     }
 
-    fun bind(productUIModel: ProductUIModel) {
-        Glide.with(binding.root.context)
-            .load(productUIModel.url)
+    fun bind(item: CartProductUIModel) {
+        cartProduct = item
+        Glide.with(itemView)
+            .load(cartProduct.productUIModel.url)
             .into(binding.ivProductImage)
-        binding.tvProductName.text = productUIModel.name
-        binding.tvPrice.text = productUIModel.price.toString()
+        binding.cartProduct = cartProduct
+
     }
 }
