@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.productcatalogue
+package woowacourse.shopping.view.shoppingmain
 
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.ProductMockData
@@ -6,8 +6,8 @@ import woowacourse.shopping.data.db.RecentProductDBRepository
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
-class ProductCataloguePresenter(private val view: ProductCatalogueContract.View) :
-    ProductCatalogueContract.Presenter {
+class ShoppingMainPresenter(private val view: ShoppingMainContract.View) :
+    ShoppingMainContract.Presenter {
     override fun getMainProducts(): List<ProductUIModel> {
         return ProductMockData.mainProductMockData
     }

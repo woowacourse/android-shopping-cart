@@ -2,12 +2,12 @@ package woowacourse.shopping.view.shoppingcart
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import woowacourse.shopping.databinding.ItemProductInCartBinding
+import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ShoppingCartViewHolder(
-    private val binding: ItemProductInCartBinding,
+    private val binding: ItemCartProductBinding,
     cartProducts: List<CartProductUIModel>,
     onClickRemove: (ProductUIModel) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {

@@ -21,7 +21,7 @@
             android:name=".view.productdetail.ProductDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".view.productcatalogue.ProductCatalogueActivity"
+            android:name=".view.shoppingmain.ShoppingMainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

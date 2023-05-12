@@ -1,10 +1,10 @@
-package woowacourse.shopping.view.productcatalogue
+package woowacourse.shopping.view.shoppingmain
 
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
-interface ProductCatalogueContract {
+interface ShoppingMainContract {
     interface View {
         var presenter: Presenter
 

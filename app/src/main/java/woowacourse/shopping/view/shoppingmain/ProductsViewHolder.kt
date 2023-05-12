@@ -1,11 +1,11 @@
-package woowacourse.shopping.view.productcatalogue
+package woowacourse.shopping.view.shoppingmain
 
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductCatalogueBinding
+import woowacourse.shopping.databinding.ItemProductMainBinding
 import woowacourse.shopping.uimodel.ProductUIModel
 
-class MainProductCatalogueViewHolder(
-    private val binding: ItemProductCatalogueBinding,
+class ProductsViewHolder(
+    private val binding: ItemProductMainBinding,
     private val products: List<ProductUIModel>,
     private val productOnClick: (ProductUIModel) -> Unit,
 ) :

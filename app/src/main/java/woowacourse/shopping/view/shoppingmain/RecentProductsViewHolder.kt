@@ -1,12 +1,12 @@
-package woowacourse.shopping.view.productcatalogue
+package woowacourse.shopping.view.shoppingmain
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.RecentProductCatalogueBinding
+import woowacourse.shopping.databinding.RecentProductsBinding
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
-class RecentProductCatalogueViewHolder(
-    private val binding: RecentProductCatalogueBinding,
+class RecentProductsViewHolder(
+    private val binding: RecentProductsBinding,
     private val recentProducts: List<RecentProductUIModel>,
 ) : RecyclerView.ViewHolder(binding.root) {
 

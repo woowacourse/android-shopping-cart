@@ -1,13 +1,13 @@
-package woowacourse.shopping.view.productcatalogue
+package woowacourse.shopping.view.shoppingmain
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import woowacourse.shopping.databinding.ItemProductCatalogueRecentBinding
+import woowacourse.shopping.databinding.ItemProductRecentBinding
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
-class RecentProductCatalogueChildViewHolder(
-    private val binding: ItemProductCatalogueRecentBinding,
+class RecentProductViewHolder(
+    private val binding: ItemProductRecentBinding,
     recentProducts: List<RecentProductUIModel>,
     productOnClick: (ProductUIModel) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {

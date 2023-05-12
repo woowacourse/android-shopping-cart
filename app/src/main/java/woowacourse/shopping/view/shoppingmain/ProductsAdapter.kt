@@ -1,14 +1,14 @@
-package woowacourse.shopping.view.productcatalogue
+package woowacourse.shopping.view.shoppingmain
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductCatalogueBinding
-import woowacourse.shopping.databinding.RecentProductCatalogueBinding
+import woowacourse.shopping.databinding.ItemProductMainBinding
+import woowacourse.shopping.databinding.RecentProductsBinding
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
-class MainProductCatalogueAdapter(
+class ProductsAdapter(
     private var products: List<ProductUIModel>,
     private var recentProducts: List<RecentProductUIModel>,
     private val productOnClick: (ProductUIModel) -> Unit,
@@ -26,15 +26,15 @@ class MainProductCatalogueAdapter(
         when (viewType) {
             RECENT_PRODUCTS_VIEW_TYPE -> {
                 val inflater = LayoutInflater.from(parent.context)
-                val view = RecentProductCatalogueBinding.inflate(inflater, parent, false)
+                val view = RecentProductsBinding.inflate(inflater, parent, false)
                 view.rvRecentProductCatalogue.adapter =
-                    RecentProductCatalogueAdapter(recentProducts, productOnClick)
-                RecentProductCatalogueViewHolder(view, recentProducts)
+                    RecentProductsAdapter(recentProducts, productOnClick)
+                RecentProductsViewHolder(view, recentProducts)
             }
             MAIN_PRODUCTS_VIEW_TYPE -> {
                 val inflater = LayoutInflater.from(parent.context)
-                val view = ItemProductCatalogueBinding.inflate(inflater, parent, false)
-                MainProductCatalogueViewHolder(view, products, productOnClick)
+                val view = ItemProductMainBinding.inflate(inflater, parent, false)
+                ProductsViewHolder(view, products, productOnClick)
             }
             else -> throw IllegalArgumentException("잘못된 값: $viewType 유효하지 않은 ViewType입니다.")
         }
@@ -42,7 +42,7 @@ class MainProductCatalogueAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
 
-            MAIN_PRODUCTS_VIEW_TYPE -> (holder as MainProductCatalogueViewHolder).bind(products[position - 1])
+            MAIN_PRODUCTS_VIEW_TYPE -> (holder as ProductsViewHolder).bind(products[position - 1])
         }
     }
 

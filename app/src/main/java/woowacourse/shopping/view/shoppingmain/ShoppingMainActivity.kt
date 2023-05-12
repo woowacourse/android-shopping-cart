@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.productcatalogue
+package woowacourse.shopping.view.shoppingmain
 
 import android.os.Bundle
 import android.view.Menu
@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
 import woowacourse.shopping.data.db.RecentProductDBHelper
-import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
+import woowacourse.shopping.databinding.ActivityShoppingMainBinding
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
-class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.View {
-    override lateinit var presenter: ProductCatalogueContract.Presenter
-    private lateinit var adapter: MainProductCatalogueAdapter
+class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
+    override lateinit var presenter: ShoppingMainContract.Presenter
+    private lateinit var adapter: ProductsAdapter
 
-    private var _binding: ActivityProductCatalogueBinding? = null
+    private var _binding: ActivityShoppingMainBinding? = null
     private val binding
         get() = _binding!!
 
@@ -35,7 +35,7 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        _binding = DataBindingUtil.setContentView(this, R.layout.activity_product_catalogue)
+        _binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_main)
 
         setSupportActionBar(binding.tbProductCatalogue)
         setPresenter()
@@ -44,25 +44,25 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
     }
 
     private fun setPresenter() {
-        presenter = ProductCataloguePresenter(this)
-    }
-
-    override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
-        val intent = ProductDetailActivity.intent(this)
-        intent.putExtra(BundleKeys.KEY_PRODUCT, it)
-        startActivity(intent)
+        presenter = ShoppingMainPresenter(this)
     }
 
     private fun setAdapter() {
         val db = RecentProductDBHelper(this).writableDatabase
 
-        adapter = MainProductCatalogueAdapter(
+        adapter = ProductsAdapter(
             presenter.getMainProducts(),
             presenter.getRecentProducts(db),
             showProductDetailPage()
         )
 
         db.close()
+    }
+
+    override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
+        val intent = ProductDetailActivity.intent(this)
+        intent.putExtra(BundleKeys.KEY_PRODUCT, it)
+        startActivity(intent)
     }
 
     private fun setViewSettings() {
