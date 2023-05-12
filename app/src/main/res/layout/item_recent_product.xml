@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.ui.model.Product" />
+            name="recentProduct"
+            type="woowacourse.shopping.ui.model.RecentProduct" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_height="0dp"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1"
-            app:image="@{product.imageUrl}"
+            app:image="@{recentProduct.product.imageUrl}"
             tools:srcCompat="@tools:sample/avatars"
             android:id="@+id/iv_product"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,7 +31,7 @@
         <TextView
             tools:text="PET_보틀_정사각"
             android:textColor="@color/woowa_text_black"
-            android:text="@{product.name}"
+            android:text="@{recentProduct.product.name}"
             android:textStyle="bold"
             android:includeFontPadding="false"
             android:textSize="12sp"

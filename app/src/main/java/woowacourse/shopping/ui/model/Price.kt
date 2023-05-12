@@ -6,6 +6,6 @@ import kotlinx.android.parcel.Parcelize
 typealias UiPrice = Price
 
 @Parcelize
-class Price(
+data class Price(
     val value: Int
 ) : Parcelable
