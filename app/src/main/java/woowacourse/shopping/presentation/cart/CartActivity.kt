@@ -17,16 +17,22 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val presenter: CartContract.Presenter by lazy {
         CartPresenter(this, CartDbAdapter(CartDbHelper(this)), MockProductRepository)
     }
-    private lateinit var cartAdapter: CartAdapter
+    private val cartAdapter: CartAdapter by lazy {
+        CartAdapter(listOf(), presenter::deleteProduct)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setView()
+        initCartAdapter()
+    }
+
+    private fun setView() {
         setToolBar()
         initLeftClick()
         initRightClick()
-        presenter.initCart()
     }
 
     override fun setPage(count: Int) {
@@ -49,10 +55,15 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return true
     }
 
-    override fun initCartProductModels(productModels: List<ProductModel>) {
-        cartAdapter = CartAdapter(productModels, presenter::deleteProduct)
+    private fun initCartAdapter() {
         binding.recyclerCart.adapter = cartAdapter
+        presenter.initCart()
     }
+
+//    override fun initCartProductModels(productModels: List<ProductModel>) {
+//        cartAdapter = CartAdapter(productModels, presenter::deleteProduct)
+//        binding.recyclerCart.adapter = cartAdapter
+//    }
 
     override fun setCartProductModels(productModels: List<ProductModel>) {
         cartAdapter.setItems(productModels)

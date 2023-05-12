@@ -14,13 +14,14 @@ class CartPresenter(
     private val productRepository: ProductRepository,
 ) : CartContract.Presenter {
 
-    private var page = Counter(1)
+    private var page = Counter(FIRST_PAGE)
     private val products: Products = Products()
     override fun initCart() {
-        setProducts()
-        view.setPage(page.value)
-        val cartProducts = products.getProductsInRange((page.value - 1) * 5, 5)
-        view.initCartProductModels(cartProducts.toPresentation())
+        loadProducts()
+        setCartPage()
+    }
+
+    private fun checkPageAble() {
         checkRightPageAble()
         checkLeftPageAble()
     }
@@ -28,29 +29,26 @@ class CartPresenter(
     override fun deleteProduct(productModel: ProductModel) {
         cartRepository.deleteCartProductId(productModel.id)
         products.deleteProduct(productModel.id)
-
-        val cartProducts = products.getProductsInRange((page.value - 1) * 5, 5)
-        view.setCartProductModels(cartProducts.toPresentation())
+        setCartPage()
     }
 
     override fun plusPage() {
-        page = page.plus(1)
-        setView()
+        page = page.plus(PAGE_UNIT)
+        setCartPage()
     }
 
     override fun minusPage() {
-        page = page.minus(1)
-        setView()
+        page = page.minus(PAGE_UNIT)
+        setCartPage()
     }
 
-    private fun setView() {
+    private fun setCartPage() {
         view.setPage(page.value)
         updateCart()
-        checkRightPageAble()
-        checkLeftPageAble()
+        checkPageAble()
     }
 
-    private fun setProducts() {
+    private fun loadProducts() {
         val recentProductIds = cartRepository.getCartProductIds()
         val productItems = recentProductIds.map {
             productRepository.findProductById(it) ?: Product.defaultProduct
@@ -71,7 +69,7 @@ class CartPresenter(
     }
 
     private fun checkRightPageAble() {
-        if ((products.size / PRODUCT_CART_SIZE + FIRST_PAGE) == page.value) {
+        if (((products.size - FIRST_PAGE) / PRODUCT_CART_SIZE + FIRST_PAGE) == page.value) {
             view.setRightPageEnable(false)
         } else {
             view.setRightPageEnable(true)
@@ -88,6 +86,7 @@ class CartPresenter(
 
     companion object {
         private const val FIRST_PAGE = 1
+        private const val PAGE_UNIT = 1
         private const val PRODUCT_CART_SIZE = 5
     }
 }

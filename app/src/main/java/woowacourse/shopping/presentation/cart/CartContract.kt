@@ -11,7 +11,6 @@ interface CartContract {
     }
 
     interface View {
-        fun initCartProductModels(productModels: List<ProductModel>)
         fun setCartProductModels(productModels: List<ProductModel>)
         fun setPage(count: Int)
         fun setRightPageEnable(isEnable: Boolean)
