@@ -11,7 +11,7 @@ import woowacourse.shopping.uimodel.ProductUIModel
 
 class ShoppingCartViewHolder(
     parent: ViewGroup,
-    private val  onClickRemove: (ProductUIModel) -> Unit
+    private val onClickRemove: (ProductUIModel) -> Unit
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_cart_product, parent, false)
 ) {
@@ -30,6 +30,5 @@ class ShoppingCartViewHolder(
             .load(cartProduct.productUIModel.url)
             .into(binding.ivProductImage)
         binding.cartProduct = cartProduct
-
     }
 }

@@ -7,7 +7,7 @@ import woowacourse.shopping.uimodel.ProductUIModel
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View
-): ShoppingCartContract.Presenter {
+) : ShoppingCartContract.Presenter {
     override lateinit var cartProducts: List<CartProductUIModel>
 
     override fun setRecentProducts(db: SQLiteDatabase) {
@@ -21,8 +21,7 @@ class ShoppingCartPresenter(
         repository.remove(CartProductUIModel(productUIModel))
 
         val index = getIndex(productUIModel)
-        val tmp = cartProducts
-        cartProducts = tmp - tmp[index]
+        cartProducts = cartProducts - cartProducts[index]
         view.removeCartProduct(cartProducts, index)
     }
 

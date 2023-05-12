@@ -11,12 +11,12 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_cart"
             android:layout_width="0dp"
+            android:theme="@style/ToolBarTheme"
             android:layout_height="wrap_content"
-            android:background="#555555"
+            android:background="@color/tool_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/tool_bar_cart"
             app:title="Cart"
             app:titleTextColor="@color/white" />
 

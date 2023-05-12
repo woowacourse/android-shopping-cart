@@ -18,7 +18,7 @@
             android:id="@+id/tb_product_catalogue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#555555"
+            android:background="@color/tool_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
