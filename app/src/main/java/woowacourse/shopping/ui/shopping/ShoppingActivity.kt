@@ -99,11 +99,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun setProducts(data: List<ProductsItemType>) {
-        binding.productRecyclerview.adapter = ProductsAdapter(
-            data,
-            presenter::navigateToItemDetail,
-            presenter::fetchMoreProducts
-        )
+        val listener = object : ProductsListener {
+            override val onClickItem: (data: ProductUIModel) -> Unit
+                get() = presenter::navigateToItemDetail
+            override val onReadMoreClick: () -> Unit
+                get() = presenter::fetchMoreProducts
+        }
+        binding.productRecyclerview.adapter = ProductsAdapter(data, listener)
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {

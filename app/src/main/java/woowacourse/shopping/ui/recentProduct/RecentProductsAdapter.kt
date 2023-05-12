@@ -12,15 +12,15 @@ class RecentProductsAdapter(
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
-        return RecentProductViewHolder.from(parent) {
-            onClickItem(recentProducts[it].product)
-        }
+        return RecentProductViewHolder.from(parent) { onClickItem(recentProducts[it].product) }
     }
-
-    override fun getItemCount(): Int = recentProducts.size
 
     override fun onBindViewHolder(holder: RecentProductViewHolder, position: Int) {
         holder.bind(recentProducts[position])
+    }
+
+    override fun getItemCount(): Int {
+        return recentProducts.size
     }
 
     override fun getItemViewType(position: Int): Int {

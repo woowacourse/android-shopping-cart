@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.shopping.viewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ProductItemBinding
-import woowacourse.shopping.ui.shopping.ProductItem
 import woowacourse.shopping.ui.shopping.ProductsItemType
 
 class ProductsViewHolder private constructor(
@@ -14,12 +13,12 @@ class ProductsViewHolder private constructor(
 
     init {
         binding.root.setOnClickListener {
-            onClickItem(adapterPosition)
+            onClickItem(bindingAdapterPosition)
         }
     }
 
-    fun bind(productItemType: ProductsItemType) {
-        val productItem = productItemType as? ProductItem ?: return
+    override fun bind(productItemType: ProductsItemType) {
+        val productItem = productItemType as? ProductsItemType.Product ?: return
         binding.product = productItem.product
     }
 
