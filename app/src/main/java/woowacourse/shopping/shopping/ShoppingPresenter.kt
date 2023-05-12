@@ -24,6 +24,7 @@ class ShoppingPresenter(
 ) : ShoppingContract.Presenter {
 
     init {
+        productDao.initMockData()
         loadMoreProduct()
         val recentProducts = recentProductDao.selectAll()
         recentProductsState.save(recentProducts)
