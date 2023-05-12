@@ -20,9 +20,21 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var presenter: ProductListContract.Presenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductListBinding.inflate(layoutInflater)
+        setUpBinding()
         setContentView(binding.root)
+        setUpPresenter()
+        setUpActionBar()
+    }
+
+    private fun setUpBinding() {
+        binding = ActivityProductListBinding.inflate(layoutInflater)
+    }
+
+    private fun setUpPresenter() {
         presenter = ProductListPresenter(this, ProductMockRepository, RecentViewedDbRepository(this))
+    }
+
+    private fun setUpActionBar() {
         supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 

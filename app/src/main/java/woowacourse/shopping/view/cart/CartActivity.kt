@@ -17,12 +17,24 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCartBinding.inflate(layoutInflater)
+        setUpBinding()
         setContentView(binding.root)
+        setUpActionBar()
+        setUpPresenter()
+        presenter.fetchProducts()
+    }
+
+    private fun setUpBinding() {
+        binding = ActivityCartBinding.inflate(layoutInflater)
+    }
+
+    private fun setUpActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Cart"
+    }
+
+    private fun setUpPresenter() {
         presenter = CartPresenter(this, CartDbRepository(this), ProductMockRepository)
-        presenter.fetchProducts()
     }
 
     override fun showProducts(cartProducts: List<ProductModel>, isExistUndo: Boolean, isExistNext: Boolean, count: Int) {

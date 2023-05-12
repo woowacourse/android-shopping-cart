@@ -23,22 +23,36 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var presenter: ProductDetailContract.Presenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductDetailBinding.inflate(layoutInflater)
+        setUpPresenter()
+        setUpBinding()
         setContentView(binding.root)
-
-        presenter = ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
         val product = intent.getParcelableCompat<ProductModel>(PRODUCT)
         if (product == null) {
-            Toast.makeText(this, NOT_EXIST_DATA_ERROR, Toast.LENGTH_LONG).show()
-            finish()
+            forceQuit()
             return
         }
+        setUpInitView(product)
+        presenter.updateRecentViewedProducts(product.id)
+    }
+
+    private fun setUpBinding() {
+        binding = ActivityProductDetailBinding.inflate(layoutInflater)
+    }
+
+    private fun setUpPresenter() {
+        presenter = ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
+    }
+
+    private fun forceQuit() {
+        Toast.makeText(this, NOT_EXIST_DATA_ERROR, Toast.LENGTH_LONG).show()
+        finish()
+    }
+
+    private fun setUpInitView(product: ProductModel) {
         binding.product = product
         binding.presenter = presenter
         Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
         binding.textPrice.text = getString(R.string.korean_won, PriceFormatter.format(product.price))
-
-        presenter.updateRecentViewedProducts(product.id)
     }
 
     override fun startCartActivity() {
