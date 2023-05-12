@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class CartDbHelper(
-    context: Context
+    context: Context,
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -17,7 +17,7 @@ class CartDbHelper(
                     ${CartContract.TABLE_COLUMN_PRODUCT_NAME} TEXT, 
                     ${CartContract.TABLE_COLUMN_PRODUCT_PRICE} INTEGER
                 )
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 
@@ -27,6 +27,6 @@ class CartDbHelper(
     }
 
     companion object {
-        const val DATABASE_NAME = "cart.db"
+        private const val DATABASE_NAME = "cart.db"
     }
 }
