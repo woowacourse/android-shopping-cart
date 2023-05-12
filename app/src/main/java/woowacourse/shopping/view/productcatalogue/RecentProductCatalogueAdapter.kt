@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductCatalogueRecentBinding
 import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductCatalogueUIModel
+import woowacourse.shopping.uimodel.RecentProductUIModel
 
 class RecentProductCatalogueAdapter(
-    private val recentProducts: RecentProductCatalogueUIModel,
+    private val recentProducts: List<RecentProductUIModel>,
     private val productOnClick: (ProductUIModel) -> Unit,
 ) : RecyclerView.Adapter<RecentProductCatalogueChildViewHolder>() {
     override fun onCreateViewHolder(
@@ -21,9 +21,9 @@ class RecentProductCatalogueAdapter(
         return RecentProductCatalogueChildViewHolder(view, recentProducts, productOnClick)
     }
 
-    override fun getItemCount(): Int = recentProducts.mainProductCatalogue.items.size
+    override fun getItemCount(): Int = recentProducts.size
 
     override fun onBindViewHolder(holder: RecentProductCatalogueChildViewHolder, position: Int) {
-        holder.bind(recentProducts.mainProductCatalogue.items[position])
+        holder.bind(recentProducts[position].productUIModel)
     }
 }

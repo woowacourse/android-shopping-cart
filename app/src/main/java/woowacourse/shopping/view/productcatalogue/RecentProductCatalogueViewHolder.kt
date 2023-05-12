@@ -3,11 +3,11 @@ package woowacourse.shopping.view.productcatalogue
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.RecentProductCatalogueBinding
-import woowacourse.shopping.uimodel.RecentProductCatalogueUIModel
+import woowacourse.shopping.uimodel.RecentProductUIModel
 
 class RecentProductCatalogueViewHolder(
     private val binding: RecentProductCatalogueBinding,
-    private val recentProducts: RecentProductCatalogueUIModel,
+    private val recentProducts: List<RecentProductUIModel>,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
@@ -15,7 +15,7 @@ class RecentProductCatalogueViewHolder(
     }
 
     private fun setRecentProductsVisibility() {
-        if (recentProducts.mainProductCatalogue.items.isEmpty()) {
+        if (recentProducts.isEmpty()) {
             binding.root.layoutParams =
                 RecyclerView.LayoutParams(0, 0)
             return

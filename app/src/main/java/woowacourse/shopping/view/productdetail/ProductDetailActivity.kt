@@ -10,12 +10,15 @@ import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
-import woowacourse.shopping.data.db.CartDBHelper
-import woowacourse.shopping.data.db.ProductDBHelper
-import woowacourse.shopping.data.db.ProductDBRepository
+import woowacourse.shopping.data.db.CartProductDBHelper
+import woowacourse.shopping.data.db.CartProductDBRepository
+import woowacourse.shopping.data.db.RecentProductDBHelper
+import woowacourse.shopping.data.db.RecentProductDBRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
+import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.RecentProductUIModel
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -30,10 +33,10 @@ class ProductDetailActivity : AppCompatActivity() {
         val productData =
             intent.getSerializableCompat(BundleKeys.KEY_PRODUCT) ?: ProductUIModel.dummy
 
-        val dbHelper = ProductDBHelper(this)
+        val dbHelper = RecentProductDBHelper(this)
         val db = dbHelper.writableDatabase
-        val repository = ProductDBRepository(db)
-        repository.insert(productData)
+        val repository = RecentProductDBRepository(db)
+        repository.insert(RecentProductUIModel(productData))
 
         Glide.with(binding.root.context)
             .load(productData.url)
@@ -46,10 +49,10 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun setOnClickAddToCart(productData: ProductUIModel) {
         binding.btAddToCart.setOnClickListener {
-            val dbHelper = CartDBHelper(this)
+            val dbHelper = CartProductDBHelper(this)
             val db = dbHelper.writableDatabase
-            val repository = ProductDBRepository(db)
-            repository.insert(productData)
+            val repository = CartProductDBRepository(db)
+            repository.insert(CartProductUIModel(productData))
 
             startActivity(ShoppingCartActivity.intent(binding.root.context))
         }

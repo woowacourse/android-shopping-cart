@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class CartDBHelper(context: Context) : SQLiteOpenHelper(
+class CartProductDBHelper(context: Context) : SQLiteOpenHelper(
     context,
     DB_NAME,
     null,
@@ -19,15 +19,16 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(
     }
 
     companion object {
-        const val DB_NAME = "CartDB"
+        const val DB_NAME = "CartProductDB"
         private const val DB_VERSION: Int = 1
         const val TABLE_NAME = "products"
+        const val KEY_ID = "id"
         const val KEY_NAME = "name"
         const val KEY_IMAGE = "image"
         const val KEY_PRICE = "price"
 
         private const val CREATE_TABLE_QUERY = "CREATE TABLE $TABLE_NAME (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "$KEY_ID int," +
             "$KEY_NAME text," +
             "$KEY_IMAGE text," +
             "$KEY_PRICE text" +

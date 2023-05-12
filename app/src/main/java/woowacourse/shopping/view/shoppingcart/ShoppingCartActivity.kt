@@ -6,10 +6,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.db.CartDBHelper
-import woowacourse.shopping.data.db.ProductDBRepository
+import woowacourse.shopping.data.db.CartProductDBHelper
+import woowacourse.shopping.data.db.CartProductDBRepository
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.uimodel.CartProductsUIModel
+import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ShoppingCartActivity : AppCompatActivity() {
@@ -20,12 +20,12 @@ class ShoppingCartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
 
-        val dbHelper = CartDBHelper(this)
+        val dbHelper = CartProductDBHelper(this)
         val db = dbHelper.readableDatabase
-        val repository = ProductDBRepository(db)
-        val cartProducts = repository.getAll(CartDBHelper.TABLE_NAME)
+        val repository = CartProductDBRepository(db)
+        val cartProducts = repository.getAll()
         adapter = ShoppingCartAdapter(
-            CartProductsUIModel(cartProducts),
+            cartProducts,
             setOnClickRemove()
         )
 
@@ -34,10 +34,10 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     fun setOnClickRemove(): (ProductUIModel) -> Unit = {
         adapter.remove(it)
-        val dbHelper = CartDBHelper(this)
+        val dbHelper = CartProductDBHelper(this)
         val db = dbHelper.writableDatabase
-        val repository = ProductDBRepository(db)
-        repository.remove(CartDBHelper.TABLE_NAME, it)
+        val repository = CartProductDBRepository(db)
+        repository.remove(CartProductUIModel(it))
     }
 
     companion object {

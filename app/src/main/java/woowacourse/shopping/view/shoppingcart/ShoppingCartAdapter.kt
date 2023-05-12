@@ -1,17 +1,14 @@
 package woowacourse.shopping.view.shoppingcart
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductInCartBinding
-import woowacourse.shopping.uimodel.CartProductsUIModel
+import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.mapper.toDomain
-import woowacourse.shopping.uimodel.mapper.toUIModel
 
 class ShoppingCartAdapter(
-    private var cartProducts: CartProductsUIModel,
+    private var cartProducts: List<CartProductUIModel>,
     private val onClickRemove: (ProductUIModel) -> Unit
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartViewHolder {
@@ -21,15 +18,15 @@ class ShoppingCartAdapter(
         return ShoppingCartViewHolder(view, cartProducts, onClickRemove)
     }
 
-    override fun getItemCount(): Int = cartProducts.products.size
+    override fun getItemCount(): Int = cartProducts.size
 
     override fun onBindViewHolder(holder: ShoppingCartViewHolder, position: Int) {
-        holder.bind(cartProducts.products[position])
+        holder.bind(cartProducts[position].productUIModel)
     }
 
-    fun remove(it: ProductUIModel) {
-        val index = cartProducts.products.indexOf(it)
-        cartProducts = cartProducts.toDomain().remove(it.toDomain()).toUIModel()
+    fun remove(product: ProductUIModel) {
+        val index = cartProducts.indexOf(CartProductUIModel(product))
+        cartProducts = cartProducts - CartProductUIModel(product)
         notifyItemRemoved(index)
     }
 }

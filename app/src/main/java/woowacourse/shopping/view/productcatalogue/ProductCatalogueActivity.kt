@@ -8,24 +8,44 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
-import woowacourse.shopping.data.ProductMockData
-import woowacourse.shopping.data.db.ProductDBHelper
-import woowacourse.shopping.data.db.ProductDBRepository
+import woowacourse.shopping.data.db.RecentProductDBHelper
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
-import woowacourse.shopping.uimodel.MainProductCatalogueUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductCatalogueUIModel
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.View {
-    private lateinit var binding: ActivityProductCatalogueBinding
     override lateinit var presenter: ProductCatalogueContract.Presenter
-    private val adapter: MainProductCatalogueAdapter = MainProductCatalogueAdapter(
-        ProductMockData.mainProductMockData,
-        ProductMockData.recentProductMockData,
-        showProductDetailPage(),
-    )
+    private lateinit var adapter: MainProductCatalogueAdapter
+
+    private var _binding: ActivityProductCatalogueBinding? = null
+    private val binding
+        get() = _binding!!
+
+    override fun onResume() {
+        super.onResume()
+
+        val db = RecentProductDBHelper(this).writableDatabase
+        val recentProducts = presenter.getRecentProducts(db)
+        db.close()
+
+        adapter.update(recentProducts)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        _binding = DataBindingUtil.setContentView(this, R.layout.activity_product_catalogue)
+
+        setSupportActionBar(binding.tbProductCatalogue)
+        setPresenter()
+        setAdapter()
+        setViewSettings()
+    }
+
+    private fun setPresenter() {
+        presenter = ProductCataloguePresenter(this)
+    }
 
     override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
         val intent = ProductDetailActivity.intent(this)
@@ -33,30 +53,19 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
         startActivity(intent)
     }
 
-    override fun onResume() {
-        super.onResume()
-        val dbHelper = ProductDBHelper(this)
-        val db = dbHelper.writableDatabase
-        val repository = ProductDBRepository(db)
-        val recentProducts = repository.getAll(ProductDBHelper.TABLE_NAME)
+    private fun setAdapter() {
+        val db = RecentProductDBHelper(this).writableDatabase
 
-        adapter.update(
-            RecentProductCatalogueUIModel(
-                MainProductCatalogueUIModel(recentProducts)
-            )
+        adapter = MainProductCatalogueAdapter(
+            presenter.getMainProducts(),
+            presenter.getRecentProducts(db),
+            showProductDetailPage()
         )
-        adapter.notifyDataSetChanged()
+
+        db.close()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_catalogue)
-
-        setSupportActionBar(binding.tbProductCatalogue)
-
-        presenter = ProductCataloguePresenter(this)
-
-        binding.rvProductCatalogue.adapter = adapter
+    private fun setViewSettings() {
         val gridLayoutManager = GridLayoutManager(binding.root.context, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -64,10 +73,8 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
                 return 1
             }
         }
-
         binding.rvProductCatalogue.layoutManager = gridLayoutManager
-
-        adapter.notifyDataSetChanged()
+        binding.rvProductCatalogue.adapter = adapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
