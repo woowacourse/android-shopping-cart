@@ -2,12 +2,12 @@ package woowacourse.shopping.ui.cart.contract
 
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.cart.CartItem
+import woowacourse.shopping.ui.cart.CartItemType
 
 interface CartContract {
 
     interface View {
-        fun setCarts(products: List<CartItem>, cartUIModel: CartUIModel)
+        fun setCarts(products: List<CartItemType.Cart>, cartUIModel: CartUIModel)
         fun navigateToItemDetail(product: ProductUIModel)
     }
 

@@ -4,7 +4,7 @@ import com.example.domain.model.CartRepository
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.cart.CartItem
+import woowacourse.shopping.ui.cart.CartItemType
 import woowacourse.shopping.ui.cart.contract.CartContract
 
 class CartPresenter(
@@ -23,7 +23,7 @@ class CartPresenter(
 
     override fun setUpCarts() {
         view.setCarts(
-            repository.getSubList(offset, STEP).map { CartItem(it.toUIModel()) },
+            repository.getSubList(offset, STEP).map { CartItemType.Cart(it.toUIModel()) },
             CartUIModel(
                 offset + STEP < repository.getAll().size,
                 0 < offset,
