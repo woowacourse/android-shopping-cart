@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
+import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemProductInCartBinding

@@ -33,11 +33,11 @@ class ShoppingCartActivity : AppCompatActivity() {
     }
 
     fun setOnClickRemove(): (ProductUIModel) -> Unit = {
+        adapter.remove(it)
         val dbHelper = CartDBHelper(this)
         val db = dbHelper.writableDatabase
         val repository = ProductDBRepository(db)
         repository.remove(CartDBHelper.TABLE_NAME, it)
-        adapter.remove(it)
     }
 
     companion object {

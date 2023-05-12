@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,8 @@ class ShoppingCartAdapter(
     }
 
     fun remove(it: ProductUIModel) {
+        val index = cartProducts.products.indexOf(it)
         cartProducts = cartProducts.toDomain().remove(it.toDomain()).toUIModel()
+        notifyItemRemoved(index)
     }
 }
