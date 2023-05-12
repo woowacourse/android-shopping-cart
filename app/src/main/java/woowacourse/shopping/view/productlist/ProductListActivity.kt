@@ -55,9 +55,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
                 val isFooter =
                     if (recentViewedProducts.isNotEmpty()) position == products.size + 1 else position == products.size
                 return if (isHeader || isFooter) {
-                    2
+                    HEADER_FOOTER_SPAN
                 } else {
-                    1
+                    PRODUCT_ITEM_SPAN
                 }
             }
         }
@@ -100,5 +100,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+    companion object {
+        private const val HEADER_FOOTER_SPAN = 2
+        private const val PRODUCT_ITEM_SPAN = 1
     }
 }
