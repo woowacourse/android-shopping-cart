@@ -13,21 +13,21 @@ class CartDao(
     context: Context
 ) : SQLiteOpenHelper(context, DB_NAME, null, VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(CartContract.createSQL())
+        db?.execSQL(CartTableContract.createSQL())
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS ${CartContract.TABLE_NAME}")
+        db?.execSQL("DROP TABLE IF EXISTS ${CartTableContract.TABLE_NAME}")
         onCreate(db)
     }
 
     fun selectAll(): List<CartProduct> {
         val cursor = readableDatabase.query(
-            CartContract.TABLE_NAME,
+            CartTableContract.TABLE_NAME,
             arrayOf(
-                CartContract.TABLE_COLUMN_CART_ID,
-                CartContract.TABLE_COLUMN_PRODUCT_ID,
-                CartContract.TABLE_COLUMN_PRODUCT_COUNT
+                CartTableContract.TABLE_COLUMN_CART_ID,
+                CartTableContract.TABLE_COLUMN_PRODUCT_ID,
+                CartTableContract.TABLE_COLUMN_PRODUCT_COUNT
             ),
             null, null, null, null, null
         )
@@ -35,9 +35,9 @@ class CartDao(
         val cart = mutableListOf<CartProduct>()
         while (cursor.moveToNext()) {
             val data = CartEntity(
-                cursor.getLong(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CART_ID)),
-                cursor.getLong(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_ID)),
-                cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_COUNT))
+                cursor.getLong(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_CART_ID)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_PRODUCT_ID)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT))
             )
             val product: Product = productsDatasource.find { it.id == data.productId } ?: continue
             cart.add(CartProduct(data.cartId, product))
@@ -49,16 +49,16 @@ class CartDao(
 
     fun insertProduct(product: Product) {
         val values = ContentValues().apply {
-            put(CartContract.TABLE_COLUMN_PRODUCT_ID, product.id)
-            put(CartContract.TABLE_COLUMN_PRODUCT_COUNT, 1) // 일단 1로 고정
+            put(CartTableContract.TABLE_COLUMN_PRODUCT_ID, product.id)
+            put(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT, 1) // 일단 1로 고정
         }
-        writableDatabase.insert(CartContract.TABLE_NAME, null, values)
+        writableDatabase.insert(CartTableContract.TABLE_NAME, null, values)
     }
 
     fun deleteCartProduct(cartProduct: CartProduct) {
-        val selection = "${CartContract.TABLE_COLUMN_CART_ID} = ?"
+        val selection = "${CartTableContract.TABLE_COLUMN_CART_ID} = ?"
         val selectionArgs = arrayOf("${cartProduct.cartId}")
-        writableDatabase.delete(CartContract.TABLE_NAME, selection, selectionArgs)
+        writableDatabase.delete(CartTableContract.TABLE_NAME, selection, selectionArgs)
     }
 
     companion object {

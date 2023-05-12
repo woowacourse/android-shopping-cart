@@ -16,25 +16,25 @@ class RecentDao(
 ) : SQLiteOpenHelper(context, DB_NAME, null, VERSION) {
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(RecentContract.createSQL())
+        db?.execSQL(RecentTableContract.createSQL())
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS ${RecentContract.TABLE_NAME}")
+        db?.execSQL("DROP TABLE IF EXISTS ${RecentTableContract.TABLE_NAME}")
         onCreate(db)
     }
 
     fun selectAllRecent(): List<RecentProduct> {
         val cursor = readableDatabase.rawQuery(
-            "SELECT * FROM ${RecentContract.TABLE_NAME} ORDER BY ${RecentContract.TABLE_COLUMN_DATE_TIME} desc LIMIT 10",
+            "SELECT * FROM ${RecentTableContract.TABLE_NAME} ORDER BY ${RecentTableContract.TABLE_COLUMN_DATE_TIME} desc LIMIT 10",
             null
         )
 
         val recentlyShownProducts = mutableListOf<RecentProduct>()
         while (cursor.moveToNext()) {
             val data = RecentProductEntity(
-                cursor.getLong(cursor.getColumnIndexOrThrow(RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID)),
-                cursor.getLong(cursor.getColumnIndexOrThrow(RecentContract.TABLE_COLUMN_DATE_TIME))
+                cursor.getLong(cursor.getColumnIndexOrThrow(RecentTableContract.TABLE_COLUMN_RECENT_PRODUCT_ID)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(RecentTableContract.TABLE_COLUMN_DATE_TIME))
             )
             val product: Product = productsDatasource.find { it.id == data.productId } ?: continue
             val shownDateTime = LocalDateTime.ofEpochSecond(data.dateTimeMills, 0, ZoneOffset.UTC)
@@ -58,17 +58,17 @@ class RecentDao(
     private fun insertRecentProduct(recentProduct: RecentProduct) {
         val timeSecond = recentProduct.dateTime.toEpochSecond(ZoneOffset.UTC)
         val values = ContentValues().apply {
-            put(RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID, recentProduct.product.id)
-            put(RecentContract.TABLE_COLUMN_DATE_TIME, timeSecond)
+            put(RecentTableContract.TABLE_COLUMN_RECENT_PRODUCT_ID, recentProduct.product.id)
+            put(RecentTableContract.TABLE_COLUMN_DATE_TIME, timeSecond)
         }
-        writableDatabase.insert(RecentContract.TABLE_NAME, null, values)
+        writableDatabase.insert(RecentTableContract.TABLE_NAME, null, values)
     }
 
     private fun updateRecentProduct(recentProduct: RecentProduct) {
         val timeSecond = recentProduct.dateTime.toEpochSecond(ZoneOffset.UTC)
-        val updateSql = "UPDATE ${RecentContract.TABLE_NAME} " +
-                "SET ${RecentContract.TABLE_COLUMN_DATE_TIME}=${timeSecond} " +
-                "WHERE ${RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID}=${recentProduct.product.id}"
+        val updateSql = "UPDATE ${RecentTableContract.TABLE_NAME} " +
+                "SET ${RecentTableContract.TABLE_COLUMN_DATE_TIME}=${timeSecond} " +
+                "WHERE ${RecentTableContract.TABLE_COLUMN_RECENT_PRODUCT_ID}=${recentProduct.product.id}"
         writableDatabase.execSQL(updateSql)
     }
 

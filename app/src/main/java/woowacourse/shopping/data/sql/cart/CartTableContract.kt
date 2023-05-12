@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.sql.cart
 
-object CartContract {
+object CartTableContract {
     const val TABLE_NAME = "cart_table"
     const val TABLE_COLUMN_CART_ID = "cart_id"
     const val TABLE_COLUMN_PRODUCT_ID = "product_id"
