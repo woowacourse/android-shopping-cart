@@ -82,7 +82,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initPresenter() {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = CartPresenter(
-            this, cartDao = CartDao(db), sizePerPage = SIZE_PER_PAGE
+            this, cartDao = CartDao(db), countPerPage = SIZE_PER_PAGE
         )
     }
 

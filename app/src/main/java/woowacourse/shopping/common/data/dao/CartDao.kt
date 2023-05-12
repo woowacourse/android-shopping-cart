@@ -31,9 +31,7 @@ class CartDao(private val db: SQLiteDatabase) {
         )
         return cursor.use {
             it.moveToNext()
-            it.getInt(0).also { c ->
-                println(c)
-            }
+            it.getInt(0)
         }
     }
 
@@ -45,9 +43,9 @@ class CartDao(private val db: SQLiteDatabase) {
         return makeCart(cursor)
     }
 
-    fun selectPage(page: Int, sizePerPage: Int): Cart {
+    fun selectPage(page: Int, countPerPage: Int): Cart {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * sizePerPage}, $sizePerPage",
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * countPerPage}, $countPerPage",
             null
         )
         return makeCart(cursor)

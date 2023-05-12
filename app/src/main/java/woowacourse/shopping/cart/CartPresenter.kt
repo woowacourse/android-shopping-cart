@@ -14,7 +14,7 @@ class CartPresenter(
     private val cartState: State<Cart> = CartState,
     private val cartDao: CartDao,
     private var currentPage: Int = 0,
-    private val sizePerPage: Int
+    private val countPerPage: Int
 ) : CartContract.Presenter {
     init {
         updateCartPage()
@@ -22,7 +22,6 @@ class CartPresenter(
 
     override fun removeCartProduct(cartProductModel: CartProductModel) {
         cart = cartState.load().remove(cartProductModel.toDomain())
-        cartState.save(cart)
         cartDao.deleteCartProductByOrdinal(cartProductModel.ordinal)
         updateCartPage()
     }
@@ -39,12 +38,12 @@ class CartPresenter(
 
     private fun updateCartPage() {
         cartState.save(cartDao.selectAll())
-        val cart = cartDao.selectPage(currentPage, sizePerPage)
-        view.updateCart(cartProductsModel = cart.cartProducts.map { it.toView() })
+        val cart = cartDao.selectPage(currentPage, countPerPage)
+        view.updateCart(cartProductsModel = cart.products.map { it.toView() })
         view.updateNavigator(
             currentPage = currentPage + 1, maxPage = calculateMaxPage() + 1
         )
     }
 
-    private fun calculateMaxPage(): Int = (cartDao.selectAllCount() - 1) / sizePerPage
+    private fun calculateMaxPage(): Int = (cartDao.selectAllCount() - 1) / countPerPage
 }

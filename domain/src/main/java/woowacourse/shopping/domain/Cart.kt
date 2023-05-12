@@ -1,12 +1,12 @@
 package woowacourse.shopping.domain
 
-data class Cart(val cartProducts: List<CartProduct>) {
+data class Cart(val products: List<CartProduct>) {
     fun add(cartProduct: CartProduct): Cart {
-        return Cart(cartProducts + cartProduct)
+        return Cart(products + cartProduct)
     }
 
     fun remove(cartProduct: CartProduct): Cart {
-        return Cart(cartProducts - cartProduct)
+        return Cart(products - cartProduct)
     }
 
     fun makeCartProduct(product: Product): CartProduct {
@@ -15,9 +15,6 @@ data class Cart(val cartProducts: List<CartProduct>) {
     }
 
     private fun getCurrentOrdinal(): Int {
-        return (if (cartProducts.isEmpty()) 0 else cartProducts.maxOf { it.ordinal } + 1).also {
-            println(cartProducts)
-            println(it)
-        }
+        return (if (products.isEmpty()) 0 else products.maxOf { it.ordinal } + 1)
     }
 }
