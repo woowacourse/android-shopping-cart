@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -77,8 +78,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             }
             productRecyclerView.addOnScrollListener(
                 ShoppingRecyclerScrollListener(
-                    scrollPossible = { buttonShowMore.visibility = View.GONE },
-                    scrollImpossible = { buttonShowMore.visibility = View.VISIBLE }
+                    scrollPossible = { buttonShowMore.isVisible = false },
+                    scrollImpossible = { buttonShowMore.isVisible = true }
                 )
             )
         }
