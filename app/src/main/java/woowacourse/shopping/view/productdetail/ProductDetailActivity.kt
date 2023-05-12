@@ -16,7 +16,7 @@ import woowacourse.shopping.data.db.ProductDBRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
@@ -51,7 +51,7 @@ class ProductDetailActivity : AppCompatActivity() {
             val repository = ProductDBRepository(db)
             repository.insert(productData)
 
-            startActivity(CartActivity.intent(binding.root.context))
+            startActivity(ShoppingCartActivity.intent(binding.root.context))
         }
     }
 

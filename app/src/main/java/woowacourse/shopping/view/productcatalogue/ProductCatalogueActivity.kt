@@ -15,7 +15,7 @@ import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
 import woowacourse.shopping.uimodel.MainProductCatalogueUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductCatalogueUIModel
-import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
 class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.View {
@@ -78,7 +78,7 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.menu_cart -> {
-                startActivity(CartActivity.intent(this))
+                startActivity(ShoppingCartActivity.intent(this))
                 true
             }
             else -> super.onOptionsItemSelected(item)

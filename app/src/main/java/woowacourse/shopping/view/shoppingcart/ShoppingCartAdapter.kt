@@ -1,28 +1,28 @@
-package woowacourse.shopping.view.cart
+package woowacourse.shopping.view.shoppingcart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductInCartBinding
-import woowacourse.shopping.uimodel.CartUIModel
+import woowacourse.shopping.uimodel.CartProductsUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.mapper.toDomain
 import woowacourse.shopping.uimodel.mapper.toUIModel
 
-class CartRecyclerViewAdapter(
-    private var cartProducts: CartUIModel,
+class ShoppingCartAdapter(
+    private var cartProducts: CartProductsUIModel,
     private val onClickRemove: (ProductUIModel) -> Unit
-) : RecyclerView.Adapter<CartRecyclerViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartRecyclerViewHolder {
+) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartViewHolder {
 
         val inflater = LayoutInflater.from(parent.context)
         val view = ItemProductInCartBinding.inflate(inflater, parent, false)
-        return CartRecyclerViewHolder(view, cartProducts, onClickRemove)
+        return ShoppingCartViewHolder(view, cartProducts, onClickRemove)
     }
 
     override fun getItemCount(): Int = cartProducts.products.size
 
-    override fun onBindViewHolder(holder: CartRecyclerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ShoppingCartViewHolder, position: Int) {
         holder.bind(cartProducts.products[position])
     }
 

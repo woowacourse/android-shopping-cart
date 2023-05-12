@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.cart
+package woowacourse.shopping.view.shoppingcart
 
 import android.content.Context
 import android.content.Intent
@@ -8,24 +8,24 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.db.CartDBHelper
 import woowacourse.shopping.data.db.ProductDBRepository
-import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.uimodel.CartUIModel
+import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.uimodel.CartProductsUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
-class CartActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityCartBinding
-    private lateinit var adapter: CartRecyclerViewAdapter
+class ShoppingCartActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityShoppingCartBinding
+    private lateinit var adapter: ShoppingCartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
 
         val dbHelper = CartDBHelper(this)
         val db = dbHelper.readableDatabase
         val repository = ProductDBRepository(db)
         val cartProducts = repository.getAll(CartDBHelper.TABLE_NAME)
-        adapter = CartRecyclerViewAdapter(
-            CartUIModel(cartProducts),
+        adapter = ShoppingCartAdapter(
+            CartProductsUIModel(cartProducts),
             setOnClickRemove()
         )
 
@@ -41,6 +41,6 @@ class CartActivity : AppCompatActivity() {
     }
 
     companion object {
-        fun intent(context: Context) = Intent(context, CartActivity::class.java)
+        fun intent(context: Context) = Intent(context, ShoppingCartActivity::class.java)
     }
 }
