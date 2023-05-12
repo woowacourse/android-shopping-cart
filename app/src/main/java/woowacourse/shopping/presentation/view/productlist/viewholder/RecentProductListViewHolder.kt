@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.view.productlist.viewholder
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -9,16 +8,16 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentProductListBinding
 import woowacourse.shopping.presentation.model.RecentProductModel
 
-class RecentProductListViewHolder private constructor(
-    view: View
-) : RecyclerView.ViewHolder(view) {
-    private val binding = ItemRecentProductListBinding.bind(view)
+class RecentProductListViewHolder(
+    parent: ViewGroup,
+    onProductClick: (Int) -> Unit
+) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context)
+        .inflate(R.layout.item_recent_product_list, parent, false)
+) {
+    private val binding = ItemRecentProductListBinding.bind(itemView)
 
-    constructor(parent: ViewGroup, onProductClick: (Int) -> Unit) : this(
-        LayoutInflater.from(parent.context).inflate(
-            R.layout.item_recent_product_list, parent, false
-        )
-    ) {
+    init {
         binding.root.setOnClickListener {
             onProductClick(bindingAdapterPosition)
         }
