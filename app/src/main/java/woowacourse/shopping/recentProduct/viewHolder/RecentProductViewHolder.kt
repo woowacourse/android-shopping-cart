@@ -8,12 +8,12 @@ import woowacourse.shopping.recentProduct.RecentProductItem
 
 class RecentProductViewHolder(
     private val binding: RecentProductItemItemBinding,
-    onClickItem: (Int) -> Unit
+    onClickItem: (Int) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener {
-            onClickItem(adapterPosition)
+            onClickItem(bindingAdapterPosition)
         }
     }
 
@@ -24,13 +24,13 @@ class RecentProductViewHolder(
     companion object {
         fun from(
             parent: ViewGroup,
-            onClickItem: (Int) -> Unit
+            onClickItem: (Int) -> Unit,
         ): RecentProductViewHolder {
             val binding =
                 RecentProductItemItemBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
-                    false
+                    false,
                 )
             return RecentProductViewHolder(binding, onClickItem)
         }

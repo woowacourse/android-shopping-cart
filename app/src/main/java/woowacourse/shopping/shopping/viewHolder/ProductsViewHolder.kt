@@ -8,13 +8,13 @@ import woowacourse.shopping.shopping.ProductsItemType
 
 class ProductsViewHolder private constructor(
     private val binding: ProductItemBinding,
-    val onClickItem: (Int) -> Unit
+    val onClickItem: (Int) -> Unit,
 ) :
     ItemViewHolder(binding.root) {
 
     init {
         binding.root.setOnClickListener {
-            onClickItem(adapterPosition)
+            onClickItem(bindingAdapterPosition)
         }
     }
 

@@ -10,7 +10,7 @@ import woowacourse.shopping.model.CartUIModel
 class CartNavigationViewHolder private constructor(
     private val binding: CartNavigationItemBinding,
     onPageUp: () -> Unit,
-    onPageDown: () -> Unit
+    onPageDown: () -> Unit,
 ) : ItemViewHolder(binding.root) {
     init {
         binding.pageUp.setOnClickListener { onPageUp() }
@@ -30,7 +30,7 @@ class CartNavigationViewHolder private constructor(
         fun from(
             parent: ViewGroup,
             onPageUp: () -> Unit,
-            onPageDown: () -> Unit
+            onPageDown: () -> Unit,
         ): CartNavigationViewHolder {
             val binding = CartNavigationItemBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)

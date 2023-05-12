@@ -8,7 +8,7 @@ import woowacourse.shopping.shopping.ProductsItemType
 
 class RecentProductsAdapter(
     private var recentProducts: List<RecentProductItem>,
-    private val onClickItem: (data: ProductUIModel) -> Unit
+    private val onClickItem: (data: ProductUIModel) -> Unit,
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {

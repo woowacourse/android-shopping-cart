@@ -9,15 +9,15 @@ import woowacourse.shopping.model.ProductUIModel
 
 class CartPresenter(
     val view: CartContract.View,
-    val repository: CartRepository,
-    offset: Int = 0
+    private val repository: CartRepository,
+    offset: Int = 0,
 ) : CartContract.Presenter {
     private var offset = offset
         set(value) {
-            when {
-                value < 0 -> field = 0
-                value > repository.getAll().size -> field = repository.getAll().size
-                else -> field = value
+            field = when {
+                value < 0 -> 0
+                value > repository.getAll().size -> repository.getAll().size
+                else -> value
             }
         }
 
@@ -27,8 +27,8 @@ class CartPresenter(
             CartUIModel(
                 offset + STEP < repository.getAll().size,
                 0 < offset,
-                offset / STEP + 1
-            )
+                offset / STEP + 1,
+            ),
         )
     }
 

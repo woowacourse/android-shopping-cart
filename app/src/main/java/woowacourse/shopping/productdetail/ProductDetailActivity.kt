@@ -33,7 +33,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
             CartDatabase(CartDBHelper(this).writableDatabase),
-            RecentProductDatabase(this)
+            RecentProductDatabase(this),
         )
 
         presenter.setUpProductDetail()

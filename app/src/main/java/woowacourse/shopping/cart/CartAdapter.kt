@@ -8,7 +8,7 @@ import woowacourse.shopping.model.ProductUIModel
 class CartAdapter(
     private val cartItems: List<CartItem>,
     private val onItemClick: (ProductUIModel) -> Unit,
-    private val onItemRemove: (Int) -> Unit
+    private val onItemRemove: (Int) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {

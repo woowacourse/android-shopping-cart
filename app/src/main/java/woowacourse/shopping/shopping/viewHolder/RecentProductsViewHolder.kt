@@ -11,20 +11,20 @@ import woowacourse.shopping.shopping.RecentProductsItem
 
 class RecentProductsViewHolder(
     private val binding: RecentProductItemBinding,
-    private val onClickItem: (product: ProductUIModel) -> Unit
+    private val onClickItem: (product: ProductUIModel) -> Unit,
 ) : ItemViewHolder(binding.root) {
     fun bind(productItemType: ProductsItemType) {
         val recentProducts = productItemType as? RecentProductsItem ?: return
         binding.recentProductRecyclerview.adapter = RecentProductsAdapter(
             recentProducts.product.map { RecentProductItem(it) },
-            onClickItem
+            onClickItem,
         )
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            onClickItem: (product: ProductUIModel) -> Unit
+            onClickItem: (product: ProductUIModel) -> Unit,
         ): RecentProductsViewHolder {
             val binding =
                 RecentProductItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)

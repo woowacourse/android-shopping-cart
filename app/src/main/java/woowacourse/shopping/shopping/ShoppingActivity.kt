@@ -71,7 +71,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 outRect: Rect,
                 view: View,
                 parent: RecyclerView,
-                state: RecyclerView.State
+                state: RecyclerView.State,
             ) {
                 val position = parent.getChildAdapterPosition(view)
                 val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
@@ -91,7 +91,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         binding.productRecyclerview.adapter = ProductsAdapter(
             data,
             presenter::navigateToItemDetail,
-            presenter::fetchMoreProducts
+            presenter::fetchMoreProducts,
         )
     }
 

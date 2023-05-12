@@ -8,7 +8,7 @@ import woowacourse.shopping.model.CartUIModel
 class CartNavigationAdapter(
     private val cartUIModel: CartUIModel,
     private val onPageUp: () -> Unit,
-    private val onPageDown: () -> Unit
+    private val onPageDown: () -> Unit,
 ) : RecyclerView.Adapter<CartNavigationViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartNavigationViewHolder {

@@ -6,7 +6,7 @@ import woowacourse.shopping.databinding.ProductReadMoreItemBinding
 
 class ReadMoreViewHolder private constructor(
     binding: ProductReadMoreItemBinding,
-    onReadMoreClick: () -> Unit
+    onReadMoreClick: () -> Unit,
 ) :
     ItemViewHolder(binding.root) {
 
