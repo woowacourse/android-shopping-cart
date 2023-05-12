@@ -15,6 +15,8 @@ import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
 
+    private lateinit var cartAdapter: CartAdapter
+
     private val presenter: CartContract.Presenter by lazy {
         CartPresenter(this, CartRepositoryImp(this))
     }
@@ -25,6 +27,16 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         setSupportActionBar()
         presenter.loadCartItems()
+        binding.btCartListPageLeft.setOnClickListener {
+            val currentCount = binding.tvCartListPageCount.text
+            binding.tvCartListPageCount.text = (currentCount.toString().toInt() - 1).toString()
+            presenter.updateCartItem(binding.tvCartListPageCount.text.toString().toInt())
+        }
+        binding.btCartListPageRight.setOnClickListener {
+            val currentCount = binding.tvCartListPageCount.text
+            binding.tvCartListPageCount.text = (currentCount.toString().toInt() + 1).toString()
+            presenter.updateCartItem(binding.tvCartListPageCount.text.toString().toInt())
+        }
     }
 
     private fun setSupportActionBar() {
@@ -42,15 +54,21 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItemsView(carts: List<CartModel>) {
-        binding.rvCart.adapter = CartAdapter(carts, ::deleteCartItem)
+        cartAdapter = CartAdapter(carts, ::deleteCartItem)
+        binding.rvCart.adapter = cartAdapter
     }
 
     private fun deleteCartItem(position: Int) {
         presenter.deleteCartItem(position)
     }
 
+    override fun updateCartItemView(carts: List<CartModel>) {
+        cartAdapter = CartAdapter(carts, ::deleteCartItem)
+        binding.rvCart.adapter = cartAdapter
+    }
+
     override fun updateToDeleteCartItemView(position: Int) {
-        binding.rvCart.adapter?.notifyItemRemoved(position)
+        cartAdapter.notifyItemRemoved(position)
     }
 
     companion object {
