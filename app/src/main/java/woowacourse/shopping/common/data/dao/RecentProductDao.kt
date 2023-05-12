@@ -1,6 +1,7 @@
-package woowacourse.shopping.common.data.database.dao
+package woowacourse.shopping.common.data.dao
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.common.data.database.selectRowId
 import woowacourse.shopping.common.data.database.table.SqlProduct
@@ -29,21 +30,26 @@ class RecentProductDao(private val db: SQLiteDatabase) {
             "SELECT * FROM ${SqlRecentProduct.name}, ${SqlProduct.name} on ${SqlRecentProduct.name}.${SqlRecentProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
             null
         )
-        return RecentProducts(
-            cursor.use {
-                val recentProducts = mutableListOf<RecentProduct>()
-                while (it.moveToNext()) recentProducts.add(
-                    RecentProduct(
-                        it.getInt(it.getColumnIndexOrThrow(SqlRecentProduct.ORDINAL)),
-                        Product(
-                            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                        )
-                    )
-                )
-                recentProducts
-            }
-        )
+        return makeRecentProducts(cursor)
     }
+
+    private fun makeRecentProducts(cursor: Cursor) = RecentProducts(
+        cursor.use {
+            val recentProducts = mutableListOf<RecentProduct>()
+            while (it.moveToNext()) recentProducts.add(
+                makeRecentProduct(it)
+            )
+            recentProducts
+        }
+    )
+
+    private fun makeRecentProduct(it: Cursor) = RecentProduct(
+        it.getInt(it.getColumnIndexOrThrow(SqlRecentProduct.ORDINAL)), makeProduct(it)
+    )
+
+    private fun makeProduct(it: Cursor) = Product(
+        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
+        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
+    )
 }

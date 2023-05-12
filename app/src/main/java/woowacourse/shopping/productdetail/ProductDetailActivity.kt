@@ -8,8 +8,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
+import woowacourse.shopping.common.data.dao.CartDao
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.common.data.database.dao.CartDao
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.utils.getSerializable

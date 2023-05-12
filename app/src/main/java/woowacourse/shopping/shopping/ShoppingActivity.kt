@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
+import woowacourse.shopping.common.data.dao.ProductDao
+import woowacourse.shopping.common.data.dao.RecentProductDao
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.common.data.database.dao.ProductDao
-import woowacourse.shopping.common.data.database.dao.RecentProductDao
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.databinding.ActivityShoppingBinding

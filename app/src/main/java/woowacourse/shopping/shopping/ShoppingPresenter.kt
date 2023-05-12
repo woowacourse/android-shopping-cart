@@ -1,7 +1,7 @@
 package woowacourse.shopping.shopping
 
-import woowacourse.shopping.common.data.database.dao.ProductDao
-import woowacourse.shopping.common.data.database.dao.RecentProductDao
+import woowacourse.shopping.common.data.dao.ProductDao
+import woowacourse.shopping.common.data.dao.RecentProductDao
 import woowacourse.shopping.common.data.database.state.ProductsState
 import woowacourse.shopping.common.data.database.state.RecentProductsState
 import woowacourse.shopping.common.data.database.state.State

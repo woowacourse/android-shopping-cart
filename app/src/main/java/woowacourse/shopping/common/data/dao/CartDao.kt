@@ -1,6 +1,7 @@
-package woowacourse.shopping.common.data.database.dao
+package woowacourse.shopping.common.data.dao
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.common.data.database.selectRowId
 import woowacourse.shopping.common.data.database.table.SqlCart
@@ -24,33 +25,9 @@ class CartDao(private val db: SQLiteDatabase) {
         db.insert(SqlCart.name, null, row)
     }
 
-    fun selectAll(): Cart {
-        val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
-            null
-        )
-        return Cart(
-            cursor.use {
-                val cart = mutableListOf<CartProduct>()
-                while (it.moveToNext()) cart.add(
-                    CartProduct(
-                        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)),
-                        Product(
-                            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                        )
-                    )
-                )
-                cart
-            }
-        )
-    }
-
     fun selectAllCount(): Int {
         val cursor = db.rawQuery(
-            "SELECT COUNT(*) FROM ${SqlCart.name}",
-            null
+            "SELECT COUNT(*) FROM ${SqlCart.name}", null
         )
         return cursor.use {
             it.moveToNext()
@@ -60,30 +37,46 @@ class CartDao(private val db: SQLiteDatabase) {
         }
     }
 
+    fun selectAll(): Cart {
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
+            null
+        )
+        return makeCart(cursor)
+    }
+
     fun selectPage(page: Int, sizePerPage: Int): Cart {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * sizePerPage}, $sizePerPage",
             null
         )
-        return Cart(
-            cursor.use {
-                val cart = mutableListOf<CartProduct>()
-                while (it.moveToNext()) cart.add(
-                    CartProduct(
-                        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)),
-                        Product(
-                            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                        )
-                    )
-                )
-                cart
-            }
-        )
+        return makeCart(cursor)
     }
 
     fun deleteCartProductByOrdinal(ordinal: Int) {
         db.delete(SqlCart.name, "${SqlCart.ORDINAL} = ?", arrayOf(ordinal.toString()))
     }
+
+    private fun makeCart(cursor: Cursor) = Cart(
+        cursor.use {
+            val cart = mutableListOf<CartProduct>()
+
+            while (it.moveToNext()) {
+                cart.add(
+                    makeCartProduct(it)
+                )
+            }
+            cart
+        }
+    )
+
+    private fun makeCartProduct(it: Cursor) = CartProduct(
+        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)), makeProduct(it)
+    )
+
+    private fun makeProduct(it: Cursor) = Product(
+        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
+        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
+    )
 }

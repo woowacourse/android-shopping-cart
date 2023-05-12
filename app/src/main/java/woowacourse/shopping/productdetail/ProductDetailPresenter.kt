@@ -1,6 +1,6 @@
 package woowacourse.shopping.productdetail
 
-import woowacourse.shopping.common.data.database.dao.CartDao
+import woowacourse.shopping.common.data.dao.CartDao
 import woowacourse.shopping.common.data.database.state.CartState
 import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toView

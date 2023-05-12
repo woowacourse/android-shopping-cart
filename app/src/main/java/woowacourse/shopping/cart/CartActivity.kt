@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.common.data.dao.CartDao
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.common.data.database.dao.CartDao
 import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.databinding.ActivityCartBinding
 

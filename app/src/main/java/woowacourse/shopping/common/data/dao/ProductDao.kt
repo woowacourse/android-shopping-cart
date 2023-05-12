@@ -1,6 +1,7 @@
-package woowacourse.shopping.common.data.database.dao
+package woowacourse.shopping.common.data.dao
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.common.data.database.table.SqlProduct
 import woowacourse.shopping.common.data.mock.ProductMock
@@ -13,21 +14,24 @@ class ProductDao(private val db: SQLiteDatabase) {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlProduct.name} LIMIT $start, $range", null
         )
-        return Products(
-            cursor.use {
-                val products = mutableListOf<Product>()
-                while (it.moveToNext()) products.add(
-                    Product(
-                        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                    )
-                )
-
-                products
-            }
-        )
+        return makeProducts(cursor)
     }
+
+    private fun makeProducts(cursor: Cursor) = Products(
+        cursor.use {
+            val products = mutableListOf<Product>()
+            while (it.moveToNext()) products.add(
+                makeProduct(it)
+            )
+            products
+        }
+    )
+
+    private fun makeProduct(it: Cursor) = Product(
+        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
+        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
+    )
 
     private fun selectAllCount(): Int {
         val cursor = db.rawQuery(
