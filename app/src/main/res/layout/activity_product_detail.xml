@@ -17,7 +17,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_product_detail"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="56dp"
             android:background="@color/toolbar_color"
             app:layout_constraintEnd_toEndOf="parent"
@@ -27,30 +27,34 @@
 
         <ImageView
             android:id="@+id/image_product_detail"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="360dp"
-            android:src="@drawable/ic_launcher_background"
+            android:contentDescription="@string/image_of_product"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
+            tools:src="@drawable/example" />
 
         <TextView
             android:id="@+id/text_product_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
             android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/text_product_price_description"
             app:layout_constraintTop_toBottomOf="@id/image_product_detail"
             tools:text="아메리카노" />
 
         <View
             android:id="@+id/view_separator"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="13dp"
             android:background="#AAAAAA"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_product_name" />
 
         <TextView
@@ -80,14 +84,15 @@
 
         <Button
             android:id="@+id/button_put_to_shopping_cart"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="@color/button_color"
             android:onClick="@{()->presenter.addToShoppingCart()}"
             android:text="@string/put_to_shopping_cart"
-            android:textColor="@color/white"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
