@@ -65,13 +65,13 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
                 presenter.readMoreShoppingCartProducts()
             }
             buttonPreviousPage.setOnClickListener {
-                shoppingCartRecyclerAdapter.toPreviousPage()
+                shoppingCartRecyclerAdapter.moveToPreviousPage()
             }
         }
     }
 
     override fun showMoreShoppingCartProducts(products: List<ProductUiModel>) {
-        shoppingCartRecyclerAdapter.toNextPage(products = products)
+        shoppingCartRecyclerAdapter.moveToNextPage(products = products)
     }
 
     private fun setUpTextPageNumber(pageNumber: Int) {

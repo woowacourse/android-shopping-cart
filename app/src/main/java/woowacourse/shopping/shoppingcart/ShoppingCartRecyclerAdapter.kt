@@ -45,7 +45,7 @@ class ShoppingCartRecyclerAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun toNextPage(products: List<ProductUiModel>) {
+    fun moveToNextPage(products: List<ProductUiModel>) {
         shoppingCartProducts.addAll(products)
         currentPage = currentPage.next()
         onPageChanged(currentPage.value)
@@ -53,7 +53,7 @@ class ShoppingCartRecyclerAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun toPreviousPage() {
+    fun moveToPreviousPage() {
         currentPage = currentPage.prev()
         onPageChanged(currentPage.value)
         notifyDataSetChanged()
