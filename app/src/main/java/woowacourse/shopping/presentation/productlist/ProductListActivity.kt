@@ -13,15 +13,14 @@ import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.model.ProductViewType
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.productlist.product.ProductListAdapter
-import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductAdapter
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
 
     private lateinit var productListAdapter: ProductListAdapter
-    private lateinit var recentProductAdapter: RecentProductAdapter
 
     private val recentProductRepository: RecentProductIdRepository by lazy {
         RecentProductIdDbAdapter(RecentProductDbHelper(this))
@@ -41,7 +40,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initRecyclerView() {
-        presenter.initRecentProducts()
         presenter.initProducts()
         setLayoutManager()
     }
@@ -51,27 +49,35 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         presenter.updateRecentProducts()
     }
 
-    override fun initProductModels(productModels: List<ProductModel>) {
+    override fun initProductModels(
+        recentProductModels: List<ProductModel>,
+        productModels: List<ProductModel>,
+    ) {
         productListAdapter = ProductListAdapter(
-            products = productModels,
+            productItems = combineProductViewItems(recentProductModels, productModels),
             showMoreProductItem = presenter::updateProducts,
             showProductDetail = ::productClick,
-            recentProductAdapter = recentProductAdapter,
         )
 
         binding.recyclerProduct.adapter = productListAdapter
     }
 
     override fun setProductModels(productModels: List<ProductModel>) {
-        productListAdapter.setItems(productModels)
+        productListAdapter.setProductItems(productModels)
     }
 
-    override fun initRecentProductModels(productModels: List<ProductModel>) {
-        recentProductAdapter = RecentProductAdapter(productModels, ::productClick)
+    private fun combineProductViewItems(
+        recentProductModels: List<ProductModel>,
+        productModels: List<ProductModel>,
+    ): List<ProductViewType> {
+        val productItems =
+            listOf(ProductViewType.RecentProductModels(recentProductModels)) +
+                productModels.map { ProductViewType.ProductItem(it) } + ProductViewType.MoreItem
+        return productItems
     }
 
     override fun setRecentProductModels(productModels: List<ProductModel>) {
-        recentProductAdapter.setItems(productModels)
+        productListAdapter.setRecentProductsItems(productModels)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

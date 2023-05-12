@@ -7,39 +7,36 @@ import woowacourse.shopping.databinding.ItemMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductContainerBinding
 import woowacourse.shopping.presentation.model.ProductModel
-import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductAdapter
+import woowacourse.shopping.presentation.model.ProductViewType
+import woowacourse.shopping.presentation.model.ProductViewType.ProductItem
+import woowacourse.shopping.presentation.model.ProductViewType.RecentProductModels
 import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductContainerViewHolder
 
 class ProductListAdapter(
-    products: List<ProductModel>,
+    productItems: List<ProductViewType>,
     private val showMoreProductItem: () -> Unit,
     private val showProductDetail: (ProductModel) -> Unit,
-    private val recentProductAdapter: RecentProductAdapter,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var itemProductBinding: ItemProductBinding
     private lateinit var inflater: LayoutInflater
 
-    private val _products = products.toMutableList()
+    private val _productItems = productItems.toMutableList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (!::inflater.isInitialized) {
             inflater = LayoutInflater.from(parent.context)
         }
 
-        return when (ProductListViewType.find(viewType)) {
-            ProductListViewType.RECENT_PRODUCT -> {
+        return when (viewType) {
+            ProductViewType.RECENT_PRODUCTS_VIEW_TYPE_NUMBER -> {
                 val containerBinding = ItemRecentProductContainerBinding.inflate(
                     inflater,
                     parent,
                     false,
                 )
-
-                RecentProductContainerViewHolder(
-                    containerBinding,
-                    recentProductAdapter,
-                )
+                RecentProductContainerViewHolder(containerBinding)
             }
-            ProductListViewType.PRODUCT -> {
+            ProductViewType.PRODUCT_VIEW_TYPE_NUMBER -> {
                 itemProductBinding = ItemProductBinding.inflate(
                     inflater,
                     parent,
@@ -48,7 +45,7 @@ class ProductListAdapter(
 
                 ProductItemViewHolder(itemProductBinding, showProductDetail)
             }
-            ProductListViewType.MORE_ITEM -> {
+            ProductViewType.MORE_ITEM_VIEW_TYPE_NUMBER -> {
                 val itemMoreBinding = ItemMoreBinding.inflate(
                     inflater,
                     parent,
@@ -56,33 +53,51 @@ class ProductListAdapter(
                 )
                 MoreItemViewHolder(itemMoreBinding, showMoreProductItem)
             }
+            else -> throw IllegalArgumentException()
         }
     }
 
-    override fun getItemCount(): Int = _products.size + ADDITIONAL_VIEW_COUNT
+    override fun getItemCount(): Int = _productItems.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is ProductItemViewHolder) {
-            holder.bind(_products[position - 1])
+        when (holder) {
+            is RecentProductContainerViewHolder -> {
+                holder.bind(
+                    _productItems[position] as RecentProductModels,
+                    showProductDetail,
+                )
+            }
+            is ProductItemViewHolder -> {
+                holder.bind(_productItems[position] as ProductItem)
+            }
+            is MoreItemViewHolder -> {}
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (position) {
-            RECENT_PRODUCT_VIEW_POSITION -> ProductListViewType.RECENT_PRODUCT.number
-            _products.size + 1 -> ProductListViewType.MORE_ITEM.number
-            else -> ProductListViewType.PRODUCT.number
+            RECENT_PRODUCT_VIEW_POSITION -> ProductViewType.RECENT_PRODUCTS_VIEW_TYPE_NUMBER
+            _productItems.lastIndex -> ProductViewType.MORE_ITEM_VIEW_TYPE_NUMBER
+            else -> ProductViewType.PRODUCT_VIEW_TYPE_NUMBER
         }
     }
 
-    fun setItems(products: List<ProductModel>) {
-        _products.clear()
-        _products.addAll(products)
-        notifyDataSetChanged()
+    fun setProductItems(products: List<ProductModel>) {
+        val beforeLastIndex = _productItems.lastIndex
+        _productItems.addAll(
+            beforeLastIndex,
+            products.map { ProductItem(it) },
+        )
+        notifyItemRangeChanged(beforeLastIndex, _productItems.lastIndex)
+    }
+
+    fun setRecentProductsItems(productModel: List<ProductModel>) {
+        _productItems[RECENT_PRODUCT_VIEW_POSITION] =
+            RecentProductModels(productModel)
+        notifyItemChanged(RECENT_PRODUCT_VIEW_POSITION)
     }
 
     companion object {
         const val RECENT_PRODUCT_VIEW_POSITION = 0
-        private const val ADDITIONAL_VIEW_COUNT = 2
     }
 }

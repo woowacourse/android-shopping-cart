@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.productlist
 
+import woowacourse.shopping.Counter
 import woowacourse.shopping.Product
-import woowacourse.shopping.Products
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.presentation.mapper.toPresentation
@@ -13,23 +13,23 @@ class ProductListPresenter(
     private val recentProductIdRepository: RecentProductIdRepository,
 ) : ProductListContract.Presenter {
 
-    private val products = Products()
-
+    private var itemCount = Counter(FIRST_SIZE)
     override fun initProducts() {
-        val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
-        products.addProducts(receivedProducts)
-        view.initProductModels(products.toPresentation())
+        val receivedProducts = receiveProducts()
+        view.initProductModels(getRecentProductModels(), receivedProducts.toPresentation())
     }
 
     override fun updateProducts() {
-        val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
-        products.addProducts(receivedProducts)
-        view.setProductModels(products.toPresentation())
+        val receivedProducts = receiveProducts()
+        view.setProductModels(receivedProducts.toPresentation())
     }
 
-    override fun initRecentProducts() {
-        val recentProductModels = getRecentProductModels()
-        view.initRecentProductModels(recentProductModels)
+    private fun receiveProducts(): List<Product> {
+        val receivedProducts =
+            productRepository.getProductsWithRange(itemCount.value, PRODUCTS_SIZE)
+        itemCount += PRODUCTS_SIZE
+
+        return receivedProducts
     }
 
     override fun updateRecentProducts() {
@@ -54,12 +54,13 @@ class ProductListPresenter(
         }
     }
 
-    private fun Products.toPresentation(): List<ProductModel> {
-        return items.map { it.toPresentation() }
+    private fun List<Product>.toPresentation(): List<ProductModel> {
+        return this.map { it.toPresentation() }
     }
 
     companion object {
         private const val PRODUCTS_SIZE = 20
         private const val RECENT_PRODUCTS_SIZE = 10
+        private const val FIRST_SIZE = 0
     }
 }
