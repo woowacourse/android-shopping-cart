@@ -9,8 +9,8 @@ import woowacourse.shopping.feature.list.viewholder.CartProductViewHolder
 import woowacourse.shopping.feature.list.viewholder.ItemHolder
 
 class CartProductListAdapter(
-    private var items: List<ListItem>,
-    private val onXClick: (ListItem) -> Unit
+    private var items: List<ListItem> = listOf(),
+    private val onXClick: (ListItem) -> Unit,
 ) : RecyclerView.Adapter<ItemHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
