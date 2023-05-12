@@ -1,10 +1,7 @@
 package woowacourse.shopping.view.shoppingmain
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemProductMainBinding
-import woowacourse.shopping.databinding.RecentProductsBinding
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
@@ -24,24 +21,14 @@ class ProductsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
-            RECENT_PRODUCTS_VIEW_TYPE -> {
-                val inflater = LayoutInflater.from(parent.context)
-                val view = RecentProductsBinding.inflate(inflater, parent, false)
-                view.rvRecentProductCatalogue.adapter =
-                    RecentProductsAdapter(recentProducts, productOnClick)
-                RecentProductsViewHolder(view, recentProducts)
-            }
-            MAIN_PRODUCTS_VIEW_TYPE -> {
-                val inflater = LayoutInflater.from(parent.context)
-                val view = ItemProductMainBinding.inflate(inflater, parent, false)
-                ProductsViewHolder(view, products, productOnClick)
-            }
+            RECENT_PRODUCTS_VIEW_TYPE -> RecentProductsViewHolder(parent, recentProducts)
+            MAIN_PRODUCTS_VIEW_TYPE -> ProductsViewHolder(parent, products, productOnClick)
             else -> throw IllegalArgumentException("잘못된 값: $viewType 유효하지 않은 ViewType입니다.")
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-
+            RECENT_PRODUCTS_VIEW_TYPE -> (holder as RecentProductsViewHolder).bind(productOnClick)
             MAIN_PRODUCTS_VIEW_TYPE -> (holder as ProductsViewHolder).bind(products[position - 1])
         }
     }

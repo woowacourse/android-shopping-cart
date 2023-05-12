@@ -15,10 +15,7 @@ class RecentProductsAdapter(
         parent: ViewGroup,
         viewType: Int
     ): RecentProductViewHolder {
-
-        val inflater = LayoutInflater.from(parent.context)
-        val view = ItemProductRecentBinding.inflate(inflater, parent, false)
-        return RecentProductViewHolder(view, recentProducts, productOnClick)
+        return RecentProductViewHolder(parent, productOnClick)
     }
 
     override fun getItemCount(): Int = recentProducts.size
