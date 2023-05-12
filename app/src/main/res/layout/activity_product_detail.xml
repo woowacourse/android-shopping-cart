@@ -17,10 +17,11 @@
 
         <ImageView
             android:id="@+id/img_product"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:src="@drawable/cart" />
 
         <TextView
@@ -37,14 +38,15 @@
             app:layout_constraintTop_toBottomOf="@id/img_product"
             tools:text="동원참치" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <View
             android:id="@+id/line_gray"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="13dp"
             android:background="@color/gray"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_product_name" />
+            app:layout_constraintTop_toBottomOf="@id/text_product_name"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <TextView
             android:id="@+id/text_price_label"
@@ -71,7 +73,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_put_in_cart"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/mint"
             android:text="@string/put_in_cart"
@@ -80,6 +82,7 @@
             android:textStyle="bold"
             android:onClick="@{()->presenter.putInCart(product)}"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
