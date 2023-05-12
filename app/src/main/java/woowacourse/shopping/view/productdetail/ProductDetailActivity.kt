@@ -40,7 +40,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun setUpPresenter() {
-        presenter = ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
+        presenter =
+            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
     }
 
     private fun forceQuit() {
@@ -52,7 +53,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.product = product
         binding.presenter = presenter
         Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
-        binding.textPrice.text = getString(R.string.korean_won, PriceFormatter.format(product.price))
+        binding.textPrice.text =
+            getString(R.string.korean_won, PriceFormatter.format(product.price))
     }
 
     override fun startCartActivity() {

@@ -12,10 +12,16 @@ class CartPresenter(
 ) : CartContract.Presenter {
     private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
 
-    private val currentCartProducts = convertIdToProductModel(cartPagination.nextItems()).toMutableList()
+    private val currentCartProducts =
+        convertIdToProductModel(cartPagination.nextItems()).toMutableList()
 
     override fun fetchProducts() {
-        view.showProducts(currentCartProducts, cartPagination.isUndoItemsEnabled, cartPagination.isNextItemsEnabled, cartPagination.mark / PAGINATION_SIZE + 1)
+        view.showProducts(
+            currentCartProducts,
+            cartPagination.isUndoItemsEnabled,
+            cartPagination.isNextItemsEnabled,
+            cartPagination.mark / PAGINATION_SIZE + 1
+        )
     }
 
     override fun removeProduct(id: Int) {
@@ -43,7 +49,8 @@ class CartPresenter(
         }
     }
 
-    private fun convertIdToProductModel(cartProducts: List<CartProduct>) = cartProducts.map { productRepository.find(it.id) }.map { it.toUiModel() }
+    private fun convertIdToProductModel(cartProducts: List<CartProduct>) =
+        cartProducts.map { productRepository.find(it.id) }.map { it.toUiModel() }
 
     companion object {
         private const val PAGINATION_SIZE = 5

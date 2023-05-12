@@ -31,7 +31,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun setUpPresenter() {
-        presenter = ProductListPresenter(this, ProductMockRepository, RecentViewedDbRepository(this))
+        presenter =
+            ProductListPresenter(this, ProductMockRepository, RecentViewedDbRepository(this))
     }
 
     private fun setUpActionBar() {
@@ -43,12 +44,16 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         presenter.fetchProducts()
     }
 
-    override fun showProducts(recentViewedProducts: List<ProductModel>, products: List<ProductModel>) {
+    override fun showProducts(
+        recentViewedProducts: List<ProductModel>,
+        products: List<ProductModel>
+    ) {
         val gridLayoutManager = GridLayoutManagerWrapper(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 val isHeader = recentViewedProducts.isNotEmpty() && position == 0
-                val isFooter = if (recentViewedProducts.isNotEmpty()) position == products.size + 1 else position == products.size
+                val isFooter =
+                    if (recentViewedProducts.isNotEmpty()) position == products.size + 1 else position == products.size
                 return if (isHeader || isFooter) {
                     2
                 } else {

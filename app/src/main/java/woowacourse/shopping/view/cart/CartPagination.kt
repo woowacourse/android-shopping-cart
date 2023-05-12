@@ -34,6 +34,7 @@ class CartPagination(private val rangeSize: Int, private val cartRepository: Car
     override fun nextItemExist(): Boolean {
         return cartRepository.isExistByMark(mark)
     }
+
     private fun prevItemExist(): Boolean {
         return cartRepository.isExistByMark(mark - rangeSize - 1)
     }

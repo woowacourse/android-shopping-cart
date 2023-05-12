@@ -11,33 +11,50 @@ import woowacourse.shopping.databinding.ItemCartPaginationBinding
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.PriceFormatter
 
-sealed class CartItemViewHolder(view: View): RecyclerView.ViewHolder(view) {
-    class CartProductViewHolder(private val binding: ItemCartBinding) : CartItemViewHolder(binding.root) {
+sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class CartProductViewHolder(private val binding: ItemCartBinding) :
+        CartItemViewHolder(binding.root) {
         fun bind(product: ProductModel, onItemClick: CartAdapter.OnItemClick) {
             binding.cartProduct = product
-            binding.textPrice.text = binding.root.context.getString(R.string.korean_won, PriceFormatter.format(product.price))
+            binding.textPrice.text = binding.root.context.getString(
+                R.string.korean_won,
+                PriceFormatter.format(product.price)
+            )
             Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
             binding.onItemClick = onItemClick
         }
     }
 
-    class CartPaginationViewHolder(private val binding: ItemCartPaginationBinding, onItemClick: CartAdapter.OnItemClick) : CartItemViewHolder(binding.root) {
+    class CartPaginationViewHolder(
+        private val binding: ItemCartPaginationBinding,
+        onItemClick: CartAdapter.OnItemClick
+    ) :
+        CartItemViewHolder(binding.root) {
         init {
             binding.onItemClick = onItemClick
         }
+
         fun bind(count: Int, isExistUndo: Boolean, isExistNext: Boolean) {
             binding.count = count
-            binding.btnUndoPage.isEnabled = isExistUndo
+            binding.btnPrevPage.isEnabled = isExistUndo
             binding.btnNextPage.isEnabled = isExistNext
         }
     }
 
     companion object {
-        fun of(parent: ViewGroup, type: CartViewType, onItemClick: CartAdapter.OnItemClick): CartItemViewHolder {
+        fun of(
+            parent: ViewGroup,
+            type: CartViewType,
+            onItemClick: CartAdapter.OnItemClick
+        ): CartItemViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(type.id, parent, false)
             return when (type) {
                 CartViewType.CART_PRODUCT_ITEM -> CartProductViewHolder(ItemCartBinding.bind(view))
-                CartViewType.PAGINATION_ITEM -> CartPaginationViewHolder(ItemCartPaginationBinding.bind(view), onItemClick)
+                CartViewType.PAGINATION_ITEM -> CartPaginationViewHolder(
+                    ItemCartPaginationBinding.bind(
+                        view
+                    ), onItemClick
+                )
             }
         }
     }
