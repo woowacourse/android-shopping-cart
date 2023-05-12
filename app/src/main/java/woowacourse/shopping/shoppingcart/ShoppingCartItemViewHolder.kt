@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.model.ProductUiModel
 
-class ShoppingCartItemViewHolder(
+class ShoppingCartItemViewHolder private constructor(
     private val binding: ItemShoppingCartBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 

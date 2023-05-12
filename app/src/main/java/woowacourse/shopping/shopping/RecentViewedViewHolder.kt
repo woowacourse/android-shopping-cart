@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemRecentViewedProductBinding
 import woowacourse.shopping.model.ProductUiModel
 
-class RecentViewedViewHolder(
+class RecentViewedViewHolder private constructor(
     private val binding: ItemRecentViewedProductBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 

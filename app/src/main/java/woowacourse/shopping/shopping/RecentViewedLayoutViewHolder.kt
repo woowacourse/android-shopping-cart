@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.RecentViewedLayoutBinding
 import woowacourse.shopping.model.ProductUiModel
 
-class RecentViewedLayoutViewHolder(
+class RecentViewedLayoutViewHolder private constructor(
     private val binding: RecentViewedLayoutBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
