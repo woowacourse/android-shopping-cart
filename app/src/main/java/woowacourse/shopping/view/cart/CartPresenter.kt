@@ -50,7 +50,7 @@ class CartPresenter(
     }
 
     private fun convertIdToProductModel(cartProducts: List<CartProduct>) =
-        cartProducts.map { productRepository.find(it.id) }.map { it.toUiModel() }
+        cartProducts.asSequence().map { productRepository.find(it.id) }.map { it.toUiModel() }.toList()
 
     companion object {
         private const val PAGINATION_SIZE = 5
