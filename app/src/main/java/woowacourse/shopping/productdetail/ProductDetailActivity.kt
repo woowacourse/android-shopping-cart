@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
@@ -22,15 +21,19 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        setSupportActionBar(findViewById(R.id.product_detail_toolbar))
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-
+        initBinding()
+        initToolbar()
         setUpProductDetailCartButton()
-
         initPresenter()
+    }
+
+    override fun updateProductDetail(productModel: ProductModel) {
+        binding.product = productModel
+    }
+
+    override fun showCart() {
+        startCartActivity()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -45,18 +48,22 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateProductDetail(productModel: ProductModel) {
-        Glide.with(this)
-            .load(productModel.picture)
-            .centerCrop()
-            .into(binding.productDetailPicture)
-        binding.productDetailTitle.text = productModel.title
-        binding.productDetailPrice.text =
-            getString(R.string.product_price, productModel.price)
+    private fun initBinding() {
+        binding = ActivityProductDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
-    override fun showCart() {
-        startCartActivity()
+    private fun initToolbar() {
+        setSupportActionBar(binding.productDetailToolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun initPresenter() {
+        val product = intent.getSerializable<ProductModel>(EXTRA_KEY_PRODUCT) ?: return finish()
+        val db = ShoppingDBOpenHelper(this).writableDatabase
+        presenter = ProductDetailPresenter(
+            this, product = product.toDomain(), cartDao = CartDao(db)
+        )
     }
 
     private fun startCartActivity() {
@@ -68,16 +75,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.productDetailCartButton.setOnClickListener {
             presenter.addToCart()
         }
-    }
-
-    private fun initPresenter() {
-        val product = intent.getSerializable<ProductModel>(EXTRA_KEY_PRODUCT) ?: return finish()
-        val db = ShoppingDBOpenHelper(this).writableDatabase
-        presenter = ProductDetailPresenter(
-            this,
-            product = product.toDomain(),
-            cartDao = CartDao(db)
-        )
     }
 
     companion object {

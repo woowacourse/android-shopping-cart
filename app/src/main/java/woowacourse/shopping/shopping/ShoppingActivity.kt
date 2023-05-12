@@ -53,13 +53,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityShoppingBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        setSupportActionBar(findViewById(R.id.shopping_toolbar))
-
+        initBinding()
+        initToolbar()
         initProductList()
-
         initPresenter()
     }
 
@@ -101,9 +98,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         startCartActivity()
     }
 
-    private fun startCartActivity() {
-        val intent = CartActivity.createIntent(this)
-        startActivity(intent)
+    private fun initBinding() {
+        binding = ActivityShoppingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.shoppingToolbar)
     }
 
     private fun initProductList() {
@@ -120,6 +121,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             recentProductSize = 10,
             productLoadSize = 20
         )
+    }
+
+    private fun startCartActivity() {
+        val intent = CartActivity.createIntent(this)
+        startActivity(intent)
     }
 
     private fun makeLayoutManager(): GridLayoutManager {

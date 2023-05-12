@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.R
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.common.data.database.dao.CartDao
 import woowacourse.shopping.common.model.CartProductModel
@@ -18,14 +17,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCartBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        setSupportActionBar(findViewById(R.id.cart_toolbar))
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        initBinding()
+        initToolbar()
         initCartAdapter()
-
         initPresenter()
     }
 
@@ -36,7 +31,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateCart(cartProducts: List<CartProductModel>, currentPage: Int, isNextButtonEnabled: Boolean) {
+    override fun updateCart(
+        cartProducts: List<CartProductModel>,
+        currentPage: Int,
+        isNextButtonEnabled: Boolean
+    ) {
         cartAdapter.updateCartProducts(cartProducts, currentPage, isNextButtonEnabled)
     }
 
@@ -44,11 +43,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         cartAdapter.updateNavigationVisible(visibility)
     }
 
-    private fun initPresenter() {
-        val db = ShoppingDBOpenHelper(this).writableDatabase
-        presenter = CartPresenter(
-            this, cartDao = CartDao(db), sizePerPage = SIZE_PER_PAGE
-        )
+    private fun initBinding() {
+        binding = ActivityCartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.cartToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     private fun initCartAdapter() {
@@ -59,6 +61,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             onNextButtonClick = { presenter.goToNextPage() }
         )
         binding.cartProductList.adapter = cartAdapter
+    }
+
+    private fun initPresenter() {
+        val db = ShoppingDBOpenHelper(this).writableDatabase
+        presenter = CartPresenter(
+            this, cartDao = CartDao(db), sizePerPage = SIZE_PER_PAGE
+        )
     }
 
     companion object {
