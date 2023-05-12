@@ -11,6 +11,7 @@ object RecentProductContract {
     internal val CREATE_TABLE_QUERY = """
         CREATE TABLE IF NOT EXISTS $TABLE_NAME (
             ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${ProductContract.TABLE_NAME}${BaseColumns._ID},
             $COLUMN_NAME TEXT,
             $COLUMN_PRICE INTEGER,
             $COLUMN_IMAGE_URL TEXT

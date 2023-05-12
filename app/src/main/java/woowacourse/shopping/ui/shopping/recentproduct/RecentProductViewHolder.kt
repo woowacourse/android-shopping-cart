@@ -1,21 +1,24 @@
 package woowacourse.shopping.ui.shopping.recentproduct
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentProductBinding
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.model.UiRecentProduct
+import woowacourse.shopping.util.setOnSingleClickListener
 
-class RecentProductViewHolder(
-    private val binding: ItemRecentProductBinding,
-    onItemClick: (UiProduct) -> Unit
-) : RecyclerView.ViewHolder(binding.root) {
-    private lateinit var product: UiProduct
+class RecentProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :
+    RecyclerView.ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.item_recent_product, parent, false)
+    ) {
+    private val binding = ItemRecentProductBinding.bind(itemView)
 
     init {
-        binding.root.setOnClickListener { onItemClick(product) }
+        binding.root.setOnSingleClickListener { onItemClick(bindingAdapterPosition) }
     }
 
-    fun bind(item: UiProduct) {
-        product = item
-        binding.product = item
+    fun bind(recentProduct: UiRecentProduct) {
+        binding.recentProduct = recentProduct
     }
 }
