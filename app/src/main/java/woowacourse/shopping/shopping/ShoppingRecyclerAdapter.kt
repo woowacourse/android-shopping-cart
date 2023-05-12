@@ -25,14 +25,12 @@ class ShoppingRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return when (viewType) {
-            ShoppingRecyclerItemViewType.RECENT_VIEWED.ordinal ->
+        return when (ShoppingRecyclerItemViewType.find(viewType)) {
+            ShoppingRecyclerItemViewType.RECENT_VIEWED ->
                 RecentViewedLayoutViewHolder.from(parent)
 
-            ShoppingRecyclerItemViewType.PRODUCT.ordinal ->
+            ShoppingRecyclerItemViewType.PRODUCT ->
                 ShoppingItemViewHolder.from(parent)
-
-            else -> throw IllegalArgumentException(VIEW_TYPE_ERROR)
         }
     }
 
@@ -64,9 +62,5 @@ class ShoppingRecyclerAdapter(
     fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
         products.addAll(toAdd)
         notifyDataSetChanged()
-    }
-
-    companion object {
-        private const val VIEW_TYPE_ERROR = "해당 타입의 뷰홀더는 생성할 수 없습니다."
     }
 }
