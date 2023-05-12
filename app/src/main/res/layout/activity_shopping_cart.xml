@@ -41,7 +41,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recycler_view_cart">
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_previous_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -59,7 +59,7 @@
                 android:textSize="22sp"
                 tools:text="1" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_next_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"

@@ -31,8 +31,7 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-        <Button
-
+        <androidx.appcompat.widget.AppCompatButton
             android:layout_margin="20dp"
             android:background="@drawable/item_round"
             android:id="@+id/button_show_more"
