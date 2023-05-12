@@ -29,7 +29,7 @@
                 android:id="@+id/bt_cart_list_page_left"
                 android:layout_width="43dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_left_page_false" />
+                android:background="@drawable/drawable_left_button" />
 
             <TextView
                 android:id="@+id/tv_cart_list_page_count"
@@ -44,7 +44,7 @@
                 android:id="@+id/bt_cart_list_page_right"
                 android:layout_width="43dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_right_page_true" />
+                android:background="@drawable/drawable_right_button" />
 
         </LinearLayout>
 
