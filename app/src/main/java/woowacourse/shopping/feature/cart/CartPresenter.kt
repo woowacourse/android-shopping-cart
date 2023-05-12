@@ -10,8 +10,7 @@ class CartPresenter(
     val view: CartContract.View,
     private val cartRepository: CartRepository,
 ) : CartContract.Presenter {
-    private var _page =
-        PageUiModel(cartRepository.getAll().size, 1)
+    private var _page = PageUiModel(cartRepository.getAll().size, 1)
     override val page: PageUiModel
         get() = _page.copy()
 

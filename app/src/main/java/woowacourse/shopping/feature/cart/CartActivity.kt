@@ -13,7 +13,6 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.PageUiModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
-
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
     private lateinit var cartProductAdapter: CartProductAdapter

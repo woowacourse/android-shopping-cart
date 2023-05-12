@@ -72,12 +72,6 @@ class RecentDao(
         writableDatabase.execSQL(updateSql)
     }
 
-    private fun deleteRecentProduct(recentProduct: RecentProduct) {
-        val selection = "${RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID} = ?"
-        val selectionArgs = arrayOf("${recentProduct.product.id}")
-        writableDatabase.delete(RecentContract.TABLE_NAME, selection, selectionArgs)
-    }
-
     companion object {
         private const val DB_NAME = "recent_db"
         private const val VERSION = 1

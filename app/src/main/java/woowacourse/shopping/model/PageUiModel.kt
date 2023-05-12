@@ -4,7 +4,7 @@ data class PageUiModel(
     val allSize: Int,
     val currentPage: Int
 ) {
-    val pageCount: Int
+    private val pageCount: Int
         get() {
             return kotlin.math.ceil((allSize.toDouble() / PAGE_LOAD_SIZE)).toInt()
         }

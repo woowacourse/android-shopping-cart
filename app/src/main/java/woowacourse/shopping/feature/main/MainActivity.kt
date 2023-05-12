@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
         initAdapters()
         initLayoutManager()
-        binding.productRv.adapter = concatAdapter
+        binding.productRecyclerView.adapter = concatAdapter
         if (savedInstanceState == null) {
             presenter.loadProducts()
         } else {
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                 }
             }
         }
-        binding.productRv.layoutManager = layoutManager
+        binding.productRecyclerView.layoutManager = layoutManager
     }
 
     override fun showCartScreen() {
