@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.shoppingmain
 
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemProductMainBinding
 import woowacourse.shopping.uimodel.ProductUIModel
 
@@ -18,6 +19,9 @@ class ProductsViewHolder(
     }
 
     fun bind(item: ProductUIModel) {
+        Glide.with(itemView)
+            .load(item.url)
+            .into(binding.ivProductImage)
         binding.product = item
     }
 }
