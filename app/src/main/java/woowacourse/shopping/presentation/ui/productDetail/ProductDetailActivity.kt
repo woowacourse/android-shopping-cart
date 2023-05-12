@@ -48,7 +48,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun addRecentlyViewedProduct(productId: Long) =
-        presenter.addRecentlyViewedProduct(productId, COUNT_TEN)
+        presenter.addRecentlyViewedProduct(productId, DEFAULT_UNIT_RECENT_PRODUCT)
 
     private fun setClickEvent() {
         setClickEventOnCloseButton()
@@ -68,7 +68,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val DEFAULT_ID: Long = 0
-        private const val COUNT_TEN = 10
+        private const val DEFAULT_UNIT_RECENT_PRODUCT = 10
         private const val PRODUCT_ID = "productId"
         fun getIntent(context: Context, productId: Long): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
