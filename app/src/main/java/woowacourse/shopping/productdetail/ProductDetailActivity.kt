@@ -19,6 +19,7 @@ import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
+
     // todo null인 경우 처리하기
     private val product: ProductUiModel by lazy { intent.getSerializableCompat(PRODUCT_KEY)!! }
     private val presenter: ProductDetailPresenter by lazy {
@@ -70,8 +71,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun navigateToShoppingCartView() {
-        val intent = Intent(this, ShoppingCartActivity::class.java)
-        startActivity(intent)
+        startActivity(
+            ShoppingCartActivity.getIntent(this)
+        )
         finish()
     }
 

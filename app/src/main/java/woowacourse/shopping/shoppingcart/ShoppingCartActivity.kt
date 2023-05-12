@@ -1,5 +1,7 @@
 package woowacourse.shopping.shoppingcart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -74,5 +76,13 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private fun setUpTextPageNumber(pageNumber: Int) {
         binding.textPageNumber.text = pageNumber.toString()
+    }
+
+    companion object {
+
+        fun getIntent(context: Context): Intent {
+
+            return Intent(context, ShoppingCartActivity::class.java)
+        }
     }
 }

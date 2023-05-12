@@ -1,6 +1,5 @@
 package woowacourse.shopping.shopping
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -46,7 +45,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.shopping_cart -> {
-                startActivity(Intent(this, ShoppingCartActivity::class.java))
+                startActivity(
+                    ShoppingCartActivity.getIntent(this)
+                )
             }
         }
 
