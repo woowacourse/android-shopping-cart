@@ -107,7 +107,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.from(this, product))
+        startActivity(ProductDetailActivity.getIntent(this, product))
     }
 
     override fun addProducts(data: List<ProductsItemType>) {
@@ -119,6 +119,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun navigateToCart() {
-        startActivity(CartActivity.from(this))
+        startActivity(CartActivity.getIntent(this))
     }
 }

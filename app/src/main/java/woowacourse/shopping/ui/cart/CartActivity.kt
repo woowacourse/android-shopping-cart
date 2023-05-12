@@ -64,7 +64,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun navigateToItemDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.from(this, product))
+        startActivity(ProductDetailActivity.getIntent(this, product))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -83,7 +83,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
     companion object {
         private const val KEY_OFFSET = "KEY_OFFSET"
-        fun from(context: Context): Intent {
+        fun getIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }
     }

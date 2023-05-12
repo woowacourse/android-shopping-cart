@@ -74,11 +74,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun navigateToCart() {
-        startActivity(CartActivity.from(this))
+        startActivity(CartActivity.getIntent(this))
     }
 
     companion object {
-        fun from(context: Context, product: ProductUIModel): Intent {
+        fun getIntent(context: Context, product: ProductUIModel): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
             }
