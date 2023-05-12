@@ -3,6 +3,7 @@ package woowacourse.shopping.view.shoppingcart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -12,32 +13,51 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
-class ShoppingCartActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityShoppingCartBinding
+class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
+    override lateinit var presenter: ShoppingCartContract.Presenter
     private lateinit var adapter: ShoppingCartAdapter
+
+    private var _binding: ActivityShoppingCartBinding? = null
+    private val binding
+        get()= _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
 
-        val dbHelper = CartProductDBHelper(this)
-        val db = dbHelper.readableDatabase
-        val repository = CartProductDBRepository(db)
-        val cartProducts = repository.getAll()
+        _binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
+
+        setPresenter()
+        setAdapter()
+        setViewSettings()
+    }
+
+    private fun setPresenter() {
+        presenter = ShoppingCartPresenter(this)
+    }
+
+    private fun setAdapter() {
+        val db = CartProductDBHelper(this).readableDatabase
+        presenter.setRecentProducts(db)
         adapter = ShoppingCartAdapter(
-            cartProducts,
+            presenter.cartProducts,
             setOnClickRemove()
         )
+    }
 
+    private fun setViewSettings() {
         binding.rvCartList.adapter = adapter
     }
 
-    fun setOnClickRemove(): (ProductUIModel) -> Unit = {
-        adapter.remove(it)
-        val dbHelper = CartProductDBHelper(this)
-        val db = dbHelper.writableDatabase
-        val repository = CartProductDBRepository(db)
-        repository.remove(CartProductUIModel(it))
+    private fun setOnClickRemove(): (ProductUIModel) -> Unit = { product ->
+        val db = CartProductDBHelper(this).writableDatabase
+        presenter.removeCartProduct(db, product)
+    }
+
+    override fun removeCartProduct(cartProducts: List<CartProductUIModel>, index: Int) {
+        Log.d("mendel", cartProducts.joinToString { it.productUIModel.name })
+        Log.d("mendel", index.toString())
+        adapter.update(cartProducts)
+        adapter.notifyItemRemoved(index)
     }
 
     companion object {
