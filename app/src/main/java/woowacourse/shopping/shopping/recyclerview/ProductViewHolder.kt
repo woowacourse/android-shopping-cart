@@ -9,7 +9,9 @@ class ProductViewHolder(
     onItemViewClick: (Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.root.setOnClickListener { onItemViewClick(adapterPosition) }
+        binding.root.setOnClickListener {
+            onItemViewClick(bindingAdapterPosition)
+        }
     }
 
     fun bind(product: ProductModel) {

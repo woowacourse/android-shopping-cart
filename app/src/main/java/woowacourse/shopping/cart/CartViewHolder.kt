@@ -11,7 +11,7 @@ class CartViewHolder(
     init {
         binding.cartProductListRemoveButton.setOnClickListener {
             onCartItemRemoveButtonViewClick(
-                adapterPosition
+                bindingAdapterPosition
             )
         }
     }
