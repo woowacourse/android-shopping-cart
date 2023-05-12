@@ -15,7 +15,6 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
-import woowacourse.shopping.shopping.recyclerview.LoadMoreAdapter
 import woowacourse.shopping.shopping.recyclerview.ProductAdapter
 import woowacourse.shopping.shopping.recyclerview.RecentProductAdapter
 import woowacourse.shopping.shopping.recyclerview.RecentProductWrapperAdapter
@@ -36,18 +35,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         RecentProductWrapperAdapter(recentProductAdapter)
     }
 
-    private val loadMoreAdapter: LoadMoreAdapter by lazy {
-        LoadMoreAdapter {
-            presenter.loadMoreProduct()
-        }
-    }
-
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
             setIsolateViewTypes(false)
         }.build()
         ConcatAdapter(
-            config, recentProductWrapperAdapter, productAdapter, loadMoreAdapter
+            config, recentProductWrapperAdapter, productAdapter
         )
     }
 

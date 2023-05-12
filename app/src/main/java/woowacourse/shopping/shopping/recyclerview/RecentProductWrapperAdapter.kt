@@ -3,7 +3,7 @@ package woowacourse.shopping.shopping.recyclerview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ListRecentProductLayoutBinding
+import woowacourse.shopping.databinding.ItemRecentProductListWrapperBinding
 
 class RecentProductWrapperAdapter(private val recentProductAdapter: RecentProductAdapter) :
     RecyclerView.Adapter<RecentProductWrapperViewHolder>() {
@@ -12,7 +12,7 @@ class RecentProductWrapperAdapter(private val recentProductAdapter: RecentProduc
         viewType: Int
     ): RecentProductWrapperViewHolder {
         return RecentProductWrapperViewHolder(
-            ListRecentProductLayoutBinding.inflate(LayoutInflater.from(parent.context))
+            ItemRecentProductListWrapperBinding.inflate(LayoutInflater.from(parent.context))
         )
     }
 
