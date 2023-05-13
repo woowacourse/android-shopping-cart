@@ -88,7 +88,7 @@ class ProductListAdapter(
             beforeLastIndex,
             products.map { ProductItem(it) },
         )
-        notifyItemRangeChanged(beforeLastIndex, _productItems.lastIndex)
+        notifyItemRangeInserted(beforeLastIndex, products.size)
     }
 
     fun setRecentProductsItems(productModel: List<ProductModel>) {
