@@ -1,8 +1,8 @@
 package woowacourse.shopping.ui.productdetail
 
 import woowacourse.shopping.domain.repository.BasketRepository
-import woowacourse.shopping.ui.mapper.toDomain
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.model.UiProduct
 import kotlin.concurrent.thread
 
 class ProductDetailPresenter(

@@ -2,7 +2,7 @@ package woowacourse.shopping.ui.basket
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemBasketBinding
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.model.UiProduct
 
 class BasketViewHolder(private val binding: ItemBasketBinding, onItemClick: (UiProduct) -> Unit) :
     RecyclerView.ViewHolder(binding.root) {

@@ -3,7 +3,7 @@ package woowacourse.shopping.ui.shopping.recyclerview.recentproduct
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import woowacourse.shopping.ui.model.UiRecentProduct
+import woowacourse.shopping.model.UiRecentProduct
 
 class RecentProductAdapter(private val onItemClick: (UiRecentProduct) -> Unit) :
     ListAdapter<UiRecentProduct, RecentProductViewHolder>(recentProductDiffUtil) {

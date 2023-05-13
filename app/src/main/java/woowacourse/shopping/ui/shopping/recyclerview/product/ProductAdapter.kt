@@ -3,7 +3,7 @@ package woowacourse.shopping.ui.shopping.recyclerview.product
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.ui.shopping.ShoppingViewType
 
 class ProductAdapter(private val onItemClick: (UiProduct) -> Unit) :

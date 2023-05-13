@@ -3,10 +3,10 @@ package woowacourse.shopping.ui.shopping
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.DomainProductRepository
 import woowacourse.shopping.domain.repository.DomainRecentProductRepository
-import woowacourse.shopping.ui.mapper.toDomain
-import woowacourse.shopping.ui.mapper.toUi
-import woowacourse.shopping.ui.model.UiProduct
-import woowacourse.shopping.ui.model.UiRecentProduct
+import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.mapper.toUi
+import woowacourse.shopping.model.UiProduct
+import woowacourse.shopping.model.UiRecentProduct
 import kotlin.concurrent.thread
 
 class ShoppingPresenter(

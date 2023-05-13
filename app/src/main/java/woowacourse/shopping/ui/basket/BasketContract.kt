@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.basket
 
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.model.UiProduct
 
 interface BasketContract {
     interface View {

@@ -1,9 +1,9 @@
 package woowacourse.shopping.ui.basket
 
 import woowacourse.shopping.domain.repository.BasketRepository
-import woowacourse.shopping.ui.mapper.toDomain
-import woowacourse.shopping.ui.mapper.toUi
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.mapper.toUi
+import woowacourse.shopping.model.UiProduct
 
 class BasketPresenter(
     override val view: BasketContract.View,

@@ -11,7 +11,7 @@ import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityBasketBinding
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.model.UiProduct
 
 class BasketActivity : AppCompatActivity(), BasketContract.View {
     override lateinit var presenter: BasketContract.Presenter

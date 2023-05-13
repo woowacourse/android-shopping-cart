@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentProductBinding
-import woowacourse.shopping.ui.model.UiRecentProduct
+import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.util.setOnSingleClickListener
 
 class RecentProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :

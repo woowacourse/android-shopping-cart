@@ -15,7 +15,7 @@ import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.basket.BasketActivity
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.util.getParcelableExtraCompat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View,

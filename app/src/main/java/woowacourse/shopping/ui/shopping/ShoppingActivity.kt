@@ -17,8 +17,8 @@ import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.ui.basket.BasketActivity
-import woowacourse.shopping.ui.model.UiProduct
-import woowacourse.shopping.ui.model.UiRecentProduct
+import woowacourse.shopping.model.UiProduct
+import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.recyclerview.layoutmanager.ShoppingGridLayoutManager
 import woowacourse.shopping.ui.shopping.recyclerview.listener.EndScrollListener
