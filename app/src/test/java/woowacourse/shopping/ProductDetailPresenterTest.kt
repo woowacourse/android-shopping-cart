@@ -21,7 +21,7 @@ class ProductDetailPresenterTest {
     fun setUp() {
         view = mockk()
         cartRepository = mockk()
-        presenter = ProductDetailPresenter(view, cartRepository)
+        presenter = ProductDetailPresenter(view, cartRepository, ProductModel(10, "", "", 1000))
     }
 
     @Test
@@ -31,7 +31,7 @@ class ProductDetailPresenterTest {
         every { cartRepository.addCartProductId(productModel.id) } just runs
         every { view.showCompleteMessage(productModel.name) } just runs
         // when
-        presenter.putProductInCart(productModel)
+        presenter.putProductInCart()
         // then
         verify { view.showCompleteMessage(productModel.name) }
     }
