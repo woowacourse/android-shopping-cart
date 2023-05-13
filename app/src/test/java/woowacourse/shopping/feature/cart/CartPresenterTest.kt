@@ -54,7 +54,7 @@ internal class CartPresenterTest {
     @Test
     fun `상품 하나를 삭제하고 다시 불러온 상품을 화면에 띄운다`() {
         val slot = slot<Long>()
-        every { cartRepository.getProductFromId(5, capture(slot)) } returns emptyList()
+        every { cartRepository.getProductsFromId(5, capture(slot)) } returns emptyList()
         every { cartRepository.deleteProduct(any()) } just Runs
 
         presenter.deleteCartProduct(mockCartProductUiModel, 5L)

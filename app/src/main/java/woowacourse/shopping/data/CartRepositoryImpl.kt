@@ -31,7 +31,15 @@ class CartRepositoryImpl(
         return getAll().asSequence().filter { it.cartId > bottomId }.take(size).toList()
     }
 
-    override fun getProductFromId(size: Int, startId: Long): List<CartProduct> {
+    override fun getProducts(size: Int): List<CartProduct> {
+        return getAll().take(size)
+    }
+
+    override fun getProductsFromId(size: Int, startId: Long): List<CartProduct> {
         return getAll().asSequence().filter { it.cartId >= startId }.take(size).toList()
+    }
+
+    override fun getProductsByRange(startIndex: Int, endIndex: Int): List<CartProduct> {
+        return getAll().subList(startIndex, endIndex)
     }
 }
