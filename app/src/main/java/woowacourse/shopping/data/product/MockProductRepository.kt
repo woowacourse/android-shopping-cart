@@ -20,6 +20,8 @@ object MockProductRepository : ProductRepository {
 
     override fun findProductById(id: Int): Product? = products.find { it.id == id }
 
-    override fun getProductsWithRange(startIndex: Int, size: Int): List<Product> =
-        products.subList(startIndex, startIndex + size)
+    override fun getProductsWithRange(startIndex: Int, size: Int): List<Product> {
+        if (startIndex >= products.size) return listOf()
+        return products.subList(startIndex, startIndex + size)
+    }
 }

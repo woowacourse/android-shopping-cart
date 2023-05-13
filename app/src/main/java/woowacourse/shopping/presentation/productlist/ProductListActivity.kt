@@ -34,16 +34,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
-        initRecyclerView()
         setSupportActionBar(binding.toolbarProductList.toolbar)
-    }
-
-    private fun initRecyclerView() {
-        presenter.initRecentProducts()
-        presenter.initProducts()
-        setLayoutManager()
     }
 
     override fun onStart() {
@@ -54,10 +46,15 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun initProductModels(productModels: List<ProductModel>) {
         productListAdapter = ProductListAdapter(
             products = productModels,
-            showMoreProductItem = presenter::updateProducts,
+            showMoreProductItem = ::showMoreProductItems,
             showProductDetail = ::productClick,
             recentProductAdapter = recentProductAdapter,
         )
+
+        val layoutManager = GridLayoutManager(this, SPAN_COUNT)
+        binding.recyclerProduct.layoutManager = layoutManager.apply {
+            spanSizeLookup = ProductListSpanSizeLookup(productListAdapter::getItemViewType)
+        }
 
         binding.recyclerProduct.adapter = productListAdapter
     }
@@ -87,6 +84,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         return true
     }
 
+    private fun showMoreProductItems() {
+        presenter.updateProducts()
+    }
+
     private fun productClick(productModel: ProductModel) {
         presenter.saveRecentProductId(productModel.id)
         showProductDetail(productModel)
@@ -94,13 +95,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun showProductDetail(productModel: ProductModel) {
         startActivity(ProductDetailActivity.getIntent(this, productModel))
-    }
-
-    private fun setLayoutManager() {
-        val layoutManager = GridLayoutManager(this, SPAN_COUNT)
-        binding.recyclerProduct.layoutManager = layoutManager.apply {
-            spanSizeLookup = GridLayoutSizeManager(productListAdapter::getItemViewType)
-        }
     }
 
     companion object {

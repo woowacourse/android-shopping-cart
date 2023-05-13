@@ -9,18 +9,15 @@ import woowacourse.shopping.presentation.model.ProductModel
 class ProductItemViewHolder(
     private val binding: ItemProductBinding,
     showProductDetail: (ProductModel) -> Unit,
-) :
-    RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
 
-    private var _productModel: ProductModel? = null
-    private val productModel get() = _productModel!!
-
+    private lateinit var productModel: ProductModel
     init {
         itemView.setOnClickListener { showProductDetail(productModel) }
     }
 
     fun bind(product: ProductModel) {
-        _productModel = product
+        productModel = product
         binding.textProductListName.text = product.name
         binding.textProductListPrice.text =
             binding.textProductListPrice.context.getString(R.string.price_format, product.price)

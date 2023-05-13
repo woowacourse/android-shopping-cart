@@ -15,6 +15,11 @@ class ProductListPresenter(
 
     private val products = Products()
 
+    init {
+        initRecentProducts()
+        initProducts()
+    }
+
     override fun initProducts() {
         val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
         products.addProducts(receivedProducts)
