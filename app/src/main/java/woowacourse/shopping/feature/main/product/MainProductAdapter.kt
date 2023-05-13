@@ -1,18 +1,12 @@
 package woowacourse.shopping.feature.main.product
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ItemMainProductBinding
 
 class MainProductAdapter(
     items: List<MainProductItemModel>
 ) : RecyclerView.Adapter<MainProductViewHolder>() {
     private val _items = items.toMutableList()
-    val items: List<MainProductItemModel>
-        get() = _items.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainProductViewHolder {
         return MainProductViewHolder.create(parent)
@@ -29,8 +23,9 @@ class MainProductAdapter(
     }
 
     fun addItems(newItems: List<MainProductItemModel>) {
+        val preSize = _items.size
         _items.addAll(newItems.toList())
-        notifyDataSetChanged()
+        notifyItemRangeInserted(preSize, newItems.size)
     }
 
     companion object {

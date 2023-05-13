@@ -20,6 +20,7 @@ import woowacourse.shopping.feature.main.product.MainProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentAdapter
 import woowacourse.shopping.feature.main.recent.RecentProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
+import woowacourse.shopping.model.ProductUiModel
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var binding: ActivityMainBinding
@@ -58,9 +59,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         mainProductAdapter = MainProductAdapter(listOf())
         recentAdapter = RecentAdapter(listOf())
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
-        loadAdapter = LoadAdapter {
-            presenter.loadMoreProduct(mainProductAdapter.items.lastOrNull()?.product?.id ?: 0)
-        }
+        loadAdapter = LoadAdapter { presenter.loadMoreProduct() }
     }
 
     private fun initLayoutManager() {
@@ -82,9 +81,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(CartActivity.getIntent(this))
     }
 
-    override fun showProductDetailScreenByProduct(position: Int) {
-        val product = mainProductAdapter.items[position].product
-        startActivity(DetailActivity.getIntent(this, product))
+    override fun showProductDetailScreenByProduct(productUiModel: ProductUiModel) {
+        startActivity(DetailActivity.getIntent(this, productUiModel))
     }
 
     override fun addProducts(products: List<MainProductItemModel>) {
