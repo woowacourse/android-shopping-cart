@@ -16,7 +16,7 @@ data class ProductUiModel(
         return DecimalFormat("#,###").format(price)
     }
 
-    fun toItemModel(onClick: (position: Int) -> Unit): MainProductItemModel {
+    fun toItemModel(onClick: (productId: Long) -> Unit): MainProductItemModel {
         return MainProductItemModel(this, onClick)
     }
 }

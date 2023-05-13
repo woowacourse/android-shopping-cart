@@ -48,15 +48,17 @@ class MainPresenter(
         view.updateRecent(recentProductUiModels)
     }
 
-    override fun showProductDetail(position: Int) {
-        view.showProductDetailScreen(products[position])
-        addRecentProduct(products[position])
+    override fun showProductDetail(productId: Long) {
+        val product = products.find { it.id == productId } ?: return
+        view.showProductDetailScreen(product)
+        addRecentProduct(product)
         loadRecent()
     }
 
-    override fun showRecentProductDetail(position: Int) {
-        view.showProductDetailScreen(recentProducts[position].productUiModel)
-        addRecentProduct(recentProducts[position])
+    override fun showRecentProductDetail(productId: Long) {
+        val recentProduct = recentProducts.find { it.productUiModel.id == productId } ?: return
+        view.showProductDetailScreen(recentProduct.productUiModel)
+        addRecentProduct(recentProduct)
         loadRecent()
     }
 

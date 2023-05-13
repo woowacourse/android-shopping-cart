@@ -33,12 +33,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun changeCartProducts(newItems: List<CartProductUiModel>) {
         val newItemModels =
-            newItems.map { it.toItemModel { position -> deleteCartProductFromScreen(position) } }
+            newItems.map { it.toItemModel { cartId -> presenter.deleteCartProduct(cartId) } }
         cartProductAdapter.setItems(newItemModels)
-    }
-
-    private fun deleteCartProductFromScreen(position: Int) {
-        presenter.deleteCartProduct(cartProductAdapter.items[position].cartProduct)
     }
 
     override fun setPreviousButtonState(enabled: Boolean) {

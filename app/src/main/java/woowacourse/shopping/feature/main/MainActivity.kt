@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter.loadRecent()
     }
 
-    private fun initPresenter(){
+    private fun initPresenter() {
         presenter = MainPresenter(
             this,
             ProductMockRepositoryImpl(),
@@ -89,18 +89,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun addProducts(products: List<ProductUiModel>) {
         val productUiModels = products.map {
-            it.toItemModel { position ->
-                presenter.showProductDetail(position)
-            }
+            it.toItemModel { productId -> presenter.showProductDetail(productId) }
         }
         mainProductAdapter.addItems(productUiModels)
     }
 
     override fun updateRecent(recent: List<RecentProductUiModel>) {
         val recentProductUiModels = recent.map {
-            it.toItemModel { position ->
-                presenter.showRecentProductDetail(position)
-            }
+            it.toItemModel { productId -> presenter.showRecentProductDetail(productId) }
         }
         recentAdapter.setItems(recentProductUiModels)
     }

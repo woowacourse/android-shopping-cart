@@ -10,7 +10,7 @@ data class RecentProductUiModel(
     val productUiModel: ProductUiModel,
     val dateTime: LocalDateTime
 ) : Parcelable {
-    fun toItemModel(onClick: (position: Int) -> Unit): RecentProductItemModel {
+    fun toItemModel(onClick: (productId: Long) -> Unit): RecentProductItemModel {
         return RecentProductItemModel(this, onClick)
     }
 }

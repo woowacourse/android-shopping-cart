@@ -1,18 +1,12 @@
 package woowacourse.shopping.feature.cart
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ItemCartProductBinding
 
 class CartProductAdapter(
     items: List<CartProductItemModel>
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
     private val _items = items.toMutableList()
-    val items: List<CartProductItemModel>
-        get() = _items.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
         return CartProductViewHolder.create(parent)

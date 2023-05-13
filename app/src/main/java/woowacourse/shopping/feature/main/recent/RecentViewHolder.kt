@@ -11,9 +11,6 @@ class RecentViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(recentProduct: RecentProductItemModel) {
         binding.itemModel = recentProduct
-        binding.recentBox.setOnClickListener {
-            recentProduct.onClick(bindingAdapterPosition)
-        }
     }
 
     companion object {

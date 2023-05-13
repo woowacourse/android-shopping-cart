@@ -56,7 +56,8 @@ class CartPresenter(
         changePageState(nextCartProductUiModels)
     }
 
-    override fun deleteCartProduct(cartProduct: CartProductUiModel) {
+    override fun deleteCartProduct(cartId: Long) {
+        val cartProduct = currentPageCartProductUiModel.find { it.cartId == cartId } ?: return
         cartRepository.deleteProduct(cartProduct.toDomain())
         _page = _page.copy(allSize = _page.allSize - 1)
         val updateCartProducts = if (currentPageCartProductUiModel.size == 1) {
