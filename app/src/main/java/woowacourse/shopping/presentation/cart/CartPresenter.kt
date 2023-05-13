@@ -15,79 +15,74 @@ class CartPresenter(
 ) : CartContract.Presenter {
 
     private var page = Counter(1)
-    private val products: Products = Products()
+
+    init {
+        initCart()
+        setView()
+    }
+
     override fun initCart() {
-        setProducts()
-        view.setPage(page.value)
-        val cartProducts = products.getProductsInRange((page.value - 1) * 5, 5)
-        view.initCartProductModels(cartProducts.toPresentation())
-        checkRightPageAble()
-        checkLeftPageAble()
+        val cartProducts = getCurrentPageProducts(page.value)
+        view.initCartItems(cartProducts.toPresentation())
     }
 
     override fun deleteProduct(productModel: ProductModel) {
         cartRepository.deleteCartProductId(productModel.id)
-        products.deleteProduct(productModel.id)
-
-        val cartProducts = products.getProductsInRange((page.value - 1) * 5, 5)
-        view.setCartProductModels(cartProducts.toPresentation())
     }
 
     override fun plusPage() {
         page = page.plus(1)
-        setView()
+        view.setPage(page.value)
     }
 
     override fun minusPage() {
         page = page.minus(1)
-        setView()
+        view.setPage(page.value)
+    }
+
+    override fun updateCart() {
+        val cartProducts = getCurrentPageProducts(page.value)
+        view.setCartItems(cartProducts.toPresentation())
+    }
+    override fun updateRightPageState() {
+        if (getCurrentPageProducts(page.value + START_PAGE).items.isEmpty()) {
+            view.setRightPageState(false)
+        } else {
+            view.setRightPageState(true)
+        }
+    }
+
+    override fun updateLeftPageState() {
+        if (page.value == START_PAGE) {
+            view.setLeftPageState(false)
+        } else {
+            view.setLeftPageState(true)
+        }
     }
 
     private fun setView() {
         view.setPage(page.value)
         updateCart()
-        checkRightPageAble()
-        checkLeftPageAble()
+        updateRightPageState()
+        updateLeftPageState()
     }
 
-    private fun setProducts() {
-        val recentProductIds = cartRepository.getCartProductIds()
-        val productItems = recentProductIds.map {
-            productRepository.findProductById(it) ?: Product.defaultProduct
-        }
-        products.addProducts(productItems)
-    }
-
-    private fun updateCart() {
-        val cartProducts = products.getProductsInRange(
-            (page.value - FIRST_PAGE) * PRODUCT_CART_SIZE,
-            PRODUCT_CART_SIZE,
+    private fun getCurrentPageProducts(page: Int): Products {
+        val cartProductIds = cartRepository.getCartProductIds(
+            limit = PAGE_PER_PRODUCT_COUNT,
+            offset = (page - START_PAGE) * PAGE_PER_PRODUCT_COUNT,
         )
-        view.setCartProductModels(cartProducts.toPresentation())
+        return Products(
+            cartProductIds.map { productRepository.findProductById(it) ?: Product.defaultProduct },
+        )
     }
 
     private fun Products.toPresentation(): List<ProductModel> {
         return items.map { it.toPresentation() }
     }
 
-    private fun checkRightPageAble() {
-        if ((products.size / PRODUCT_CART_SIZE + FIRST_PAGE) == page.value) {
-            view.setRightPageEnable(false)
-        } else {
-            view.setRightPageEnable(true)
-        }
-    }
-
-    private fun checkLeftPageAble() {
-        if (page.value == FIRST_PAGE) {
-            view.setLeftPageEnable(false)
-        } else {
-            view.setLeftPageEnable(true)
-        }
-    }
-
     companion object {
-        private const val FIRST_PAGE = 1
-        private const val PRODUCT_CART_SIZE = 5
+        private const val START_PAGE = 1
+        private const val PAGE_PER_PRODUCT_COUNT = 5
     }
 }

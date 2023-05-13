@@ -23,20 +23,44 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setToolBar()
-        initLeftClick()
-        initRightClick()
-        presenter.initCart()
+        initView()
+        managePaging()
     }
 
-    override fun setPage(count: Int) {
-        binding.textCartPage.text = count.toString()
+    private fun initView() {
+        presenter
+        setToolBar()
     }
 
     private fun setToolBar() {
         setSupportActionBar(binding.toolbarCart.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.arrow_back_24)
+    }
+
+    private fun managePaging() {
+        onPlusPage()
+        onMinusPage()
+    }
+
+    private fun onPlusPage() {
+        binding.buttonRightPage.setOnClickListener {
+            presenter.plusPage()
+            updateView()
+        }
+    }
+
+    private fun onMinusPage() {
+        binding.buttonLeftPage.setOnClickListener {
+            presenter.minusPage()
+            updateView()
+        }
+    }
+
+    private fun updateView() {
+        presenter.updateCart()
+        presenter.updateLeftPageState()
+        presenter.updateRightPageState()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -49,28 +73,25 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return true
     }
 
-    override fun initCartProductModels(productModels: List<ProductModel>) {
-        cartAdapter = CartAdapter(productModels, presenter::deleteProduct)
+    override fun initCartItems(cartProductModels: List<ProductModel>) {
+        cartAdapter = CartAdapter(cartProductModels, ::deleteCartProduct)
         binding.recyclerCart.adapter = cartAdapter
     }
 
-    override fun setCartProductModels(productModels: List<ProductModel>) {
+    private fun deleteCartProduct(productModel: ProductModel) {
+        presenter.deleteProduct(productModel)
+        updateView()
+    }
+
+    override fun setCartItems(productModels: List<ProductModel>) {
         cartAdapter.setItems(productModels)
     }
 
-    private fun initRightClick() {
-        binding.buttonRightPage.setOnClickListener {
-            presenter.plusPage()
-        }
+    override fun setPage(count: Int) {
+        binding.textCartPage.text = count.toString()
     }
 
-    private fun initLeftClick() {
-        binding.buttonLeftPage.setOnClickListener {
-            presenter.minusPage()
-        }
-    }
-
-    override fun setRightPageEnable(isEnable: Boolean) {
+    override fun setRightPageState(isEnable: Boolean) {
         binding.buttonRightPage.isClickable = isEnable
         if (isEnable) {
             binding.buttonRightPage.setImageResource(R.drawable.icon_right_page_true)
@@ -79,7 +100,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setLeftPageEnable(isEnable: Boolean) {
+    override fun setLeftPageState(isEnable: Boolean) {
         binding.buttonLeftPage.isClickable = isEnable
         if (isEnable) {
             binding.buttonLeftPage.setImageResource(R.drawable.icon_left_page_true)

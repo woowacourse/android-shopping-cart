@@ -3,7 +3,6 @@ package woowacourse.shopping.data.cart
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import java.lang.String.valueOf
 
 class CartDbAdapter(db: CartDbHelper) : CartRepository {
 
@@ -21,11 +20,11 @@ class CartDbAdapter(db: CartDbHelper) : CartRepository {
         writableDb.delete(
             CartDbContract.TABLE_NAME,
             "${CartDbContract.PRODUCT_ID}=?",
-            arrayOf<String>(valueOf(productId)),
+            arrayOf(productId.toString()),
         )
     }
 
-    override fun getCartProductIds(): List<Int> {
+    override fun getCartProductIds(limit: Int, offset: Int): List<Int> {
         val productIds = mutableListOf<Int>()
 
         val cursor = writableDb.query(
@@ -39,7 +38,7 @@ class CartDbAdapter(db: CartDbHelper) : CartRepository {
             null,
             null,
             "${CartDbContract.TIMESTAMP} DESC",
-            null,
+            "$offset,$limit",
         )
         while (cursor.moveToNext()) {
             val productId = cursor.getCartProductId()
