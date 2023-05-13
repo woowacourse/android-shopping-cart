@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.URL
+import java.time.LocalDateTime
 
 class RecentProductDao(private val db: SQLiteDatabase) {
     fun insertRecentProduct(recentProductModel: RecentProductModel) {
@@ -19,14 +20,15 @@ class RecentProductDao(private val db: SQLiteDatabase) {
         productRow[SqlProduct.PRICE] = recentProductModel.product.price
 
         val row = ContentValues()
-        row.put(SqlRecentProduct.ORDINAL, recentProductModel.ordinal)
+        row.put(SqlRecentProduct.TIME, recentProductModel.time.toString())
         row.put(SqlRecentProduct.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
         db.insert(SqlRecentProduct.name, null, row)
     }
 
     fun selectAll(): RecentProducts {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlRecentProduct.name}, ${SqlProduct.name} on ${SqlRecentProduct.name}.${SqlRecentProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
+            "SELECT * FROM ${SqlRecentProduct.name}, ${SqlProduct.name} ON ${SqlRecentProduct.name}.${SqlRecentProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} " +
+                "ORDER BY ${SqlRecentProduct.TIME} DESC",
             null
         )
         return RecentProducts(
@@ -34,7 +36,7 @@ class RecentProductDao(private val db: SQLiteDatabase) {
                 val recentProducts = mutableListOf<RecentProduct>()
                 while (it.moveToNext()) recentProducts.add(
                     RecentProduct(
-                        it.getInt(it.getColumnIndexOrThrow(SqlRecentProduct.ORDINAL)),
+                        LocalDateTime.parse(it.getString(it.getColumnIndexOrThrow(SqlRecentProduct.TIME))),
                         Product(
                             URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
                             it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),

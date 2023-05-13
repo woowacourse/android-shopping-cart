@@ -1,3 +1,5 @@
 package woowacourse.shopping.domain
 
-data class RecentProduct(val ordinal: Int, val product: Product)
+import java.time.LocalDateTime
+
+data class RecentProduct(val time: LocalDateTime, val product: Product)

@@ -5,10 +5,10 @@ import org.junit.Test
 
 class RecentProductsTest {
     @Test
-    fun 최근_본_상품_9개를_요청하면_상품_9개를_반환하다() {
+    fun 최근_본_상품_9개를_요청하면_상품_9개를_반환한다() {
         // given
         val recentProducts = RecentProducts(
-            List(10) { createRecentProduct(ordinal = it) }
+            List(10) { createRecentProduct() }
         )
 
         // when

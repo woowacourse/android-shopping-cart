@@ -1,5 +1,7 @@
 package woowacourse.shopping.domain
 
+import java.time.LocalDateTime
+
 fun createProduct(
     url: URL = URL("www.google.com"),
     title: String = "",
@@ -12,6 +14,6 @@ fun createCartProduct(
 ): CartProduct = CartProduct(ordinal, product)
 
 fun createRecentProduct(
-    ordinal: Int = 1,
+    time: LocalDateTime = LocalDateTime.now(),
     product: Product = createProduct()
-): RecentProduct = RecentProduct(ordinal, product)
+): RecentProduct = RecentProduct(time, product)

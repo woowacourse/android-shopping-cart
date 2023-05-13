@@ -1,3 +1,5 @@
 package woowacourse.shopping.common.model
 
-data class RecentProductModel(val ordinal: Int, val product: ProductModel)
+import java.time.LocalDateTime
+
+data class RecentProductModel(val time: LocalDateTime, val product: ProductModel)

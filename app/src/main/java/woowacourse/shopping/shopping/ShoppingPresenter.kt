@@ -10,7 +10,6 @@ import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.ProductMapper.toView
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 
 class ShoppingPresenter(
@@ -56,10 +55,6 @@ class ShoppingPresenter(
 
     private fun updateRecentProducts() {
         val recentProducts = recentProductsState.load()
-        val recentProductsDesc =
-            recentProducts.getRecentProducts(recentProductSize).value.sortedByDescending(
-                RecentProduct::ordinal
-            )
-        view.updateRecentProducts(recentProductsDesc.map { it.toView() })
+        view.updateRecentProducts(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }
 }

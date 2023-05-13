@@ -4,12 +4,12 @@ import woowacourse.shopping.common.data.database.SqlColumn
 import woowacourse.shopping.common.data.database.SqlType
 
 object SqlRecentProduct : SqlTable {
-    const val ORDINAL = "ordinal"
+    const val TIME = "time"
     const val PRODUCT_ID = "product_id"
 
     override val name: String = "RecentProduct"
     override val scheme: List<SqlColumn> = listOf(
-        SqlColumn(ORDINAL, SqlType.INTEGER, "PRIMARY KEY"),
+        SqlColumn(TIME, SqlType.TEXT, "PRIMARY KEY"),
         SqlColumn(PRODUCT_ID, SqlType.INTEGER)
     )
 
