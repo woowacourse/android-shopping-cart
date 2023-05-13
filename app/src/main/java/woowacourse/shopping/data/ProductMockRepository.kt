@@ -273,11 +273,11 @@ object ProductMockRepository : ProductRepository {
         return products[id]
     }
 
-    override fun findRange(start: Int, size: Int): List<Product> {
-        if (products.size <= start + size) {
-            return products.subList(start, products.lastIndex)
+    override fun findRange(mark: Int, rangeSize: Int): List<Product> {
+        if (products.size <= mark + rangeSize) {
+            return products.subList(mark, products.lastIndex)
         }
-        return products.subList(start, start + size)
+        return products.subList(mark, mark + rangeSize)
     }
 
     override fun isExistByMark(mark: Int): Boolean {

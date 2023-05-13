@@ -6,43 +6,43 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import woowacourse.shopping.domain.CartProduct
 
-class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1) {
+class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
-            "CREATE TABLE ${CartConstract.TABLE_NAME} (" +
-                "  ${CartConstract.TABLE_COLUMN_ID} Int PRIMARY KEY not null," +
-                "  ${CartConstract.TABLE_COLUMN_COUNT} Int not null" +
+            "CREATE TABLE ${CartContract.TABLE_NAME} (" +
+                "  ${CartContract.TABLE_COLUMN_ID} Int PRIMARY KEY not null," +
+                "  ${CartContract.TABLE_COLUMN_COUNT} Int not null" +
                 ");",
         )
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("DROP TABLE IF EXISTS ${CartConstract.TABLE_NAME}")
+        db?.execSQL("DROP TABLE IF EXISTS ${CartContract.TABLE_NAME}")
         onCreate(db)
     }
 
     fun insert(id: Int, count: Int) {
         val values = ContentValues()
-        values.put(CartConstract.TABLE_COLUMN_ID, id)
-        values.put(CartConstract.TABLE_COLUMN_COUNT, count)
-        writableDatabase.insert(CartConstract.TABLE_NAME, null, values)
+        values.put(CartContract.TABLE_COLUMN_ID, id)
+        values.put(CartContract.TABLE_COLUMN_COUNT, count)
+        writableDatabase.insert(CartContract.TABLE_NAME, null, values)
     }
 
     fun update(id: Int, count: Int) {
-        writableDatabase.execSQL("UPDATE ${CartConstract.TABLE_NAME} SET ${CartConstract.TABLE_COLUMN_COUNT}=$count WHERE ${CartConstract.TABLE_COLUMN_ID}=$id")
+        writableDatabase.execSQL("UPDATE ${CartContract.TABLE_NAME} SET ${CartContract.TABLE_COLUMN_COUNT}=$count WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
     }
 
     fun remove(id: Int) {
-        writableDatabase.execSQL("DELETE FROM ${CartConstract.TABLE_NAME} WHERE ${CartConstract.TABLE_COLUMN_ID}=$id")
+        writableDatabase.execSQL("DELETE FROM ${CartContract.TABLE_NAME} WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
     }
 
     fun selectAll(): List<CartProduct> {
         val products = mutableListOf<CartProduct>()
-        val sql = "select * from ${CartConstract.TABLE_NAME}"
+        val sql = "select * from ${CartContract.TABLE_NAME}"
         val cursor = readableDatabase.rawQuery(sql, null)
         while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartConstract.TABLE_COLUMN_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartConstract.TABLE_COLUMN_COUNT))
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
             products.add(CartProduct(id, count))
         }
         cursor.close()
@@ -50,11 +50,11 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1
     }
 
     fun selectWhereId(id: Int): CartProduct? {
-        val sql = "select * from ${CartConstract.TABLE_NAME} where ${CartConstract.TABLE_COLUMN_ID}=$id"
+        val sql = "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_ID}=$id"
         val cursor = readableDatabase.rawQuery(sql, null)
         while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartConstract.TABLE_COLUMN_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartConstract.TABLE_COLUMN_COUNT))
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
             cursor.close()
             return CartProduct(id, count)
         }
@@ -63,11 +63,11 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1
 
     fun selectRange(mark: Int, rangeSize: Int): List<CartProduct> {
         val products = mutableListOf<CartProduct>()
-        val sql = "select * from ${CartConstract.TABLE_NAME} limit $rangeSize offset $mark;"
+        val sql = "select * from ${CartContract.TABLE_NAME} limit $rangeSize offset $mark;"
         val cursor = readableDatabase.rawQuery(sql, null)
         while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartConstract.TABLE_COLUMN_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartConstract.TABLE_COLUMN_COUNT))
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
             products.add(CartProduct(id, count))
         }
         cursor.close()
@@ -77,5 +77,9 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1
     fun getSize(mark: Int): Boolean {
         val itemsSize = selectAll().size
         return mark in 0 until itemsSize
+    }
+
+    companion object {
+        private const val TABLE_TITLE = "cart"
     }
 }

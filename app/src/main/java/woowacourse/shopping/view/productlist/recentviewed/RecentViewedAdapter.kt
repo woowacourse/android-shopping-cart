@@ -14,7 +14,8 @@ class RecentViewedAdapter(
 ) : RecyclerView.Adapter<RecentViewedItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedItemViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_recent_viewed_product, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_recent_viewed_product, parent, false)
         return RecentViewedItemViewHolder(ItemRecentViewedProductBinding.bind(view))
     }
 

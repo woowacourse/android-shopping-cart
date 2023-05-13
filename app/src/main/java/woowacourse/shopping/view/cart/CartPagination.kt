@@ -3,7 +3,6 @@ package woowacourse.shopping.view.cart
 import woowacourse.shopping.Pagination
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.model.ProductModel
 
 class CartPagination(private val rangeSize: Int, private val cartRepository: CartRepository) :
     Pagination<CartProduct> {
@@ -26,8 +25,8 @@ class CartPagination(private val rangeSize: Int, private val cartRepository: Car
 
     fun undoItems(): List<CartProduct> {
         if (undoItemExist()) {
-            val items = cartRepository.findRange(mark - rangeSize, rangeSize)
             mark -= rangeSize
+            val items = cartRepository.findRange(mark - rangeSize, rangeSize)
             return items
         }
         return emptyList()

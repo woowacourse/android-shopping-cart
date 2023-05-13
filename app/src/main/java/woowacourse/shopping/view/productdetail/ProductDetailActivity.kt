@@ -44,6 +44,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun startCartActivity() {
         val intent = CartActivity.newIntent(this)
         startActivity(intent)
+        finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

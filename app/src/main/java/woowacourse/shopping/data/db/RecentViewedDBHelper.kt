@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, "recent_viewed", null, 1) {
+class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${RecentViewedContract.TABLE_NAME} (" +
@@ -54,5 +54,9 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, "recent
 
     fun removeOldest() {
         writableDatabase.execSQL("DELETE FROM ${RecentViewedContract.TABLE_NAME} WHERE rowid = (SELECT MIN(rowid) FROM ${RecentViewedContract.TABLE_NAME});")
+    }
+
+    companion object {
+        private const val TABLE_TITLE = "recent_viewed"
     }
 }

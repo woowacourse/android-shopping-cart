@@ -1,6 +1,5 @@
 package woowacourse.shopping
 
-
 interface Pagination<T> {
     var mark: Int
     var isNextEnabled: Boolean

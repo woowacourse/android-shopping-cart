@@ -9,7 +9,7 @@ class CartAdapter(
     private val onItemClick: OnItemClick,
     private val isExistUndo: Boolean,
     private val isExistNext: Boolean,
-    private val count: Int
+    private val count: Int,
 ) : RecyclerView.Adapter<CartItemViewHolder>() {
 
     interface OnItemClick {

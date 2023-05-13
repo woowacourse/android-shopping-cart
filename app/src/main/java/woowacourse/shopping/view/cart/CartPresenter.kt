@@ -1,16 +1,14 @@
 package woowacourse.shopping.view.cart
 
-import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
 ) : CartContract.Presenter {
     private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
 
