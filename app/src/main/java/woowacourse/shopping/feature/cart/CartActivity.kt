@@ -11,6 +11,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.list.adapter.CartProductsAdapter
 import woowacourse.shopping.feature.list.item.CartProductItem
 import woowacourse.shopping.feature.list.item.ListItem
+import kotlin.properties.Delegates
 
 class CartActivity : AppCompatActivity(), CartActivityContract.View {
     private lateinit var presenter: CartActivityContract.Presenter
@@ -22,6 +23,11 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         CartDbHandler(CartDbHelper(this).writableDatabase)
     }
 
+    private var page: Int by Delegates.observable(1) { _, _, new ->
+        presenter.setUpData(new)
+        binding.pageNumberTv.text = page.toString()
+    }
+
     private lateinit var adapter: CartProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +36,7 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         setContentView(binding.root)
 
         presenter = CartActivityPresenter(this, db)
-        presenter.setUpData()
+        presenter.setUpData(OPEN_PAGE)
         presenter.setUpButton()
         setUpView()
     }
@@ -40,46 +46,20 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
             onXClick = { listItem -> itemXClickEvent(listItem) },
         )
         binding.cartProductRv.adapter = adapter
-        presenter.updateDataEachPage(1)
+        adapter.setItems(cartItems)
     }
 
-    override fun setAfterButtonListener(maxPageNumber: Int) {
+    override fun setButtonListener(maxPage: Int) {
         binding.pageAfterTv.setOnClickListener {
-            var page: Int = binding.pageNumberTv.text.toString().toInt()
-
-            binding.pageAfterTv.setBackgroundColor(getColor(R.color.teal_200))
-            binding.pageBeforeTv.setBackgroundColor(getColor(R.color.teal_200))
-
-            if (page <= 1) {
-                binding.pageBeforeTv.setBackgroundColor(getColor(R.color.gray))
+            if (page < maxPage) {
+                ++page
             }
-            if (page >= maxPageNumber) {
-                binding.pageAfterTv.setBackgroundColor(getColor(R.color.gray))
-                return@setOnClickListener
-            }
-
-            binding.pageNumberTv.text = (++page).toString()
-            presenter.updateDataEachPage(page)
         }
-    }
 
-    override fun setBeforeButtonListener(maxPageNumber: Int) {
         binding.pageBeforeTv.setOnClickListener {
-            var page: Int = binding.pageNumberTv.text.toString().toInt()
-
-            binding.pageBeforeTv.setBackgroundColor(getColor(R.color.teal_200))
-            binding.pageAfterTv.setBackgroundColor(getColor(R.color.teal_200))
-
-            if (page >= maxPageNumber) {
-                binding.pageAfterTv.setBackgroundColor(getColor(R.color.gray))
+            if (page > 1) {
+                --page
             }
-            if (page <= 1) {
-                binding.pageBeforeTv.setBackgroundColor(getColor(R.color.gray))
-                return@setOnClickListener
-            }
-
-            binding.pageNumberTv.text = (--page).toString()
-            presenter.updateDataEachPage(page)
         }
     }
 
@@ -88,19 +68,26 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
     }
 
     private fun setUpView() {
-        binding.pageNumberTv.text = "1"
+        binding.pageNumberTv.text = OPEN_PAGE.toString()
         binding.pageBeforeTv.setBackgroundColor(getColor(R.color.gray))
     }
 
     private fun itemXClickEvent(listItem: ListItem) {
         when (listItem) {
             is CartProductItem -> {
-                presenter.deleteData(listItem)
+                presenter.deleteData(page, listItem)
             }
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
     companion object {
+        private const val OPEN_PAGE = 1
+
         fun startActivity(context: Context) {
             val intent = Intent(context, CartActivity::class.java)
             context.startActivity(intent)
