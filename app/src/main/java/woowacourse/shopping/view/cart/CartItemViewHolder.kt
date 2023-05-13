@@ -8,9 +8,6 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.databinding.ItemCartPaginationBinding
-import woowacourse.shopping.model.CartPageStatus
-import woowacourse.shopping.model.CartProductModel
-import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.PriceFormatter
 
 sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -67,4 +64,3 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 }
-

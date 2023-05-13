@@ -1,9 +1,7 @@
 package woowacourse.shopping.view.productlist
 
-import android.util.Log
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
-import woowacourse.shopping.model.ProductListPagination
 import woowacourse.shopping.model.toUiModel
 
 class ProductListPresenter(
@@ -25,7 +23,7 @@ class ProductListPresenter(
         // 상품 리스트
         productsListItems.addAll(products.map { ProductListViewItem.ProductItem(it) })
         // 더보기
-        if(productListPagination.isNextEnabled) productsListItems.add(ProductListViewItem.ShowMoreItem())
+        if (productListPagination.isNextEnabled) productsListItems.add(ProductListViewItem.ShowMoreItem())
         view.showProducts(productsListItems)
     }
 
@@ -36,7 +34,7 @@ class ProductListPresenter(
         // RecyclerView Items 수정
         productsListItems.removeLast()
         productsListItems.addAll(nextProducts.map { ProductListViewItem.ProductItem(it) })
-        if(productListPagination.isNextEnabled) productsListItems.add(ProductListViewItem.ShowMoreItem())
+        if (productListPagination.isNextEnabled) productsListItems.add(ProductListViewItem.ShowMoreItem())
         // Notify
         view.notifyAddProducts(mark, PAGINATION_SIZE)
     }
@@ -49,7 +47,7 @@ class ProductListPresenter(
         view.notifyRecentViewedChanged()
     }
 
-    private fun convertIdToProductModel(id: Int) =  productRepository.find(id).toUiModel()
+    private fun convertIdToProductModel(id: Int) = productRepository.find(id).toUiModel()
 
     private fun isExistRecentViewed(): Boolean = productsListItems[0] is ProductListViewItem.RecentViewedItem
 

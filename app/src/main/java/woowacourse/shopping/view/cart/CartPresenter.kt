@@ -3,7 +3,6 @@ package woowacourse.shopping.view.cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.model.CartPagination
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
@@ -16,9 +15,8 @@ class CartPresenter(
     private val currentCartProducts =
         convertToCartProductModels(cartPagination.nextItems()).toMutableList()
     private val cartItems =
-        (currentCartProducts.map { CartViewItem.CartProductItem(it) } + CartViewItem.PaginationItem(
-            cartPagination.status
-        )).toMutableList()
+        (currentCartProducts.map { CartViewItem.CartProductItem(it) }
+                + CartViewItem.PaginationItem(cartPagination.status)).toMutableList()
 
     override fun fetchProducts() {
         view.showProducts(cartItems)

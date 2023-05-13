@@ -1,7 +1,5 @@
 package woowacourse.shopping.view.productlist
 
-import woowacourse.shopping.model.CartPageStatus
-import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.ProductModel
 
 sealed interface ProductListViewItem {

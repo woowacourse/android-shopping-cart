@@ -1,8 +1,5 @@
 package woowacourse.shopping.view.cart
 
-import woowacourse.shopping.model.CartPageStatus
-import woowacourse.shopping.model.CartProductModel
-
 interface CartContract {
     interface View {
         fun showProducts(items: List<CartViewItem>)

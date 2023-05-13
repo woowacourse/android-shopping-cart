@@ -5,13 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.CartPageStatus
-import woowacourse.shopping.model.CartProductModel
-import woowacourse.shopping.model.ProductModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -40,19 +36,22 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun showProducts(items: List<CartViewItem>) {
-        binding.recyclerCart.adapter = CartAdapter(items, object : CartAdapter.OnItemClick {
-            override fun onRemoveClick(id: Int) {
-                presenter.removeProduct(id)
-            }
+        binding.recyclerCart.adapter = CartAdapter(
+            items,
+            object : CartAdapter.OnItemClick {
+                override fun onRemoveClick(id: Int) {
+                    presenter.removeProduct(id)
+                }
 
-            override fun onNextClick() {
-                presenter.fetchNextPage()
-            }
+                override fun onNextClick() {
+                    presenter.fetchNextPage()
+                }
 
-            override fun onPrevClick() {
-                presenter.fetchPrevPage()
+                override fun onPrevClick() {
+                    presenter.fetchPrevPage()
+                }
             }
-        })
+        )
     }
 
     override fun showOtherPage() {

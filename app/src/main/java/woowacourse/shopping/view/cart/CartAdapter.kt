@@ -2,9 +2,6 @@ package woowacourse.shopping.view.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.CartPageStatus
-import woowacourse.shopping.model.CartProductModel
-import woowacourse.shopping.model.ProductModel
 
 class CartAdapter(
     private val items: List<CartViewItem>,

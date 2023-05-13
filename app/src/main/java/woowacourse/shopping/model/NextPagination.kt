@@ -1,6 +1,5 @@
 package woowacourse.shopping.model
 
-
 interface NextPagination<T> {
     val isNextEnabled: Boolean
         get() = nextItemExist()

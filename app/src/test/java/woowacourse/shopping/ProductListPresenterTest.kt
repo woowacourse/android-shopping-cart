@@ -12,6 +12,7 @@ import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 import woowacourse.shopping.view.productlist.ProductListContract
 import woowacourse.shopping.view.productlist.ProductListPresenter
+import woowacourse.shopping.view.productlist.ProductListViewItem
 
 class ProductListPresenterTest {
     private lateinit var presenter: ProductListContract.Presenter
@@ -61,19 +62,18 @@ class ProductListPresenterTest {
 
     @Test
     fun 최근_본_상품과_20개의_상품들을_띄울_수_있다() {
-        val viewedProductsActual = slot<List<ProductModel>>()
-        val productsActual = slot<List<ProductModel>>()
-        every { view.showProducts(capture(viewedProductsActual), capture(productsActual)) } just runs
+        val items = slot<List<ProductListViewItem>>()
+        every { view.showProducts(capture(items)) } just runs
         presenter.fetchProducts()
 
-        val viewedProductExpected = listOf(0, 1, 2).map { id -> products.find { it.id == id }?.toUiModel() }.sortedByDescending { it?.id }
-        val productsExpected = products.subList(0, 20).map { it.toUiModel() }
-        assertEquals(viewedProductExpected, viewedProductsActual.captured)
-        assertEquals(productsExpected, productsActual.captured)
+        val itemsExpected = ProductListViewItem.RecentViewedItem(listOf(0, 1, 2).map { id -> products.find { it.id == id }?.toUiModel() }.sortedByDescending { it?.id } as List<ProductModel>)
+        assertEquals(itemsExpected, items.captured[0])
     }
 
     @Test
     fun 상품을_추가로_띄울_수_있다() {
+        presenter.fetchProducts()
+
         val mark = slot<Int>()
         every { view.notifyAddProducts(capture(mark), 20) } just runs
         presenter.showMoreProducts()

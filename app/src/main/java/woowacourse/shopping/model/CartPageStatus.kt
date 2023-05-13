@@ -1,6 +1,6 @@
 package woowacourse.shopping.model
 
-class CartPageStatus(
+data class CartPageStatus(
     val isPrevEnabled: Boolean,
     val isNextEnabled: Boolean,
     val count: Int

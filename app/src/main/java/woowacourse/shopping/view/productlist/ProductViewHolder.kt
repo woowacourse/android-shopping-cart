@@ -9,7 +9,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentViewedBinding
 import woowacourse.shopping.databinding.ItemShowMoreBinding
-import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.view.productlist.recentviewed.RecentViewedAdapter
 
@@ -66,12 +65,14 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 ProductListViewType.PRODUCT_ITEM -> ProductItemViewHolder(
                     ItemProductBinding.bind(
                         view
-                    ), onItemClick
+                    ),
+                    onItemClick
                 )
                 ProductListViewType.SHOW_MORE_ITEM -> ShowMoreViewHolder(
                     ItemShowMoreBinding.bind(
                         view
-                    ), onItemClick
+                    ),
+                    onItemClick
                 )
             }
         }
