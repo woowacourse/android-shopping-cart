@@ -43,8 +43,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         cartProducts: List<CartProductModel>,
         cartPageStatus: CartPageStatus
     ) {
-        binding.recyclerCart.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerCart.adapter = CartAdapter(cartProducts, object : CartAdapter.OnItemClick {
             override fun onRemoveClick(id: Int) {
                 presenter.removeProduct(id)
