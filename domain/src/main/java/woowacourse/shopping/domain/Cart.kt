@@ -15,9 +15,6 @@ data class Cart(val cartProducts: List<CartProduct>) {
     }
 
     private fun getCurrentOrdinal(): Int {
-        return (if (cartProducts.isEmpty()) 0 else cartProducts.maxOf { it.ordinal } + 1).also {
-            println(cartProducts)
-            println(it)
-        }
+        return (if (cartProducts.isEmpty()) 0 else cartProducts.maxOf { it.ordinal } + 1)
     }
 }
