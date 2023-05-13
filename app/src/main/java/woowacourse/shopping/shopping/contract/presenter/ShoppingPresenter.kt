@@ -17,11 +17,12 @@ class ShoppingPresenter(
     private val repository: ProductRepository,
     private val recentRepository: RecentRepository,
 ) : ShoppingContract.Presenter {
-    private var productsData: MutableList<ProductsItemType> = mutableListOf()
+    private val productsData: MutableList<ProductsItemType> = mutableListOf()
 
     override fun setUpProducts() {
         productsData += repository.getUntil(productOffset)
             .map { product: Product -> ProductItem(product.toUIModel()) }
+        productsData += ProductReadMore
         updateProducts()
     }
 
@@ -33,13 +34,16 @@ class ShoppingPresenter(
             productsData[0] is RecentProductsItem -> productsData[0] = recentProductsData
             recentProductsData.product.isNotEmpty() -> productsData.add(0, recentProductsData)
         }
-        view.setProducts(productsData.plus(ProductReadMore))
+        view.setProducts(productsData)
     }
 
     override fun fetchMoreProducts() {
-        productsData += repository.getNext(PRODUCT_COUNT)
-            .map { ProductItem(it.toUIModel()) }
-        view.addProducts(productsData.plus(ProductReadMore))
+        productsData.addAll(
+            productsData.size - 1,
+            repository.getNext(PRODUCT_COUNT)
+                .map { ProductItem(it.toUIModel()) },
+        )
+        view.addProducts(productsData)
     }
 
     override fun navigateToItemDetail(data: ProductUIModel) {
