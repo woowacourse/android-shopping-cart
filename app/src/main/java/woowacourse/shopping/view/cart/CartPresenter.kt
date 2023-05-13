@@ -18,9 +18,9 @@ class CartPresenter(
     override fun fetchProducts() {
         view.showProducts(
             currentCartProducts,
-            cartPagination.isUndoItemsEnabled,
-            cartPagination.isNextItemsEnabled,
-            cartPagination.mark / PAGINATION_SIZE + 1
+            cartPagination.isPrevEnabled,
+            cartPagination.isNextEnabled,
+            1
         )
     }
 
