@@ -1,4 +1,4 @@
-package woowacourse.shopping.database.recentviewed
+package woowacourse.shopping.database.product
 
 object RecentViewedDBContract {
 

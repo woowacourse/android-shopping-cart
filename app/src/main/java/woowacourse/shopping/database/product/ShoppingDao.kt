@@ -4,8 +4,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import woowacourse.shopping.database.DBContract
-import woowacourse.shopping.database.recentviewed.RecentViewedDBContract
-import woowacourse.shopping.database.shoppingcart.ShoppingCartDBContract
 
 class ShoppingDao(
     context: Context

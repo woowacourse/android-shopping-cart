@@ -1,4 +1,4 @@
-package woowacourse.shopping.database.shoppingcart
+package woowacourse.shopping.database.product
 
 object ShoppingCartDBContract {
 
