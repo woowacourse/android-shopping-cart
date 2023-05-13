@@ -8,7 +8,7 @@ import woowacourse.shopping.databinding.ItemShoppingProductBinding
 import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingItemViewHolder(
-    private val binding: ItemShoppingProductBinding
+    private val binding: ItemShoppingProductBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(productUiModel: ProductUiModel, onClicked: (ProductUiModel) -> Unit) {

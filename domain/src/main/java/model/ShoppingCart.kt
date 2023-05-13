@@ -1,7 +1,7 @@
 package model
 
 class ShoppingCart(
-    products: List<Product>
+    products: List<Product>,
 ) {
 
     private val _products: MutableList<Product> = products.toMutableList()

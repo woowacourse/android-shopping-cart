@@ -9,7 +9,7 @@ class RecentViewedProductsTest {
         // given
         val recentViewedProducts = RecentViewedProducts(
             products = listOf(Product(name = "아메리카노")),
-            maxSize = 1
+            maxSize = 1,
         )
 
         // when
@@ -25,20 +25,20 @@ class RecentViewedProductsTest {
         // given
         val recentViewedProducts = RecentViewedProducts(
             products = listOf(
-                Product(name = "아메리카노")
+                Product(name = "아메리카노"),
             ),
-            maxSize = 5
+            maxSize = 5,
         )
 
         // when
         val removedProducts = recentViewedProducts.add(
-            Product(name = "카페라떼")
+            Product(name = "카페라떼"),
         )
 
         // then
         val expectedValues = listOf(
             Product(name = "아메리카노"),
-            Product(name = "카페라떼")
+            Product(name = "카페라떼"),
         )
         val expected = null
         assertEquals(expected, removedProducts)

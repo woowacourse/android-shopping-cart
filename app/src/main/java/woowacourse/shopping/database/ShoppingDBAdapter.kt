@@ -21,9 +21,13 @@ class ShoppingDBAdapter(
     private val recentViewedCursor = shoppingDB.query(
         RecentViewedDBContract.TABLE_NAME,
         arrayOf(
-            RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID
+            RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID,
         ),
-        null, null, null, null, null
+        null,
+        null,
+        null,
+        null,
+        null,
     )
 
     private fun addProduct(product: ProductUiModel) {
@@ -40,7 +44,8 @@ class ShoppingDBAdapter(
     override fun selectProducts(from: Int, count: Int): List<Product> {
         val products = mutableListOf<Product>()
         val query = "SELECT * FROM ${ProductDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
-            count, from
+            count,
+            from,
         )
         val cursor = shoppingDB.rawQuery(query, null)
 
@@ -59,7 +64,8 @@ class ShoppingDBAdapter(
     override fun selectShoppingCartProducts(from: Int, count: Int): List<Product> {
         val shoppingCartProducts = mutableListOf<Product>()
         val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
-            count, from
+            count,
+            from,
         )
         val cursor = shoppingDB.rawQuery(query, null)
 
@@ -91,7 +97,7 @@ class ShoppingDBAdapter(
     override fun selectProductById(id: Int): Product {
         val cursor = shoppingDB.rawQuery(
             "select * from ${ProductDBContract.TABLE_NAME} where ${ProductDBContract.PRODUCT_ID} = ?",
-            arrayOf(id.toString())
+            arrayOf(id.toString()),
         ).apply {
             moveToNext()
         }
@@ -114,7 +120,7 @@ class ShoppingDBAdapter(
         shoppingDB.delete(
             ShoppingCartDBContract.TABLE_NAME,
             "${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
-            arrayOf(id.toString())
+            arrayOf(id.toString()),
         )
     }
 
@@ -146,7 +152,7 @@ class ShoppingDBAdapter(
         shoppingDB.delete(
             RecentViewedDBContract.TABLE_NAME,
             "ROWID = (SELECT MIN(ROWID) FROM ${RecentViewedDBContract.TABLE_NAME})",
-            null
+            null,
         )
     }
 

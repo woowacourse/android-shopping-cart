@@ -7,6 +7,6 @@ interface ShowingRule {
 
     fun of(
         products: List<ProductUiModel>,
-        page: Page
+        page: Page,
     ): List<ProductUiModel>
 }

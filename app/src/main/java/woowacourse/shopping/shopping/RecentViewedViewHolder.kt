@@ -8,7 +8,7 @@ import woowacourse.shopping.databinding.ItemRecentViewedProductBinding
 import woowacourse.shopping.model.ProductUiModel
 
 class RecentViewedViewHolder(
-    private val binding: ItemRecentViewedProductBinding
+    private val binding: ItemRecentViewedProductBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(product: ProductUiModel) {

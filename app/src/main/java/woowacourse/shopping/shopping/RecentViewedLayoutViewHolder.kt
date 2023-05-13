@@ -7,12 +7,12 @@ import woowacourse.shopping.databinding.RecentViewedLayoutBinding
 import woowacourse.shopping.model.ProductUiModel
 
 class RecentViewedLayoutViewHolder(
-    private val binding: RecentViewedLayoutBinding
+    private val binding: RecentViewedLayoutBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(recentViewedProducts: List<ProductUiModel>) {
         binding.recyclerViewRecentViewedProduct.adapter = RecentViewedRecyclerAdapter(
-            products = recentViewedProducts
+            products = recentViewedProducts,
         )
     }
 

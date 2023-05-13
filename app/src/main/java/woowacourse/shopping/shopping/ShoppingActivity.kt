@@ -24,8 +24,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         ShoppingPresenter(
             view = this,
             repository = ShoppingDBAdapter(
-                shoppingDao = ShoppingDao(this)
-            )
+                shoppingDao = ShoppingDao(this),
+            ),
         )
     }
 
@@ -56,12 +56,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun setUpShoppingView(
         products: List<ProductUiModel>,
         recentViewedProducts: List<ProductUiModel>,
-        showMoreShoppingProducts: () -> (Unit)
+        showMoreShoppingProducts: () -> (Unit),
     ) {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
-            onProductClicked = ::navigateToProductDetailView
+            onProductClicked = ::navigateToProductDetailView,
         )
 
         with(binding) {
@@ -77,19 +77,19 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             productRecyclerView.addOnScrollListener(
                 ShoppingRecyclerScrollListener(
                     scrollPossible = { buttonShowMore.visibility = View.GONE },
-                    scrollImpossible = { buttonShowMore.visibility = View.VISIBLE }
-                )
+                    scrollImpossible = { buttonShowMore.visibility = View.VISIBLE },
+                ),
             )
         }
     }
 
     override fun refreshRecentViewedProductsView(
         toAdd: ProductUiModel,
-        toRemove: ProductUiModel?
+        toRemove: ProductUiModel?,
     ) {
         shoppingRecyclerAdapter.refreshRecentViewedItems(
             toRemove = toRemove,
-            toAdd = toAdd
+            toAdd = toAdd,
         )
     }
 

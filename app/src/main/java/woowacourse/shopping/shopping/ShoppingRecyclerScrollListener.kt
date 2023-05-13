@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ShoppingRecyclerScrollListener(
     private val scrollPossible: () -> Unit,
-    private val scrollImpossible: () -> Unit
+    private val scrollImpossible: () -> Unit,
 ) : RecyclerView.OnScrollListener() {
 
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

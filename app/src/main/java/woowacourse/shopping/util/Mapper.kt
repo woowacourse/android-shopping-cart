@@ -9,12 +9,12 @@ fun ProductUiModel.toDomainModel() = Product(
     id = id,
     name = Name(name),
     imageUrl = imageUrl,
-    price = Price(price)
+    price = Price(price),
 )
 
 fun Product.toUiModel() = ProductUiModel(
     id = id,
     name = name.value,
     imageUrl = imageUrl,
-    price = price.value
+    price = price.value,
 )

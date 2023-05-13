@@ -10,7 +10,7 @@ class ShoppingCartRecyclerAdapter(
     products: List<ProductUiModel>,
     private val onRemoved: (id: Int) -> Unit,
     private val showingRule: ShowingRule,
-    private val onPageChanged: (pageNumber: Int) -> Unit
+    private val onPageChanged: (pageNumber: Int) -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
     private val shoppingCartProducts: MutableList<ProductUiModel> = products.toMutableList()
@@ -18,7 +18,7 @@ class ShoppingCartRecyclerAdapter(
     private val showingProducts: List<ProductUiModel>
         get() = showingRule.of(
             products = shoppingCartProducts,
-            page = currentPage
+            page = currentPage,
         )
 
     init {
@@ -26,14 +26,13 @@ class ShoppingCartRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartItemViewHolder {
-
         return ShoppingCartItemViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: ShoppingCartItemViewHolder, position: Int) {
         holder.bind(
             productUiModel = showingProducts[position],
-            onRemoveClicked = ::removeItem
+            onRemoveClicked = ::removeItem,
         )
     }
 

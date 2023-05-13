@@ -10,16 +10,16 @@ interface ShoppingContract {
         fun setUpShoppingView(
             products: List<ProductUiModel>,
             recentViewedProducts: List<ProductUiModel>,
-            showMoreShoppingProducts: () -> Unit
+            showMoreShoppingProducts: () -> Unit,
         )
 
         fun refreshRecentViewedProductsView(
             toAdd: ProductUiModel,
-            toRemove: ProductUiModel?
+            toRemove: ProductUiModel?,
         )
 
         fun refreshShoppingProductsView(
-            toAdd: List<ProductUiModel>
+            toAdd: List<ProductUiModel>,
         )
     }
 

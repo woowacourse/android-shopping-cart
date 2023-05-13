@@ -25,7 +25,7 @@ class ShoppingPresenterTest {
         repository = mockk(relaxed = true)
         every { repository.selectRecentViewedProducts() } returns listOf(
             Product(name = "아메리카노"),
-            Product(name = "카페라떼")
+            Product(name = "카페라떼"),
         )
 
         view = mockk()
@@ -40,12 +40,12 @@ class ShoppingPresenterTest {
             view.setUpShoppingView(
                 products = capture(slot),
                 any(),
-                any()
+                any(),
             )
         } just Runs
         every { repository.selectProducts(any(), any()) } returns listOf(
             Product(name = "아메리카노"),
-            Product(name = "카페라떼")
+            Product(name = "카페라떼"),
         )
 
         // when
@@ -55,14 +55,14 @@ class ShoppingPresenterTest {
         val actual = slot.captured
         val expected = listOf(
             ProductUiModel(name = "아메리카노"),
-            ProductUiModel(name = "카페라떼")
+            ProductUiModel(name = "카페라떼"),
         )
         assertEquals(expected, actual)
         verify {
             view.setUpShoppingView(
                 products = actual,
                 any(),
-                any()
+                any(),
             )
         }
     }
@@ -75,7 +75,7 @@ class ShoppingPresenterTest {
             view.setUpShoppingView(
                 any(),
                 recentViewedProducts = capture(slot),
-                any()
+                any(),
             )
         } just Runs
 
@@ -86,14 +86,14 @@ class ShoppingPresenterTest {
         val actual = slot.captured
         val expected = listOf(
             ProductUiModel(name = "아메리카노"),
-            ProductUiModel(name = "카페라떼")
+            ProductUiModel(name = "카페라떼"),
         )
         assertEquals(expected, actual)
         verify {
             view.setUpShoppingView(
                 any(),
                 recentViewedProducts = actual,
-                any()
+                any(),
             )
         }
     }

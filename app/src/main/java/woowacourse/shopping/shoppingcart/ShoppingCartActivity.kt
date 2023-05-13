@@ -17,8 +17,8 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         ShoppingCartPresenter(
             view = this,
             repository = ShoppingDBAdapter(
-                shoppingDao = ShoppingDao(this)
-            )
+                shoppingDao = ShoppingDao(this),
+            ),
         )
     }
     private lateinit var binding: ActivityShoppingCartBinding
@@ -54,7 +54,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             products = products,
             onRemoved = onRemoved,
             showingRule = ShowingShoppingCartProducts(),
-            onPageChanged = ::setUpTextPageNumber
+            onPageChanged = ::setUpTextPageNumber,
         )
 
         with(binding) {

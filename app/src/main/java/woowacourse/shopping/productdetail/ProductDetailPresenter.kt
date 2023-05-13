@@ -6,7 +6,7 @@ import woowacourse.shopping.model.ProductUiModel
 class ProductDetailPresenter(
     val view: ProductDetailContract.View,
     val product: ProductUiModel,
-    val repository: ShoppingRepository
+    val repository: ShoppingRepository,
 ) : ProductDetailContract.Presenter {
 
     override fun addToShoppingCart() {

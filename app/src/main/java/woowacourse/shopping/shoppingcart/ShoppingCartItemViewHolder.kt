@@ -8,12 +8,12 @@ import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingCartItemViewHolder(
-    private val binding: ItemShoppingCartBinding
+    private val binding: ItemShoppingCartBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
         productUiModel: ProductUiModel,
-        onRemoveClicked: (Int) -> Unit
+        onRemoveClicked: (Int) -> Unit,
     ) {
         with(binding) {
             Glide.with(root.context)

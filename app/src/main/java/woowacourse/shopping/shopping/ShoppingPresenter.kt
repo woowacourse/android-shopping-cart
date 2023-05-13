@@ -7,11 +7,11 @@ import woowacourse.shopping.util.toUiModel
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
-    private val repository: ShoppingRepository
+    private val repository: ShoppingRepository,
 ) : ShoppingContract.Presenter {
 
     override val recentViewedProducts = RecentViewedProducts(
-        products = repository.selectRecentViewedProducts()
+        products = repository.selectRecentViewedProducts(),
     )
     private var numberOfReadProduct: Int = 0
 
@@ -22,7 +22,7 @@ class ShoppingPresenter(
         view.setUpShoppingView(
             products = products,
             recentViewedProducts = recentViewedProducts,
-            showMoreShoppingProducts = ::readMoreShoppingProducts
+            showMoreShoppingProducts = ::readMoreShoppingProducts,
         )
     }
 
@@ -35,7 +35,7 @@ class ShoppingPresenter(
     private fun selectProducts(): List<ProductUiModel> {
         val products = repository.selectProducts(
             from = numberOfReadProduct,
-            count = COUNT_TO_READ
+            count = COUNT_TO_READ,
         ).map { it.toUiModel() }
 
         numberOfReadProduct += products.size
@@ -53,7 +53,7 @@ class ShoppingPresenter(
         repository.insertToRecentViewedProducts(id)
         view.refreshRecentViewedProductsView(
             toAdd = product.toUiModel(),
-            toRemove = removedProduct?.toUiModel()
+            toRemove = removedProduct?.toUiModel(),
         )
     }
 

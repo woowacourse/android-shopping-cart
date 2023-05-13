@@ -8,12 +8,10 @@ class RecentViewedRecyclerAdapter(private val products: List<ProductUiModel>) :
     RecyclerView.Adapter<RecentViewedViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedViewHolder {
-
         return RecentViewedViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: RecentViewedViewHolder, position: Int) {
-
         holder.bind(products[position])
     }
 

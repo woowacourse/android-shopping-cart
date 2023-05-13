@@ -8,7 +8,6 @@ enum class ShoppingRecyclerItemViewType {
         private const val INITIAL_POSITION = 0
 
         fun valueOf(position: Int): ShoppingRecyclerItemViewType {
-
             return when (position) {
                 INITIAL_POSITION -> RECENT_VIEWED
                 else -> PRODUCT

@@ -12,13 +12,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.ShoppingDBAdapter
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.util.getSerializableCompat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
+
     // todo null인 경우 처리하기
     private val product: ProductUiModel by lazy { intent.getSerializableCompat(PRODUCT_KEY)!! }
     private val presenter: ProductDetailPresenter by lazy {
@@ -27,7 +28,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             product = product,
             repository = ShoppingDBAdapter(
                 shoppingDao = ShoppingDao(this),
-            )
+            ),
         )
     }
 
