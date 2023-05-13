@@ -3,16 +3,18 @@ package woowacourse.shopping.shoppingcart
 import woowacourse.shopping.model.Page
 import woowacourse.shopping.model.ProductUiModel
 
-class ShowingShoppingCartProducts : ShowingRule {
+object ShowingCartProductsPageRule : PageRule {
 
-    override fun of(products: List<ProductUiModel>, page: Page): List<ProductUiModel> {
+    override val itemCountOnEachPage: Int = 3
+
+    override fun getProductsOfPage(products: List<ProductUiModel>, page: Page): List<ProductUiModel> {
         val shoppingCartProducts = mutableListOf<ProductUiModel>()
-        var currentIndex = page.value * COUNT_TO_READ
+        var currentIndex = page.value * itemCountOnEachPage
 
         if (currentIndex >= products.size) {
             return listOf()
         }
-        repeat(COUNT_TO_READ) {
+        repeat(itemCountOnEachPage) {
             shoppingCartProducts.add(products[currentIndex])
             if (products.lastIndex == currentIndex) {
                 return shoppingCartProducts.toList()
@@ -22,7 +24,10 @@ class ShowingShoppingCartProducts : ShowingRule {
         return shoppingCartProducts.toList()
     }
 
-    companion object {
-        private const val COUNT_TO_READ = 3
+    override fun getPageOfEnd(totalProductsSize: Int): Page {
+        if (totalProductsSize == 0) {
+            return Page()
+        }
+        return Page((totalProductsSize - 1) / itemCountOnEachPage)
     }
 }

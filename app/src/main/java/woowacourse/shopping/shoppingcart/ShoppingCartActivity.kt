@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -51,18 +52,19 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     override fun setUpShoppingCartView(
         products: List<ProductUiModel>,
         onRemoved: (id: Int) -> Unit,
+        onAdded: () -> Unit
     ) {
         shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
             products = products,
             onRemoved = onRemoved,
-            showingRule = ShowingShoppingCartProducts(),
+            onAdded = onAdded,
             onPageChanged = ::setUpTextPageNumber
         )
 
         with(binding) {
             recyclerViewCart.adapter = shoppingCartRecyclerAdapter
             buttonNextPage.setOnClickListener {
-                presenter.readMoreShoppingCartProducts()
+                shoppingCartRecyclerAdapter.moveToNextPage()
             }
             buttonPreviousPage.setOnClickListener {
                 shoppingCartRecyclerAdapter.moveToPreviousPage()
@@ -71,7 +73,15 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     override fun showMoreShoppingCartProducts(products: List<ProductUiModel>) {
-        shoppingCartRecyclerAdapter.moveToNextPage(products = products)
+        if (products.isEmpty()) {
+            return Toast.makeText(
+                this,
+                getString(R.string.message_last_page),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+        shoppingCartRecyclerAdapter.addItems(products = products)
     }
 
     private fun setUpTextPageNumber(pageNumber: Int) {

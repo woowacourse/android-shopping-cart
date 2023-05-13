@@ -1,56 +1,69 @@
 package woowacourse.shopping
 
-import io.mockk.Runs
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.verify
-import org.junit.Assert.assertEquals
+import model.Product
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartContract
 import woowacourse.shopping.shoppingcart.ShoppingCartPresenter
+import woowacourse.shopping.util.toUiModel
 
 class ShoppingCartPresenterTest {
 
     private lateinit var presenter: ShoppingCartContract.Presenter
     private lateinit var view: ShoppingCartContract.View
     private lateinit var repository: ShoppingRepository
+    private lateinit var exampleProducts: List<Product>
 
     @Before
     fun setUp() {
-        view = mockk()
-        repository = mockk()
+        view = mockk(relaxed = true)
+        repository = mockk(relaxed = true)
         presenter = ShoppingCartPresenter(
             view = view,
             repository = repository,
+        )
+        exampleProducts = listOf(
+            Product(name = "아메리카노"),
+            Product(name = "밀크티"),
         )
     }
 
     @Test
     fun `저장소에서 장바구니에 담긴 상품들을 받아와서 뷰를 초기화한다`() {
         // given
-        val slot = slot<List<ProductUiModel>>()
-        every { view.setUpShoppingCartView(capture(slot), any()) } just Runs
-        every { repository.selectShoppingCartProducts() } returns listOf(
-            Product(name = "아메리카노"),
-            Product(name = "밀크티"),
-        )
+        every { repository.selectShoppingCartProducts(any(), any()) } returns exampleProducts
 
         // when
         presenter.loadShoppingCartProducts()
 
         // then
-        val actual = slot.captured
-        val expected = listOf(
-            ProductUiModel(name = "아메리카노"),
-            ProductUiModel(name = "밀크티"),
-        )
+        val expected = exampleProducts.map { it.toUiModel() }
+        verify { view.setUpShoppingCartView(expected, any(), any()) }
+    }
 
-        assertEquals(expected, actual)
-        verify { view.setUpShoppingCartView(actual, any()) }
+    @Test
+    fun `상품을 삭제하면 저장소에게 삭제할 상품의 아이디를 전해준다`() {
+        // when
+        presenter.removeShoppingCartProduct(id = 1)
+
+        // then
+        verify { repository.deleteFromShoppingCart(id = 1) }
+    }
+
+    @Test
+    fun `상품을 추가하면 저장소에서 상품 정보를 받아서 뷰에서 더 많은 상품을 보여준다`() {
+        // given
+        every { repository.selectShoppingCartProducts(any(), any()) } returns exampleProducts
+
+        // when
+        presenter.addShoppingCartProducts()
+
+        // then
+        val expected = exampleProducts.map { it.toUiModel() }
+        verify { view.showMoreShoppingCartProducts(products = expected) }
     }
 }

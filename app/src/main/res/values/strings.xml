@@ -7,6 +7,7 @@
     <string name="price_description">금액</string>
     <string name="read_more">더보기</string>
     <string name ="message_last_product">마지막 상품입니다.</string>
+    <string name ="message_last_page">마지막 페이지입니다.</string>
     <string name="previous_page"><![CDATA[<]]></string>
     <string name="next_page"><![CDATA[>]]></string>
     <string name="image_of_product">image of product</string>

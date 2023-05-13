@@ -9,14 +9,18 @@ import woowacourse.shopping.model.ProductUiModel
 class ShoppingCartRecyclerAdapter(
     products: List<ProductUiModel>,
     private val onRemoved: (id: Int) -> Unit,
-    private val showingRule: ShowingRule,
+    private val onAdded: () -> (Unit),
     private val onPageChanged: (pageNumber: Int) -> Unit
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
     private val shoppingCartProducts: MutableList<ProductUiModel> = products.toMutableList()
     private var currentPage = Page()
+    private val endPage: Page
+        get() = ShowingCartProductsPageRule.getPageOfEnd(
+            totalProductsSize = shoppingCartProducts.size
+        )
     private val showingProducts: List<ProductUiModel>
-        get() = showingRule.of(
+        get() = ShowingCartProductsPageRule.getProductsOfPage(
             products = shoppingCartProducts,
             page = currentPage
         )
@@ -44,20 +48,30 @@ class ShoppingCartRecyclerAdapter(
         notifyDataSetChanged()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun moveToNextPage(products: List<ProductUiModel>) {
+    fun addItems(products: List<ProductUiModel>) {
         shoppingCartProducts.addAll(products)
         currentPage = currentPage.next()
-        onPageChanged(currentPage.value)
-        notifyDataSetChanged()
+        changePage()
+    }
+
+    fun moveToNextPage() {
+        if (currentPage == endPage) {
+            return onAdded()
+        }
+        currentPage = currentPage.next()
+        changePage()
+    }
+
+    fun moveToPreviousPage() {
+        currentPage = currentPage.prev()
+        changePage()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun moveToPreviousPage() {
-        currentPage = currentPage.prev()
+    private fun changePage() {
         onPageChanged(currentPage.value)
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = showingProducts.size
+    override fun getItemCount(): Int = ShowingCartProductsPageRule.itemCountOnEachPage
 }
