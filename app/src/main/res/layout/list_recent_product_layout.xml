@@ -6,9 +6,7 @@
         android:id="@+id/shopping_recent_product_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:paddingTop="20dp">
 
         <TextView
             android:id="@+id/shopping_recent_text"
