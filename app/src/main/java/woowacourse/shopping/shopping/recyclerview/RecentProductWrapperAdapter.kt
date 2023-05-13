@@ -12,7 +12,8 @@ class RecentProductWrapperAdapter(private val recentProductAdapter: RecentProduc
         viewType: Int
     ): RecentProductWrapperViewHolder {
         return RecentProductWrapperViewHolder(
-            ListRecentProductLayoutBinding.inflate(LayoutInflater.from(parent.context))
+            ListRecentProductLayoutBinding.inflate(LayoutInflater.from(parent.context)),
+            recentProductAdapter.itemCount
         )
     }
 

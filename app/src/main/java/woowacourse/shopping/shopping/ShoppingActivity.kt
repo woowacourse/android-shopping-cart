@@ -1,11 +1,14 @@
 package woowacourse.shopping.shopping
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
@@ -13,6 +16,7 @@ import woowacourse.shopping.common.data.database.dao.ProductDao
 import woowacourse.shopping.common.data.database.dao.RecentProductDao
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
+import woowacourse.shopping.common.utils.convertDpToPixel
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.recyclerview.LoadMoreAdapter
@@ -49,6 +53,30 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         ConcatAdapter(
             config, recentProductWrapperAdapter, productAdapter, loadMoreAdapter
         )
+    }
+
+    private val gridItemDecoration = object : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            val position = parent.getChildAdapterPosition(view) - 1
+            val column = position % SPAN_COUNT
+            val density = resources.displayMetrics.density
+
+            if (position in 0 until SPAN_COUNT) {
+                outRect.top += convertDpToPixel(DP_GRID_TOP_OFFSET, density)
+            }
+
+            val edgeHorizontalOffset = convertDpToPixel(DP_GRID_EDGE_HORIZONTAL_OFFSET, density)
+            if (column == 0) {
+                outRect.left += edgeHorizontalOffset
+            } else if (column == SPAN_COUNT - 1) {
+                outRect.right += edgeHorizontalOffset
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,6 +136,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initProductList() {
         binding.shoppingProductList.layoutManager = makeLayoutManager()
+        binding.shoppingProductList.addItemDecoration(gridItemDecoration)
         binding.shoppingProductList.adapter = concatAdapter
     }
 
@@ -123,7 +152,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun makeLayoutManager(): GridLayoutManager {
-        return GridLayoutManager(this, 2).apply {
+        return GridLayoutManager(this, SPAN_COUNT).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
                     return when (concatAdapter.getItemViewType(position)) {
@@ -139,5 +168,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun startProductDetailActivity(productModel: ProductModel) {
         val intent = ProductDetailActivity.createIntent(this, productModel)
         startActivity(intent)
+    }
+
+    companion object {
+        private const val SPAN_COUNT = 2
+        private const val DP_GRID_TOP_OFFSET = 10
+        private const val DP_GRID_EDGE_HORIZONTAL_OFFSET = 14
     }
 }
