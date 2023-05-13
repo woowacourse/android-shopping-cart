@@ -10,6 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.PageUiModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -30,11 +31,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun changeCartProducts(newItems: List<CartProductItemModel>) {
-        cartProductAdapter.setItems(newItems)
+    override fun changeCartProducts(newItems: List<CartProductUiModel>) {
+        val newItemModels =
+            newItems.map { it.toItemModel { position -> deleteCartProductFromScreen(position) } }
+        cartProductAdapter.setItems(newItemModels)
     }
 
-    override fun deleteCartProductFromScreen(position: Int) {
+    private fun deleteCartProductFromScreen(position: Int) {
         presenter.deleteCartProduct(cartProductAdapter.items[position].cartProduct)
     }
 

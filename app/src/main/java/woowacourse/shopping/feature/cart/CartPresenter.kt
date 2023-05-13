@@ -85,10 +85,7 @@ class CartPresenter(
     }
 
     private fun changePageState(cartProductUiModels: List<CartProductUiModel>) {
-        val itemModels = cartProductUiModels.map {
-            it.toItemModel { position -> view.deleteCartProductFromScreen(position) }
-        }
-        view.changeCartProducts(itemModels)
+        view.changeCartProducts(cartProductUiModels)
         view.setPreviousButtonState(_page.hasPreviousPage())
         view.setNextButtonState(_page.hasNextPage())
         view.setCount(_page.currentPage)
