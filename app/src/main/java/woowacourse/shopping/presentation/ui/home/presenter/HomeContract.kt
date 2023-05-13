@@ -1,10 +1,10 @@
 package woowacourse.shopping.presentation.ui.home.presenter
 
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.ui.common.BaseView
 
 interface HomeContract {
-    interface View {
-        val presenter: Presenter
+    interface View : BaseView<Presenter> {
         fun setUpProducts(products: List<Product>)
         fun setUpRecentlyViewed(products: List<Product>)
         fun getProductCount(): Int
