@@ -1,4 +1,4 @@
-package com.example.domain.model
+package com.domain.model
 
 interface CartRepository {
     fun getAll(): List<Product>

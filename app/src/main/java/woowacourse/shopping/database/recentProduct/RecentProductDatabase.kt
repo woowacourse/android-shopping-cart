@@ -2,8 +2,8 @@ package woowacourse.shopping.database.recentProduct
 
 import android.content.ContentValues
 import android.content.Context
-import com.example.domain.model.Product
-import com.example.domain.model.RecentRepository
+import com.domain.model.Product
+import com.domain.model.RecentRepository
 import woowacourse.shopping.database.recentProduct.RecentProductConstant.TABLE_COLUMN_ID
 import woowacourse.shopping.database.recentProduct.RecentProductConstant.TABLE_COLUMN_IMAGE_URL
 import woowacourse.shopping.database.recentProduct.RecentProductConstant.TABLE_COLUMN_NAME

@@ -1,8 +1,8 @@
 package woowacourse.shopping.shopping.contract.presenter
 
-import com.example.domain.model.Product
-import com.example.domain.model.ProductRepository
-import com.example.domain.model.RecentRepository
+import com.domain.model.Product
+import com.domain.model.ProductRepository
+import com.domain.model.RecentRepository
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.shopping.ProductItem
@@ -22,7 +22,7 @@ class ShoppingPresenter(
     override fun setUpProducts() {
         productsData += repository.getUntil(productOffset)
             .map { product: Product -> ProductItem(product.toUIModel()) }
-        view.setProducts(productsData.plus(ProductReadMore))
+        updateProducts()
     }
 
     override fun updateProducts() {

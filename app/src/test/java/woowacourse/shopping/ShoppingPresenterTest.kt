@@ -1,8 +1,8 @@
 package woowacourse.shopping
 
-import com.example.domain.model.Product
-import com.example.domain.model.ProductRepository
-import com.example.domain.model.RecentRepository
+import com.domain.model.Product
+import com.domain.model.ProductRepository
+import com.domain.model.RecentRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -26,7 +26,7 @@ class ShoppingPresenterTest {
         1,
         "[사미헌] 갈비탕",
         12000,
-        "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+        "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg",
     )
 
     @Before
@@ -34,47 +34,31 @@ class ShoppingPresenterTest {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
         recentRepository = mockk(relaxed = true)
-        presenter = ShoppingPresenter(view, productRepository, recentRepository)
+        presenter = ShoppingPresenter(view, 0, productRepository, recentRepository)
     }
 
     @Test
     fun `상품을 불러와서 세팅한다`() {
         // given
-        every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
-        every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
+        every { productRepository.getUntil(any()) } returns List(10) { fakeProduct }
+        every { recentRepository.getRecent(any()) } returns emptyList()
         val slot = slot<List<ProductsItemType>>()
         every { view.setProducts(capture(slot)) } answers { nothing }
 
         // when
         presenter.setUpProducts()
-
-        // then
-        val capturedProducts = slot.captured
-        assertTrue(capturedProducts.size == 12)
-        verify(exactly = 1) { view.setProducts(capturedProducts) }
-    }
-
-    @Test
-    fun `최근 상품이 없으면 최근 상품을 세팅하지 않는다`() {
-        // given
-        every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
-        every { recentRepository.getRecent(10) } returns emptyList()
-        val slot = slot<List<ProductsItemType>>()
-        every { view.setProducts(capture(slot)) } answers { nothing }
-
-        // when
-        presenter.setUpProducts()
+        presenter.updateProducts()
 
         // then
         val capturedProducts = slot.captured
         assertTrue(capturedProducts.size == 11)
-        verify(exactly = 1) { view.setProducts(capturedProducts) }
+        verify(exactly = 2) { view.setProducts(capturedProducts) }
     }
 
     @Test
-    fun `상품을 불러와서 업데이트한다`() {
+    fun `최근 상품이 생가면 최근 상품을 세팅한다`() {
         // given
-        every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
+        every { productRepository.getUntil(any()) } returns List(10) { fakeProduct }
         every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
         val slot = slot<List<ProductsItemType>>()
         every { view.setProducts(capture(slot)) } answers { nothing }
@@ -92,7 +76,7 @@ class ShoppingPresenterTest {
     @Test
     fun `리스트에 있는 상품을 클릭하면 상세화면으로 이동한다`() {
         // given
-        every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
+        every { productRepository.getUntil(any()) } returns List(10) { fakeProduct }
         every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
 
         // when
@@ -106,8 +90,8 @@ class ShoppingPresenterTest {
     @Test
     fun `더 보기를 누르면 상품을 불러온다`() {
         // given
+        every { productRepository.getUntil(any()) } returns List(10) { fakeProduct }
         every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
-        every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
         val slot = slot<List<ProductsItemType>>()
         every { view.addProducts(capture(slot)) } answers { nothing }
 
@@ -118,7 +102,8 @@ class ShoppingPresenterTest {
         // then
 
         val capturedProducts = slot.captured
-        assertTrue(capturedProducts.size == 22)
+        println("dddddddd" + capturedProducts.size)
+        assertTrue(capturedProducts.size == 21)
         verify(exactly = 1) { view.addProducts(capturedProducts) }
     }
 }

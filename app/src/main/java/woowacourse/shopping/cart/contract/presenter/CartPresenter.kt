@@ -1,6 +1,6 @@
 package woowacourse.shopping.cart.contract.presenter
 
-import com.example.domain.model.CartRepository
+import com.domain.model.CartRepository
 import woowacourse.shopping.cart.CartItem
 import woowacourse.shopping.cart.contract.CartContract
 import woowacourse.shopping.mapper.toUIModel

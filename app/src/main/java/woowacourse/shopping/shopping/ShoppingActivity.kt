@@ -45,7 +45,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         )
         initLayoutManager()
         presenter.setUpProducts()
-        presenter.updateProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
