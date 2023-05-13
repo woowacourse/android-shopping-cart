@@ -14,12 +14,8 @@ class ProductListPresenter(
 ) : ProductListContract.Presenter {
 
     private var itemCount = Counter(FIRST_SIZE)
-    override fun initProducts() {
-        val receivedProducts = receiveProducts()
-        view.initProductModels(getRecentProductModels(), receivedProducts.toPresentation())
-    }
 
-    override fun updateProducts() {
+    override fun loadProducts() {
         val receivedProducts = receiveProducts()
         view.setProductModels(receivedProducts.toPresentation())
     }
@@ -32,7 +28,7 @@ class ProductListPresenter(
         return receivedProducts
     }
 
-    override fun updateRecentProducts() {
+    override fun loadRecentProducts() {
         val recentProductModels = getRecentProductModels()
         view.setRecentProductModels(recentProductModels)
     }

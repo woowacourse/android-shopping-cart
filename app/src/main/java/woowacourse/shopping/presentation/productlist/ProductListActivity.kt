@@ -40,22 +40,23 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initRecyclerView() {
-        presenter.initProducts()
+        initProductListAdapter()
+        presenter.loadProducts()
         setLayoutManager()
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.updateRecentProducts()
+        presenter.loadRecentProducts()
     }
 
-    override fun initProductModels(
-        recentProductModels: List<ProductModel>,
-        productModels: List<ProductModel>,
+    private fun initProductListAdapter(
+//        recentProductModels: List<ProductModel>,
+//        productModels: List<ProductModel>,
     ) {
         productListAdapter = ProductListAdapter(
-            productItems = combineProductViewItems(recentProductModels, productModels),
-            showMoreProductItem = presenter::updateProducts,
+            productItems = combineProductViewItems(listOf(), listOf()),
+            showMoreProductItem = presenter::loadProducts,
             showProductDetail = ::productClick,
         )
 
