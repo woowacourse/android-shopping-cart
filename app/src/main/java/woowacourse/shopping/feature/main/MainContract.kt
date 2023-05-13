@@ -18,5 +18,6 @@ interface MainContract {
         fun moveToCart()
         fun loadMoreProduct(lastProductId: Long)
         fun loadRecent()
+        fun clearCache()
     }
 }

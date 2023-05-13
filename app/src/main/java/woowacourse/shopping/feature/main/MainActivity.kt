@@ -44,18 +44,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter = MainPresenter(
             this,
             ProductMockRepository(),
-            RecentProductRepositoryImpl(RecentDao(this))
+            RecentProductRepositoryImpl(RecentDao(this)),
+            ProductCache
         )
 
         initAdapters()
         initLayoutManager()
         binding.productRv.adapter = concatAdapter
-        if (savedInstanceState == null) {
-            presenter.loadProducts()
-        } else {
-            presenter.loadProductsFromCache()
-        }
-
+        presenter.loadProducts()
         presenter.loadRecent()
     }
 
@@ -134,7 +130,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun onDestroy() {
         super.onDestroy()
         if (isFinishing) {
-            ProductCache.clear()
+            presenter.clearCache()
         }
     }
 }

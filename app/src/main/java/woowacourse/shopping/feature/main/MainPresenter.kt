@@ -10,10 +10,19 @@ import java.time.LocalDateTime
 class MainPresenter(
     private val view: MainContract.View,
     private val productRepository: ProductRepository,
-    private val recentProductRepository: RecentProductRepository
+    private val recentProductRepository: RecentProductRepository,
+    private val productCache: ProductCache
 ) : MainContract.Presenter {
 
     override fun loadProducts() {
+        if (productCache.productList.isEmpty()) {
+            loadNewProducts()
+        } else {
+            loadProductsFromCache()
+        }
+    }
+
+    private fun loadNewProducts() {
         val firstProducts = productRepository.getFirstProducts()
         val productItems = firstProducts.map { product ->
             product.toPresentation().toItemModel { position ->
@@ -64,6 +73,10 @@ class MainPresenter(
             }
         }
         view.updateRecent(recent)
+    }
+
+    override fun clearCache() {
+        productCache.clear()
     }
 
     private fun addRecentProduct(recentProduct: RecentProduct) {
