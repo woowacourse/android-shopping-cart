@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@{`` + cart.pageNumber}"
-            android:textColor="#555555"
+            android:textColor="@color/gray_555555"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
