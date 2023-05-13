@@ -2,14 +2,14 @@ package woowacourse.shopping.view.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.model.CartPageStatus
+import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.ProductModel
 
 class CartAdapter(
-    private val products: List<ProductModel>,
+    private val products: List<CartProductModel>,
     private val onItemClick: OnItemClick,
-    private val isExistUndo: Boolean,
-    private val isExistNext: Boolean,
-    private val count: Int
+    private val cartPageStatus: CartPageStatus
 ) : RecyclerView.Adapter<CartItemViewHolder>() {
 
     interface OnItemClick {
@@ -35,7 +35,7 @@ class CartAdapter(
     override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
         when (holder) {
             is CartItemViewHolder.CartProductViewHolder -> holder.bind(products[position], onItemClick)
-            is CartItemViewHolder.CartPaginationViewHolder -> holder.bind(count, isExistUndo, isExistNext)
+            is CartItemViewHolder.CartPaginationViewHolder -> holder.bind(cartPageStatus)
         }
     }
 }

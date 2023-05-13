@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="count"
-            type="Integer" />
+            name="status"
+            type="woowacourse.shopping.model.CartPageStatus" />
 
         <variable
             name="onItemClick"
@@ -26,7 +26,7 @@
             android:layout_height="42dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/selector_page_left_button"
-            android:enabled="false"
+            android:enabled="@{status.prevEnabled}"
             android:onClick="@{() -> onItemClick.onPrevClick()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/text_page_count"
@@ -36,7 +36,7 @@
             android:id="@+id/text_page_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/basic_page"
+            android:text="@{Integer.toString(status.count)}"
             android:textColor="@color/black"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -52,7 +52,7 @@
             android:layout_height="42dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/selector_page_right_button"
-            android:enabled="true"
+            android:enabled="@{status.nextEnabled}"
             android:onClick="@{() -> onItemClick.onNextClick()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_page_count"

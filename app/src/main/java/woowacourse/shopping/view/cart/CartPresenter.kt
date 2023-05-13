@@ -3,6 +3,7 @@ package woowacourse.shopping.view.cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.model.CartPageStatus
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
@@ -14,13 +15,12 @@ class CartPresenter(
 
     private val currentCartProducts =
         convertIdToProductModel(cartPagination.nextItems()).toMutableList()
+    private var cartPageStatus = cartPagination.status
 
     override fun fetchProducts() {
         view.showProducts(
             currentCartProducts,
-            cartPagination.isPrevEnabled,
-            cartPagination.isNextEnabled,
-            1
+            cartPageStatus
         )
     }
 
@@ -36,6 +36,7 @@ class CartPresenter(
         if (getItems.isNotEmpty()) {
             currentCartProducts.clear()
             currentCartProducts.addAll(convertIdToProductModel(getItems))
+            cartPageStatus = cartPagination.status
             fetchProducts()
         }
     }
@@ -45,12 +46,13 @@ class CartPresenter(
         if (getItems.isNotEmpty()) {
             currentCartProducts.clear()
             currentCartProducts.addAll(convertIdToProductModel(getItems))
+            cartPageStatus = cartPagination.status
             fetchProducts()
         }
     }
 
     private fun convertIdToProductModel(cartProducts: List<CartProduct>) =
-        cartProducts.asSequence().map { productRepository.find(it.id) }.map { it.toUiModel() }.toList()
+        cartProducts.asSequence().map { it.toUiModel(productRepository.find(it.id)) }.toList()
 
     companion object {
         private const val PAGINATION_SIZE = 5

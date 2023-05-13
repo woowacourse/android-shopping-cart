@@ -8,17 +8,19 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.databinding.ItemCartPaginationBinding
+import woowacourse.shopping.model.CartPageStatus
+import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.PriceFormatter
 
 sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class CartProductViewHolder(private val binding: ItemCartBinding) :
         CartItemViewHolder(binding.root) {
-        fun bind(product: ProductModel, onItemClick: CartAdapter.OnItemClick) {
+        fun bind(product: CartProductModel, onItemClick: CartAdapter.OnItemClick) {
             binding.cartProduct = product
             binding.textPrice.text = binding.root.context.getString(
                 R.string.korean_won,
-                PriceFormatter.format(product.price)
+                PriceFormatter.format(product.totalPrice)
             )
             Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
             binding.onItemClick = onItemClick
@@ -34,10 +36,8 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.onItemClick = onItemClick
         }
 
-        fun bind(count: Int, isExistUndo: Boolean, isExistNext: Boolean) {
-            binding.count = count
-            binding.btnPrevPage.isEnabled = isExistUndo
-            binding.btnNextPage.isEnabled = isExistNext
+        fun bind(cartPageStatus: CartPageStatus) {
+            binding.status = cartPageStatus
         }
     }
 

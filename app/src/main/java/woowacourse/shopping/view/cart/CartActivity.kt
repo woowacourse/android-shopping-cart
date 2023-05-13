@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.CartPageStatus
+import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.ProductModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -38,10 +40,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun showProducts(
-        cartProducts: List<ProductModel>,
-        isExistUndo: Boolean,
-        isExistNext: Boolean,
-        count: Int
+        cartProducts: List<CartProductModel>,
+        cartPageStatus: CartPageStatus
     ) {
         binding.recyclerCart.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -57,7 +57,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             override fun onPrevClick() {
                 presenter.fetchPrevPage()
             }
-        }, isExistUndo, isExistNext, count)
+        }, cartPageStatus)
     }
 
     override fun showOtherPage(size: Int) {

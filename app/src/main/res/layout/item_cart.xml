@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="cart_product"
-            type="woowacourse.shopping.model.ProductModel" />
+            name="cartProduct"
+            type="woowacourse.shopping.model.CartProductModel" />
 
         <variable
             name="onItemClick"
@@ -26,7 +26,7 @@
             android:id="@+id/text_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{cart_product.name}"
+            android:text="@{cartProduct.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -61,7 +61,7 @@
             android:layout_height="26dp"
             android:background="@drawable/ic_close"
             android:backgroundTint="@color/gray"
-            android:onClick="@{() -> onItemClick.onRemoveClick(cart_product.id)}"
+            android:onClick="@{() -> onItemClick.onRemoveClick(cartProduct.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
