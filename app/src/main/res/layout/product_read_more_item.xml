@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="16sp"
-            android:textColor="#333333"
+            android:textColor="@color/load_text_color"
             android:text="@string/product_list_read_more_text"
             android:gravity="center" />
 
