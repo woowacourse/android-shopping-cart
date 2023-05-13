@@ -32,8 +32,6 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
 
     override fun showCartScreen() = startActivity(CartActivity.getIntent(this))
 
-    override fun exitDetailScreen() = finish()
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.app_bar_cancel_menu, menu)
         return true

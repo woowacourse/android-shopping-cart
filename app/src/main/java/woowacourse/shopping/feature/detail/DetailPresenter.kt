@@ -17,8 +17,4 @@ class DetailPresenter(
         cartRepository.addProduct(_product.toDomain())
         view.showCartScreen()
     }
-
-    override fun exit() {
-        view.exitDetailScreen()
-    }
 }
