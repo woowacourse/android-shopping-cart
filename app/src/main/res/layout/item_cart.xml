@@ -8,6 +8,9 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.cart.cartAdapter.CartListener" />
     </data>
 
 
@@ -15,7 +18,8 @@
         android:layout_width="324dp"
         android:layout_height="153dp"
         android:layout_marginTop="24dp"
-        android:background="@drawable/layout_border_radius">
+        android:background="@drawable/layout_border_radius"
+        android:onClick="@{() -> listener.onItemClick(product)}">
 
         <TextView
             android:id="@+id/tv_product_title"
@@ -46,6 +50,7 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
+            android:onClick="@{() -> listener.onItemRemove(product.id)}"
             android:src="@drawable/ic_cart_close_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

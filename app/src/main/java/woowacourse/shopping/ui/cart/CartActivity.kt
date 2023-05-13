@@ -48,14 +48,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setCarts(products: List<CartItemType.Cart>, cartUIModel: CartUIModel) {
         val cartListener = object : CartListener {
-            override val onItemClick: (ProductUIModel) -> Unit
-                get() = presenter::navigateToItemDetail
-            override val onItemRemove: (Int) -> Unit
-                get() = presenter::removeItem
-            override val onPageUp: () -> Unit
-                get() = presenter::pageUp
-            override val onPageDown: () -> Unit
-                get() = presenter::pageDown
+            override fun onPageUp() { presenter.pageUp() }
+            override fun onPageDown() { presenter.pageDown() }
+            override fun onItemRemove(productId: Int) { presenter.removeItem(productId) }
+            override fun onItemClick(product: ProductUIModel) {
+                presenter.navigateToItemDetail(product)
+            }
         }
 
         binding.rvProducts.adapter = CartAdapter(

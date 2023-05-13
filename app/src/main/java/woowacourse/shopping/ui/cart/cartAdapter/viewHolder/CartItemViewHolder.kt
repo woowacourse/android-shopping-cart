@@ -5,5 +5,5 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 
 sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    abstract fun bind(cartItemType: CartItemType)
+    abstract fun bind(data: CartItemType)
 }

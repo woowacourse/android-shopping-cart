@@ -8,13 +8,14 @@ import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 
 class CartViewHolder private constructor(
     private val binding: ItemCartBinding,
-    private val cartListener: CartListener
+    cartListener: CartListener
 ) : CartItemViewHolder(binding.root) {
-    override fun bind(cartItemType: CartItemType) {
-        val cart = cartItemType as? CartItemType.Cart ?: return
-        binding.product = cart.product
-        binding.root.setOnClickListener { cartListener.onItemClick(cart.product) }
-        binding.ivRemove.setOnClickListener { cartListener.onItemRemove(cart.product.id) }
+    init {
+        binding.listener = cartListener
+    }
+    override fun bind(data: CartItemType) {
+        if (data !is CartItemType.Cart) return
+        binding.product = data.product
     }
 
     companion object {

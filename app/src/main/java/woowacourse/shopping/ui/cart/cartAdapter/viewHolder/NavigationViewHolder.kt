@@ -1,8 +1,6 @@
 package woowacourse.shopping.ui.cart.cartAdapter.viewHolder
 
 import android.view.LayoutInflater
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemCartNavigationBinding
 import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
@@ -10,20 +8,16 @@ import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 
 class NavigationViewHolder private constructor(
     private val binding: ItemCartNavigationBinding,
-    private val cartListener: CartListener
+    cartListener: CartListener
 ) : CartItemViewHolder(binding.root) {
     init {
-        binding.tvPageUp.setOnClickListener { cartListener.onPageUp() }
-        binding.tvPageDown.setOnClickListener { cartListener.onPageDown() }
+        binding.listener = cartListener
     }
 
-    override fun bind(cartItemType: CartItemType) {
-        val cart = (cartItemType as? CartItemType.Navigation ?: return).cart
-        binding.cartNavigation.visibility = when {
-            cart.pageUp || cart.pageDown -> VISIBLE
-            else -> GONE
-        }
-        binding.cart = cart
+    override fun bind(data: CartItemType) {
+        if (data !is CartItemType.Navigation) return
+
+        binding.cart = data.cart
     }
 
     companion object {
