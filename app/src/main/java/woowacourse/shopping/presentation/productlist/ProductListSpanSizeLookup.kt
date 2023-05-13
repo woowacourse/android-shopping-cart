@@ -3,7 +3,7 @@ package woowacourse.shopping.presentation.productlist
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.presentation.productlist.product.ProductListViewType
 
-class GridLayoutSizeManager(private val getViewType: (Int) -> Int) :
+class ProductListSpanSizeLookup(private val getViewType: (Int) -> Int) :
     GridLayoutManager.SpanSizeLookup() {
     override fun getSpanSize(position: Int): Int {
         return when (getViewType(position)) {
