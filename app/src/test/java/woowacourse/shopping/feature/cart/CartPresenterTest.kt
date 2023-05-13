@@ -27,23 +27,25 @@ internal class CartPresenterTest {
         view = mockk(relaxed = true)
         cartRepository = mockk(relaxed = true)
         every { cartRepository.getAll() } returns mockCartProducts
+        every { cartRepository.getInitPageProducts(any()) } returns mockCartProducts.take(5)
         presenter = CartPresenter(view, cartRepository)
     }
 
     @Test
     fun `처음 5개를 가져와 화면에 띄운다`() {
-        val cartProductSlot = slot<List<CartProductItemModel>>()
+        val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
         val previousSlot = slot<Boolean>()
         every { view.setPreviousButtonState(capture(previousSlot)) } just Runs
         val nextSlot = slot<Boolean>()
         every { view.setNextButtonState(capture(nextSlot)) } just Runs
+        every { view.setCount(any()) } just Runs
 
         presenter.loadInitCartProduct()
 
         val expected = mockCartProducts.take(5)
         val actual = cartProductSlot.captured.map {
-            CartProduct(it.cartProduct.cartId, it.cartProduct.productUiModel.toDomain())
+            CartProduct(it.cartId, it.productUiModel.toDomain())
         }
 
         assert(expected == actual)
@@ -52,18 +54,18 @@ internal class CartPresenterTest {
     }
 
     @Test
-    fun `상품 하나를 삭제하고 다시 불러온 상품을 화면에 띄운다`() {
-        val slot = slot<Long>()
-        every { cartRepository.getPageCartProductsFromFirstId(5, capture(slot)) } returns emptyList()
-        every { cartRepository.deleteProduct(any()) } just Runs
+    fun `주문아이디가 일치하는 주문 상품을 삭제한다`() {
+        presenter.loadInitCartProduct()
+        val slot = slot<CartProduct>()
+        every { cartRepository.deleteProduct(capture(slot)) } just Runs
 
-        presenter.deleteCartProduct(mockCartProductUiModel, 5L)
+        presenter.deleteCartProduct(4L)
 
         verify { cartRepository.deleteProduct(any()) }
-        val expected = 5L
+        val expected = 4L
         val actual = slot.captured
 
-        assert(expected == actual)
+        assert(expected == actual.cartId)
     }
 
     @Test
@@ -72,16 +74,17 @@ internal class CartPresenterTest {
         every { cartRepository.getPreviousProducts(any(), capture(slot)) } answers {
             mockCartProducts.filter { it.cartId < slot.captured }.take(5)
         }
-        val cartProductSlot = slot<List<CartProductItemModel>>()
+        val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
         val previousSlot = slot<Boolean>()
         every { view.setPreviousButtonState(capture(previousSlot)) } just Runs
         val nextSlot = slot<Boolean>()
         every { view.setNextButtonState(capture(nextSlot)) } just Runs
+        presenter.loadInitCartProduct()
 
-        presenter.loadPreviousPage(5)
+        presenter.loadPreviousPage()
 
-        val actual = cartProductSlot.captured.map { it.cartProduct.toDomain() }
+        val actual = cartProductSlot.captured.map { it.toDomain() }
         val expected = mockCartProducts.take(5)
         assert(actual == expected)
     }
@@ -92,16 +95,17 @@ internal class CartPresenterTest {
         every { cartRepository.getNextProducts(any(), capture(slot)) } answers {
             mockCartProducts.filter { it.cartId > slot.captured }.take(5)
         }
-        val cartProductSlot = slot<List<CartProductItemModel>>()
+        val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
         val previousSlot = slot<Boolean>()
         every { view.setPreviousButtonState(capture(previousSlot)) } just Runs
         val nextSlot = slot<Boolean>()
         every { view.setNextButtonState(capture(nextSlot)) } just Runs
+        presenter.loadInitCartProduct()
 
-        presenter.loadNextPage(4)
+        presenter.loadNextPage()
 
-        val actual = cartProductSlot.captured.map { it.cartProduct.toDomain() }
+        val actual = cartProductSlot.captured.map { it.toDomain() }
         val expected = mockCartProducts.subList(5, 10)
         assert(actual == expected)
     }

@@ -61,7 +61,9 @@ class CartPresenter(
         cartRepository.deleteProduct(cartProduct.toDomain())
         _page = _page.copy(allSize = _page.allSize - 1)
         val updateCartProducts = if (currentPageCartProductUiModel.size == 1) {
-            if (page.currentPage != 1) _page = _page.copy(currentPage = _page.currentPage - 1)
+            if (page.currentPage != 1) {
+                _page = _page.copy(currentPage = _page.currentPage - 1)
+            }
             cartRepository.getPreviousProducts(PageUiModel.PAGE_LOAD_SIZE, firstIdInCurrentPage)
         } else {
             cartRepository.getPageCartProductsFromFirstId(
