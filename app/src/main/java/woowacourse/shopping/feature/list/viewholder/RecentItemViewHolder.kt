@@ -5,13 +5,13 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentBinding
 import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.list.item.ProductItem
 
-class RecentItemViewHolder(binding: ViewBinding) : ItemHolder(binding) {
+class RecentItemViewHolder(binding: ViewBinding) : ItemViewHolder(binding) {
     private val binding = binding as ItemRecentBinding
 
     override fun bind(listItem: ListItem, onClick: (ListItem) -> Unit) {
-        val productItem = listItem as ProductListItem
+        val productItem = listItem as ProductItem
 
         Glide.with(binding.root.context)
             .load(productItem.imageUrl)

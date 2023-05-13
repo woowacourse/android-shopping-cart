@@ -2,7 +2,7 @@ package woowacourse.shopping.feature.cart
 
 import com.example.domain.CartProduct
 import woowacourse.shopping.data.cart.CartDbHandler
-import woowacourse.shopping.feature.list.item.CartProductListItem
+import woowacourse.shopping.feature.list.item.CartProductItem
 import woowacourse.shopping.feature.model.mapper.toDomain
 import woowacourse.shopping.feature.model.mapper.toItem
 
@@ -10,7 +10,7 @@ class CartActivityPresenter(
     private val view: CartActivityContract.View,
     private val db: CartDbHandler,
 ) : CartActivityContract.Presenter {
-    private lateinit var cartItems: List<CartProductListItem>
+    private lateinit var cartItems: List<CartProductItem>
 
     override fun setUpData() {
         cartItems = db.getCartProducts().map(CartProduct::toItem)
@@ -28,7 +28,7 @@ class CartActivityPresenter(
         view.updateAdapterData(items)
     }
 
-    override fun deleteData(item: CartProductListItem) {
+    override fun deleteData(item: CartProductItem) {
         db.deleteColumn(item.toDomain())
         val items = db.getCartProducts().map(CartProduct::toItem)
         view.updateAdapterData(items)
@@ -39,7 +39,7 @@ class CartActivityPresenter(
         return (cartItems.size - 1) / ITEM_COUNT_EACH_PAGE + 1
     }
 
-    private fun getItemsEachPage(page: Int): List<CartProductListItem> {
+    private fun getItemsEachPage(page: Int): List<CartProductItem> {
         val onePageItemNumberStart =
             page * ITEM_COUNT_EACH_PAGE - ITEM_COUNT_EACH_PAGE
         val onePageItemNumberEnd = page * ITEM_COUNT_EACH_PAGE

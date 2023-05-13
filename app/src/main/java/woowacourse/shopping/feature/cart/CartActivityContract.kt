@@ -1,11 +1,11 @@
 package woowacourse.shopping.feature.cart
 
-import woowacourse.shopping.feature.list.item.CartProductListItem
+import woowacourse.shopping.feature.list.item.CartProductItem
 
 interface CartActivityContract {
     interface View {
-        fun setUpRecyclerView(cartItems: List<CartProductListItem>)
-        fun updateAdapterData(cartItems: List<CartProductListItem>)
+        fun setUpRecyclerView(cartItems: List<CartProductItem>)
+        fun updateAdapterData(cartItems: List<CartProductItem>)
         fun setBeforeButtonListener(maxPageNumber: Int)
         fun setAfterButtonListener(maxPageNumber: Int)
     }
@@ -14,6 +14,6 @@ interface CartActivityContract {
         fun setUpData()
         fun setUpButton()
         fun updateDataEachPage(page: Int)
-        fun deleteData(item: CartProductListItem)
+        fun deleteData(item: CartProductItem)
     }
 }

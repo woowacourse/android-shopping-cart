@@ -1,3 +1,3 @@
 package woowacourse.shopping.feature.list.item
 
-class MoreListItem : ListItem
+class MoreItem : ListItem

@@ -1,6 +1,6 @@
 package woowacourse.shopping.feature.list.item
 
-class CartProductListItem(
+class CartProductItem(
     val productId: Int,
     val productImageUrl: String,
     val productName: String,

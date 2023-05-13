@@ -1,11 +1,11 @@
 package woowacourse.shopping.feature.util
 
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
-import woowacourse.shopping.feature.list.adapter.ProductListAdapter
+import woowacourse.shopping.feature.list.adapter.ProductsAdapter
 import woowacourse.shopping.feature.main.ViewType
 
 class SpanSizeLookUpManager(
-    private val adapter: ProductListAdapter,
+    private val adapter: ProductsAdapter,
     private val spanCount: Int,
 ) : SpanSizeLookup() {
 
@@ -14,6 +14,8 @@ class SpanSizeLookUpManager(
             adapter.getItemViewType(position) == ViewType.ADD.ordinal
         ) {
             spanCount
-        } else 1
+        } else {
+            1
+        }
     }
 }

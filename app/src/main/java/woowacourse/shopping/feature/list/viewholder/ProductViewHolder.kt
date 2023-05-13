@@ -5,14 +5,14 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.list.item.ProductItem
 import java.text.DecimalFormat
 
-class ProductViewHolder(binding: ViewBinding) : ItemHolder(binding) {
+class ProductViewHolder(binding: ViewBinding) : ItemViewHolder(binding) {
     private val binding = binding as ItemProductBinding
 
     override fun bind(listItem: ListItem, onClick: (ListItem) -> Unit) {
-        val productItem = listItem as ProductListItem
+        val productItem = listItem as ProductItem
 
         Glide.with(binding.root.context)
             .load(productItem.imageUrl)

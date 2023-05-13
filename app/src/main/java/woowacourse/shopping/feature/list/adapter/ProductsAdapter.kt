@@ -7,18 +7,18 @@ import woowacourse.shopping.databinding.ItemMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductListBinding
 import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.list.viewholder.ItemHolder
+import woowacourse.shopping.feature.list.viewholder.ItemViewHolder
 import woowacourse.shopping.feature.list.viewholder.ProductMoreViewHolder
 import woowacourse.shopping.feature.list.viewholder.ProductViewHolder
 import woowacourse.shopping.feature.list.viewholder.RecentListItemViewHolder
 import woowacourse.shopping.feature.main.ViewType
 
-class ProductListAdapter(
+class ProductsAdapter(
     private var items: List<ListItem> = listOf(),
     private var recentItems: List<ListItem> = listOf(),
     private val onItemClick: (ListItem) -> Unit,
     private val onMoreItemClick: (ListItem) -> Unit,
-) : RecyclerView.Adapter<ItemHolder>() {
+) : RecyclerView.Adapter<ItemViewHolder>() {
 
     override fun getItemCount(): Int {
         return items.size
@@ -38,7 +38,7 @@ class ProductListAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
 
         return when (ViewType.get(viewType)) {
@@ -57,7 +57,7 @@ class ProductListAdapter(
         }
     }
 
-    override fun onBindViewHolder(holder: ItemHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         when (holder) {
             is ProductMoreViewHolder -> {
                 holder.bind(items[position], onMoreItemClick)

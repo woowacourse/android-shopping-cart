@@ -2,7 +2,7 @@ package woowacourse.shopping.feature.main
 
 import com.example.domain.Product
 import com.example.domain.RecentProducts
-import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.list.item.ProductItem
 
 interface MainContract {
 
@@ -13,6 +13,6 @@ interface MainContract {
 
     interface Presenter {
         fun addProducts()
-        fun storeRecentProduct(product: ProductListItem)
+        fun storeRecentProduct(product: ProductItem)
     }
 }

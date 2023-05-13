@@ -8,8 +8,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbHandler
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.feature.list.adapter.CartProductListAdapter
-import woowacourse.shopping.feature.list.item.CartProductListItem
+import woowacourse.shopping.feature.list.adapter.CartProductsAdapter
+import woowacourse.shopping.feature.list.item.CartProductItem
 import woowacourse.shopping.feature.list.item.ListItem
 
 class CartActivity : AppCompatActivity(), CartActivityContract.View {
@@ -22,7 +22,7 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         CartDbHandler(CartDbHelper(this).writableDatabase)
     }
 
-    private lateinit var adapter: CartProductListAdapter
+    private lateinit var adapter: CartProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,8 +35,8 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         setUpView()
     }
 
-    override fun setUpRecyclerView(cartItems: List<CartProductListItem>) {
-        adapter = CartProductListAdapter(
+    override fun setUpRecyclerView(cartItems: List<CartProductItem>) {
+        adapter = CartProductsAdapter(
             onXClick = { listItem -> itemXClickEvent(listItem) },
         )
         binding.cartProductRv.adapter = adapter
@@ -83,7 +83,7 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         }
     }
 
-    override fun updateAdapterData(cartItems: List<CartProductListItem>) {
+    override fun updateAdapterData(cartItems: List<CartProductItem>) {
         adapter.setItems(cartItems)
     }
 
@@ -94,7 +94,7 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
 
     private fun itemXClickEvent(listItem: ListItem) {
         when (listItem) {
-            is CartProductListItem -> {
+            is CartProductItem -> {
                 presenter.deleteData(listItem)
             }
         }

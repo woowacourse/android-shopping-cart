@@ -7,8 +7,8 @@ import woowacourse.shopping.databinding.ItemRecentBinding
 import woowacourse.shopping.feature.list.item.ListItem
 import woowacourse.shopping.feature.list.viewholder.RecentItemViewHolder
 
-class RecentProductListAdapter(
-    private var items: List<ListItem>
+class RecentProductsAdapter(
+    private var items: List<ListItem>,
 ) : RecyclerView.Adapter<RecentItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentItemViewHolder {

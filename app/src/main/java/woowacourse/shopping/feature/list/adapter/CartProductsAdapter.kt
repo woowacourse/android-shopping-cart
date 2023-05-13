@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.feature.list.item.ListItem
 import woowacourse.shopping.feature.list.viewholder.CartProductViewHolder
-import woowacourse.shopping.feature.list.viewholder.ItemHolder
+import woowacourse.shopping.feature.list.viewholder.ItemViewHolder
 
-class CartProductListAdapter(
+class CartProductsAdapter(
     private var items: List<ListItem> = listOf(),
     private val onXClick: (ListItem) -> Unit,
-) : RecyclerView.Adapter<ItemHolder>() {
+) : RecyclerView.Adapter<ItemViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartProductBinding.inflate(inflater, parent, false)
         return CartProductViewHolder(binding)
@@ -23,7 +23,7 @@ class CartProductListAdapter(
         return items.size
     }
 
-    override fun onBindViewHolder(holder: ItemHolder, position: Int) {
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bind(items[position], onXClick)
     }
 

@@ -14,8 +14,8 @@ import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.feature.list.adapter.ProductListAdapter
-import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.list.adapter.ProductsAdapter
+import woowacourse.shopping.feature.list.item.ProductItem
 import woowacourse.shopping.feature.model.mapper.toItem
 import woowacourse.shopping.feature.model.mapper.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
     }
 
-    lateinit var productListAdapter: ProductListAdapter
+    lateinit var productsAdapter: ProductsAdapter
     lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,10 +50,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapter() {
-        productListAdapter = ProductListAdapter(
+        productsAdapter = ProductsAdapter(
             onItemClick = { listItem ->
                 when (listItem) {
-                    is ProductListItem -> {
+                    is ProductItem -> {
                         presenter.storeRecentProduct(listItem)
                         ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
                     }
@@ -63,25 +63,25 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                 presenter.addProducts()
             },
         )
-        binding.productRv.adapter = productListAdapter
+        binding.productRv.adapter = productsAdapter
         initLayout()
     }
 
     private fun initLayout() {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup =
-            SpanSizeLookUpManager(productListAdapter, gridLayoutManager.spanCount)
+            SpanSizeLookUpManager(productsAdapter, gridLayoutManager.spanCount)
         binding.productRv.layoutManager = gridLayoutManager
     }
 
     override fun addProducts(products: List<Product>) {
-        productListAdapter.addItems(
+        productsAdapter.addItems(
             products.map { it.toUi().toItem() },
         )
     }
 
     override fun setProducts(products: List<Product>, recentProducts: RecentProducts) {
-        productListAdapter.setItems(
+        productsAdapter.setItems(
             products.map { it.toUi().toItem() },
             recentProducts.products.map { it.toUi().toItem() },
         )

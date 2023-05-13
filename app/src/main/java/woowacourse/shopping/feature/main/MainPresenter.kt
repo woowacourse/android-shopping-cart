@@ -4,33 +4,25 @@ import com.example.domain.Product
 import com.example.domain.RecentProducts
 import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
-import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.list.item.ProductItem
 import woowacourse.shopping.feature.model.mapper.toDomain
 import woowacourse.shopping.feature.model.mapper.toUi
 
 class MainPresenter(
     val view: MainContract.View,
-    val productDbHandler: ProductDbHandler,
-    val recentProductDbHandler: RecentProductDbHandler
+    private val productDb: ProductDbHandler,
+    private val recentProductDb: RecentProductDbHandler,
 ) : MainContract.Presenter {
 
-    val products: List<Product> = productDbHandler.getAll()
+    private val products: List<Product> = productDb.getAll()
     private var currentItemIndex = 0
 
-    fun loadProducts() {
-        val products: List<Product> =
-            productDbHandler.getAll().subList(currentItemIndex, currentItemIndex + ADD_SIZE)
-        currentItemIndex += ADD_SIZE
-        val recentProducts: RecentProducts = recentProductDbHandler.getRecentProducts()
-        view.setProducts(products, recentProducts)
-    }
-
     override fun addProducts() {
-        val addItems: List<Product>
         if (currentItemIndex == 0) {
             loadProducts()
             return
         }
+        val addItems: List<Product>
         if (products.size < currentItemIndex + ADD_SIZE) {
             addItems = products.subList(currentItemIndex, products.size - 1)
             currentItemIndex += products.size - 1 - currentItemIndex
@@ -41,8 +33,16 @@ class MainPresenter(
         view.addProducts(addItems)
     }
 
-    override fun storeRecentProduct(product: ProductListItem) {
-        recentProductDbHandler.addColumn(product.toUi().toDomain())
+    private fun loadProducts() {
+        val products: List<Product> =
+            productDb.getAll().subList(currentItemIndex, currentItemIndex + ADD_SIZE)
+        currentItemIndex += ADD_SIZE
+        val recentProducts: RecentProducts = recentProductDb.getRecentProducts()
+        view.setProducts(products, recentProducts)
+    }
+
+    override fun storeRecentProduct(product: ProductItem) {
+        recentProductDb.addColumn(product.toUi().toDomain())
     }
 
     companion object {
