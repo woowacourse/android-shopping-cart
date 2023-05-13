@@ -33,13 +33,23 @@ class ShoppingPresenter(
     }
 
     override fun openProduct(productModel: ProductModel) {
-        val recentProducts = recentProductsState.load()
-        val recentProduct = recentProducts.makeRecentProduct(productModel.toDomain())
-
-        recentProductsState.save(recentProducts.add(recentProduct))
-        recentProductDao.insertRecentProduct(recentProduct.toView())
-
+        updateRecentProducts(productModel)
         view.showProductDetail(productModel)
+    }
+
+    private fun updateRecentProducts(productModel: ProductModel) {
+        val recentProducts = recentProductsState.load()
+        var recentProduct = recentProductDao.selectByProduct(productModel)
+
+        if (recentProduct == null) {
+            recentProduct = recentProducts.makeRecentProduct(productModel.toDomain())
+            recentProductsState.save(recentProducts.add(recentProduct))
+            recentProductDao.insertRecentProduct(recentProduct.toView())
+        } else {
+            recentProduct = recentProduct.updateTime()
+            recentProductsState.save(recentProducts.update(recentProduct))
+            recentProductDao.updateRecentProduct(recentProduct.toView())
+        }
     }
 
     override fun openCart() {

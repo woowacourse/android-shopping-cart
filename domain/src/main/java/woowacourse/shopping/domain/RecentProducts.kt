@@ -14,4 +14,8 @@ data class RecentProducts(val value: List<RecentProduct> = emptyList()) {
     fun getRecentProducts(size: Int): RecentProducts {
         return RecentProducts(value.take(size))
     }
+
+    fun update(recentProduct: RecentProduct): RecentProducts {
+        return RecentProducts(listOf(recentProduct) + value.filter { it.product != recentProduct.product })
+    }
 }
