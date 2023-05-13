@@ -44,9 +44,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setProductDetailView() {
-        Glide.with(this)
-            .load(presenter.product.url)
-            .into(binding.ivProductImage)
         binding.product = presenter.product
     }
 
@@ -64,6 +61,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun showCartPage() {
         startActivity(ShoppingCartActivity.intent(binding.root.context))
+        finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

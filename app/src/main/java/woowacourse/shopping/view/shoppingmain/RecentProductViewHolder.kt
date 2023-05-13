@@ -26,10 +26,6 @@ class RecentProductViewHolder(
 
     fun bind(item: ProductUIModel) {
         recentProduct = RecentProductUIModel(item)
-
         binding.product = recentProduct.productUIModel
-        Glide.with(binding.root.context)
-            .load(recentProduct.productUIModel.url)
-            .into(binding.ivProductImage)
     }
 }

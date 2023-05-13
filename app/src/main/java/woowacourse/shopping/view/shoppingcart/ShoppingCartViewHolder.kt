@@ -25,10 +25,6 @@ class ShoppingCartViewHolder(
     }
 
     fun bind(item: CartProductUIModel) {
-        cartProduct = item
-        Glide.with(itemView)
-            .load(cartProduct.productUIModel.url)
-            .into(binding.ivProductImage)
         binding.cartProduct = cartProduct
     }
 }

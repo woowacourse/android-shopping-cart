@@ -5,8 +5,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_recent_product_box"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:paddingStart="20dp">
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="20dp">
 
         <TextView
             android:id="@+id/tv_recent_product_title"
@@ -22,7 +22,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_recent_product_catalogue"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -30,5 +30,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_recent_product_title" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="7dp"
+            android:layout_marginTop="40dp"
+            android:background="#EBEBEB"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_recent_product_catalogue" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
