@@ -5,14 +5,14 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.ProductUiModel
 
 class RecentViewedRecyclerAdapter(private val products: List<ProductUiModel>) :
-    RecyclerView.Adapter<RecentViewedViewHolder>() {
+    RecyclerView.Adapter<RecentViewedProductViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedProductViewHolder {
 
-        return RecentViewedViewHolder.from(parent)
+        return RecentViewedProductViewHolder.from(parent)
     }
 
-    override fun onBindViewHolder(holder: RecentViewedViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecentViewedProductViewHolder, position: Int) {
         holder.bind(products[position])
     }
 

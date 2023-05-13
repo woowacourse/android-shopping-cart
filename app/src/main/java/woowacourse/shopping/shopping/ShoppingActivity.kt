@@ -59,13 +59,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun setUpShoppingView(
         products: List<ProductUiModel>,
         recentViewedProducts: List<ProductUiModel>,
-        showMoreShoppingProducts: () -> (Unit)
+        readMoreShoppingProducts: () -> (Unit)
     ) {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView,
-            onShowMoreButtonClicked = showMoreShoppingProducts
+            onReadMoreButtonClicked = readMoreShoppingProducts
         )
 
         with(binding) {

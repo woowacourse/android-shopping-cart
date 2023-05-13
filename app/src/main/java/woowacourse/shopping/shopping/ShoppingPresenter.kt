@@ -22,7 +22,7 @@ class ShoppingPresenter(
         view.setUpShoppingView(
             products = products,
             recentViewedProducts = recentViewedProducts,
-            showMoreShoppingProducts = ::readMoreShoppingProducts
+            readMoreShoppingProducts = ::readMoreShoppingProducts
         )
     }
 

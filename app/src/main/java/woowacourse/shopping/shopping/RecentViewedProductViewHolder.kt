@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemRecentViewedProductBinding
 import woowacourse.shopping.model.ProductUiModel
 
-class RecentViewedViewHolder private constructor(
+class RecentViewedProductViewHolder private constructor(
     private val binding: ItemRecentViewedProductBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -22,11 +22,11 @@ class RecentViewedViewHolder private constructor(
     }
 
     companion object {
-        fun from(parent: ViewGroup): RecentViewedViewHolder {
+        fun from(parent: ViewGroup): RecentViewedProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemRecentViewedProductBinding.inflate(layoutInflater, parent, false)
 
-            return RecentViewedViewHolder(binding)
+            return RecentViewedProductViewHolder(binding)
         }
     }
 }

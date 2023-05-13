@@ -9,7 +9,6 @@ enum class ShoppingRecyclerItemViewType {
         private const val VIEW_TYPE_ERROR = "해당 타입의 뷰는 존재하지 않습니다."
 
         fun valueOf(position: Int, shoppingItemsSize: Int): ShoppingRecyclerItemViewType {
-
             return when (position) {
                 INITIAL_POSITION -> RECENT_VIEWED
                 shoppingItemsSize -> READ_MORE
