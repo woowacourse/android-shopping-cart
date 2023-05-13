@@ -17,7 +17,7 @@ class ProductListPresenter(
     private val recentProducts = mutableListOf<RecentProductModel>()
     private var recentProductsPreSize = 0
 
-    override fun initRecentProductItems() {
+    override fun deleteNotTodayRecentProducts() {
         val today = LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN))
         recentProductRepository.deleteNotTodayRecentProducts(today)
     }

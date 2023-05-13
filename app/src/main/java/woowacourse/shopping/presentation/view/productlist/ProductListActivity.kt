@@ -57,7 +57,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
 
         initLayoutManager()
-        presenter.initRecentProductItems()
+        presenter.deleteNotTodayRecentProducts()
         presenter.loadProductItems()
         presenter.loadRecentProductItems()
         setMoreProductListAdapter()

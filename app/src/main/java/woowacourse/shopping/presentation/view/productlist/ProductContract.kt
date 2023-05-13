@@ -12,7 +12,7 @@ interface ProductContract {
     }
 
     interface Presenter {
-        fun initRecentProductItems()
+        fun deleteNotTodayRecentProducts()
         fun loadProductItems()
         fun loadRecentProductItems()
         fun updateRecentProductItems()
