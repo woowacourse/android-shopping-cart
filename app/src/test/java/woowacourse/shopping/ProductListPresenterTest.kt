@@ -1,6 +1,10 @@
 package woowacourse.shopping
 
-import io.mockk.*
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -66,7 +70,14 @@ class ProductListPresenterTest {
         every { view.showProducts(capture(items)) } just runs
         presenter.fetchProducts()
 
-        val itemsExpected = ProductListViewItem.RecentViewedItem(listOf(0, 1, 2).map { id -> products.find { it.id == id }?.toUiModel() }.sortedByDescending { it?.id } as List<ProductModel>)
+        val itemsExpected = ProductListViewItem.RecentViewedItem(
+            listOf(
+                0,
+                1,
+                2
+            ).map { id -> products.find { it.id == id }?.toUiModel() }
+                .sortedByDescending { it?.id } as List<ProductModel>
+        )
         assertEquals(itemsExpected, items.captured[0])
     }
 

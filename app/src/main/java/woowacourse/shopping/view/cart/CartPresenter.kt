@@ -15,8 +15,10 @@ class CartPresenter(
     private val currentCartProducts =
         convertToCartProductModels(cartPagination.nextItems()).toMutableList()
     private val cartItems =
-        (currentCartProducts.map { CartViewItem.CartProductItem(it) }
-                + CartViewItem.PaginationItem(cartPagination.status)).toMutableList()
+        (
+            currentCartProducts.map { CartViewItem.CartProductItem(it) } +
+                CartViewItem.PaginationItem(cartPagination.status)
+            ).toMutableList()
 
     override fun fetchProducts() {
         view.showProducts(cartItems)

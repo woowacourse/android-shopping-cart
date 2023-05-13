@@ -1,21 +1,23 @@
 package woowacourse.shopping
 
-import android.util.Log
-import io.mockk.*
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.domain.*
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.Price
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.model.CartPageStatus
-import woowacourse.shopping.model.CartProductModel
-import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 import woowacourse.shopping.view.cart.CartContract
 import woowacourse.shopping.view.cart.CartPresenter
 import woowacourse.shopping.view.cart.CartViewItem
-import woowacourse.shopping.view.productlist.ProductListContract
-import woowacourse.shopping.view.productlist.ProductListPresenter
-import woowacourse.shopping.view.productlist.ProductListViewItem
 
 class CartPresenterTest {
     private lateinit var presenter: CartContract.Presenter
@@ -54,7 +56,6 @@ class CartPresenterTest {
                 cartProducts.add(CartProduct(5, 1))
                 cartProducts.add(CartProduct(6, 1))
                 cartProducts.add(CartProduct(7, 1))
-
             }
 
             override fun findAll(): List<CartProduct> {
@@ -76,7 +77,6 @@ class CartPresenterTest {
             override fun isExistByMark(mark: Int): Boolean {
                 return cartProducts.getOrNull(mark) != null
             }
-
         }
 
         presenter = CartPresenter(view, cartRepository, productRepository)
@@ -94,11 +94,13 @@ class CartPresenterTest {
             CartViewItem.CartProductItem(CartProduct(2, 1).toUiModel(products[2])),
             CartViewItem.CartProductItem(CartProduct(3, 1).toUiModel(products[3])),
             CartViewItem.CartProductItem(CartProduct(4, 1).toUiModel(products[4])),
-        ) + CartViewItem.PaginationItem(CartPageStatus(
-            isPrevEnabled = false,
-            isNextEnabled = true,
-            count = 1
-        ))
+        ) + CartViewItem.PaginationItem(
+            CartPageStatus(
+                isPrevEnabled = false,
+                isNextEnabled = true,
+                count = 1
+            )
+        )
         assertEquals(itemsExpected, items.captured)
     }
 
