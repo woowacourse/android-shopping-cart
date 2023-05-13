@@ -41,7 +41,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         super.onResume()
 
         val db = RecentProductDBHelper(this).writableDatabase
-        val recentProducts = presenter.getRecentProducts(db).subList(0,9).reversed()
+        val recentProducts = presenter.getRecentProducts(db)
 
         recentProductAdapter.update(recentProducts)
     }
@@ -58,7 +58,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
             showProductDetailPage()
         )
         recentProductAdapter = RecentProductAdapter(
-            presenter.getRecentProducts(db).subList(0,9),
+            presenter.getRecentProducts(db),
             showProductDetailPage()
         )
         recentProductWrapperAdapter = RecentProductWrapperAdapter(
@@ -68,7 +68,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         val config = ConcatAdapter.Config.Builder().apply {
             setIsolateViewTypes(false)
         }.build()
-        adapter = ConcatAdapter(config, recentProductAdapter, productAdapter)
+        adapter = ConcatAdapter(config, recentProductWrapperAdapter, productAdapter)
     }
 
     override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
@@ -81,7 +81,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return when(adapter.getItemViewType(position)) {
+                return when (adapter.getItemViewType(position)) {
                     ProductAdapter.VIEW_TYPE -> 1
                     RecentProductWrapperAdapter.VIEW_TYPE -> 2
                     else -> 2
