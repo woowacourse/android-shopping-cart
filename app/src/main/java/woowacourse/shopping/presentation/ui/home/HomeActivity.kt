@@ -1,24 +1,81 @@
 package woowacourse.shopping.presentation.ui.home
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.R
+import woowacourse.shopping.data.product.ProductDao
+import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.ui.common.BindingActivity
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.presenter.HomeContract
 import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
-import woowacourse.shopping.util.initProducts
 
-class HomeActivity : AppCompatActivity(), HomeContract.View {
-    private lateinit var binding: ActivityHomeBinding
-    override val presenter: HomeContract.Presenter by lazy { HomePresenter(this) }
+class HomeActivity :
+    BindingActivity<ActivityHomeBinding>(R.layout.activity_home), HomeContract.View {
+    override val presenter: HomeContract.Presenter by lazy { initPresenter() }
     private val homeAdapter = HomeAdapter(::setClickEventOnProduct, ::setEventOnShowMoreButton)
+
+    private fun initPresenter(): HomePresenter {
+        return HomePresenter(
+            this,
+            ProductRepositoryImpl(
+                productDataSource = ProductDao(),
+                recentlyViewedDataSource = RecentlyViewedDao(),
+            ),
+        )
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // 목 데이터 추가 함수 : initProducts(this)
+
+        attachAdapter()
+        setUpLayoutManager()
+        setClickEventOnShoppingCartButton()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.fetchProducts()
+        presenter.fetchRecentlyViewed()
+    }
+
+    private fun attachAdapter() {
+        binding.rvHomeProducts.adapter = homeAdapter
+    }
+
+    private fun setUpLayoutManager() {
+        val gridLayoutManager = initGridLayoutManager()
+        binding.rvHomeProducts.layoutManager = gridLayoutManager
+    }
+
+    private fun initGridLayoutManager(): GridLayoutManager {
+        return GridLayoutManager(this, 2).apply {
+            spanSizeLookup = GridWeightLookedUp(homeAdapter::getItemViewType)
+        }
+    }
+
+    private fun setEventOnShowMoreButton(productId: Long) {
+        presenter.fetchMoreProducts(productId)
+    }
+
+    private fun setClickEventOnShoppingCartButton() {
+        binding.ivHomeShoppingCart.setOnClickListener {
+            val intent = ShoppingCartActivity.getIntent(this)
+            startActivity(intent)
+        }
+    }
+
+    private fun setClickEventOnProduct(productId: Long) {
+        val intent = ProductDetailActivity.getIntent(this, productId)
+        startActivity(intent)
+    }
 
     override fun setUpProducts(products: List<Product>) {
         homeAdapter.initProducts(products)
@@ -30,71 +87,5 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
 
     override fun getProductCount(): Int {
         return homeAdapter.productsCount
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        initAdapter()
-
-        initLayoutManager()
-        // 목 데이터 추가 함수 :
-        initProducts(this)
-        setClickEventOnShoppingCartButton()
-    }
-
-    private fun setEventOnShowMoreButton(productId: Long) {
-        presenter.fetchMoreProducts(productId)
-    }
-
-    private fun initAdapter() {
-        binding.rvHomeProducts.apply {
-            adapter = homeAdapter
-            addOnScrollListener(setScrollListener())
-        }
-    }
-
-    private fun setScrollListener(): RecyclerView.OnScrollListener {
-        return object : RecyclerView.OnScrollListener() {
-            var scrollState: Int = 0
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (scrollState == 1) {
-                    super.onScrolled(recyclerView, dx, dy)
-                }
-            }
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!binding.rvHomeProducts.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if (scrollState == 1) return
-                    scrollState = 1
-                    homeAdapter.initShowMoreButton()
-                }
-            }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        presenter.fetchProducts()
-        presenter.fetchRecentlyViewed()
-    }
-
-    private fun setClickEventOnShoppingCartButton() {
-        binding.ivHomeShoppingCart.setOnClickListener {
-            startActivity(Intent(this, ShoppingCartActivity::class.java))
-        }
-    }
-
-    private fun setClickEventOnProduct(productId: Long) {
-        startActivity(ProductDetailActivity.getIntent(this, productId))
-    }
-
-    private fun initLayoutManager() {
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.spanSizeLookup = GridWeightLookedUp { homeAdapter.getItemViewType(it) }
-        binding.rvHomeProducts.layoutManager = gridLayoutManager
     }
 }

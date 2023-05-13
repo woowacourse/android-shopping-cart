@@ -1,19 +1,11 @@
 package woowacourse.shopping.presentation.ui.home.presenter
 
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class HomePresenter(
     private val view: HomeContract.View,
+    private val productRepository: ProductRepository,
 ) : HomeContract.Presenter {
-    private val productRepository: ProductRepository by lazy {
-        ProductRepositoryImpl(
-            productDataSource = ProductDao(),
-            recentlyViewedDataSource = RecentlyViewedDao(),
-        )
-    }
 
     override fun fetchProducts() {
         val products = productRepository.getProducts(20, 0)
