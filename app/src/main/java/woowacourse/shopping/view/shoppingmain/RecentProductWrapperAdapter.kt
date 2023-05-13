@@ -26,7 +26,7 @@ class RecentProductWrapperAdapter(
     override fun onBindViewHolder(holder: RecentProductWrapperViewHolder, position: Int) {
         holder.bind(recentProductAdapter)
     }
-    
+
     companion object {
         const val VIEW_TYPE = 1
     }

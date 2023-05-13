@@ -11,8 +11,21 @@ class ShoppingMainPresenter(
     private val productsRepository: ProductRepository,
     private val recentProductsRepository: RecentProductsRepository
 ) : ShoppingMainContract.Presenter {
-    override fun getMainProducts(): List<ProductUIModel> {
-        return productsRepository.products.toUIModel()
+    private var index: Pair<Int, Int> = Pair(INIT_INDEX, PRODUCT_LOAD_UNIT)
+    private var _isPossibleLoad = true
+    override val isPossibleLoad
+        get() = _isPossibleLoad
+
+    override fun loadProducts(): List<ProductUIModel> {
+        val loadedProducts = productsRepository.loadProducts(index)
+        index = Pair(index.first + PRODUCT_LOAD_UNIT, index.second + PRODUCT_LOAD_UNIT)
+
+        if (loadedProducts.size < PRODUCT_LOAD_UNIT) {
+            view.deActivateButton()
+            _isPossibleLoad = false
+        }
+
+        return loadedProducts.toUIModel()
     }
 
     override fun getRecentProducts(): List<RecentProductUIModel> {
@@ -21,5 +34,15 @@ class ShoppingMainPresenter(
 
     override fun setProductOnClick() {
         view.showProductDetailPage()
+    }
+
+    override fun setLoadMoreOnClick() {
+        view.showMoreProducts()
+        view.deActivateButton()
+    }
+
+    companion object {
+        private const val INIT_INDEX = 0
+        private const val PRODUCT_LOAD_UNIT = 8
     }
 }

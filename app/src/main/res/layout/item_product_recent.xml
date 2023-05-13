@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="98dp"
         android:layout_height="130dp"
-        android:paddingHorizontal="5dp">
+        android:paddingHorizontal="10dp">
 
         <ImageView
             android:id="@+id/iv_product_image"

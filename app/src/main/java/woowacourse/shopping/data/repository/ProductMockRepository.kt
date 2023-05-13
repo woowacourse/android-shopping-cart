@@ -308,5 +308,10 @@ object ProductMockRepository : ProductRepository {
         )
     )
 
-    override val products: List<Product> = mockProducts.subList(0, 20)
+    override fun loadProducts(index: Pair<Int, Int>): List<Product> {
+        if (index.first >= mockProducts.size) {
+            return emptyList()
+        }
+        return mockProducts.subList(index.first, minOf(index.second, mockProducts.size))
+    }
 }

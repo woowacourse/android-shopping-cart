@@ -3,10 +3,13 @@ package woowacourse.shopping.view.shoppingmain
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
 import woowacourse.shopping.data.db.RecentProductDao
@@ -20,6 +23,7 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     override lateinit var presenter: ShoppingMainContract.Presenter
     private lateinit var concatAdapter: ConcatAdapter
+    private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
 
     private var _binding: ActivityShoppingMainBinding? = null
@@ -35,13 +39,14 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         setPresenter()
         setAdapters()
         setViewSettings()
+        setButtonOnClick()
+        setScrollView()
     }
 
     override fun onResume() {
         super.onResume()
 
         val recentProducts = presenter.getRecentProducts()
-
         recentProductAdapter.update(recentProducts)
     }
 
@@ -54,8 +59,8 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     }
 
     private fun setAdapters() {
-        val productAdapter = ProductAdapter(
-            presenter.getMainProducts(),
+        productAdapter = ProductAdapter(
+            presenter.loadProducts(),
             showProductDetailPage()
         )
         recentProductAdapter = RecentProductAdapter(
@@ -70,6 +75,12 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
             setIsolateViewTypes(false)
         }.build()
         concatAdapter = ConcatAdapter(config, recentProductWrapperAdapter, productAdapter)
+    }
+
+    private fun setButtonOnClick() {
+        binding.btnLoadMore.setOnClickListener {
+            presenter.setLoadMoreOnClick()
+        }
     }
 
     override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
@@ -91,6 +102,36 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         }
         binding.rvProductCatalogue.adapter = concatAdapter
         binding.rvProductCatalogue.layoutManager = gridLayoutManager
+    }
+
+    private fun setScrollView() {
+        binding.rvProductCatalogue.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    activateButton()
+                } else {
+                    deActivateButton()
+                }
+            }
+        })
+    }
+
+    override fun showMoreProducts() {
+        val updatedProducts = presenter.loadProducts()
+        productAdapter.update(updatedProducts)
+    }
+
+    override fun deActivateButton() {
+        binding.btnLoadMore.visibility = GONE
+    }
+
+    override fun activateButton() {
+        if (!presenter.isPossibleLoad) {
+            return
+        }
+        binding.btnLoadMore.visibility = VISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

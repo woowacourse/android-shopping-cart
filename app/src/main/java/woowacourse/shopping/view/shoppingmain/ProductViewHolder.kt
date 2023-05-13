@@ -9,7 +9,7 @@ import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductViewHolder(
     parent: ViewGroup,
-    private val productOnClick: (ProductUIModel) -> Unit,
+    private val productOnClick: (ProductUIModel) -> Unit
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_product_main, parent, false)
 ) {

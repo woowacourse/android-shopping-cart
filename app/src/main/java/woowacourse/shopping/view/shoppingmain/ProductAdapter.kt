@@ -6,7 +6,7 @@ import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductAdapter(
     private var products: List<ProductUIModel>,
-    private val productOnClick: (ProductUIModel) -> Unit,
+    private val productOnClick: (ProductUIModel) -> Unit
 ) :
     RecyclerView.Adapter<ProductViewHolder>() {
 
@@ -23,6 +23,11 @@ class ProductAdapter(
     }
 
     override fun getItemCount(): Int = products.size
+
+    fun update(updatedProducts: List<ProductUIModel>) {
+        products = products + updatedProducts
+        notifyDataSetChanged()
+    }
 
     companion object {
         const val VIEW_TYPE = 0

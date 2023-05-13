@@ -3,5 +3,5 @@ package com.shopping.repository
 import com.shopping.domain.Product
 
 interface ProductRepository {
-    val products: List<Product>
+    fun loadProducts(index: Pair<Int, Int>): List<Product>
 }

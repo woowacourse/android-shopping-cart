@@ -6,13 +6,17 @@ import woowacourse.shopping.uimodel.RecentProductUIModel
 interface ShoppingMainContract {
     interface View {
         var presenter: Presenter
-
         fun showProductDetailPage(): (ProductUIModel) -> Unit
+        fun showMoreProducts()
+        fun deActivateButton()
+        fun activateButton()
     }
 
     interface Presenter {
-        fun getMainProducts(): List<ProductUIModel>
+        val isPossibleLoad: Boolean
+        fun loadProducts(): List<ProductUIModel>
         fun getRecentProducts(): List<RecentProductUIModel>
         fun setProductOnClick()
+        fun setLoadMoreOnClick()
     }
 }

@@ -10,4 +10,6 @@
 
     <color name="add_to_cart_button_color">#04C09E</color>
     <color name="tool_bar">#555555</color>
+    <color name="load_more_boarder">#AAAAAA</color>
+    <color name="load_more_button_color">#00FFFFFF</color>
 </resources>
