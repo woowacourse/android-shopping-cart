@@ -36,7 +36,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         presenter.loadProductInfoById(productId)
 
-        setAddCart(productId)
+        setAddCartClickListener(productId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,7 +61,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.tvProductDetailPrice.text = getString(R.string.product_price_format, productModel.price)
     }
 
-    private fun setAddCart(productId: Long) {
+    private fun setAddCartClickListener(productId: Long) {
         binding.btProductDetailAddToCart.setOnClickListener {
             presenter.addCart(productId)
         }
