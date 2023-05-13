@@ -15,9 +15,9 @@ interface CartContract {
     interface Presenter {
         val page: PageUiModel
         fun loadInitCartProduct()
-        fun deleteCartProduct(cartProduct: CartProductUiModel, topId: Long)
-        fun loadPreviousPage(topId: Long)
-        fun loadNextPage(bottomId: Long)
+        fun deleteCartProduct(cartProduct: CartProductUiModel)
+        fun loadPreviousPage()
+        fun loadNextPage()
         fun setPage(page: PageUiModel)
     }
 }

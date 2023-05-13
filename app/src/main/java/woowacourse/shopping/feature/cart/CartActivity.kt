@@ -34,10 +34,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initClickListener() {
         binding.previousPageBtn.setOnClickListener {
-            presenter.loadPreviousPage(cartProductAdapter.items.first().cartProduct.cartId)
+            presenter.loadPreviousPage()
         }
         binding.nextPageBtn.setOnClickListener {
-            presenter.loadNextPage(cartProductAdapter.items.last().cartProduct.cartId)
+            presenter.loadNextPage()
         }
     }
 
@@ -47,8 +47,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun deleteCartProductFromScreen(position: Int) {
         presenter.deleteCartProduct(
-            cartProductAdapter.items[position].cartProduct,
-            cartProductAdapter.items.first().cartProduct.cartId
+            cartProductAdapter.items[position].cartProduct
         )
     }
 

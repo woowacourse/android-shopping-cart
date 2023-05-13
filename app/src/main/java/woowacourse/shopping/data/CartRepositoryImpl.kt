@@ -12,6 +12,10 @@ class CartRepositoryImpl(
         return cartDao.selectAll()
     }
 
+    override fun getAllSize(): Int {
+        return cartDao.selectAll().size
+    }
+
     override fun addProduct(product: Product) {
         cartDao.insertProduct(product)
     }
@@ -20,18 +24,32 @@ class CartRepositoryImpl(
         cartDao.deleteCartProduct(cartProduct)
     }
 
-    override fun getPreviousProducts(size: Int, topId: Long): List<CartProduct> {
-        val all = getAll()
-        val lower = all.filter { it.cartId < topId }.takeLast(size)
-        if (lower.size != size) return all.take(size)
+    override fun getInitPageProducts(pageSize: Int): List<CartProduct> {
+        return cartDao.selectAll().asSequence().take(pageSize).toList()
+    }
+
+    override fun getPreviousProducts(pageSize: Int, nextId: Long?): List<CartProduct> {
+        val all = cartDao.selectAll()
+        val lower = all.filter { it.cartId < (nextId ?: 0) }.takeLast(pageSize)
+        if (lower.size != pageSize) return all.take(pageSize)
         return lower
     }
 
-    override fun getNextProducts(size: Int, bottomId: Long): List<CartProduct> {
-        return getAll().asSequence().filter { it.cartId > bottomId }.take(size).toList()
+    override fun getNextProducts(pageSize: Int, previousId: Long?): List<CartProduct> {
+        return cartDao.selectAll().asSequence().filter { it.cartId > (previousId ?: 0) }.take(pageSize)
+            .toList()
     }
 
-    override fun getProductFromId(size: Int, startId: Long): List<CartProduct> {
-        return getAll().asSequence().filter { it.cartId >= startId }.take(size).toList()
+    override fun getPageCartProductsFromFirstId(pageSize: Int, firstId: Long?): List<CartProduct> {
+        return cartDao.selectAll().asSequence().filter { it.cartId >= (firstId ?: 0) }.take(pageSize).toList()
+    }
+
+    override fun getCartProductsFromPage(pageSize: Int, page: Int): List<CartProduct> {
+        val all = cartDao.selectAll()
+        val firstIndexInPage = pageSize * (page - 1)
+        if (all.size > firstIndexInPage) {
+            return all.subList(firstIndexInPage, all.size).take(pageSize)
+        }
+        return emptyList()
     }
 }
