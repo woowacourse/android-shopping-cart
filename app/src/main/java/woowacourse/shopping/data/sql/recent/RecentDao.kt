@@ -45,8 +45,29 @@ class RecentDao(
         return recentlyShownProducts
     }
 
+    private fun selectAll(): List<RecentProduct> {
+        val cursor = readableDatabase.rawQuery(
+            "SELECT * FROM ${RecentTableContract.TABLE_NAME}",
+            null
+        )
+
+        val recentlyShownProducts = mutableListOf<RecentProduct>()
+        while (cursor.moveToNext()) {
+            val data = RecentProductEntity(
+                cursor.getLong(cursor.getColumnIndexOrThrow(RecentTableContract.TABLE_COLUMN_RECENT_PRODUCT_ID)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(RecentTableContract.TABLE_COLUMN_DATE_TIME))
+            )
+            val product: Product = productsDatasource.find { it.id == data.productId } ?: continue
+            val shownDateTime = LocalDateTime.ofEpochSecond(data.dateTimeMills, 0, ZoneOffset.UTC)
+            recentlyShownProducts.add(RecentProduct(product, shownDateTime))
+        }
+
+        cursor.close()
+        return recentlyShownProducts
+    }
+
     fun putRecentProduct(recentProduct: RecentProduct) {
-        val findRecentProduct = selectAllRecent().find { it.product.id == recentProduct.product.id }
+        val findRecentProduct = selectAll().find { it.product.id == recentProduct.product.id }
 
         if (findRecentProduct != null) {
             updateRecentProduct(recentProduct)

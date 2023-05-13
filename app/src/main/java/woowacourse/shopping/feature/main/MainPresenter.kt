@@ -6,6 +6,7 @@ import com.example.domain.repository.RecentProductRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toPresentation
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentProductUiModel
 import java.time.LocalDateTime
 
 class MainPresenter(
@@ -13,21 +14,15 @@ class MainPresenter(
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository
 ) : MainContract.Presenter {
-    private var products: MutableList<ProductUiModel> = mutableListOf()
+    private val products: MutableList<ProductUiModel> = mutableListOf()
+    private val recentProducts: MutableList<RecentProductUiModel> = mutableListOf()
 
     override fun loadProducts() {
         val firstProducts = productRepository.getFirstProducts()
         val productUiModels = firstProducts.map { it.toPresentation() }
-        val productItemModels = productUiModels.map { productUiModel ->
-            productUiModel.toItemModel { position ->
-                addRecentProduct(productUiModel)
-                view.showProductDetailScreenByProduct(products[position])
-                loadRecent()
-            }
-        }
 
         products.addAll(productUiModels)
-        view.addProducts(productItemModels)
+        view.addProducts(productUiModels)
     }
 
     override fun moveToCart() {
@@ -38,27 +33,31 @@ class MainPresenter(
         val lastProductId: Long = products.lastOrNull()?.id ?: 0
         val nextProducts = productRepository.getNextProducts(lastProductId)
         val nextProductUiModels = nextProducts.map { it.toPresentation() }
-        val nextProductItemModels = nextProductUiModels.map { product ->
-            product.toItemModel { position ->
-                addRecentProduct(product)
-                view.showProductDetailScreenByProduct(products[position])
-                loadRecent()
-            }
-        }
 
         products.addAll(nextProductUiModels)
-        view.addProducts(nextProductItemModels)
+        view.addProducts(nextProductUiModels)
     }
 
     override fun loadRecent() {
-        val recent = recentProductRepository.getAll().map {
-            it.toPresentation().toItemModel { position ->
-                addRecentProduct(it)
-                view.showProductDetailScreenByRecent(position)
-                loadRecent()
-            }
+        val recentProductUiModels = recentProductRepository.getAll().map { it.toPresentation() }
+
+        with(recentProducts) {
+            clear()
+            addAll(recentProductUiModels)
         }
-        view.updateRecent(recent)
+        view.updateRecent(recentProductUiModels)
+    }
+
+    override fun showProductDetail(position: Int) {
+        view.showProductDetailScreen(products[position])
+        addRecentProduct(products[position])
+        loadRecent()
+    }
+
+    override fun showRecentProductDetail(position: Int) {
+        view.showProductDetailScreen(recentProducts[position].productUiModel)
+        addRecentProduct(recentProducts[position])
+        loadRecent()
     }
 
     override fun resetProducts() {
@@ -66,8 +65,10 @@ class MainPresenter(
         view.addProducts(listOf())
     }
 
-    private fun addRecentProduct(recentProduct: RecentProduct) {
-        recentProductRepository.addRecentProduct(recentProduct.copy(dateTime = LocalDateTime.now()))
+    private fun addRecentProduct(recentProduct: RecentProductUiModel) {
+        recentProductRepository.addRecentProduct(
+            recentProduct.toDomain().copy(dateTime = LocalDateTime.now())
+        )
     }
 
     private fun addRecentProduct(product: ProductUiModel) {

@@ -16,11 +16,10 @@ import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity
 import woowacourse.shopping.feature.main.load.LoadAdapter
 import woowacourse.shopping.feature.main.product.MainProductAdapter
-import woowacourse.shopping.feature.main.product.MainProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentAdapter
-import woowacourse.shopping.feature.main.recent.RecentProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentProductUiModel
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var binding: ActivityMainBinding
@@ -81,21 +80,26 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(CartActivity.getIntent(this))
     }
 
-    override fun showProductDetailScreenByProduct(productUiModel: ProductUiModel) {
+    override fun showProductDetailScreen(productUiModel: ProductUiModel) {
         startActivity(DetailActivity.getIntent(this, productUiModel))
     }
 
-    override fun addProducts(products: List<MainProductItemModel>) {
-        mainProductAdapter.addItems(products)
+    override fun addProducts(products: List<ProductUiModel>) {
+        val productUiModels = products.map {
+            it.toItemModel { position ->
+                presenter.showProductDetail(position)
+            }
+        }
+        mainProductAdapter.addItems(productUiModels)
     }
 
-    override fun updateRecent(recent: List<RecentProductItemModel>) {
-        recentAdapter.setItems(recent)
-    }
-
-    override fun showProductDetailScreenByRecent(position: Int) {
-        val product = recentAdapter.items[position].recentProduct.productUiModel
-        startActivity(DetailActivity.getIntent(this, product))
+    override fun updateRecent(recent: List<RecentProductUiModel>) {
+        val recentProductUiModels = recent.map {
+            it.toItemModel { position ->
+                presenter.showRecentProductDetail(position)
+            }
+        }
+        recentAdapter.setItems(recentProductUiModels)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
