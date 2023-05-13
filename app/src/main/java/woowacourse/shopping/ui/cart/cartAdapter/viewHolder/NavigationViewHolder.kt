@@ -4,17 +4,17 @@ import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import woowacourse.shopping.databinding.CartNavigationItemBinding
+import woowacourse.shopping.databinding.ItemCartNavigationBinding
 import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 
 class NavigationViewHolder private constructor(
-    private val binding: CartNavigationItemBinding,
+    private val binding: ItemCartNavigationBinding,
     private val cartListener: CartListener
 ) : CartItemViewHolder(binding.root) {
     init {
-        binding.pageUp.setOnClickListener { cartListener.onPageUp() }
-        binding.pageDown.setOnClickListener { cartListener.onPageDown() }
+        binding.tvPageUp.setOnClickListener { cartListener.onPageUp() }
+        binding.tvPageDown.setOnClickListener { cartListener.onPageDown() }
     }
 
     override fun bind(cartItemType: CartItemType) {
@@ -28,7 +28,7 @@ class NavigationViewHolder private constructor(
 
     companion object {
         fun from(parent: ViewGroup, cartListener: CartListener): NavigationViewHolder {
-            val binding = CartNavigationItemBinding
+            val binding = ItemCartNavigationBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
             return NavigationViewHolder(binding, cartListener)
         }

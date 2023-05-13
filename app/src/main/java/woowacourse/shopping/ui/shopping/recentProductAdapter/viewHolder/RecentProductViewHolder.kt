@@ -3,11 +3,11 @@ package woowacourse.shopping.ui.shopping.recentProductAdapter.viewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.RecentProductItemItemBinding
+import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.ui.shopping.recentProductAdapter.RecentProductItem
 
 class RecentProductViewHolder(
-    private val binding: RecentProductItemItemBinding,
+    private val binding: ItemRecentProductBinding,
     onClickItem: (Int) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
@@ -25,7 +25,7 @@ class RecentProductViewHolder(
             onClickItem: (Int) -> Unit
         ): RecentProductViewHolder {
             val binding =
-                RecentProductItemItemBinding.inflate(
+                ItemRecentProductBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false

@@ -27,14 +27,14 @@
             app:titleTextColor="@color/white" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/iv_product_image"
             android:layout_width="match_parent"
             android:layout_height="360dp"
             app:imgResId="@{product.imageUrl}"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_product_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
@@ -43,7 +43,7 @@
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product_image"
             tools:layout_editor_absoluteX="17dp"
             tools:text="TITLE" />
 
@@ -54,10 +54,10 @@
             android:layout_marginTop="14dp"
             android:background="@color/gray_aaaaaa"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_title" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tv_price_prefix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -76,11 +76,11 @@
             android:textColor="@color/gray_333333"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView3"
+            app:layout_constraintTop_toTopOf="@+id/tv_price_prefix"
             tools:text="10000원" />
 
         <TextView
-            android:id="@+id/cart_button"
+            android:id="@+id/btn_add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="#04C09E"

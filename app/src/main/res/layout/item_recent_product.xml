@@ -15,7 +15,7 @@
         android:layout_marginStart="8dp">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/iv_product_image"
             android:layout_width="98dp"
             android:layout_height="98dp"
             app:imgResId="@{product.imageUrl}"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/productName"
+            android:id="@+id/tv_product_name"
             android:text="@{product.name}"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:textStyle="bold"
             android:layout_marginStart="4dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product_image"
             tools:text="가나다라마바사아차자창ㄹ망ㄹ" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

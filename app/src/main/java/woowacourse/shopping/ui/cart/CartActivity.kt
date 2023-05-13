@@ -58,7 +58,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 get() = presenter::pageDown
         }
 
-        binding.cartRecyclerview.adapter = CartAdapter(
+        binding.rvProducts.adapter = CartAdapter(
             products.map { it }.plus(CartItemType.Navigation(cartUIModel)),
             cartListener
         )

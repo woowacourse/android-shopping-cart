@@ -2,11 +2,11 @@ package woowacourse.shopping.ui.shopping.productAdapter.viewHolder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import woowacourse.shopping.databinding.ProductItemBinding
+import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 
 class ProductsViewHolder private constructor(
-    private val binding: ProductItemBinding,
+    private val binding: ItemProductBinding,
     val onClickItem: (Int) -> Unit
 ) :
     ItemViewHolder(binding.root) {
@@ -24,7 +24,7 @@ class ProductsViewHolder private constructor(
 
     companion object {
         fun from(parent: ViewGroup, onClickItem: (Int) -> Unit): ProductsViewHolder {
-            val binding = ProductItemBinding
+            val binding = ItemProductBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
             return ProductsViewHolder(binding, onClickItem)
         }

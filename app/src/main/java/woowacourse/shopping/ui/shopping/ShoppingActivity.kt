@@ -70,7 +70,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return when (binding.productRecyclerview.adapter?.getItemViewType(position)) {
+                return when (binding.rvProducts.adapter?.getItemViewType(position)) {
                     ProductsItemType.TYPE_FOOTER -> spanCount
                     ProductsItemType.TYPE_ITEM -> 1
                     else -> spanCount
@@ -78,7 +78,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             }
         }
 
-        binding.productRecyclerview.addItemDecoration(object : RecyclerView.ItemDecoration() {
+        binding.rvProducts.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,
                 view: View,
@@ -96,7 +96,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 outRect.top = spacing
             }
         })
-        binding.productRecyclerview.layoutManager = layoutManager
+        binding.rvProducts.layoutManager = layoutManager
     }
 
     override fun setProducts(data: List<ProductsItemType>) {
@@ -106,7 +106,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             override val onReadMoreClick: () -> Unit
                 get() = presenter::fetchMoreProducts
         }
-        binding.productRecyclerview.adapter = ProductsAdapter(data, listener)
+        binding.rvProducts.adapter = ProductsAdapter(data, listener)
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {
@@ -114,7 +114,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun addProducts(data: List<ProductsItemType>) {
-        binding.productRecyclerview.adapter?.let {
+        binding.rvProducts.adapter?.let {
             if (it is ProductsAdapter) {
                 it.updateData(data)
             }

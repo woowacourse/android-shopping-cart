@@ -48,7 +48,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initCartButton() {
-        binding.cartButton.setOnClickListener {
+        binding.btnAddToCart.setOnClickListener {
             presenter.addProductToCart()
             navigateToCart()
         }
