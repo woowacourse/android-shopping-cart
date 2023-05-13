@@ -1,19 +1,15 @@
 package woowacourse.shopping.feature.main.recent
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemRecentWrapperBinding
 
 class RecentWrapperAdapter(
     private val adapter: RecentAdapter
 ) : RecyclerView.Adapter<RecentWrapperViewHolder>() {
     private var lastScrollX = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentWrapperViewHolder {
-        return RecentWrapperViewHolder(
-            ItemRecentWrapperBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        )
+        return RecentWrapperViewHolder.create(parent)
     }
 
     override fun getItemCount(): Int = 1

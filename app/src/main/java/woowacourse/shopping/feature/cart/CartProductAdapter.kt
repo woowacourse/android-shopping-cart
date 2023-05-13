@@ -15,14 +15,7 @@ class CartProductAdapter(
         get() = _items.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<ItemCartProductBinding>(
-            layoutInflater,
-            R.layout.item_cart_product,
-            parent,
-            false
-        )
-        return CartProductViewHolder(binding)
+        return CartProductViewHolder.create(parent)
     }
 
     override fun getItemCount(): Int = _items.size

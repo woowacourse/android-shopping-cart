@@ -16,14 +16,7 @@ class RecentAdapter(
         get() = _items.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<ItemRecentProductBinding>(
-            layoutInflater,
-            R.layout.item_recent_product,
-            parent,
-            false
-        )
-        return RecentViewHolder(binding)
+        return RecentViewHolder.create(parent)
     }
 
     override fun getItemCount(): Int = _items.size

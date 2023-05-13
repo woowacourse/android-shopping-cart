@@ -9,9 +9,7 @@ class LoadAdapter(
     val onClick: () -> Unit
 ) : RecyclerView.Adapter<LoadViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoadViewHolder {
-        val binding =
-            ItemLoadMoreProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LoadViewHolder(binding)
+        return LoadViewHolder.create(parent)
     }
 
     override fun getItemCount(): Int = 1

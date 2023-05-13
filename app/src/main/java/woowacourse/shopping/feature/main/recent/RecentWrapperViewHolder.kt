@@ -1,10 +1,12 @@
 package woowacourse.shopping.feature.main.recent
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentWrapperBinding
 
-class RecentWrapperViewHolder(
+class RecentWrapperViewHolder private constructor(
     private val binding: ItemRecentWrapperBinding
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(adapter: RecentAdapter, lastScrollX: Int, onScrolled: (Int) -> Unit) {
@@ -17,5 +19,13 @@ class RecentWrapperViewHolder(
                 onScrolled(recyclerView.computeHorizontalScrollOffset())
             }
         })
+    }
+
+    companion object {
+        fun create(parent: ViewGroup): RecentWrapperViewHolder {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val binding = ItemRecentWrapperBinding.inflate(layoutInflater, parent, false)
+            return RecentWrapperViewHolder(binding)
+        }
     }
 }

@@ -15,14 +15,7 @@ class MainProductAdapter(
         get() = _items.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainProductViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<ItemMainProductBinding>(
-            layoutInflater,
-            R.layout.item_main_product,
-            parent,
-            false
-        )
-        return MainProductViewHolder(binding)
+        return MainProductViewHolder.create(parent)
     }
 
     override fun getItemCount(): Int = _items.size

@@ -1,13 +1,23 @@
 package woowacourse.shopping.feature.main.recent
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 
-class RecentViewHolder(
+class RecentViewHolder private constructor(
     private val binding: ItemRecentProductBinding
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(recentProduct: RecentProductItemModel) {
         binding.itemModel = recentProduct
         binding.position = bindingAdapterPosition
+    }
+
+    companion object {
+        fun create(parent: ViewGroup): RecentViewHolder {
+            val layoutInflater = LayoutInflater.from(parent.context)
+            val binding = ItemRecentProductBinding.inflate(layoutInflater, parent, false)
+            return RecentViewHolder(binding)
+        }
     }
 }
