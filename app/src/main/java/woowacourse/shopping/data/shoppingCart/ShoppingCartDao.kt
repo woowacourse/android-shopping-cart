@@ -7,7 +7,6 @@ import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_QUANTITY
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_NAME
 import woowacourse.shopping.data.WoowaShoppingDbHelper
-import woowacourse.shopping.domain.model.ProductInCart
 
 class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
     private val shoppingDb by lazy { WoowaShoppingDbHelper(context).readableDatabase }
@@ -31,10 +30,10 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
         return true
     }
 
-    override fun addProductInShoppingCart(productInCart: ProductInCart): Long {
+    override fun addProductInShoppingCart(productId: Long, productQuantity: Int): Long {
         val data = ContentValues()
-        data.put(TABLE_COLUMN_PRODUCT_ID, productInCart.product.id)
-        data.put(TABLE_COLUMN_QUANTITY, productInCart.quantity)
+        data.put(TABLE_COLUMN_PRODUCT_ID, productId)
+        data.put(TABLE_COLUMN_QUANTITY, productQuantity)
         return shoppingDb.insert(TABLE_NAME, null, data)
     }
 

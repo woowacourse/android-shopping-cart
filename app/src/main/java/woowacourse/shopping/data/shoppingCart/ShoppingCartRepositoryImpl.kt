@@ -25,7 +25,10 @@ class ShoppingCartRepositoryImpl(
     }
 
     override fun addProductInCart(productInCart: ProductInCart): Long {
-        return shoppingCartDataSource.addProductInShoppingCart(productInCart)
+        val productId = productInCart.product.id
+        val productQuantity = productInCart.quantity
+
+        return shoppingCartDataSource.addProductInShoppingCart(productId, productQuantity)
     }
 
     override fun deleteProductInCart(id: Long): Boolean {
