@@ -17,11 +17,11 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class RecentViewedViewHolder(private val binding: ItemRecentViewedBinding) :
         ProductViewHolder(binding.root) {
         fun bind(
-            recentViewedProducts: List<ProductModel>,
+            item: ProductListViewItem.RecentViewedItem,
             onItemClick: ProductListAdapter.OnItemClick
         ) {
             binding.recyclerRecentViewed.adapter =
-                RecentViewedAdapter(recentViewedProducts, onItemClick)
+                RecentViewedAdapter(item.products, onItemClick)
         }
     }
 
@@ -33,13 +33,13 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.onItemClick = onItemClick
         }
 
-        fun bind(product: ProductModel) {
-            binding.product = product
+        fun bind(item: ProductListViewItem.ProductItem) {
+            binding.product = item.product
             binding.textPrice.text = binding.root.context.getString(
                 R.string.korean_won,
-                PriceFormatter.format(product.price)
+                PriceFormatter.format(item.product.price)
             )
-            Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
+            Glide.with(binding.root.context).load(item.product.imageUrl).into(binding.imgProduct)
         }
     }
 

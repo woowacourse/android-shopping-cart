@@ -17,6 +17,8 @@ import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.util.getParcelableCompat
 import woowacourse.shopping.view.cart.CartActivity
+import woowacourse.shopping.view.productlist.ProductListActivity.Companion.ID
+import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_VIEWED
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
@@ -32,6 +34,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             return
         }
         setUpInitView(product)
+        setUpResult(product.id)
         presenter.updateRecentViewedProducts(product.id)
     }
 
@@ -55,6 +58,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
         binding.textPrice.text =
             getString(R.string.korean_won, PriceFormatter.format(product.price))
+    }
+
+    private fun setUpResult(id: Int) {
+        intent.putExtra(ID, id)
+        setResult(RESULT_VIEWED, intent)
     }
 
     override fun startCartActivity() {

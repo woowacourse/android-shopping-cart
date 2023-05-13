@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.cart
+package woowacourse.shopping.model
 
 import woowacourse.shopping.model.NextPagination
 import woowacourse.shopping.model.PrevPagination

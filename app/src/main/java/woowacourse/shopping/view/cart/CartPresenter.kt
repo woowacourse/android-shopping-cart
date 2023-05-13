@@ -3,6 +3,7 @@ package woowacourse.shopping.view.cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.model.CartPagination
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(

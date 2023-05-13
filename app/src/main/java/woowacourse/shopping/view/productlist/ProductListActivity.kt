@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -18,12 +20,20 @@ import woowacourse.shopping.view.productdetail.ProductDetailActivity
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var presenter: ProductListContract.Presenter
+    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if(it.resultCode == RESULT_VIEWED) {
+            val id = it.data?.getIntExtra("id", -1)
+            presenter.updateRecentViewed(id ?: -1)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpBinding()
         setContentView(binding.root)
         setUpPresenter()
         setUpActionBar()
+        presenter.fetchProducts()
     }
 
     private fun setUpBinding() {
@@ -39,21 +49,12 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 
-    override fun onResume() {
-        super.onResume()
-        presenter.fetchProducts()
-    }
-
-    override fun showProducts(
-        recentViewedProducts: List<ProductModel>,
-        products: List<ProductModel>
-    ) {
+    override fun showProducts(items: List<ProductListViewItem>) {
         val gridLayoutManager = GridLayoutManagerWrapper(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                val isHeader = recentViewedProducts.isNotEmpty() && position == 0
-                val isFooter =
-                    if (recentViewedProducts.isNotEmpty()) position == products.size + 1 else position == products.size
+                val isHeader = items[position].type == ProductListViewType.RECENT_VIEWED_ITEM
+                val isFooter = items[position].type == ProductListViewType.SHOW_MORE_ITEM
                 return if (isHeader || isFooter) {
                     HEADER_FOOTER_SPAN
                 } else {
@@ -63,8 +64,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
         binding.gridProducts.layoutManager = gridLayoutManager
         binding.gridProducts.adapter = ProductListAdapter(
-            recentViewedProducts,
-            products,
+            items,
             object : ProductListAdapter.OnItemClick {
                 override fun onProductClick(product: ProductModel) {
                     showProductDetail(product)
@@ -81,9 +81,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.gridProducts.adapter?.notifyItemRangeInserted(position, size)
     }
 
+    override fun notifyRecentViewedChanged() {
+        binding.gridProducts.adapter?.notifyItemChanged(0)
+    }
+
     private fun showProductDetail(product: ProductModel) {
         val intent = ProductDetailActivity.newIntent(binding.root.context, product)
-        startActivity(intent)
+        resultLauncher.launch(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -104,5 +108,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     companion object {
         private const val HEADER_FOOTER_SPAN = 2
         private const val PRODUCT_ITEM_SPAN = 1
+        const val RESULT_VIEWED = 200
+        const val ID = "id"
     }
 }
