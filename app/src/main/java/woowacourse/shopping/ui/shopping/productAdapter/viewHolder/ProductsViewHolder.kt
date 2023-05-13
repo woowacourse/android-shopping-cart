@@ -4,17 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
 
 class ProductsViewHolder private constructor(
     private val binding: ItemProductBinding,
-    val onClickItem: (Int) -> Unit
-) :
-    ItemViewHolder(binding.root) {
-
+    listener: ProductsListener
+) : ItemViewHolder(binding.root) {
     init {
-        binding.root.setOnClickListener {
-            onClickItem(bindingAdapterPosition)
-        }
+        binding.listener = listener
     }
 
     override fun bind(productItemType: ProductsItemType) {
@@ -23,10 +20,10 @@ class ProductsViewHolder private constructor(
     }
 
     companion object {
-        fun from(parent: ViewGroup, onClickItem: (Int) -> Unit): ProductsViewHolder {
+        fun from(parent: ViewGroup, listener: ProductsListener): ProductsViewHolder {
             val binding = ItemProductBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
-            return ProductsViewHolder(binding, onClickItem)
+            return ProductsViewHolder(binding, listener)
         }
     }
 }

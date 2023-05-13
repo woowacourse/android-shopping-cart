@@ -14,13 +14,9 @@ class ProductsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return when (viewType) {
-            ProductsItemType.TYPE_HEADER -> RecentViewHolder.from(parent, listener.onClickItem)
-            ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(parent) {
-                listener.onClickItem((datas[it] as ProductsItemType.Product).product)
-            }
-            ProductsItemType.TYPE_FOOTER -> ReadMoreViewHolder.from(parent) {
-                listener.onReadMoreClick()
-            }
+            ProductsItemType.TYPE_HEADER -> RecentViewHolder.from(parent, listener)
+            ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(parent, listener)
+            ProductsItemType.TYPE_FOOTER -> ReadMoreViewHolder.from(parent, listener)
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -37,7 +33,7 @@ class ProductsAdapter(
         return datas[position].viewType
     }
 
-    fun updateData(data: List<ProductsItemType>) {
+    fun submitList(data: List<ProductsItemType>) {
         datas = data
         notifyItemChanged(0)
     }

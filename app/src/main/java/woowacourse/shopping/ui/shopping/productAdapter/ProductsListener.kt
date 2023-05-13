@@ -3,6 +3,6 @@ package woowacourse.shopping.ui.shopping.productAdapter
 import woowacourse.shopping.model.ProductUIModel
 
 interface ProductsListener {
-    val onClickItem: (data: ProductUIModel) -> Unit
-    val onReadMoreClick: () -> Unit
+    fun onClickItem(data: ProductUIModel)
+    fun onReadMoreClick()
 }

@@ -101,10 +101,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun setProducts(data: List<ProductsItemType>) {
         val listener = object : ProductsListener {
-            override val onClickItem: (data: ProductUIModel) -> Unit
-                get() = presenter::navigateToItemDetail
-            override val onReadMoreClick: () -> Unit
-                get() = presenter::fetchMoreProducts
+            override fun onClickItem(data: ProductUIModel) { presenter.navigateToItemDetail(data) }
+            override fun onReadMoreClick() { presenter.fetchMoreProducts() }
         }
         binding.rvProducts.adapter = ProductsAdapter(data, listener)
     }
@@ -116,7 +114,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun addProducts(data: List<ProductsItemType>) {
         binding.rvProducts.adapter?.let {
             if (it is ProductsAdapter) {
-                it.updateData(data)
+                it.submitList(data)
             }
         }
     }
