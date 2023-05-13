@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbAdapter
 import woowacourse.shopping.data.cart.CartDbHelper
@@ -43,10 +42,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setProductDetail(productModel: ProductModel) {
-        binding.textProductDetailPrice.text =
-            getString(R.string.price_format, productModel.price)
-        binding.textProductDetailName.text = productModel.name
-        setProductImage(productModel)
+        binding.productModel = productModel
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -77,14 +73,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun setToolbar() {
         setSupportActionBar(binding.toolbarProductDetail.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    private fun setProductImage(productModel: ProductModel) {
-        Glide.with(this)
-            .load(productModel.imageUrl)
-            .error(R.drawable.default_image)
-            .centerCrop()
-            .into(binding.imageProductDetailPoster)
     }
 
     companion object {
