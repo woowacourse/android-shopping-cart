@@ -1,14 +1,17 @@
 package woowacourse.shopping.shopping
 
 import io.mockk.every
-import io.mockk.justRun
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.common.data.database.dao.ProductDao
-import woowacourse.shopping.common.data.database.dao.RecentProductDao
+import woowacourse.shopping.common.data.dao.ProductDao
+import woowacourse.shopping.common.data.dao.RecentProductDao
 import woowacourse.shopping.common.data.database.state.State
+import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.mapper.ProductMapper.toView
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProducts
 
@@ -22,11 +25,20 @@ class ShoppingPresenterTest {
 
     @Before
     fun setUp() {
-        view = mockk(relaxed = true)
-        productDao = mockk(relaxed = true)
-        productsState = mockk(relaxed = true)
-        recentProductDao = mockk(relaxed = true)
-        recentProductsState = mockk(relaxed = true)
+        view = mockk()
+        productDao = mockk()
+        productsState = mockk()
+        recentProductDao = mockk()
+        recentProductsState = mockk()
+
+        every {
+            productDao.initMockData()
+            recentProductsState.save(any())
+        } just runs
+
+        every {
+            recentProductDao.selectAll()
+        } returns RecentProducts(emptyList())
 
         every {
             productsState.load()
@@ -37,8 +49,9 @@ class ShoppingPresenterTest {
         } returns Products(emptyList())
 
         every {
-            recentProductsState.load()
-        } returns RecentProducts(emptyList())
+            productsState.save(any())
+            view.addProducts(any())
+        } just runs
 
         presenter = ShoppingPresenter(
             view,
@@ -54,44 +67,52 @@ class ShoppingPresenterTest {
     @Test
     fun 프레젠터가_생성되면_뷰의_상품_목록과_최근_상품_목록을_갱신한다() {
         // given
-        justRun {
-            productsState.save(any())
-            view.addProducts(any())
-        }
 
         // when
 
         // then
         verify {
-            productsState.save(any())
-            view.addProducts(any())
+            productDao.initMockData()
+            recentProductDao.selectAll()
+            recentProductsState.save(RecentProducts(emptyList()))
+        }
+
+        verify {
+            productsState.save(Products(emptyList()))
+            view.addProducts(Products(emptyList()).value.map { it.toView() })
         }
     }
 
     @Test
     fun 상품을_선택하면_최근_본_상품에_추가하고_상품_상세정보를_보여준다() {
         // given
-        justRun {
+        val productModel = ProductModel("", "", 0)
+
+        every {
+            recentProductsState.load()
+        } returns RecentProducts(emptyList())
+
+        every {
             recentProductsState.save(any())
             recentProductDao.insertRecentProduct(any())
             view.showProductDetail(any())
-        }
+        } just runs
 
         // when
-        presenter.openProduct(mockk(relaxed = true))
+        presenter.openProduct(productModel)
 
         // then
         verify {
             recentProductsState.save(any())
             recentProductDao.insertRecentProduct(any())
-            view.showProductDetail(any())
+            view.showProductDetail(productModel)
         }
     }
 
     @Test
     fun 카트를_열면_카트_뷰를_보여준다() {
         // given
-        justRun { view.showCart() }
+        every { view.showCart() } just runs
 
         // when
         presenter.openCart()
@@ -103,19 +124,16 @@ class ShoppingPresenterTest {
     @Test
     fun 새로운_상품을_불러오고_갱신한다() {
         // given
-        justRun {
-            productsState.save(any())
-            view.addProducts(any())
-        }
 
         // when
         presenter.loadMoreProduct()
 
         // then
         verify {
-            productDao.selectByRange(any(), any())
-            productsState.save(any())
-            view.addProducts(any())
+            productsState.load()
+            productDao.selectByRange(0, 0)
+            productsState.save(Products(emptyList()))
+            view.addProducts(Products(emptyList()).value.map { it.toView() })
         }
     }
 }
