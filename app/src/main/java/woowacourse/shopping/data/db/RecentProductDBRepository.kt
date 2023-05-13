@@ -2,6 +2,7 @@ package woowacourse.shopping.data.db
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import android.util.Log
 import woowacourse.shopping.data.db.RecentProductDBHelper.Companion.KEY_ID
 import woowacourse.shopping.data.db.RecentProductDBHelper.Companion.KEY_IMAGE
 import woowacourse.shopping.data.db.RecentProductDBHelper.Companion.KEY_NAME
@@ -26,10 +27,19 @@ class RecentProductDBRepository(private val database: SQLiteDatabase) {
                 products.add(recentProductUIModel)
             }
         }
-        return products
+
+        if (products.isEmpty()) {
+            return emptyList()
+        }
+        return products.reversed().subList(0, minOf(products.size, 10))
     }
 
     fun insert(recentProductUIModel: RecentProductUIModel) {
+        if (exist(recentProductUIModel)) {
+            Log.d("bboddo", "entered")
+            remove(recentProductUIModel)
+        }
+
         val record = ContentValues().apply {
             put(KEY_ID, recentProductUIModel.productUIModel.id)
             put(KEY_NAME, recentProductUIModel.productUIModel.name)
@@ -37,6 +47,23 @@ class RecentProductDBRepository(private val database: SQLiteDatabase) {
             put(KEY_PRICE, recentProductUIModel.productUIModel.price)
         }
         database.insert(TABLE_NAME, null, record)
+    }
+
+    fun exist(recentProductUIModel: RecentProductUIModel): Boolean {
+        val arrayToFind = arrayOf(recentProductUIModel.productUIModel.id.toString())
+        val cursor = database.query(
+            TABLE_NAME,
+            arrayOf("COUNT(*)"),
+            "$KEY_ID=?",
+            arrayToFind,
+            null,
+            null,
+            null
+        )
+        cursor.moveToFirst()
+        val count = cursor.getInt(0)
+        cursor.close()
+        return count >= 1
     }
 
     fun remove(recentProductUIModel: RecentProductUIModel) {

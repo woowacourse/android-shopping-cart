@@ -183,5 +183,5 @@ object ProductMockData {
     )
 
     val mainProductMockData: List<ProductUIModel> =
-        (products.subList(0, 19)).toUIModel()
+        (products.subList(0, 20)).toUIModel()
 }
