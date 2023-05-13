@@ -1,6 +1,5 @@
 package woowacourse.shopping.shopping.contract.presenter
 
-import com.domain.model.Product
 import com.domain.model.ProductRepository
 import com.domain.model.RecentRepository
 import woowacourse.shopping.mapper.toUIModel
@@ -17,33 +16,30 @@ class ShoppingPresenter(
     private val repository: ProductRepository,
     private val recentRepository: RecentRepository,
 ) : ShoppingContract.Presenter {
-    private val productsData: MutableList<ProductsItemType> = mutableListOf()
-
-    override fun setUpProducts() {
-        productsData += repository.getUntil(productOffset)
-            .map { product: Product -> ProductItem(product.toUIModel()) }
-        productsData += ProductReadMore
-        updateProducts()
-    }
-
-    override fun updateProducts() {
-        val recentProductsData = RecentProductsItem(
+    private val recentProductsData: RecentProductsItem
+        get() = RecentProductsItem(
             recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() },
         )
-        when {
-            productsData[0] is RecentProductsItem -> productsData[0] = recentProductsData
-            recentProductsData.product.isNotEmpty() -> productsData.add(0, recentProductsData)
+
+    override fun setUpProducts() {
+        val productsData = mutableListOf<ProductsItemType>().apply {
+            if (recentProductsData.product.isNotEmpty()) {
+                add(recentProductsData)
+            }
+            addAll(repository.getUntil(productOffset).map { ProductItem(it.toUIModel()) })
+            add(ProductReadMore)
         }
         view.setProducts(productsData)
     }
 
+    override fun updateRecentProducts() {
+        view.addRecentProducts(recentProductsData)
+    }
+
     override fun fetchMoreProducts() {
-        productsData.addAll(
-            productsData.size - 1,
-            repository.getNext(PRODUCT_COUNT)
-                .map { ProductItem(it.toUIModel()) },
+        view.addProducts(
+            repository.getNext(PRODUCT_COUNT).map { ProductItem(it.toUIModel()) },
         )
-        view.addProducts(productsData)
     }
 
     override fun navigateToItemDetail(data: ProductUIModel) {

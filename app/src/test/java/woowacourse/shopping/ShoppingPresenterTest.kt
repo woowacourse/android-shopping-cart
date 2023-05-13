@@ -47,7 +47,7 @@ class ShoppingPresenterTest {
 
         // when
         presenter.setUpProducts()
-        presenter.updateProducts()
+        presenter.updateRecentProducts()
 
         // then
         val capturedProducts = slot.captured
@@ -65,7 +65,7 @@ class ShoppingPresenterTest {
 
         // when
         presenter.setUpProducts()
-        presenter.updateProducts()
+        presenter.updateRecentProducts()
 
         // then
         val capturedProducts = slot.captured

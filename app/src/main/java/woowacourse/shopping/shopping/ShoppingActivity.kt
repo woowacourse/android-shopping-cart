@@ -29,7 +29,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val getResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             when (result.resultCode) {
-                RESULT_OK -> presenter.updateProducts()
+                RESULT_OK -> presenter.updateRecentProducts()
             }
         }
 
@@ -109,9 +109,17 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun addProducts(data: List<ProductsItemType>) {
+        updateProductsAdapterItem { updateProducts(data) }
+    }
+
+    override fun addRecentProducts(data: ProductsItemType) {
+        updateProductsAdapterItem { updateRecentProducts(data) }
+    }
+
+    private fun updateProductsAdapterItem(action: ProductsAdapter.() -> Unit) {
         binding.productRecyclerview.adapter?.let {
             if (it is ProductsAdapter) {
-                it.updateData(data)
+                it.action()
             }
         }
     }
