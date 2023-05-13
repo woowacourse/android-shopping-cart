@@ -4,7 +4,10 @@ interface ProductDetailContract {
     interface View {
         val presenter: Presenter
 
-        fun showBasket()
+        fun showProductImage(imageUrl: String)
+        fun navigateToBasketScreen()
+        fun showProductName(name: String)
+        fun showProductPrice(amount: Int)
     }
 
     interface Presenter {

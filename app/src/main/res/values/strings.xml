@@ -18,5 +18,6 @@
     <string name="tv_previous"><![CDATA[<]]></string>
     <string name="tv_next"><![CDATA[>]]></string>
     <string name="default_page">1</string>
+    <string name="close_screen">화면 닫기</string>
 
 </resources>

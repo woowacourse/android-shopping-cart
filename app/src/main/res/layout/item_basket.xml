@@ -18,7 +18,7 @@
         android:layout_height="153dp">
 
         <TextView
-            android:id="@+id/tv_name"
+            android:id="@+id/tv_product_name"
             android:layout_width="0dp"
             android:layout_marginEnd="10dp"
             android:maxLines="1"
@@ -45,26 +45,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/iv_close"
             android:layout_marginEnd="24dp"
-            app:layout_constraintTop_toTopOf="@+id/tv_name"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+            app:layout_constraintTop_toTopOf="@+id/tv_product_name"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_product_name"
             app:tint="@color/woowa_light_gray" />
 
         <ImageView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@id/tv_name"
+            app:layout_constraintStart_toStartOf="@id/tv_product_name"
             android:layout_marginTop="18dp"
             tools:srcCompat="@tools:sample/avatars"
             android:scaleType="centerCrop"
             android:layout_marginBottom="18dp"
             android:id="@+id/iv_product"
             app:image="@{product.imageUrl}"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
             app:layout_constraintDimensionRatio="136:72"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
-            android:id="@+id/tv_price"
+            android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="@id/iv_close"

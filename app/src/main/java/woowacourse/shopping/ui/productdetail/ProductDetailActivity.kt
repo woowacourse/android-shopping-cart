@@ -3,8 +3,11 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.databinding.DataBindingUtil
+import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
@@ -14,55 +17,59 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.util.getParcelableExtraCompat
-import woowacourse.shopping.util.intentDataNullProcess
-import woowacourse.shopping.util.setOnSingleClickListener
 
-class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
-
+class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View,
+    OnMenuItemClickListener {
     private lateinit var binding: ActivityProductDetailBinding
-    private lateinit var product: UiProduct
-    override lateinit var presenter: ProductDetailContract.Presenter
+
+    override val presenter: ProductDetailContract.Presenter by lazy {
+        ProductDetailPresenter(
+            view = this,
+            basketRepository =
+            BasketRepository(LocalBasketDataSource(BasketDaoImpl(ShoppingDatabase(this)))),
+            product = intent.getParcelableExtraCompat(PRODUCT_KEY)!!
+        )
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        initExtraData()
-        initPresenter()
-        initBindingData()
-        initButtonCloseClickListener()
+        initView()
     }
 
-    private fun initExtraData() {
-        product = intent.getParcelableExtraCompat(PRODUCT_KEY)
-            ?: return intentDataNullProcess(PRODUCT_KEY)
-    }
-
-    private fun initBindingData() {
-        binding.product = product
+    private fun initView() {
         binding.productDetailPresenter = presenter
+        binding.tbProductDetail.setOnMenuItemClickListener(this)
     }
 
-    private fun initPresenter() {
-        presenter = ProductDetailPresenter(
-            this,
-            BasketRepository(LocalBasketDataSource(BasketDaoImpl(ShoppingDatabase(this)))),
-            product
-        )
+    override fun showProductImage(imageUrl: String) {
+        Glide.with(this).load(imageUrl).into(binding.ivProduct)
     }
 
-    private fun initButtonCloseClickListener() {
-        binding.ivClose.setOnSingleClickListener {
-            finish()
-        }
+    override fun showProductName(name: String) {
+        binding.tvProductName.text = name
     }
 
-    override fun showBasket() {
+    override fun showProductPrice(amount: Int) {
+        binding.tvProductPrice.text = getString(R.string.price_format, amount)
+    }
+
+    override fun navigateToBasketScreen() {
         startActivity(BasketActivity.getIntent(this))
         finish()
     }
 
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.close -> finish()
+            else -> super.onMenuItemSelected(item.itemId, item)
+        }
+        return true
+    }
+
     companion object {
-        private const val PRODUCT_KEY = "product"
+        private const val PRODUCT_KEY = "product_key"
         fun getIntent(context: Context, product: UiProduct): Intent =
             Intent(context, ProductDetailActivity::class.java).putExtra(PRODUCT_KEY, product)
     }
