@@ -27,15 +27,15 @@ class CartPresenter(
 
     override fun fetchNextPage() {
         val getItems = cartPagination.nextItems()
-        if (getItems.isNotEmpty()) {
-            currentCartProducts.clear()
-            currentCartProducts.addAll(convertIdToProductModel(getItems))
-            fetchProducts()
-        }
+        updateCartItems(getItems)
     }
 
     override fun fetchUndoPage() {
         val getItems = cartPagination.undoItems()
+        updateCartItems(getItems)
+    }
+
+    private fun updateCartItems(getItems: List<CartProduct>) {
         if (getItems.isNotEmpty()) {
             currentCartProducts.clear()
             currentCartProducts.addAll(convertIdToProductModel(getItems))
