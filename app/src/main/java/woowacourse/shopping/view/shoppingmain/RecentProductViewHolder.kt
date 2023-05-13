@@ -3,7 +3,6 @@ package woowacourse.shopping.view.shoppingmain
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductRecentBinding
 import woowacourse.shopping.uimodel.ProductUIModel

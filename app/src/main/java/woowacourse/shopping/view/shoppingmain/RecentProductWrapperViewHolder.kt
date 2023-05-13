@@ -2,7 +2,6 @@ package woowacourse.shopping.view.shoppingmain
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.RecentProductsBinding

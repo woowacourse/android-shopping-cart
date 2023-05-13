@@ -17,7 +17,7 @@ class RecentProductAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return RECENT_PRODUCT_VIEW_TYPE
+        return VIEW_TYPE
     }
 
     override fun getItemCount(): Int = recentProducts.size
@@ -32,6 +32,6 @@ class RecentProductAdapter(
     }
 
     companion object {
-        const val RECENT_PRODUCT_VIEW_TYPE = 22
+        const val VIEW_TYPE = 2
     }
 }

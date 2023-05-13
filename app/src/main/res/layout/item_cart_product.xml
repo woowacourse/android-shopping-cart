@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="cartProduct"
             type="woowacourse.shopping.uimodel.CartProductUIModel" />

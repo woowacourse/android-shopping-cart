@@ -17,10 +17,8 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     override lateinit var presenter: ShoppingMainContract.Presenter
-    private lateinit var adapter: ConcatAdapter
-    private lateinit var productAdapter: ProductAdapter
+    private lateinit var concatAdapter: ConcatAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
-    private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
 
     private var _binding: ActivityShoppingMainBinding? = null
     private val binding
@@ -51,24 +49,22 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     }
 
     private fun setAdapters() {
-        val db = RecentProductDBHelper(this).writableDatabase
-
-        productAdapter = ProductAdapter(
+        val productAdapter = ProductAdapter(
             presenter.getMainProducts(),
             showProductDetailPage()
         )
         recentProductAdapter = RecentProductAdapter(
-            presenter.getRecentProducts(db),
+            emptyList(),
             showProductDetailPage()
         )
-        recentProductWrapperAdapter = RecentProductWrapperAdapter(
+        val recentProductWrapperAdapter = RecentProductWrapperAdapter(
             recentProductAdapter
         )
 
         val config = ConcatAdapter.Config.Builder().apply {
             setIsolateViewTypes(false)
         }.build()
-        adapter = ConcatAdapter(config, recentProductWrapperAdapter, productAdapter)
+        concatAdapter = ConcatAdapter(config, recentProductWrapperAdapter, productAdapter)
     }
 
     override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
@@ -81,14 +77,14 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return when (adapter.getItemViewType(position)) {
+                return when (concatAdapter.getItemViewType(position)) {
                     ProductAdapter.VIEW_TYPE -> 1
                     RecentProductWrapperAdapter.VIEW_TYPE -> 2
                     else -> 2
                 }
             }
         }
-        binding.rvProductCatalogue.adapter = adapter
+        binding.rvProductCatalogue.adapter = concatAdapter
         binding.rvProductCatalogue.layoutManager = gridLayoutManager
     }
 
