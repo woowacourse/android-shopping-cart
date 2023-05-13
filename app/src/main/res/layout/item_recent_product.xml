@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="productModel"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -17,6 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:imageGlide="@{productModel.imageUrl}"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
@@ -26,8 +33,8 @@
             android:layout_marginHorizontal="4dp"
             android:layout_marginTop="7dp"
             android:ellipsize="end"
-
             android:singleLine="true"
+            android:text="@{productModel.name}"
             android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"

@@ -60,11 +60,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.initCart()
     }
 
-//    override fun initCartProductModels(productModels: List<ProductModel>) {
-//        cartAdapter = CartAdapter(productModels, presenter::deleteProduct)
-//        binding.recyclerCart.adapter = cartAdapter
-//    }
-
     override fun setCartProductModels(productModels: List<ProductModel>) {
         cartAdapter.setItems(productModels)
     }

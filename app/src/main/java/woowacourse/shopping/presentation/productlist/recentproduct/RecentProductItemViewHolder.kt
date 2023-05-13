@@ -9,9 +9,8 @@ class RecentProductItemViewHolder(
     showProductDetail: (ProductModel) -> Unit,
 ) : ProductBaseViewHolder(binding.root, showProductDetail) {
 
-    override fun bind(recentProduct: ProductModel) {
-        _productModel = recentProduct
-        binding.textProductListName.text = recentProduct.name
-        setImage(recentProduct, binding.imageProductListPoster)
+    override fun bind(product: ProductModel) {
+        _productModel = product
+        binding.productModel = productModel
     }
 }
