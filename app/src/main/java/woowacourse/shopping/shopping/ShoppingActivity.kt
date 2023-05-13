@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.data.ProductFakeRepository
+import woowacourse.shopping.data.ProductFakeRepository.KEY_PRODUCT_OFFSET
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
@@ -27,7 +28,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         setSupportActionBar(binding.toolbar)
-        presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
+        presenter = ShoppingPresenter(
+            this,
+            savedInstanceState?.getInt(KEY_PRODUCT_OFFSET) ?: 20,
+            ProductFakeRepository,
+            RecentProductDatabase(this),
+        )
 
         initLayoutManager()
         presenter.setUpProducts()
@@ -105,6 +111,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 it.updateData(data)
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_PRODUCT_OFFSET, ProductFakeRepository.offset)
     }
 
     private fun navigateToCart() {

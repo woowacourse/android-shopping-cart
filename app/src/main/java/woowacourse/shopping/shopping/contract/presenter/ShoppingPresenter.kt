@@ -13,13 +13,14 @@ import woowacourse.shopping.shopping.contract.ShoppingContract
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
+    private val productOffset: Int,
     private val repository: ProductRepository,
     private val recentRepository: RecentRepository,
 ) : ShoppingContract.Presenter {
     private var productsData: MutableList<ProductsItemType> = mutableListOf()
 
     override fun setUpProducts() {
-        productsData += repository.getNext(PRODUCT_COUNT)
+        productsData += repository.getUntil(productOffset)
             .map { product: Product -> ProductItem(product.toUIModel()) }
         view.setProducts(productsData.plus(ProductReadMore))
     }

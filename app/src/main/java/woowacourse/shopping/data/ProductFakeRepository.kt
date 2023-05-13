@@ -6,6 +6,8 @@ import java.lang.Integer.min
 
 object ProductFakeRepository : ProductRepository {
 
+    const val KEY_PRODUCT_OFFSET = "bundle_key_offset"
+
     private val products = List(100) {
         Product(
             it,
@@ -15,7 +17,8 @@ object ProductFakeRepository : ProductRepository {
         )
     }
 
-    private var offset = 0
+    var offset = 0
+        private set
 
     override fun getAll(): List<Product> {
         return products.toList()
@@ -26,6 +29,13 @@ object ProductFakeRepository : ProductRepository {
         val to = min(offset + count, products.size)
         val subList = products.subList(from, to)
         offset = to
+        return subList
+    }
+
+    override fun getUntil(offset: Int): List<Product> {
+        val to = min(offset, products.size)
+        val subList = products.subList(0, to)
+        this.offset = to
         return subList
     }
 
