@@ -1,10 +1,13 @@
 package woowacourse.shopping.shopping
 
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -23,6 +26,12 @@ import woowacourse.shopping.shopping.contract.presenter.ShoppingPresenter
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
+    private val getResult: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            when (result.resultCode) {
+                RESULT_OK -> presenter.updateProducts()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +43,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             ProductFakeRepository,
             RecentProductDatabase(this),
         )
-
         initLayoutManager()
         presenter.setUpProducts()
+        presenter.updateProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -50,11 +59,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             else -> super.onOptionsItemSelected(item)
         }
         return true
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.updateProducts()
     }
 
     private fun initLayoutManager() {
@@ -102,7 +106,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.from(this, product))
+        getResult.launch(ProductDetailActivity.from(this, product))
     }
 
     override fun addProducts(data: List<ProductsItemType>) {
