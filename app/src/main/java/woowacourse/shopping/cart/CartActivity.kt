@@ -49,10 +49,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCarts(products: List<CartItem>, cartUIModel: CartUIModel) {
-        binding.cartRecyclerview.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-            this,
-        )
-
         val cartAdapter = CartAdapter(
             products.map { it },
             presenter::navigateToItemDetail,
