@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.shoppingmain
 
-import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
@@ -13,7 +12,7 @@ interface ShoppingMainContract {
 
     interface Presenter {
         fun getMainProducts(): List<ProductUIModel>
-        fun getRecentProducts(db: SQLiteDatabase): List<RecentProductUIModel>
+        fun getRecentProducts(): List<RecentProductUIModel>
         fun setProductOnClick()
     }
 }

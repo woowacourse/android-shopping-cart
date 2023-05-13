@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
-import woowacourse.shopping.data.db.RecentProductDBHelper
+import woowacourse.shopping.data.db.RecentProductDao
+import woowacourse.shopping.data.repository.ProductMockRepository
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingMainBinding
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
@@ -38,14 +40,17 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     override fun onResume() {
         super.onResume()
 
-        val db = RecentProductDBHelper(this).writableDatabase
-        val recentProducts = presenter.getRecentProducts(db)
+        val recentProducts = presenter.getRecentProducts()
 
         recentProductAdapter.update(recentProducts)
     }
 
     private fun setPresenter() {
-        presenter = ShoppingMainPresenter(this)
+        presenter = ShoppingMainPresenter(
+            view = this,
+            productsRepository = ProductMockRepository,
+            recentProductsRepository = RecentProductRepositoryImpl(RecentProductDao(this))
+        )
     }
 
     private fun setAdapters() {

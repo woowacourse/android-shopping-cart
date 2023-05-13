@@ -1,22 +1,22 @@
 package woowacourse.shopping.view.shoppingmain
 
-import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.data.ProductMockData
-import woowacourse.shopping.data.db.RecentProductDBRepository
+import com.shopping.repository.ProductRepository
+import com.shopping.repository.RecentProductsRepository
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
+import woowacourse.shopping.uimodel.mapper.toUIModel
 
-class ShoppingMainPresenter(private val view: ShoppingMainContract.View) :
-    ShoppingMainContract.Presenter {
+class ShoppingMainPresenter(
+    private val view: ShoppingMainContract.View,
+    private val productsRepository: ProductRepository,
+    private val recentProductsRepository: RecentProductsRepository
+) : ShoppingMainContract.Presenter {
     override fun getMainProducts(): List<ProductUIModel> {
-        return ProductMockData.mainProductMockData
+        return productsRepository.products.toUIModel()
     }
 
-    override fun getRecentProducts(db: SQLiteDatabase): List<RecentProductUIModel> {
-        val repository = RecentProductDBRepository(db)
-        val recentProducts = repository.getAll()
-        repository.close()
-        return recentProducts
+    override fun getRecentProducts(): List<RecentProductUIModel> {
+        return recentProductsRepository.getAll().map { it.toUIModel() }
     }
 
     override fun setProductOnClick() {

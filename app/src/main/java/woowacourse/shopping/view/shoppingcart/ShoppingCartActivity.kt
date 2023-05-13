@@ -7,7 +7,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.db.CartProductDBHelper
+import woowacourse.shopping.data.db.CartProductDao
+import woowacourse.shopping.data.repository.CartProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
@@ -37,16 +38,15 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun setPresenter() {
-        presenter = ShoppingCartPresenter(this)
+        presenter = ShoppingCartPresenter(
+            view = this,
+            cartProductRepository = CartProductRepositoryImpl(CartProductDao(this))
+        )
     }
 
     private fun setAdapter() {
-        val db = CartProductDBHelper(this).readableDatabase
-        presenter.setRecentProducts(db)
-        adapter = ShoppingCartAdapter(
-            presenter.cartProducts,
-            setOnClickRemove()
-        )
+        presenter.setRecentProducts()
+        adapter = ShoppingCartAdapter(presenter.cartProducts, setOnClickRemove())
     }
 
     private fun setViewSettings() {
@@ -54,8 +54,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun setOnClickRemove(): (ProductUIModel) -> Unit = { product ->
-        val db = CartProductDBHelper(this).writableDatabase
-        presenter.removeCartProduct(db, product)
+        presenter.removeCartProduct(product)
     }
 
     override fun removeCartProduct(cartProducts: List<CartProductUIModel>, index: Int) {

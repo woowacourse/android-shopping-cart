@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.productdetail
 
-import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.uimodel.ProductUIModel
 
 interface ProductDetailContract {
@@ -12,7 +11,7 @@ interface ProductDetailContract {
 
     interface Presenter {
         val product: ProductUIModel
-        fun saveRecentProduct(db: SQLiteDatabase)
-        fun saveCartProduct(db: SQLiteDatabase)
+        fun saveRecentProduct()
+        fun saveCartProduct()
     }
 }

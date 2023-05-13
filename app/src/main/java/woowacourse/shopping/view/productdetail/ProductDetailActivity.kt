@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
-import woowacourse.shopping.data.db.CartProductDBHelper
-import woowacourse.shopping.data.db.RecentProductDBHelper
+import woowacourse.shopping.data.db.CartProductDao
+import woowacourse.shopping.data.db.RecentProductDao
+import woowacourse.shopping.data.repository.CartProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.uimodel.ProductUIModel
@@ -39,7 +41,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val product = intent.getSerializableCompat<ProductUIModel>(BundleKeys.KEY_PRODUCT)
             ?: throw IllegalStateException(NON_FOUND_KEY_ERROR)
 
-        presenter = ProductDetailPresenter(this, product)
+        presenter =
+            ProductDetailPresenter(
+                view = this,
+                product = product,
+                cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
+                recentProductsRepository = RecentProductRepositoryImpl(RecentProductDao(this))
+            )
     }
 
     override fun setProductDetailView() {
@@ -47,14 +55,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun saveRecentProduct() {
-        val db = RecentProductDBHelper(this).writableDatabase
-        presenter.saveRecentProduct(db)
+        presenter.saveRecentProduct()
     }
 
     private fun setAddToCartClick() {
-        val db = CartProductDBHelper(this).writableDatabase
+        val db = CartProductDao(this).writableDatabase
         binding.btnAddToCart.setOnClickListener {
-            presenter.saveCartProduct(db)
+            presenter.saveCartProduct()
         }
     }
 

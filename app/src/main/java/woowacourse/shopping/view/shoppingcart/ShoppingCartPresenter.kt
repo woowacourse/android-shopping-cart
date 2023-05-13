@@ -1,24 +1,23 @@
 package woowacourse.shopping.view.shoppingcart
 
-import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.data.db.CartProductDBRepository
+import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.mapper.toDomain
+import woowacourse.shopping.uimodel.mapper.toUIModel
 
 class ShoppingCartPresenter(
-    private val view: ShoppingCartContract.View
+    private val view: ShoppingCartContract.View,
+    private val cartProductRepository: CartProductRepository
 ) : ShoppingCartContract.Presenter {
     override lateinit var cartProducts: List<CartProductUIModel>
 
-    override fun setRecentProducts(db: SQLiteDatabase) {
-        val repository = CartProductDBRepository(db)
-        cartProducts = repository.getAll()
-        repository.close()
+    override fun setRecentProducts() {
+        cartProducts = cartProductRepository.getAll().map { it.toUIModel() }
     }
 
-    override fun removeCartProduct(db: SQLiteDatabase, productUIModel: ProductUIModel) {
-        val repository = CartProductDBRepository(db)
-        repository.remove(CartProductUIModel(productUIModel))
+    override fun removeCartProduct(productUIModel: ProductUIModel) {
+        cartProductRepository.remove(CartProductUIModel(productUIModel).toDomain())
 
         val index = getIndex(productUIModel)
         cartProducts = cartProducts - cartProducts[index]

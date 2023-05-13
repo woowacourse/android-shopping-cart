@@ -1,11 +1,10 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
 import com.shopping.domain.Product
-import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.mapper.toUIModel
+import com.shopping.repository.ProductRepository
 
-object ProductMockData {
-    private val products = listOf(
+object ProductMockRepository : ProductRepository {
+    private val mockProducts = listOf(
         Product(
             id = 1,
             name = "PET 보틀 정사각 420",
@@ -180,8 +179,134 @@ object ProductMockData {
             "http://modooing.co.kr/shopimages/modooin/0030070001053.jpg?1673252506",
             3_000
         ),
+        Product(
+            30,
+            "종이용기 무지 350",
+            "http://modooing.co.kr/shopimages/modooin/0030080002392.jpg?1673252436",
+            3_000
+        ),
+        Product(
+            31,
+            "종이용기 무지 380",
+            "http://modooing.co.kr/shopimages/modooin/0030080002382.jpg?1673252436",
+            3_000
+        ),
+        Product(
+            32,
+            "종이용기 무지 750",
+            "http://modooing.co.kr/shopimages/modooin/0030080002362.jpg?1673252429",
+            7_000
+        ),
+        Product(
+            33,
+            "종이용기 무지 1000",
+            "http://modooing.co.kr/shopimages/modooin/0030080002342.jpg?1673252452",
+            10_000
+        ),
+        Product(
+            34,
+            "종이 용기 무지 1200",
+            "http://modooing.co.kr/shopimages/modooin/0030080002332.jpg?1673252453",
+            12_000
+        ),
+        Product(
+            35,
+            "종이 용기 무지 1500",
+            "http://modooing.co.kr/shopimages/modooin/0030080002322.jpg?1673252442",
+            15_000
+        ),
+        Product(
+            36,
+            "종이 용기 아이스크림 150",
+            "http://modooing.co.kr/shopimages/modooin/0030080002302.jpg?1673252442",
+            1_000
+        ),
+        Product(
+            37,
+            "종이 용기 꽃 350",
+            "http://modooing.co.kr/shopimages/modooin/0030080002272.jpg?1673252436",
+            3_000
+        ),
+        Product(
+            38,
+            "종이 용기 블루 꽃 380",
+            "http://modooing.co.kr/shopimages/modooin/0030080002262.jpg?1673252436",
+            3_000
+        ),
+        Product(
+            39,
+            "종이 용기 별 520",
+            "http://modooing.co.kr/shopimages/modooin/0030080002252.jpg?1673252436",
+            5_000
+        ),
+        Product(
+            40,
+            "종이 용기 다이아 750",
+            "http://modooing.co.kr/shopimages/modooin/0030080002242.jpg?1673252437",
+            7_000
+        ),
+        Product(
+            41,
+            "종이 용기 동글 1000",
+            "http://modooing.co.kr/shopimages/modooin/0030080002222.jpg?1673252452",
+            10_000
+        ),
+        Product(
+            42,
+            "종이 용기 블랙 꽃 1300",
+            "http://modooing.co.kr/shopimages/modooin/0030080002192.jpg?1673252442",
+            13_000
+        ),
+        Product(
+            43,
+            "종이 용기 블랙 꽃 1500",
+            "http://modooing.co.kr/shopimages/modooin/0030080002182.jpg?1673252442",
+            15_000
+        ),
+        Product(
+            44,
+            "직사각 2칸 도시락 검정 소",
+            "http://modooing.co.kr/shopimages/modooin/0030080000772.jpg?1673252480",
+            12_000
+        ),
+        Product(
+            45,
+            "직사각 2칸 도시락 검정 대",
+            "http://modooing.co.kr/shopimages/modooin/0030080000762.jpg?1673252480",
+            14_000
+        ),
+        Product(
+            46,
+            "직사각 2칸 도시락 투명 소",
+            "http://modooing.co.kr/shopimages/modooin/0030080000752.jpg?1673252480",
+            12_000
+
+        ),
+        Product(
+            47,
+            "직사각 2칸 도시락 투명 대",
+            "http://modooing.co.kr/shopimages/modooin/0030080000742.jpg?1673252480",
+            14_000
+        ),
+        Product(
+            48,
+            "정사각 3칸 도시락 검정",
+            "http://modooing.co.kr/shopimages/modooin/0030080000732.jpg?1673252487",
+            10_000
+        ),
+        Product(
+            49,
+            "정사각 3칸 도시락 투명",
+            "http://modooing.co.kr/shopimages/modooin/0030080000722.jpg?1673252479",
+            10_000
+        ),
+        Product(
+            50,
+            "반찬 용기 검정",
+            "http://modooing.co.kr/shopimages/modooin/0030110000152.jpg?1671437852",
+            9_000
+        )
     )
 
-    val mainProductMockData: List<ProductUIModel> =
-        (products.subList(0, 20)).toUIModel()
+    override val products: List<Product> = mockProducts.subList(0, 20)
 }
