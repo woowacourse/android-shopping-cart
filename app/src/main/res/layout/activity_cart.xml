@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.feature.cart.CartContract.Presenter" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,6 +34,7 @@
             android:background="@drawable/selector_arrow_button"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:onClick="@{()->presenter.loadPreviousPage()}"
             android:padding="12dp"
             android:src="@drawable/ic_arrow_back_ios_new_24"
             app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
@@ -56,6 +64,7 @@
             android:background="@drawable/selector_arrow_button"
             android:insetTop="0dp"
             android:insetBottom="0dp"
+            android:onClick="@{()->presenter.loadNextPage()}"
             android:padding="12dp"
             android:src="@drawable/ic_arrow_forward_ios_24"
             app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"

@@ -20,25 +20,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-
         cartProductAdapter = CartProductAdapter(listOf())
         binding.cartItemRecyclerview.adapter = cartProductAdapter
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
+        binding.presenter = presenter
 
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        initClickListener()
-    }
-
-    private fun initClickListener() {
-        binding.previousPageBtn.setOnClickListener {
-            presenter.loadPreviousPage()
-        }
-        binding.nextPageBtn.setOnClickListener {
-            presenter.loadNextPage()
-        }
     }
 
     override fun changeCartProducts(newItems: List<CartProductItemModel>) {
@@ -46,9 +35,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun deleteCartProductFromScreen(position: Int) {
-        presenter.deleteCartProduct(
-            cartProductAdapter.items[position].cartProduct
-        )
+        presenter.deleteCartProduct(cartProductAdapter.items[position].cartProduct)
     }
 
     override fun setPreviousButtonState(enabled: Boolean) {
