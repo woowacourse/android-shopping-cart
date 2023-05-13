@@ -5,9 +5,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
@@ -20,28 +17,19 @@ import woowacourse.shopping.util.initProducts
 
 class HomeActivity : AppCompatActivity(), HomeContract.View {
     private lateinit var binding: ActivityHomeBinding
-    override val presenter: HomeContract.Presenter by lazy { initPresenter() }
+    override val presenter: HomeContract.Presenter by lazy { HomePresenter(this) }
     private val homeAdapter = HomeAdapter(::setClickEventOnProduct, ::setEventOnShowMoreButton)
-    override fun setProducts(products: List<Product>) {
+
+    override fun setUpProducts(products: List<Product>) {
         homeAdapter.initProducts(products)
     }
 
-    override fun setRecentlyViewed(products: List<Product>) {
+    override fun setUpRecentlyViewed(products: List<Product>) {
         homeAdapter.initRecentlyViewedProduct(products)
     }
 
     override fun getProductCount(): Int {
         return homeAdapter.productsCount
-    }
-
-    private fun initPresenter(): HomePresenter {
-        return HomePresenter(
-            this,
-            ProductRepositoryImpl(
-                productDataSource = ProductDao(this),
-                recentlyViewedDataSource = RecentlyViewedDao(this),
-            ),
-        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +46,7 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
     }
 
     private fun setEventOnShowMoreButton(productId: Long) {
-        presenter.getMoreProducts(productId)
+        presenter.fetchMoreProducts(productId)
     }
 
     private fun initAdapter() {
@@ -79,9 +67,7 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!binding.rvHomeProducts.canScrollVertically(1) &&
-                    newState == RecyclerView.SCROLL_STATE_IDLE
-                ) {
+                if (!binding.rvHomeProducts.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     if (scrollState == 1) return
                     scrollState = 1
                     homeAdapter.initShowMoreButton()
@@ -92,8 +78,8 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
 
     override fun onStart() {
         super.onStart()
-        presenter.getProducts()
-        presenter.getRecentlyViewed()
+        presenter.fetchProducts()
+        presenter.fetchRecentlyViewed()
     }
 
     private fun setClickEventOnShoppingCartButton() {

@@ -5,14 +5,14 @@ import woowacourse.shopping.domain.model.Product
 interface HomeContract {
     interface View {
         val presenter: Presenter
-        fun setProducts(products: List<Product>)
-        fun setRecentlyViewed(products: List<Product>)
+        fun setUpProducts(products: List<Product>)
+        fun setUpRecentlyViewed(products: List<Product>)
         fun getProductCount(): Int
     }
 
     interface Presenter {
-        fun getProducts()
-        fun getRecentlyViewed()
-        fun getMoreProducts(productId: Long)
+        fun fetchProducts()
+        fun fetchRecentlyViewed()
+        fun fetchMoreProducts(productId: Long)
     }
 }
