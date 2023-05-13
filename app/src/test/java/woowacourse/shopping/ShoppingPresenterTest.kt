@@ -13,6 +13,7 @@ import woowacourse.shopping.util.toUiModel
 
 class ShoppingPresenterTest {
 
+    private lateinit var exampleProduct: Product
     private lateinit var exampleProducts: List<Product>
     private lateinit var view: ShoppingContract.View
     private lateinit var repository: ShoppingRepository
@@ -25,6 +26,7 @@ class ShoppingPresenterTest {
             Product(name = "아메리카노"),
             Product(name = "카페라떼")
         )
+        exampleProduct = Product(name = "밀크티")
     }
 
     @Test
@@ -37,10 +39,12 @@ class ShoppingPresenterTest {
             view = view,
             repository = repository
         )
+
         presenter.loadProducts()
 
         // then
         val expected = exampleProducts.map { it.toUiModel() }
+
         verify {
             view.setUpShoppingView(
                 products = expected,
@@ -60,10 +64,12 @@ class ShoppingPresenterTest {
             view = view,
             repository = repository
         )
+
         presenter.loadProducts()
 
         // then
         val expected = exampleProducts.map { it.toUiModel() }
+
         verify {
             view.setUpShoppingView(
                 any(),
@@ -71,5 +77,44 @@ class ShoppingPresenterTest {
                 any()
             )
         }
+    }
+
+    @Test
+    fun `상품을 더 읽어오면 추가적으로 받아온 상품들을 가지고 뷰를 갱신한다`() {
+        // given
+        every { repository.selectProducts(any(), any()) } returns exampleProducts
+
+        // when
+        val presenter = ShoppingPresenter(
+            view = view,
+            repository = repository
+        )
+
+        presenter.readMoreShoppingProducts()
+
+        // then
+        val expected = exampleProducts.map { it.toUiModel() }
+
+        verify { view.refreshShoppingProductsView(toAdd = expected) }
+    }
+
+    @Test
+    fun `최근 본 상품을 추가하면 저장소에 저장한 후 기존 최근 본 상품들과 합쳐서 뷰를 갱신한다`() {
+        // given
+        every { repository.selectRecentViewedProducts() } returns exampleProducts
+        every { repository.selectProductById(id = exampleProduct.id) } returns exampleProduct
+
+        // when
+        val presenter = ShoppingPresenter(
+            view = view,
+            repository = repository
+        )
+
+        presenter.addToRecentViewedProduct(exampleProduct.id)
+
+        // then
+        val expected = listOf(exampleProduct.toUiModel()) + exampleProducts.map { it.toUiModel() }
+
+        verify { view.refreshRecentViewedProductsView(products = expected) }
     }
 }

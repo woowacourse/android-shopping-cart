@@ -24,7 +24,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             view = this,
             repository = ShoppingDBAdapter(
                 shoppingDao = ShoppingDao(this)
-            )
+            ).apply {
+                setUpDB()
+            }
         )
     }
 
@@ -75,14 +77,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         }
     }
 
-    override fun refreshRecentViewedProductsView(
-        toAdd: ProductUiModel,
-        toRemove: ProductUiModel?
-    ) {
-        shoppingRecyclerAdapter.refreshRecentViewedItems(
-            toRemove = toRemove,
-            toAdd = toAdd
-        )
+    override fun refreshRecentViewedProductsView(products: List<ProductUiModel>) {
+        shoppingRecyclerAdapter.refreshRecentViewedItems(products = products)
     }
 
     override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {

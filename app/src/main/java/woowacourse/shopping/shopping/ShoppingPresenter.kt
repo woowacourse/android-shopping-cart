@@ -52,8 +52,7 @@ class ShoppingPresenter(
         }
         repository.insertToRecentViewedProducts(id)
         view.refreshRecentViewedProductsView(
-            toAdd = product.toUiModel(),
-            toRemove = removedProduct?.toUiModel()
+            products = recentViewedProducts.values.map { it.toUiModel() }
         )
     }
 

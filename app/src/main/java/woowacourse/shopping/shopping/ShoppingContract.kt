@@ -14,8 +14,7 @@ interface ShoppingContract {
         )
 
         fun refreshRecentViewedProductsView(
-            toAdd: ProductUiModel,
-            toRemove: ProductUiModel?
+            products: List<ProductUiModel>
         )
 
         fun refreshShoppingProductsView(
