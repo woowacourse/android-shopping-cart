@@ -39,11 +39,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter = CartPresenter(this, CartDbRepository(this), ProductMockRepository)
     }
 
-    override fun showProducts(
-        cartProducts: List<CartProductModel>,
-        cartPageStatus: CartPageStatus
-    ) {
-        binding.recyclerCart.adapter = CartAdapter(cartProducts, object : CartAdapter.OnItemClick {
+    override fun showProducts(items: List<CartViewItem>) {
+        binding.recyclerCart.adapter = CartAdapter(items, object : CartAdapter.OnItemClick {
             override fun onRemoveClick(id: Int) {
                 presenter.removeProduct(id)
             }
@@ -55,11 +52,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             override fun onPrevClick() {
                 presenter.fetchPrevPage()
             }
-        }, cartPageStatus)
+        })
     }
 
-    override fun showOtherPage(size: Int) {
-        binding.recyclerCart.adapter?.notifyItemRangeChanged(0, size + 1)
+    override fun showOtherPage() {
+        binding.recyclerCart.adapter?.notifyDataSetChanged()
     }
 
     override fun notifyRemoveItem(position: Int) {

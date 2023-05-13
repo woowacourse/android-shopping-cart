@@ -7,9 +7,8 @@ import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.ProductModel
 
 class CartAdapter(
-    private val products: List<CartProductModel>,
+    private val items: List<CartViewItem>,
     private val onItemClick: OnItemClick,
-    private val cartPageStatus: CartPageStatus
 ) : RecyclerView.Adapter<CartItemViewHolder>() {
 
     interface OnItemClick {
@@ -23,19 +22,15 @@ class CartAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == products.size) {
-            CartViewType.PAGINATION_ITEM.ordinal
-        } else {
-            CartViewType.CART_PRODUCT_ITEM.ordinal
-        }
+        return items[position].type.ordinal
     }
 
-    override fun getItemCount(): Int = products.size + 1
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
         when (holder) {
-            is CartItemViewHolder.CartProductViewHolder -> holder.bind(products[position], onItemClick)
-            is CartItemViewHolder.CartPaginationViewHolder -> holder.bind(cartPageStatus)
+            is CartItemViewHolder.CartProductViewHolder -> holder.bind(items[position] as CartViewItem.CartProductItem)
+            is CartItemViewHolder.CartPaginationViewHolder -> holder.bind(items[position] as CartViewItem.PaginationItem)
         }
     }
 }

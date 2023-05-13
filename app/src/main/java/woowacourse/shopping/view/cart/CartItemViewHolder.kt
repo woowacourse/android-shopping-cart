@@ -14,16 +14,22 @@ import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.PriceFormatter
 
 sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    class CartProductViewHolder(private val binding: ItemCartBinding) :
+    class CartProductViewHolder(
+        private val binding: ItemCartBinding,
+        onItemClick: CartAdapter.OnItemClick
+    ) :
         CartItemViewHolder(binding.root) {
-        fun bind(product: CartProductModel, onItemClick: CartAdapter.OnItemClick) {
-            binding.cartProduct = product
+        init {
+            binding.onItemClick = onItemClick
+        }
+
+        fun bind(item: CartViewItem.CartProductItem) {
+            binding.cartProduct = item.product
             binding.textPrice.text = binding.root.context.getString(
                 R.string.korean_won,
-                PriceFormatter.format(product.totalPrice)
+                PriceFormatter.format(item.product.totalPrice)
             )
-            Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
-            binding.onItemClick = onItemClick
+            Glide.with(binding.root.context).load(item.product.imageUrl).into(binding.imgProduct)
         }
     }
 
@@ -36,8 +42,8 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.onItemClick = onItemClick
         }
 
-        fun bind(cartPageStatus: CartPageStatus) {
-            binding.status = cartPageStatus
+        fun bind(item: CartViewItem.PaginationItem) {
+            binding.status = item.status
         }
     }
 
@@ -49,11 +55,13 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         ): CartItemViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(type.id, parent, false)
             return when (type) {
-                CartViewType.CART_PRODUCT_ITEM -> CartProductViewHolder(ItemCartBinding.bind(view))
+                CartViewType.CART_PRODUCT_ITEM -> CartProductViewHolder(
+                    ItemCartBinding.bind(view),
+                    onItemClick
+                )
                 CartViewType.PAGINATION_ITEM -> CartPaginationViewHolder(
-                    ItemCartPaginationBinding.bind(
-                        view
-                    ), onItemClick
+                    ItemCartPaginationBinding.bind(view),
+                    onItemClick
                 )
             }
         }

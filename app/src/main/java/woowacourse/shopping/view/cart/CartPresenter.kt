@@ -3,7 +3,6 @@ package woowacourse.shopping.view.cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.model.CartPageStatus
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
@@ -14,45 +13,50 @@ class CartPresenter(
     private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
 
     private val currentCartProducts =
-        convertIdToProductModel(cartPagination.nextItems()).toMutableList()
-    private var cartPageStatus = cartPagination.status
+        convertToCartProductModels(cartPagination.nextItems()).toMutableList()
+    private val cartItems =
+        (currentCartProducts.map { CartViewItem.CartProductItem(it) } + CartViewItem.PaginationItem(
+            cartPagination.status
+        )).toMutableList()
 
     override fun fetchProducts() {
-        view.showProducts(
-            currentCartProducts,
-            cartPageStatus
-        )
+        view.showProducts(cartItems)
     }
 
     override fun removeProduct(id: Int) {
         val removedItem = currentCartProducts.find { it.id == id }
         cartRepository.remove(id)
         view.notifyRemoveItem(currentCartProducts.indexOf(removedItem))
+        cartItems.removeAt(currentCartProducts.indexOf(removedItem))
         currentCartProducts.remove(removedItem)
     }
 
     override fun fetchNextPage() {
-        val getItems = cartPagination.nextItems()
-        if (getItems.isNotEmpty()) {
-            currentCartProducts.clear()
-            currentCartProducts.addAll(convertIdToProductModel(getItems))
-            cartPageStatus = cartPagination.status
-            fetchProducts()
+        val items = cartPagination.nextItems()
+        if (items.isNotEmpty()) {
+            changeListItems(items)
+            view.showOtherPage()
         }
     }
 
     override fun fetchPrevPage() {
-        val getItems = cartPagination.prevItems()
-        if (getItems.isNotEmpty()) {
-            currentCartProducts.clear()
-            currentCartProducts.addAll(convertIdToProductModel(getItems))
-            cartPageStatus = cartPagination.status
-            fetchProducts()
+        val items = cartPagination.prevItems()
+        if (items.isNotEmpty()) {
+            changeListItems(items)
+            view.showOtherPage()
         }
     }
 
-    private fun convertIdToProductModel(cartProducts: List<CartProduct>) =
+    private fun convertToCartProductModels(cartProducts: List<CartProduct>) =
         cartProducts.asSequence().map { it.toUiModel(productRepository.find(it.id)) }.toList()
+
+    private fun changeListItems(items: List<CartProduct>) {
+        currentCartProducts.clear()
+        currentCartProducts.addAll(convertToCartProductModels(items))
+        cartItems.clear()
+        cartItems.addAll(currentCartProducts.map { CartViewItem.CartProductItem(it) })
+        cartItems.add(CartViewItem.PaginationItem(cartPagination.status))
+    }
 
     companion object {
         private const val PAGINATION_SIZE = 5
