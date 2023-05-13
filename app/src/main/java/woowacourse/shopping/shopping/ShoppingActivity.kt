@@ -23,6 +23,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
+    private val shoppingDBOpenHelper: ShoppingDBOpenHelper by lazy {
+        ShoppingDBOpenHelper(this)
+    }
+
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it) })
     }
@@ -106,11 +110,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initPresenter() {
-        val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ShoppingPresenter(
             this,
-            productDao = ProductDao(db),
-            recentProductDao = RecentProductDao(db),
+            productDao = ProductDao(shoppingDBOpenHelper.writableDatabase),
+            recentProductDao = RecentProductDao(shoppingDBOpenHelper.writableDatabase),
             recentProductSize = 10,
             productLoadSize = 20
         )

@@ -16,6 +16,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var cartAdapter: CartAdapter
 
+    private val shoppingDBOpenHelper: ShoppingDBOpenHelper by lazy {
+        ShoppingDBOpenHelper(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -80,9 +84,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initPresenter() {
-        val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = CartPresenter(
-            this, cartDao = CartDao(db), countPerPage = SIZE_PER_PAGE
+            this,
+            cartDao = CartDao(shoppingDBOpenHelper.writableDatabase),
+            countPerPage = SIZE_PER_PAGE
         )
     }
 
