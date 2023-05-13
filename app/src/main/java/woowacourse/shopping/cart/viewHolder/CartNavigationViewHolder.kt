@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.CartNavigationItemBinding
 import woowacourse.shopping.model.CartUIModel
 
@@ -11,7 +12,7 @@ class CartNavigationViewHolder private constructor(
     private val binding: CartNavigationItemBinding,
     onPageUp: () -> Unit,
     onPageDown: () -> Unit,
-) : ItemViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.pageUp.setOnClickListener { onPageUp() }
         binding.pageDown.setOnClickListener { onPageDown() }

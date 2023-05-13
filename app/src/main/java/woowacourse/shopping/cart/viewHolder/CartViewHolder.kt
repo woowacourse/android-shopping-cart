@@ -2,6 +2,7 @@ package woowacourse.shopping.cart.viewHolder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.CartItem
 import woowacourse.shopping.databinding.CartItemBinding
 import woowacourse.shopping.model.ProductUIModel
@@ -10,7 +11,7 @@ class CartViewHolder private constructor(
     val binding: CartItemBinding,
     val onClick: (ProductUIModel) -> Unit,
     val onRemove: (Int) -> Unit,
-) : ItemViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(cart: CartItem) {
         binding.product = cart.product
         binding.root.setOnClickListener { onClick(cart.product) }
