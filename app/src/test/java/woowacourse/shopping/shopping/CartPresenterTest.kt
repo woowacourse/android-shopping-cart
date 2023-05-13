@@ -11,7 +11,7 @@ import woowacourse.shopping.cart.CartContract
 import woowacourse.shopping.cart.CartPresenter
 import woowacourse.shopping.common.data.dao.CartDao
 import woowacourse.shopping.common.data.database.state.State
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
@@ -81,7 +81,7 @@ class CartPresenterTest {
         } just runs
 
         // when
-        val cartProductModel = makeCartProduct(0).toView()
+        val cartProductModel = makeCartProduct(0).toViewModel()
         presenter.removeCartProduct(cartProductModel)
 
         // then

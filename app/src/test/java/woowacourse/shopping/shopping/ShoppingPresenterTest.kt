@@ -11,7 +11,7 @@ import woowacourse.shopping.common.data.dao.ProductDao
 import woowacourse.shopping.common.data.dao.RecentProductDao
 import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.mapper.ProductMapper.toView
+import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProducts
 
@@ -79,7 +79,7 @@ class ShoppingPresenterTest {
 
         verify {
             productsState.save(Products(emptyList()))
-            view.addProducts(Products(emptyList()).value.map { it.toView() })
+            view.addProducts(Products(emptyList()).value.map { it.toViewModel() })
         }
     }
 
@@ -133,7 +133,7 @@ class ShoppingPresenterTest {
             productsState.load()
             productDao.selectByRange(0, 0)
             productsState.save(Products(emptyList()))
-            view.addProducts(Products(emptyList()).value.map { it.toView() })
+            view.addProducts(Products(emptyList()).value.map { it.toViewModel() })
         }
     }
 }

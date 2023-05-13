@@ -1,7 +1,7 @@
 package woowacourse.shopping.common.model.mapper
 
 interface Mapper<T, R> {
-    fun T.toView(): R
+    fun T.toViewModel(): R
 
-    fun R.toDomain(): T
+    fun R.toDomainModel(): T
 }

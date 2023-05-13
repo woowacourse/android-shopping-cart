@@ -9,8 +9,8 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.common.data.dao.CartDao
 import woowacourse.shopping.common.data.database.state.State
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
-import woowacourse.shopping.common.model.mapper.ProductMapper.toView
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
+import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
@@ -47,7 +47,7 @@ class ProductDetailPresenterTest {
 
         // then
         verify {
-            view.updateProductDetail(product.toView())
+            view.updateProductDetail(product.toViewModel())
         }
     }
 
@@ -85,7 +85,7 @@ class ProductDetailPresenterTest {
         verify {
             cartDao.selectAll()
             cartState.save(addedCart)
-            cartDao.insertCartProduct(cartProduct.toView())
+            cartDao.insertCartProduct(cartProduct.toViewModel())
             view.showCart()
         }
     }

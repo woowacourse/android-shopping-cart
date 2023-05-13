@@ -4,8 +4,8 @@ import woowacourse.shopping.common.data.dao.CartDao
 import woowacourse.shopping.common.data.database.state.CartState
 import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.CartProductModel
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomain
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomainModel
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
 import woowacourse.shopping.domain.Cart
 
 class CartPresenter(
@@ -21,7 +21,7 @@ class CartPresenter(
     }
 
     override fun removeCartProduct(cartProductModel: CartProductModel) {
-        cart = cartState.load().remove(cartProductModel.toDomain())
+        cart = cartState.load().remove(cartProductModel.toDomainModel())
         cartDao.deleteCartProductByOrdinal(cartProductModel.ordinal)
         updateCartPage()
     }
@@ -39,7 +39,7 @@ class CartPresenter(
     private fun updateCartPage() {
         cartState.save(cartDao.selectAll())
         val cart = cartDao.selectPage(currentPage, countPerPage)
-        view.updateCart(cartProductsModel = cart.products.map { it.toView() })
+        view.updateCart(cartProductsModel = cart.products.map { it.toViewModel() })
         view.updateNavigator(
             currentPage = currentPage + 1, maxPage = calculateMaxPage() + 1
         )

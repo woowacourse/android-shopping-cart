@@ -11,7 +11,7 @@ import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.data.dao.CartDao
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
+import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.common.utils.getSerializable
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 
@@ -65,7 +65,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val product = intent.getSerializable<ProductModel>(EXTRA_KEY_PRODUCT) ?: return finish()
         presenter = ProductDetailPresenter(
             this,
-            product = product.toDomain(),
+            product = product.toDomainModel(),
             cartDao = CartDao(shoppingDBOpenHelper.writableDatabase)
         )
     }

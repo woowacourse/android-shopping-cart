@@ -6,9 +6,9 @@ import woowacourse.shopping.common.data.database.state.ProductsState
 import woowacourse.shopping.common.data.database.state.RecentProductsState
 import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
-import woowacourse.shopping.common.model.mapper.ProductMapper.toView
-import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
+import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
+import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
+import woowacourse.shopping.common.model.mapper.RecentProductMapper.toViewModel
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
@@ -36,10 +36,10 @@ class ShoppingPresenter(
 
     override fun openProduct(productModel: ProductModel) {
         val recentProducts = recentProductsState.load()
-        val recentProduct = recentProducts.makeRecentProduct(productModel.toDomain())
+        val recentProduct = recentProducts.makeRecentProduct(productModel.toDomainModel())
 
         recentProductsState.save(recentProducts.add(recentProduct))
-        recentProductDao.insertRecentProduct(recentProduct.toView())
+        recentProductDao.insertRecentProduct(recentProduct.toViewModel())
 
         view.showProductDetail(productModel)
     }
@@ -52,7 +52,7 @@ class ShoppingPresenter(
         val products = productsState.load()
         val loadedProducts = productDao.selectByRange(products.value.size, productLoadSize)
         productsState.save(products + loadedProducts)
-        view.addProducts(loadedProducts.value.map { it.toView() })
+        view.addProducts(loadedProducts.value.map { it.toViewModel() })
     }
 
     private fun updateRecentProducts() {
@@ -61,6 +61,6 @@ class ShoppingPresenter(
             recentProducts.getRecentProducts(recentProductSize).value.sortedByDescending(
                 RecentProduct::ordinal
             )
-        view.updateRecentProducts(recentProductsDesc.map { it.toView() })
+        view.updateRecentProducts(recentProductsDesc.map { it.toViewModel() })
     }
 }

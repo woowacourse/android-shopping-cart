@@ -1,22 +1,22 @@
 package woowacourse.shopping.common.model.mapper
 
 import woowacourse.shopping.common.model.RecentProductModel
-import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
-import woowacourse.shopping.common.model.mapper.ProductMapper.toView
+import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
+import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
 import woowacourse.shopping.domain.RecentProduct
 
 object RecentProductMapper : Mapper<RecentProduct, RecentProductModel> {
-    override fun RecentProduct.toView(): RecentProductModel {
+    override fun RecentProduct.toViewModel(): RecentProductModel {
         return RecentProductModel(
             ordinal,
-            product.toView()
+            product.toViewModel()
         )
     }
 
-    override fun RecentProductModel.toDomain(): RecentProduct {
+    override fun RecentProductModel.toDomainModel(): RecentProduct {
         return RecentProduct(
             ordinal,
-            product.toDomain()
+            product.toDomainModel()
         )
     }
 }
