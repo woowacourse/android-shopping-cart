@@ -18,7 +18,7 @@ class ProductViewHolder(
     private lateinit var product: ProductUIModel
 
     init {
-        binding.root.setOnClickListener {
+        itemView.setOnClickListener {
             productOnClick(product)
         }
     }

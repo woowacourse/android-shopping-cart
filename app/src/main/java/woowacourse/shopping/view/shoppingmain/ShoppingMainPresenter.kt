@@ -14,7 +14,9 @@ class ShoppingMainPresenter(private val view: ShoppingMainContract.View) :
 
     override fun getRecentProducts(db: SQLiteDatabase): List<RecentProductUIModel> {
         val repository = RecentProductDBRepository(db)
-        return repository.getAll()
+        val recentProducts = repository.getAll()
+        repository.close()
+        return recentProducts
     }
 
     override fun setProductOnClick() {

@@ -25,6 +25,7 @@ class ShoppingCartViewHolder(
     }
 
     fun bind(item: CartProductUIModel) {
+        cartProduct = item
         binding.cartProduct = cartProduct
     }
 }

@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
@@ -16,21 +17,14 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 
 class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     override lateinit var presenter: ShoppingMainContract.Presenter
-    private lateinit var adapter: ProductsAdapter
+    private lateinit var adapter: ConcatAdapter
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentProductAdapter: RecentProductAdapter
+    private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
 
     private var _binding: ActivityShoppingMainBinding? = null
     private val binding
         get() = _binding!!
-
-    override fun onResume() {
-        super.onResume()
-
-        val db = RecentProductDBHelper(this).writableDatabase
-        val recentProducts = presenter.getRecentProducts(db)
-        db.close()
-
-        adapter.update(recentProducts)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,24 +33,42 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
 
         setSupportActionBar(binding.tbProductCatalogue)
         setPresenter()
-        setAdapter()
+        setAdapters()
         setViewSettings()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val db = RecentProductDBHelper(this).writableDatabase
+        val recentProducts = presenter.getRecentProducts(db).subList(0,9).reversed()
+
+        recentProductAdapter.update(recentProducts)
     }
 
     private fun setPresenter() {
         presenter = ShoppingMainPresenter(this)
     }
 
-    private fun setAdapter() {
+    private fun setAdapters() {
         val db = RecentProductDBHelper(this).writableDatabase
 
-        adapter = ProductsAdapter(
+        productAdapter = ProductAdapter(
             presenter.getMainProducts(),
-            presenter.getRecentProducts(db),
             showProductDetailPage()
         )
+        recentProductAdapter = RecentProductAdapter(
+            presenter.getRecentProducts(db).subList(0,9),
+            showProductDetailPage()
+        )
+        recentProductWrapperAdapter = RecentProductWrapperAdapter(
+            recentProductAdapter
+        )
 
-        db.close()
+        val config = ConcatAdapter.Config.Builder().apply {
+            setIsolateViewTypes(false)
+        }.build()
+        adapter = ConcatAdapter(config, recentProductAdapter, productAdapter)
     }
 
     override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
@@ -66,15 +78,18 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     }
 
     private fun setViewSettings() {
-        val gridLayoutManager = GridLayoutManager(binding.root.context, 2)
+        val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                if (position == 0) return 2
-                return 1
+                return when(adapter.getItemViewType(position)) {
+                    ProductAdapter.VIEW_TYPE -> 1
+                    RecentProductWrapperAdapter.VIEW_TYPE -> 2
+                    else -> 2
+                }
             }
         }
-        binding.rvProductCatalogue.layoutManager = gridLayoutManager
         binding.rvProductCatalogue.adapter = adapter
+        binding.rvProductCatalogue.layoutManager = gridLayoutManager
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

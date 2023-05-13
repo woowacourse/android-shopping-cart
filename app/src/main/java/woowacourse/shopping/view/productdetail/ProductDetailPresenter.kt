@@ -15,13 +15,13 @@ class ProductDetailPresenter(
     override fun saveRecentProduct(db: SQLiteDatabase) {
         val repository = RecentProductDBRepository(db)
         repository.insert(RecentProductUIModel(product))
-        db.close()
+        repository.close()
     }
 
     override fun saveCartProduct(db: SQLiteDatabase) {
         val repository = CartProductDBRepository(db)
         repository.insert(CartProductUIModel(product))
-        db.close()
+        repository.close()
         view.showCartPage()
     }
 }
