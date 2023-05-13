@@ -1,6 +1,6 @@
 package woowacourse.shopping.feature.main
 
-import com.example.domain.ProductCache
+import com.example.domain.cache.ProductLocalCache
 import com.example.domain.model.Price
 import com.example.domain.model.Product
 import com.example.domain.model.RecentProduct
@@ -26,7 +26,7 @@ internal class MainPresenterTest {
         productRepository = mockk()
         recentProductRepository = mockk()
         presenter = MainPresenter(view, productRepository, recentProductRepository)
-        ProductCache.clear()
+        ProductLocalCache.clear()
     }
 
     @Test
@@ -41,12 +41,12 @@ internal class MainPresenterTest {
         val expected = mockProducts.toList()
         assert(actual == expected)
         verify { view.addProducts(any()) }
-        assert(ProductCache.productList == expected)
+        assert(ProductLocalCache.productList == expected)
     }
 
     @Test
     fun `캐쉬로부터 복구받은 상품록을 화면에 띄운다`() {
-        ProductCache.addProducts(mockProducts)
+        ProductLocalCache.addProducts(mockProducts)
         val slot = slot<List<MainProductItemModel>>()
         every { view.addProducts(capture(slot)) } just Runs
 
@@ -85,7 +85,7 @@ internal class MainPresenterTest {
 
         assert(actual == expected)
         verify { view.addProducts(any()) }
-        assert(ProductCache.productList == expected)
+        assert(ProductLocalCache.productList == expected)
     }
 
     @Test

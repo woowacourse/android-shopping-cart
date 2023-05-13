@@ -7,9 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.domain.ProductCache
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.data.ProductMockRepositoryImpl
 import woowacourse.shopping.data.RecentProductRepositoryImpl
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
@@ -43,19 +42,15 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
         presenter = MainPresenter(
             this,
-            ProductMockRepository(),
+            ProductMockRepositoryImpl(),
             RecentProductRepositoryImpl(RecentDao(this))
         )
 
         initAdapters()
         initLayoutManager()
         binding.productRecyclerView.adapter = concatAdapter
-        if (savedInstanceState == null) {
-            presenter.loadProducts()
-        } else {
-            presenter.loadProductsFromCache()
-        }
 
+        presenter.loadProducts()
         presenter.loadRecent()
     }
 
@@ -134,7 +129,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun onDestroy() {
         super.onDestroy()
         if (isFinishing) {
-            ProductCache.clear()
+            presenter.resetProducts()
         }
     }
 }

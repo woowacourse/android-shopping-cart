@@ -1,17 +1,17 @@
-package com.example.domain
+package com.example.domain.cache
 
 import com.example.domain.model.Product
 
-object ProductCache {
+object ProductLocalCache : ProductCache {
     private val _productList = mutableListOf<Product>()
-    val productList: List<Product>
+    override val productList: List<Product>
         get() = _productList.toList()
 
-    fun addProducts(products: List<Product>) {
+    override fun addProducts(products: List<Product>) {
         _productList.addAll(products)
     }
 
-    fun clear() {
+    override fun clear() {
         _productList.clear()
     }
 }

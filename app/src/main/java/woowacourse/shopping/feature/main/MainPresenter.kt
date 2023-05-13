@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.main
 
-import com.example.domain.ProductCache
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
@@ -23,19 +22,6 @@ class MainPresenter(
             }
         }
         view.addProducts(productItems)
-        ProductCache.addProducts(firstProducts)
-    }
-
-    override fun loadProductsFromCache() {
-        val cacheProducts = ProductCache.productList
-        val cacheItems = cacheProducts.map { product ->
-            product.toPresentation().toItemModel { position ->
-                addRecentProduct(RecentProduct(product, LocalDateTime.now()))
-                view.showProductDetailScreenByProduct(position)
-                loadRecent()
-            }
-        }
-        view.addProducts(cacheItems)
     }
 
     override fun moveToCart() {
@@ -52,7 +38,6 @@ class MainPresenter(
             }
         }
         view.addProducts(nextProductItems)
-        ProductCache.addProducts(nextProducts)
     }
 
     override fun loadRecent() {
@@ -64,6 +49,11 @@ class MainPresenter(
             }
         }
         view.updateRecent(recent)
+    }
+
+    override fun resetProducts() {
+        productRepository.resetCache()
+        view.addProducts(listOf())
     }
 
     private fun addRecentProduct(recentProduct: RecentProduct) {
