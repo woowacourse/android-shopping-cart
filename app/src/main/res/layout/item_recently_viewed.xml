@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/tv_wrapper_recently_viewed"
-            style="@style/woowa_pro_16"
+            style="@style/Woowa_pro_16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"

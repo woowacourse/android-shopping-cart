@@ -102,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="18dp"
-                android:text="@{String.format(@string/detail_price_format, presenter.selectedProduct.price)}"
+                android:text="@{String.format(@string/price_format, presenter.selectedProduct.price)}"
                 android:textColor="@color/woowa_dealer_black_400"
                 android:textSize="20sp"
                 android:textStyle="normal"

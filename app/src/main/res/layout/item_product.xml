@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/tv_item_product_name"
-                style="@style/woowa_pro_16"
+                style="@style/Woowa_pro_16"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -53,7 +53,7 @@
 
             <TextView
                 android:id="@+id/tv_item_product_price"
-                style="@style/woowa_air_16"
+                style="@style/Woowa_air_16"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rectangle_radius_4dp_blue"
@@ -61,7 +61,7 @@
                 android:paddingHorizontal="8dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="8dp"
-                android:text="@{String.valueOf(product.price)}"
+                android:text="@{@string/price_format(product.price)}"
                 android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

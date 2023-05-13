@@ -36,7 +36,7 @@
 
             <TextView
                 android:id="@+id/tv_shoppingCart_title"
-                style="@style/woowa_pro_20"
+                style="@style/Woowa_pro_20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -50,7 +50,7 @@
 
         <TextView
             android:id="@+id/tv_shoppingCart_page_number"
-            style="@style/woowa_air_24"
+            style="@style/Woowa_air_24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="62dp"

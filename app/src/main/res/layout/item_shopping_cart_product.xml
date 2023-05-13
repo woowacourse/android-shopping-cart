@@ -26,7 +26,7 @@
 
             <TextView
                 android:id="@+id/tv_cartProduct_name"
-                style="@style/woowa_pro_24"
+                style="@style/Woowa_pro_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -61,7 +61,7 @@
 
             <TextView
                 android:id="@+id/tv_cartProduct_price"
-                style="@style/woowa_air_16"
+                style="@style/Woowa_air_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="13dp"

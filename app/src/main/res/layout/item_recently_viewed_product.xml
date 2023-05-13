@@ -20,7 +20,6 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:glideSrc="@{product.itemImage}"
-            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +27,7 @@
 
         <TextView
             android:id="@+id/tv_item_product_name"
-            style="@style/woowa_pro_16"
+            style="@style/Woowa_pro_16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
