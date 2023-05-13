@@ -5,7 +5,7 @@ import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.ProductUiModel
 
 class DetailPresenter(
-    val view: DetailContract.View,
+    private val view: DetailContract.View,
     private val cartRepository: CartRepository,
     product: ProductUiModel
 ) : DetailContract.Presenter {

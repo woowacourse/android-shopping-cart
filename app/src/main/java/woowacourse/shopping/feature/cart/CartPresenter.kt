@@ -7,7 +7,7 @@ import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.PageUiModel
 
 class CartPresenter(
-    val view: CartContract.View,
+    private val view: CartContract.View,
     private val cartRepository: CartRepository,
 ) : CartContract.Presenter {
     private var _page =

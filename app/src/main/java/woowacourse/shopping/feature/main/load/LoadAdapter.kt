@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreProductBinding
 
 class LoadAdapter(
-    val onClick: () -> Unit
+    private val onClick: () -> Unit
 ) : RecyclerView.Adapter<LoadViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoadViewHolder {
         val binding =

@@ -23,7 +23,7 @@ import woowacourse.shopping.feature.main.recent.RecentProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
 
 class MainActivity : AppCompatActivity(), MainContract.View {
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var presenter: MainContract.Presenter
     private lateinit var mainProductAdapter: MainProductAdapter
     private lateinit var recentAdapter: RecentAdapter
