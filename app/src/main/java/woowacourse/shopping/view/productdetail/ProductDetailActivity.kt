@@ -21,24 +21,33 @@ import woowacourse.shopping.view.cart.CartActivity
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
+
+    private lateinit var product: ProductModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         presenter = ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
+        getData()
+        bindView()
+        presenter.updateRecentViewedProducts(product.id)
+    }
+
+    private fun getData() {
         val product = intent.getParcelableCompat<ProductModel>(PRODUCT)
         if (product == null) {
             Toast.makeText(this, NOT_EXIST_DATA_ERROR, Toast.LENGTH_LONG).show()
             finish()
             return
         }
+    }
+
+    private fun bindView() {
         binding.product = product
         binding.presenter = presenter
         Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
         binding.textPrice.text = getString(R.string.korean_won, PriceFormatter.format(product.price))
-
-        presenter.updateRecentViewedProducts(product.id)
     }
 
     override fun startCartActivity() {
