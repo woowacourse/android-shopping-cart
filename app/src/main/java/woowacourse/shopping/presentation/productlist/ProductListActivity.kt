@@ -50,10 +50,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         presenter.loadRecentProducts()
     }
 
-    private fun initProductListAdapter(
-//        recentProductModels: List<ProductModel>,
-//        productModels: List<ProductModel>,
-    ) {
+    private fun initProductListAdapter() {
         productListAdapter = ProductListAdapter(
             productItems = combineProductViewItems(listOf(), listOf()),
             showMoreProductItem = presenter::loadProducts,
@@ -96,11 +93,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun productClick(productModel: ProductModel) {
         presenter.saveRecentProductId(productModel.id)
-        showProductDetail(productModel)
+        showProductDetail(productModel.id)
     }
 
-    private fun showProductDetail(productModel: ProductModel) {
-        startActivity(ProductDetailActivity.getIntent(this, productModel))
+    private fun showProductDetail(productId: Int) {
+        startActivity(ProductDetailActivity.getIntent(this, productId))
     }
 
     private fun setLayoutManager() {

@@ -4,10 +4,12 @@ import woowacourse.shopping.presentation.model.ProductModel
 
 interface ProductDetailContract {
     interface Presenter {
-        fun putProductInCart(productModel: ProductModel)
+        fun loadProductDetail(productId: Int)
+        fun putProductInCart()
     }
 
     interface View {
+        fun setProductDetail(productModel: ProductModel)
         fun showCompleteMessage(productName: String)
     }
 }
