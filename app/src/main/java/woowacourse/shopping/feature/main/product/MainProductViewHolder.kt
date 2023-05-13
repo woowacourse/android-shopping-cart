@@ -10,7 +10,9 @@ class MainProductViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(product: MainProductItemModel) {
         binding.item = product
-        binding.position = bindingAdapterPosition
+        binding.productBox.setOnClickListener {
+            product.onClick(bindingAdapterPosition)
+        }
     }
 
     companion object {

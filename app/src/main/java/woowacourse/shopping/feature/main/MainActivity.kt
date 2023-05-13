@@ -40,18 +40,21 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        presenter = MainPresenter(
-            this,
-            ProductMockRepositoryImpl(),
-            RecentProductRepositoryImpl(RecentDao(this))
-        )
-
+        initPresenter()
         initAdapters()
         initLayoutManager()
         binding.productRecyclerView.adapter = concatAdapter
 
         presenter.loadProducts()
         presenter.loadRecent()
+    }
+
+    private fun initPresenter(){
+        presenter = MainPresenter(
+            this,
+            ProductMockRepositoryImpl(),
+            RecentProductRepositoryImpl(RecentDao(this))
+        )
     }
 
     private fun initAdapters() {

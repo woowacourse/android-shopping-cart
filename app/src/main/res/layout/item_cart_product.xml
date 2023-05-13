@@ -4,11 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="position"
-            type="int" />
-
         <variable
             name="itemModel"
             type="woowacourse.shopping.feature.cart.CartProductItemModel" />
@@ -56,7 +51,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:contentDescription="@string/cancel_button"
-            android:onClick="@{() -> itemModel.onClick.invoke(position)}"
             android:src="@drawable/ic_clear"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
             app:layout_constraintTop_toTopOf="parent"

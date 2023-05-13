@@ -4,21 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-        <variable
-            name="position"
-            type="int" />
-
         <variable
             name="item"
             type="woowacourse.shopping.feature.main.product.MainProductItemModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/product_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:onClick="@{()->item.onClick.invoke(position)}">
+        android:layout_margin="8dp">
 
         <ImageView
             android:id="@+id/product_img"

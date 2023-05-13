@@ -12,7 +12,9 @@ class CartProductViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(cartProduct: CartProductItemModel) {
         binding.itemModel = cartProduct
-        binding.position = bindingAdapterPosition
+        binding.deleteBtn.setOnClickListener {
+            cartProduct.onClick(bindingAdapterPosition)
+        }
     }
 
     companion object {
