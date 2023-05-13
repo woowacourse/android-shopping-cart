@@ -7,6 +7,7 @@ import woowacourse.shopping.databinding.ItemMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductContainerBinding
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.productlist.product.ProductListViewType.* // ktlint-disable no-wildcard-imports
 import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductAdapter
 import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductContainerViewHolder
 
@@ -27,7 +28,7 @@ class ProductListAdapter(
         }
 
         return when (ProductListViewType.find(viewType)) {
-            ProductListViewType.RECENT_PRODUCT -> {
+            RECENT_PRODUCT -> {
                 val containerBinding = ItemRecentProductContainerBinding.inflate(
                     inflater,
                     parent,
@@ -39,7 +40,7 @@ class ProductListAdapter(
                     recentProductAdapter,
                 )
             }
-            ProductListViewType.PRODUCT -> {
+            PRODUCT -> {
                 itemProductBinding = ItemProductBinding.inflate(
                     inflater,
                     parent,
@@ -48,7 +49,7 @@ class ProductListAdapter(
 
                 ProductItemViewHolder(itemProductBinding, showProductDetail)
             }
-            ProductListViewType.MORE_ITEM -> {
+            MORE_ITEM -> {
                 val itemMoreBinding = ItemMoreBinding.inflate(
                     inflater,
                     parent,
@@ -69,9 +70,9 @@ class ProductListAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (position) {
-            RECENT_PRODUCT_VIEW_POSITION -> ProductListViewType.RECENT_PRODUCT.number
-            _products.size + 1 -> ProductListViewType.MORE_ITEM.number
-            else -> ProductListViewType.PRODUCT.number
+            RECENT_PRODUCT_VIEW_POSITION -> RECENT_PRODUCT.number
+            _products.size + 1 -> MORE_ITEM.number
+            else -> PRODUCT.number
         }
     }
 

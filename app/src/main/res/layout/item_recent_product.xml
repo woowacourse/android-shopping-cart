@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="productModel"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -14,6 +20,8 @@
             android:id="@+id/image_product_list_poster"
             android:layout_width="98dp"
             android:layout_height="98dp"
+            app:imageUrl="@{productModel.imageUrl}"
+            app:error="@{@drawable/default_image}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -26,16 +34,14 @@
             android:layout_marginHorizontal="4dp"
             android:layout_marginTop="7dp"
             android:ellipsize="end"
-
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="12sp"
             android:textStyle="bold"
+            android:text="@{productModel.name}"
             app:layout_constraintEnd_toEndOf="@+id/image_product_list_poster"
             app:layout_constraintStart_toStartOf="@+id/image_product_list_poster"
             app:layout_constraintTop_toBottomOf="@id/image_product_list_poster"
             tools:text="PET보틀-정사각형정사각형" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

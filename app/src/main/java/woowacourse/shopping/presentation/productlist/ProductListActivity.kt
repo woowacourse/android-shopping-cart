@@ -19,7 +19,6 @@ import woowacourse.shopping.presentation.productlist.recentproduct.RecentProduct
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
-
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
 

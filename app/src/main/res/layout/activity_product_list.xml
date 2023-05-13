@@ -13,7 +13,6 @@
             android:id="@+id/toolbar_product_list"
             layout="@layout/toolbar_product_list" />
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_product"
             android:layout_width="0dp"
