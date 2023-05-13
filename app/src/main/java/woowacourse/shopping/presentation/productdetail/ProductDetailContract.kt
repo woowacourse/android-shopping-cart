@@ -4,7 +4,8 @@ import woowacourse.shopping.presentation.model.ProductModel
 
 interface ProductDetailContract {
     interface Presenter {
-        fun putProductInCart(productModel: ProductModel)
+        var productModel: ProductModel
+        fun putProductInCart()
     }
 
     interface View {

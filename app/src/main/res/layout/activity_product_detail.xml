@@ -3,6 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.presentation.productdetail.ProductDetailContract.Presenter" />
+
+        <variable
+            name="productModel"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
+    </data>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,6 +25,8 @@
             layout="@layout/toolbar_product_detail" />
 
         <ImageView
+            app:imageUrl="@{productModel.imageUrl}"
+            app:error ="@{@drawable/default_image}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1"
@@ -34,6 +47,7 @@
             android:textColor="@color/black"
             android:textStyle="bold"
             tools:text="[든든] 동원 스위트콘"
+            android:text="@{productModel.name}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -66,9 +80,11 @@
             tools:text="99,800원"
             android:textSize="20sp"
             android:textColor="@color/black"
+            android:text="@{@string/price_format(productModel.price)}"
             app:layout_constraintTop_toTopOf="@+id/text_product_detail_price_title" />
 
         <Button
+            android:onClick="@{()->presenter.putProductInCart()}"
             android:id="@+id/button_put_in_cart"
             android:layout_width="0dp"
             android:layout_height="50dp"

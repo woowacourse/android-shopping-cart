@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbAdapter
 import woowacourse.shopping.data.cart.CartDbHelper
@@ -19,27 +18,19 @@ import woowacourse.shopping.util.noIntentExceptionHandler
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
-    private lateinit var productModel: ProductModel
-    private val presenter: ProductDetailContract.Presenter by lazy {
-        ProductDetailPresenter(this, CartDbAdapter(CartDbHelper(this)))
-    }
-
+    private lateinit var presenter: ProductDetailContract.Presenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        receiveProductModel()
+        initPresenter()
         initView()
     }
 
     private fun initView() {
         setToolbar()
-        setProductInfo()
-        binding.buttonPutInCart.setOnClickListener { putProductInCart() }
-    }
-
-    private fun putProductInCart() {
-        presenter.putProductInCart(productModel)
+        binding.presenter = presenter
+        binding.productModel = presenter.productModel
     }
 
     private fun setToolbar() {
@@ -70,23 +61,14 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         ).show()
     }
 
-    private fun setProductInfo() {
-        binding.textProductDetailPrice.text = getString(R.string.price_format, productModel.price)
-        binding.textProductDetailName.text = productModel.name
-        setProductImage()
-    }
-
-    private fun setProductImage() {
-        Glide.with(this)
-            .load(productModel.imageUrl)
-            .error(R.drawable.default_image)
-            .centerCrop()
-            .into(binding.imageProductDetailPoster)
-    }
-
-    private fun receiveProductModel() {
-        productModel = intent.getParcelableExtraCompat(PRODUCT_KEY_VALUE)
-            ?: return this.noIntentExceptionHandler(getString(R.string.product_model_null_error_message))
+    private fun initPresenter() {
+        intent.getParcelableExtraCompat<ProductModel>(PRODUCT_KEY_VALUE)?.let {
+            presenter = ProductDetailPresenter(
+                this,
+                CartDbAdapter(CartDbHelper(this)),
+                it,
+            )
+        } ?: noIntentExceptionHandler(getString(R.string.product_model_null_error_message))
     }
 
     companion object {
