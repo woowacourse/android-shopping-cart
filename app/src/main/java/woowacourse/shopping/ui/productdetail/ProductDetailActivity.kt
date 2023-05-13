@@ -27,7 +27,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         initBinding()
         initPresenter()
         initToolbar()
-        initCartButton()
     }
 
     private fun initBinding() {
@@ -45,13 +44,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             CartDatabase(CartDBHelper(this).writableDatabase),
             RecentProductDatabase(this)
         )
-    }
-
-    private fun initCartButton() {
-        binding.btnAddToCart.setOnClickListener {
-            presenter.addProductToCart()
-            navigateToCart()
-        }
+        binding.presenter = presenter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -71,7 +64,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.product = product
     }
 
-    private fun navigateToCart() {
+    override fun navigateToCart() {
         startActivity(CartActivity.getIntent(this))
     }
 

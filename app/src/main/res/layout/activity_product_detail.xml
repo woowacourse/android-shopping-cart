@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter" />
 
         <variable
             name="product"
@@ -85,6 +88,7 @@
             android:layout_height="50dp"
             android:background="#04C09E"
             android:gravity="center"
+            android:onClick="@{() -> presenter.addProductToCart()}"
             android:text="장바구니 담기"
             android:textColor="@color/white"
             android:textSize="20sp"
