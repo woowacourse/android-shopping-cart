@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import woowacourse.shopping.database.ProductContract
+import woowacourse.shopping.database.ProductDBHelper
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
@@ -12,7 +13,7 @@ class CartRepositoryImpl(
     context: Context,
     private val productRepository: ProductRepository,
 ) : CartRepository {
-    private val db = CartDbHelper(context).writableDatabase
+    private val db = ProductDBHelper(context).writableDatabase
 
     override fun findAll(): List<Product> {
         val products = mutableListOf<Product>()
