@@ -3,6 +3,7 @@ package woowacourse.shopping.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.CartDBHelper
@@ -20,7 +21,7 @@ class CartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-
+        setToolBarBackButton()
         val dbHelper = CartDBHelper(this)
         val db = dbHelper.readableDatabase
         val repository = ProductDBRepository(db)
@@ -33,13 +34,25 @@ class CartActivity : AppCompatActivity() {
         binding.rvCartList.adapter = adapter
     }
 
-    fun setOnClickRemove(): (ProductUIModel) -> Unit = {
+    private fun setToolBarBackButton() {
+        setSupportActionBar(binding.tbCart)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back_24)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    fun setOnClickRemove(): (ProductUIModel, Int) -> Unit = { productUIModle: ProductUIModel, position: Int ->
         val dbHelper = CartDBHelper(this)
         val db = dbHelper.writableDatabase
         val repository = ProductDBRepository(db)
         repository.remove(it)
 
-        adapter.remove(it)
+        adapter.remove(productUIModle)
+        adapter.notifyItemChanged(position)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) finish()
+        return super.onOptionsItemSelected(item)
     }
 
     companion object {
