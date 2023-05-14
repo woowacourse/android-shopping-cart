@@ -15,6 +15,6 @@ class RecentProductWrapperViewHolder(
 ) {
     init {
         val binding = ItemRecentProductWrapperBinding.bind(itemView)
-        binding.rvRecentProduct.adapter = recentProductAdapter
+        binding.adapter = recentProductAdapter
     }
 }

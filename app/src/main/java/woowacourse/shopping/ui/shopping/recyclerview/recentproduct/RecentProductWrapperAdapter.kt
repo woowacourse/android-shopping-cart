@@ -26,4 +26,9 @@ class RecentProductWrapperAdapter(
         recentProductAdapter.submitList(recentProductList)
         notifyDataSetChanged()
     }
+
+    fun submit(recentProduct: UiRecentProduct) {
+        val origin = recentProductAdapter.currentList
+        submitList(listOf(recentProduct) + origin)
+    }
 }

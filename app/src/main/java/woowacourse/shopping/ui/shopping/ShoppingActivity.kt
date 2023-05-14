@@ -43,15 +43,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
         )
     }
 
-    private val recentProductWrapperAdapter: RecentProductWrapperAdapter by lazy {
-        RecentProductWrapperAdapter(recentProductAdapter)
-    }
-    private val recentProductAdapter: RecentProductAdapter by lazy {
+    private val recentProductAdapter: RecentProductAdapter =
         RecentProductAdapter(presenter::inquiryRecentProductDetail)
-    }
-    private val productAdapter: ProductAdapter by lazy {
+
+    private val recentProductWrapperAdapter: RecentProductWrapperAdapter =
+        RecentProductWrapperAdapter(recentProductAdapter)
+
+    private val productAdapter: ProductAdapter =
         ProductAdapter(presenter::inquiryProductDetail)
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +78,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
 
     override fun updateRecentProducts(recentProducts: List<UiRecentProduct>) {
         recentProductWrapperAdapter.submitList(recentProducts)
+    }
+
+    override fun addRecentProduct(recentProduct: UiRecentProduct) {
+        runOnUiThread { recentProductWrapperAdapter.submit(recentProduct) }
     }
 
     override fun showProductDetail(product: UiProduct) {

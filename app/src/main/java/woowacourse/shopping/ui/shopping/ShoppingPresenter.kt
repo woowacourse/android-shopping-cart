@@ -22,6 +22,7 @@ class ShoppingPresenter(
         val products = productRepository
             .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, lastId)
             .map { it.toUi() }
+
         lastId = products.maxOfOrNull { it.id } ?: -1
         lastId -= if (checkHasNext(products)) 1 else 0
         hasNext = checkHasNext(products)
@@ -38,8 +39,13 @@ class ShoppingPresenter(
     }
 
     override fun inquiryProductDetail(product: UiProduct) {
+        val recentProduct = RecentProduct(product = product.toDomain())
         view.showProductDetail(product)
-        thread { recentProductRepository.add(RecentProduct(product = product.toDomain())) }
+
+        thread {
+            recentProductRepository.add(recentProduct)
+            view.addRecentProduct(recentProduct.toUi())
+        }
     }
 
     override fun inquiryRecentProductDetail(recentProduct: UiRecentProduct) {
