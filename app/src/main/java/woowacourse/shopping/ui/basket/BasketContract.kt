@@ -8,6 +8,7 @@ interface BasketContract {
 
         fun updateBasket(products: List<UiProduct>)
         fun updateNavigatorEnabled(previous: Boolean, next: Boolean)
+        fun closeScreen()
     }
 
     interface Presenter {
@@ -15,5 +16,6 @@ interface BasketContract {
 
         fun fetchBasket(isNext: Boolean)
         fun removeBasketProduct(product: UiProduct)
+        fun closeScreen()
     }
 }

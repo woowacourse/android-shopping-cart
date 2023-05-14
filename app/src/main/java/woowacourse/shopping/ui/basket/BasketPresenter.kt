@@ -33,6 +33,10 @@ class BasketPresenter(
         fetchBasket(true)
     }
 
+    override fun closeScreen() {
+        view.closeScreen()
+    }
+
     private fun checkHasNext(products: List<UiProduct>): Boolean =
         products.size == TOTAL_LOAD_BASKET_SIZE_AT_ONCE
 

@@ -30,13 +30,6 @@ class BasketActivity : AppCompatActivity(), View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_basket)
         binding.presenter = presenter
         binding.adapter = BasketAdapter(presenter::removeBasketProduct)
-        setClickListener()
-    }
-
-    private fun setClickListener() {
-        binding.tbBasket.setNavigationOnClickListener { finish() }
-        binding.btnPrevious.setOnClickListener { presenter.fetchBasket(isNext = false) }
-        binding.btnNext.setOnClickListener { presenter.fetchBasket(isNext = true) }
     }
 
     override fun updateBasket(products: List<UiProduct>) {
@@ -46,6 +39,10 @@ class BasketActivity : AppCompatActivity(), View {
     override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {
         binding.btnPrevious.isEnabled = previous
         binding.btnNext.isEnabled = next
+    }
+
+    override fun closeScreen() {
+        finish()
     }
 
     companion object {
