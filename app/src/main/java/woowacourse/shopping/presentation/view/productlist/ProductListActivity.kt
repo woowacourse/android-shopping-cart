@@ -143,6 +143,16 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         startActivity(CartActivity.createIntent(this))
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        recentProductWrapperAdapter.onSaveScrollState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        recentProductWrapperAdapter.onRestoreScrollState(savedInstanceState)
+    }
+
     companion object {
         private const val EMPTY = 0
         private const val SPAN_SIZE = 2
