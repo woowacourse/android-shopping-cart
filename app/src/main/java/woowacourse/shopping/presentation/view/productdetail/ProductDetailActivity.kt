@@ -65,11 +65,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun addCartSuccessView() {
         showToast(getString(R.string.toast_message_success_add_cart))
-        finish()
     }
 
     override fun handleErrorView() {
         showToast(getString(R.string.toast_message_system_error))
+    }
+
+    override fun exitProductDetailView() {
         finish()
     }
 

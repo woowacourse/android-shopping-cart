@@ -7,6 +7,7 @@ interface ProductDetailContract {
         fun setProductInfoView(productModel: ProductModel)
         fun handleErrorView()
         fun addCartSuccessView()
+        fun exitProductDetailView()
     }
     interface Presenter {
         fun loadProductInfoById(id: Long)

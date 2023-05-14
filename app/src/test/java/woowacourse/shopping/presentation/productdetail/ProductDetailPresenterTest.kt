@@ -56,6 +56,7 @@ class ProductDetailPresenterTest {
         val slot = slot<Long>()
         justRun { cartRepository.addCart(capture(slot)) }
         justRun { view.addCartSuccessView() }
+        justRun { view.exitProductDetailView() }
 
         // when
         presenter.addCart(1)
@@ -66,5 +67,6 @@ class ProductDetailPresenterTest {
         assertEquals(expected, actual)
         verify { cartRepository.addCart(actual) }
         verify { view.addCartSuccessView() }
+        verify { view.exitProductDetailView() }
     }
 }

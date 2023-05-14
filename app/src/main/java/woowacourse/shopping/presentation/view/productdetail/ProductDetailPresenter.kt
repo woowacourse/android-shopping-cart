@@ -12,8 +12,9 @@ class ProductDetailPresenter(
     ProductDetailContract.Presenter {
     override fun loadProductInfoById(id: Long) {
         val product = productRepository.getDataById(id)
-        if (product.id == -1L) {
+        if (product.id == UNABLE_PRODUCT_ID) {
             view.handleErrorView()
+            view.exitProductDetailView()
             return
         }
         view.setProductInfoView(product)
@@ -22,5 +23,10 @@ class ProductDetailPresenter(
     override fun addCart(productId: Long) {
         cartRepository.addCart(productId)
         view.addCartSuccessView()
+        view.exitProductDetailView()
+    }
+
+    companion object {
+        private const val UNABLE_PRODUCT_ID = -1L
     }
 }
