@@ -1,10 +1,10 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartProduct
+import woowacourse.shopping.model.CartProductUIModel
 
-fun Product.toUIModel(): ProductUIModel {
-    return ProductUIModel(
+fun CartProduct.toUIModel(): CartProductUIModel {
+    return CartProductUIModel(
         id = this.id,
         name = this.name,
         price = this.price,
@@ -12,8 +12,8 @@ fun Product.toUIModel(): ProductUIModel {
     )
 }
 
-fun ProductUIModel.toDomain(): Product {
-    return Product(
+fun CartProductUIModel.toDomain(): CartProduct {
+    return CartProduct(
         id = this.id,
         name = this.name,
         price = this.price,

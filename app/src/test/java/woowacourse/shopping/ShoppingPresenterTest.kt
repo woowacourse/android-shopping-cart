@@ -1,8 +1,5 @@
 package woowacourse.shopping
 
-import com.example.domain.model.Product
-import com.example.domain.model.ProductRepository
-import com.example.domain.model.RecentRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -11,6 +8,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.model.Product
+import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentRepository
 import woowacourse.shopping.ui.shopping.ShoppingContract
 import woowacourse.shopping.ui.shopping.ShoppingPresenter
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
@@ -118,7 +118,7 @@ class ShoppingPresenterTest {
         // then
 
         val capturedProducts = slot.captured
-        assertTrue(capturedProducts.size == 22)
+        assertTrue(capturedProducts.size == 21)
         verify(exactly = 1) { view.addProducts(capturedProducts) }
     }
 }

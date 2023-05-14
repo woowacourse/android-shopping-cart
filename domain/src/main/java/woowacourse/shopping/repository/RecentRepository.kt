@@ -1,4 +1,6 @@
-package com.example.domain.model
+package woowacourse.shopping.repository
+
+import woowacourse.shopping.model.Product
 
 interface RecentRepository {
     fun insert(product: Product)

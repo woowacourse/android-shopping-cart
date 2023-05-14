@@ -1,8 +1,8 @@
 package woowacourse.shopping.data
 
-import com.example.domain.model.Product
-import com.example.domain.model.ProductRepository
 import java.lang.Integer.min
+import woowacourse.shopping.model.Product
+import woowacourse.shopping.repository.ProductRepository
 
 object ProductFakeRepository : ProductRepository {
 
@@ -27,6 +27,10 @@ object ProductFakeRepository : ProductRepository {
         val subList = products.subList(from, to)
         offset = to
         return subList
+    }
+
+    override fun insert(product: Product) {
+        TODO("Not yet implemented")
     }
 
     override fun findById(id: Int): Product {

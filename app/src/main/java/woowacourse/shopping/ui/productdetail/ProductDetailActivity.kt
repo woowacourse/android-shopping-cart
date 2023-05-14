@@ -8,12 +8,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.database.cart.CartDBHelper
+import woowacourse.shopping.database.ShoppingDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.model.ProductUIModel.Companion.KEY_PRODUCT
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.utils.keyError
@@ -41,7 +40,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
-            CartDatabase(CartDBHelper(this).writableDatabase),
+            CartDatabase(ShoppingDBHelper(this).writableDatabase),
             RecentProductDatabase(this)
         )
         binding.presenter = presenter
@@ -69,7 +68,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     companion object {
+        private const val KEY_PRODUCT = "KEY_PRODUCT"
         fun getIntent(context: Context, product: ProductUIModel): Intent {
+            println("productId: $product")
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
             }

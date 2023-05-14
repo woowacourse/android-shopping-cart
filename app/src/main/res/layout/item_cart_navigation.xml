@@ -8,7 +8,7 @@
 
         <variable
             name="cart"
-            type="woowacourse.shopping.model.CartUIModel" />
+            type="woowacourse.shopping.model.PageUIModel" />
 
         <variable
             name="listener"

@@ -1,9 +1,9 @@
 package woowacourse.shopping.ui.productdetail
 
-import com.example.domain.model.CartRepository
-import com.example.domain.model.RecentRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.RecentRepository
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
@@ -21,7 +21,7 @@ class ProductDetailPresenter(
     }
 
     override fun addProductToCart() {
-        cartRepository.insert(product.toDomain())
+        cartRepository.insert(product.id)
         view.navigateToCart()
     }
 

@@ -7,10 +7,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.database.cart.CartDBHelper
+import woowacourse.shopping.database.ShoppingDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
+import woowacourse.shopping.database.product.ProductDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.CartUIModel
+import woowacourse.shopping.model.CartProductUIModel
+import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.cartAdapter.CartAdapter
 import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
@@ -35,7 +37,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initPresenter(savedInstanceState: Bundle?) {
         presenter = CartPresenter(
             this,
-            CartDatabase(CartDBHelper(this).writableDatabase),
+            CartDatabase(ShoppingDBHelper(this).writableDatabase),
+            ProductDatabase(ShoppingDBHelper(this).writableDatabase),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0
         )
         presenter.setUpCarts()
@@ -46,18 +49,18 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun setCarts(products: List<CartItemType.Cart>, cartUIModel: CartUIModel) {
+    override fun setCarts(products: List<CartItemType.Cart>, pageUIModel: PageUIModel) {
         val cartListener = object : CartListener {
             override fun onPageUp() { presenter.pageUp() }
             override fun onPageDown() { presenter.pageDown() }
             override fun onItemRemove(productId: Int) { presenter.removeItem(productId) }
-            override fun onItemClick(product: ProductUIModel) {
-                presenter.navigateToItemDetail(product)
+            override fun onItemClick(product: CartProductUIModel) {
+                presenter.navigateToItemDetail(product.id)
             }
         }
 
         binding.rvProducts.adapter = CartAdapter(
-            products.map { it }.plus(CartItemType.Navigation(cartUIModel)),
+            products.map { it }.plus(CartItemType.Navigation(pageUIModel)),
             cartListener
         )
     }

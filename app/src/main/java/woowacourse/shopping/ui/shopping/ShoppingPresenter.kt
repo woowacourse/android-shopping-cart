@@ -1,10 +1,10 @@
 package woowacourse.shopping.ui.shopping
 
-import com.example.domain.model.Product
-import com.example.domain.model.ProductRepository
-import com.example.domain.model.RecentRepository
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentRepository
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 
 class ShoppingPresenter(

@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.cart.cartAdapter
 
-import woowacourse.shopping.model.CartUIModel
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartProductUIModel
+import woowacourse.shopping.model.PageUIModel
 
 sealed class CartItemType {
     val viewType: Int
@@ -10,9 +10,9 @@ sealed class CartItemType {
             is Navigation -> TYPE_FOOTER
         }
 
-    data class Cart(val product: ProductUIModel) : CartItemType()
+    data class Cart(val product: CartProductUIModel) : CartItemType()
 
-    data class Navigation(val cart: CartUIModel) : CartItemType()
+    data class Navigation(val cart: PageUIModel) : CartItemType()
 
     companion object {
         const val TYPE_ITEM = 1

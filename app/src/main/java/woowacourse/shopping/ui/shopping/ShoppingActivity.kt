@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductFakeRepository
+import woowacourse.shopping.database.ShoppingDBHelper
+import woowacourse.shopping.database.product.ProductDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
@@ -41,6 +43,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initPresenter() {
+        ProductFakeRepository.getAll().forEach {
+            ProductDatabase(ShoppingDBHelper(this).writableDatabase).insert(it)
+        }
         presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
         presenter.setUpProducts()
     }

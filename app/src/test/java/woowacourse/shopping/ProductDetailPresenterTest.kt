@@ -1,8 +1,5 @@
 package woowacourse.shopping
 
-import com.example.domain.model.CartRepository
-import com.example.domain.model.Product
-import com.example.domain.model.RecentRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -11,7 +8,10 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.RecentRepository
 import woowacourse.shopping.ui.productdetail.ProductDetailContract
 import woowacourse.shopping.ui.productdetail.ProductDetailPresenter
 
@@ -58,7 +58,7 @@ class ProductDetailPresenterTest {
         // when
         presenter.addProductToCart()
         // then
-        verify(exactly = 1) { cartRepository.insert(fakeProduct) }
+        verify(exactly = 1) { cartRepository.insert(fakeProduct.id) }
     }
 
     @Test
