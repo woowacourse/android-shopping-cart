@@ -17,9 +17,13 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
+    private lateinit var productModel: ProductModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        initExtras()
+
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -56,6 +60,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         startActivity(intent)
     }
 
+    private fun initExtras() {
+        productModel = intent.getSerializable(EXTRA_KEY_PRODUCT) ?: return finish()
+    }
+
     private fun setUpProductDetailCartButton() {
         binding.productDetailCartButton.setOnClickListener {
             presenter.addToCart()
@@ -63,11 +71,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initPresenter() {
-        val product = intent.getSerializable<ProductModel>(EXTRA_KEY_PRODUCT) ?: return finish()
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ProductDetailPresenter(
             this,
-            productModel = product,
+            productModel = productModel,
             cartDao = CartDao(db)
         )
     }
