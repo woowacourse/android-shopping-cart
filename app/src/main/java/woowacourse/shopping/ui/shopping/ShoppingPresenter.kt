@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.shopping
 
 import woowacourse.shopping.mapper.toUIModel
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentRepository
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
@@ -17,19 +16,11 @@ class ShoppingPresenter(
         setRecentProduct()
 
         productsData += productRepository.getNext(PRODUCT_COUNT)
-            .map { product: Product -> ProductsItemType.Product(product.toUIModel()) }
-        view.setProducts(productsData.plus(ProductsItemType.ReadMore))
-    }
-
-    override fun updateProducts() {
-        setRecentProduct()
-
+            .map { ProductsItemType.Product(it.toUIModel()) }
         view.setProducts(productsData.plus(ProductsItemType.ReadMore))
     }
 
     override fun fetchMoreProducts() {
-        setRecentProduct()
-
         productsData += productRepository.getNext(PRODUCT_COUNT)
             .map { ProductsItemType.Product(it.toUIModel()) }
         view.addProducts(productsData.plus(ProductsItemType.ReadMore))

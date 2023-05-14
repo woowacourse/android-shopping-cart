@@ -13,7 +13,6 @@ interface ShoppingContract {
 
     interface Presenter {
         fun setUpProducts()
-        fun updateProducts()
         fun fetchMoreProducts()
         fun navigateToItemDetail(productId: Int)
     }

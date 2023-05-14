@@ -8,7 +8,7 @@ import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ReadMoreViewHo
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.RecentViewHolder
 
 class ProductsAdapter(
-    private var datas: List<ProductsItemType>,
+    private var products: List<ProductsItemType>,
     private val listener: ProductsListener
 ) : RecyclerView.Adapter<ItemViewHolder>() {
 
@@ -22,19 +22,19 @@ class ProductsAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(datas[position])
+        holder.bind(products[position])
     }
 
     override fun getItemCount(): Int {
-        return datas.size
+        return products.size
     }
 
     override fun getItemViewType(position: Int): Int {
-        return datas[position].viewType
+        return products[position].viewType
     }
 
     fun submitList(data: List<ProductsItemType>) {
-        datas = data
-        notifyItemChanged(0)
+        products = data
+        notifyItemChanged(products.size - data.size)
     }
 }

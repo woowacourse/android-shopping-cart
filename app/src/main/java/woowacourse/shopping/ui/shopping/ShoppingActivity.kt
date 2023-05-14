@@ -66,11 +66,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         return true
     }
 
-    override fun onResume() {
-        super.onResume()
-        presenter.updateProducts()
-    }
-
     private fun initLayoutManager() {
         val layoutManager = GridLayoutManager(this@ShoppingActivity, 2)
         val spacing = resources.getDimensionPixelSize(R.dimen.item_spacing)

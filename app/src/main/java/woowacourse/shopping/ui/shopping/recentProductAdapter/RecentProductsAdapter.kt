@@ -26,8 +26,7 @@ class RecentProductsAdapter(
         return ProductsItemType.TYPE_ITEM
     }
 
-    fun submitList(list: List<RecentProductItem>) {
-        recentProducts = list
-        notifyItemChanged(0)
+    fun submitList(data: List<RecentProductItem>) {
+        recentProducts = data
     }
 }
