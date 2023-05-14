@@ -44,7 +44,7 @@ class ShoppingPresenter(
     }
 
     override fun addToRecentViewedProduct(id: Int) {
-        val product = repository.selectProductById(id)
+        val product = repository.selectRecentViewedProductById(id)
         val removedProduct = recentViewedProducts.add(product)
 
         removedProduct?.let {

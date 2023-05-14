@@ -1,15 +1,15 @@
 package model
 
 class RecentViewedProducts(
-    products: List<Product>,
+    products: List<RecentViewedProduct>,
     private val maxSize: Int = 10,
 ) {
 
-    private val _values: MutableList<Product> = products.toMutableList()
-    val values: List<Product>
+    private val _values: MutableList<RecentViewedProduct> = products.toMutableList()
+    val values: List<RecentViewedProduct>
         get() = _values.toList()
 
-    fun add(product: Product): Product? {
+    fun add(product: RecentViewedProduct): RecentViewedProduct? {
         refreshLatestProduct(product)
 
         if (_values.size > maxSize) {
@@ -22,7 +22,7 @@ class RecentViewedProducts(
         return null
     }
 
-    private fun refreshLatestProduct(product: Product) {
+    private fun refreshLatestProduct(product: RecentViewedProduct) {
         _values.remove(product)
         _values.add(0, product)
     }

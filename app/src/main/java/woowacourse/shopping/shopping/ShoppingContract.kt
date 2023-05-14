@@ -2,6 +2,7 @@ package woowacourse.shopping.shopping
 
 import model.RecentViewedProducts
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentViewedProductUiModel
 
 interface ShoppingContract {
 
@@ -9,12 +10,12 @@ interface ShoppingContract {
 
         fun setUpShoppingView(
             products: List<ProductUiModel>,
-            recentViewedProducts: List<ProductUiModel>,
+            recentViewedProducts: List<RecentViewedProductUiModel>,
             readMoreShoppingProducts: () -> Unit
         )
 
         fun refreshRecentViewedProductsView(
-            products: List<ProductUiModel>
+            products: List<RecentViewedProductUiModel>
         )
 
         fun refreshShoppingProductsView(

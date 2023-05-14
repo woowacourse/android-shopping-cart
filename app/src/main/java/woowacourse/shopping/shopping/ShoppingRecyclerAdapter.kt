@@ -4,10 +4,11 @@ import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentViewedProductUiModel
 
 class ShoppingRecyclerAdapter(
     products: List<ProductUiModel>,
-    private var recentViewedProducts: List<ProductUiModel>,
+    private var recentViewedProducts: List<RecentViewedProductUiModel>,
     private val onProductClicked: (ProductUiModel) -> Unit,
     private val onReadMoreButtonClicked: () -> Unit
 ) : RecyclerView.Adapter<ShoppingRecyclerItemViewHolder>() {
@@ -59,7 +60,7 @@ class ShoppingRecyclerAdapter(
     override fun getItemCount(): Int = products.size + 1
 
     @SuppressLint("NotifyDataSetChanged")
-    fun refreshRecentViewedItems(products: List<ProductUiModel>) {
+    fun refreshRecentViewedItems(products: List<RecentViewedProductUiModel>) {
         recentViewedProducts = products
         notifyDataSetChanged()
     }

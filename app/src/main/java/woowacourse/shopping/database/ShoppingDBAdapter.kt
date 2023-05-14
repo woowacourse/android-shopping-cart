@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import model.Name
 import model.Price
 import model.Product
+import model.RecentViewedProduct
 import woowacourse.shopping.database.product.MockProduct
 import woowacourse.shopping.database.product.ProductDBContract
 import woowacourse.shopping.database.product.RecentViewedDBContract
@@ -88,6 +89,14 @@ class ShoppingDBAdapter(
         return Product(id, Name(name), img, Price(price))
     }
 
+    private fun Cursor.getRecentViewedProduct(): RecentViewedProduct {
+        val id = getInt(getColumnIndexOrThrow(ProductDBContract.PRODUCT_ID))
+        val img = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_IMG))
+        val name = getString(getColumnIndexOrThrow(ProductDBContract.PRODUCT_NAME))
+
+        return RecentViewedProduct(id, Name(name), img)
+    }
+
     override fun selectProductById(id: Int): Product {
         val cursor = shoppingDB.rawQuery(
             "select * from ${ProductDBContract.TABLE_NAME} where ${ProductDBContract.PRODUCT_ID} = ?",
@@ -126,20 +135,34 @@ class ShoppingDBAdapter(
         shoppingDB.insert(RecentViewedDBContract.TABLE_NAME, null, values)
     }
 
-    override fun selectRecentViewedProducts(): List<Product> {
-        val recentViewedProducts = mutableListOf<Product>()
+    override fun selectRecentViewedProducts(): List<RecentViewedProduct> {
+        val recentViewedProducts = mutableListOf<RecentViewedProduct>()
 
         with(recentViewedCursor) {
             while (moveToNext()) {
                 val id =
                     getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
-                val product = selectProductById(id)
+                val product = selectRecentViewedProductById(id)
 
                 recentViewedProducts.add(product)
             }
         }
 
         return recentViewedProducts.toList().reversed()
+    }
+
+    override fun selectRecentViewedProductById(id: Int): RecentViewedProduct {
+        val cursor = shoppingDB.rawQuery(
+            "select * from ${ProductDBContract.TABLE_NAME} where ${ProductDBContract.PRODUCT_ID} = ?",
+            arrayOf(id.toString())
+        ).apply {
+            moveToNext()
+        }
+
+        val product = cursor.getRecentViewedProduct()
+        cursor.close()
+
+        return product
     }
 
     override fun deleteFromRecentViewedProducts() {

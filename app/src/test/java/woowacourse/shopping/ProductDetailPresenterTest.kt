@@ -10,7 +10,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.productdetail.ProductDetailPresenter
 import woowacourse.shopping.util.toUiModel
@@ -35,10 +34,8 @@ class ProductDetailPresenterTest {
     @Test
     fun `프레젠터가 생성될 때 주입받은 상품에 대한 정보를 가지고 화면을 초기화한다`() {
         // given
-        val slot = slot<ProductUiModel>()
         view = mockk()
         repository = mockk()
-        every { view.setUpProductDetailView(capture(slot)) } just Runs
 
         // when
         ProductDetailPresenter(
@@ -48,11 +45,8 @@ class ProductDetailPresenterTest {
         )
 
         // then
-        val actual = slot.captured
         val expected = Product(id = 1).toUiModel()
-
-        assertEquals(expected, actual)
-        verify { view.setUpProductDetailView(actual) }
+        verify { view.setUpProductDetailView(expected) }
     }
 
     @Test

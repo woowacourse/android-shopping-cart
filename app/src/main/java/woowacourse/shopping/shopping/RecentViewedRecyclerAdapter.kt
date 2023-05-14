@@ -2,9 +2,9 @@ package woowacourse.shopping.shopping
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentViewedProductUiModel
 
-class RecentViewedRecyclerAdapter(private val products: List<ProductUiModel>) :
+class RecentViewedRecyclerAdapter(private val products: List<RecentViewedProductUiModel>) :
     RecyclerView.Adapter<RecentViewedProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedProductViewHolder {

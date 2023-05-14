@@ -1,6 +1,7 @@
 package woowacourse.shopping.database
 
 import model.Product
+import model.RecentViewedProduct
 
 interface ShoppingRepository {
 
@@ -16,7 +17,9 @@ interface ShoppingRepository {
 
     fun insertToRecentViewedProducts(id: Int)
 
-    fun selectRecentViewedProducts(): List<Product>
+    fun selectRecentViewedProducts(): List<RecentViewedProduct>
+
+    fun selectRecentViewedProductById(id: Int): RecentViewedProduct
 
     fun deleteFromRecentViewedProducts()
 }

@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemRecentViewedProductBinding
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentViewedProductUiModel
 
 class RecentViewedProductViewHolder private constructor(
     private val binding: ItemRecentViewedProductBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(product: ProductUiModel) {
+    fun bind(product: RecentViewedProductUiModel) {
         with(binding) {
             Glide.with(root.context)
                 .load(product.imageUrl)

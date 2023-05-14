@@ -12,6 +12,7 @@ import woowacourse.shopping.database.ShoppingDBAdapter
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentViewedProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 
@@ -58,7 +59,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun setUpShoppingView(
         products: List<ProductUiModel>,
-        recentViewedProducts: List<ProductUiModel>,
+        recentViewedProducts: List<RecentViewedProductUiModel>,
         readMoreShoppingProducts: () -> (Unit)
     ) {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
@@ -77,7 +78,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         }
     }
 
-    override fun refreshRecentViewedProductsView(products: List<ProductUiModel>) {
+    override fun refreshRecentViewedProductsView(products: List<RecentViewedProductUiModel>) {
         shoppingRecyclerAdapter.refreshRecentViewedItems(products = products)
     }
 
