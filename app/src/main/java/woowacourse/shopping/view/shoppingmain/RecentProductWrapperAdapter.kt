@@ -18,10 +18,10 @@ class RecentProductWrapperAdapter(
     override fun getItemViewType(position: Int): Int = VIEW_TYPE
 
     override fun getItemCount(): Int {
-        if (recentProductAdapterItemCount == 0) {
-            return 0
+        if (recentProductAdapterItemCount == RECENT_PRODUCTS_VIEW_INVISIBLE_COUNT) {
+            return RECENT_PRODUCTS_VIEW_INVISIBLE_COUNT
         }
-        return 1
+        return RECENT_PRODUCTS_VIEW_VISIBLE_COUNT
     }
 
     override fun onBindViewHolder(holder: RecentProductWrapperViewHolder, position: Int) {
@@ -35,5 +35,7 @@ class RecentProductWrapperAdapter(
 
     companion object {
         const val VIEW_TYPE = 1
+        private const val RECENT_PRODUCTS_VIEW_INVISIBLE_COUNT = 0
+        private const val RECENT_PRODUCTS_VIEW_VISIBLE_COUNT = 1
     }
 }
