@@ -5,9 +5,7 @@ import woowacourse.shopping.model.PageUiModel
 interface CartContract {
     interface View {
         fun changeCartProducts(newItems: List<CartProductItemModel>)
-        fun setPreviousButtonState(enabled: Boolean)
-        fun setNextButtonState(enabled: Boolean)
-        fun setCount(count: Int)
+        fun setPageState(hasPrevious: Boolean, hasNext: Boolean, pageNumber: Int)
     }
 
     interface Presenter {

@@ -77,8 +77,10 @@ class CartPresenter(
 
     private fun changePageState(itemModels: List<CartProductItemModel>) {
         view.changeCartProducts(itemModels)
-        view.setPreviousButtonState(this.page.hasPreviousPage())
-        view.setNextButtonState(this.page.hasNextPage())
-        view.setCount(this.page.currentPage)
+        view.setPageState(
+            this.page.hasPreviousPage(),
+            this.page.hasNextPage(),
+            this.page.currentPage
+        )
     }
 }

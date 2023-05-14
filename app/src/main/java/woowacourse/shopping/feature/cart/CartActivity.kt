@@ -46,16 +46,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         cartProductAdapter.setItems(newItems)
     }
 
-    override fun setPreviousButtonState(enabled: Boolean) {
-        binding.previousPageBtn.isEnabled = enabled
-    }
-
-    override fun setNextButtonState(enabled: Boolean) {
-        binding.nextPageBtn.isEnabled = enabled
-    }
-
-    override fun setCount(count: Int) {
-        binding.pageCountTextView.text = count.toString()
+    override fun setPageState(hasPrevious: Boolean, hasNext: Boolean, pageNumber: Int) {
+        binding.apply {
+            previousPageBtn.isEnabled = hasPrevious
+            nextPageBtn.isEnabled = hasNext
+            pageCountTextView.text = pageNumber.toString()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
