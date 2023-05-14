@@ -32,11 +32,11 @@ class MainPresenter(
             }
         }
         view.addProducts(productItems)
-        ProductCache.addProducts(firstProducts)
+        productCache.addProducts(firstProducts)
     }
 
     override fun loadProductsFromCache() {
-        val cacheProducts = ProductCache.productList
+        val cacheProducts = productCache.productList
         val cacheItems = cacheProducts.map { product ->
             product.toPresentation().toItemModel { productUiModel ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))
@@ -61,7 +61,7 @@ class MainPresenter(
             }
         }
         view.addProducts(nextProductItems)
-        ProductCache.addProducts(nextProducts)
+        productCache.addProducts(nextProducts)
     }
 
     override fun loadRecent() {

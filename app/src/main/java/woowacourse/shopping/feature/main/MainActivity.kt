@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.domain.ProductCache
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ProductCacheImpl
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.data.RecentProductRepositoryImpl
 import woowacourse.shopping.data.sql.recent.RecentDao
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             this,
             ProductMockRepository(),
             RecentProductRepositoryImpl(RecentDao(this)),
-            ProductCache
+            ProductCacheImpl
         )
 
         initAdapters()
