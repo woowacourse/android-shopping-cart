@@ -10,6 +10,7 @@ import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.ProductMapper.toView
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
 import woowacourse.shopping.domain.Products
+import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 
 class ShoppingPresenter(
@@ -28,8 +29,9 @@ class ShoppingPresenter(
         recentProductsState.save(recentProducts)
     }
 
-    override fun resumeView() {
-        updateRecentProducts()
+    override fun updateRecentProducts() {
+        val recentProducts = recentProductsState.load()
+        view.updateRecentProducts(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }
 
     override fun openProduct(productModel: ProductModel) {
@@ -43,13 +45,27 @@ class ShoppingPresenter(
 
         if (recentProduct == null) {
             recentProduct = recentProducts.makeRecentProduct(productModel.toDomain())
-            recentProductsState.save(recentProducts.add(recentProduct))
-            recentProductDao.insertRecentProduct(recentProduct.toView())
+            addRecentProduct(recentProducts, recentProduct)
         } else {
             recentProduct = recentProduct.updateTime()
-            recentProductsState.save(recentProducts.update(recentProduct))
-            recentProductDao.updateRecentProduct(recentProduct.toView())
+            updateRecentProduct(recentProducts, recentProduct)
         }
+    }
+
+    private fun addRecentProduct(
+        recentProducts: RecentProducts,
+        recentProduct: RecentProduct
+    ) {
+        recentProductsState.save(recentProducts.add(recentProduct))
+        recentProductDao.insertRecentProduct(recentProduct.toView())
+    }
+
+    private fun updateRecentProduct(
+        recentProducts: RecentProducts,
+        recentProduct: RecentProduct
+    ) {
+        recentProductsState.save(recentProducts.update(recentProduct))
+        recentProductDao.updateRecentProduct(recentProduct.toView())
     }
 
     override fun openCart() {
@@ -61,10 +77,5 @@ class ShoppingPresenter(
         val loadedProducts = productDao.selectByRange(products.value.size, productLoadSize)
         productsState.save(products + loadedProducts)
         view.addProducts(loadedProducts.value.map { it.toView() })
-    }
-
-    private fun updateRecentProducts() {
-        val recentProducts = recentProductsState.load()
-        view.updateRecentProducts(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })
     }
 }

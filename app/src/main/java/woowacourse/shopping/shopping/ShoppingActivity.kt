@@ -93,7 +93,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.resumeView()
+        presenter.updateRecentProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
