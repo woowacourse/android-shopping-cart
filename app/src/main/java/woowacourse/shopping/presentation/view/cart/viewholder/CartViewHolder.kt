@@ -24,8 +24,5 @@ class CartViewHolder(
 
     fun bind(cart: CartModel) {
         binding.cart = cart
-        binding.tvCartListTitle.text = cart.product.title
-        binding.tvCartListPrice.text =
-            binding.root.context.getString(R.string.product_price_format, cart.product.price)
     }
 }

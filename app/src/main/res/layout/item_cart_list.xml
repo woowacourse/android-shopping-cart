@@ -41,6 +41,7 @@
                 android:textColor="@color/product_info_text_color"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                setText="@{cart.product.title}"
                 app:layout_constraintEnd_toStartOf="@+id/bt_iv_cart_list_close"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -79,6 +80,7 @@
                 android:layout_marginEnd="18dp"
                 android:textColor="@color/product_info_text_color"
                 android:textSize="16sp"
+                setPrice="@{cart.product.price}"
                 app:layout_constraintBottom_toBottomOf="@id/iv_cart_list_thumbnail"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="84,400원" />

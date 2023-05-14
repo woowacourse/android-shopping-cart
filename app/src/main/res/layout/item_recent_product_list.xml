@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="recent_product"
+            name="recentProduct"
             type="woowacourse.shopping.presentation.model.RecentProductModel" />
     </data>
 
@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/iv_recent_product_thumbnail"
-            set_image_url="@{recent_product.product.imageUrl}"
+            set_image_url="@{recentProduct.product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
@@ -38,6 +38,7 @@
             android:textColor="@color/product_info_text_color"
             android:textSize="12sp"
             android:textStyle="bold"
+            setText="@{recentProduct.product.title}"
             app:layout_constraintEnd_toEndOf="@id/iv_recent_product_thumbnail"
             app:layout_constraintStart_toStartOf="@id/iv_recent_product_thumbnail"
             app:layout_constraintTop_toBottomOf="@id/iv_recent_product_thumbnail"

@@ -24,8 +24,5 @@ class ProductListViewHolder(
 
     fun bind(product: ProductModel) {
         binding.product = product
-        binding.tvProductTitle.text = product.title
-        binding.tvProductPrice.text =
-            binding.root.context.getString(R.string.product_price_format, product.price)
     }
 }

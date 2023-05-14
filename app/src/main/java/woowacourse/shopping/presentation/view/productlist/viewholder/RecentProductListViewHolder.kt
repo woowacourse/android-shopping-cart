@@ -24,6 +24,5 @@ class RecentProductListViewHolder(
 
     fun bind(recentProduct: RecentProductModel) {
         binding.recentProduct = recentProduct
-        binding.tvRecentProductTitle.text = recentProduct.product.title
     }
 }

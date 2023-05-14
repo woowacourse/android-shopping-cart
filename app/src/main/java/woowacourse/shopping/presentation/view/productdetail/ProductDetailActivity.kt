@@ -50,9 +50,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun setProductInfoView(productModel: ProductModel) {
         binding.product = productModel
-        binding.tvProductDetailTitle.text = productModel.title
-        binding.tvProductDetailPrice.text =
-            getString(R.string.product_price_format, productModel.price)
     }
 
     private fun setAddCart(productId: Long) {
