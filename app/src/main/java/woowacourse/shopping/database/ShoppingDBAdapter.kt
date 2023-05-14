@@ -81,6 +81,16 @@ class ShoppingDBAdapter(
         return shoppingCartProducts.toList()
     }
 
+    override fun getShoppingCartProductsSize(): Int {
+        val cursor = shoppingDB.rawQuery(
+            "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME}",
+            null,
+        )
+        val count = cursor.count
+        cursor.close()
+        return count
+    }
+
     private fun Cursor.getShoppingCartProductById(): Product {
         val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
         return selectProductById(id)

@@ -10,7 +10,8 @@ class ShoppingCartRecyclerAdapter(
     products: List<ProductUiModel>,
     private val onRemoved: (id: Int) -> Unit,
     private val showingRule: ShowingRule,
-    private val onPageChanged: (pageNumber: Int) -> Unit,
+    private val updatePageState: (pageNumber: Int, totalSize: Int) -> Unit,
+    private var totalSize: Int,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
     private val shoppingCartProducts: MutableList<ProductUiModel> = products.toMutableList()
@@ -22,7 +23,7 @@ class ShoppingCartRecyclerAdapter(
         )
 
     init {
-        onPageChanged(currentPage.value)
+        updatePageState(currentPage.value, totalSize)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartItemViewHolder {
@@ -40,6 +41,11 @@ class ShoppingCartRecyclerAdapter(
     private fun removeItem(position: Int) {
         onRemoved(shoppingCartProducts[position].id)
         shoppingCartProducts.removeAt(position)
+        if (showingProducts.isEmpty()) {
+            currentPage = currentPage.prev()
+        }
+        totalSize--
+        updatePageState(currentPage.value, totalSize)
         notifyDataSetChanged()
     }
 
@@ -47,14 +53,14 @@ class ShoppingCartRecyclerAdapter(
     fun toNextPage(products: List<ProductUiModel>) {
         shoppingCartProducts.addAll(products)
         currentPage = currentPage.next()
-        onPageChanged(currentPage.value)
+        updatePageState(currentPage.value, totalSize)
         notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun toPreviousPage() {
         currentPage = currentPage.prev()
-        onPageChanged(currentPage.value)
+        updatePageState(currentPage.value, totalSize)
         notifyDataSetChanged()
     }
 

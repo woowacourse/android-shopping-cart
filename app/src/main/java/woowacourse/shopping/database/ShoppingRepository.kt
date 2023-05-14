@@ -8,6 +8,8 @@ interface ShoppingRepository {
 
     fun selectShoppingCartProducts(from: Int, count: Int): List<Product>
 
+    fun getShoppingCartProductsSize(): Int
+
     fun selectProductById(id: Int): Product
 
     fun insertToShoppingCart(id: Int)

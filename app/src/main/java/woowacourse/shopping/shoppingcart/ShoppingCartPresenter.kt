@@ -21,8 +21,9 @@ class ShoppingCartPresenter(
 
     override fun loadShoppingCartProducts() {
         val products = selectShoppingCartProducts()
+        val productsSize = repository.getShoppingCartProductsSize()
 
-        view.setUpShoppingCartView(products, ::removeShoppingCartProduct)
+        view.setUpShoppingCartView(products, ::removeShoppingCartProduct, productsSize)
     }
 
     override fun removeShoppingCartProduct(id: Int) {
@@ -31,7 +32,6 @@ class ShoppingCartPresenter(
 
     override fun readMoreShoppingCartProducts() {
         val products = selectShoppingCartProducts()
-
         view.showMoreShoppingCartProducts(products)
     }
 }

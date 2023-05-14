@@ -6,7 +6,11 @@ interface ShoppingCartContract {
 
     interface View {
 
-        fun setUpShoppingCartView(products: List<ProductUiModel>, onRemoved: (id: Int) -> Unit)
+        fun setUpShoppingCartView(
+            products: List<ProductUiModel>,
+            onRemoved: (id: Int) -> Unit,
+            totalSize: Int,
+        )
 
         fun showMoreShoppingCartProducts(products: List<ProductUiModel>)
     }

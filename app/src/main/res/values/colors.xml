@@ -10,4 +10,5 @@
     <color name="toolbar_color">#555555</color>
     <color name="gray">#AAAAAA</color>
     <color name="button_color">#04C09E</color>
+    <color name="button_disabled">#D6D6D6</color>
 </resources>
