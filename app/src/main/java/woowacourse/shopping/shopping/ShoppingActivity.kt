@@ -66,7 +66,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             products = products,
             recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView,
-            onReadMoreButtonClicked = readMoreShoppingProducts
+            onReadMoreButtonClicked = readMoreShoppingProducts,
+            readMoreButtonDescription = getString(R.string.read_more)
         )
 
         with(binding) {
