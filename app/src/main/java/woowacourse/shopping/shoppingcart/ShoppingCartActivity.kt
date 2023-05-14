@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.database.ShoppingDBAdapter
+import woowacourse.shopping.database.ShoppingDBRepository
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.model.ProductUiModel
@@ -17,7 +17,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private val presenter: ShoppingCartContract.Presenter by lazy {
         ShoppingCartPresenter(
             view = this,
-            repository = ShoppingDBAdapter(
+            repository = ShoppingDBRepository(
                 shoppingDao = ShoppingDao(this),
             ),
         )

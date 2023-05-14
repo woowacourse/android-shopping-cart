@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.database.ShoppingDBAdapter
+import woowacourse.shopping.database.ShoppingDBRepository
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductUiModel
@@ -26,7 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         ProductDetailPresenter(
             view = this,
             product = product,
-            repository = ShoppingDBAdapter(
+            repository = ShoppingDBRepository(
                 shoppingDao = ShoppingDao(this),
             ),
         )

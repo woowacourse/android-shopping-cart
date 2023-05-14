@@ -13,7 +13,7 @@ import woowacourse.shopping.database.recentviewed.RecentViewedDBContract
 import woowacourse.shopping.database.shoppingcart.ShoppingCartDBContract
 import woowacourse.shopping.model.ProductUiModel
 
-class ShoppingDBAdapter(
+class ShoppingDBRepository(
     shoppingDao: ShoppingDao,
 ) : ShoppingRepository {
 
