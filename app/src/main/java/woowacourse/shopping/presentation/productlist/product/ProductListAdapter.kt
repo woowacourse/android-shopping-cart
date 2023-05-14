@@ -92,8 +92,7 @@ class ProductListAdapter(
     }
 
     fun setRecentProductsItems(productModel: List<ProductModel>) {
-        _productItems[RECENT_PRODUCT_VIEW_POSITION] =
-            RecentProductModels(productModel)
+        _productItems[RECENT_PRODUCT_VIEW_POSITION] = RecentProductModels(productModel)
         notifyItemChanged(RECENT_PRODUCT_VIEW_POSITION)
     }
 
