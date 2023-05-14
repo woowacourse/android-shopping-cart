@@ -8,7 +8,7 @@ interface ShoppingMainContract {
         var presenter: Presenter
         fun showProductDetailPage(): (ProductUIModel) -> Unit
         fun showMoreProducts()
-        fun deActivateButton()
+        fun deactivateButton()
         fun activateButton()
     }
 

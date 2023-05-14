@@ -21,7 +21,7 @@ class ShoppingMainPresenter(
         index = Pair(index.first + PRODUCT_LOAD_UNIT, index.second + PRODUCT_LOAD_UNIT)
 
         if (loadedProducts.size < PRODUCT_LOAD_UNIT) {
-            view.deActivateButton()
+            view.deactivateButton()
             _isPossibleLoad = false
         }
 
@@ -38,7 +38,7 @@ class ShoppingMainPresenter(
 
     override fun setLoadMoreOnClick() {
         view.showMoreProducts()
-        view.deActivateButton()
+        view.deactivateButton()
     }
 
     companion object {

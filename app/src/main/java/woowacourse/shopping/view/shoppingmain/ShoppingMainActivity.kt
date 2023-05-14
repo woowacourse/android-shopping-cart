@@ -112,7 +112,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
                 if (!recyclerView.canScrollVertically(1)) {
                     activateButton()
                 } else {
-                    deActivateButton()
+                    deactivateButton()
                 }
             }
         })
@@ -123,7 +123,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         productAdapter.update(updatedProducts)
     }
 
-    override fun deActivateButton() {
+    override fun deactivateButton() {
         binding.btnLoadMore.visibility = GONE
     }
 
