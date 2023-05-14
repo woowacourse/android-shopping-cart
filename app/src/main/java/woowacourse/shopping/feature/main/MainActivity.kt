@@ -96,9 +96,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         recentAdapter.setItems(recent)
     }
 
-    override fun showProductDetailScreenByRecent(position: Int) {
-        val product = recentAdapter.items[position].recentProduct.productUiModel
-        startActivity(DetailActivity.getIntent(this, product))
+    override fun showProductDetailScreenByRecent(recentProduct: RecentProductItemModel) {
+        startActivity(DetailActivity.getIntent(this, recentProduct.recentProduct.productUiModel))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

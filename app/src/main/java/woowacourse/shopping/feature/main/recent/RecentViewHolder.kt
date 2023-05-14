@@ -8,6 +8,5 @@ class RecentViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(recentProduct: RecentProductItemModel) {
         binding.itemModel = recentProduct
-        binding.position = bindingAdapterPosition
     }
 }

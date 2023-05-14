@@ -4,5 +4,5 @@ import woowacourse.shopping.model.RecentProductUiModel
 
 data class RecentProductItemModel(
     val recentProduct: RecentProductUiModel,
-    val onClick: (position: Int) -> Unit
+    val onClick: (recentProduct: RecentProductItemModel) -> Unit
 )

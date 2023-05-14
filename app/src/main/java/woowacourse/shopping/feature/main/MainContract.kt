@@ -9,7 +9,7 @@ interface MainContract {
         fun showProductDetailScreenByProduct(position: Int)
         fun addProducts(products: List<MainProductItemModel>)
         fun updateRecent(recent: List<RecentProductItemModel>)
-        fun showProductDetailScreenByRecent(position: Int)
+        fun showProductDetailScreenByRecent(recentProduct: RecentProductItemModel)
     }
 
     interface Presenter {

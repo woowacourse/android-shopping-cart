@@ -66,9 +66,9 @@ class MainPresenter(
 
     override fun loadRecent() {
         val recent = recentProductRepository.getAll().map {
-            it.toPresentation().toItemModel { position ->
+            it.toPresentation().toItemModel { recentProduct ->
                 addRecentProduct(it)
-                view.showProductDetailScreenByRecent(position)
+                view.showProductDetailScreenByRecent(recentProduct)
                 loadRecent()
             }
         }
