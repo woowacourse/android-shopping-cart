@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.view.productlist
 
+import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.product.ProductRepositoryImp
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
@@ -48,6 +49,12 @@ class ProductListPresenter(
         val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT)
         products.addAll(newProducts)
         view.updateMoreProductsView(startPosition + 1, newProducts.size)
+    }
+
+    override fun actionOptionItem(itemId: Int) {
+        when (itemId) {
+            R.id.action_cart -> view.moveToCartView()
+        }
     }
 
     companion object {

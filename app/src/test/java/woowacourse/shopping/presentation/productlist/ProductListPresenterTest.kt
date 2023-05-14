@@ -8,6 +8,7 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
@@ -91,6 +92,7 @@ class ProductListPresenterTest {
         verify { recentProductRepository.getRecentProducts() }
         verify { view.updateRecentProductItemsView(actualPreSize, actualDiffSize) }
     }
+
     @Test
     fun `데이터가 더 존재한다면 추가 데이터를 가져와 갱신한다`() {
         // given
@@ -109,6 +111,18 @@ class ProductListPresenterTest {
         assertEquals(1, actualDiffSize)
         verify { productRepository.getData(0, 20) }
         verify { view.updateMoreProductsView(actualPreSize, actualDiffSize) }
+    }
+
+    @Test
+    fun `Cart 옵션을 누르면 장바구니 화면을 보여준다`() {
+        // given
+        justRun { view.moveToCartView() }
+
+        // when
+        presenter.actionOptionItem(R.id.action_cart)
+
+        // then
+        verify { view.moveToCartView() }
     }
 
     companion object {

@@ -85,11 +85,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_cart -> {
-                startActivity(CartActivity.createIntent(this))
-            }
-        }
+        presenter.actionOptionItem(item.itemId)
 
         return super.onOptionsItemSelected(item)
     }
@@ -148,6 +144,10 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     override fun updateMoreProductsView(preSize: Int, diffSize: Int) {
         productListAdapter.notifyItemRangeInserted(preSize, diffSize)
+    }
+
+    override fun moveToCartView() {
+        startActivity(CartActivity.createIntent(this))
     }
 
     companion object {
