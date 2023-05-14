@@ -98,7 +98,7 @@ class ShoppingPresenterTest {
     @Test
     fun `리스트에 있는 상품을 클릭하면 상세화면으로 이동한다`() {
         // given
-        every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
+        every { productRepository.findById(any()) } returns fakeProduct
         every { recentRepository.getRecent(10) } returns List(10) { fakeRecentProduct }
 
         // when
@@ -124,7 +124,7 @@ class ShoppingPresenterTest {
         // then
 
         val capturedProducts = slot.captured
-        assertTrue(capturedProducts.size == 21)
+        assertTrue(capturedProducts.size == 22)
         verify(exactly = 1) { view.addProducts(capturedProducts) }
     }
 }
