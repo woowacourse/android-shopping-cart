@@ -1,12 +1,15 @@
 package woowacourse.shopping.database.cart
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.database.ShoppingDBHelper
 import woowacourse.shopping.model.CartProduct
 import woowacourse.shopping.repository.CartRepository
 
-class CartDatabase(private val shoppingDb: SQLiteDatabase) : CartRepository {
+class CartDatabase(context: Context) : CartRepository {
+    private val db = ShoppingDBHelper(context).writableDatabase
+
     override fun getAll(): List<CartProduct> {
         val cartProducts = mutableListOf<CartProduct>()
         getCartCursor().use {
@@ -24,7 +27,7 @@ class CartDatabase(private val shoppingDb: SQLiteDatabase) : CartRepository {
 
     private fun getProductById(id: Int): CartProduct {
         val query = ProductConstant.getGetQuery(id)
-        shoppingDb.rawQuery(query, null).use {
+        db.rawQuery(query, null).use {
             it.moveToNext()
             return getCartProduct(it)
         }
@@ -32,7 +35,7 @@ class CartDatabase(private val shoppingDb: SQLiteDatabase) : CartRepository {
 
     override fun insert(productId: Int) {
         val product = getProductById(productId)
-        shoppingDb.execSQL(CartConstant.getInsertQuery(product))
+        db.execSQL(CartConstant.getInsertQuery(product))
     }
 
     override fun getSubList(offset: Int, size: Int): List<CartProduct> {
@@ -42,10 +45,10 @@ class CartDatabase(private val shoppingDb: SQLiteDatabase) : CartRepository {
     }
 
     override fun remove(id: Int) {
-        shoppingDb.execSQL(CartConstant.getDeleteQuery(id))
+        db.execSQL(CartConstant.getDeleteQuery(id))
     }
 
     private fun getCartCursor(): Cursor {
-        return shoppingDb.rawQuery(CartConstant.getGetAllQuery(), null)
+        return db.rawQuery(CartConstant.getGetAllQuery(), null)
     }
 }

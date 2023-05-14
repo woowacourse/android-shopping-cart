@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.database.ShoppingDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.product.ProductDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -37,8 +36,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initPresenter(savedInstanceState: Bundle?) {
         presenter = CartPresenter(
             this,
-            CartDatabase(ShoppingDBHelper(this).writableDatabase),
-            ProductDatabase(ShoppingDBHelper(this).writableDatabase),
+            CartDatabase(this),
+            ProductDatabase(this),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0
         )
         presenter.setUpCarts()

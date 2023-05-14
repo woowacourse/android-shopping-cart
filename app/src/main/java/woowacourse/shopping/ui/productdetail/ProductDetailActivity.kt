@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.database.ShoppingDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -40,7 +39,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
-            CartDatabase(ShoppingDBHelper(this).writableDatabase),
+            CartDatabase(this),
             RecentProductDatabase(this)
         )
         binding.presenter = presenter

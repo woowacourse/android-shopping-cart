@@ -1,14 +1,16 @@
 package woowacourse.shopping.database.product
 
-import android.database.sqlite.SQLiteDatabase
+import android.content.Context
+import woowacourse.shopping.database.ShoppingDBHelper
 import woowacourse.shopping.database.cart.ProductConstant
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.ProductRepository
 
-class ProductDatabase(private val shoppingDb: SQLiteDatabase) : ProductRepository {
+class ProductDatabase(context: Context) : ProductRepository {
+    private val db = ShoppingDBHelper(context).writableDatabase
     override fun getAll(): List<Product> {
         val products = mutableListOf<Product>()
-        shoppingDb.rawQuery(ProductConstant.getGetAllQuery(), null).use {
+        db.rawQuery(ProductConstant.getGetAllQuery(), null).use {
             while (it.moveToNext()) {
                 products.add(ProductConstant.fromCursor(it))
             }
@@ -18,7 +20,7 @@ class ProductDatabase(private val shoppingDb: SQLiteDatabase) : ProductRepositor
 
     override fun getNext(count: Int): List<Product> {
         val products = mutableListOf<Product>()
-        shoppingDb.rawQuery(ProductConstant.getGetNextQuery(count), null).use {
+        db.rawQuery(ProductConstant.getGetNextQuery(count), null).use {
             while (it.moveToNext()) {
                 products.add(ProductConstant.fromCursor(it))
             }
@@ -27,13 +29,13 @@ class ProductDatabase(private val shoppingDb: SQLiteDatabase) : ProductRepositor
     }
 
     override fun findById(id: Int): Product {
-        shoppingDb.rawQuery(ProductConstant.getGetQuery(id), null).use {
+        db.rawQuery(ProductConstant.getGetQuery(id), null).use {
             it.moveToNext()
             return ProductConstant.fromCursor(it)
         }
     }
 
     override fun insert(product: Product) {
-        shoppingDb.execSQL(ProductConstant.getInsertQuery(product))
+        db.execSQL(ProductConstant.getInsertQuery(product))
     }
 }
