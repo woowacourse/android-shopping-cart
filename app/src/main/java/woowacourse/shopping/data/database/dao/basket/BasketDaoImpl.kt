@@ -8,6 +8,7 @@ import woowacourse.shopping.data.database.contract.BasketContract
 import woowacourse.shopping.data.model.DataPageNumber
 import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.DataProduct
+import woowacourse.shopping.util.extension.safeSubList
 
 class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     @SuppressLint("Range")
@@ -15,10 +16,8 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         val products = mutableListOf<DataProduct>()
 
         val db = database.writableDatabase
-        val cursor = db.rawQuery(
-            GET_PARTIALLY_QUERY,
-            arrayOf(page.startId.toString(), page.pageSizeForCheckHasNext.toString())
-        )
+        val cursor = db.rawQuery(GET_ALL_QUERY, null)
+
         while (cursor.moveToNext()) {
             val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
             val name: String =
@@ -30,7 +29,8 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             products.add(DataProduct(id, name, price, imageUrl))
         }
         cursor.close()
-        return products
+
+        return products.safeSubList(page.start, page.end)
     }
 
     override fun add(product: DataProduct) {
@@ -53,10 +53,8 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     }
 
     companion object {
-        private val GET_PARTIALLY_QUERY = """
-            SELECT * FROM ${BasketContract.TABLE_NAME}
-            WHERE ${BaseColumns._ID} > ?
-            ORDER BY ${BasketContract.COLUMN_CREATED} LIMIT ?        
+        private val GET_ALL_QUERY = """
+            SELECT * FROM ${BasketContract.TABLE_NAME}  
         """.trimIndent()
     }
 }
