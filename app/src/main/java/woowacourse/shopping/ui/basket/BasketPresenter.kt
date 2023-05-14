@@ -10,9 +10,9 @@ import woowacourse.shopping.ui.basket.BasketContract.Presenter
 import woowacourse.shopping.ui.basket.BasketContract.View
 
 class BasketPresenter(
-    override val view: View,
+    view: View,
     private val basketRepository: BasketRepository,
-) : Presenter {
+) : Presenter(view) {
     private var products = Products(loadUnit = BASKET_PAGING_SIZE)
     private var currentPage: PageNumber = PageNumber()
 

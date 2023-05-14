@@ -13,10 +13,10 @@ import woowacourse.shopping.ui.shopping.ShoppingContract.Presenter
 import woowacourse.shopping.ui.shopping.ShoppingContract.View
 
 class ShoppingPresenter(
-    override val view: View,
+    view: View,
     private val productRepository: DomainProductRepository,
     private val recentProductRepository: DomainRecentProductRepository,
-) : Presenter {
+) : Presenter(view) {
     private var products = Products()
     private var recentProducts = RecentProducts()
 

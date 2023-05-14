@@ -15,14 +15,12 @@ interface ShoppingContract {
         fun hideLoadMoreButton()
     }
 
-    interface Presenter {
-        val view: View
-
-        fun fetchAll()
-        fun fetchProducts()
-        fun fetchRecentProducts()
-        fun inquiryProductDetail(product: UiProduct)
-        fun inquiryRecentProductDetail(recentProduct: UiRecentProduct)
-        fun openBasket()
+    abstract class Presenter(protected val view: View) {
+        abstract fun fetchAll()
+        abstract fun fetchProducts()
+        abstract fun fetchRecentProducts()
+        abstract fun inquiryProductDetail(product: UiProduct)
+        abstract fun inquiryRecentProductDetail(recentProduct: UiRecentProduct)
+        abstract fun openBasket()
     }
 }

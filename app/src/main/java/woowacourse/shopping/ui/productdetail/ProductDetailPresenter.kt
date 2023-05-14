@@ -5,10 +5,10 @@ import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.UiProduct
 
 class ProductDetailPresenter(
-    override val view: ProductDetailContract.View,
+    view: ProductDetailContract.View,
     private val basketRepository: BasketRepository,
     private val product: UiProduct,
-) : ProductDetailContract.Presenter {
+) : ProductDetailContract.Presenter(view) {
 
     init {
         view.showProductImage(product.imageUrl)

@@ -10,9 +10,7 @@ interface ProductDetailContract {
         fun showProductPrice(amount: Int)
     }
 
-    interface Presenter {
-        val view: View
-
-        fun addBasketProduct()
+    abstract class Presenter(protected val view: View) {
+        abstract fun addBasketProduct()
     }
 }

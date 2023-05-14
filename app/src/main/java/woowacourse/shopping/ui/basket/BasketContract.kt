@@ -13,13 +13,11 @@ interface BasketContract {
         fun updatePageNumber(page: PageNumber)
     }
 
-    interface Presenter {
-        val view: View
-
-        fun fetchBasket()
-        fun fetchPrevious()
-        fun fetchNext()
-        fun removeBasketProduct(product: UiProduct)
-        fun closeScreen()
+    abstract class Presenter(protected val view: View) {
+        abstract fun fetchBasket()
+        abstract fun fetchPrevious()
+        abstract fun fetchNext()
+        abstract fun removeBasketProduct(product: UiProduct)
+        abstract fun closeScreen()
     }
 }
