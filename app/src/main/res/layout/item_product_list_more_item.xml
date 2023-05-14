@@ -5,7 +5,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp">
+        android:padding="20dp">
 
         <Button
             android:id="@+id/bt_item_product_list_more"
