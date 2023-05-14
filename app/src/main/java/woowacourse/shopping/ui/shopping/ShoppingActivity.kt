@@ -54,6 +54,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(presenter::inquiryProductDetail)
     }
+    private val concatAdapter: ConcatAdapter by lazy {
+        ConcatAdapter(isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,16 +67,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
 
     private fun initView() {
         binding.tbShopping.setOnMenuItemClickListener(this)
-        initAdapter()
+        initRecyclerView()
     }
 
-    private fun initAdapter() {
-        val concatAdapter =
-            ConcatAdapter(isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter)
-
+    private fun initRecyclerView() {
         binding.rvShopping.adapter = concatAdapter
         binding.rvShopping.layoutManager = ShoppingGridLayoutManager(concatAdapter, this)
         binding.rvShopping.addOnScrollListener(EndScrollListener(presenter::fetchHasNext))
+
         presenter.fetchRecentProducts()
         presenter.fetchProducts()
     }
