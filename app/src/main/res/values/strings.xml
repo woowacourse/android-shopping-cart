@@ -3,4 +3,5 @@
     <string name="error_intent_message">잘못된 접근입니다.</string>
     <string name="left_charactor"><![CDATA[<]]></string>
     <string name="right_charactor"><![CDATA[>]]></string>
+    <string name="price_format">%,d원</string>
 </resources>

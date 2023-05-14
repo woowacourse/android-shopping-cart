@@ -7,10 +7,9 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartProductBinding
 import woowacourse.shopping.feature.list.item.CartProductItem
-import java.text.DecimalFormat
 
 class CartProductViewHolder(
-    parent: ViewGroup,
+    val parent: ViewGroup,
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context)
         .inflate(R.layout.item_cart_product, parent, false),
@@ -24,7 +23,7 @@ class CartProductViewHolder(
             .into(binding.cartProductImageView)
 
         binding.cartProductNameTv.text = cartProductItem.productName
-        binding.cartProductPriceTv.text = "${DecimalFormat("#,###").format(cartProductItem.productPrice)}원"
+        binding.cartProductPriceTv.text = parent.context.getString(R.string.price_format, cartProductItem.productPrice)
         binding.cartClearImageView.setOnClickListener { onClick(cartProductItem) }
     }
 }
