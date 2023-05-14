@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
@@ -22,7 +21,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
 
-    private lateinit var product: ProductModel
+    private lateinit var productData: ProductModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,23 +30,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
         getData()
         bindView()
-        presenter.updateRecentViewedProducts(product.id)
+        presenter.updateRecentViewedProducts(productData.id)
     }
 
     private fun getData() {
-        val product = intent.getParcelableCompat<ProductModel>(PRODUCT)
-        if (product == null) {
-            Toast.makeText(this, NOT_EXIST_DATA_ERROR, Toast.LENGTH_LONG).show()
-            finish()
-            return
-        }
+        intent.getParcelableCompat<ProductModel>(PRODUCT)?.let { productData = it }
     }
 
     private fun bindView() {
-        binding.product = product
+        binding.product = productData
         binding.presenter = presenter
-        Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
-        binding.textPrice.text = getString(R.string.korean_won, PriceFormatter.format(product.price))
+        Glide.with(binding.root.context).load(productData.imageUrl).into(binding.imgProduct)
+        binding.textPrice.text = getString(R.string.korean_won, PriceFormatter.format(productData.price))
     }
 
     override fun startCartActivity() {
@@ -73,7 +67,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         const val PRODUCT = "PRODUCT"
-        private const val NOT_EXIST_DATA_ERROR = "데이터가 넘어오지 않았습니다."
 
         fun newIntent(context: Context, product: ProductModel): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
