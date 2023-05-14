@@ -19,6 +19,7 @@
             android:id="@+id/img_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            glideImage="@{product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/cart" />
@@ -65,6 +66,7 @@
             android:layout_marginEnd="18dp"
             android:textColor="@color/black"
             android:textSize="20sp"
+            setPrice="@{product.price}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/text_price_label"
             tools:text="99,800원" />

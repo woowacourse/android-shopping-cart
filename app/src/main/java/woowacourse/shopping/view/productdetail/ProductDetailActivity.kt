@@ -7,13 +7,11 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.data.RecentViewedDbRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductModel
-import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.util.getParcelableCompat
 import woowacourse.shopping.view.cart.CartActivity
 
@@ -40,8 +38,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun bindView() {
         binding.product = productData
         binding.presenter = presenter
-        Glide.with(binding.root.context).load(productData.imageUrl).into(binding.imgProduct)
-        binding.textPrice.text = getString(R.string.korean_won, PriceFormatter.format(productData.price))
     }
 
     override fun startCartActivity() {

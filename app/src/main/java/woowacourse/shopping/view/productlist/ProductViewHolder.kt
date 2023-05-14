@@ -4,13 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentViewedBinding
 import woowacourse.shopping.databinding.ItemShowMoreBinding
 import woowacourse.shopping.model.ProductModel
-import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.view.productlist.recentviewed.RecentViewedAdapter
 
 sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -26,8 +23,6 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
         fun bind(product: ProductModel) {
             binding.product = product
-            binding.textPrice.text = binding.root.context.getString(R.string.korean_won, PriceFormatter.format(product.price))
-            Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
         }
     }
 
