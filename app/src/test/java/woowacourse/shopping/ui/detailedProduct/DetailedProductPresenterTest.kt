@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.ui.detailedProduct
 
 import io.mockk.every
 import io.mockk.mockk
@@ -12,8 +12,6 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.RecentRepository
-import woowacourse.shopping.ui.detailedProduct.DetailedProductContract
-import woowacourse.shopping.ui.detailedProduct.DetailedProductPresenter
 
 class DetailedProductPresenterTest {
 
