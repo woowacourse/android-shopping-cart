@@ -43,6 +43,8 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
             RecentProductDatabase(this)
         )
         binding.presenter = presenter
+        presenter.setUpProductDetail()
+        presenter.addProductToRecent()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
