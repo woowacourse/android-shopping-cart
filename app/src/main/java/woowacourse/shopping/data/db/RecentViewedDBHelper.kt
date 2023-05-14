@@ -30,10 +30,12 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_T
     }
 
     fun selectWhereId(id: Int): Int? {
-        val sql = "select * from ${RecentViewedContract.TABLE_NAME} WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id"
+        val sql =
+            "select * from ${RecentViewedContract.TABLE_NAME} WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id"
         val cursor = readableDatabase.rawQuery(sql, null)
         while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
+            val id =
+                cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
             cursor.close()
             return id
         }
@@ -45,7 +47,8 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_T
         val sql = "select * from ${RecentViewedContract.TABLE_NAME}"
         val cursor = readableDatabase.rawQuery(sql, null)
         while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
+            val id =
+                cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
             viewedProducts.add(id)
         }
         cursor.close()

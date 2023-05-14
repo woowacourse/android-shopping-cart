@@ -50,7 +50,8 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, nu
     }
 
     fun selectWhereId(id: Int): CartProduct? {
-        val sql = "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_ID}=$id"
+        val sql =
+            "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_ID}=$id"
         val cursor = readableDatabase.rawQuery(sql, null)
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))

@@ -34,8 +34,16 @@ class CartAdapter(
 
     override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
         when (holder) {
-            is CartItemViewHolder.CartProductViewHolder -> holder.bind(products[position], onItemClick)
-            is CartItemViewHolder.CartPaginationViewHolder -> holder.bind(count, isExistUndo, isExistNext)
+            is CartItemViewHolder.CartProductViewHolder -> holder.bind(
+                products[position],
+                onItemClick,
+            )
+
+            is CartItemViewHolder.CartPaginationViewHolder -> holder.bind(
+                count,
+                isExistUndo,
+                isExistNext,
+            )
         }
     }
 

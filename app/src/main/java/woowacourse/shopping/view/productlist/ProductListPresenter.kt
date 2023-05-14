@@ -13,7 +13,8 @@ class ProductListPresenter(
     private val products = productListPagination.nextItems().map { it.toUiModel() }.toMutableList()
     private val viewedProducts = recentViewedRepository.findAll()
     override fun fetchProducts() {
-        val viewedProductsUiModel = viewedProducts.map { productRepository.find(it).toUiModel() }.reversed()
+        val viewedProductsUiModel =
+            viewedProducts.map { productRepository.find(it).toUiModel() }.reversed()
         view.showProducts(viewedProductsUiModel, products)
     }
 

@@ -25,7 +25,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
+        presenter =
+            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
         getData()
         bindView()
         presenter.updateRecentViewedProducts(productData.id)

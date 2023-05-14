@@ -30,7 +30,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         supportActionBar?.title = "Cart"
     }
 
-    override fun showProducts(cartProducts: List<ProductModel>, isExistUndo: Boolean, isExistNext: Boolean, count: String) {
+    override fun showProducts(
+        cartProducts: List<ProductModel>,
+        isExistUndo: Boolean,
+        isExistNext: Boolean,
+        count: String,
+    ) {
         adpater = CartAdapter(
             cartProducts,
             object : CartAdapter.OnItemClick {

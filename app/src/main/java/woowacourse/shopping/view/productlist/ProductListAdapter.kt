@@ -28,17 +28,20 @@ class ProductListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = if (isRecentViewedExist()) products.size + 2 else products.size + 1
+    override fun getItemCount(): Int =
+        if (isRecentViewedExist()) products.size + 2 else products.size + 1
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         when (holder) {
             is ProductViewHolder.RecentViewedViewHolder -> {
                 holder.bind(recentViewedProducts, onItemClick)
             }
+
             is ProductViewHolder.ProductItemViewHolder -> {
                 val convertPosition = if (isRecentViewedExist()) position - 1 else position
                 holder.bind(products[convertPosition])
             }
+
             is ProductViewHolder.ShowMoreViewHolder -> {
                 return
             }
