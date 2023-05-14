@@ -65,11 +65,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         setConcatAdapter()
     }
 
-    override fun onRestart() {
-        presenter.updateRecentProductItems()
-        super.onRestart()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_list_toolbar, menu)
 
@@ -127,6 +122,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     private fun onProductClickEvent(product: ProductModel) {
         presenter.saveRecentProduct(product.id)
+        presenter.updateRecentProductItems()
         moveToActivity(product.id)
     }
 
