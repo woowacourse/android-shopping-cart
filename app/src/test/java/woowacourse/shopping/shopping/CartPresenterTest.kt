@@ -9,9 +9,8 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.cart.CartContract
 import woowacourse.shopping.cart.CartPresenter
-import woowacourse.shopping.common.data.dao.CartDao
-import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
@@ -21,36 +20,33 @@ class CartPresenterTest {
     private lateinit var presenter: CartPresenter
     private lateinit var view: CartContract.View
     private lateinit var cart: Cart
-    private lateinit var cartState: State<Cart>
-    private lateinit var cartDao: CartDao
+    private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUp() {
         view = mockk()
         cart = makeCartMock(0, 1, 2, 3, 4, 5, 6)
-        cartState = mockk()
-        cartDao = mockk()
+        cartRepository = mockk()
 
         every {
-            cartDao.selectAll()
+            cartRepository.selectAll()
         } returns cart
 
         every {
-            cartDao.selectPage(0, 5)
+            cartRepository.selectPage(0, 5)
         } returns makeCartMock(0, 1, 2, 3, 4)
 
         every {
-            cartDao.selectAllCount()
+            cartRepository.selectAllCount()
         } returns 7
 
         every {
-            cartState.save(cart)
             view.updateCart(any())
             view.updateNavigator(any(), any())
         } just runs
 
         presenter = CartPresenter(
-            view, cart, cartState, cartDao, 0, 5
+            view, cartRepository, 0, 5
         )
     }
 
@@ -62,8 +58,7 @@ class CartPresenterTest {
 
         // then
         verify {
-            cartState.save(cart)
-            cartDao.selectPage(0, 5)
+            cartRepository.selectPage(0, 5)
             view.updateCart(any())
             view.updateNavigator(1, 2)
         }
@@ -73,11 +68,7 @@ class CartPresenterTest {
     fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
         // given
         every {
-            cartState.load()
-        } returns cart
-
-        every {
-            cartDao.deleteCartProductByOrdinal(any())
+            cartRepository.deleteCartProductByOrdinal(any())
         } just runs
 
         // when
@@ -86,13 +77,11 @@ class CartPresenterTest {
 
         // then
         verify {
-            cartState.load()
-            cartDao.deleteCartProductByOrdinal(0)
+            cartRepository.deleteCartProductByOrdinal(0)
         }
 
         verify {
-            cartState.save(cart)
-            cartDao.selectPage(0, 5)
+            cartRepository.selectPage(0, 5)
             view.updateCart(any())
             view.updateNavigator(1, 2)
         }

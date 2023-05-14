@@ -1,18 +1,12 @@
 package woowacourse.shopping.cart
 
-import woowacourse.shopping.common.data.dao.CartDao
-import woowacourse.shopping.common.data.database.state.CartState
-import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.CartProductModel
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomainModel
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
-import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.data.repository.CartRepository
 
 class CartPresenter(
     private val view: CartContract.View,
-    private var cart: Cart = Cart(emptyList()),
-    private val cartState: State<Cart> = CartState,
-    private val cartDao: CartDao,
+    private val cartRepository: CartRepository,
     private var currentPage: Int = 0,
     private val countPerPage: Int
 ) : CartContract.Presenter {
@@ -21,8 +15,7 @@ class CartPresenter(
     }
 
     override fun removeCartProduct(cartProductModel: CartProductModel) {
-        cart = cartState.load().remove(cartProductModel.toDomainModel())
-        cartDao.deleteCartProductByOrdinal(cartProductModel.ordinal)
+        cartRepository.deleteCartProductByOrdinal(cartProductModel.ordinal)
         updateCartPage()
     }
 
@@ -37,13 +30,12 @@ class CartPresenter(
     }
 
     private fun updateCartPage() {
-        cartState.save(cartDao.selectAll())
-        val cart = cartDao.selectPage(currentPage, countPerPage)
+        val cart = cartRepository.selectPage(currentPage, countPerPage)
         view.updateCart(cartProductsModel = cart.products.map { it.toViewModel() })
         view.updateNavigator(
             currentPage = currentPage + 1, maxPage = calculateMaxPage() + 1
         )
     }
 
-    private fun calculateMaxPage(): Int = (cartDao.selectAllCount() - 1) / countPerPage
+    private fun calculateMaxPage(): Int = (cartRepository.selectAllCount() - 1) / countPerPage
 }

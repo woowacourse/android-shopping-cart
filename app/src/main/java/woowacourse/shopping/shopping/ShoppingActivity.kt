@@ -8,11 +8,13 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
-import woowacourse.shopping.common.data.dao.ProductDao
-import woowacourse.shopping.common.data.dao.RecentProductDao
-import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
+import woowacourse.shopping.data.database.ShoppingDBOpenHelper
+import woowacourse.shopping.data.datasource.dao.ProductDao
+import woowacourse.shopping.data.datasource.dao.RecentProductDao
+import woowacourse.shopping.data.repository.ProductRepository
+import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.recyclerview.ProductAdapter
@@ -112,8 +114,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initPresenter() {
         presenter = ShoppingPresenter(
             this,
-            productDao = ProductDao(shoppingDBOpenHelper.writableDatabase),
-            recentProductDao = RecentProductDao(shoppingDBOpenHelper.writableDatabase),
+            productRepository = ProductRepository(ProductDao(shoppingDBOpenHelper.writableDatabase)),
+            recentProductRepository = RecentProductRepository(RecentProductDao(shoppingDBOpenHelper.writableDatabase)),
             recentProductSize = 10,
             productLoadSize = 20
         )

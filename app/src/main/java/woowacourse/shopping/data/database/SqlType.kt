@@ -1,4 +1,4 @@
-package woowacourse.shopping.common.data.database
+package woowacourse.shopping.data.database
 
 sealed class SqlType {
     object INTEGER : SqlType() {

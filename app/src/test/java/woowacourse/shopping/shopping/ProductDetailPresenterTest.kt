@@ -7,10 +7,8 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.common.data.dao.CartDao
-import woowacourse.shopping.common.data.database.state.State
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
@@ -22,21 +20,19 @@ class ProductDetailPresenterTest {
     private lateinit var presenter: ProductDetailPresenter
     private lateinit var view: ProductDetailContract.View
     private lateinit var product: Product
-    private lateinit var cartState: State<Cart>
-    private lateinit var cartDao: CartDao
+    private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUP() {
         view = mockk()
         product = makeProductMock()
-        cartState = mockk()
-        cartDao = mockk()
+        cartRepository = mockk()
 
         every {
             view.updateProductDetail(any())
         } just runs
 
-        presenter = ProductDetailPresenter(view, product, cartState, cartDao)
+        presenter = ProductDetailPresenter(view, product, cartRepository)
     }
 
     @Test
@@ -61,7 +57,7 @@ class ProductDetailPresenterTest {
         )
 
         every {
-            cartDao.selectAll()
+            cartRepository.selectAll()
         } returns cart
 
         every {
@@ -73,8 +69,7 @@ class ProductDetailPresenterTest {
         } returns addedCart
 
         every {
-            cartState.save(any())
-            cartDao.insertCartProduct(any())
+            cartRepository.insertCartProduct(any())
             view.showCart()
         } just runs
 
@@ -83,9 +78,8 @@ class ProductDetailPresenterTest {
 
         // then
         verify {
-            cartDao.selectAll()
-            cartState.save(addedCart)
-            cartDao.insertCartProduct(cartProduct.toViewModel())
+            cartRepository.selectAll()
+            cartRepository.insertCartProduct(cartProduct)
             view.showCart()
         }
     }

@@ -6,9 +6,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.common.data.dao.CartDao
-import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.data.database.ShoppingDBOpenHelper
+import woowacourse.shopping.data.datasource.dao.CartDao
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -86,7 +87,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initPresenter() {
         presenter = CartPresenter(
             this,
-            cartDao = CartDao(shoppingDBOpenHelper.writableDatabase),
+            cartRepository = CartRepository(CartDao(shoppingDBOpenHelper.writableDatabase)),
             countPerPage = SIZE_PER_PAGE
         )
     }

@@ -1,31 +1,31 @@
-package woowacourse.shopping.common.data.dao
+package woowacourse.shopping.data.datasource.dao
 
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.common.data.database.selectRowId
-import woowacourse.shopping.common.data.database.table.SqlProduct
-import woowacourse.shopping.common.data.database.table.SqlRecentProduct
-import woowacourse.shopping.common.model.RecentProductModel
+import woowacourse.shopping.data.database.selectRowId
+import woowacourse.shopping.data.database.table.SqlProduct
+import woowacourse.shopping.data.database.table.SqlRecentProduct
+import woowacourse.shopping.data.datasource.RecentProductDataSource
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.URL
 
-class RecentProductDao(private val db: SQLiteDatabase) {
-    fun insertRecentProduct(recentProductModel: RecentProductModel) {
+class RecentProductDao(private val db: SQLiteDatabase) : RecentProductDataSource {
+    override fun insertRecentProduct(recentProduct: RecentProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = recentProductModel.product.picture
-        productRow[SqlProduct.TITLE] = recentProductModel.product.title
-        productRow[SqlProduct.PRICE] = recentProductModel.product.price
+        productRow[SqlProduct.PICTURE] = recentProduct.product.picture.value
+        productRow[SqlProduct.TITLE] = recentProduct.product.title
+        productRow[SqlProduct.PRICE] = recentProduct.product.price
 
         val row = ContentValues()
-        row.put(SqlRecentProduct.ORDINAL, recentProductModel.ordinal)
+        row.put(SqlRecentProduct.ORDINAL, recentProduct.ordinal)
         row.put(SqlRecentProduct.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
         db.insert(SqlRecentProduct.name, null, row)
     }
 
-    fun selectAll(): RecentProducts {
+    override fun selectAll(): RecentProducts {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlRecentProduct.name}, ${SqlProduct.name} on ${SqlRecentProduct.name}.${SqlRecentProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
             null

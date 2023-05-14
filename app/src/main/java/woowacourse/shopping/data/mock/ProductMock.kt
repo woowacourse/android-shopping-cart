@@ -1,4 +1,4 @@
-package woowacourse.shopping.common.data.mock
+package woowacourse.shopping.data.mock
 
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL

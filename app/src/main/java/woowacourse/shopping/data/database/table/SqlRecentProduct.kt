@@ -1,7 +1,7 @@
-package woowacourse.shopping.common.data.database.table
+package woowacourse.shopping.data.database.table
 
-import woowacourse.shopping.common.data.database.SqlColumn
-import woowacourse.shopping.common.data.database.SqlType
+import woowacourse.shopping.data.database.SqlColumn
+import woowacourse.shopping.data.database.SqlType
 
 object SqlRecentProduct : SqlTable {
     const val ORDINAL = "ordinal"

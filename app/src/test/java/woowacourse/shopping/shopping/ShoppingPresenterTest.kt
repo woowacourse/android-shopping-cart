@@ -7,58 +7,45 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.common.data.dao.ProductDao
-import woowacourse.shopping.common.data.dao.RecentProductDao
-import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
+import woowacourse.shopping.data.repository.ProductRepository
+import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProducts
 
 class ShoppingPresenterTest {
     private lateinit var presenter: ShoppingPresenter
     private lateinit var view: ShoppingContract.View
-    private lateinit var productDao: ProductDao
-    private lateinit var productsState: State<Products>
-    private lateinit var recentProductsState: State<RecentProducts>
-    private lateinit var recentProductDao: RecentProductDao
+    private lateinit var productRepository: ProductRepository
+    private lateinit var recentProductRepository: RecentProductRepository
 
     @Before
     fun setUp() {
         view = mockk()
-        productDao = mockk()
-        productsState = mockk()
-        recentProductDao = mockk()
-        recentProductsState = mockk()
+        productRepository = mockk()
+        recentProductRepository = mockk()
 
         every {
-            productDao.initMockData()
-            recentProductsState.save(any())
+            productRepository.initMockData()
         } just runs
 
         every {
-            recentProductDao.selectAll()
+            recentProductRepository.selectAll()
         } returns RecentProducts(emptyList())
 
         every {
-            productsState.load()
+            productRepository.selectByRange(any(), any())
         } returns Products(emptyList())
 
         every {
-            productDao.selectByRange(any(), any())
-        } returns Products(emptyList())
-
-        every {
-            productsState.save(any())
             view.addProducts(any())
         } just runs
 
         presenter = ShoppingPresenter(
             view,
-            productDao = productDao,
-            productsState = productsState,
-            recentProductDao = recentProductDao,
-            recentProductsState = recentProductsState,
+            productRepository = productRepository,
+            recentProductRepository = recentProductRepository,
             recentProductSize = 0,
             productLoadSize = 0
         )
@@ -72,13 +59,10 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            productDao.initMockData()
-            recentProductDao.selectAll()
-            recentProductsState.save(RecentProducts(emptyList()))
+            productRepository.initMockData()
         }
 
         verify {
-            productsState.save(Products(emptyList()))
             view.addProducts(Products(emptyList()).value.map { it.toViewModel() })
         }
     }
@@ -89,12 +73,7 @@ class ShoppingPresenterTest {
         val productModel = ProductModel("", "", 0)
 
         every {
-            recentProductsState.load()
-        } returns RecentProducts(emptyList())
-
-        every {
-            recentProductsState.save(any())
-            recentProductDao.insertRecentProduct(any())
+            recentProductRepository.insertRecentProduct(any())
             view.showProductDetail(any())
         } just runs
 
@@ -103,8 +82,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            recentProductsState.save(any())
-            recentProductDao.insertRecentProduct(any())
+            recentProductRepository.insertRecentProduct(any())
             view.showProductDetail(productModel)
         }
     }
@@ -130,9 +108,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            productsState.load()
-            productDao.selectByRange(0, 0)
-            productsState.save(Products(emptyList()))
+            productRepository.selectByRange(0, 0)
             view.addProducts(Products(emptyList()).value.map { it.toViewModel() })
         }
     }
