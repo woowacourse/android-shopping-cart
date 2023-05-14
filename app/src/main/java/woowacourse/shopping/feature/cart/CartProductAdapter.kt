@@ -11,8 +11,6 @@ class CartProductAdapter(
     items: List<CartProductItemModel>
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
     private val _items = items.toMutableList()
-    val items: List<CartProductItemModel>
-        get() = _items.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         recentAdapter = RecentAdapter(listOf())
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
         loadAdapter = LoadAdapter {
-            presenter.loadMoreProduct(mainProductAdapter.items.lastOrNull()?.product?.id ?: 0)
+            presenter.loadMoreProduct()
         }
     }
 

@@ -51,8 +51,8 @@ class MainPresenter(
         view.showCartScreen()
     }
 
-    override fun loadMoreProduct(lastProductId: Long) {
-        val nextProducts = productRepository.getNextProducts(lastProductId)
+    override fun loadMoreProduct() {
+        val nextProducts = productRepository.getNextProducts(productCache.productList.size)
         val nextProductItems = nextProducts.map { product ->
             product.toPresentation().toItemModel { productUiModel ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))

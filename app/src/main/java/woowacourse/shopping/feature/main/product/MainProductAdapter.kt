@@ -11,8 +11,6 @@ class MainProductAdapter(
     items: List<MainProductItemModel>
 ) : RecyclerView.Adapter<MainProductViewHolder>() {
     private val _items = items.toMutableList()
-    val items: List<MainProductItemModel>
-        get() = _items.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainProductViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
