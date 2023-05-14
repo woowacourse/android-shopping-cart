@@ -24,12 +24,13 @@ class RecentProductWrapperAdapter(
 
     fun submitList(recentProductList: List<UiRecentProduct>) {
         recentProductAdapter.submitList(recentProductList)
-        fetchContainerVisible(recentProductList)
+        updateRecentProductWrapperVisible(recentProductList)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun fetchContainerVisible(recentProductList: List<UiRecentProduct>) {
-        if (recentProductList.isNotEmpty()) container.add(Any()) else container.clear()
+    private fun updateRecentProductWrapperVisible(recentProductList: List<UiRecentProduct>) {
+        container.clear()
+        if (recentProductList.isNotEmpty()) container.add(Any())
         notifyDataSetChanged()
     }
 }

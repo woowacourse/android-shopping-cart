@@ -41,6 +41,7 @@ class ShoppingPresenter(
     override fun inquiryProductDetail(product: UiProduct) {
         val recentProduct = RecentProduct(product = product.toDomain())
         recentProducts += recentProduct
+
         view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
         view.showProductDetail(product)
 

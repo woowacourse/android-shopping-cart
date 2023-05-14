@@ -8,9 +8,9 @@ enum class ShoppingViewType(val value: Int) {
     MORE_BUTTON(R.layout.item_load_more);
 
     companion object {
-        private const val WRONG_KEY_ERROR = "검색한 뷰타입이 존재하지 않습니다."
+        private const val INVALID_VIEW_TYPE_ERROR_MESSAGE = "올바르지 않은 뷰 타입입니다."
 
         fun of(value: Int): ShoppingViewType =
-            requireNotNull(values().find { it.value == value }) { WRONG_KEY_ERROR }
+            requireNotNull(values().find { it.value == value }) { INVALID_VIEW_TYPE_ERROR_MESSAGE }
     }
 }
