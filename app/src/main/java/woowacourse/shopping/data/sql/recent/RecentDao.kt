@@ -46,13 +46,35 @@ class RecentDao(
     }
 
     fun putRecentProduct(recentProduct: RecentProduct) {
-        val findRecentProduct = selectAllRecent().find { it.product.id == recentProduct.product.id }
+        val findRecentProduct =
+            selectAll().find { it.product.id == recentProduct.product.id }
 
         if (findRecentProduct != null) {
             updateRecentProduct(recentProduct)
         } else {
             insertRecentProduct(recentProduct)
         }
+    }
+
+    private fun selectAll(): List<RecentProduct> {
+        val cursor = readableDatabase.rawQuery(
+            "SELECT * FROM ${RecentContract.TABLE_NAME}",
+            null
+        )
+
+        val recentProducts = mutableListOf<RecentProduct>()
+        while (cursor.moveToNext()) {
+            val data = RecentProductEntity(
+                cursor.getLong(cursor.getColumnIndexOrThrow(RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID)),
+                cursor.getLong(cursor.getColumnIndexOrThrow(RecentContract.TABLE_COLUMN_DATE_TIME))
+            )
+            val product: Product = productsDatasource.find { it.id == data.productId } ?: continue
+            val shownDateTime = LocalDateTime.ofEpochSecond(data.dateTimeMills, 0, ZoneOffset.UTC)
+            recentProducts.add(RecentProduct(product, shownDateTime))
+        }
+
+        cursor.close()
+        return recentProducts
     }
 
     private fun insertRecentProduct(recentProduct: RecentProduct) {
@@ -67,15 +89,9 @@ class RecentDao(
     private fun updateRecentProduct(recentProduct: RecentProduct) {
         val timeSecond = recentProduct.dateTime.toEpochSecond(ZoneOffset.UTC)
         val updateSql = "UPDATE ${RecentContract.TABLE_NAME} " +
-                "SET ${RecentContract.TABLE_COLUMN_DATE_TIME}=${timeSecond} " +
-                "WHERE ${RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID}=${recentProduct.product.id}"
+            "SET ${RecentContract.TABLE_COLUMN_DATE_TIME}=$timeSecond " +
+            "WHERE ${RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID}=${recentProduct.product.id}"
         writableDatabase.execSQL(updateSql)
-    }
-
-    private fun deleteRecentProduct(recentProduct: RecentProduct) {
-        val selection = "${RecentContract.TABLE_COLUMN_RECENT_PRODUCT_ID} = ?"
-        val selectionArgs = arrayOf("${recentProduct.product.id}")
-        writableDatabase.delete(RecentContract.TABLE_NAME, selection, selectionArgs)
     }
 
     companion object {
