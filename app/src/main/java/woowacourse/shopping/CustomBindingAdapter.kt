@@ -7,7 +7,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 object CustomBindingAdapter {
 
-    @BindingAdapter("imgResId")
+    @BindingAdapter("imageUrl")
     @JvmStatic
     fun setImageResource(view: ImageView, url: String) {
         Glide.with(view.context)

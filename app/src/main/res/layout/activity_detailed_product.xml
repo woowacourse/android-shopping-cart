@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="presenter"
             type="woowacourse.shopping.ui.detailedProduct.DetailedProductContract.Presenter" />
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
@@ -30,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:contentDescription="@string/cart_item_product_image_description"
-            app:imgResId="@{product.imageUrl}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintTop_toBottomOf="@id/toolbar"
             tools:src="@drawable/ic_launcher_foreground" />
 

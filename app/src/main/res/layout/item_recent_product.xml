@@ -25,7 +25,7 @@
             android:layout_width="98dp"
             android:layout_height="98dp"
             android:contentDescription="@string/recent_product_item_product_image_description"
-            app:imgResId="@{product.imageUrl}"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
