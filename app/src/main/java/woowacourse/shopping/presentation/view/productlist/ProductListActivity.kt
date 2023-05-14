@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.view.productlist
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -28,6 +29,13 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
             recentProductRepository = RecentProductRepositoryImp(this)
         )
     }
+
+    private val recentProductResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.javaClass.name == ProductDetailActivity::javaClass.name) {
+                presenter.updateRecentProductItems()
+            }
+        }
 
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductListAdapter: RecentProductListAdapter
@@ -131,7 +139,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     private fun moveToActivity(productId: Long) {
         val intent = ProductDetailActivity.createIntent(this, productId)
-        startActivity(intent)
+        recentProductResultLauncher.launch(intent)
     }
 
     private fun onMoreProductList() {
