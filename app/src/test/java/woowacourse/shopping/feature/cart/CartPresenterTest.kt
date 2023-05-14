@@ -2,14 +2,20 @@ package woowacourse.shopping.feature.cart
 
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.CartProduct
+import com.example.domain.model.Price
+import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.mapper.toPresentation
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.PageUiModel
 
 internal class CartPresenterTest {
@@ -23,19 +29,39 @@ internal class CartPresenterTest {
         cartRepository = mockk(relaxed = true)
         every { cartRepository.getAll() } returns mockCartProducts
         presenter = CartPresenter(view, cartRepository)
-        presenter.setPage(PageUiModel(41, 2))
+    }
+
+    @Test
+    fun `처음 5개를 가져와 화면에 띄운다`() {
+        every { cartRepository.getProductsByPage(any(), any()) } returns mockCartProducts.take(5)
+        val cartProductSlot = slot<List<CartProductItemModel>>()
+        every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
+
+        presenter.loadInitCartProduct()
+
+        val expected = mockCartProducts.take(5)
+        val actual = cartProductSlot.captured.map {
+            CartProduct(it.cartProduct.cartId, it.cartProduct.productUiModel.toDomain())
+        }
+
+        assert(expected == actual)
+        verify { view.changeCartProducts(any()) }
+        verify { view.setPageState(any(), any(), any()) }
     }
 
     @Test
     fun `이전 페이지를 불러온다`() {
+        presenter.setPage(PageUiModel(41, 2))
         val pageSlot = slot<Int>()
-        every { cartRepository.getProductsByPage(capture(pageSlot), any()) } returns emptyList()
-        val cartProductSlot = slot<List<CartProductItemModel>>()
-        every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
         val previousSlot = slot<Boolean>()
-        every { view.setPreviousButtonState(capture(previousSlot)) } just Runs
         val nextSlot = slot<Boolean>()
-        every { view.setNextButtonState(capture(nextSlot)) } just Runs
+        every {
+            view.setPageState(
+                capture(previousSlot),
+                capture(nextSlot),
+                capture(pageSlot)
+            )
+        } just Runs
 
         presenter.loadPreviousPage()
 
@@ -46,14 +72,17 @@ internal class CartPresenterTest {
 
     @Test
     fun `다음 페이지를 불러온다`() {
+        presenter.setPage(PageUiModel(41, 2))
         val pageSlot = slot<Int>()
-        every { cartRepository.getProductsByPage(capture(pageSlot), any()) } returns emptyList()
-        val cartProductSlot = slot<List<CartProductItemModel>>()
-        every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
         val previousSlot = slot<Boolean>()
-        every { view.setPreviousButtonState(capture(previousSlot)) } just Runs
         val nextSlot = slot<Boolean>()
-        every { view.setNextButtonState(capture(nextSlot)) } just Runs
+        every {
+            view.setPageState(
+                capture(previousSlot),
+                capture(nextSlot),
+                capture(pageSlot)
+            )
+        } just Runs
 
         presenter.loadNextPage()
 
@@ -67,4 +96,15 @@ internal class CartPresenterTest {
             it.toLong(), productsDatasource[it]
         )
     }
+
+    private val mockProduct = Product(
+        5,
+        "유명산지 고당도사과 1.5kg",
+        "https://product-image.kurly.com/cdn-cgi/image/quality=85,width=676/product/image/b573ba85-9bfa-433b-bafc-3356b081440b.jpg",
+        Price(13000)
+    )
+
+    private val mockCartProductUiModel = CartProductUiModel(
+        5L, mockProduct.toPresentation()
+    )
 }

@@ -76,6 +76,23 @@ internal class MainPresenterTest {
     }
 
     @Test
+    fun `상품 목록을 이어서 더 불러와서 화면에 추가로 띄운다`() {
+        every { productRepository.getNextProducts(any()) } answers {
+            mockProducts.subList(10, 15)
+        }
+        val slot = slot<List<MainProductItemModel>>()
+        every { view.addProducts(capture(slot)) } just Runs
+
+        presenter.loadMoreProduct()
+
+        val actual = slot.captured.map { it.product.toDomain() }
+        val expected = mockProducts.subList(10, 15)
+
+        assert(actual == expected)
+        verify { view.addProducts(any()) }
+    }
+
+    @Test
     fun `최근 본 상품 목록을 가져와서 화면에 띄운다`() {
         every { recentProductRepository.getAll() } returns mockRecentProducts
         val slot = slot<List<RecentProductItemModel>>()
