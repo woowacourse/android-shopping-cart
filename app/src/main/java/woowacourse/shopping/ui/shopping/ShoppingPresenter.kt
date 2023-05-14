@@ -22,10 +22,10 @@ class ShoppingPresenter(
     private var recentProducts = RecentProducts()
 
     override fun fetchProducts() {
-        products = products.addAll(
-            productRepository.getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, products.lastId)
-        )
+        val newProducts = productRepository
+            .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, products.lastId)
 
+        products = products.addAll(newProducts)
         view.updateProducts(products.getItemsByUnit().map { it.toUi() })
         view.updateLoadMoreVisible()
     }
@@ -39,13 +39,14 @@ class ShoppingPresenter(
     }
 
     override fun inquiryProductDetail(product: UiProduct) {
-        thread {
-            val recentProduct = RecentProduct(product = product.toDomain())
-            recentProductRepository.add(recentProduct)
-            recentProducts += recentProduct
-            view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
-        }
+        val recentProduct = RecentProduct(product = product.toDomain())
+        recentProducts += recentProduct
+        view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
         view.showProductDetail(product)
+
+        thread {
+            recentProductRepository.add(recentProduct)
+        }
     }
 
     override fun fetchRecentProducts() {

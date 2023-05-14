@@ -22,16 +22,18 @@ import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.shopping.ShoppingContract.Presenter
+import woowacourse.shopping.ui.shopping.ShoppingContract.View
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.loadmore.LoadMoreAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductWrapperAdapter
 import woowacourse.shopping.util.isolatedViewTypeConfig
 
-class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemClickListener {
+class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     private lateinit var binding: ActivityShoppingBinding
 
-    override val presenter: ShoppingContract.Presenter by lazy {
+    override val presenter: Presenter by lazy {
         val shoppingDatabase = ShoppingDatabase(this)
         ShoppingPresenter(
             this,
@@ -45,7 +47,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
     private val recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
     private val recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
     private val productAdapter = ProductAdapter(presenter::inquiryProductDetail)
-    private val loadMoreAdapter = LoadMoreAdapter(onItemClick = presenter::fetchProducts)
+    private val loadMoreAdapter = LoadMoreAdapter(presenter::fetchProducts)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +74,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
     }
 
     override fun updateRecentProducts(recentProducts: List<UiRecentProduct>) {
-        runOnUiThread { recentProductWrapperAdapter.submitList(recentProducts) }
+        recentProductWrapperAdapter.submitList(recentProducts)
     }
 
     override fun showProductDetail(product: UiProduct) {

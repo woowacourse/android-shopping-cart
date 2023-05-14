@@ -8,6 +8,7 @@ import woowacourse.shopping.ui.shopping.ShoppingViewType
 
 class RecentProductWrapperAdapter(
     private val recentProductAdapter: RecentProductAdapter,
+    private val container: MutableList<Any> = mutableListOf(),
 ) : RecyclerView.Adapter<RecentProductWrapperViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -17,18 +18,18 @@ class RecentProductWrapperAdapter(
 
     override fun onBindViewHolder(holder: RecentProductWrapperViewHolder, position: Int) {}
 
-    override fun getItemCount(): Int = if (recentProductAdapter.itemCount > 0) 1 else 0
+    override fun getItemCount(): Int = container.size
 
     override fun getItemViewType(position: Int): Int = ShoppingViewType.RECENT_PRODUCTS.value
 
-    @SuppressLint("NotifyDataSetChanged")
     fun submitList(recentProductList: List<UiRecentProduct>) {
         recentProductAdapter.submitList(recentProductList)
-        notifyDataSetChanged()
+        fetchContainerVisible(recentProductList)
     }
 
-    fun submit(recentProduct: UiRecentProduct) {
-        val origin = recentProductAdapter.currentList
-        submitList(listOf(recentProduct) + origin)
+    @SuppressLint("NotifyDataSetChanged")
+    private fun fetchContainerVisible(recentProductList: List<UiRecentProduct>) {
+        if (recentProductList.isNotEmpty()) container.add(Any()) else container.clear()
+        notifyDataSetChanged()
     }
 }

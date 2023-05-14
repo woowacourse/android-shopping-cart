@@ -5,8 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.ui.shopping.ShoppingViewType
 
 class LoadMoreAdapter(
-    private val button: MutableList<Any> = mutableListOf(),
     private val onItemClick: () -> Unit,
+    private val button: MutableList<Any> = mutableListOf(),
 ) : RecyclerView.Adapter<LoadMoreViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoadMoreViewHolder =
