@@ -2,7 +2,7 @@ package woowacourse.shopping.database.recentProduct
 
 import android.database.Cursor
 import android.provider.BaseColumns
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.RecentProduct
 
 object RecentProductConstant : BaseColumns {
     private const val TABLE_NAME = "recent_product"
@@ -25,7 +25,7 @@ object RecentProductConstant : BaseColumns {
         return "DROP TABLE IF EXISTS $TABLE_NAME"
     }
 
-    fun getInsertQuery(product: Product): String {
+    fun getInsertQuery(product: RecentProduct): String {
         return "INSERT OR REPLACE INTO $TABLE_NAME (" +
             "$TABLE_COLUMN_ID," +
             "$TABLE_COLUMN_NAME," +
@@ -51,11 +51,11 @@ object RecentProductConstant : BaseColumns {
         return "SELECT * FROM $TABLE_NAME WHERE $TABLE_COLUMN_ID = $id"
     }
 
-    fun fromCursor(cursor: Cursor): Product {
+    fun fromCursor(cursor: Cursor): RecentProduct {
         val id = cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_ID))
         val name = cursor.getString(cursor.getColumnIndexOrThrow(TABLE_COLUMN_NAME))
         val price = cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_PRICE))
         val imageUrl = cursor.getString(cursor.getColumnIndexOrThrow(TABLE_COLUMN_IMAGE_URL))
-        return Product(id, name, price, imageUrl)
+        return RecentProduct(id, name, price, imageUrl)
     }
 }

@@ -9,14 +9,14 @@
             type="woowacourse.shopping.ui.shopping.recentProductAdapter.RecentProductsListener" />
         <variable
             name="product"
-            type="woowacourse.shopping.model.ProductUIModel" />
+            type="woowacourse.shopping.model.RecentProductUIModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:onClick="@{() -> listener.onClickItem(product)}">
+        android:onClick="@{() -> listener.onClickItem(product.id)}">
 
         <ImageView
             android:id="@+id/iv_product_image"
@@ -25,7 +25,8 @@
             app:imgResId="@{product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/tv_product_name"

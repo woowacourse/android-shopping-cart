@@ -15,6 +15,6 @@ interface ShoppingContract {
         fun setUpProducts()
         fun updateProducts()
         fun fetchMoreProducts()
-        fun navigateToItemDetail(data: ProductUIModel)
+        fun navigateToItemDetail(productId: Int)
     }
 }

@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.shopping
 
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentRepository
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
@@ -39,8 +38,10 @@ class ShoppingPresenter(
         view.addProducts(productsData.plus(ProductsItemType.ReadMore))
     }
 
-    override fun navigateToItemDetail(data: ProductUIModel) {
-        view.navigateToProductDetail(data)
+    override fun navigateToItemDetail(productId: Int) {
+        repository.findById(productId).let {
+            view.navigateToProductDetail(it.toUIModel())
+        }
     }
 
     companion object {

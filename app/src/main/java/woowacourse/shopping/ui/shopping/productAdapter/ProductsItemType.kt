@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.shopping.productAdapter
 
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.RecentProductUIModel
 
 sealed interface ProductsItemType {
     val viewType: Int
@@ -10,7 +11,7 @@ sealed interface ProductsItemType {
             is ReadMore -> TYPE_FOOTER
         }
 
-    data class RecentProducts(val product: List<ProductUIModel>) : ProductsItemType
+    data class RecentProducts(val product: List<RecentProductUIModel>) : ProductsItemType
     data class Product(val product: ProductUIModel) : ProductsItemType
     object ReadMore : ProductsItemType
 

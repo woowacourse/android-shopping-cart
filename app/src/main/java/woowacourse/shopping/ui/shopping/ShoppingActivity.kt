@@ -106,7 +106,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun setProducts(data: List<ProductsItemType>) {
         val listener = object : ProductsListener {
-            override fun onClickItem(data: ProductUIModel) { presenter.navigateToItemDetail(data) }
+            override fun onClickItem(productId: Int) { presenter.navigateToItemDetail(productId) }
             override fun onReadMoreClick() { presenter.fetchMoreProducts() }
         }
         binding.rvProducts.adapter = ProductsAdapter(data, listener)

@@ -1,5 +1,5 @@
 package woowacourse.shopping.ui.shopping.recentProductAdapter
 
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.RecentProductUIModel
 
-class RecentProductItem(val product: ProductUIModel)
+class RecentProductItem(val product: RecentProductUIModel)
