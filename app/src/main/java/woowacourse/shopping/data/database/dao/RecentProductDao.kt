@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.database.dao
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
@@ -32,23 +33,27 @@ class RecentProductDao(private val db: SQLiteDatabase) {
                 "ORDER BY ${SqlRecentProduct.TIME} DESC",
             null
         )
-        return RecentProducts(
-            cursor.use {
-                val recentProducts = mutableListOf<RecentProduct>()
-                while (it.moveToNext()) recentProducts.add(
-                    RecentProduct(
-                        LocalDateTime.parse(it.getString(it.getColumnIndexOrThrow(SqlRecentProduct.TIME))),
-                        Product(
-                            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                        )
-                    )
-                )
-                recentProducts
-            }
-        )
+        return createRecentProducts(cursor)
     }
+
+    private fun createRecentProducts(cursor: Cursor) = RecentProducts(
+        cursor.use {
+            val recentProducts = mutableListOf<RecentProduct>()
+            while (it.moveToNext()) {
+                recentProducts.add(createRecentProduct(it))
+            }
+            recentProducts
+        }
+    )
+
+    private fun createRecentProduct(cursor: Cursor) = RecentProduct(
+        LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(SqlRecentProduct.TIME))),
+        Product(
+            URL(cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+            cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.TITLE)),
+            cursor.getInt(cursor.getColumnIndexOrThrow(SqlProduct.PRICE)),
+        )
+    )
 
     fun selectByProduct(product: ProductModel): RecentProduct? {
         val productRow: MutableMap<String, Any> = mutableMapOf()
@@ -63,14 +68,7 @@ class RecentProductDao(private val db: SQLiteDatabase) {
             arrayOf(productId.toString())
         )
         return cursor.use {
-            if (it.moveToNext()) RecentProduct(
-                LocalDateTime.parse(it.getString(it.getColumnIndexOrThrow(SqlRecentProduct.TIME))),
-                Product(
-                    URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                    it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                    it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                )
-            )
+            if (it.moveToNext()) createRecentProduct(it)
             else null
         }
     }

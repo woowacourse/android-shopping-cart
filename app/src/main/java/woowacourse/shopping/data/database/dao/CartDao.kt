@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.database.dao
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.data.database.selectRowId
@@ -31,23 +32,27 @@ class CartDao(private val db: SQLiteDatabase) {
                 "ORDER BY ${SqlCart.TIME} ASC",
             null
         )
-        return Cart(
-            cursor.use {
-                val cart = mutableListOf<CartProduct>()
-                while (it.moveToNext()) cart.add(
-                    CartProduct(
-                        LocalDateTime.parse(it.getString(it.getColumnIndexOrThrow(SqlCart.TIME))),
-                        Product(
-                            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                        )
-                    )
-                )
-                cart
-            }
-        )
+        return createCart(cursor)
     }
+
+    private fun createCart(cursor: Cursor) = Cart(
+        cursor.use {
+            val cart = mutableListOf<CartProduct>()
+            while (it.moveToNext()) {
+                cart.add(createCartProduct(it))
+            }
+            cart
+        }
+    )
+
+    private fun createCartProduct(cursor: Cursor) = CartProduct(
+        LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(SqlCart.TIME))),
+        Product(
+            URL(cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+            cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.TITLE)),
+            cursor.getInt(cursor.getColumnIndexOrThrow(SqlProduct.PRICE)),
+        )
+    )
 
     fun selectAllCount(): Int {
         val cursor = db.rawQuery(
@@ -67,22 +72,7 @@ class CartDao(private val db: SQLiteDatabase) {
                 "LIMIT ${page * sizePerPage}, $sizePerPage",
             null
         )
-        return Cart(
-            cursor.use {
-                val cart = mutableListOf<CartProduct>()
-                while (it.moveToNext()) cart.add(
-                    CartProduct(
-                        LocalDateTime.parse(it.getString(it.getColumnIndexOrThrow(SqlCart.TIME))),
-                        Product(
-                            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                        )
-                    )
-                )
-                cart
-            }
-        )
+        return createCart(cursor)
     }
 
     fun deleteCartProductByTime(time: LocalDateTime) {

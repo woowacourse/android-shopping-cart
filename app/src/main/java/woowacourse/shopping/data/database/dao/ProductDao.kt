@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.database.dao
 
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.domain.Product
@@ -11,19 +12,22 @@ class ProductDao(private val db: SQLiteDatabase) {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlProduct.name} LIMIT $start, $range", null
         )
-        return Products(
-            cursor.use {
-                val products = mutableListOf<Product>()
-                while (it.moveToNext()) products.add(
-                    Product(
-                        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-                        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-                        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-                    )
-                )
-
-                products
-            }
-        )
+        return createProducts(cursor)
     }
+
+    private fun createProducts(cursor: Cursor) = Products(
+        cursor.use {
+            val products = mutableListOf<Product>()
+            while (it.moveToNext()) {
+                products.add(createProduct(it))
+            }
+            products
+        }
+    )
+
+    private fun createProduct(cursor: Cursor) = Product(
+        URL(cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+        cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.TITLE)),
+        cursor.getInt(cursor.getColumnIndexOrThrow(SqlProduct.PRICE)),
+    )
 }
