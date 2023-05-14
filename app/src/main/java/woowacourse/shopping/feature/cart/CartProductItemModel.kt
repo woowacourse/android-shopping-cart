@@ -7,5 +7,5 @@ import woowacourse.shopping.model.CartProductUiModel
 @Parcelize
 data class CartProductItemModel(
     val cartProduct: CartProductUiModel,
-    val onClick: (position: Int) -> Unit
+    val onClick: (cartProduct: CartProductUiModel) -> Unit
 ) : Parcelable

@@ -8,6 +8,5 @@ class CartProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(cartProduct: CartProductItemModel) {
         binding.itemModel = cartProduct
-        binding.position = bindingAdapterPosition
     }
 }

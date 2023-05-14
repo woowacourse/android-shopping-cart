@@ -9,7 +9,7 @@ data class CartProductUiModel(
     val cartId: Long,
     val productUiModel: ProductUiModel
 ) : Parcelable {
-    fun toItemModel(onClick: (position: Int) -> Unit): CartProductItemModel {
+    fun toItemModel(onClick: (cartProduct: CartProductUiModel) -> Unit): CartProductItemModel {
         return CartProductItemModel(this, onClick)
     }
 }
