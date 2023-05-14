@@ -22,8 +22,6 @@ import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.shopping.recyclerview.layoutmanager.ShoppingGridLayoutManager
-import woowacourse.shopping.ui.shopping.recyclerview.listener.EndScrollListener
 import woowacourse.shopping.ui.shopping.recyclerview.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.recentproduct.RecentProductWrapperAdapter
@@ -54,9 +52,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(presenter::inquiryProductDetail)
     }
-    private val concatAdapter: ConcatAdapter by lazy {
-        ConcatAdapter(isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter)
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,15 +61,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
     }
 
     private fun initView() {
+        binding.presenter = presenter
         binding.tbShopping.setOnMenuItemClickListener(this)
         initRecyclerView()
     }
 
     private fun initRecyclerView() {
-        binding.rvShopping.adapter = concatAdapter
-        binding.rvShopping.layoutManager = ShoppingGridLayoutManager(concatAdapter, this)
-        binding.rvShopping.addOnScrollListener(EndScrollListener(presenter::fetchHasNext))
-
+        binding.adapter =
+            ConcatAdapter(isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter)
         presenter.fetchRecentProducts()
         presenter.fetchProducts()
     }

@@ -19,6 +19,6 @@ class RecentProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :
     }
 
     fun bind(recentProduct: UiRecentProduct) {
-        binding.recentProduct = recentProduct
+        binding.product = recentProduct.product
     }
 }

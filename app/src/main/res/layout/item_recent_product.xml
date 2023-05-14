@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="recentProduct"
-            type="woowacourse.shopping.model.RecentProduct" />
+            name="product"
+            type="woowacourse.shopping.model.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,35 +16,35 @@
         android:paddingStart="20dp">
 
         <ImageView
+            android:id="@+id/iv_product"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
+            app:image="@{product.imageUrl}"
+            app:layout_constraintBottom_toTopOf="@id/tv_product_name"
             app:layout_constraintDimensionRatio="1"
-            app:image="@{recentProduct.product.imageUrl}"
-            tools:srcCompat="@tools:sample/avatars"
-            android:id="@+id/iv_product"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tv_product_name"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            tools:text="PET_보틀_정사각"
-            android:textColor="@color/woowa_text_black"
-            android:text="@{recentProduct.product.name}"
-            android:textStyle="bold"
-            android:includeFontPadding="false"
-            android:textSize="12sp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:layout_marginTop="7dp"
+            android:id="@+id/tv_product_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_product_name"
-            app:layout_constraintTop_toBottomOf="@+id/iv_product"
-            app:layout_constraintStart_toStartOf="@+id/iv_product"
+            android:layout_marginTop="7dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="12sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/iv_product" />
+            app:layout_constraintEnd_toEndOf="@+id/iv_product"
+            app:layout_constraintStart_toStartOf="@+id/iv_product"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product"
+            tools:text="PET_보틀_정사각형" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
