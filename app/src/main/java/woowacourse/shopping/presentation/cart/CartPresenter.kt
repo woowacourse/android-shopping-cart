@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
-import woowacourse.shopping.Counter
+import woowacourse.shopping.CartPages
 import woowacourse.shopping.Product
 import woowacourse.shopping.Products
 import woowacourse.shopping.data.cart.CartRepository
@@ -14,11 +14,30 @@ class CartPresenter(
     private val productRepository: ProductRepository,
 ) : CartContract.Presenter {
 
-    private var page = Counter(FIRST_PAGE)
-    private val products: Products = Products()
-    override fun initCart() {
-        loadProducts()
-        setCartPage()
+    private lateinit var cartPages: CartPages
+    override fun loadCart() {
+        initCartPages()
+        setCartProducts()
+    }
+
+    private fun initCartPages() {
+        val productItems = loadCartProducts()
+        cartPages = CartPages(Products(productItems))
+    }
+
+    private fun loadCartProducts(): List<Product> {
+        val recentProductIds = cartRepository.getCartProductIds()
+        val productItems = recentProductIds.map {
+            productRepository.findProductById(it) ?: Product.defaultProduct
+        }
+        return productItems
+    }
+
+    private fun setCartProducts() {
+        val nextProducts = cartPages.getNextPageProducts()
+        updateCart(nextProducts)
+        view.setPage(cartPages.pageNumber.value)
+        checkPageAble()
     }
 
     private fun checkPageAble() {
@@ -28,40 +47,30 @@ class CartPresenter(
 
     override fun deleteProduct(productModel: ProductModel) {
         cartRepository.deleteCartProductId(productModel.id)
-        products.deleteProduct(productModel.id)
-        setCartPage()
-    }
-
-    override fun plusPage() {
-        page = page.plus(PAGE_UNIT)
-        setCartPage()
-    }
-
-    override fun minusPage() {
-        page = page.minus(PAGE_UNIT)
-        setCartPage()
-    }
-
-    private fun setCartPage() {
-        view.setPage(page.value)
-        updateCart()
+        val deletedProducts = cartPages.getDeletedProducts(productModel.id)
+        if (deletedProducts.size == 0) {
+            minusPage()
+            return
+        }
+        updateCart(deletedProducts)
         checkPageAble()
     }
 
-    private fun loadProducts() {
-        val recentProductIds = cartRepository.getCartProductIds()
-        val productItems = recentProductIds.map {
-            productRepository.findProductById(it) ?: Product.defaultProduct
-        }
-        products.addProducts(productItems)
+    override fun plusPage() {
+        val nextProducts = cartPages.getNextPageProducts()
+        updateCart(nextProducts)
+        checkPageAble()
     }
 
-    private fun updateCart() {
-        val cartProducts = products.getProductsInRange(
-            (page.value - FIRST_PAGE) * PRODUCT_CART_SIZE,
-            PRODUCT_CART_SIZE,
-        )
-        view.setCartProductModels(cartProducts.toPresentation())
+    override fun minusPage() {
+        val previousProducts = cartPages.getPreviousPageProducts()
+        updateCart(previousProducts)
+        checkPageAble()
+    }
+
+    private fun updateCart(products: Products) {
+        view.setPage(cartPages.pageNumber.value)
+        view.setCartProductModels(products.toPresentation())
     }
 
     private fun Products.toPresentation(): List<ProductModel> {
@@ -69,24 +78,10 @@ class CartPresenter(
     }
 
     private fun checkRightPageAble() {
-        if (((products.size - FIRST_PAGE) / PRODUCT_CART_SIZE + FIRST_PAGE) == page.value) {
-            view.setRightPageEnable(false)
-        } else {
-            view.setRightPageEnable(true)
-        }
+        view.setRightPageEnable(cartPages.isNextPageAble())
     }
 
     private fun checkLeftPageAble() {
-        if (page.value == FIRST_PAGE) {
-            view.setLeftPageEnable(false)
-        } else {
-            view.setLeftPageEnable(true)
-        }
-    }
-
-    companion object {
-        private const val FIRST_PAGE = 1
-        private const val PAGE_UNIT = 1
-        private const val PRODUCT_CART_SIZE = 5
+        view.setLeftPageEnable(cartPages.isPreviousPageAble())
     }
 }

@@ -57,7 +57,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initCartAdapter() {
         binding.recyclerCart.adapter = cartAdapter
-        presenter.initCart()
+        presenter.loadCart()
     }
 
     override fun setCartProductModels(productModels: List<ProductModel>) {
