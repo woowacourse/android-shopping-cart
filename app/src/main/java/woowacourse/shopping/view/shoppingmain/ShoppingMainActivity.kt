@@ -25,6 +25,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     private lateinit var concatAdapter: ConcatAdapter
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
+    private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
 
     private var _binding: ActivityShoppingMainBinding? = null
     private val binding
@@ -48,6 +49,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
 
         val recentProducts = presenter.getRecentProducts()
         recentProductAdapter.update(recentProducts)
+        recentProductWrapperAdapter.update(recentProductAdapter.itemCount)
     }
 
     private fun setPresenter() {
@@ -64,10 +66,10 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
             showProductDetailPage()
         )
         recentProductAdapter = RecentProductAdapter(
-            emptyList(),
+            presenter.getRecentProducts(),
             showProductDetailPage()
         )
-        val recentProductWrapperAdapter = RecentProductWrapperAdapter(
+        recentProductWrapperAdapter = RecentProductWrapperAdapter(
             recentProductAdapter
         )
 
