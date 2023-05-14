@@ -18,9 +18,9 @@ class NavigationViewHolder(
         }
     }
 
-    fun bind(currentPage: Int, isNextButtonEnabled: Boolean) {
+    fun bind(currentPage: Int, isLastPage: Boolean) {
         binding.cartNavigatorPageText.text = currentPage.toString()
         binding.cartNavigatorPreviousButton.isEnabled = currentPage != 1
-        binding.cartNavigatorNextButton.isEnabled = isNextButtonEnabled
+        binding.cartNavigatorNextButton.isEnabled = !isLastPage
     }
 }
