@@ -33,10 +33,6 @@ class ProductDetailPresenterTest {
 
     @Test
     fun `프레젠터가 생성될 때 주입받은 상품에 대한 정보를 가지고 화면을 초기화한다`() {
-        // given
-        view = mockk()
-        repository = mockk()
-
         // when
         ProductDetailPresenter(
             view = view,

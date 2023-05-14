@@ -4,18 +4,19 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 import woowacourse.shopping.model.Page
 import woowacourse.shopping.shoppingcart.ShowingCartProductsPageRule
+import woowacourse.shopping.util.toUiModel
 
 class ShowingCartProductsPageRuleTest {
 
     private val products = listOf(
-        ProductUiModel(name = "아메리카노"),
-        ProductUiModel(name = "카페라떼"),
-        ProductUiModel(name = "밀크티"),
-        ProductUiModel(name = "얼그레이"),
-        ProductUiModel(name = "녹차"),
-        ProductUiModel(name = "카라멜 마끼아또"),
-        ProductUiModel(name = "스콘")
-    )
+        ShoppingCartProduct(name = "아메리카노"),
+        ShoppingCartProduct(name = "카페라떼"),
+        ShoppingCartProduct(name = "밀크티"),
+        ShoppingCartProduct(name = "얼그레이"),
+        ShoppingCartProduct(name = "녹차"),
+        ShoppingCartProduct(name = "카라멜 마끼아또"),
+        ShoppingCartProduct(name = "스콘")
+    ).map { it.toUiModel() }
 
     @Test
     fun `페이지에 띄워줄 항목을 페이지마다 앞에서부터 세개씩 끊어서 제공한다`() {
@@ -30,10 +31,10 @@ class ShowingCartProductsPageRuleTest {
 
         // then
         val expected = listOf(
-            ProductUiModel(name = "얼그레이"),
-            ProductUiModel(name = "녹차"),
-            ProductUiModel(name = "카라멜 마끼아또"),
-        )
+            ShoppingCartProduct(name = "얼그레이"),
+            ShoppingCartProduct(name = "녹차"),
+            ShoppingCartProduct(name = "카라멜 마끼아또"),
+        ).map { it.toUiModel() }
 
         assertEquals(expected, actual)
     }

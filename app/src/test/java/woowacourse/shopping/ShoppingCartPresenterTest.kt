@@ -3,7 +3,7 @@ package woowacourse.shopping
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import model.Product
+import model.ShoppingCartProduct
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
@@ -16,7 +16,7 @@ class ShoppingCartPresenterTest {
     private lateinit var presenter: ShoppingCartContract.Presenter
     private lateinit var view: ShoppingCartContract.View
     private lateinit var repository: ShoppingRepository
-    private lateinit var exampleProducts: List<Product>
+    private lateinit var products: List<ShoppingCartProduct>
 
     @Before
     fun setUp() {
@@ -26,22 +26,22 @@ class ShoppingCartPresenterTest {
             view = view,
             repository = repository,
         )
-        exampleProducts = listOf(
-            Product(name = "아메리카노"),
-            Product(name = "밀크티"),
+        products = listOf(
+            ShoppingCartProduct(name = "아메리카노"),
+            ShoppingCartProduct(name = "밀크티"),
         )
     }
 
     @Test
     fun `저장소에서 장바구니에 담긴 상품들을 받아와서 뷰를 초기화한다`() {
         // given
-        every { repository.selectShoppingCartProducts(any(), any()) } returns exampleProducts
+        every { repository.selectShoppingCartProducts(any(), any()) } returns products
 
         // when
         presenter.loadShoppingCartProducts()
 
         // then
-        val expected = exampleProducts.map { it.toUiModel() }
+        val expected = products.map { it.toUiModel() }
         verify { view.setUpShoppingCartView(expected, any(), any()) }
     }
 
@@ -57,13 +57,13 @@ class ShoppingCartPresenterTest {
     @Test
     fun `상품을 추가하면 저장소에서 상품 정보를 받아서 뷰에서 더 많은 상품을 보여준다`() {
         // given
-        every { repository.selectShoppingCartProducts(any(), any()) } returns exampleProducts
+        every { repository.selectShoppingCartProducts(any(), any()) } returns products
 
         // when
         presenter.addShoppingCartProducts()
 
         // then
-        val expected = exampleProducts.map { it.toUiModel() }
+        val expected = products.map { it.toUiModel() }
         verify { view.showMoreShoppingCartProducts(products = expected) }
     }
 }
