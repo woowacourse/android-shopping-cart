@@ -21,11 +21,17 @@ class ShoppingPresenter(
     private var products = Products()
     private var recentProducts = RecentProducts()
 
+
+    override fun fetchAll() {
+        fetchProducts()
+        fetchRecentProducts()
+    }
+
     override fun fetchProducts() {
         val newProducts = productRepository
             .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, products.lastId)
-
         products = products.addAll(newProducts)
+
         view.updateProducts(products.getItemsByUnit().map { it.toUi() })
         view.updateLoadMoreVisible()
     }

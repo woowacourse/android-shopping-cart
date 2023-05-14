@@ -7,6 +7,10 @@
     <data>
 
         <variable
+            name="presenter"
+            type="woowacourse.shopping.ui.shopping.ShoppingPresenter" />
+
+        <variable
             name="adapter"
             type="woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter" />
 

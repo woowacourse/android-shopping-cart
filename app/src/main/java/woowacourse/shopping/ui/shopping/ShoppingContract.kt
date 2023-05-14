@@ -18,6 +18,7 @@ interface ShoppingContract {
     interface Presenter {
         val view: View
 
+        fun fetchAll()
         fun fetchProducts()
         fun fetchRecentProducts()
         fun inquiryProductDetail(product: UiProduct)

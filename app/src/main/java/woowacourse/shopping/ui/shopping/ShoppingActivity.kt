@@ -53,6 +53,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         initView()
+        insertDummies(this, 30)
     }
 
     private fun initView() {
@@ -65,8 +66,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
         binding.adapter = ConcatAdapter(
             isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter, loadMoreAdapter
         )
-        presenter.fetchRecentProducts()
-        presenter.fetchProducts()
+        presenter.fetchAll()
     }
 
     override fun updateProducts(products: List<UiProduct>) {
