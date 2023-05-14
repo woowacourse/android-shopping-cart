@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="position"
-            type="int" />
-
-        <variable
             name="item"
             type="woowacourse.shopping.feature.main.product.MainProductItemModel" />
     </data>
@@ -18,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:onClick="@{()->item.onClick.invoke(position)}">
+        android:onClick="@{()->item.onClick.invoke(item.product)}">
 
         <ImageView
             android:id="@+id/product_img"

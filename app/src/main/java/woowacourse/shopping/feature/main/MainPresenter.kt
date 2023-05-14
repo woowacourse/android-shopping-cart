@@ -25,9 +25,9 @@ class MainPresenter(
     private fun loadNewProducts() {
         val firstProducts = productRepository.getFirstProducts()
         val productItems = firstProducts.map { product ->
-            product.toPresentation().toItemModel { position ->
+            product.toPresentation().toItemModel { productUiModel ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))
-                view.showProductDetailScreenByProduct(position)
+                view.showProductDetailScreenByProduct(productUiModel)
                 loadRecent()
             }
         }
@@ -38,9 +38,9 @@ class MainPresenter(
     override fun loadProductsFromCache() {
         val cacheProducts = ProductCache.productList
         val cacheItems = cacheProducts.map { product ->
-            product.toPresentation().toItemModel { position ->
+            product.toPresentation().toItemModel { productUiModel ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))
-                view.showProductDetailScreenByProduct(position)
+                view.showProductDetailScreenByProduct(productUiModel)
                 loadRecent()
             }
         }
@@ -54,9 +54,9 @@ class MainPresenter(
     override fun loadMoreProduct(lastProductId: Long) {
         val nextProducts = productRepository.getNextProducts(lastProductId)
         val nextProductItems = nextProducts.map { product ->
-            product.toPresentation().toItemModel { position ->
+            product.toPresentation().toItemModel { productUiModel ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))
-                view.showProductDetailScreenByProduct(position)
+                view.showProductDetailScreenByProduct(productUiModel)
                 loadRecent()
             }
         }

@@ -21,6 +21,7 @@ import woowacourse.shopping.feature.main.product.MainProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentAdapter
 import woowacourse.shopping.feature.main.recent.RecentProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
+import woowacourse.shopping.model.ProductUiModel
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var binding: ActivityMainBinding
@@ -83,8 +84,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(CartActivity.getIntent(this))
     }
 
-    override fun showProductDetailScreenByProduct(position: Int) {
-        val product = mainProductAdapter.items[position].product
+    override fun showProductDetailScreenByProduct(product: ProductUiModel) {
         startActivity(DetailActivity.getIntent(this, product))
     }
 
