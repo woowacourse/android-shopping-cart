@@ -84,8 +84,8 @@ class ProductListPresenterTest {
         // then
         val actualPreSize = slotPreSize.captured
         val actualDiffSize = slotDiffSize.captured
-        val expectedPreSize = dummyRecentProduct.size
-        val expectedDiffSize = 0
+        val expectedPreSize = 0
+        val expectedDiffSize = 1
 
         assertEquals(expectedPreSize, actualPreSize)
         assertEquals(expectedDiffSize, actualDiffSize)

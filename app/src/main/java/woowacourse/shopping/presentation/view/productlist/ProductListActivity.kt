@@ -33,9 +33,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     private val recentProductResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.javaClass.name == ProductDetailActivity::javaClass.name) {
-                presenter.updateRecentProductItems()
-            }
+            presenter.updateRecentProductItems()
         }
 
     private lateinit var productListAdapter: ProductListAdapter
@@ -71,11 +69,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         presenter.loadRecentProductItems()
         setMoreProductListAdapter()
         setConcatAdapter()
-    }
-
-    override fun onRestart() {
-        presenter.updateRecentProductItems()
-        super.onRestart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

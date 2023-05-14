@@ -37,8 +37,7 @@ class ProductListPresenter(
     override fun updateRecentProductItems() {
         recentProducts.clear()
         recentProducts.addAll(recentProductRepository.getRecentProducts())
-        val diffSize = recentProducts.size - recentProductsPreSize
-        view.updateRecentProductItemsView(recentProductsPreSize, diffSize)
+        view.updateRecentProductItemsView(0, recentProducts.size)
     }
 
     override fun saveRecentProduct(productId: Long) {
