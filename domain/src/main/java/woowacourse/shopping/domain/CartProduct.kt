@@ -1,3 +1,5 @@
 package woowacourse.shopping.domain
 
-data class CartProduct(val ordinal: Int, val product: Product)
+import java.time.LocalDateTime
+
+data class CartProduct(val time: LocalDateTime, val product: Product)

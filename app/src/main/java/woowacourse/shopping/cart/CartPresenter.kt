@@ -24,7 +24,7 @@ class CartPresenter(
     override fun removeCartProduct(cartProductModel: CartProductModel) {
         cart = cartState.load().remove(cartProductModel.toDomain())
         cartState.save(cart)
-        cartDao.deleteCartProductByOrdinal(cartProductModel.ordinal)
+        cartDao.deleteCartProductByTime(cartProductModel.time)
         view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
     }

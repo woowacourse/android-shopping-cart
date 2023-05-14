@@ -2,6 +2,7 @@ package woowacourse.shopping.domain
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.LocalDateTime
 
 class CartTest {
 
@@ -11,11 +12,12 @@ class CartTest {
         val cart = Cart(emptyList())
 
         // when
-        val product = createCartProduct()
+        val time = LocalDateTime.now()
+        val product = createCartProduct(time = time)
         val actual = cart.add(product)
 
         // then
-        val expected = Cart(listOf(createCartProduct()))
+        val expected = Cart(listOf(createCartProduct(time = time)))
         assertEquals(expected, actual)
     }
 

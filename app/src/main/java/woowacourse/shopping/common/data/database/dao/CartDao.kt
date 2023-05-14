@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
+import java.time.LocalDateTime
 
 class CartDao(private val db: SQLiteDatabase) {
     fun insertCartProduct(cartProductModel: CartProductModel) {
@@ -19,14 +20,15 @@ class CartDao(private val db: SQLiteDatabase) {
         productRow[SqlProduct.PRICE] = cartProductModel.product.price
 
         val row = ContentValues()
-        row.put(SqlCart.ORDINAL, cartProductModel.ordinal)
+        row.put(SqlCart.TIME, cartProductModel.time.toString())
         row.put(SqlCart.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
         db.insert(SqlCart.name, null, row)
     }
 
     fun selectAll(): Cart {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} " +
+                "ORDER BY ${SqlCart.TIME} ASC",
             null
         )
         return Cart(
@@ -34,7 +36,7 @@ class CartDao(private val db: SQLiteDatabase) {
                 val cart = mutableListOf<CartProduct>()
                 while (it.moveToNext()) cart.add(
                     CartProduct(
-                        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)),
+                        LocalDateTime.parse(it.getString(it.getColumnIndexOrThrow(SqlCart.TIME))),
                         Product(
                             URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
                             it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
@@ -60,7 +62,9 @@ class CartDao(private val db: SQLiteDatabase) {
 
     fun selectPage(page: Int, sizePerPage: Int): Cart {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * sizePerPage}, $sizePerPage",
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} " +
+                "ORDER BY ${SqlCart.TIME} ASC " +
+                "LIMIT ${page * sizePerPage}, $sizePerPage",
             null
         )
         return Cart(
@@ -68,7 +72,7 @@ class CartDao(private val db: SQLiteDatabase) {
                 val cart = mutableListOf<CartProduct>()
                 while (it.moveToNext()) cart.add(
                     CartProduct(
-                        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)),
+                        LocalDateTime.parse(it.getString(it.getColumnIndexOrThrow(SqlCart.TIME))),
                         Product(
                             URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
                             it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
@@ -81,7 +85,7 @@ class CartDao(private val db: SQLiteDatabase) {
         )
     }
 
-    fun deleteCartProductByOrdinal(ordinal: Int) {
-        db.delete(SqlCart.name, "${SqlCart.ORDINAL} = ?", arrayOf(ordinal.toString()))
+    fun deleteCartProductByTime(time: LocalDateTime) {
+        db.delete(SqlCart.name, "${SqlCart.TIME} = ?", arrayOf(time.toString()))
     }
 }

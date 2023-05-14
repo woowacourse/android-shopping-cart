@@ -9,9 +9,9 @@ fun createProduct(
 ): Product = Product(url, title, price)
 
 fun createCartProduct(
-    ordinal: Int = 1,
+    time: LocalDateTime = LocalDateTime.now(),
     product: Product = createProduct()
-): CartProduct = CartProduct(ordinal, product)
+): CartProduct = CartProduct(time, product)
 
 fun createRecentProduct(
     time: LocalDateTime = LocalDateTime.now(),

@@ -1,8 +1,9 @@
 package woowacourse.shopping.common.model
 
 import java.io.Serializable
+import java.time.LocalDateTime
 
 data class CartProductModel(
-    val ordinal: Int,
+    val time: LocalDateTime,
     val product: ProductModel
 ) : Serializable

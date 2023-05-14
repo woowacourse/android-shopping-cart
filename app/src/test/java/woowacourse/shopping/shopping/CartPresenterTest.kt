@@ -59,7 +59,7 @@ class CartPresenterTest {
 
         justRun {
             cartState.save(any())
-            cartDao.deleteCartProductByOrdinal(any())
+            cartDao.deleteCartProductByTime(any())
             view.updateCart(any(), any(), any())
         }
 
@@ -69,7 +69,7 @@ class CartPresenterTest {
         // then
         verify {
             cartState.save(any())
-            cartDao.deleteCartProductByOrdinal(any())
+            cartDao.deleteCartProductByTime(any())
             view.updateCart(any(), any(), any())
         }
     }

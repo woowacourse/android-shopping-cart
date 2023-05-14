@@ -8,14 +8,14 @@ import woowacourse.shopping.domain.CartProduct
 object CartProductMapper : Mapper<CartProduct, CartProductModel> {
     override fun CartProduct.toView(): CartProductModel {
         return CartProductModel(
-            ordinal,
+            time,
             product.toView()
         )
     }
 
     override fun CartProductModel.toDomain(): CartProduct {
         return CartProduct(
-            ordinal,
+            time,
             product.toDomain()
         )
     }

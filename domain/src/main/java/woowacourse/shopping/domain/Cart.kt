@@ -1,5 +1,7 @@
 package woowacourse.shopping.domain
 
+import java.time.LocalDateTime
+
 data class Cart(val cartProducts: List<CartProduct>) {
     fun add(cartProduct: CartProduct): Cart {
         return Cart(cartProducts + cartProduct)
@@ -10,11 +12,6 @@ data class Cart(val cartProducts: List<CartProduct>) {
     }
 
     fun makeCartProduct(product: Product): CartProduct {
-        val ordinal = getCurrentOrdinal()
-        return CartProduct(ordinal, product)
-    }
-
-    private fun getCurrentOrdinal(): Int {
-        return (if (cartProducts.isEmpty()) 0 else cartProducts.maxOf { it.ordinal } + 1)
+        return CartProduct(LocalDateTime.now(), product)
     }
 }
