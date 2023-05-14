@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.productdetail
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.UiProduct
-import kotlin.concurrent.thread
 
 class ProductDetailPresenter(
     override val view: ProductDetailContract.View,
@@ -18,9 +17,7 @@ class ProductDetailPresenter(
     }
 
     override fun addBasketProduct() {
-        thread {
-            basketRepository.add(product.toDomain())
-            view.navigateToBasketScreen()
-        }
+        basketRepository.add(product.toDomain())
+        view.navigateToBasketScreen()
     }
 }

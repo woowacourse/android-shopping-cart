@@ -11,7 +11,6 @@ import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.shopping.ShoppingContract.Presenter
 import woowacourse.shopping.ui.shopping.ShoppingContract.View
-import kotlin.concurrent.thread
 
 class ShoppingPresenter(
     override val view: View,
@@ -51,7 +50,7 @@ class ShoppingPresenter(
         view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
         view.showProductDetail(product)
 
-        thread { recentProductRepository.add(recentProduct) }
+        recentProductRepository.add(recentProduct)
     }
 
     override fun fetchRecentProducts() {
@@ -61,7 +60,7 @@ class ShoppingPresenter(
 
     override fun inquiryRecentProductDetail(recentProduct: UiRecentProduct) {
         view.showProductDetail(recentProduct.product)
-        thread { recentProductRepository.add(recentProduct.toDomain()) }
+        recentProductRepository.add(recentProduct.toDomain())
     }
 
     override fun openBasket() {

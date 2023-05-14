@@ -41,7 +41,6 @@ class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         initView()
-        insertDummies(this, 30)
     }
 
     private fun initView() {
