@@ -12,7 +12,6 @@ interface ShoppingContract {
         fun showProductDetail(product: UiProduct)
         fun updateMoreButtonVisibility(isVisible: Boolean)
         fun navigateToBasketScreen()
-        fun addRecentProduct(recentProduct: UiRecentProduct)
     }
 
     interface Presenter {

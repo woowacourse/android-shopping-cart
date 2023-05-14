@@ -77,11 +77,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
     }
 
     override fun updateRecentProducts(recentProducts: List<UiRecentProduct>) {
-        recentProductWrapperAdapter.submitList(recentProducts)
-    }
-
-    override fun addRecentProduct(recentProduct: UiRecentProduct) {
-        runOnUiThread { recentProductWrapperAdapter.submit(recentProduct) }
+        runOnUiThread { recentProductWrapperAdapter.submitList(recentProducts) }
     }
 
     override fun showProductDetail(product: UiProduct) {
