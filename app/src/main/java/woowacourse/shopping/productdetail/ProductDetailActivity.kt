@@ -9,14 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.BundleKeys
-import woowacourse.shopping.CartDBHelper
-import woowacourse.shopping.ProductDBHelper
-import woowacourse.shopping.ProductDBRepository
-import woowacourse.shopping.ProductUIModel
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.datas.CartDBHelper
+import woowacourse.shopping.datas.ProductDBHelper
+import woowacourse.shopping.datas.ProductDBRepository
 import woowacourse.shopping.getSerializableCompat
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding

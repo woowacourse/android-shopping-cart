@@ -1,11 +1,12 @@
-package woowacourse.shopping
+package woowacourse.shopping.datas
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.ProductDBHelper.Companion.KEY_IMAGE
-import woowacourse.shopping.ProductDBHelper.Companion.KEY_NAME
-import woowacourse.shopping.ProductDBHelper.Companion.KEY_PRICE
-import woowacourse.shopping.ProductDBHelper.Companion.TABLE_NAME
+import woowacourse.shopping.datas.ProductDBHelper.Companion.KEY_IMAGE
+import woowacourse.shopping.datas.ProductDBHelper.Companion.KEY_NAME
+import woowacourse.shopping.datas.ProductDBHelper.Companion.KEY_PRICE
+import woowacourse.shopping.datas.ProductDBHelper.Companion.TABLE_NAME
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductDBRepository(private val database: SQLiteDatabase) {
     fun getAll(): List<ProductUIModel> {

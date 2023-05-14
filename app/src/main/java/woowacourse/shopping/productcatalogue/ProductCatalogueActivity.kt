@@ -7,17 +7,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.BundleKeys
-import woowacourse.shopping.MainProductCatalogueAdapter
-import woowacourse.shopping.MainProductCatalogueUIModel
-import woowacourse.shopping.ProductDBHelper
-import woowacourse.shopping.ProductDBRepository
-import woowacourse.shopping.ProductMockData
-import woowacourse.shopping.ProductUIModel
 import woowacourse.shopping.R
-import woowacourse.shopping.RecentProductCatalogueUIModel
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
+import woowacourse.shopping.datas.ProductDBHelper
+import woowacourse.shopping.datas.ProductDBRepository
+import woowacourse.shopping.datas.ProductMockData
+import woowacourse.shopping.productcatalogue.list.MainProductCatalogueAdapter
+import woowacourse.shopping.productcatalogue.list.MainProductCatalogueUIModel
+import woowacourse.shopping.productcatalogue.recent.RecentProductCatalogueUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.View {
     private lateinit var binding: ActivityProductCatalogueBinding

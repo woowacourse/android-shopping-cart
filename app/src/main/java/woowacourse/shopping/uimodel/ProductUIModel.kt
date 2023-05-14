@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.uimodel
 
 class ProductUIModel(
     val url: String,

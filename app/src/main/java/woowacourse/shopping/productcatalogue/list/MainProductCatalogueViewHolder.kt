@@ -1,8 +1,9 @@
-package woowacourse.shopping
+package woowacourse.shopping.productcatalogue.list
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemProductCatalogueBinding
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class MainProductCatalogueViewHolder(
     private val binding: ItemProductCatalogueBinding,

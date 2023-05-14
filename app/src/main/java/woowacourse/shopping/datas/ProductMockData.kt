@@ -1,9 +1,10 @@
-package woowacourse.shopping
+package woowacourse.shopping.datas
 
 import com.shopping.domain.MainProductCatalogue
 import com.shopping.domain.Product
 import com.shopping.domain.RecentProductCatalogue
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.toUIModel
 
 object ProductMockData {
     val products = listOf(

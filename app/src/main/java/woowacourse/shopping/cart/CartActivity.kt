@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import woowacourse.shopping.CartDBHelper
-import woowacourse.shopping.CartRecyclerViewAdapter
-import woowacourse.shopping.CartUIModel
-import woowacourse.shopping.ProductDBRepository
-import woowacourse.shopping.ProductUIModel
 import woowacourse.shopping.R
+import woowacourse.shopping.cart.list.CartRecyclerViewAdapter
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.datas.CartDBHelper
+import woowacourse.shopping.datas.ProductDBRepository
+import woowacourse.shopping.uimodel.CartUIModel
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding

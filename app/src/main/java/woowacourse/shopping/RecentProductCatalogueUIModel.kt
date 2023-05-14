@@ -1,3 +1,0 @@
-package woowacourse.shopping
-
-class RecentProductCatalogueUIModel(var mainProductCatalogue: MainProductCatalogueUIModel)
