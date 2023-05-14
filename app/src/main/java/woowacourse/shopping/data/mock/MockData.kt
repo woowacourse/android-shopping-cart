@@ -6,7 +6,7 @@ fun getProductDummyData(): List<Product> {
     return listOf(
         Product(
             1,
-            "",
+            "https://search.pstatic.net/common?type=n&size=174x174&quality=95&direct=true&src=https%3A%2F%2Fmusicmeta-phinf.pstatic.net%2Falbum%2F009%2F494%2F9494325.jpg%3Ftype%3Dr204Fll%26v%3D20230419175019",
             "헤어지자 말해요",
             100,
         ),

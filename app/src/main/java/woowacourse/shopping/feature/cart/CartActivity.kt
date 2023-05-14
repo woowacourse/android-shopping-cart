@@ -9,7 +9,6 @@ import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.list.adapter.CartProductsAdapter
 import woowacourse.shopping.feature.list.item.CartProductItem
-import woowacourse.shopping.feature.list.item.ListItem
 import kotlin.properties.Delegates
 
 class CartActivity : AppCompatActivity(), CartActivityContract.View {
@@ -78,12 +77,8 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         binding.pageNumberTv.text = "$page"
     }
 
-    private fun onDeleteItem(listItem: ListItem) {
-        when (listItem) {
-            is CartProductItem -> {
-                presenter.deleteData(page, listItem)
-            }
-        }
+    private fun onDeleteItem(productView: CartProductItem) {
+        presenter.deleteData(page, productView)
     }
 
     override fun onDestroy() {

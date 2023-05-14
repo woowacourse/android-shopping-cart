@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.Product
-import com.example.domain.RecentProducts
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.product.ProductDbHelper
@@ -15,7 +14,7 @@ import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductsAdapter
-import woowacourse.shopping.feature.list.item.ProductItem
+import woowacourse.shopping.feature.list.item.ProductView
 import woowacourse.shopping.feature.model.mapper.toItem
 import woowacourse.shopping.feature.model.mapper.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
@@ -53,10 +52,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         productsAdapter = ProductsAdapter(
             onItemClick = { listItem ->
                 when (listItem) {
-                    is ProductItem -> {
+                    is ProductView.ProductItem -> {
                         presenter.storeRecentProduct(listItem)
                         ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
                     }
+                    is ProductView.RecentProductsItem -> Unit
+                    is ProductView.MoreItem -> Unit
                 }
             },
             onMoreItemClick = {
@@ -80,11 +81,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         )
     }
 
-    override fun setProducts(products: List<Product>, recentProducts: RecentProducts) {
-        productsAdapter.setItems(
-            products.map { it.toUi().toItem() },
-            recentProducts.products.map { it.toUi().toItem() },
-        )
+    override fun setProducts(products: List<ProductView.ProductItem>, recentProducts: ProductView.RecentProductsItem) {
+        val list = listOf(recentProducts) + products
+        productsAdapter.setItems(list)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

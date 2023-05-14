@@ -1,18 +1,17 @@
 package woowacourse.shopping.feature.main
 
 import com.example.domain.Product
-import com.example.domain.RecentProducts
-import woowacourse.shopping.feature.list.item.ProductItem
+import woowacourse.shopping.feature.list.item.ProductView
 
 interface MainContract {
 
     interface View {
-        fun setProducts(products: List<Product>, recentProducts: RecentProducts)
+        fun setProducts(products: List<ProductView.ProductItem>, recentProducts: ProductView.RecentProductsItem)
         fun addProducts(products: List<Product>)
     }
 
     interface Presenter {
         fun addProducts()
-        fun storeRecentProduct(product: ProductItem)
+        fun storeRecentProduct(product: ProductView.ProductItem)
     }
 }

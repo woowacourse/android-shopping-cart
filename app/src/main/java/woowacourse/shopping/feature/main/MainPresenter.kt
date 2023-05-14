@@ -1,11 +1,11 @@
 package woowacourse.shopping.feature.main
 
 import com.example.domain.Product
-import com.example.domain.RecentProducts
 import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
-import woowacourse.shopping.feature.list.item.ProductItem
+import woowacourse.shopping.feature.list.item.ProductView
 import woowacourse.shopping.feature.model.mapper.toDomain
+import woowacourse.shopping.feature.model.mapper.toItem
 import woowacourse.shopping.feature.model.mapper.toUi
 
 class MainPresenter(
@@ -34,14 +34,16 @@ class MainPresenter(
     }
 
     private fun loadProducts() {
-        val products: List<Product> =
-            productDb.getAll().subList(currentItemIndex, currentItemIndex + ADD_SIZE)
+        val products: List<ProductView.ProductItem> =
+            productDb.getAll().subList(currentItemIndex, currentItemIndex + ADD_SIZE).map { product ->
+                product.toUi().toItem()
+            }
         currentItemIndex += ADD_SIZE
-        val recentProducts: RecentProducts = recentProductDb.getRecentProducts()
+        val recentProducts: ProductView.RecentProductsItem = recentProductDb.getRecentProducts().toItem()
         view.setProducts(products, recentProducts)
     }
 
-    override fun storeRecentProduct(product: ProductItem) {
+    override fun storeRecentProduct(product: ProductView.ProductItem) {
         recentProductDb.addColumn(product.toUi().toDomain())
     }
 

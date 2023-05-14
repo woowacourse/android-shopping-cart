@@ -2,7 +2,7 @@ package woowacourse.shopping.feature.util
 
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import woowacourse.shopping.feature.list.adapter.ProductsAdapter
-import woowacourse.shopping.feature.main.ViewType
+import woowacourse.shopping.feature.list.item.ProductView
 
 class SpanSizeLookUpManager(
     private val adapter: ProductsAdapter,
@@ -10,8 +10,8 @@ class SpanSizeLookUpManager(
 ) : SpanSizeLookup() {
 
     override fun getSpanSize(position: Int): Int {
-        return if (adapter.getItemViewType(position) == ViewType.HORIZONTAL.ordinal ||
-            adapter.getItemViewType(position) == ViewType.ADD.ordinal
+        return if (adapter.getItemViewType(position) == ProductView.TYPE_RECENT_PRODUCTS ||
+            adapter.getItemViewType(position) == ProductView.TYPE_MORE
         ) {
             spanCount
         } else {

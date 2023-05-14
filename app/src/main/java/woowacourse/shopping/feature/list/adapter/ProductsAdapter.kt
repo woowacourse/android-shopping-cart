@@ -6,18 +6,16 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductListBinding
-import woowacourse.shopping.feature.list.item.ListItem
+import woowacourse.shopping.feature.list.item.ProductView
 import woowacourse.shopping.feature.list.viewholder.ItemViewHolder
 import woowacourse.shopping.feature.list.viewholder.ProductMoreViewHolder
 import woowacourse.shopping.feature.list.viewholder.ProductViewHolder
-import woowacourse.shopping.feature.list.viewholder.RecentListItemViewHolder
-import woowacourse.shopping.feature.main.ViewType
+import woowacourse.shopping.feature.list.viewholder.RecentProductsViewHolder
 
 class ProductsAdapter(
-    private var items: List<ListItem> = listOf(),
-    private var recentItems: List<ListItem> = listOf(),
-    private val onItemClick: (ListItem) -> Unit,
-    private val onMoreItemClick: (ListItem) -> Unit,
+    private var items: List<ProductView> = listOf(),
+    private val onItemClick: (ProductView) -> Unit,
+    private val onMoreItemClick: (ProductView) -> Unit,
 ) : RecyclerView.Adapter<ItemViewHolder>() {
 
     override fun getItemCount(): Int {
@@ -25,50 +23,47 @@ class ProductsAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (ViewType.getType(position)) {
-            ViewType.HORIZONTAL -> {
-                ViewType.HORIZONTAL.ordinal
-            }
-            ViewType.PRODUCT -> {
-                ViewType.PRODUCT.ordinal
-            }
-            ViewType.ADD -> {
-                ViewType.ADD.ordinal
-            }
+        return when (items[position]) {
+            is ProductView.ProductItem -> ProductView.TYPE_PRODUCT
+            is ProductView.RecentProductsItem -> ProductView.TYPE_RECENT_PRODUCTS
+            is ProductView.MoreItem -> ProductView.TYPE_MORE
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-
-        return when (ViewType.get(viewType)) {
-            ViewType.HORIZONTAL -> {
-                val binding = ItemRecentProductListBinding.inflate(inflater, parent, false)
-                RecentListItemViewHolder(binding, recentItems)
-            }
-            ViewType.PRODUCT -> {
+        return when (viewType) {
+            ProductView.TYPE_PRODUCT -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
                 ProductViewHolder(binding)
             }
-            ViewType.ADD -> {
+            ProductView.TYPE_RECENT_PRODUCTS -> {
+                val binding = ItemRecentProductListBinding.inflate(inflater, parent, false)
+                RecentProductsViewHolder(binding)
+            }
+            ProductView.TYPE_MORE -> {
                 val binding = ItemMoreBinding.inflate(inflater, parent, false)
                 ProductMoreViewHolder(binding)
             }
+            else -> throw IllegalArgumentException()
         }
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         when (holder) {
+            is ProductViewHolder -> {
+                holder.bind(items[position] as ProductView.ProductItem, onItemClick)
+            }
+            is RecentProductsViewHolder -> {
+                holder.bind(items[position] as ProductView.RecentProductsItem, onItemClick)
+            }
             is ProductMoreViewHolder -> {
                 holder.bind(items[position], onMoreItemClick)
-            }
-            else -> {
-                holder.bind(items[position], onItemClick)
             }
         }
     }
 
-    fun addItems(newItems: List<ListItem>) {
+    fun addItems(newItems: List<ProductView>) {
         val items = this.items.toMutableList()
         newItems.forEach {
             items.add(it)
@@ -77,9 +72,8 @@ class ProductsAdapter(
         notifyItemRangeChanged(items.size, newItems.size)
     }
 
-    fun setItems(items: List<ListItem>, recentItems: List<ListItem>) {
+    fun setItems(items: List<ProductView>) {
         this.items = items.toList()
-        this.recentItems = recentItems.toList()
         notifyDataSetChanged()
     }
 }

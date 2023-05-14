@@ -4,16 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.feature.list.item.ListItem
+import woowacourse.shopping.feature.list.item.CartProductItem
 import woowacourse.shopping.feature.list.viewholder.CartProductViewHolder
-import woowacourse.shopping.feature.list.viewholder.ItemViewHolder
 
 class CartProductsAdapter(
-    private var items: List<ListItem> = listOf(),
-    private val onDeleteItem: (ListItem) -> Unit,
-) : RecyclerView.Adapter<ItemViewHolder>() {
+    private var items: List<CartProductItem> = listOf(),
+    private val onDeleteItem: (CartProductItem) -> Unit,
+) : RecyclerView.Adapter<CartProductViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartProductBinding.inflate(inflater, parent, false)
         return CartProductViewHolder(binding)
@@ -23,11 +22,11 @@ class CartProductsAdapter(
         return items.size
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CartProductViewHolder, position: Int) {
         holder.bind(items[position], onDeleteItem)
     }
 
-    fun setItems(items: List<ListItem>) {
+    fun setItems(items: List<CartProductItem>) {
         this.items = items.toList()
         notifyDataSetChanged()
     }

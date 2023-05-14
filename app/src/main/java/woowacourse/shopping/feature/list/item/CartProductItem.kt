@@ -5,4 +5,4 @@ class CartProductItem(
     val productImageUrl: String,
     val productName: String,
     val productPrice: Int,
-) : ListItem
+)
