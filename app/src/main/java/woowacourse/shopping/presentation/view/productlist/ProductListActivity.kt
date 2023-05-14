@@ -117,12 +117,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         binding.rvProductList.adapter = concatAdapter
     }
 
-    override fun updateRecentProductItemsView(preSize: Int, diffSize: Int) {
+    override fun updateRecentProductItemsView() {
         if (!concatAdapter.adapters.contains(recentProductWrapperAdapter)) {
             concatAdapter.addAdapter(0, recentProductWrapperAdapter)
             binding.rvProductList.scrollToPosition(0)
         }
-        recentProductListAdapter.notifyItemRangeChanged(preSize, diffSize)
+        recentProductListAdapter.updateDataSet()
     }
 
     private fun onProductClickEvent(product: ProductModel) {

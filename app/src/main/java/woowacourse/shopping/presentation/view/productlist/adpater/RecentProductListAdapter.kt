@@ -9,7 +9,6 @@ class RecentProductListAdapter(
     private val items: List<RecentProductModel>,
     private val onProductClick: (Long) -> Unit
 ) : RecyclerView.Adapter<RecentProductListViewHolder>() {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductListViewHolder {
         return RecentProductListViewHolder(parent) {
             onProductClick(items[it].product.id)
@@ -21,4 +20,8 @@ class RecentProductListAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun updateDataSet() {
+        notifyItemChanged(items.size - 1)
+    }
 }

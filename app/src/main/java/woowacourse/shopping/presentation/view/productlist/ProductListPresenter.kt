@@ -15,7 +15,6 @@ class ProductListPresenter(
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()
     private val recentProducts = mutableListOf<RecentProductModel>()
-    private var recentProductsPreSize = 0
 
     override fun deleteNotTodayRecentProducts() {
         val today = LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN))
@@ -29,15 +28,13 @@ class ProductListPresenter(
 
     override fun loadRecentProductItems() {
         recentProducts.addAll(recentProductRepository.getRecentProducts())
-        recentProductsPreSize = recentProducts.size
         view.setRecentProductItemsView(recentProducts)
     }
 
     override fun updateRecentProductItems() {
         recentProducts.clear()
         recentProducts.addAll(recentProductRepository.getRecentProducts())
-        val diffSize = recentProducts.size - recentProductsPreSize
-        view.updateRecentProductItemsView(recentProductsPreSize, diffSize)
+        view.updateRecentProductItemsView()
     }
 
     override fun saveRecentProduct(productId: Long) {
