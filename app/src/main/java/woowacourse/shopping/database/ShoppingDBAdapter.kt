@@ -182,10 +182,7 @@ class ShoppingDBAdapter(
         )
     }
 
-    /**
-     * 테스트를 위해 가짜 데이터 insert를 위한 함수
-     */
-    fun setUpDB() {
+    override fun setUpDB() {
         MockProduct.products.forEach {
             addProduct(it)
         }

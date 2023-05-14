@@ -15,6 +15,10 @@ class ShoppingPresenter(
     )
     private var numberOfReadProduct: Int = 0
 
+    init {
+        repository.setUpDB()
+    }
+
     override fun loadProducts() {
         val products = selectProducts()
         val recentViewedProducts = recentViewedProducts.values.map { it.toUiModel() }

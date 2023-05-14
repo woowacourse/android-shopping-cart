@@ -23,4 +23,6 @@ interface ShoppingRepository {
     fun selectRecentViewedProductById(id: Int): RecentViewedProduct
 
     fun deleteFromRecentViewedProducts()
+
+    fun setUpDB()
 }
