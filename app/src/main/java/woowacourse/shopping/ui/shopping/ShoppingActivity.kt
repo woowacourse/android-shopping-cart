@@ -10,13 +10,8 @@ import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
-import woowacourse.shopping.data.database.dao.recentproduct.RecentProductDaoImpl
-import woowacourse.shopping.data.datasource.product.LocalProductDataSource
-import woowacourse.shopping.data.datasource.recentproduct.LocalRecentProductDataSource
 import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.DataProduct
-import woowacourse.shopping.data.repository.ProductRepository
-import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
@@ -28,21 +23,14 @@ import woowacourse.shopping.ui.shopping.recyclerview.adapter.loadmore.LoadMoreAd
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductWrapperAdapter
+import woowacourse.shopping.util.factory.createShoppingPresenter
 import woowacourse.shopping.util.isolatedViewTypeConfig
 
 class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     private lateinit var binding: ActivityShoppingBinding
 
     private val shoppingDatabase by lazy { ShoppingDatabase(this) }
-    override val presenter: Presenter by lazy {
-        ShoppingPresenter(
-            this,
-            ProductRepository(LocalProductDataSource(ProductDaoImpl(shoppingDatabase))),
-            RecentProductRepository(
-                LocalRecentProductDataSource(RecentProductDaoImpl(shoppingDatabase))
-            )
-        )
-    }
+    override val presenter: Presenter by lazy { createShoppingPresenter(this, shoppingDatabase) }
 
     private val recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
     private val recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)

@@ -8,27 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
-import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
-import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.ui.basket.BasketActivity
+import woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter
+import woowacourse.shopping.ui.productdetail.ProductDetailContract.View
 import woowacourse.shopping.util.extension.getParcelableExtraCompat
 import woowacourse.shopping.util.extension.showImage
+import woowacourse.shopping.util.factory.createProductDetailPresenter
 
-class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View,
-    OnMenuItemClickListener {
+class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     private lateinit var binding: ActivityProductDetailBinding
-
-    override val presenter: ProductDetailContract.Presenter by lazy {
-        ProductDetailPresenter(
-            view = this,
-            basketRepository =
-            BasketRepository(LocalBasketDataSource(BasketDaoImpl(ShoppingDatabase(this)))),
-            product = intent.getParcelableExtraCompat(PRODUCT_KEY)!!
-        )
+    override val presenter: Presenter by lazy {
+        createProductDetailPresenter(this, this, intent.getParcelableExtraCompat(PRODUCT_KEY)!!)
     }
 
 

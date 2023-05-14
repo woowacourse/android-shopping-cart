@@ -7,25 +7,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
-import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
-import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.model.UiPageNumber
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.ui.basket.BasketContract.Presenter
 import woowacourse.shopping.ui.basket.BasketContract.View
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
+import woowacourse.shopping.util.factory.createBasketPresenter
 
 class BasketActivity : AppCompatActivity(), View {
     private val shoppingDatabase by lazy { ShoppingDatabase(this) }
-    override val presenter: Presenter by lazy {
-        BasketPresenter(
-            this,
-            BasketRepository(LocalBasketDataSource(BasketDaoImpl(shoppingDatabase)))
-        )
-    }
+    override val presenter: Presenter by lazy { createBasketPresenter(this, shoppingDatabase) }
     private lateinit var binding: ActivityBasketBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
