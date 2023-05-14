@@ -23,4 +23,8 @@ class ProductListAdapter(
     override fun getItemCount(): Int = products.size
 
     override fun getItemViewType(position: Int): Int = ViewType.PRODUCT_LIST.ordinal
+
+    fun updateItemInserted(positionStart: Int, itemCount: Int) {
+        notifyItemRangeInserted(positionStart, itemCount)
+    }
 }

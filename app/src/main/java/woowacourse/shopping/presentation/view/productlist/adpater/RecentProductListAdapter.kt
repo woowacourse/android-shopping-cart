@@ -21,4 +21,8 @@ class RecentProductListAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun updateItemChanged(positionStart: Int, itemCount: Int) {
+        notifyItemRangeChanged(positionStart, itemCount)
+    }
 }

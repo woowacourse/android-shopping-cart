@@ -125,7 +125,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
             concatAdapter.addAdapter(RECENT_PRODUCT_ADAPTER_POSITION, recentProductWrapperAdapter)
             binding.rvProductList.scrollToPosition(SCROLL_TOP_POSITION)
         }
-        recentProductListAdapter.notifyItemRangeChanged(preSize, diffSize)
+        recentProductListAdapter.updateItemChanged(preSize, diffSize)
     }
 
     private fun onProductClickEvent(product: ProductModel) {
@@ -143,7 +143,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun updateMoreProductsView(preSize: Int, diffSize: Int) {
-        productListAdapter.notifyItemRangeInserted(preSize, diffSize)
+        productListAdapter.updateItemInserted(preSize, diffSize)
     }
 
     override fun moveToCartView() {
