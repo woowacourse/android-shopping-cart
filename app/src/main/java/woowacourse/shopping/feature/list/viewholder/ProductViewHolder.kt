@@ -1,14 +1,20 @@
 package woowacourse.shopping.feature.list.viewholder
 
-import androidx.viewbinding.ViewBinding
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.feature.list.item.ProductView
 import java.text.DecimalFormat
 
-class ProductViewHolder(binding: ViewBinding) : ItemViewHolder(binding) {
-    private val binding = binding as ItemProductBinding
+class ProductViewHolder(
+    parent: ViewGroup,
+) : ItemViewHolder(
+    LayoutInflater.from(parent.context)
+        .inflate(R.layout.item_product, parent, false),
+) {
+    private val binding = ItemProductBinding.bind(itemView)
 
     override fun bind(productView: ProductView, onClick: (ProductView) -> Unit) {
         val productItem = productView as ProductView.ProductItem

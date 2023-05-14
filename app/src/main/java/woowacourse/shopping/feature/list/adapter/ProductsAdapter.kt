@@ -1,11 +1,7 @@
 package woowacourse.shopping.feature.list.adapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemMoreBinding
-import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.databinding.ItemRecentProductListBinding
 import woowacourse.shopping.feature.list.item.ProductView
 import woowacourse.shopping.feature.list.viewholder.ItemViewHolder
 import woowacourse.shopping.feature.list.viewholder.ProductMoreViewHolder
@@ -31,19 +27,15 @@ class ProductsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             ProductView.TYPE_PRODUCT -> {
-                val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ProductViewHolder(binding)
+                ProductViewHolder(parent)
             }
             ProductView.TYPE_RECENT_PRODUCTS -> {
-                val binding = ItemRecentProductListBinding.inflate(inflater, parent, false)
-                RecentProductsViewHolder(binding)
+                RecentProductsViewHolder(parent)
             }
             ProductView.TYPE_MORE -> {
-                val binding = ItemMoreBinding.inflate(inflater, parent, false)
-                ProductMoreViewHolder(binding)
+                ProductMoreViewHolder(parent)
             }
             else -> throw IllegalArgumentException()
         }
