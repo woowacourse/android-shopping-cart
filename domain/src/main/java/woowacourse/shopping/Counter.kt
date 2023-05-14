@@ -1,6 +1,6 @@
 package woowacourse.shopping
 
-class Counter(val value: Int) {
+data class Counter(val value: Int) {
     operator fun plus(number: Int): Counter = Counter(value + number)
 
     operator fun minus(number: Int): Counter {
