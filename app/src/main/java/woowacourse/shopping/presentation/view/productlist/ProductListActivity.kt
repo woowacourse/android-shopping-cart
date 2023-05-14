@@ -19,6 +19,7 @@ import woowacourse.shopping.presentation.view.productlist.adpater.MoreProductLis
 import woowacourse.shopping.presentation.view.productlist.adpater.ProductListAdapter
 import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductListAdapter
 import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductWrapperAdapter
+import woowacourse.shopping.presentation.view.productlist.adpater.ViewType
 
 class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private lateinit var binding: ActivityProductListBinding
@@ -53,7 +54,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun ConcatAdapter.setConcatAdapter() {
-        if (recentProductListAdapter.itemCount != 0) {
+        if (recentProductListAdapter.itemCount != EMPTY) {
             addAdapter(recentProductWrapperAdapter)
         }
         addAdapter(productListAdapter)
@@ -94,13 +95,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun initLayoutManager() {
-        val layoutManager = GridLayoutManager(this, 2)
+        val layoutManager = GridLayoutManager(this, SPAN_SIZE)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (concatAdapter.getItemViewType(position)) {
-                    ProductListAdapter.VIEW_TYPE -> 1
-                    MoreProductListAdapter.VIEW_TYPE -> 1
-                    else -> 2
+                    ViewType.PRODUCT_LIST.ordinal -> SPAN_SIZE_OF_TWO_COLUMN
+                    else -> SPAN_SIZE_OF_ONE_COLUMN
                 }
             }
         }
@@ -126,8 +126,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     override fun updateRecentProductItemsView(preSize: Int, diffSize: Int) {
         if (!concatAdapter.adapters.contains(recentProductWrapperAdapter)) {
-            concatAdapter.addAdapter(0, recentProductWrapperAdapter)
-            binding.rvProductList.scrollToPosition(0)
+            concatAdapter.addAdapter(RECENT_PRODUCT_ADAPTER_POSITION, recentProductWrapperAdapter)
+            binding.rvProductList.scrollToPosition(SCROLL_TOP_POSITION)
         }
         recentProductListAdapter.notifyItemRangeChanged(preSize, diffSize)
     }
@@ -148,5 +148,14 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     override fun updateMoreProductsView(preSize: Int, diffSize: Int) {
         productListAdapter.notifyItemRangeInserted(preSize, diffSize)
+    }
+
+    companion object {
+        private const val EMPTY = 0
+        private const val SPAN_SIZE = 2
+        private const val SPAN_SIZE_OF_ONE_COLUMN = 2
+        private const val SPAN_SIZE_OF_TWO_COLUMN = 1
+        private const val RECENT_PRODUCT_ADAPTER_POSITION = 0
+        private const val SCROLL_TOP_POSITION = 0
     }
 }

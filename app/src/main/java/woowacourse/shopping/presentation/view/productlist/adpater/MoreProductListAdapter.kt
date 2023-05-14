@@ -15,8 +15,5 @@ class MoreProductListAdapter(
     override fun onBindViewHolder(holder: MoreProductListViewHolder, position: Int) = Unit
 
     override fun getItemCount(): Int = 1
-
-    companion object {
-        internal const val VIEW_TYPE = 300
-    }
+    override fun getItemViewType(position: Int): Int = ViewType.MORE_PRODUCT_LIST.ordinal
 }

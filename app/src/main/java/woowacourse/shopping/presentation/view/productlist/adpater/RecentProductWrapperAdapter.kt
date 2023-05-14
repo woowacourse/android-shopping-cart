@@ -22,9 +22,5 @@ class RecentProductWrapperAdapter(
 
     override fun getItemCount(): Int = 1
 
-    override fun getItemViewType(position: Int): Int = VIEW_TYPE
-
-    companion object {
-        internal const val VIEW_TYPE = 200
-    }
+    override fun getItemViewType(position: Int): Int = ViewType.RECENT_PRODUCT_LIST.ordinal
 }
