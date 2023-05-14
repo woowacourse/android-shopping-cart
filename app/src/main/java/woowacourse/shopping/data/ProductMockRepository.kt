@@ -1,26 +1,41 @@
 package woowacourse.shopping.data
 
+import com.example.domain.ProductCache
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
 
 class ProductMockRepository : ProductRepository {
 
+    private val productCache: ProductCache = ProductCacheImpl
+
     override fun getFirstProducts(): List<Product> {
-        return if (LOAD_SIZE > productsDatasource.size) {
-            productsDatasource
-        } else {
-            productsDatasource.subList(0, LOAD_SIZE)
+        if (productCache.productList.isEmpty()) {
+            val products = if (LOAD_SIZE > productsDatasource.size) {
+                productsDatasource
+            } else {
+                productsDatasource.subList(0, LOAD_SIZE)
+            }
+            productCache.addProducts(products)
+            return products
         }
+        return productCache.productList
     }
 
-    override fun getNextProducts(startIndex: Int): List<Product> {
+    override fun getNextProducts(): List<Product> {
+        val startIndex = productCache.productList.size
         val toIndex = (startIndex + LOAD_SIZE)
-        return if (toIndex > productsDatasource.size) {
+        val products = if (toIndex > productsDatasource.size) {
             productsDatasource.subList((startIndex), productsDatasource.size)
         } else {
             productsDatasource.subList((startIndex), toIndex)
         }
+        productCache.addProducts(products)
+        return products
+    }
+
+    override fun clearCache() {
+        productCache.clear()
     }
 
     companion object {

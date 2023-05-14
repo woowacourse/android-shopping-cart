@@ -32,8 +32,7 @@ internal class MainPresenterTest {
         productRepository = mockk(relaxed = true)
         recentProductRepository = mockk()
         productCache = ProductCacheImpl
-        productCache.clear()
-        presenter = MainPresenter(view, productRepository, recentProductRepository, productCache)
+        presenter = MainPresenter(view, productRepository, recentProductRepository)
     }
 
     @Test
@@ -46,22 +45,6 @@ internal class MainPresenterTest {
 
         val actual = slot.captured.map { it.product.toDomain() }
         val expected = mockProducts.toList()
-        assert(actual == expected)
-        verify { view.addProducts(any()) }
-        assert(productCache.productList == expected)
-    }
-
-    @Test
-    fun `캐쉬로부터 복구받은 상품록을 화면에 띄운다`() {
-        productCache.addProducts(mockProducts)
-        val slot = slot<List<MainProductItemModel>>()
-        every { view.addProducts(capture(slot)) } just Runs
-
-        presenter.loadProductsFromCache()
-
-        val actual = slot.captured.map { it.product.toDomain() }
-        val expected = mockProducts.toList()
-
         assert(actual == expected)
         verify { view.addProducts(any()) }
     }
@@ -77,7 +60,7 @@ internal class MainPresenterTest {
 
     @Test
     fun `상품 목록을 이어서 더 불러와서 화면에 추가로 띄운다`() {
-        every { productRepository.getNextProducts(any()) } answers {
+        every { productRepository.getNextProducts() } answers {
             mockProducts.subList(10, 15)
         }
         val slot = slot<List<MainProductItemModel>>()

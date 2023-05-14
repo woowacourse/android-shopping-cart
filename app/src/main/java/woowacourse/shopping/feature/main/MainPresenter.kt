@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.main
 
-import com.example.domain.ProductCache
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
@@ -10,19 +9,10 @@ import java.time.LocalDateTime
 class MainPresenter(
     private val view: MainContract.View,
     private val productRepository: ProductRepository,
-    private val recentProductRepository: RecentProductRepository,
-    private val productCache: ProductCache
+    private val recentProductRepository: RecentProductRepository
 ) : MainContract.Presenter {
 
     override fun loadProducts() {
-        if (productCache.productList.isEmpty()) {
-            loadNewProducts()
-        } else {
-            loadProductsFromCache()
-        }
-    }
-
-    private fun loadNewProducts() {
         val firstProducts = productRepository.getFirstProducts()
         val productItems = firstProducts.map { product ->
             product.toPresentation().toItemModel { productUiModel ->
@@ -32,19 +22,6 @@ class MainPresenter(
             }
         }
         view.addProducts(productItems)
-        productCache.addProducts(firstProducts)
-    }
-
-    override fun loadProductsFromCache() {
-        val cacheProducts = productCache.productList
-        val cacheItems = cacheProducts.map { product ->
-            product.toPresentation().toItemModel { productUiModel ->
-                addRecentProduct(RecentProduct(product, LocalDateTime.now()))
-                view.showProductDetailScreenByProduct(productUiModel)
-                loadRecent()
-            }
-        }
-        view.addProducts(cacheItems)
     }
 
     override fun moveToCart() {
@@ -52,7 +29,7 @@ class MainPresenter(
     }
 
     override fun loadMoreProduct() {
-        val nextProducts = productRepository.getNextProducts(productCache.productList.size)
+        val nextProducts = productRepository.getNextProducts()
         val nextProductItems = nextProducts.map { product ->
             product.toPresentation().toItemModel { productUiModel ->
                 addRecentProduct(RecentProduct(product, LocalDateTime.now()))
@@ -61,7 +38,6 @@ class MainPresenter(
             }
         }
         view.addProducts(nextProductItems)
-        productCache.addProducts(nextProducts)
     }
 
     override fun loadRecent() {
@@ -75,8 +51,8 @@ class MainPresenter(
         view.updateRecent(recent)
     }
 
-    override fun clearCache() {
-        productCache.clear()
+    override fun refresh() {
+        productRepository.clearCache()
     }
 
     private fun addRecentProduct(recentProduct: RecentProduct) {

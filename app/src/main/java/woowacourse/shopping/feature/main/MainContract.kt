@@ -15,10 +15,9 @@ interface MainContract {
 
     interface Presenter {
         fun loadProducts()
-        fun loadProductsFromCache()
         fun moveToCart()
         fun loadMoreProduct()
         fun loadRecent()
-        fun clearCache()
+        fun refresh()
     }
 }

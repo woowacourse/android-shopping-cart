@@ -4,5 +4,6 @@ import com.example.domain.model.Product
 
 interface ProductRepository {
     fun getFirstProducts(): List<Product>
-    fun getNextProducts(startIndex: Int): List<Product>
+    fun getNextProducts(): List<Product>
+    fun clearCache()
 }
