@@ -5,9 +5,9 @@ import woowacourse.shopping.model.RecentViewedProductUiModel
 
 sealed interface ShoppingRecyclerItem {
 
-    class RecentViewedProducts(val values: List<RecentViewedProductUiModel>) : ShoppingRecyclerItem
+    data class RecentViewedProducts(val values: List<RecentViewedProductUiModel>) : ShoppingRecyclerItem
 
-    class ShoppingProduct(val value: ProductUiModel) : ShoppingRecyclerItem
+    data class ShoppingProduct(val value: ProductUiModel) : ShoppingRecyclerItem
 
-    class ReadMoreDescription(val value: String) : ShoppingRecyclerItem
+    data class ReadMoreDescription(val value: String) : ShoppingRecyclerItem
 }
