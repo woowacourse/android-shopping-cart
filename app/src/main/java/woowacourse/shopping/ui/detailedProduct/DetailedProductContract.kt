@@ -1,8 +1,8 @@
-package woowacourse.shopping.ui.productdetail
+package woowacourse.shopping.ui.detailedProduct
 
 import woowacourse.shopping.model.ProductUIModel
 
-interface ProductDetailContract {
+interface DetailedProductContract {
     interface View {
         fun setProductDetail(product: ProductUIModel)
         fun navigateToCart()

@@ -16,7 +16,7 @@ import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.CartActivity
-import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.detailedProduct.DetailedProductActivity
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapter
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
@@ -116,7 +116,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.getIntent(this, product))
+        startActivity(DetailedProductActivity.getIntent(this, product))
     }
 
     override fun addProducts(data: List<ProductsItemType>) {

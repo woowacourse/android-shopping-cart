@@ -16,7 +16,7 @@ import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.cartAdapter.CartAdapter
 import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 import woowacourse.shopping.ui.cart.cartAdapter.CartListener
-import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.detailedProduct.DetailedProductActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -65,7 +65,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun navigateToItemDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.getIntent(this, product))
+        startActivity(DetailedProductActivity.getIntent(this, product))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

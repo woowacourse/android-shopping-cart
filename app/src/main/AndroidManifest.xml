@@ -17,7 +17,7 @@
             android:name=".ui.cart.CartActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.productdetail.ProductDetailActivity"
+            android:name=".ui.detailedProduct.DetailedProductActivity"
             android:exported="false" />
         <activity
             android:name=".ui.shopping.ShoppingActivity"

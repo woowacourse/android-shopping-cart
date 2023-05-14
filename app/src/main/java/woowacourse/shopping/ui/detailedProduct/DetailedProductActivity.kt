@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.productdetail
+package woowacourse.shopping.ui.detailedProduct
 
 import android.content.Context
 import android.content.Intent
@@ -10,15 +10,15 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
-import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.databinding.ActivityDetailedProductBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.utils.keyError
 
-class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
-    private lateinit var binding: ActivityProductDetailBinding
-    private lateinit var presenter: ProductDetailContract.Presenter
+class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.View {
+    private lateinit var binding: ActivityDetailedProductBinding
+    private lateinit var presenter: DetailedProductContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_detailed_product)
     }
 
     private fun initToolbar() {
@@ -36,7 +36,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initPresenter() {
-        presenter = ProductDetailPresenter(
+        presenter = DetailedProductPresenter(
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
             CartDatabase(this),
@@ -70,7 +70,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         private const val KEY_PRODUCT = "KEY_PRODUCT"
         fun getIntent(context: Context, product: ProductUIModel): Intent {
             println("productId: $product")
-            return Intent(context, ProductDetailActivity::class.java).apply {
+            return Intent(context, DetailedProductActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
             }
         }

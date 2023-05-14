@@ -12,13 +12,13 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.RecentRepository
-import woowacourse.shopping.ui.productdetail.ProductDetailContract
-import woowacourse.shopping.ui.productdetail.ProductDetailPresenter
+import woowacourse.shopping.ui.detailedProduct.DetailedProductContract
+import woowacourse.shopping.ui.detailedProduct.DetailedProductPresenter
 
-class ProductDetailPresenterTest {
+class DetailedProductPresenterTest {
 
-    private lateinit var view: ProductDetailContract.View
-    private lateinit var presenter: ProductDetailContract.Presenter
+    private lateinit var view: DetailedProductContract.View
+    private lateinit var presenter: DetailedProductContract.Presenter
     private lateinit var cartRepository: CartRepository
     private lateinit var recentRepository: RecentRepository
 
@@ -35,7 +35,12 @@ class ProductDetailPresenterTest {
         cartRepository = mockk(relaxed = true)
         recentRepository = mockk(relaxed = true)
         presenter =
-            ProductDetailPresenter(view, fakeProduct.toUIModel(), cartRepository, recentRepository)
+            DetailedProductPresenter(
+                view,
+                fakeProduct.toUIModel(),
+                cartRepository,
+                recentRepository
+            )
     }
 
     @Test

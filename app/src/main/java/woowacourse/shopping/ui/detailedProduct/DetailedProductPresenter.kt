@@ -1,16 +1,16 @@
-package woowacourse.shopping.ui.productdetail
+package woowacourse.shopping.ui.detailedProduct
 
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.RecentRepository
 
-class ProductDetailPresenter(
-    private val view: ProductDetailContract.View,
+class DetailedProductPresenter(
+    private val view: DetailedProductContract.View,
     private val product: ProductUIModel,
     private val cartRepository: CartRepository,
     private val recentRepository: RecentRepository
-) : ProductDetailContract.Presenter {
+) : DetailedProductContract.Presenter {
     init {
         setUpProductDetail()
         addProductToRecent()

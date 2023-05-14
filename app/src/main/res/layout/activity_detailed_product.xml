@@ -7,7 +7,7 @@
 
         <variable
             name="presenter"
-            type="woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter" />
+            type="woowacourse.shopping.ui.detailedProduct.DetailedProductContract.Presenter" />
 
         <variable
             name="product"
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.productdetail.ProductDetailActivity">
+        tools:context=".ui.detailedProduct.DetailedProductActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
