@@ -22,5 +22,6 @@ class ShoppingCartAdapter(
 
     fun update(updatedCartProducts: List<CartProductUIModel>) {
         cartProducts = updatedCartProducts
+        notifyDataSetChanged()
     }
 }

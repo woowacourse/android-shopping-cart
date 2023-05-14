@@ -12,7 +12,7 @@ class ShoppingMainPresenter(
     private val recentProductsRepository: RecentProductsRepository
 ) : ShoppingMainContract.Presenter {
     private var index: Pair<Int, Int> = Pair(INIT_INDEX, PRODUCT_LOAD_UNIT)
-    private var _isPossibleLoad = true
+    private var _isPossibleLoad = POSSIBLE_LOAD
     override val isPossibleLoad
         get() = _isPossibleLoad
 
@@ -22,7 +22,7 @@ class ShoppingMainPresenter(
 
         if (loadedProducts.size < PRODUCT_LOAD_UNIT) {
             view.deactivateButton()
-            _isPossibleLoad = false
+            _isPossibleLoad = IMPOSSIBLE_LOAD
         }
 
         return loadedProducts.toUIModel()
@@ -44,5 +44,7 @@ class ShoppingMainPresenter(
     companion object {
         private const val INIT_INDEX = 0
         private const val PRODUCT_LOAD_UNIT = 8
+        private const val POSSIBLE_LOAD = true
+        private const val IMPOSSIBLE_LOAD = false
     }
 }

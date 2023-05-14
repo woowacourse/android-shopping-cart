@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import woowacourse.shopping.uimodel.PageCounter
 import woowacourse.shopping.R
 import woowacourse.shopping.data.db.CartProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
@@ -27,9 +28,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         _binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
 
         setToolBar()
-        setPresenter()
         setAdapter()
+        setPresenter()
         setViewSettings()
+        setPageMoveClick()
     }
 
     private fun setToolBar() {
@@ -40,26 +42,56 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private fun setPresenter() {
         presenter = ShoppingCartPresenter(
             view = this,
-            cartProductRepository = CartProductRepositoryImpl(CartProductDao(this))
+            cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
+            pageCounter = PageCounter()
         )
     }
 
     private fun setAdapter() {
-        presenter.setRecentProducts()
-        adapter = ShoppingCartAdapter(presenter.cartProducts, setOnClickRemove())
+        adapter = ShoppingCartAdapter(emptyList(), setOnClickRemove())
     }
 
     private fun setViewSettings() {
         binding.rvCartList.adapter = adapter
+        updatePageCounter(INIT_PAGE_COUNTER_VIEW)
+    }
+
+    private fun setPageMoveClick() {
+        binding.tvPageUp.setOnClickListener {
+            presenter.pageUpClick(it.isActivated)
+        }
+        binding.tvPageDown.setOnClickListener {
+            presenter.pageDownClick(it.isActivated)
+        }
     }
 
     private fun setOnClickRemove(): (ProductUIModel) -> Unit = { product ->
         presenter.removeCartProduct(product)
     }
 
-    override fun removeCartProduct(cartProducts: List<CartProductUIModel>, index: Int) {
+    override fun updateCartProduct(cartProducts: List<CartProductUIModel>) {
         adapter.update(cartProducts)
-        adapter.notifyItemRemoved(index)
+    }
+
+    override fun activatePageUpCounter() {
+        binding.tvPageUp.isActivated = true
+    }
+
+    override fun deactivatePageUpCounter() {
+        binding.tvPageUp.isActivated = false
+    }
+
+    override fun activatePageDownCounter() {
+        binding.tvPageDown.isActivated = true
+    }
+
+    override fun deactivatePageDownCounter() {
+        binding.tvPageDown.isActivated = false
+
+    }
+
+    override fun updatePageCounter(count: Int) {
+        binding.tvPageCounter.text = count.toString()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -71,5 +103,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     companion object {
         fun intent(context: Context) = Intent(context, ShoppingCartActivity::class.java)
+
+        private const val INIT_PAGE_COUNTER_VIEW = 1
     }
 }
