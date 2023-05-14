@@ -26,17 +26,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
         setSupportActionBar()
-        presenter.loadCartItems()
-        binding.btCartListPageLeft.setOnClickListener {
-            val currentCount = binding.tvCartListPageCount.text
-            binding.tvCartListPageCount.text = (currentCount.toString().toInt() - 1).toString()
-            presenter.updateCartItem(binding.tvCartListPageCount.text.toString().toInt())
-        }
-        binding.btCartListPageRight.setOnClickListener {
-            val currentCount = binding.tvCartListPageCount.text
-            binding.tvCartListPageCount.text = (currentCount.toString().toInt() + 1).toString()
-            presenter.updateCartItem(binding.tvCartListPageCount.text.toString().toInt())
-        }
+        presenter.loadCartItems(getPageCount())
+        setLeftButtonClick()
+        setRightButtonClick()
     }
 
     private fun setSupportActionBar() {
@@ -58,18 +50,35 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.rvCart.adapter = cartAdapter
     }
 
-    private fun deleteCartItem(position: Int) {
-        presenter.deleteCartItem(position)
+    private fun deleteCartItem(itemId: Long) {
+        presenter.deleteCartItem(getPageCount(), itemId)
     }
 
-    override fun updateCartItemView(carts: List<CartModel>) {
-        cartAdapter = CartAdapter(carts, ::deleteCartItem)
-        binding.rvCart.adapter = cartAdapter
+    override fun setEnableLeftButton(isEnabled: Boolean) {
+        binding.btCartListPageLeft.isEnabled = isEnabled
     }
 
-    override fun updateToDeleteCartItemView(position: Int) {
-        cartAdapter.notifyItemRemoved(position)
+    override fun setEnableRightButton(isEnabled: Boolean) {
+        binding.btCartListPageRight.isEnabled = isEnabled
     }
+
+    private fun setLeftButtonClick() {
+        binding.btCartListPageLeft.setOnClickListener {
+            val nextPage = getPageCount().dec()
+            binding.tvCartListPageCount.text = nextPage.toString()
+            presenter.loadCartItems(nextPage)
+        }
+    }
+
+    private fun setRightButtonClick() {
+        binding.btCartListPageRight.setOnClickListener {
+            val nextPage = getPageCount().inc()
+            binding.tvCartListPageCount.text = nextPage.toString()
+            presenter.loadCartItems(nextPage)
+        }
+    }
+
+    private fun getPageCount(): Int = binding.tvCartListPageCount.text.toString().toInt()
 
     companion object {
         fun createIntent(context: Context): Intent {

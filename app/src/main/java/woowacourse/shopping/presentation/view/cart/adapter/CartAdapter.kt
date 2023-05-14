@@ -6,11 +6,13 @@ import woowacourse.shopping.presentation.model.CartModel
 import woowacourse.shopping.presentation.view.cart.viewholder.CartViewHolder
 
 class CartAdapter(
-    private val items: List<CartModel>,
-    private val onCloseClick: (Int) -> Unit
+    items: List<CartModel>,
+    private val onCloseClick: (Long) -> Unit
 ) : RecyclerView.Adapter<CartViewHolder>() {
+    private val items = items.toMutableList()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        return CartViewHolder(parent) { onCloseClick(it) }
+        return CartViewHolder(parent) { onCloseClick(items[it].product.id) }
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {

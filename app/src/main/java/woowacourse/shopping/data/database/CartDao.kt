@@ -49,10 +49,11 @@ class CartDao(context: Context) {
             null,
             null,
             null,
-            "$startPosition,3"
+            "$startPosition, $GET_CART_ITEM_COUNT"
         )
     }
 
     companion object {
+        private const val GET_CART_ITEM_COUNT = 4
     }
 }
