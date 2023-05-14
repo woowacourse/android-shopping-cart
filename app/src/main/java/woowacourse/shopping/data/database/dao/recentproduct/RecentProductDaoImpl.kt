@@ -15,11 +15,10 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
     @SuppressLint("Range")
     override fun getSize(): Int {
         val size: Int
-        database.writableDatabase.use { db ->
-            db.rawQuery(GET_ALL_QUERY, null).use {
-                it.moveToFirst()
-                size = it.getInt(0)
-            }
+        val db = database.writableDatabase
+        db.rawQuery(GET_ALL_QUERY, null).use {
+            it.moveToFirst()
+            size = it.getInt(0)
         }
         return size
     }
@@ -27,22 +26,21 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
     @SuppressLint("Range")
     override fun getPartially(size: Int): List<DataRecentProduct> {
         val products = mutableListOf<DataRecentProduct>()
-        database.writableDatabase.use { db ->
-            val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(size.toString()))
-            while (cursor.moveToNext()) {
-                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val productId: Int =
-                    cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
-                val name: String =
-                    cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_NAME))
-                val price: DataPrice =
-                    DataPrice(cursor.getInt(cursor.getColumnIndex(RecentProductContract.COLUMN_PRICE)))
-                val imageUrl: String =
-                    cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_IMAGE_URL))
-                products.add(DataRecentProduct(id, DataProduct(productId, name, price, imageUrl)))
-            }
-            cursor.close()
+        val db = database.writableDatabase
+        val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(size.toString()))
+        while (cursor.moveToNext()) {
+            val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val productId: Int =
+                cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+            val name: String =
+                cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_NAME))
+            val price: DataPrice =
+                DataPrice(cursor.getInt(cursor.getColumnIndex(RecentProductContract.COLUMN_PRICE)))
+            val imageUrl: String =
+                cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_IMAGE_URL))
+            products.add(DataRecentProduct(id, DataProduct(productId, name, price, imageUrl)))
         }
+        cursor.close()
         return products
     }
 
@@ -53,15 +51,12 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
             put(RecentProductContract.COLUMN_IMAGE_URL, recentProduct.product.imageUrl)
         }
 
-        database.writableDatabase.use { db ->
-            db.insert(RecentProductContract.TABLE_NAME, null, contentValues)
-        }
+        database.writableDatabase.insert(RecentProductContract.TABLE_NAME, null, contentValues)
     }
 
     override fun removeLast() {
-        database.writableDatabase.use { db ->
-            db.rawQuery(REMOVE_LAST_QUERY, null)
-        }
+        val db = database.writableDatabase
+        db.rawQuery(REMOVE_LAST_QUERY, null).close()
     }
 
     companion object {

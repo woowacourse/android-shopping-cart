@@ -18,10 +18,11 @@ import woowacourse.shopping.ui.basket.BasketContract.View
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
 
 class BasketActivity : AppCompatActivity(), View {
+    private val shoppingDatabase by lazy { ShoppingDatabase(this) }
     override val presenter: Presenter by lazy {
         BasketPresenter(
             this,
-            BasketRepository(LocalBasketDataSource(BasketDaoImpl(ShoppingDatabase(this))))
+            BasketRepository(LocalBasketDataSource(BasketDaoImpl(shoppingDatabase)))
         )
     }
     private lateinit var binding: ActivityBasketBinding
@@ -48,6 +49,11 @@ class BasketActivity : AppCompatActivity(), View {
 
     override fun closeScreen() {
         finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        shoppingDatabase.close()
     }
 
     companion object {

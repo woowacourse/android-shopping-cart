@@ -33,8 +33,8 @@ import woowacourse.shopping.util.isolatedViewTypeConfig
 class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     private lateinit var binding: ActivityShoppingBinding
 
+    private val shoppingDatabase by lazy { ShoppingDatabase(this) }
     override val presenter: Presenter by lazy {
-        val shoppingDatabase = ShoppingDatabase(this)
         ShoppingPresenter(
             this,
             ProductRepository(LocalProductDataSource(ProductDaoImpl(shoppingDatabase))),
@@ -98,6 +98,11 @@ class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
             R.id.basket -> presenter.openBasket()
         }
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        shoppingDatabase.close()
     }
 
     companion object {

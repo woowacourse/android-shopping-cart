@@ -14,24 +14,22 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     override fun getPartially(page: DataPageNumber): List<DataProduct> {
         val products = mutableListOf<DataProduct>()
 
-        database.writableDatabase.use { db ->
-            val cursor =
-                db.rawQuery(
-                    GET_PARTIALLY_QUERY,
-                    arrayOf(page.startId.toString(), page.pageSizeForCheckHasNext.toString())
-                )
-            while (cursor.moveToNext()) {
-                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val name: String =
-                    cursor.getString(cursor.getColumnIndex(BasketContract.COLUMN_NAME))
-                val price: DataPrice =
-                    DataPrice(cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_PRICE)))
-                val imageUrl: String =
-                    cursor.getString(cursor.getColumnIndex(BasketContract.COLUMN_IMAGE_URL))
-                products.add(DataProduct(id, name, price, imageUrl))
-            }
-            cursor.close()
+        val db = database.writableDatabase
+        val cursor = db.rawQuery(
+            GET_PARTIALLY_QUERY,
+            arrayOf(page.startId.toString(), page.pageSizeForCheckHasNext.toString())
+        )
+        while (cursor.moveToNext()) {
+            val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val name: String =
+                cursor.getString(cursor.getColumnIndex(BasketContract.COLUMN_NAME))
+            val price: DataPrice =
+                DataPrice(cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_PRICE)))
+            val imageUrl: String =
+                cursor.getString(cursor.getColumnIndex(BasketContract.COLUMN_IMAGE_URL))
+            products.add(DataProduct(id, name, price, imageUrl))
         }
+        cursor.close()
         return products
     }
 
@@ -43,19 +41,15 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             put(BasketContract.COLUMN_CREATED, System.currentTimeMillis())
         }
 
-        database.writableDatabase.use { db ->
-            db.insert(BasketContract.TABLE_NAME, null, contentValues)
-        }
+        database.writableDatabase.insert(BasketContract.TABLE_NAME, null, contentValues)
     }
 
     override fun remove(product: DataProduct) {
-        database.writableDatabase.use { db ->
-            db.delete(
-                BasketContract.TABLE_NAME,
-                "${BaseColumns._ID} = ?",
-                arrayOf(product.id.toString())
-            )
-        }
+        database.writableDatabase.delete(
+            BasketContract.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(product.id.toString())
+        )
     }
 
     companion object {
