@@ -7,6 +7,7 @@ import model.Name
 import model.Price
 import model.Product
 import model.RecentViewedProduct
+import model.ShoppingCartProduct
 import woowacourse.shopping.database.product.MockProduct
 import woowacourse.shopping.database.product.ProductDBContract
 import woowacourse.shopping.database.product.RecentViewedDBContract
@@ -57,8 +58,11 @@ class ShoppingDBAdapter(
         return products
     }
 
-    override fun selectShoppingCartProducts(from: Int, count: Int): List<Product> {
-        val shoppingCartProducts = mutableListOf<Product>()
+    override fun selectShoppingCartProducts(
+        from: Int,
+        count: Int
+    ): List<ShoppingCartProduct> {
+        val shoppingCartProducts = mutableListOf<ShoppingCartProduct>()
         val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
             count, from
         )
@@ -76,9 +80,13 @@ class ShoppingDBAdapter(
         return shoppingCartProducts.toList()
     }
 
-    private fun Cursor.getShoppingCartProductById(): Product {
+    private fun Cursor.getShoppingCartProductById(): ShoppingCartProduct {
         val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
-        return selectProductById(id)
+        val count = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.COUNT))
+        return ShoppingCartProduct(
+            product = selectProductById(id),
+            count = count
+        )
     }
 
     private fun Cursor.getProduct(): Product {
@@ -111,9 +119,10 @@ class ShoppingDBAdapter(
         return product
     }
 
-    override fun insertToShoppingCart(id: Int) {
+    override fun insertToShoppingCart(id: Int, count: Int) {
         val values = ContentValues().apply {
             put(ShoppingCartDBContract.CART_PRODUCT_ID, id)
+            put(ShoppingCartDBContract.COUNT, count)
         }
 
         shoppingDB.insert(ShoppingCartDBContract.TABLE_NAME, null, values)

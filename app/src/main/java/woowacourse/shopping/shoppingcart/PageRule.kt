@@ -1,16 +1,14 @@
 package woowacourse.shopping.shoppingcart
 
 import woowacourse.shopping.model.Page
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 interface PageRule {
 
-    val itemCountOnEachPage: Int
-
     fun getProductsOfPage(
-        products: List<ProductUiModel>,
+        products: List<ShoppingCartProductUiModel>,
         page: Page
-    ): List<ProductUiModel>
+    ): List<ShoppingCartProductUiModel>
 
     fun getPageOfEnd(
         totalProductsSize: Int,

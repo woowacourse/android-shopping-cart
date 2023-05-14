@@ -1,20 +1,20 @@
 package woowacourse.shopping.shoppingcart
 
 import woowacourse.shopping.model.Page
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 object ShowingCartProductsPageRule : PageRule {
 
-    override val itemCountOnEachPage: Int = 3
+    private const val ITEM_COUNT_ON_EACH_PAGE = 3
 
-    override fun getProductsOfPage(products: List<ProductUiModel>, page: Page): List<ProductUiModel> {
-        val shoppingCartProducts = mutableListOf<ProductUiModel>()
-        var currentIndex = page.value * itemCountOnEachPage
+    override fun getProductsOfPage(products: List<ShoppingCartProductUiModel>, page: Page): List<ShoppingCartProductUiModel> {
+        val shoppingCartProducts = mutableListOf<ShoppingCartProductUiModel>()
+        var currentIndex = page.value * ITEM_COUNT_ON_EACH_PAGE
 
         if (currentIndex >= products.size) {
             return listOf()
         }
-        repeat(itemCountOnEachPage) {
+        repeat(ITEM_COUNT_ON_EACH_PAGE) {
             shoppingCartProducts.add(products[currentIndex])
             if (products.lastIndex == currentIndex) {
                 return shoppingCartProducts.toList()
@@ -28,6 +28,6 @@ object ShowingCartProductsPageRule : PageRule {
         if (totalProductsSize == 0) {
             return Page()
         }
-        return Page((totalProductsSize - 1) / itemCountOnEachPage)
+        return Page((totalProductsSize - 1) / ITEM_COUNT_ON_EACH_PAGE)
     }
 }

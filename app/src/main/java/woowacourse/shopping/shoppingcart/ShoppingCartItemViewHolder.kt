@@ -5,23 +5,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemShoppingCartBinding
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 class ShoppingCartItemViewHolder private constructor(
     private val binding: ItemShoppingCartBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
-        productUiModel: ProductUiModel,
+        product: ShoppingCartProductUiModel,
         onRemoveClicked: (Int) -> Unit
     ) {
         with(binding) {
             Glide.with(root.context)
-                .load(productUiModel.imageUrl)
+                .load(product.imageUrl)
                 .into(imageProduct)
 
-            textProductName.text = productUiModel.name
-            textProductPrice.text = productUiModel.price.toString()
+            textProductName.text = product.name
+            textProductPrice.text = product.price.toString()
             imageRemoveProduct.setOnClickListener { onRemoveClicked(adapterPosition) }
         }
     }

@@ -4,8 +4,10 @@ import model.Name
 import model.Price
 import model.Product
 import model.RecentViewedProduct
+import model.ShoppingCartProduct
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
+import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 fun ProductUiModel.toDomainModel() = Product(
     id = id,
@@ -25,4 +27,12 @@ fun RecentViewedProduct.toUiModel() = RecentViewedProductUiModel(
     id = id,
     name = name.value,
     imageUrl = imageUrl
+)
+
+fun ShoppingCartProduct.toUiModel() = ShoppingCartProductUiModel(
+    id = product.id,
+    name = product.name.value,
+    imageUrl = product.imageUrl,
+    price = price.value,
+    count = count
 )

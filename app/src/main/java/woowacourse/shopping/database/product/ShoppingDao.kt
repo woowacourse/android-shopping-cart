@@ -20,7 +20,8 @@ class ShoppingDao(
 
         db?.execSQL(
             "CREATE TABLE ${ShoppingCartDBContract.TABLE_NAME}(" +
-                "${ShoppingCartDBContract.CART_PRODUCT_ID} int" +
+                "${ShoppingCartDBContract.CART_PRODUCT_ID} int," +
+                "${ShoppingCartDBContract.COUNT} int" +
                 ");"
         )
 

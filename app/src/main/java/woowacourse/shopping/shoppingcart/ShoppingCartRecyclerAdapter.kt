@@ -4,22 +4,23 @@ import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.Page
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 class ShoppingCartRecyclerAdapter(
-    products: List<ProductUiModel>,
+    products: List<ShoppingCartProductUiModel>,
     private val onRemoved: (id: Int) -> Unit,
     private val onAdded: () -> (Unit),
     private val onPageChanged: (pageNumber: Int) -> Unit
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
-    private val shoppingCartProducts: MutableList<ProductUiModel> = products.toMutableList()
+    private val shoppingCartProducts: MutableList<ShoppingCartProductUiModel> =
+        products.toMutableList()
     private var currentPage = Page()
     private val endPage: Page
         get() = ShowingCartProductsPageRule.getPageOfEnd(
             totalProductsSize = shoppingCartProducts.size
         )
-    private val showingProducts: List<ProductUiModel>
+    private val showingProducts: List<ShoppingCartProductUiModel>
         get() = ShowingCartProductsPageRule.getProductsOfPage(
             products = shoppingCartProducts,
             page = currentPage
@@ -36,7 +37,7 @@ class ShoppingCartRecyclerAdapter(
 
     override fun onBindViewHolder(holder: ShoppingCartItemViewHolder, position: Int) {
         holder.bind(
-            productUiModel = showingProducts[position],
+            product = showingProducts[position],
             onRemoveClicked = ::removeItem
         )
     }
@@ -48,7 +49,7 @@ class ShoppingCartRecyclerAdapter(
         notifyDataSetChanged()
     }
 
-    fun addItems(products: List<ProductUiModel>) {
+    fun addItems(products: List<ShoppingCartProductUiModel>) {
         shoppingCartProducts.addAll(products)
         currentPage = currentPage.next()
         changePage()
@@ -73,5 +74,5 @@ class ShoppingCartRecyclerAdapter(
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int = ShowingCartProductsPageRule.itemCountOnEachPage
+    override fun getItemCount(): Int = showingProducts.size
 }

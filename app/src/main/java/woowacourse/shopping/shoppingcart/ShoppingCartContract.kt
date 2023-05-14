@@ -1,18 +1,18 @@
 package woowacourse.shopping.shoppingcart
 
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 interface ShoppingCartContract {
 
     interface View {
 
         fun setUpShoppingCartView(
-            products: List<ProductUiModel>,
+            products: List<ShoppingCartProductUiModel>,
             onRemoved: (id: Int) -> Unit,
             onAdded: () -> (Unit)
         )
 
-        fun showMoreShoppingCartProducts(products: List<ProductUiModel>)
+        fun showMoreShoppingCartProducts(products: List<ShoppingCartProductUiModel>)
     }
 
     interface Presenter {

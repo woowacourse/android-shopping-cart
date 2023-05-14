@@ -2,16 +2,17 @@ package woowacourse.shopping.database
 
 import model.Product
 import model.RecentViewedProduct
+import model.ShoppingCartProduct
 
 interface ShoppingRepository {
 
     fun selectProducts(from: Int, count: Int): List<Product>
 
-    fun selectShoppingCartProducts(from: Int, count: Int): List<Product>
+    fun selectShoppingCartProducts(from: Int, count: Int): List<ShoppingCartProduct>
 
     fun selectProductById(id: Int): Product
 
-    fun insertToShoppingCart(id: Int)
+    fun insertToShoppingCart(id: Int, count: Int = 1)
 
     fun deleteFromShoppingCart(id: Int)
 

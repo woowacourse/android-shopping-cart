@@ -1,7 +1,7 @@
 package woowacourse.shopping.shoppingcart
 
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.ShoppingCartProductUiModel
 import woowacourse.shopping.util.toUiModel
 
 class ShoppingCartPresenter(
@@ -11,7 +11,7 @@ class ShoppingCartPresenter(
 
     private var numberOfReadShoppingCartProduct: Int = 0
 
-    private fun selectShoppingCartProducts(): List<ProductUiModel> {
+    private fun selectShoppingCartProducts(): List<ShoppingCartProductUiModel> {
         val products = repository.selectShoppingCartProducts(
             from = numberOfReadShoppingCartProduct,
             count = COUNT_TO_READ

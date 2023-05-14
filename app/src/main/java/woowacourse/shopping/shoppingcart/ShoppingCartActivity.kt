@@ -11,7 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.ShoppingDBAdapter
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
@@ -50,7 +50,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     override fun setUpShoppingCartView(
-        products: List<ProductUiModel>,
+        products: List<ShoppingCartProductUiModel>,
         onRemoved: (id: Int) -> Unit,
         onAdded: () -> Unit
     ) {
@@ -72,7 +72,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         }
     }
 
-    override fun showMoreShoppingCartProducts(products: List<ProductUiModel>) {
+    override fun showMoreShoppingCartProducts(products: List<ShoppingCartProductUiModel>) {
         if (products.isEmpty()) {
             return Toast.makeText(
                 this,
