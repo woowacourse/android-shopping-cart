@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.cart
 
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -120,10 +119,9 @@ class CartPresenterTest {
     @Test
     fun `상세 페이지로 이동한다`() {
         // given
-        val slot = slot<PageUIModel>()
         every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
         every { productRepository.findById(any()) } returns fakeProduct
-        every { view.setCarts(any(), capture(slot)) } answers { nothing }
+        every { view.setCarts(any(), any()) } answers { nothing }
 
         // when
         presenter.navigateToItemDetail(fakeProduct.toUIModel().id)

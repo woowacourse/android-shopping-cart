@@ -2,14 +2,11 @@ package woowacourse.shopping.ui.detailedProduct
 
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.verify
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.RecentRepository
 
@@ -44,13 +41,11 @@ class DetailedProductPresenterTest {
     @Test
     fun `상품을 불러와서 세팅한다`() {
         // given
-        val slot = slot<ProductUIModel>()
-        every { view.setProductDetail(capture(slot)) } answers { nothing }
+        every { view.setProductDetail(any()) } answers { nothing }
         // when
         presenter.setUpProductDetail()
 
         // then
-        assertEquals(slot.captured, fakeProduct.toUIModel())
         verify(exactly = 1) { view.setProductDetail(fakeProduct.toUIModel()) }
     }
 
