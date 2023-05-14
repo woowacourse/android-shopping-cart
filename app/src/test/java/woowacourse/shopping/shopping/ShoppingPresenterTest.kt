@@ -40,6 +40,10 @@ class ShoppingPresenterTest {
             recentProductsState.load()
         } returns RecentProducts(emptyList())
 
+        every {
+            recentProductDao.selectByProduct(any())
+        } returns null
+
         presenter = ShoppingPresenter(
             view,
             productDao = productDao,
