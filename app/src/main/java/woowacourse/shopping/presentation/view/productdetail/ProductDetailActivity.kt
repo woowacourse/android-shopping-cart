@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.cart.CartRepositoryImp
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -50,11 +49,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setProductInfoView(productModel: ProductModel) {
-        Glide.with(this)
-            .load(productModel.imageUrl)
-            .into(binding.ivProductDetailThumbnail)
+        binding.product = productModel
         binding.tvProductDetailTitle.text = productModel.title
-        binding.tvProductDetailPrice.text = getString(R.string.product_price_format, productModel.price)
+        binding.tvProductDetailPrice.text =
+            getString(R.string.product_price_format, productModel.price)
     }
 
     private fun setAddCart(productId: Long) {
