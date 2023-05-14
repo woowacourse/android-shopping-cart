@@ -36,9 +36,7 @@
             app:layout_constraintBottom_toTopOf="@+id/layout_navigator"
             app:layout_constraintTop_toBottomOf="@+id/tb_basket"
             tools:itemCount="5"
-            tools:listitem="@layout/item_basket"
-
-            />
+            tools:listitem="@layout/item_basket" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_navigator"

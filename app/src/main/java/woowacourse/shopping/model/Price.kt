@@ -7,5 +7,5 @@ typealias UiPrice = Price
 
 @Parcelize
 data class Price(
-    val value: Int
+    val value: Int,
 ) : Parcelable

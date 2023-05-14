@@ -7,7 +7,7 @@ import woowacourse.shopping.model.UiProduct
 
 class BasketPresenter(
     override val view: BasketContract.View,
-    private val basketRepository: BasketRepository
+    private val basketRepository: BasketRepository,
 ) : BasketContract.Presenter {
     private var hasNext: Boolean = false
     private var lastId: Int = -1

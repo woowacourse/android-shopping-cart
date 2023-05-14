@@ -13,48 +13,48 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="20dp"
-        android:paddingHorizontal="20dp">
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="20dp">
 
         <ImageView
+            android:id="@+id/iv_product"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="1"
             app:image="@{product.imageUrl}"
-            tools:srcCompat="@tools:sample/avatars"
-            android:id="@+id/iv_product"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            tools:text="PET_보틀_정사각"
-            android:textColor="@color/woowa_text_black"
-            android:text="@{product.name}"
-            android:textStyle="bold"
-            android:includeFontPadding="false"
-            android:textSize="16sp"
-            android:ellipsize="end"
-            android:maxLines="1"
+            android:id="@+id/tv_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_product_name"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/iv_product"
             app:layout_constraintTop_toBottomOf="@+id/iv_product"
-            app:layout_constraintStart_toStartOf="@+id/iv_product" />
+            tools:text="PET_보틀_정사각" />
 
         <TextView
-            tools:text="10,000원"
-            android:textColor="@color/woowa_text_black"
-            android:includeFontPadding="false"
-            android:textSize="16sp"
-            android:text="@{@string/price_format(product.price.value)}"
+            android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_product_price"
+            android:includeFontPadding="false"
+            android:text="@{@string/price_format(product.price.value)}"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_product_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
-            app:layout_constraintStart_toStartOf="@+id/tv_product_name" />
+            tools:text="10,000원" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

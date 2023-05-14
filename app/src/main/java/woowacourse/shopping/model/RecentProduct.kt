@@ -8,5 +8,5 @@ typealias UiRecentProduct = RecentProduct
 @Parcelize
 data class RecentProduct(
     val id: Int,
-    val product: Product
+    val product: Product,
 ) : Parcelable
