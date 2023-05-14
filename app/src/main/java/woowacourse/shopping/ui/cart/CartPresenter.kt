@@ -7,18 +7,18 @@ import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 
 class CartPresenter(
-    val view: CartContract.View,
-    val repository: CartRepository,
-    val productRepository: ProductRepository,
+    private val view: CartContract.View,
+    private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
     private var index: Int = 0
 ) : CartContract.Presenter {
 
     override fun setUpCarts() {
         view.setCarts(
-            repository.getPage(index, STEP).toUIModel().map { CartItemType.Cart(it) },
+            cartRepository.getPage(index, STEP).toUIModel().map { CartItemType.Cart(it) },
             PageUIModel(
-                repository.hasNextPage(index, STEP),
-                repository.hasPrevPage(index, STEP),
+                cartRepository.hasNextPage(index, STEP),
+                cartRepository.hasPrevPage(index, STEP),
                 index + 1
             )
         )
@@ -35,8 +35,8 @@ class CartPresenter(
     }
 
     override fun removeItem(id: Int) {
-        repository.remove(id)
-        if (repository.getPage(index, STEP).toUIModel().isEmpty()) {
+        cartRepository.remove(id)
+        if (cartRepository.getPage(index, STEP).toUIModel().isEmpty()) {
             index -= 1
         }
         setUpCarts()

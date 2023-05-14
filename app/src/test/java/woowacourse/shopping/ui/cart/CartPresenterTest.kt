@@ -13,6 +13,7 @@ import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 
 class CartPresenterTest {
 
@@ -39,53 +40,81 @@ class CartPresenterTest {
     @Test
     fun `장바구니에 담긴 상품을 보여준다`() {
         // given
-        val slot = slot<PageUIModel>()
-        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
-        every { view.setCarts(any(), capture(slot)) } answers { nothing }
+        val fakeCartProducts = CartProducts(listOf())
+        every { cartRepository.getPage(any(), any()) } returns fakeCartProducts
+        every { cartRepository.hasNextPage(any(), any()) } returns true
+        every { cartRepository.hasPrevPage(any(), any()) } returns true
+        every { view.setCarts(any(), any()) } answers { nothing }
 
         // when
         presenter.setUpCarts()
 
         // then
-        assertEquals(slot.captured, PageUIModel(false, false, 1))
-        verify(exactly = 1) { view.setCarts(any(), PageUIModel(false, false, 1)) }
+        verify(exactly = 1) {
+            view.setCarts(
+                fakeCartProducts.toUIModel().map { CartItemType.Cart(it) },
+                PageUIModel(pageNext = true, pagePrev = true, pageNumber = 1)
+            )
+        }
+    }
+
+    @Test
+    fun `다음 페이지 상품을 불러온다`() {
+        // given
+        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
+        every { cartRepository.hasNextPage(any(), any()) } returns true
+        every { cartRepository.hasPrevPage(any(), any()) } returns true
+        every { view.setCarts(any(), any()) } answers { nothing }
+
+        // when
+        presenter.moveToPageNext()
+
+        // then
+        verify(exactly = 1) {
+            view.setCarts(
+                any(),
+                PageUIModel(
+                    pageNext = true,
+                    pagePrev = true,
+                    pageNumber = 2
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `이전 페이지 상품을 불러온다`() {
+        // given
+        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
+        every { cartRepository.hasNextPage(any(), any()) } returns true
+        every { cartRepository.hasPrevPage(any(), any()) } returns true
+        every { view.setCarts(any(), any()) } answers { nothing }
+        // when
+        presenter.moveToPagePrev()
+        // then
+        verify(exactly = 1) {
+            view.setCarts(
+                any(),
+                PageUIModel(
+                    pageNext = true,
+                    pagePrev = true,
+                    pageNumber = 0
+                )
+            )
+        }
     }
 
     @Test
     fun `장바구니에 담긴 상품을 삭제한다`() {
         // given
         every { cartRepository.remove(any()) } answers { nothing }
+
         // when
         presenter.removeItem(1)
+
         // then
         verify(exactly = 1) { cartRepository.remove(1) }
         verify(exactly = 1) { view.setCarts(any(), any()) }
-    }
-
-    @Test
-    fun `다음 페이지 상품을 불러온다`() {
-        // given
-        val slot = slot<PageUIModel>()
-        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
-        every { view.setCarts(any(), capture(slot)) } answers { nothing }
-        // when
-        presenter.moveToPageNext()
-        // then
-        assertEquals(slot.captured, PageUIModel(false, false, 2))
-        verify(exactly = 1) { view.setCarts(any(), PageUIModel(false, false, 2)) }
-    }
-
-    @Test
-    fun `이전 페이지 상품을 불러온다`() {
-        // given
-        val slot = slot<PageUIModel>()
-        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
-        every { view.setCarts(any(), capture(slot)) } answers { nothing }
-        // when
-        presenter.moveToPagePrev()
-        // then
-        assertEquals(slot.captured, PageUIModel(false, false, 0))
-        verify(exactly = 1) { view.setCarts(any(), PageUIModel(false, false, 0)) }
     }
 
     @Test
@@ -101,5 +130,17 @@ class CartPresenterTest {
 
         // then
         verify(exactly = 1) { view.navigateToItemDetail(fakeProduct.toUIModel()) }
+    }
+
+    @Test
+    fun `현재 페이지 인덱스를 반환한다`() {
+        // given
+        val index = 5
+
+        // when
+        val presenter = CartPresenter(view, cartRepository, productRepository, index)
+
+        // then
+        assertEquals(presenter.getPageIndex(), index)
     }
 }
