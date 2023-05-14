@@ -36,7 +36,6 @@ class CartPresenter(
     private fun setCartProducts() {
         val nextProducts = cartPages.getNextPageProducts()
         updateCart(nextProducts)
-        view.setPage(cartPages.pageNumber.value)
         checkPageAble()
     }
 
