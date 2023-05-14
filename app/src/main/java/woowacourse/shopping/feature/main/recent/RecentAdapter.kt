@@ -12,8 +12,6 @@ class RecentAdapter(
 ) : RecyclerView.Adapter<RecentViewHolder>() {
 
     private val _items = items.toMutableList()
-    val items: List<RecentProductItemModel>
-        get() = _items.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
