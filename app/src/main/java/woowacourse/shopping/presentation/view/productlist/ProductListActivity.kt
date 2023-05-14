@@ -106,7 +106,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun setMoreProductListAdapter() {
-        moreProductListAdapter = MoreProductListAdapter(productListAdapter, ::onMoreProductList)
+        moreProductListAdapter = MoreProductListAdapter(::onMoreProductList)
     }
 
     private fun setConcatAdapter() {
