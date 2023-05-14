@@ -11,6 +11,7 @@ import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityBasketBinding
+import woowacourse.shopping.model.UiPageNumber
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.ui.basket.BasketContract.Presenter
 import woowacourse.shopping.ui.basket.BasketContract.View
@@ -39,6 +40,10 @@ class BasketActivity : AppCompatActivity(), View {
     override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {
         binding.btnPrevious.isEnabled = previous
         binding.btnNext.isEnabled = next
+    }
+
+    override fun updatePageNumber(page: UiPageNumber) {
+        binding.tvPageNumber.text = page.toText()
     }
 
     override fun closeScreen() {

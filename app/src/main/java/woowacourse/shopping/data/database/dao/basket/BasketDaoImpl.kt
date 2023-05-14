@@ -5,19 +5,21 @@ import android.content.ContentValues
 import android.provider.BaseColumns
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.contract.BasketContract
+import woowacourse.shopping.data.model.DataPageNumber
 import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.DataProduct
 
 class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     @SuppressLint("Range")
-    override fun getPartially(size: Int, lastId: Int, isNext: Boolean): List<DataProduct> {
+    override fun getPartially(page: DataPageNumber): List<DataProduct> {
         val products = mutableListOf<DataProduct>()
-        val start = if (isNext) {
-            lastId
-        } else lastId - size
+
         database.writableDatabase.use { db ->
             val cursor =
-                db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(start.toString(), size.toString()))
+                db.rawQuery(
+                    GET_PARTIALLY_QUERY,
+                    arrayOf(page.startId.toString(), page.pageSizeForCheckHasNext.toString())
+                )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val name: String =
@@ -38,6 +40,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             put(BasketContract.COLUMN_NAME, product.name)
             put(BasketContract.COLUMN_PRICE, product.price.value)
             put(BasketContract.COLUMN_IMAGE_URL, product.imageUrl)
+            put(BasketContract.COLUMN_CREATED, System.currentTimeMillis())
         }
 
         database.writableDatabase.use { db ->
@@ -59,7 +62,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         private val GET_PARTIALLY_QUERY = """
             SELECT * FROM ${BasketContract.TABLE_NAME}
             WHERE ${BaseColumns._ID} > ?
-            ORDER BY ${BaseColumns._ID} LIMIT ?        
+            ORDER BY ${BasketContract.COLUMN_CREATED} LIMIT ?        
         """.trimIndent()
     }
 }

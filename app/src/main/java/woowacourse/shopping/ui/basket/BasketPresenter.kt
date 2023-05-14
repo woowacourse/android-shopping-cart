@@ -1,49 +1,50 @@
 package woowacourse.shopping.ui.basket
 
+import woowacourse.shopping.domain.PageNumber
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUi
 import woowacourse.shopping.model.UiProduct
+import woowacourse.shopping.ui.basket.BasketContract.Presenter
+import woowacourse.shopping.ui.basket.BasketContract.View
 
 class BasketPresenter(
-    override val view: BasketContract.View,
+    override val view: View,
     private val basketRepository: BasketRepository,
-) : BasketContract.Presenter {
-    private var hasNext: Boolean = false
-    private var lastId: Int = -1
-    private val hasPrevious: Boolean
-        get() = lastId > BASKET_PAGING_SIZE
+) : Presenter {
+    private var products = Products(loadUnit = BASKET_PAGING_SIZE)
+    private var currentPage: PageNumber = PageNumber()
 
-    override fun fetchBasket(isNext: Boolean) {
-        var basketProducts = basketRepository.getPartially(
-            TOTAL_LOAD_BASKET_SIZE_AT_ONCE,
-            lastId,
-            isNext
-        ).map { it.toUi() }
+    override fun fetchBasket() {
+        val currentProducts = basketRepository.getPartially(currentPage)
+        products = products.copy(currentProducts)
 
-        hasNext = checkHasNext(basketProducts)
-        if (checkHasNext(basketProducts)) basketProducts = basketProducts.dropLast(1)
-        lastId = basketProducts.maxOfOrNull { it.id } ?: -1
-        view.updateBasket(basketProducts)
-        view.updateNavigatorEnabled(hasPrevious, hasNext)
+        view.updateBasket(products.getItemsByUnit().map { it.toUi() })
+        view.updateNavigatorEnabled(currentPage.hasPrevious(), products.canLoadMore())
+        view.updatePageNumber(currentPage.toUi())
+    }
+
+    override fun fetchNext() {
+        currentPage++
+        fetchBasket()
+    }
+
+    override fun fetchPrevious() {
+        currentPage--
+        fetchBasket()
     }
 
     override fun removeBasketProduct(product: UiProduct) {
         basketRepository.remove(product.toDomain())
-        fetchBasket(true)
+        fetchBasket()
     }
 
     override fun closeScreen() {
         view.closeScreen()
     }
 
-    private fun checkHasNext(products: List<UiProduct>): Boolean =
-        products.size == TOTAL_LOAD_BASKET_SIZE_AT_ONCE
-
     companion object {
         private const val BASKET_PAGING_SIZE = 5
-        private const val BASKET_SIZE_FOR_HAS_NEXT = 1
-        private const val TOTAL_LOAD_BASKET_SIZE_AT_ONCE =
-            BASKET_PAGING_SIZE + BASKET_SIZE_FOR_HAS_NEXT
     }
 }

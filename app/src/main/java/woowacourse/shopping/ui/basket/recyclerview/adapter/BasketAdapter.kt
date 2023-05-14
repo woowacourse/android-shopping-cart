@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.model.UiProduct
 
-class BasketAdapter(private val onItemClick: (UiProduct) -> Unit) :
+class BasketAdapter(private val onDeleteClick: (UiProduct) -> Unit) :
     ListAdapter<UiProduct, BasketViewHolder>(basketDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasketViewHolder =
-        BasketViewHolder(parent) { pos -> onItemClick(currentList[pos]) }
+        BasketViewHolder(parent) { pos -> onDeleteClick(currentList[pos]) }
 
 
     override fun onBindViewHolder(holder: BasketViewHolder, position: Int) {

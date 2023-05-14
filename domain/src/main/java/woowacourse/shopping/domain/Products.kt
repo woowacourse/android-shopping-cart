@@ -1,5 +1,7 @@
 package woowacourse.shopping.domain
 
+typealias DomainProducts = Products
+
 data class Products(
     private val items: List<Product> = emptyList(),
     private val loadUnit: Int = DEFAULT_LOAD_AT_ONCE,
@@ -12,6 +14,8 @@ data class Products(
     fun add(newItem: Product): Products = copy(items = items + newItem)
 
     fun canLoadMore(): Boolean = items.size >= loadUnit && items.size % loadUnit >= 1
+
+    fun getItems(): List<Product> = items.toList()
 
     fun getItemsByUnit(): List<Product> = items.take(
         (items.size / loadUnit).coerceAtLeast(1) * loadUnit

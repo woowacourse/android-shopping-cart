@@ -1,11 +1,12 @@
 package woowacourse.shopping.data.datasource.basket
 
 import woowacourse.shopping.data.database.dao.basket.BasketDao
+import woowacourse.shopping.data.model.DataPageNumber
 import woowacourse.shopping.data.model.DataProduct
 
 class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local {
-    override fun getPartially(size: Int, lastId: Int, isNext: Boolean): List<DataProduct> =
-        dao.getPartially(size, lastId, isNext)
+    override fun getPartially(page: DataPageNumber): List<DataProduct> =
+        dao.getPartially(page)
 
     override fun add(product: DataProduct) {
         dao.add(product)

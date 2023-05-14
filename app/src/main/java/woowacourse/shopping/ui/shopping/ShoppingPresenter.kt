@@ -45,9 +45,7 @@ class ShoppingPresenter(
         view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
         view.showProductDetail(product)
 
-        thread {
-            recentProductRepository.add(recentProduct)
-        }
+        thread { recentProductRepository.add(recentProduct) }
     }
 
     override fun fetchRecentProducts() {
