@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
@@ -46,13 +45,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun updateProductDetail(productModel: ProductModel) {
-        Glide.with(this)
-            .load(productModel.picture)
-            .centerCrop()
-            .into(binding.productDetailPicture)
-        binding.productDetailTitle.text = productModel.title
-        binding.productDetailPrice.text =
-            getString(R.string.product_price, productModel.price)
+        binding.product = productModel
     }
 
     override fun showCart() {

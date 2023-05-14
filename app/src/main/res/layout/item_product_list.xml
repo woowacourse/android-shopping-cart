@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.common.model.ProductModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,6 +18,7 @@
 
         <ImageView
             android:id="@+id/product_list_picture"
+            loadPicture="@{product.picture}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
@@ -26,6 +34,7 @@
             android:layout_marginHorizontal="6dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.title}"
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -40,6 +49,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{@string/product_price(product.price)}"
             android:textColor="#333333"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/product_list_title"
