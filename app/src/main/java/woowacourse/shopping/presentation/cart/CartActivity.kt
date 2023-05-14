@@ -74,7 +74,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun initCartItems(cartProductModels: List<ProductModel>) {
-        cartAdapter = CartAdapter(cartProductModels, ::deleteCartProduct)
+        cartAdapter = CartAdapter(::deleteCartProduct)
         binding.recyclerCart.adapter = cartAdapter
     }
 
@@ -84,7 +84,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItems(productModels: List<ProductModel>) {
-        cartAdapter.setItems(productModels)
+        cartAdapter.submitList(productModels)
     }
 
     override fun setPage(count: Int) {
