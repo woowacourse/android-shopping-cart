@@ -34,8 +34,9 @@ class MainProductAdapter(
     }
 
     fun addItems(newItems: List<MainProductItemModel>) {
+        val previousSize = _items.size
         _items.addAll(newItems.toList())
-        notifyDataSetChanged()
+        notifyItemRangeInserted(previousSize, newItems.size)
     }
 
     companion object {

@@ -32,6 +32,6 @@ class CartProductAdapter(
     fun setItems(newItems: List<CartProductItemModel>) {
         _items.clear()
         _items.addAll(newItems)
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, newItems.size)
     }
 }

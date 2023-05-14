@@ -33,6 +33,6 @@ class RecentAdapter(
     fun setItems(items: List<RecentProductItemModel>) {
         _items.clear()
         _items.addAll(items)
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, items.size)
     }
 }
