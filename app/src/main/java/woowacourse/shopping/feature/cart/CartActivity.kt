@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbHandler
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -35,32 +34,40 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         _binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setUpView()
         presenter = CartActivityPresenter(this, db)
         presenter.setUpData(OPEN_PAGE)
         presenter.setUpButton()
-        setUpView()
     }
 
     override fun setUpRecyclerView(cartItems: List<CartProductItem>) {
         adapter = CartProductsAdapter(
-            onXClick = { listItem -> itemXClickEvent(listItem) },
+            onDeleteItem = { listItem -> onDeleteItem(listItem) },
         )
         binding.cartProductRv.adapter = adapter
         adapter.setItems(cartItems)
     }
 
     override fun setButtonListener(maxPage: Int) {
+        updateButtonsEnabledState(maxPage)
         binding.pageAfterTv.setOnClickListener {
             if (page < maxPage) {
                 ++page
             }
+            updateButtonsEnabledState(maxPage)
         }
 
         binding.pageBeforeTv.setOnClickListener {
             if (page > 1) {
                 --page
             }
+            updateButtonsEnabledState(maxPage)
         }
+    }
+
+    private fun updateButtonsEnabledState(maxPage: Int) {
+        binding.pageBeforeTv.isEnabled = page > 1
+        binding.pageAfterTv.isEnabled = page < maxPage
     }
 
     override fun updateAdapterData(cartItems: List<CartProductItem>) {
@@ -68,11 +75,10 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
     }
 
     private fun setUpView() {
-        binding.pageNumberTv.text = OPEN_PAGE.toString()
-        binding.pageBeforeTv.setBackgroundColor(getColor(R.color.gray))
+        binding.pageNumberTv.text = "$page"
     }
 
-    private fun itemXClickEvent(listItem: ListItem) {
+    private fun onDeleteItem(listItem: ListItem) {
         when (listItem) {
             is CartProductItem -> {
                 presenter.deleteData(page, listItem)
