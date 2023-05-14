@@ -1,17 +1,15 @@
 package woowacourse.shopping.uimodel
 
 class PageCounter {
-    private var _count = MINIMUM_PAGE_COUNT
-    val count
-        get() = _count
+    private var count = MINIMUM_PAGE_COUNT
 
     fun add(): Int {
-        return ++_count
+        return ++count
     }
 
     fun sub(): Int {
-        _count = (--_count).coerceAtLeast(MINIMUM_PAGE_COUNT)
-        return _count
+        count = (--count).coerceAtLeast(MINIMUM_PAGE_COUNT)
+        return count
     }
 
     companion object {

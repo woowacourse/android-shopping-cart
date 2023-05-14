@@ -6,12 +6,12 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import woowacourse.shopping.uimodel.PageCounter
 import woowacourse.shopping.R
 import woowacourse.shopping.data.db.CartProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.uimodel.CartProductUIModel
+import woowacourse.shopping.uimodel.PageCounter
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
@@ -87,7 +87,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun deactivatePageDownCounter() {
         binding.tvPageDown.isActivated = false
-
     }
 
     override fun updatePageCounter(count: Int) {

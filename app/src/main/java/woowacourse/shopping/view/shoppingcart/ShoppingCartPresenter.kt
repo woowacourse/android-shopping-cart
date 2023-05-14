@@ -1,14 +1,11 @@
 package woowacourse.shopping.view.shoppingcart
 
-import android.util.Log
-import com.shopping.domain.CartProduct
-import woowacourse.shopping.uimodel.PageCounter
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.uimodel.CartProductUIModel
+import woowacourse.shopping.uimodel.PageCounter
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.mapper.toDomain
 import woowacourse.shopping.uimodel.mapper.toUIModel
-import kotlin.math.min
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
@@ -25,7 +22,7 @@ class ShoppingCartPresenter(
     }
 
     override fun loadCartProducts(): List<CartProductUIModel> {
-        if(cartProducts.isEmpty()) {
+        if (cartProducts.isEmpty()) {
             return emptyList()
         }
         return cartProducts.subList(index.first, minOf(index.second, cartProducts.size))
@@ -36,7 +33,7 @@ class ShoppingCartPresenter(
 
         if (index.first == cartProducts.size) {
             index = Pair(
-                maxOf(INIT_INDEX,index.first - PRODUCT_COUNT_UNIT),
+                maxOf(INIT_INDEX, index.first - PRODUCT_COUNT_UNIT),
                 minOf(index.first, cartProducts.size)
             )
             view.updatePageCounter(pageCounter.sub())
@@ -67,13 +64,13 @@ class ShoppingCartPresenter(
     }
 
     private fun setButtonViews() {
-        if(isPossiblePageUp()) {
+        if (isPossiblePageUp()) {
             view.activatePageUpCounter()
         } else {
             view.deactivatePageUpCounter()
         }
 
-        if(isPossiblePageDown()) {
+        if (isPossiblePageDown()) {
             view.activatePageDownCounter()
         } else {
             view.deactivatePageDownCounter()
