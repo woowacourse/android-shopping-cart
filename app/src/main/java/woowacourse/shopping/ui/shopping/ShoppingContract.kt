@@ -9,10 +9,9 @@ interface ShoppingContract {
 
         fun updateProducts(products: List<UiProduct>)
         fun updateRecentProducts(recentProducts: List<UiRecentProduct>)
-
         fun showProductDetail(product: UiProduct)
-
         fun updateMoreButtonVisibility(isVisible: Boolean)
+        fun navigateToBasketScreen()
     }
 
     interface Presenter {
@@ -20,11 +19,9 @@ interface ShoppingContract {
 
         fun fetchProducts()
         fun fetchRecentProducts()
-
         fun inquiryProductDetail(product: UiProduct)
-
         fun inquiryRecentProductDetail(recentProduct: UiRecentProduct)
-
         fun fetchHasNext()
+        fun openBasket()
     }
 }

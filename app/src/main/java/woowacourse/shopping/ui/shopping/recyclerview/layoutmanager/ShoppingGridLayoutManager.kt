@@ -9,19 +9,21 @@ import woowacourse.shopping.ui.shopping.ShoppingViewType
 class ShoppingGridLayoutManager(
     private val adapter: Adapter<ViewHolder>,
     context: Context,
-    spanSize: Int = DEFAULT_SPAN_SIZE,
+    spanSize: Int = MAXIMUM_SPAN_SIZE,
 ) : GridLayoutManager(context, spanSize) {
 
-    override fun getSpanSizeLookup(): SpanSizeLookup = object : SpanSizeLookup() {
-        override fun getSpanSize(position: Int): Int =
-            when (ShoppingViewType.of(adapter.getItemViewType(position))) {
-                ShoppingViewType.RECENT_PRODUCTS -> 2
-                ShoppingViewType.PRODUCT -> 1
-                ShoppingViewType.MORE_BUTTON -> 2
-            }
+    init {
+        spanSizeLookup = object : SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int =
+                when (ShoppingViewType.of(adapter.getItemViewType(position))) {
+                    ShoppingViewType.RECENT_PRODUCTS -> 2
+                    ShoppingViewType.PRODUCT -> 1
+                    ShoppingViewType.MORE_BUTTON -> 2
+                }
+        }
     }
 
     companion object {
-        private const val DEFAULT_SPAN_SIZE: Int = 2
+        private const val MAXIMUM_SPAN_SIZE: Int = 2
     }
 }

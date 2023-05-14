@@ -1,13 +1,15 @@
 package woowacourse.shopping.ui.shopping.recyclerview.recentproduct
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.shopping.ShoppingViewType
 
 class RecentProductWrapperAdapter(
     private val recentProductAdapter: RecentProductAdapter,
-) :
-    RecyclerView.Adapter<RecentProductWrapperViewHolder>() {
+) : RecyclerView.Adapter<RecentProductWrapperViewHolder>() {
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -18,4 +20,10 @@ class RecentProductWrapperAdapter(
     override fun getItemCount(): Int = if (recentProductAdapter.itemCount > 0) 1 else 0
 
     override fun getItemViewType(position: Int): Int = ShoppingViewType.RECENT_PRODUCTS.value
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun submitList(recentProductList: List<UiRecentProduct>) {
+        recentProductAdapter.submitList(recentProductList)
+        notifyDataSetChanged()
+    }
 }

@@ -17,6 +17,7 @@ class ShoppingPresenter(
     private var hasNext: Boolean = false
     private var lastId: Int = -1
 
+
     override fun fetchProducts() {
         val products = productRepository
             .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, lastId)
@@ -48,6 +49,10 @@ class ShoppingPresenter(
 
     override fun fetchHasNext() {
         view.updateMoreButtonVisibility(hasNext)
+    }
+
+    override fun openBasket() {
+        view.navigateToBasketScreen()
     }
 
     companion object {

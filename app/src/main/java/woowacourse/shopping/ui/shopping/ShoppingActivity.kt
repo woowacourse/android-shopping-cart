@@ -2,7 +2,9 @@ package woowacourse.shopping.ui.shopping
 
 import android.content.Context
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
@@ -16,9 +18,9 @@ import woowacourse.shopping.data.model.DataProduct
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
+import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.recyclerview.layoutmanager.ShoppingGridLayoutManager
 import woowacourse.shopping.ui.shopping.recyclerview.listener.EndScrollListener
@@ -26,9 +28,9 @@ import woowacourse.shopping.ui.shopping.recyclerview.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.recentproduct.RecentProductWrapperAdapter
 import woowacourse.shopping.util.isolatedViewTypeConfig
-import woowacourse.shopping.util.setOnSingleClickListener
 
-class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
+class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemClickListener {
+    private lateinit var binding: ActivityShoppingBinding
 
     override val presenter: ShoppingContract.Presenter by lazy {
         val shoppingDatabase = ShoppingDatabase(this)
@@ -42,33 +44,38 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             )
         )
     }
-    private lateinit var binding: ActivityShoppingBinding
 
-    private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
-    private lateinit var recentProductAdapter: RecentProductAdapter
-    private lateinit var productAdapter: ProductAdapter
+    private val recentProductWrapperAdapter: RecentProductWrapperAdapter by lazy {
+        RecentProductWrapperAdapter(recentProductAdapter)
+    }
+    private val recentProductAdapter: RecentProductAdapter by lazy {
+        RecentProductAdapter(presenter::inquiryRecentProductDetail)
+    }
+    private val productAdapter: ProductAdapter by lazy {
+        ProductAdapter(presenter::inquiryProductDetail)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
+        initView()
+    }
+
+    private fun initView() {
+        binding.tbShopping.setOnMenuItemClickListener(this)
         initAdapter()
-        initClickListener()
     }
 
     private fun initAdapter() {
-        recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
-        recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
-        productAdapter = ProductAdapter(presenter::inquiryProductDetail)
         val concatAdapter =
             ConcatAdapter(isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter)
 
         binding.rvShopping.adapter = concatAdapter
         binding.rvShopping.layoutManager = ShoppingGridLayoutManager(concatAdapter, this)
-
+        binding.rvShopping.addOnScrollListener(EndScrollListener(presenter::fetchHasNext))
         presenter.fetchRecentProducts()
         presenter.fetchProducts()
-
-        binding.rvShopping.addOnScrollListener(EndScrollListener(presenter::fetchHasNext))
     }
 
     override fun updateProducts(products: List<UiProduct>) {
@@ -76,7 +83,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun updateRecentProducts(recentProducts: List<UiRecentProduct>) {
-        recentProductAdapter.submitList(recentProducts)
+        recentProductWrapperAdapter.submitList(recentProducts)
     }
 
     override fun showProductDetail(product: UiProduct) {
@@ -87,10 +94,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     }
 
-    private fun initClickListener() {
-        binding.ivBasket.setOnSingleClickListener {
-            startActivity(BasketActivity.getIntent(this))
+    override fun navigateToBasketScreen() {
+        startActivity(BasketActivity.getIntent(this))
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.basket -> presenter.openBasket()
         }
+        return true
     }
 
     companion object {
