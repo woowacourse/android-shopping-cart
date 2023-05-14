@@ -1,17 +1,14 @@
 package woowacourse.shopping.shopping
 
 import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.data.ProductFakeRepository
@@ -75,24 +72,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             }
         }
 
-        binding.productRecyclerview.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State,
-            ) {
-                val position = parent.getChildAdapterPosition(view)
-                val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
-
-                if (spanSize != spanCount) {
-                    outRect.left = spacing
-                    outRect.right = spacing
-                }
-
-                outRect.top = spacing
-            }
-        })
+        binding.productRecyclerview.addItemDecoration(
+            ProductRecyclerViewItemDecoration(
+                layoutManager,
+                spacing,
+                spanCount,
+            ),
+        )
         binding.productRecyclerview.layoutManager = layoutManager
     }
 
