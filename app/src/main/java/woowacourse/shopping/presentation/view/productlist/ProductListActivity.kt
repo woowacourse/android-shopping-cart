@@ -136,6 +136,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun updateMoreProductsView(preSize: Int, diffSize: Int) {
-        productListAdapter.notifyItemRangeInserted(preSize, diffSize)
+        productListAdapter.updateDataSet(preSize, diffSize)
     }
 }

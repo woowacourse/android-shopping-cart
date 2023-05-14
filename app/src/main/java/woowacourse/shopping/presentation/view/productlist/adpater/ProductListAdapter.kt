@@ -24,6 +24,10 @@ class ProductListAdapter(
 
     override fun getItemViewType(position: Int): Int = VIEW_TYPE
 
+    fun updateDataSet(preSize: Int, diffSize: Int) {
+        notifyItemRangeInserted(preSize, diffSize)
+    }
+
     companion object {
         internal const val VIEW_TYPE = 100
     }
