@@ -7,6 +7,5 @@ interface CartRepository {
     fun getAll(): List<CartProduct>
     fun addProduct(product: Product)
     fun deleteProduct(cartProduct: CartProduct)
-    fun getProducts(size: Int): List<CartProduct>
-    fun getProductsByRange(startIndex: Int, endIndex: Int): List<CartProduct>
+    fun getProductsByPage(page: Int, size: Int): List<CartProduct>
 }

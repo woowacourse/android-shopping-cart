@@ -20,11 +20,13 @@ class CartRepositoryImpl(
         cartDao.deleteCartProduct(cartProduct)
     }
 
-    override fun getProducts(size: Int): List<CartProduct> {
-        return getAll().take(size)
-    }
+    override fun getProductsByPage(page: Int, size: Int): List<CartProduct> {
+        val allProducts = getAll()
+        val startIndex = (page - 1) * size
+        val endIndex =
+            if (startIndex + size >= allProducts.size) allProducts.size
+            else startIndex + size
 
-    override fun getProductsByRange(startIndex: Int, endIndex: Int): List<CartProduct> {
-        return getAll().subList(startIndex, endIndex)
+        return allProducts.subList(startIndex, endIndex)
     }
 }

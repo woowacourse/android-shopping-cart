@@ -15,7 +15,8 @@ class CartPresenter(
         private set
 
     override fun loadInitCartProduct() {
-        val cartProducts = cartRepository.getProducts(PageUiModel.PAGE_LOAD_SIZE)
+        val cartProducts =
+            cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
         val items = cartProducts.map {
             it.toPresentation()
                 .toItemModel { cartProduct -> deleteCartProduct(cartProduct) }
@@ -52,13 +53,9 @@ class CartPresenter(
 
     override fun setPage(page: PageUiModel) {
         this.page = page
-        val allCartProductsSize = page.allSize
-        val startIndex = (this.page.currentPage - 1) * PageUiModel.PAGE_LOAD_SIZE
-        val endIndex =
-            if (startIndex + PageUiModel.PAGE_LOAD_SIZE >= allCartProductsSize) allCartProductsSize
-            else startIndex + PageUiModel.PAGE_LOAD_SIZE
 
-        val restoreCartProducts = cartRepository.getProductsByRange(startIndex, endIndex)
+        val restoreCartProducts =
+            cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
 
         val restoreItems = restoreCartProducts.map {
             it.toPresentation()
@@ -68,13 +65,8 @@ class CartPresenter(
     }
 
     private fun loadCurrentPageItems(): List<CartProductItemModel> {
-        val allCartProductsSize = page.allSize
-        val startIndex = (page.currentPage - 1) * PageUiModel.PAGE_LOAD_SIZE
-        val endIndex =
-            if (startIndex + PageUiModel.PAGE_LOAD_SIZE >= allCartProductsSize) allCartProductsSize
-            else startIndex + PageUiModel.PAGE_LOAD_SIZE
-
-        val cartProducts = cartRepository.getProductsByRange(startIndex, endIndex)
+        val cartProducts =
+            cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
 
         val cartProductItems = cartProducts.map {
             it.toPresentation()
