@@ -20,21 +20,11 @@ class CartPresenterTest {
     private lateinit var cartRepository: CartRepository
     private lateinit var productRepository: ProductRepository
 
-    private fun initCartPresenter() {
-        every { cartRepository.getCartProductIds(any(), any()) } returns listOf()
-        every { view.initCartItems(any()) } just runs
-        every { view.setCartItems(any()) } just runs
-        every { view.setPage(any()) } just runs
-        every { view.setLeftPageState(any()) } just runs
-        every { view.setRightPageState(any()) } just runs
-    }
-
     @Before
     fun setUp() {
-        view = mockk()
-        cartRepository = mockk()
-        productRepository = mockk()
-        initCartPresenter()
+        view = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
+        productRepository = mockk(relaxed = true)
         presenter = CartPresenter(view, cartRepository, productRepository)
     }
 
@@ -45,7 +35,6 @@ class CartPresenterTest {
         val productModels = List(5) { product.toPresentation() }
         every { cartRepository.getCartProductIds(5, 0) } returns listOf(1, 1, 1, 1, 1)
         every { productRepository.findProductById(1) } returns product
-        every { view.initCartItems(productModels) } just runs
         // when
         presenter.initCart()
         // then
@@ -56,7 +45,6 @@ class CartPresenterTest {
     fun 상품을_삭제한다() {
         // given
         val productModel = ProductModel(1, "", "", 100)
-        every { cartRepository.deleteCartProductId(1) } just runs
         // when
         presenter.deleteProduct(productModel)
         // then
@@ -75,9 +63,6 @@ class CartPresenterTest {
 
     @Test
     fun 페이지를_1_감소시킨다() {
-        // given
-        every { view.setPage(2) } just runs
-        every { view.setPage(1) } just runs
         // when
         presenter.plusPage()
         presenter.minusPage()
@@ -92,7 +77,6 @@ class CartPresenterTest {
         val productModels = List(5) { product.toPresentation() }
         every { cartRepository.getCartProductIds(5, 0) } returns listOf(1, 1, 1, 1, 1)
         every { productRepository.findProductById(1) } returns product
-        every { view.setCartItems(productModels) } just runs
         // when
         presenter.updateCart()
         // then
@@ -105,7 +89,6 @@ class CartPresenterTest {
         val product = Product(1, "", "", Price(1000))
         every { cartRepository.getCartProductIds(5, 5) } returns listOf(1, 1, 1, 1, 1)
         every { productRepository.findProductById(1) } returns product
-        every { view.setRightPageState(true) } just runs
         // when
         presenter.updateRightPageState()
         // then
@@ -116,7 +99,6 @@ class CartPresenterTest {
     fun 다음_페이지에_상품이_없으면_오른쪽페이지_버튼상태를_false로_한다() {
         // given
         every { cartRepository.getCartProductIds(5, 5) } returns listOf()
-        every { view.setRightPageState(false) } just runs
         // when
         presenter.updateRightPageState()
         // then
@@ -125,8 +107,6 @@ class CartPresenterTest {
 
     @Test
     fun 현재_페이지가_1이라면_왼쪽버튼상태를_false로_한다() {
-        // given
-        every { view.setLeftPageState(false) } just runs
         // when
         presenter.updateLeftPageState()
         // then
@@ -135,9 +115,6 @@ class CartPresenterTest {
 
     @Test
     fun 현재_페이지가_1이_아니라면_왼쪽버튼상태를_true로_한다() {
-        // given
-        every { view.setLeftPageState(true) } just runs
-        every { view.setPage(2) } just runs
         // when
         presenter.plusPage()
         presenter.updateLeftPageState()

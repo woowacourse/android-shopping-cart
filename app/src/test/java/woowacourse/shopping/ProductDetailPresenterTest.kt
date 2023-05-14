@@ -1,9 +1,6 @@
 package woowacourse.shopping
 
-import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
@@ -19,8 +16,8 @@ class ProductDetailPresenterTest {
 
     @Before
     fun setUp() {
-        view = mockk()
-        cartRepository = mockk()
+        view = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
         presenter = ProductDetailPresenter(view, cartRepository, ProductModel(10, "", "", 1000))
     }
 
@@ -28,8 +25,6 @@ class ProductDetailPresenterTest {
     fun 카트에_상품_목록을_추가한다() {
         // given
         val productModel = ProductModel(10, "", "", 1000)
-        every { cartRepository.addCartProductId(productModel.id) } just runs
-        every { view.showCompleteMessage(productModel.name) } just runs
         // when
         presenter.putProductInCart()
         // then
