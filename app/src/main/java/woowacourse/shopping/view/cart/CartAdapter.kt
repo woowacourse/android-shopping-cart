@@ -38,4 +38,12 @@ class CartAdapter(
             is CartItemViewHolder.CartPaginationViewHolder -> holder.bind(count, isExistUndo, isExistNext)
         }
     }
+
+    fun updateCartItems(size: Int) {
+        notifyItemRangeChanged(0, size + 1)
+    }
+
+    fun removeCartItems(position: Int) {
+        notifyItemRemoved(position)
+    }
 }

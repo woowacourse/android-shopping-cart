@@ -14,6 +14,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
 
+    private lateinit var adpater: CartAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
@@ -29,7 +31,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun showProducts(cartProducts: List<ProductModel>, isExistUndo: Boolean, isExistNext: Boolean, count: Int) {
-        binding.recyclerCart.adapter = CartAdapter(
+        adpater = CartAdapter(
             cartProducts,
             object : CartAdapter.OnItemClick {
                 override fun onRemoveClick(id: Int) {
@@ -48,14 +50,15 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             isExistNext,
             count,
         )
+        binding.recyclerCart.adapter = adpater
     }
 
     override fun showOtherPage(size: Int) {
-        binding.recyclerCart.adapter?.notifyItemRangeChanged(0, size + 1)
+        adpater.updateCartItems(size)
     }
 
     override fun notifyRemoveItem(position: Int) {
-        binding.recyclerCart.adapter?.notifyItemRemoved(position)
+        adpater.removeCartItems(position)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
