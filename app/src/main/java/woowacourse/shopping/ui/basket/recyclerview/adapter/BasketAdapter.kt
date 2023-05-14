@@ -1,20 +1,16 @@
-package woowacourse.shopping.ui.basket
+package woowacourse.shopping.ui.basket.recyclerview.adapter
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import woowacourse.shopping.databinding.ItemBasketBinding
 import woowacourse.shopping.model.UiProduct
 
 class BasketAdapter(private val onItemClick: (UiProduct) -> Unit) :
     ListAdapter<UiProduct, BasketViewHolder>(basketDiffUtil) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasketViewHolder {
-        val binding =
-            ItemBasketBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return BasketViewHolder(binding, onItemClick)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasketViewHolder =
+        BasketViewHolder(parent) { pos -> onItemClick(currentList[pos]) }
+
 
     override fun onBindViewHolder(holder: BasketViewHolder, position: Int) {
         holder.bind(getItem(position))

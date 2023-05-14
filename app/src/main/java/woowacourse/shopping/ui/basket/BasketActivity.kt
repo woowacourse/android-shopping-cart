@@ -12,48 +12,35 @@ import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.model.UiProduct
+import woowacourse.shopping.ui.basket.BasketContract.Presenter
+import woowacourse.shopping.ui.basket.BasketContract.View
+import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
 
-class BasketActivity : AppCompatActivity(), BasketContract.View {
-    override lateinit var presenter: BasketContract.Presenter
-
-    private lateinit var binding: ActivityBasketBinding
-    private lateinit var basketAdapter: BasketAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_basket)
-        initPresenter()
-        initAdapter()
-        initToolbarBackButton()
-        navigatorClickListener()
-    }
-
-    private fun initPresenter() {
-        presenter = BasketPresenter(
+class BasketActivity : AppCompatActivity(), View {
+    override val presenter: Presenter by lazy {
+        BasketPresenter(
             this,
             BasketRepository(LocalBasketDataSource(BasketDaoImpl(ShoppingDatabase(this))))
         )
     }
+    private lateinit var binding: ActivityBasketBinding
 
-    private fun initAdapter() {
-        basketAdapter = BasketAdapter(presenter::removeBasketProduct)
-        binding.rvBasket.adapter = basketAdapter
-        presenter.fetchBasketProducts()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_basket)
+        binding.presenter = presenter
+        binding.adapter = BasketAdapter(presenter::removeBasketProduct)
+        setClickListener()
     }
 
-    private fun initToolbarBackButton() {
-        binding.tbBasket.setNavigationOnClickListener {
-            finish()
-        }
+    private fun setClickListener() {
+        binding.tbBasket.setNavigationOnClickListener { finish() }
+        binding.btnPrevious.setOnClickListener { presenter.fetchBasket(isNext = false) }
+        binding.btnNext.setOnClickListener { presenter.fetchBasket(isNext = true) }
     }
 
-    private fun navigatorClickListener() {
-        binding.btnPrevious.setOnClickListener { presenter.fetchBasketProducts(isNext = false) }
-        binding.btnNext.setOnClickListener { presenter.fetchBasketProducts(isNext = true) }
-    }
-
-    override fun updateBasketProducts(products: List<UiProduct>) {
-        basketAdapter.submitList(products)
+    override fun updateBasket(products: List<UiProduct>) {
+        binding.adapter?.submitList(products)
     }
 
     override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {

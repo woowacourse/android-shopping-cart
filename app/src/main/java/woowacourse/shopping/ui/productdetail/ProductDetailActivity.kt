@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
@@ -16,7 +15,8 @@ import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.ui.basket.BasketActivity
-import woowacourse.shopping.util.getParcelableExtraCompat
+import woowacourse.shopping.util.extension.getParcelableExtraCompat
+import woowacourse.shopping.util.extension.showImage
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View,
     OnMenuItemClickListener {
@@ -44,7 +44,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View,
     }
 
     override fun showProductImage(imageUrl: String) {
-        Glide.with(this).load(imageUrl).into(binding.ivProduct)
+        binding.ivProduct.showImage(imageUrl)
     }
 
     override fun showProductName(name: String) {

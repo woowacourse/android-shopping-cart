@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.util.setOnSingleClickListener
+import woowacourse.shopping.util.extension.setOnSingleClickListener
 
 class LoadMoreViewHolder(
     parent: ViewGroup,

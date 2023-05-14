@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.UiProduct
-import woowacourse.shopping.util.setOnSingleClickListener
+import woowacourse.shopping.util.extension.setOnSingleClickListener
 
 class ProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :
     RecyclerView.ViewHolder(
