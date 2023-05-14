@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.shopping
 
-import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -9,9 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
-import woowacourse.shopping.data.model.DataPrice
-import woowacourse.shopping.data.model.DataProduct
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
@@ -90,20 +86,5 @@ class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     override fun onDestroy() {
         super.onDestroy()
         shoppingDatabase.close()
-    }
-
-    companion object {
-        fun insertDummies(context: Context, size: Int) {
-            (0 until size).forEach { id ->
-                ProductDaoImpl(ShoppingDatabase(context)).add(
-                    DataProduct(
-                        id,
-                        "name $id",
-                        DataPrice(1000),
-                        "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000001939]_20210225094313315.jpg"
-                    )
-                )
-            }
-        }
     }
 }
