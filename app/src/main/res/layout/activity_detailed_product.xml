@@ -4,29 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="presenter"
             type="woowacourse.shopping.ui.detailedProduct.DetailedProductContract.Presenter" />
-
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.detailedProduct.DetailedProductActivity">
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="@color/toolbar_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/exit_menu"
             app:titleTextColor="@color/white" />
 
@@ -36,7 +31,8 @@
             android:layout_height="360dp"
             android:contentDescription="@string/cart_item_product_image_description"
             app:imgResId="@{product.imageUrl}"
-            app:layout_constraintTop_toBottomOf="@id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            tools:src="@drawable/ic_launcher_foreground" />
 
         <TextView
             android:id="@+id/tv_product_title"
@@ -48,41 +44,51 @@
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/iv_product_image"
             tools:layout_editor_absoluteX="17dp"
             tools:text="TITLE" />
 
-        <LinearLayout
+        <View
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="14dp"
-            android:background="@color/gray_aaaaaa"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_title" />
+            android:background="@color/gray_aaaaaa" />
 
-        <TextView
-            android:id="@+id/tv_price_prefix"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/product_price_prefix"
-            android:textColor="@color/gray_333333"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
-            android:text="@{@string/product_price(product.price)}"
-            android:textColor="@color/gray_333333"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_price_prefix"
-            tools:text="10000원" />
+            <TextView
+                android:id="@+id/tv_price_prefix"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/product_price_prefix"
+                android:textColor="@color/gray_333333"
+                android:textSize="20sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="18dp"
+                android:text="@{@string/product_price(product.price)}"
+                android:textColor="@color/gray_333333"
+                android:textSize="20sp"
+                tools:text="10000원" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/btn_add_to_cart"
@@ -94,7 +100,6 @@
             android:text="@string/product_detail_add_to_cart_btn"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textStyle="bold" />
+    </LinearLayout>
 </layout>
