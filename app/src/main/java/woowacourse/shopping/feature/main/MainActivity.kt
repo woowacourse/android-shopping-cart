@@ -15,77 +15,42 @@ import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
-import woowacourse.shopping.feature.list.item.ProductListItem
+import woowacourse.shopping.feature.model.ProductState
 import woowacourse.shopping.feature.model.mapper.toItem
-import woowacourse.shopping.feature.model.mapper.toRecentProduct
 import woowacourse.shopping.feature.model.mapper.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 import woowacourse.shopping.feature.util.SpanSizeLookUpManager
 
 class MainActivity : AppCompatActivity(), MainContract.View {
+
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding
         get() = _binding!!
-    private val productDbHandler: ProductDbHandler by lazy {
-        ProductDbHandler(ProductDbHelper(this).writableDatabase)
-    }
-    private val recentProductDbHandler: RecentProductDbHandler by lazy {
-        RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
-    }
 
-    lateinit var productListAdapter: ProductListAdapter
-    lateinit var presenter: MainContract.Presenter
+    private val presenter: MainContract.Presenter by lazy {
+        val productDbHandler = ProductDbHandler(ProductDbHelper(this).writableDatabase)
+        val recentProductDbHandler =
+            RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
+        MainPresenter(this, productDbHandler, recentProductDbHandler)
+    }
+    private val productListAdapter: ProductListAdapter by lazy {
+        ProductListAdapter(
+            onItemClick = { presenter.showProductDetail(it) },
+            onMoreItemClick = { presenter.addProducts() }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = MainPresenter(this, productDbHandler, recentProductDbHandler)
-        initAdapter()
+        initList()
         presenter.addProducts()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-
-    private fun initAdapter() {
-        productListAdapter = ProductListAdapter(
-            onItemClick = { listItem ->
-                when (listItem) {
-                    is ProductListItem -> {
-                        presenter.storeRecentProduct(listItem.toRecentProduct())
-                        ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
-                    }
-                }
-            },
-            onMoreItemClick = {
-                presenter.addProducts()
-            }
-        )
-        binding.productRv.adapter = productListAdapter
-        initLayout()
-    }
-
-    private fun initLayout() {
-        val gridLayoutManager = GridLayoutManager(this, 2)
-        gridLayoutManager.spanSizeLookup =
-            SpanSizeLookUpManager(productListAdapter, gridLayoutManager.spanCount)
-        binding.productRv.layoutManager = gridLayoutManager
-    }
-
-    override fun addProducts(products: List<Product>) {
-        productListAdapter.addItems(
-            products.map { it.toUi().toItem() }
-        )
-    }
-
-    override fun setProducts(products: List<Product>, recentProducts: List<RecentProduct>) {
-        productListAdapter.setItems(
-            products.map { it.toUi().toItem() },
-            recentProducts.map { it.toUi().toItem() }
-        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -95,10 +60,32 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.item_cart -> {
-                CartActivity.startActivity(this)
-            }
+            R.id.item_cart -> CartActivity.startActivity(this)
         }
         return true
+    }
+
+    override fun addProducts(products: List<Product>) {
+        productListAdapter.addItems(products.map { it.toUi().toItem() })
+    }
+
+    override fun setProducts(products: List<Product>, recentProducts: List<RecentProduct>) {
+        productListAdapter.setItems(
+            products.map { it.toUi().toItem() },
+            recentProducts.map { it.toUi().toItem() }
+        )
+    }
+
+    override fun showProductDetail(productState: ProductState) {
+        ProductDetailActivity.startActivity(this, productState)
+    }
+
+    private fun initList() {
+        val gridLayoutManager = GridLayoutManager(this, 2)
+        gridLayoutManager.spanSizeLookup =
+            SpanSizeLookUpManager(productListAdapter, gridLayoutManager.spanCount)
+
+        binding.productRv.adapter = productListAdapter
+        binding.productRv.layoutManager = gridLayoutManager
     }
 }

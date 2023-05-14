@@ -4,9 +4,11 @@ import com.example.domain.Product
 import com.example.domain.RecentProduct
 import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
+import woowacourse.shopping.feature.list.item.ListItem
+import woowacourse.shopping.feature.list.item.ProductListItem
 import woowacourse.shopping.feature.list.item.RecentProductListItem
-import woowacourse.shopping.feature.model.RecentProductState
 import woowacourse.shopping.feature.model.mapper.toDomain
+import woowacourse.shopping.feature.model.mapper.toRecentProduct
 import woowacourse.shopping.feature.model.mapper.toUi
 
 class MainPresenter(
@@ -15,16 +17,8 @@ class MainPresenter(
     private val recentProductDbHandler: RecentProductDbHandler
 ) : MainContract.Presenter {
 
-    val products: List<Product> = productDbHandler.getAll()
+    private val products: List<Product> = productDbHandler.getAll()
     private var currentItemIndex = 0
-
-    fun loadProducts() {
-        val products: List<Product> =
-            productDbHandler.getAll().subList(currentItemIndex, currentItemIndex + ADD_SIZE)
-        currentItemIndex += ADD_SIZE
-        val recentProducts: List<RecentProduct> = recentProductDbHandler.getAll()
-        view.setProducts(products, recentProducts)
-    }
 
     override fun addProducts() {
         val addItems: List<Product>
@@ -42,9 +36,25 @@ class MainPresenter(
         view.addProducts(addItems)
     }
 
-    override fun storeRecentProduct(recentProductListItem: RecentProductListItem) {
-        val r: RecentProductState = recentProductListItem.toUi()
+    override fun showProductDetail(listItem: ListItem) {
+        when (listItem) {
+            is ProductListItem -> {
+                storeRecentProduct(listItem.toRecentProduct())
+                view.showProductDetail(listItem.toUi())
+            }
+        }
+    }
+
+    private fun storeRecentProduct(recentProductListItem: RecentProductListItem) {
         recentProductDbHandler.addColumn(recentProductListItem.toUi().toDomain())
+    }
+
+    private fun loadProducts() {
+        val products: List<Product> =
+            productDbHandler.getAll().subList(currentItemIndex, currentItemIndex + ADD_SIZE)
+        currentItemIndex += ADD_SIZE
+        val recentProducts: List<RecentProduct> = recentProductDbHandler.getAll()
+        view.setProducts(products, recentProducts)
     }
 
     companion object {
