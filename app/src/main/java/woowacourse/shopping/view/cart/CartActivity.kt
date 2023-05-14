@@ -62,12 +62,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-            }
-        }
+        presenter.handleNextStep(item.itemId)
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun handleBackButtonClicked() {
+        finish()
     }
 
     companion object {

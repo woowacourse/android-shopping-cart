@@ -7,6 +7,7 @@ interface CartContract {
         fun showProducts(cartProducts: List<ProductModel>, isExistUndo: Boolean, isExistNext: Boolean, count: Int)
         fun notifyRemoveItem(position: Int)
         fun showOtherPage(size: Int)
+        fun handleBackButtonClicked()
     }
 
     interface Presenter {
@@ -14,5 +15,6 @@ interface CartContract {
         fun removeProduct(id: Int)
         fun fetchNextPage()
         fun fetchUndoPage()
+        fun handleNextStep(itemId: Int)
     }
 }

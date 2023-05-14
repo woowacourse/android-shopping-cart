@@ -45,6 +45,14 @@ class CartPresenter(
 
     private fun convertIdToProductModel(cartProducts: List<CartProduct>) = cartProducts.map { productRepository.find(it.id) }.map { it.toUiModel() }
 
+    override fun handleNextStep(itemId: Int) {
+        when (itemId) {
+            android.R.id.home -> {
+                view.handleBackButtonClicked()
+            }
+        }
+    }
+
     companion object {
         private const val PAGINATION_SIZE = 5
     }
