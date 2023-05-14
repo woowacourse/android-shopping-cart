@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
-import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.common.data.database.dao.ProductDao
-import woowacourse.shopping.common.data.database.dao.RecentProductDao
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.common.utils.convertDpToPixel
+import woowacourse.shopping.data.database.ShoppingDBOpenHelper
+import woowacourse.shopping.data.database.dao.ProductDao
+import woowacourse.shopping.data.database.dao.RecentProductDao
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.recyclerview.LoadMoreAdapter

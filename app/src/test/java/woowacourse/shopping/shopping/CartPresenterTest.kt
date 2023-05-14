@@ -8,8 +8,8 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.cart.CartContract
 import woowacourse.shopping.cart.CartPresenter
-import woowacourse.shopping.common.data.database.dao.CartDao
-import woowacourse.shopping.common.data.database.state.State
+import woowacourse.shopping.data.database.dao.CartDao
+import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Cart
 
 class CartPresenterTest {

@@ -1,4 +1,4 @@
-package woowacourse.shopping.common.data.database.state
+package woowacourse.shopping.data.state
 
 import woowacourse.shopping.domain.RecentProducts
 

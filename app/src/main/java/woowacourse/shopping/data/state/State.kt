@@ -1,4 +1,4 @@
-package woowacourse.shopping.common.data.database.state
+package woowacourse.shopping.data.state
 
 interface State<T> {
     fun save(t: T)

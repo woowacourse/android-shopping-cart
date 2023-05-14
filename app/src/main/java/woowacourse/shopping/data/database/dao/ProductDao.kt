@@ -1,7 +1,7 @@
-package woowacourse.shopping.common.data.database.dao
+package woowacourse.shopping.data.database.dao
 
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.common.data.database.table.SqlProduct
+import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.URL

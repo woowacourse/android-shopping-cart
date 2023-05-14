@@ -1,14 +1,14 @@
 package woowacourse.shopping.shopping
 
-import woowacourse.shopping.common.data.database.dao.ProductDao
-import woowacourse.shopping.common.data.database.dao.RecentProductDao
-import woowacourse.shopping.common.data.database.state.ProductsState
-import woowacourse.shopping.common.data.database.state.RecentProductsState
-import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.ProductMapper.toView
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
+import woowacourse.shopping.data.database.dao.ProductDao
+import woowacourse.shopping.data.database.dao.RecentProductDao
+import woowacourse.shopping.data.state.ProductsState
+import woowacourse.shopping.data.state.RecentProductsState
+import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts

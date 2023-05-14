@@ -1,9 +1,9 @@
-package woowacourse.shopping.common.data.database
+package woowacourse.shopping.data.database
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.common.data.database.table.SqlProduct
-import woowacourse.shopping.common.data.database.table.SqlTable
+import woowacourse.shopping.data.database.table.SqlProduct
+import woowacourse.shopping.data.database.table.SqlTable
 
 fun SqlTable.insert(db: SQLiteDatabase?, row: Map<String, Any>): Long {
     db ?: return -1

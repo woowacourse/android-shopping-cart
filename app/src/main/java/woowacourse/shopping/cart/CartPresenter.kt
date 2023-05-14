@@ -1,11 +1,11 @@
 package woowacourse.shopping.cart
 
-import woowacourse.shopping.common.data.database.dao.CartDao
-import woowacourse.shopping.common.data.database.state.CartState
-import woowacourse.shopping.common.data.database.state.State
 import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
+import woowacourse.shopping.data.database.dao.CartDao
+import woowacourse.shopping.data.state.CartState
+import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Cart
 
 class CartPresenter(
@@ -43,7 +43,7 @@ class CartPresenter(
         cartState.save(cartDao.selectAll())
         val cart = cartDao.selectPage(currentPage, sizePerPage)
         view.updateCart(
-            cart = cart.cartProducts.map { it.toView() },
+            cartProducts = cart.cartProducts.map { it.toView() },
             currentPage = currentPage + 1,
             isNextButtonEnabled = determineNextButtonEnabled(cart)
         )

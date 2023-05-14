@@ -6,9 +6,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.common.data.database.dao.ProductDao
-import woowacourse.shopping.common.data.database.dao.RecentProductDao
-import woowacourse.shopping.common.data.database.state.State
+import woowacourse.shopping.data.database.dao.ProductDao
+import woowacourse.shopping.data.database.dao.RecentProductDao
+import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProducts
 

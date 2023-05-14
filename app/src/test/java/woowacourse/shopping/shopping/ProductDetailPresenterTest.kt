@@ -6,8 +6,8 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.common.data.database.dao.CartDao
-import woowacourse.shopping.common.data.database.state.State
+import woowacourse.shopping.data.database.dao.CartDao
+import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.productdetail.ProductDetailPresenter

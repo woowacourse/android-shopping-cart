@@ -1,12 +1,12 @@
-package woowacourse.shopping.common.data.database.dao
+package woowacourse.shopping.data.database.dao
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.common.data.database.selectRowId
-import woowacourse.shopping.common.data.database.table.SqlProduct
-import woowacourse.shopping.common.data.database.table.SqlRecentProduct
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
+import woowacourse.shopping.data.database.selectRowId
+import woowacourse.shopping.data.database.table.SqlProduct
+import woowacourse.shopping.data.database.table.SqlRecentProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
