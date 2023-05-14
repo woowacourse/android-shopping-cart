@@ -5,13 +5,12 @@ import woowacourse.shopping.presentation.model.CartModel
 interface CartContract {
     interface View {
         fun setCartItemsView(carts: List<CartModel>)
-        fun updateCartItemView(carts: List<CartModel>)
-        fun updateToDeleteCartItemView(position: Int)
+        fun setEnableLeftButton(isEnabled: Boolean)
+        fun setEnableRightButton(isEnabled: Boolean)
     }
 
     interface Presenter {
-        fun loadCartItems()
-        fun deleteCartItem(position: Int)
-        fun updateCartItem(currentPage: Int)
+        fun loadCartItems(currentPage: Int)
+        fun deleteCartItem(currentPage: Int, itemId: Long)
     }
 }
