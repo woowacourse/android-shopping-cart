@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="listener"
             type="woowacourse.shopping.ui.shopping.productAdapter.ProductsListener" />
@@ -20,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/product_list_read_more_text"
+            android:text="@string/shopping_read_more_text"
             android:textColor="@color/gray_333333"
             android:textSize="16sp" />
 

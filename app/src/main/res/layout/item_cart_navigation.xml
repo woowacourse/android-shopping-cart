@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="cart"
@@ -32,15 +33,14 @@
             android:layout_marginEnd="16dp"
             android:background="@drawable/btn_page_prev"
             android:enabled="@{cart.pagePrev}"
-            android:onClick="@{() -> listener.onPagePrev()}"
             android:gravity="center"
+            android:onClick="@{() -> listener.onPagePrev()}"
             android:text="@string/cart_page_prev_btn"
             android:textColor="@color/white"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_page_number"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText" />
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
@@ -67,15 +67,14 @@
             android:layout_marginStart="16dp"
             android:background="@drawable/btn_page_next"
             android:enabled="@{cart.pageNext}"
-            android:onClick="@{() -> listener.onPageNext()}"
             android:gravity="center"
+            android:onClick="@{() -> listener.onPageNext()}"
             android:text="@string/cart_page_next_btn"
             android:textColor="@color/white"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_page_number"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.495"
-            tools:ignore="HardcodedText" />
+            app:layout_constraintVertical_bias="0.495" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

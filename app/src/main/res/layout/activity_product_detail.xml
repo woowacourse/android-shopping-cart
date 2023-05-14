@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="presenter"
             type="woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter" />
@@ -33,6 +34,7 @@
             android:id="@+id/iv_product_image"
             android:layout_width="match_parent"
             android:layout_height="360dp"
+            android:contentDescription="@string/cart_item_product_image_description"
             app:imgResId="@{product.imageUrl}"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
@@ -65,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="금액"
+            android:text="@string/product_price_prefix"
             android:textColor="@color/gray_333333"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -86,10 +88,10 @@
             android:id="@+id/btn_add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#04C09E"
+            android:background="@color/blue_green_04c09e"
             android:gravity="center"
             android:onClick="@{() -> presenter.addProductToCart()}"
-            android:text="장바구니 담기"
+            android:text="@string/product_detail_add_to_cart_btn"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"

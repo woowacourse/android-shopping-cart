@@ -2,11 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    
+
     <data>
+
         <variable
             name="listener"
             type="woowacourse.shopping.ui.shopping.productAdapter.ProductsListener" />
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
@@ -22,24 +24,24 @@
             android:id="@+id/iv_product_image"
             android:layout_width="154dp"
             android:layout_height="154dp"
+            android:contentDescription="@string/shopping_item_product_image_description"
             app:imgResId="@{product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_product_name"
-            android:text="@{product.name}"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginStart="6dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_product_image"
             tools:text="가나다라마바사아차자창ㄹ망ㄹ" />
@@ -47,9 +49,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="6dp"
             android:text="@{@string/product_price(product.price)}"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
             tools:text="10000원" />
 

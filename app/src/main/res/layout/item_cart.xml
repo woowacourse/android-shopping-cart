@@ -8,6 +8,7 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.CartProductUIModel" />
+
         <variable
             name="listener"
             type="woowacourse.shopping.ui.cart.cartAdapter.CartListener" />
@@ -27,8 +28,8 @@
             android:layout_height="40dp"
             android:layout_marginStart="13dp"
             android:layout_marginTop="10dp"
-            android:text="@{product.name}"
             android:gravity="center_vertical"
+            android:text="@{product.name}"
             android:textAppearance="@style/cart_item_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,9 +40,9 @@
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="13dp"
+            android:contentDescription="@string/cart_item_product_image_description"
             app:layout_constraintStart_toStartOf="@+id/tv_product_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_product_title"
-            tools:ignore="ContentDescription"
             tools:src="@color/black" />
 
         <ImageView
@@ -50,11 +51,11 @@
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
+            android:contentDescription="@string/cart_item_product_remove_btn_description"
             android:onClick="@{() -> listener.onItemRemove(product.id)}"
             android:src="@drawable/ic_cart_close_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:layout_width="wrap_content"
