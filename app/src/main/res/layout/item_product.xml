@@ -43,7 +43,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_product_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_product_image"
             tools:text="가나다라마바사아차자창ㄹ망ㄹ" />
 
         <TextView
@@ -52,7 +52,7 @@
             android:layout_marginStart="6dp"
             android:text="@{@string/product_price(product.price)}"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
