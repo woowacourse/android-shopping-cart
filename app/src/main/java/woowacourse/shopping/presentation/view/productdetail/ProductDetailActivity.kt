@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.data.database.CartDao
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -18,7 +19,7 @@ import woowacourse.shopping.presentation.view.util.showToast
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private val cartRepository: CartRepository by lazy {
-        CartRepositoryImpl(this)
+        CartRepositoryImpl(CartDao(this))
     }
 
     private val presenter: ProductDetailContract.Presenter by lazy {
@@ -58,7 +59,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             .load(productModel.imageUrl)
             .into(binding.ivProductDetailThumbnail)
         binding.tvProductDetailTitle.text = productModel.title
-        binding.tvProductDetailPrice.text = getString(R.string.product_price_format, productModel.price)
+        binding.tvProductDetailPrice.text =
+            getString(R.string.product_price_format, productModel.price)
     }
 
     private fun setAddCartClickListener(productId: Long) {
