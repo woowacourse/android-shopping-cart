@@ -5,6 +5,6 @@ import woowacourse.shopping.model.CartProductUIModel
 interface CartListener {
     fun onItemClick(product: CartProductUIModel)
     fun onItemRemove(productId: Int)
-    fun onPageUp()
-    fun onPageDown()
+    fun onPageNext()
+    fun onPagePrev()
 }

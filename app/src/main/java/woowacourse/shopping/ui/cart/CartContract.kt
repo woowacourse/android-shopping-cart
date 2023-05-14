@@ -13,10 +13,10 @@ interface CartContract {
 
     interface Presenter {
         fun setUpCarts()
-        fun pageUp()
-        fun pageDown()
+        fun moveToPageNext()
+        fun moveToPagePrev()
         fun removeItem(id: Int)
         fun navigateToItemDetail(productId: Int)
-        fun getOffset(): Int
+        fun getPageIndex(): Int
     }
 }

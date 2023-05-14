@@ -8,6 +8,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.model.CartProducts
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
@@ -41,7 +42,7 @@ class CartPresenterTest {
     fun `장바구니에 담긴 상품을 보여준다`() {
         // given
         val slot = slot<PageUIModel>()
-        every { cartRepository.getSubList(any(), any()) } returns emptyList()
+        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
         every { view.setCarts(any(), capture(slot)) } answers { nothing }
 
         // when
@@ -67,33 +68,33 @@ class CartPresenterTest {
     fun `다음 페이지 상품을 불러온다`() {
         // given
         val slot = slot<PageUIModel>()
-        every { cartRepository.getSubList(any(), any()) } returns emptyList()
+        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
         every { view.setCarts(any(), capture(slot)) } answers { nothing }
         // when
-        presenter.pageUp()
+        presenter.moveToPageNext()
         // then
-        assertEquals(slot.captured, PageUIModel(false, false, 1))
-        verify(exactly = 1) { view.setCarts(any(), PageUIModel(false, false, 1)) }
+        assertEquals(slot.captured, PageUIModel(false, false, 2))
+        verify(exactly = 1) { view.setCarts(any(), PageUIModel(false, false, 2)) }
     }
 
     @Test
     fun `이전 페이지 상품을 불러온다`() {
         // given
         val slot = slot<PageUIModel>()
-        every { cartRepository.getSubList(any(), any()) } returns emptyList()
+        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
         every { view.setCarts(any(), capture(slot)) } answers { nothing }
         // when
-        presenter.pageDown()
+        presenter.moveToPagePrev()
         // then
-        assertEquals(slot.captured, PageUIModel(false, false, 1))
-        verify(exactly = 1) { view.setCarts(any(), PageUIModel(false, false, 1)) }
+        assertEquals(slot.captured, PageUIModel(false, false, 0))
+        verify(exactly = 1) { view.setCarts(any(), PageUIModel(false, false, 0)) }
     }
 
     @Test
     fun `상세 페이지로 이동한다`() {
         // given
         val slot = slot<PageUIModel>()
-        every { cartRepository.getSubList(any(), any()) } returns emptyList()
+        every { cartRepository.getPage(any(), any()) } returns CartProducts(listOf())
         every { productRepository.findById(any()) } returns fakeProduct
         every { view.setCarts(any(), capture(slot)) } answers { nothing }
 

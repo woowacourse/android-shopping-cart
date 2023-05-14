@@ -5,19 +5,22 @@ import android.content.Context
 import android.database.Cursor
 import woowacourse.shopping.database.ShoppingDBHelper
 import woowacourse.shopping.model.CartProduct
+import woowacourse.shopping.model.CartProducts
 import woowacourse.shopping.repository.CartRepository
 
 class CartDatabase(context: Context) : CartRepository {
     private val db = ShoppingDBHelper(context).writableDatabase
 
-    override fun getAll(): List<CartProduct> {
+    private var cartProducts: CartProducts = getAll()
+
+    private fun getAll(): CartProducts {
         val cartProducts = mutableListOf<CartProduct>()
         getCartCursor().use {
             while (it.moveToNext()) {
                 cartProducts.add(getCartProduct(it))
             }
         }
-        return cartProducts
+        return CartProducts(cartProducts)
     }
 
     @SuppressLint("Range")
@@ -33,22 +36,34 @@ class CartDatabase(context: Context) : CartRepository {
         }
     }
 
+    private fun getCartCursor(): Cursor {
+        return db.rawQuery(CartConstant.getGetAllQuery(), null)
+    }
+
+    override fun getPage(index: Int, size: Int): CartProducts {
+        return cartProducts.subList(index * size, size)
+    }
+
+    override fun hasNextPage(index: Int, size: Int): Boolean {
+        return cartProducts.hasNextPage(index, size)
+    }
+
+    override fun hasPrevPage(index: Int, size: Int): Boolean {
+        return cartProducts.hasPrevPage(index, size)
+    }
+
+    override fun getTotalCount(): Int {
+        return cartProducts.size
+    }
+
     override fun insert(productId: Int) {
         val product = getProductById(productId)
         db.execSQL(CartConstant.getInsertQuery(product))
-    }
-
-    override fun getSubList(offset: Int, size: Int): List<CartProduct> {
-        val lastIndex = getAll().lastIndex
-        val endIndex = (lastIndex + 1).coerceAtMost(offset + size)
-        return if (offset <= lastIndex) getAll().subList(offset, endIndex) else emptyList()
+        cartProducts = getAll()
     }
 
     override fun remove(id: Int) {
         db.execSQL(CartConstant.getDeleteQuery(id))
-    }
-
-    private fun getCartCursor(): Cursor {
-        return db.rawQuery(CartConstant.getGetAllQuery(), null)
+        cartProducts = getAll()
     }
 }

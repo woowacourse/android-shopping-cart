@@ -10,42 +10,34 @@ class CartPresenter(
     val view: CartContract.View,
     val repository: CartRepository,
     val productRepository: ProductRepository,
-    offset: Int = 0
+    private var index: Int = 0
 ) : CartContract.Presenter {
-    private var offset = offset
-        set(value) {
-            when {
-                value < 0 -> field = 0
-                value > repository.getAll().size -> field = repository.getAll().size
-                else -> field = value
-            }
-        }
 
     override fun setUpCarts() {
         view.setCarts(
-            repository.getSubList(offset, STEP).map { CartItemType.Cart(it.toUIModel()) },
+            repository.getPage(index, STEP).toUIModel().map { CartItemType.Cart(it) },
             PageUIModel(
-                offset + STEP < repository.getAll().size,
-                0 < offset,
-                offset / STEP + 1
+                repository.hasNextPage(index, STEP),
+                repository.hasPrevPage(index, STEP),
+                index + 1
             )
         )
     }
 
-    override fun pageUp() {
-        offset += STEP
+    override fun moveToPageNext() {
+        index += 1
         setUpCarts()
     }
 
-    override fun pageDown() {
-        offset -= STEP
+    override fun moveToPagePrev() {
+        index -= 1
         setUpCarts()
     }
 
     override fun removeItem(id: Int) {
         repository.remove(id)
-        if (offset == repository.getAll().size) {
-            offset -= STEP
+        if (repository.getPage(index, STEP).toUIModel().isEmpty()) {
+            index -= 1
         }
         setUpCarts()
     }
@@ -54,8 +46,8 @@ class CartPresenter(
         productRepository.findById(productId).let { view.navigateToItemDetail(it.toUIModel()) }
     }
 
-    override fun getOffset(): Int {
-        return offset
+    override fun getPageIndex(): Int {
+        return index
     }
 
     companion object {

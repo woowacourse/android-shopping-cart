@@ -50,8 +50,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setCarts(products: List<CartItemType.Cart>, pageUIModel: PageUIModel) {
         val cartListener = object : CartListener {
-            override fun onPageUp() { presenter.pageUp() }
-            override fun onPageDown() { presenter.pageDown() }
+            override fun onPageNext() { presenter.moveToPageNext() }
+            override fun onPagePrev() { presenter.moveToPagePrev() }
             override fun onItemRemove(productId: Int) { presenter.removeItem(productId) }
             override fun onItemClick(product: CartProductUIModel) {
                 presenter.navigateToItemDetail(product.id)
@@ -78,7 +78,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter.getOffset().let {
+        presenter.getPageIndex().let {
             outState.putInt(KEY_OFFSET, it)
         }
     }

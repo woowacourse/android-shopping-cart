@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.RecentProduct
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentRepository
 import woowacourse.shopping.ui.shopping.ShoppingContract
@@ -29,6 +30,13 @@ class ShoppingPresenterTest {
         "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
     )
 
+    private val fakeRecentProduct: RecentProduct = RecentProduct(
+        1,
+        "[사미헌] 갈비탕",
+        12000,
+        "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+    )
+
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
@@ -41,7 +49,7 @@ class ShoppingPresenterTest {
     fun `상품을 불러와서 세팅한다`() {
         // given
         every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
-        every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
+        every { recentRepository.getRecent(10) } returns List(10) { fakeRecentProduct }
         val slot = slot<List<ProductsItemType>>()
         every { view.setProducts(capture(slot)) } answers { nothing }
 
@@ -75,7 +83,7 @@ class ShoppingPresenterTest {
     fun `상품을 불러와서 업데이트한다`() {
         // given
         every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
-        every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
+        every { recentRepository.getRecent(10) } returns List(10) { fakeRecentProduct }
         val slot = slot<List<ProductsItemType>>()
         every { view.setProducts(capture(slot)) } answers { nothing }
 
@@ -93,11 +101,11 @@ class ShoppingPresenterTest {
     fun `리스트에 있는 상품을 클릭하면 상세화면으로 이동한다`() {
         // given
         every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
-        every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
+        every { recentRepository.getRecent(10) } returns List(10) { fakeRecentProduct }
 
         // when
         presenter.setUpProducts()
-        presenter.navigateToItemDetail(fakeProduct.toUIModel())
+        presenter.navigateToItemDetail(fakeProduct.toUIModel().id)
 
         // then
         verify(exactly = 1) { view.navigateToProductDetail(fakeProduct.toUIModel()) }
@@ -107,7 +115,7 @@ class ShoppingPresenterTest {
     fun `더 보기를 누르면 상품을 불러온다`() {
         // given
         every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
-        every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
+        every { recentRepository.getRecent(10) } returns List(10) { fakeRecentProduct }
         val slot = slot<List<ProductsItemType>>()
         every { view.addProducts(capture(slot)) } answers { nothing }
 
