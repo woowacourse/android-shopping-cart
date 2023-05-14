@@ -6,15 +6,15 @@ class RecentProducts(
 ) {
     private val items: List<RecentProduct> = _items.take(maxCount)
 
-    fun add(item: RecentProduct): RecentProducts {
+    fun add(newItem: RecentProduct): RecentProducts {
         val newItems = items.toMutableList()
         if (newItems.size == maxCount) newItems.removeLast()
-        newItems.add(0, RecentProduct(product = item.product))
+        newItems.add(0, RecentProduct(product = newItem.product))
 
-        return RecentProducts(newItems.take(maxCount))
+        return RecentProducts(newItems.take(maxCount), maxCount)
     }
 
-    operator fun plus(item: RecentProduct): RecentProducts = add(item)
+    operator fun plus(newItem: RecentProduct): RecentProducts = add(newItem)
 
     fun getItems(): List<RecentProduct> = items.map { it }.toList()
 }

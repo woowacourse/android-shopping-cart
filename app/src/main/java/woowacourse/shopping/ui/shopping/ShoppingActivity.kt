@@ -22,9 +22,10 @@ import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
-import woowacourse.shopping.ui.shopping.recyclerview.product.ProductAdapter
-import woowacourse.shopping.ui.shopping.recyclerview.recentproduct.RecentProductAdapter
-import woowacourse.shopping.ui.shopping.recyclerview.recentproduct.RecentProductWrapperAdapter
+import woowacourse.shopping.ui.shopping.recyclerview.adapter.loadmore.LoadMoreAdapter
+import woowacourse.shopping.ui.shopping.recyclerview.adapter.product.ProductAdapter
+import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter
+import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductWrapperAdapter
 import woowacourse.shopping.util.isolatedViewTypeConfig
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemClickListener {
@@ -33,25 +34,18 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
     override val presenter: ShoppingContract.Presenter by lazy {
         val shoppingDatabase = ShoppingDatabase(this)
         ShoppingPresenter(
-            view = this,
-            productRepository = ProductRepository(
-                LocalProductDataSource(ProductDaoImpl(shoppingDatabase))
-            ),
-            recentProductRepository = RecentProductRepository(
+            this,
+            ProductRepository(LocalProductDataSource(ProductDaoImpl(shoppingDatabase))),
+            RecentProductRepository(
                 LocalRecentProductDataSource(RecentProductDaoImpl(shoppingDatabase))
             )
         )
     }
 
-    private val recentProductAdapter: RecentProductAdapter =
-        RecentProductAdapter(presenter::inquiryRecentProductDetail)
-
-    private val recentProductWrapperAdapter: RecentProductWrapperAdapter =
-        RecentProductWrapperAdapter(recentProductAdapter)
-
-    private val productAdapter: ProductAdapter =
-        ProductAdapter(presenter::inquiryProductDetail)
-
+    private val recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
+    private val recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
+    private val productAdapter = ProductAdapter(presenter::inquiryProductDetail)
+    private val loadMoreAdapter = LoadMoreAdapter(onItemClick = presenter::fetchProducts)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +60,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
     }
 
     private fun initRecyclerView() {
-        binding.adapter =
-            ConcatAdapter(isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter)
+        binding.adapter = ConcatAdapter(
+            isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter, loadMoreAdapter
+        )
         presenter.fetchRecentProducts()
         presenter.fetchProducts()
     }
@@ -84,12 +79,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, OnMenuItemC
         startActivity(ProductDetailActivity.getIntent(this, product))
     }
 
-    override fun updateMoreButtonVisibility(isVisible: Boolean) {
-
-    }
-
     override fun navigateToBasketScreen() {
         startActivity(BasketActivity.getIntent(this))
+    }
+
+    override fun showLoadMoreButton() {
+        loadMoreAdapter.showButton()
+    }
+
+    override fun hideLoadMoreButton() {
+        loadMoreAdapter.hideButton()
     }
 
     override fun onMenuItemClick(item: MenuItem): Boolean {

@@ -1,4 +1,4 @@
-package woowacourse.shopping.ui.shopping.recyclerview.recentproduct
+package woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

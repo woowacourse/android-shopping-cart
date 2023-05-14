@@ -8,7 +8,7 @@
 
         <variable
             name="adapter"
-            type="woowacourse.shopping.ui.shopping.recyclerview.recentproduct.RecentProductAdapter" />
+            type="woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter" />
 
     </data>
 

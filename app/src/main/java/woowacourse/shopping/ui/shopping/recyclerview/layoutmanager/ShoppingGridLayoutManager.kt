@@ -10,7 +10,7 @@ import woowacourse.shopping.ui.shopping.ShoppingViewType
 class ShoppingGridLayoutManager(
     context: Context,
     adapter: Adapter<ViewHolder>,
-    spanSize: Int = MAXIMUM_SPAN_SIZE,
+    spanSize: Int = DEFAULT_MAXIMUM_SPAN_SIZE,
 ) : GridLayoutManager(context, spanSize) {
 
     init {
@@ -25,14 +25,14 @@ class ShoppingGridLayoutManager(
     }
 
     companion object {
-        private const val MAXIMUM_SPAN_SIZE: Int = 2
+        private const val DEFAULT_MAXIMUM_SPAN_SIZE: Int = 2
 
         @JvmStatic
         @JvmOverloads
         fun create(
             context: Context,
             adapter: ConcatAdapter,
-            spanSize: Int = MAXIMUM_SPAN_SIZE,
+            spanSize: Int = DEFAULT_MAXIMUM_SPAN_SIZE,
         ): ShoppingGridLayoutManager = ShoppingGridLayoutManager(context, adapter, spanSize)
     }
 }

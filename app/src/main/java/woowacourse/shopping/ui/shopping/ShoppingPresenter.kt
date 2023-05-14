@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.shopping
 
+import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.repository.DomainProductRepository
@@ -8,35 +9,33 @@ import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUi
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
+import woowacourse.shopping.ui.shopping.ShoppingContract.Presenter
+import woowacourse.shopping.ui.shopping.ShoppingContract.View
 import kotlin.concurrent.thread
 
 class ShoppingPresenter(
-    override val view: ShoppingContract.View,
+    override val view: View,
     private val productRepository: DomainProductRepository,
     private val recentProductRepository: DomainRecentProductRepository,
-) : ShoppingContract.Presenter {
+) : Presenter {
+    private var products = Products()
     private var recentProducts = RecentProducts()
-    private var hasNext: Boolean = false
-    private var lastId: Int = -1
-
 
     override fun fetchProducts() {
-        val products = productRepository
-            .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, lastId)
-            .map { it.toUi() }
+        products = products.addAll(
+            productRepository.getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, products.lastId)
+        )
 
-        lastId = products.maxOfOrNull { it.id } ?: -1
-        lastId -= if (checkHasNext(products)) 1 else 0
-        hasNext = checkHasNext(products)
-        view.updateProducts(products)
+        view.updateProducts(products.getItemsByUnit().map { it.toUi() })
+        view.updateLoadMoreVisible()
     }
 
-    private fun checkHasNext(products: List<UiProduct>): Boolean =
-        products.size == TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE
-
-    override fun fetchRecentProducts() {
-        recentProducts = RecentProducts(recentProductRepository.getPartially(RECENT_PRODUCT_SIZE))
-        view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
+    private fun View.updateLoadMoreVisible() {
+        if (products.canLoadMore()) {
+            showLoadMoreButton()
+        } else {
+            hideLoadMoreButton()
+        }
     }
 
     override fun inquiryProductDetail(product: UiProduct) {
@@ -46,17 +45,17 @@ class ShoppingPresenter(
             recentProducts += recentProduct
             view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
         }
-
         view.showProductDetail(product)
+    }
+
+    override fun fetchRecentProducts() {
+        recentProducts = RecentProducts(recentProductRepository.getPartially(RECENT_PRODUCT_SIZE))
+        view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
     }
 
     override fun inquiryRecentProductDetail(recentProduct: UiRecentProduct) {
         view.showProductDetail(recentProduct.product)
         thread { recentProductRepository.add(recentProduct.toDomain()) }
-    }
-
-    override fun fetchHasNext() {
-        view.updateMoreButtonVisibility(hasNext)
     }
 
     override fun openBasket() {
