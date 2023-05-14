@@ -11,7 +11,6 @@ import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.common.data.database.dao.CartDao
 import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.utils.getSerializable
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 
@@ -68,7 +67,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ProductDetailPresenter(
             this,
-            product = product.toDomain(),
+            productModel = product,
             cartDao = CartDao(db)
         )
     }
