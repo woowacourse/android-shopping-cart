@@ -20,8 +20,8 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         init {
             binding.onItemClick = onItemClick
         }
-        fun bind(count: Int, isExistUndo: Boolean, isExistNext: Boolean) {
-            binding.count = count
+        fun bind(count: String, isExistUndo: Boolean, isExistNext: Boolean) {
+            binding.textPageCount.text = count
             binding.btnUndoPage.isEnabled = isExistUndo
             binding.btnNextPage.isEnabled = isExistNext
         }

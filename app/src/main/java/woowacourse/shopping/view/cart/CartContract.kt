@@ -4,7 +4,7 @@ import woowacourse.shopping.model.ProductModel
 
 interface CartContract {
     interface View {
-        fun showProducts(cartProducts: List<ProductModel>, isExistUndo: Boolean, isExistNext: Boolean, count: Int)
+        fun showProducts(cartProducts: List<ProductModel>, isExistUndo: Boolean, isExistNext: Boolean, count: String)
         fun notifyRemoveItem(position: Int)
         fun showOtherPage(size: Int)
         fun handleBackButtonClicked()
