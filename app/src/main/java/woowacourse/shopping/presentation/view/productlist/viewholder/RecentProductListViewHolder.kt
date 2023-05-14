@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.view.productlist.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentProductListBinding
 import woowacourse.shopping.presentation.model.RecentProductModel
@@ -24,9 +23,7 @@ class RecentProductListViewHolder(
     }
 
     fun bind(recentProduct: RecentProductModel) {
-        Glide.with(binding.root)
-            .load(recentProduct.product.imageUrl)
-            .into(binding.ivRecentProductThumbnail)
+        binding.recentProduct = recentProduct
         binding.tvRecentProductTitle.text = recentProduct.product.title
     }
 }

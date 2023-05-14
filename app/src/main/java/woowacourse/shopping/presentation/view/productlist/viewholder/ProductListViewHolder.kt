@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.view.productlist.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductListBinding
 import woowacourse.shopping.presentation.model.ProductModel
@@ -24,7 +23,7 @@ class ProductListViewHolder(
     }
 
     fun bind(product: ProductModel) {
-        Glide.with(binding.root).load(product.imageUrl).into(binding.ivProductThumbnail)
+        binding.product = product
         binding.tvProductTitle.text = product.title
         binding.tvProductPrice.text =
             binding.root.context.getString(R.string.product_price_format, product.price)
