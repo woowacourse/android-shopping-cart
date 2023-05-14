@@ -9,7 +9,7 @@ import woowacourse.shopping.mapper.toUIModel
 
 class CartRecyclerViewAdapter(
     private var cartProducts: CartUIModel,
-    private val onClickRemove: (ProductUIModel) -> Unit
+    private val onClickRemove: (ProductUIModel, Int) -> Unit
 ) : RecyclerView.Adapter<CartRecyclerViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartRecyclerViewHolder {
 

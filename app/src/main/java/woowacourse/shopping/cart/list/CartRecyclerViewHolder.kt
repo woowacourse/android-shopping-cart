@@ -7,12 +7,12 @@ import woowacourse.shopping.databinding.ItemProductInCartBinding
 class CartRecyclerViewHolder(
     private val binding: ItemProductInCartBinding,
     cartProducts: CartUIModel,
-    onClickRemove: (ProductUIModel) -> Unit
+    onClickRemove: (ProductUIModel, Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.ivCancel.setOnClickListener {
-            onClickRemove(cartProducts.products[adapterPosition])
+            onClickRemove(cartProducts.products[adapterPosition], adapterPosition)
         }
     }
 

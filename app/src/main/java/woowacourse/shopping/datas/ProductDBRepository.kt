@@ -33,7 +33,12 @@ class ProductDBRepository(private val database: SQLiteDatabase) {
     }
 
     fun remove(productUIModel: ProductUIModel) {
-        database.rawQuery("DELETE FROM $TABLE_NAME WHERE $KEY_NAME = ${productUIModel.name}", null)
+        database.execSQL(
+            "DELETE FROM $TABLE_NAME " +
+                "WHERE $KEY_NAME = '${productUIModel.name}' " +
+                "AND $KEY_PRICE = '${productUIModel.price}'" +
+                "AND $KEY_IMAGE = '${productUIModel.url}'"
+        )
     }
 
     fun clear() {

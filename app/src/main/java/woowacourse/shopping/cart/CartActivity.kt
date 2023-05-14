@@ -44,7 +44,7 @@ class CartActivity : AppCompatActivity() {
         val dbHelper = CartDBHelper(this)
         val db = dbHelper.writableDatabase
         val repository = ProductDBRepository(db)
-        repository.remove(it)
+        repository.remove(productUIModle)
 
         adapter.remove(productUIModle)
         adapter.notifyItemChanged(position)
