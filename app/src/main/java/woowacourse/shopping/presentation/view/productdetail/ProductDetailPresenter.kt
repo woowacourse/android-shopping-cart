@@ -2,11 +2,11 @@ package woowacourse.shopping.presentation.view.productdetail
 
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
-import woowacourse.shopping.data.respository.product.ProductRepositoryImp
+import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
-    private val productRepository: ProductRepository = ProductRepositoryImp(),
+    private val productRepository: ProductRepository = ProductRepositoryImpl(),
     private val cartRepository: CartRepository
 ) :
     ProductDetailContract.Presenter {

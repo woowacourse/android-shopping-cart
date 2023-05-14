@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.view.productlist
 
 import woowacourse.shopping.data.respository.product.ProductRepository
-import woowacourse.shopping.data.respository.product.ProductRepositoryImp
+import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.RecentProductModel
@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter
 
 class ProductListPresenter(
     private val view: ProductContract.View,
-    private val productRepository: ProductRepository = ProductRepositoryImp(),
+    private val productRepository: ProductRepository = ProductRepositoryImpl(),
     private val recentProductRepository: RecentProductRepository
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()

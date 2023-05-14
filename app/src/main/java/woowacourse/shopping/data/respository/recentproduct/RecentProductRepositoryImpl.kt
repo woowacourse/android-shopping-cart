@@ -5,7 +5,7 @@ import woowacourse.shopping.data.database.RecentProductDao
 import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.presentation.model.RecentProductModel
 
-class RecentProductRepositoryImp(
+class RecentProductRepositoryImpl(
     context: Context
 ) : RecentProductRepository {
     private val recentProductDao = RecentProductDao(context)
