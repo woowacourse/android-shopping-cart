@@ -1,6 +1,5 @@
 package woowacourse.shopping.shopping
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.ProductUiModel
@@ -50,19 +49,18 @@ class ShoppingRecyclerAdapter(
 
     override fun getItemCount(): Int = products.size
 
-    @SuppressLint("NotifyDataSetChanged")
     fun refreshRecentViewedItems(toReplace: List<ProductUiModel>) {
         recentViewedProducts = toReplace.toMutableList()
-        notifyDataSetChanged()
+        notifyItemRangeChanged(0, RECENT_VIEWED_ITEM_SIZE)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
         products.addAll(toAdd)
-        notifyDataSetChanged()
+        notifyItemInserted(products.size - toAdd.size)
     }
 
     companion object {
         private const val VIEW_TYPE_ERROR = "해당 타입의 뷰홀더는 생성할 수 없습니다."
+        private const val RECENT_VIEWED_ITEM_SIZE = 10
     }
 }
