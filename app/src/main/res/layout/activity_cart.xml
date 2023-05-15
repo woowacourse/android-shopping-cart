@@ -1,60 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".feature.cart.CartActivity">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cart_product_rv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="0dp"
             android:padding="@dimen/margin_large"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/page_number_tv"
             tools:listitem="@layout/item_cart_product" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/page_number_tv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="160dp">
+            android:layout_marginBottom="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cart_product_rv"
+            tools:text="0" />
 
-            <TextView
-                android:id="@+id/page_before_tv"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@drawable/tv_state_selector"
-                android:gravity="center"
-                android:text="@string/left_charactor"
-                android:textColor="@color/white"
-                android:textSize="22sp"/>
+        <TextView
+            android:id="@+id/page_before_tv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/tv_state_selector"
+            android:gravity="center"
+            android:text="@string/left_charactor"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintEnd_toStartOf="@id/page_number_tv"
+            app:layout_constraintTop_toTopOf="@id/page_number_tv" />
 
-            <TextView
-                android:id="@+id/page_number_tv"
-                android:gravity="center"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                tools:text="0" />
+        <TextView
+            android:id="@+id/page_after_tv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/tv_state_selector"
+            android:gravity="center"
+            android:text="@string/right_charactor"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintStart_toEndOf="@id/page_number_tv"
+            app:layout_constraintTop_toTopOf="@id/page_number_tv"/>
 
-            <TextView
-                android:id="@+id/page_after_tv"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@drawable/tv_state_selector"
-                android:text="@string/right_charactor"
-                app:layout_constraintStart_toStartOf="@id/page_number_tv"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
