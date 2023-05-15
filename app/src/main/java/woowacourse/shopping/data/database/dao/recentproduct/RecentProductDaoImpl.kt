@@ -34,11 +34,11 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
                 val name: String =
-                    cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_NAME))
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
-                    DataPrice(cursor.getInt(cursor.getColumnIndex(RecentProductContract.COLUMN_PRICE)))
+                    DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
                 val imageUrl: String =
-                    cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_IMAGE_URL))
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
                 products.add(DataRecentProduct(id, DataProduct(productId, name, price, imageUrl)))
             }
             cursor.close()
@@ -48,9 +48,7 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
 
     override fun add(recentProduct: DataRecentProduct) {
         val contentValues = ContentValues().apply {
-            put(RecentProductContract.COLUMN_NAME, recentProduct.product.name)
-            put(RecentProductContract.COLUMN_PRICE, recentProduct.product.price.value)
-            put(RecentProductContract.COLUMN_IMAGE_URL, recentProduct.product.imageUrl)
+            put(ProductContract.TABLE_NAME + BaseColumns._ID, recentProduct.product.id)
         }
 
         database.writableDatabase.use { db ->
@@ -70,7 +68,9 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
         """.trimIndent()
 
         private val GET_PARTIALLY_QUERY = """
-            SELECT * FROM ${RecentProductContract.TABLE_NAME} ORDER BY ${BaseColumns._ID} DESC LIMIT ?        
+            SELECT * FROM ${RecentProductContract.TABLE_NAME}
+            INNER JOIN ${ProductContract.TABLE_NAME} ON ${RecentProductContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
+            ORDER BY ${RecentProductContract.TABLE_NAME}.${BaseColumns._ID} DESC LIMIT ?
         """.trimIndent()
 
         private val REMOVE_LAST_QUERY = """
