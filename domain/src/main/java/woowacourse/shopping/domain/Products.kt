@@ -13,7 +13,8 @@ data class Products(
 
     fun add(newItem: Product): Products = copy(items = items + newItem)
 
-    fun canLoadMore(): Boolean = items.size >= loadUnit && items.size % loadUnit >= 1
+    fun canLoadMore(): Boolean =
+        items.size >= loadUnit && (items.size % loadUnit >= 1 || loadUnit == 1 && items.size > loadUnit)
 
     fun getItems(): List<Product> = items.toList()
 
