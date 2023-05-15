@@ -23,7 +23,7 @@ class CartDbHandler(
         )
     }
 
-    fun getCartProducts(): List<CartProduct> {
+    fun getAll(): List<CartProduct> {
         val cursor = getCursor()
         val list = mutableListOf<CartProduct>()
 

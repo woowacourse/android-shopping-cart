@@ -18,7 +18,7 @@ class CartPresenter(
     private val maxPageNumber: Int
         get() = getMaxPageNumber(cartProducts.size)
 
-    private var cartProducts: List<CartProduct> = cartProductDbHandler.getCartProducts()
+    private var cartProducts: List<CartProduct> = cartProductDbHandler.getAll()
     private var pageNumber: Int = 1
 
     override fun loadCart() {
@@ -62,7 +62,7 @@ class CartPresenter(
         when (item) {
             is CartProductListItem -> {
                 cartProductDbHandler.deleteColumn(item.toDomain())
-                cartProducts = cartProductDbHandler.getCartProducts()
+                cartProducts = cartProductDbHandler.getAll()
                 loadCart()
             }
         }
