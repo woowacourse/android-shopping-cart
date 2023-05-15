@@ -23,7 +23,7 @@ interface ShoppingContract {
 
         fun inquiryProductDetail(product: UiProduct)
 
-        fun inquiryRecentProductDetail(recentProduct: UiRecentProduct)
+        fun inquiryRecentProductDetail(recentProduct: UiProduct)
 
         fun fetchHasNext()
     }

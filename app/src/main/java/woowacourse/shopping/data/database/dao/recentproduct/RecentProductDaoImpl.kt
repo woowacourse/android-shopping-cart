@@ -46,9 +46,9 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
         return products
     }
 
-    override fun add(recentProduct: DataRecentProduct) {
+    override fun add(recentProduct: DataProduct) {
         val contentValues = ContentValues().apply {
-            put(ProductContract.TABLE_NAME + BaseColumns._ID, recentProduct.product.id)
+            put("${ProductContract.TABLE_NAME}${BaseColumns._ID}", recentProduct.id)
         }
 
         database.writableDatabase.use { db ->

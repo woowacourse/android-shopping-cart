@@ -1,12 +1,10 @@
 package woowacourse.shopping.ui.shopping
 
-import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.DomainProductRepository
 import woowacourse.shopping.domain.repository.DomainRecentProductRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.model.UiProduct
-import woowacourse.shopping.ui.model.UiRecentProduct
 import kotlin.concurrent.thread
 
 class ShoppingPresenter(
@@ -39,11 +37,11 @@ class ShoppingPresenter(
 
     override fun inquiryProductDetail(product: UiProduct) {
         view.showProductDetail(product)
-        thread { recentProductRepository.add(RecentProduct(product = product.toDomain())) }
+        thread { recentProductRepository.add(product.toDomain()) }
     }
 
-    override fun inquiryRecentProductDetail(recentProduct: UiRecentProduct) {
-        view.showProductDetail(recentProduct.product)
+    override fun inquiryRecentProductDetail(recentProduct: UiProduct) {
+        view.showProductDetail(recentProduct)
         thread { recentProductRepository.add(recentProduct.toDomain()) }
     }
 

@@ -35,9 +35,9 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         return products
     }
 
-    override fun add(basketProduct: DataBasketProduct) {
+    override fun add(basketProduct: DataProduct) {
         val contentValues = ContentValues().apply {
-            put(ProductContract.TABLE_NAME + BaseColumns._ID, basketProduct.product.id)
+            put("${ProductContract.TABLE_NAME}${BaseColumns._ID}", basketProduct.id)
         }
 
         database.writableDatabase.use { db ->
