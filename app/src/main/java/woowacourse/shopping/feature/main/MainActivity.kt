@@ -16,6 +16,7 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
+import woowacourse.shopping.feature.list.item.ProductListItem
 import woowacourse.shopping.feature.model.ProductState
 import woowacourse.shopping.feature.model.mapper.toItem
 import woowacourse.shopping.feature.model.mapper.toUi
@@ -66,8 +67,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         return true
     }
 
-    override fun addProducts(products: List<Product>) {
-        productListAdapter.addItems(products.map { it.toUi().toItem() })
+    override fun addProductItems(products: List<ProductListItem>) {
+        productListAdapter.addItems(products.map { it })
     }
 
     override fun setProducts(products: List<Product>, recentProducts: List<RecentProduct>) {

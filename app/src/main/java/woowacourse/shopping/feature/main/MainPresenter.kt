@@ -8,6 +8,7 @@ import woowacourse.shopping.feature.list.item.ListItem
 import woowacourse.shopping.feature.list.item.ProductListItem
 import woowacourse.shopping.feature.list.item.RecentProductListItem
 import woowacourse.shopping.feature.model.mapper.toDomain
+import woowacourse.shopping.feature.model.mapper.toItem
 import woowacourse.shopping.feature.model.mapper.toRecentProduct
 import woowacourse.shopping.feature.model.mapper.toUi
 
@@ -21,28 +22,23 @@ class MainPresenter(
 
     private val products: List<Product> = productDbHandler.getAll()
     private val recentProducts: List<RecentProduct> = recentProductDbHandler.getAll()
-    private var loadMoreItemStartIndex = 0
+
+    private var loadItemFromIndex = 0
+    private val loadItemToIndex: Int
+        get() = if (products.size > loadItemFromIndex + loadItemCountUnit) loadItemFromIndex + loadItemCountUnit
+        else products.size
 
     override fun loadMoreProducts() {
-        val addItems: List<Product>
-
         if (products.isEmpty()) {
             view.showEmptyProducts()
             return
         }
-        if (loadMoreItemStartIndex == 0) {
-            loadProducts()
-            return
+        if (loadItemFromIndex == 0) {
+            view.setProducts(listOf(), recentProducts)
         }
-        if (products.size < loadMoreItemStartIndex + loadItemCountUnit) {
-            addItems = products.subList(loadMoreItemStartIndex, products.size - 1)
-            loadMoreItemStartIndex += products.size - 1 - loadMoreItemStartIndex
-        } else {
-            addItems =
-                products.subList(loadMoreItemStartIndex, loadMoreItemStartIndex + loadItemCountUnit)
-            loadMoreItemStartIndex += loadItemCountUnit
-        }
-        view.addProducts(addItems)
+
+        view.addProductItems(getAddProductsUnit())
+        loadItemFromIndex = loadItemToIndex
     }
 
     override fun showProductDetail(listItem: ListItem) {
@@ -54,15 +50,12 @@ class MainPresenter(
         }
     }
 
-    private fun storeRecentProduct(recentProductListItem: RecentProductListItem) {
-        recentProductDbHandler.addColumn(recentProductListItem.toUi().toDomain())
+    private fun getAddProductsUnit(): List<ProductListItem> {
+        val productsUnit: List<Product> = products.subList(loadItemFromIndex, loadItemToIndex)
+        return productsUnit.map { it.toUi().toItem() }
     }
 
-    private fun loadProducts() {
-        val productUnit: List<Product> =
-            products.subList(loadMoreItemStartIndex, loadMoreItemStartIndex + loadItemCountUnit)
-
-        view.setProducts(productUnit, recentProducts)
-        loadMoreItemStartIndex += loadItemCountUnit
+    private fun storeRecentProduct(recentProductListItem: RecentProductListItem) {
+        recentProductDbHandler.addColumn(recentProductListItem.toUi().toDomain())
     }
 }
