@@ -9,6 +9,7 @@ interface CartContract {
         fun setPreviousButtonState(enabled: Boolean)
         fun setNextButtonState(enabled: Boolean)
         fun setCount(count: Int)
+        fun exitCartScreen()
     }
 
     interface Presenter {
@@ -17,6 +18,7 @@ interface CartContract {
         fun deleteCartProduct(cartId: Long)
         fun loadPreviousPage()
         fun loadNextPage()
-        fun setPage(page: PageUiModel)
+        fun setPage(newPage: PageUiModel)
+        fun exit()
     }
 }

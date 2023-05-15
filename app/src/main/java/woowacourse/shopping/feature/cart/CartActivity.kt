@@ -49,10 +49,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.pageCountTextView.text = count.toString()
     }
 
+    override fun exitCartScreen() {
+        finish()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
-                finish()
+                presenter.exit()
                 true
             }
 

@@ -42,7 +42,7 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.cancel_action -> {
-                finish()
+                presenter.exit()
                 true
             }
 

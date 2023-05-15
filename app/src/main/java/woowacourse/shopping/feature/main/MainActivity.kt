@@ -69,9 +69,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (concatAdapter.getItemViewType(position)) {
-                    RecentWrapperAdapter.VIEW_TYPE -> 2
+                    LoadAdapter.VIEW_TYPE, RecentWrapperAdapter.VIEW_TYPE -> 2
                     MainProductAdapter.VIEW_TYPE -> 1
-                    LoadAdapter.VIEW_TYPE -> 2
                     else -> 2
                 }
             }
