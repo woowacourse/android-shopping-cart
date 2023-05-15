@@ -30,6 +30,10 @@ class CartPresenter(
 ) : CartContract.Presenter {
     private var offset = Offset(offset, repository)
 
+    init {
+        setUpCarts()
+    }
+
     override fun setUpCarts() {
         view.setCarts(
             repository.getSubList(offset.getOffset(), STEP).map { CartItem(it.toUIModel()) },

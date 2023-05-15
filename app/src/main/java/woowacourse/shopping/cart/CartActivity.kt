@@ -31,7 +31,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             CartDatabase(CartDBHelper(this).writableDatabase),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0,
         )
-        presenter.setUpCarts()
         setToolbar()
     }
 
