@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/icon_cart"
+        android:title="@string/toolbar_cart_title"
+        android:enabled="true"
+        android:icon="@drawable/ic_shopping_cart_24"
+        app:showAsAction="always"/>
+
+</menu>

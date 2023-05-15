@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="toolbar_cart_title">toolbar_cart</string>
+    <string name="price_format">%,d원</string>
+    <string name="price_title">금액</string>
+    <string name="put_in_cart_button_text">장바구니 담기</string>
+    <string name="product_detail_close">close</string>
+    <string name="cart_back_title">cart_back</string>
+    <string name="cart_toolbar_title">Cart</string>
+    <string name="product_model_null_error_message">상품 정보가 올바르지 않습니다.</string>
+    <string name="put_in_cart_complete_message">%s이 장바구니에 담겼습니다!</string>
+    <string name="text_more_item">더보기</string>
 </resources>
