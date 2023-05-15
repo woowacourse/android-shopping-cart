@@ -1,8 +1,8 @@
 package woowacourse.shopping.ui.shopping.contract.presenter
 
 import com.example.domain.model.Product
-import com.example.domain.model.ProductRepository
-import com.example.domain.model.RecentRepository
+import com.example.domain.repository.ProductRepository
+import com.example.domain.repository.RecentRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot

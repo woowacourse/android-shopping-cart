@@ -3,7 +3,7 @@ package woowacourse.shopping.database.recentProduct
 import android.content.ContentValues
 import android.content.Context
 import com.example.domain.model.Product
-import com.example.domain.model.RecentRepository
+import com.example.domain.repository.RecentRepository
 import woowacourse.shopping.database.recentProduct.RecentProductConstant.TABLE_COLUMN_ID
 import woowacourse.shopping.database.recentProduct.RecentProductConstant.TABLE_COLUMN_IMAGE_URL
 import woowacourse.shopping.database.recentProduct.RecentProductConstant.TABLE_COLUMN_NAME
@@ -25,7 +25,7 @@ class RecentProductDatabase(context: Context) : RecentRepository {
         values.put(TABLE_COLUMN_IMAGE_URL, product.imageUrl)
         values.put(
             TABLE_COLUMN_SAVE_TIME,
-            System.currentTimeMillis()
+            System.currentTimeMillis(),
         )
         db.insert(TABLE_NAME, null, values)
     }
@@ -39,7 +39,7 @@ class RecentProductDatabase(context: Context) : RecentRepository {
             null,
             null,
             "$TABLE_COLUMN_SAVE_TIME DESC",
-            "$size"
+            "$size",
         )
         val products = mutableListOf<Product>()
         while (cursor.moveToNext()) {
@@ -47,15 +47,15 @@ class RecentProductDatabase(context: Context) : RecentRepository {
                 cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_ID))
             val name =
                 cursor.getString(
-                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_NAME)
+                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_NAME),
                 )
             val price =
                 cursor.getInt(
-                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_PRICE)
+                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_PRICE),
                 )
             val imageUrl =
                 cursor.getString(
-                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_IMAGE_URL)
+                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_IMAGE_URL),
                 )
             products.add(Product(id, name, price, imageUrl))
         }
@@ -74,7 +74,7 @@ class RecentProductDatabase(context: Context) : RecentRepository {
             null,
             null,
             null,
-            "1"
+            "1",
         )
         var product: Product? = null
         if (cursor.count > 0) {
@@ -83,15 +83,15 @@ class RecentProductDatabase(context: Context) : RecentRepository {
                 cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_ID))
             val name =
                 cursor.getString(
-                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_NAME)
+                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_NAME),
                 )
             val price =
                 cursor.getInt(
-                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_PRICE)
+                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_PRICE),
                 )
             val imageUrl =
                 cursor.getString(
-                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_IMAGE_URL)
+                    cursor.getColumnIndexOrThrow(TABLE_COLUMN_IMAGE_URL),
                 )
             product = Product(id, name, price, imageUrl)
         }
@@ -105,7 +105,7 @@ class RecentProductDatabase(context: Context) : RecentRepository {
         db.delete(
             TABLE_NAME,
             whereClause,
-            whereArgs
+            whereArgs,
         )
     }
 }

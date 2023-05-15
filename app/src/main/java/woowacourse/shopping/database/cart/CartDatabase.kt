@@ -5,8 +5,8 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
-import com.example.domain.model.CartRepository
 import com.example.domain.model.Product
+import com.example.domain.repository.CartRepository
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_IMAGE_URL
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_NAME

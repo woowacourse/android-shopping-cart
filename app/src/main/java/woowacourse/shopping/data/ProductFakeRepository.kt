@@ -1,7 +1,7 @@
 package woowacourse.shopping.data
 
 import com.example.domain.model.Product
-import com.example.domain.model.ProductRepository
+import com.example.domain.repository.ProductRepository
 import java.lang.Integer.min
 
 object ProductFakeRepository : ProductRepository {

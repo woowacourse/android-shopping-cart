@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.cart.contract.presenter
 
-import com.example.domain.model.CartRepository
+import com.example.domain.repository.CartRepository
 import com.example.domain.model.Product
 import io.mockk.every
 import io.mockk.mockk
