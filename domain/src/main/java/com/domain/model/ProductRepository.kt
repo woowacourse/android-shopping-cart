@@ -5,4 +5,5 @@ interface ProductRepository {
     fun getNext(count: Int): List<Product>
     fun getUntil(offset: Int): List<Product>
     fun findById(id: Int): Product
+    fun getOffset(): Int
 }

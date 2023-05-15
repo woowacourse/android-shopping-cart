@@ -51,6 +51,10 @@ class ShoppingPresenter(
         view.navigateToProductDetail(data)
     }
 
+    override fun getOffset(): Int {
+        return repository.getOffset()
+    }
+
     companion object {
         private const val RECENT_PRODUCT_COUNT = 10
         private const val PRODUCT_COUNT = 20

@@ -17,5 +17,6 @@ interface ShoppingContract {
         fun updateRecentProducts()
         fun fetchMoreProducts()
         fun navigateToItemDetail(data: ProductUIModel)
+        fun getOffset(): Int
     }
 }

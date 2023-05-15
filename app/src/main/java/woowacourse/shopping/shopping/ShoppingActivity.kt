@@ -115,7 +115,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(KEY_PRODUCT_OFFSET, ProductFakeRepository.offset)
+        outState.putInt(KEY_PRODUCT_OFFSET, presenter.getOffset())
     }
 
     private fun navigateToCart() {

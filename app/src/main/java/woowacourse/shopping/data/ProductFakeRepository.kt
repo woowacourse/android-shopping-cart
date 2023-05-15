@@ -17,8 +17,7 @@ object ProductFakeRepository : ProductRepository {
         )
     }
 
-    var offset = 0
-        private set
+    private var offset = 0
 
     override fun getAll(): List<Product> {
         return products.toList()
@@ -44,4 +43,6 @@ object ProductFakeRepository : ProductRepository {
             it.id == id
         } ?: throw IllegalArgumentException("해당하는 아이템이 없습니다.")
     }
+
+    override fun getOffset(): Int = offset
 }
