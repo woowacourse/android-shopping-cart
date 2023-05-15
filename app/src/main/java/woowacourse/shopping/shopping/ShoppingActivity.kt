@@ -56,6 +56,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         initBinding()
         initToolbar()
         initProductList()
+        initLoadMoreButton()
         initPresenter()
     }
 
@@ -104,6 +105,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initToolbar() {
         setSupportActionBar(binding.shoppingToolbar)
+    }
+
+    private fun initLoadMoreButton() {
+        binding.loadMoreButton.setOnClickListener {
+            presenter.loadMoreProduct()
+        }
     }
 
     private fun initProductList() {
