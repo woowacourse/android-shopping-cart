@@ -21,12 +21,12 @@ class CartPresenter(
         updateCartPage()
     }
 
-    override fun goToPreviousPage() {
+    override fun loadPreviousPage() {
         currentPage--
         updateCartPage()
     }
 
-    override fun goToNextPage() {
+    override fun loadNextPage() {
         currentPage++
         updateCartPage()
     }

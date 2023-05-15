@@ -7,9 +7,9 @@ interface CartContract {
     interface Presenter {
         fun removeCartProduct(cartProductModel: CartProductModel)
 
-        fun goToPreviousPage()
+        fun loadPreviousPage()
 
-        fun goToNextPage()
+        fun loadNextPage()
     }
 
     interface View {

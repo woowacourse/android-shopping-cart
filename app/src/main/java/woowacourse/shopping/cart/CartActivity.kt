@@ -68,10 +68,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initNavigator() {
         binding.cartNavigatorPreviousButton.setOnClickListener {
-            presenter.goToPreviousPage()
+            presenter.loadPreviousPage()
         }
         binding.cartNavigatorNextButton.setOnClickListener {
-            presenter.goToNextPage()
+            presenter.loadNextPage()
         }
     }
 
