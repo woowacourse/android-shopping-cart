@@ -24,20 +24,6 @@ class ProductListAdapter(
         return items.size
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return when (ViewType.getType(position)) {
-            ViewType.RECENT_PRODUCT -> {
-                ViewType.RECENT_PRODUCT.ordinal
-            }
-            ViewType.PRODUCT -> {
-                ViewType.PRODUCT.ordinal
-            }
-            ViewType.LOAD_MORE -> {
-                ViewType.LOAD_MORE.ordinal
-            }
-        }
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
         val inflater = LayoutInflater.from(parent.context)
 
@@ -66,6 +52,10 @@ class ProductListAdapter(
                 holder.bind(items[position], onItemClick)
             }
         }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return ViewType.getType(position).ordinal
     }
 
     fun addItems(newItems: List<ListItem>) {
