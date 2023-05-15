@@ -8,6 +8,6 @@ class ProductMoreViewHolder(binding: ViewBinding) : ItemHolder(binding) {
     private val binding = binding as ItemMoreBinding
 
     override fun bind(listItem: ListItem, onClick: (ListItem) -> Unit) {
-        binding.moreButton.setOnClickListener { onClick(listItem) }
+        binding.moreTv.setOnClickListener { onClick(listItem) }
     }
 }

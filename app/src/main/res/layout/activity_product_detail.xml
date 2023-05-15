@@ -21,7 +21,7 @@
 
         <TextView
             android:id="@+id/product_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
             android:textColor="@color/black"
@@ -33,7 +33,7 @@
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintTop_toBottomOf="@id/product_name"
@@ -41,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
             android:textColor="@color/black"
@@ -52,7 +52,7 @@
 
         <TextView
             android:id="@+id/product_price"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
             android:textColor="@color/black"
@@ -70,7 +70,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/product_detail_item_medium_text_size"
             android:background="@color/teal_200"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
