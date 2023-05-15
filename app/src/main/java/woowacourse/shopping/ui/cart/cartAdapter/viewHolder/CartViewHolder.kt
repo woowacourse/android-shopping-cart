@@ -16,6 +16,7 @@ class CartViewHolder private constructor(
     override fun bind(data: CartItemType) {
         if (data !is CartItemType.Cart) return
         binding.product = data.product
+        binding.tvProductCount.text = 0.toString()
     }
 
     companion object {

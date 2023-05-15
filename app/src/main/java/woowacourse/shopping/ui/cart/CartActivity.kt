@@ -31,6 +31,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        binding.price = 345600
+        binding.totalCount = 7
     }
 
     private fun initPresenter(savedInstanceState: Bundle?) {
