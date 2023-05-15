@@ -17,6 +17,7 @@ import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.productdetail.ProductDetailActivity.Companion.ACTIVITY_RESULT_CODE
 import woowacourse.shopping.shopping.contract.ShoppingContract
 import woowacourse.shopping.shopping.contract.presenter.ShoppingPresenter
 
@@ -26,7 +27,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val getResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             when (result.resultCode) {
-                RESULT_OK -> presenter.updateRecentProducts()
+                ACTIVITY_RESULT_CODE -> {
+                    presenter.updateRecentProducts()
+                }
             }
         }
 

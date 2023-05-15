@@ -52,10 +52,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.exit -> {
-                setResult(RESULT_OK)
-                finish()
-            }
+            R.id.exit -> finish()
             else -> super.onOptionsItemSelected(item)
         }
         return true
@@ -69,7 +66,14 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         startActivity(CartActivity.from(this))
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        setResult(ACTIVITY_RESULT_CODE)
+        finish()
+    }
+
     companion object {
+        const val ACTIVITY_RESULT_CODE = 0
         fun from(context: Context, product: ProductUIModel): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
