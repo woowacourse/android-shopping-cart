@@ -12,9 +12,9 @@ import woowacourse.shopping.ui.basket.BasketContract.View
 class BasketPresenter(
     view: View,
     private val basketRepository: BasketRepository,
+    private var products: Products = Products(loadUnit = BASKET_PAGING_SIZE),
+    private var currentPage: PageNumber = PageNumber(),
 ) : Presenter(view) {
-    private var products = Products(loadUnit = BASKET_PAGING_SIZE)
-    private var currentPage: PageNumber = PageNumber()
 
     override fun fetchBasket() {
         val currentProducts = basketRepository.getPartially(currentPage)
