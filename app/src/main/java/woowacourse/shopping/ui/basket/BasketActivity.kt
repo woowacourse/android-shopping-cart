@@ -33,12 +33,12 @@ class BasketActivity : AppCompatActivity(), View {
     }
 
     override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {
-        binding.btnPrevious.isEnabled = previous
-        binding.btnNext.isEnabled = next
+        binding.previousButton.isEnabled = previous
+        binding.nextButton.isEnabled = next
     }
 
     override fun updatePageNumber(page: UiPageNumber) {
-        binding.tvPageNumber.text = page.toText()
+        binding.pageNumberTextView.text = page.toText()
     }
 
     override fun closeScreen() {

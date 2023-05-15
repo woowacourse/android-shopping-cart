@@ -23,7 +23,7 @@
         tools:context=".ui.shopping.ShoppingActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/tb_shopping"
+            android:id="@+id/shopping_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/woowa_toolbar_gray"
@@ -33,14 +33,14 @@
             app:titleTextColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_shopping"
+            android:id="@+id/shopping_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             bind:adapter="@{adapter}"
             bind:fixedSize="@{true}"
             bind:layoutManager="@{ShoppingGridLayoutManager.create(context, adapter)}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_shopping"
+            app:layout_constraintTop_toBottomOf="@+id/shopping_tool_bar"
             app:spanCount="2"
             tools:itemCount="10"
             tools:listitem="@layout/item_product" />

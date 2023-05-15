@@ -32,19 +32,19 @@ class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener
 
     private fun initView() {
         binding.productDetailPresenter = presenter
-        binding.tbProductDetail.setOnMenuItemClickListener(this)
+        binding.productDetailToolBar.setOnMenuItemClickListener(this)
     }
 
     override fun showProductImage(imageUrl: String) {
-        binding.ivProduct.showImage(imageUrl)
+        binding.productImageView.showImage(imageUrl)
     }
 
     override fun showProductName(name: String) {
-        binding.tvProductName.text = name
+        binding.productNameTextView.text = name
     }
 
     override fun showProductPrice(amount: Int) {
-        binding.tvProductPrice.text = getString(R.string.price_format, amount)
+        binding.productPriceTextView.text = getString(R.string.price_format, amount)
     }
 
     override fun navigateToBasketScreen() {

@@ -16,7 +16,7 @@
         tools:context=".ui.productdetail.ProductDetailActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/tb_product_detail"
+            android:id="@+id/product_detail_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/woowa_toolbar_gray"
@@ -26,18 +26,18 @@
             app:titleTextColor="@color/white" />
 
         <ImageView
-            android:id="@+id/iv_product"
+            android:id="@+id/product_image_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_product_detail"
+            app:layout_constraintTop_toBottomOf="@+id/product_detail_tool_bar"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/tv_product_name"
+            android:id="@+id/product_name_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -49,17 +49,17 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_product"
+            app:layout_constraintTop_toBottomOf="@+id/product_image_view"
             tools:text="[든든] 동원 스위트콘" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/woowa_light_gray"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
+            app:layout_constraintTop_toBottomOf="@+id/product_name_text_view" />
 
         <TextView
-            android:id="@+id/tv_price_title"
+            android:id="@+id/price_title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -69,10 +69,10 @@
             android:textColor="@color/woowa_text_black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_name" />
+            app:layout_constraintTop_toBottomOf="@+id/product_name_text_view" />
 
         <TextView
-            android:id="@+id/tv_product_price"
+            android:id="@+id/product_price_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
@@ -80,11 +80,11 @@
             android:textColor="@color/woowa_text_black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_price_title"
+            app:layout_constraintTop_toTopOf="@+id/price_title_text_view"
             tools:text="99,800원" />
 
         <TextView
-            android:id="@+id/btn_basket"
+            android:id="@+id/basket_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/woowa_button"
