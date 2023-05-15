@@ -3,9 +3,6 @@ package woowacourse.shopping.presentation.productlist.product
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemMoreBinding
-import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.databinding.ItemRecentProductContainerBinding
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.ProductViewType
 import woowacourse.shopping.presentation.model.ProductViewType.ProductItem
@@ -17,42 +14,29 @@ class ProductListAdapter(
     private val showProductDetail: (ProductModel) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private lateinit var itemProductBinding: ItemProductBinding
     private lateinit var inflater: LayoutInflater
 
     private val _productItems = productItems.toMutableList()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (!::inflater.isInitialized) {
-            inflater = LayoutInflater.from(parent.context)
-        }
+        initLayoutInflater(parent)
 
         return when (viewType) {
-            ProductViewType.RECENT_PRODUCTS_VIEW_TYPE_NUMBER -> {
-                val containerBinding = ItemRecentProductContainerBinding.inflate(
-                    inflater,
-                    parent,
-                    false,
-                )
-                RecentProductContainerViewHolder(containerBinding)
-            }
-            ProductViewType.PRODUCT_VIEW_TYPE_NUMBER -> {
-                itemProductBinding = ItemProductBinding.inflate(
-                    inflater,
-                    parent,
-                    false,
-                )
+            ProductViewType.RECENT_PRODUCTS_VIEW_TYPE_NUMBER ->
+                RecentProductContainerViewHolder(parent, inflater)
 
-                ProductItemViewHolder(itemProductBinding, showProductDetail)
-            }
-            ProductViewType.MORE_ITEM_VIEW_TYPE_NUMBER -> {
-                val itemMoreBinding = ItemMoreBinding.inflate(
-                    inflater,
-                    parent,
-                    false,
-                )
-                MoreItemViewHolder(itemMoreBinding, showMoreProductItem)
-            }
+            ProductViewType.PRODUCT_VIEW_TYPE_NUMBER ->
+                ProductItemViewHolder(parent, inflater, ::onItemClick)
+
+            ProductViewType.MORE_ITEM_VIEW_TYPE_NUMBER ->
+                MoreItemViewHolder(parent, inflater, showMoreProductItem)
+
             else -> throw IllegalArgumentException()
+        }
+    }
+
+    private fun initLayoutInflater(parent: ViewGroup) {
+        if (!::inflater.isInitialized) {
+            inflater = LayoutInflater.from(parent.context)
         }
     }
 
@@ -61,10 +45,7 @@ class ProductListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is RecentProductContainerViewHolder -> {
-                holder.bind(
-                    _productItems[position] as RecentProductModels,
-                    showProductDetail,
-                )
+                holder.bind(_productItems[position] as RecentProductModels, showProductDetail)
             }
             is ProductItemViewHolder -> {
                 val productItem = _productItems[position] as ProductItem
@@ -94,6 +75,11 @@ class ProductListAdapter(
     fun setRecentProductsItems(productModel: List<ProductModel>) {
         _productItems[RECENT_PRODUCT_VIEW_POSITION] = RecentProductModels(productModel)
         notifyItemChanged(RECENT_PRODUCT_VIEW_POSITION)
+    }
+
+    private fun onItemClick(position: Int) {
+        val productItem = _productItems[position] as ProductItem
+        showProductDetail(productItem.productModel)
     }
 
     companion object {

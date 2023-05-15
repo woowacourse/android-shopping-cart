@@ -6,14 +6,11 @@ import woowacourse.shopping.presentation.model.ProductModel
 
 abstract class ProductBaseViewHolder(
     val view: View,
-    showProductDetail: (ProductModel) -> Unit,
+    onItemClick: (position: Int) -> Unit,
 ) : RecyclerView.ViewHolder(view) {
 
-    protected var _productModel: ProductModel? = null
-    protected val productModel get() = _productModel!!
-
     init {
-        itemView.setOnClickListener { showProductDetail(productModel) }
+        itemView.setOnClickListener { onItemClick(adapterPosition) }
     }
 
     abstract fun bind(product: ProductModel)

@@ -33,7 +33,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
         initRecyclerView()
         setSupportActionBar(binding.toolbarProductList.toolbar)
@@ -68,10 +67,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         recentProductModels: List<ProductModel>,
         productModels: List<ProductModel>,
     ): List<ProductViewType> {
-        val productItems =
-            listOf(ProductViewType.RecentProductModels(recentProductModels)) +
-                productModels.map { ProductViewType.ProductItem(it) } + ProductViewType.MoreItem
-        return productItems
+        return listOf(ProductViewType.RecentProductModels(recentProductModels)) +
+            productModels.map { ProductViewType.ProductItem(it) } + ProductViewType.MoreItem
     }
 
     override fun setRecentProductModels(productModels: List<ProductModel>) {
