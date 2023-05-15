@@ -1,7 +1,10 @@
 package woowacourse.shopping.shopping
 
+import android.content.Context
 import model.RecentViewedProducts
+import woowacourse.shopping.database.ShoppingDBRepository
 import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toUiModel
 
@@ -59,5 +62,14 @@ class ShoppingPresenter(
 
     companion object {
         private const val COUNT_TO_READ = 20
+
+        fun of(view: ShoppingContract.View, context: Context): ShoppingPresenter {
+            return ShoppingPresenter(
+                view,
+                ShoppingDBRepository(
+                    ShoppingDao(context),
+                ),
+            )
+        }
     }
 }

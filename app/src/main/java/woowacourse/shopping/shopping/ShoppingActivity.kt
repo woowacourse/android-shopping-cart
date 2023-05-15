@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.database.ShoppingDBRepository
-import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
@@ -21,12 +19,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var shoppingRecyclerAdapter: ShoppingRecyclerAdapter
     private val presenter: ShoppingContract.Presenter by lazy {
-        ShoppingPresenter(
-            view = this,
-            repository = ShoppingDBRepository(
-                shoppingDao = ShoppingDao(this),
-            ),
-        )
+        ShoppingPresenter.of(this, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

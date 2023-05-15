@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.database.ShoppingDBRepository
-import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
@@ -20,16 +18,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
 
-    // todo null인 경우 처리하기
     private val product: ProductUiModel by lazy { intent.getSerializableCompat(PRODUCT_KEY)!! }
     private val presenter: ProductDetailPresenter by lazy {
-        ProductDetailPresenter(
-            view = this,
-            product = product,
-            repository = ShoppingDBRepository(
-                shoppingDao = ShoppingDao(this),
-            ),
-        )
+        ProductDetailPresenter.of(this, product, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
