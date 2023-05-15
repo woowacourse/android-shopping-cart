@@ -12,17 +12,17 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.model.ProductState
-import woowacourse.shopping.feature.model.mapper.toDomain
 import java.text.DecimalFormat
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private var _binding: ActivityProductDetailBinding? = null
     private val binding: ActivityProductDetailBinding
         get() = _binding!!
 
-    private val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
-    private val dbHandler: CartDbHandler by lazy {
-        CartDbHandler(CartDbHelper(this).writableDatabase)
+    private val presenter: ProductDetailContract.Presenter by lazy {
+        val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
+        val cartDbHandler = CartDbHandler(CartDbHelper(this).writableDatabase)
+        ProductDetailPresenter(this, product, cartDbHandler)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,31 +30,41 @@ class ProductDetailActivity : AppCompatActivity() {
         _binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (product == null) {
-            showToast(getString(R.string.error_intent_message))
-            finish()
-        }
+        presenter.loadProduct()
 
-        binding.product = product
-
-        product?.let { product ->
-            Glide.with(this)
-                .load(product.imageUrl)
-                .error(R.drawable.ic_launcher_background)
-                .into(binding.productImage)
-
-            binding.productPrice.text = "${DecimalFormat("#,###").format(product.price)}원"
-
-            binding.navigateCartTv.setOnClickListener {
-                dbHandler.addColumn(product.toDomain())
-                CartActivity.startActivity(this)
-            }
-        }
+        binding.addCartProductTv.setOnClickListener { presenter.addCartProduct() }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun showCart() {
+        CartActivity.startActivity(this)
+    }
+
+    override fun setProductName(name: String) {
+        binding.productName.text = name
+    }
+
+    override fun setProductPrice(price: Int) {
+        binding.productPrice.text = "${DecimalFormat("#,###").format(price)}원"
+    }
+
+    override fun setProductImage(imageUrl: String) {
+        Glide.with(this)
+            .load(imageUrl)
+            .error(R.drawable.ic_launcher_background)
+            .into(binding.productImage)
+    }
+
+    override fun showAccessError() {
+        showToast(getString(R.string.error_intent_message))
+    }
+
+    override fun closeProductDetail() {
+        finish()
     }
 
     companion object {
