@@ -50,14 +50,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         val gridLayoutManager = GridLayoutManagerWrapper(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                val isHeader = recentViewedProducts.isNotEmpty() && position == 0
-                val isFooter =
-                    if (recentViewedProducts.isNotEmpty()) position == products.size + 1 else position == products.size
-                return if (isHeader || isFooter) {
-                    2
-                } else {
-                    1
-                }
+                return presenter.calculateSpanSize(recentViewedProducts, position)
             }
         }
         binding.gridProducts.layoutManager = gridLayoutManager

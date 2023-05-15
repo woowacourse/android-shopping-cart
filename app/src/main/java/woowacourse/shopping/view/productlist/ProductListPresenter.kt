@@ -3,6 +3,7 @@ package woowacourse.shopping.view.productlist
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
+import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 
 class ProductListPresenter(
@@ -25,6 +26,17 @@ class ProductListPresenter(
         val mark = if (viewedProducts.isNotEmpty()) products.size + 1 else products.size
         products.addAll(productListPagination.nextItems().map { it.toUiModel() })
         view.notifyAddProducts(mark, PAGINATION_SIZE)
+    }
+
+    override fun calculateSpanSize(recentViewedProducts: List<ProductModel>, position: Int): Int {
+        val isHeader = recentViewedProducts.isNotEmpty() && position == 0
+        val isFooter =
+            if (recentViewedProducts.isNotEmpty()) position == products.size + 1 else position == products.size
+        return if (isHeader || isFooter) {
+            2
+        } else {
+            1
+        }
     }
 
     override fun handleNextStep(itemId: Int) {

@@ -14,6 +14,7 @@ interface ProductListContract {
     interface Presenter {
         fun fetchProducts()
         fun showMoreProducts()
+        fun calculateSpanSize(recentViewedProducts: List<ProductModel>, position: Int): Int
         fun handleNextStep(itemId: Int)
     }
 }
