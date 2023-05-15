@@ -25,6 +25,11 @@ class MainPresenter(
 
     override fun loadMoreProducts() {
         val addItems: List<Product>
+
+        if (products.isEmpty()) {
+            view.showEmptyProducts()
+            return
+        }
         if (loadMoreItemStartIndex == 0) {
             loadProducts()
             return

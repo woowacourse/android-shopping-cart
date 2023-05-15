@@ -14,6 +14,7 @@ import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
+import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.list.adapter.ProductListAdapter
 import woowacourse.shopping.feature.model.ProductState
 import woowacourse.shopping.feature.model.mapper.toItem
@@ -78,6 +79,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun showProductDetail(productState: ProductState) {
         ProductDetailActivity.startActivity(this, productState)
+    }
+
+    override fun showEmptyProducts() {
+        showToast("제품이 없습니다.")
     }
 
     private fun initList() {

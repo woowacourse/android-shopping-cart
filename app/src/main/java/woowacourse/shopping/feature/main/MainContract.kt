@@ -11,6 +11,7 @@ interface MainContract {
         fun setProducts(products: List<Product>, recentProducts: List<RecentProduct>)
         fun addProducts(products: List<Product>)
         fun showProductDetail(productState: ProductState)
+        fun showEmptyProducts()
     }
 
     interface Presenter {
