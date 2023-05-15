@@ -23,13 +23,21 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductDetailBinding.inflate(layoutInflater)
+        setBinding()
         setContentView(binding.root)
-        presenter =
-            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
+        setPresenter()
         getData()
         bindView()
         presenter.updateRecentViewedProducts(productData.id)
+    }
+
+    private fun setBinding() {
+        binding = ActivityProductDetailBinding.inflate(layoutInflater)
+    }
+
+    private fun setPresenter() {
+        presenter =
+            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
     }
 
     private fun getData() {

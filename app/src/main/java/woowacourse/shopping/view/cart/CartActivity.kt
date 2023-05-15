@@ -18,16 +18,24 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCartBinding.inflate(layoutInflater)
+        setBinding()
         setContentView(binding.root)
         setActionBar()
-        presenter = CartPresenter(this, CartDbRepository(this), ProductMockRepository)
+        setPresenter()
         presenter.fetchProducts()
+    }
+
+    private fun setBinding() {
+        binding = ActivityCartBinding.inflate(layoutInflater)
     }
 
     private fun setActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Cart"
+        supportActionBar?.title = ACTION_BAR_TITLE
+    }
+
+    private fun setPresenter() {
+        presenter = CartPresenter(this, CartDbRepository(this), ProductMockRepository)
     }
 
     override fun showProducts(
@@ -76,6 +84,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     companion object {
+        private const val ACTION_BAR_TITLE = "Cart"
+
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }
