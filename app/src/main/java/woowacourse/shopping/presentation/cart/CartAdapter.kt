@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.cart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.presentation.cart.viewholder.CartItemViewHolder
 import woowacourse.shopping.presentation.model.ProductModel
 
@@ -11,12 +10,19 @@ class CartAdapter(
     cartProducts: List<ProductModel>,
     private val deleteItem: (ProductModel) -> Unit,
 ) : RecyclerView.Adapter<CartItemViewHolder>() {
-    private lateinit var binding: ItemCartBinding
+
     private val _cartProducts = cartProducts.toMutableList()
+    private lateinit var inflater: LayoutInflater
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
-        binding =
-            ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartItemViewHolder(binding, deleteItem)
+        initLayoutInflater(parent)
+        return CartItemViewHolder(parent, inflater, ::onCloseClick)
+    }
+
+    private fun initLayoutInflater(parent: ViewGroup) {
+        if (!::inflater.isInitialized) {
+            inflater = LayoutInflater.from(parent.context)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -31,5 +37,9 @@ class CartAdapter(
         _cartProducts.clear()
         _cartProducts.addAll(products)
         notifyDataSetChanged()
+    }
+
+    private fun onCloseClick(position: Int) {
+        deleteItem(_cartProducts[position])
     }
 }
