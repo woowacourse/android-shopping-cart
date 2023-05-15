@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.PageNavigatorModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.datasource.dao.CartDao
 import woowacourse.shopping.data.repository.CartRepository
@@ -44,18 +44,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         cartAdapter.updateCartProducts(cartProductsModel)
     }
 
-    override fun updateNavigator(currentPage: Int, maxPage: Int) {
-        binding.cartNavigatorLayout.visibility = isNavigatorVisible(maxPage)
-        binding.cartNavigatorPreviousButton.isEnabled = isFirstPage(currentPage)
-        binding.cartNavigatorNextButton.isEnabled = isLastPage(currentPage, maxPage)
-        binding.cartNavigatorPageText.text = currentPage.toString()
+    override fun updateNavigator(pageNavigatorModel: PageNavigatorModel) {
+        binding.pageNavigator = pageNavigatorModel
     }
-
-    private fun isLastPage(currentPage: Int, maxPage: Int) = currentPage == maxPage - 1
-
-    private fun isFirstPage(currentPage: Int) = currentPage != 1
-
-    private fun isNavigatorVisible(maxPage: Int) = if (maxPage <= 1) View.GONE else View.VISIBLE
 
     private fun initBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)

@@ -1,6 +1,7 @@
 package woowacourse.shopping.cart
 
 import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.PageNavigatorModel
 
 interface CartContract {
     interface Presenter {
@@ -13,6 +14,6 @@ interface CartContract {
 
     interface View {
         fun updateCart(cartProductsModel: List<CartProductModel>)
-        fun updateNavigator(currentPage: Int, maxPage: Int)
+        fun updateNavigator(pageNavigatorModel: PageNavigatorModel)
     }
 }
