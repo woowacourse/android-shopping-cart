@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="add_to_cart_button_color">#04C09E</color>
+    <color name="tool_bar">#555555</color>
+    <color name="load_more_boarder">#AAAAAA</color>
+    <color name="load_more_button_color">#00FFFFFF</color>
+    <color name="activate_counter_button">#04C09E</color>
+    <color name="deactivate_counter_button">#D6D6D6</color>
 </resources>
