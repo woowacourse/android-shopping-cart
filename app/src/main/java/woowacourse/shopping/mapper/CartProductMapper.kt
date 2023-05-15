@@ -1,12 +1,13 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.model.RecentProduct
-import woowacourse.shopping.model.RecentProductUIModel
+import woowacourse.shopping.model.CartProduct
+import woowacourse.shopping.model.CartProductUIModel
 
-fun RecentProduct.toUIModel(): RecentProductUIModel {
-    return RecentProductUIModel(
+fun CartProduct.toUIModel(): CartProductUIModel {
+    return CartProductUIModel(
         id = this.id,
         name = this.name,
+        count = this.count,
         price = this.price,
         imageUrl = this.imageUrl
     )
