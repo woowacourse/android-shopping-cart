@@ -25,14 +25,30 @@ class CartDatabase(context: Context) : CartRepository {
 
     @SuppressLint("Range")
     private fun getCartProduct(cursor: Cursor): CartProduct {
-        return CartConstant.fromCursor(cursor)
+        CartConstant.fromCursor(cursor).let {
+            return CartProduct(
+                id = it.id,
+                name = it.name,
+                count = it.count,
+                price = it.price,
+                imageUrl = it.imageUrl
+            )
+        }
     }
 
     private fun getProductById(id: Int): CartProduct {
         val query = ProductConstant.getGetQuery(id)
-        db.rawQuery(query, null).use {
-            it.moveToNext()
-            return getCartProduct(it)
+        db.rawQuery(query, null).use { cursor ->
+            cursor.moveToNext()
+            return ProductConstant.fromCursor(cursor).let {
+                CartProduct(
+                    id = it.id,
+                    name = it.name,
+                    count = 1,
+                    price = it.price,
+                    imageUrl = it.imageUrl
+                )
+            }
         }
     }
 
@@ -60,6 +76,13 @@ class CartDatabase(context: Context) : CartRepository {
         val product = getProductById(productId)
         db.execSQL(CartConstant.getInsertQuery(product))
         cartProducts = getAll()
+    }
+
+    override fun updateCount(id: Int, count: Int): Int {
+        db.execSQL(CartConstant.getUpdateCountQuery(id, count)).let {
+            cartProducts = getAll()
+            return count
+        }
     }
 
     override fun remove(id: Int) {

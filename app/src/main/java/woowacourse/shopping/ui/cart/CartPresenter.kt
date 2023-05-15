@@ -50,6 +50,13 @@ class CartPresenter(
         return index
     }
 
+    override fun updateItem(productId: Int, count: Int): Int {
+        return when {
+            count > 0 -> cartRepository.updateCount(productId, count)
+            else -> 1
+        }
+    }
+
     companion object {
         private const val STEP = 5
     }

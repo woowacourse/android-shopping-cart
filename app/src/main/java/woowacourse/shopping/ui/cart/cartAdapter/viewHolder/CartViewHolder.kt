@@ -8,15 +8,24 @@ import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 
 class CartViewHolder private constructor(
     private val binding: ItemCartBinding,
-    cartListener: CartListener
+    private val cartListener: CartListener
 ) : CartItemViewHolder(binding.root) {
+    var count: Int = 1
+        get() = binding.tvProductCount.text.toString().toInt()
+        set(value) {
+            field = cartListener.onItemUpdate(binding.product!!.id, value)
+            binding.tvProductCount.text = field.toString()
+        }
+
     init {
         binding.listener = cartListener
     }
     override fun bind(data: CartItemType) {
         if (data !is CartItemType.Cart) return
         binding.product = data.product
-        binding.tvProductCount.text = 0.toString()
+        count = data.product.count
+        binding.tvProductCountMinus.setOnClickListener { count -= 1 }
+        binding.tvProductCountPlus.setOnClickListener { count += 1 }
     }
 
     companion object {

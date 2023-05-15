@@ -18,5 +18,6 @@ interface CartContract {
         fun removeItem(id: Int)
         fun navigateToItemDetail(productId: Int)
         fun getPageIndex(): Int
+        fun updateItem(productId: Int, count: Int): Int
     }
 }

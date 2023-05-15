@@ -58,10 +58,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             override fun onItemClick(product: CartProductUIModel) {
                 presenter.navigateToItemDetail(product.id)
             }
+            override fun onItemUpdate(productId: Int, count: Int): Int {
+                return presenter.updateItem(productId, count)
+            }
         }
 
         binding.rvProducts.adapter = CartAdapter(
-            products.map { it }.plus(CartItemType.Navigation(pageUIModel)),
+            products.plus(CartItemType.Navigation(pageUIModel)),
             cartListener
         )
     }

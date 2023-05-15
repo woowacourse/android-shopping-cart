@@ -7,6 +7,7 @@ fun CartProduct.toUIModel(): CartProductUIModel {
     return CartProductUIModel(
         id = this.id,
         name = this.name,
+        count = this.count,
         price = this.price,
         imageUrl = this.imageUrl
     )

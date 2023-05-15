@@ -94,6 +94,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
+            android:text="@{String.valueOf(product.count)}"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_count_plus"
             app:layout_constraintEnd_toStartOf="@id/tv_product_count_plus"

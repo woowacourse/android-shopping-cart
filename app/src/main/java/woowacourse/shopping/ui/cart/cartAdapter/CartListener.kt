@@ -7,4 +7,5 @@ interface CartListener {
     fun onItemRemove(productId: Int)
     fun onPageNext()
     fun onPagePrev()
+    fun onItemUpdate(productId: Int, count: Int): Int
 }
