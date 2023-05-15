@@ -10,7 +10,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_shopping"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="56dp"
             android:background="@color/toolbar_color"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,25 +24,12 @@
             android:id="@+id/product_recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/button_show_more"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_shopping">
 
         </androidx.recyclerview.widget.RecyclerView>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:layout_margin="20dp"
-            android:background="@drawable/item_round"
-            android:id="@+id/button_show_more"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:text="@string/read_more"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/product_recycler_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

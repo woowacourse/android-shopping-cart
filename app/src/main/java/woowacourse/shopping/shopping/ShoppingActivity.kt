@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -60,12 +59,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun setUpShoppingView(
         products: List<ProductUiModel>,
         recentViewedProducts: List<ProductUiModel>,
-        showMoreShoppingProducts: () -> (Unit),
+        showMoreShoppingProducts: () -> Unit,
     ) {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView,
+            onReadMoreClicked = showMoreShoppingProducts,
         )
 
         with(binding) {
@@ -74,16 +74,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                     ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
             }
             productRecyclerView.adapter = shoppingRecyclerAdapter
-            buttonShowMore.setOnClickListener {
-                buttonShowMore.visibility = View.GONE
-                showMoreShoppingProducts()
-            }
-            productRecyclerView.addOnScrollListener(
-                ShoppingRecyclerScrollListener(
-                    scrollPossible = { buttonShowMore.visibility = View.GONE },
-                    scrollImpossible = { buttonShowMore.visibility = View.VISIBLE },
-                ),
-            )
         }
     }
 

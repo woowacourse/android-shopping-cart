@@ -9,6 +9,7 @@ class ShoppingRecyclerAdapter(
     products: List<ProductUiModel>,
     recentViewedProducts: List<ProductUiModel>,
     private val onProductClicked: (ProductUiModel) -> Unit,
+    private val onReadMoreClicked: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val products: MutableList<ProductUiModel> =
@@ -20,6 +21,7 @@ class ShoppingRecyclerAdapter(
         if (recentViewedProducts.isEmpty()) {
             return PRODUCT_ITEM_TYPE
         }
+        if (position + 1 == itemCount) return READ_MORE_ITEM_TYPE
         return if (position == INITIAL_POSITION) RECENT_VIEWED_ITEM_TYPE else PRODUCT_ITEM_TYPE
     }
 
@@ -28,6 +30,8 @@ class ShoppingRecyclerAdapter(
             RECENT_VIEWED_ITEM_TYPE -> RecentViewedLayoutViewHolder.from(parent)
 
             PRODUCT_ITEM_TYPE -> ShoppingItemViewHolder.from(parent)
+
+            READ_MORE_ITEM_TYPE -> ReadMoreViewHolder.from(parent)
 
             else -> throw IllegalArgumentException(VIEW_TYPE_ERROR)
         }
@@ -40,13 +44,16 @@ class ShoppingRecyclerAdapter(
 
             PRODUCT_ITEM_TYPE ->
                 (holder as ShoppingItemViewHolder).bind(
-                    productUiModel = products[position],
+                    productUiModel = products[position - 1],
                     onClicked = onProductClicked,
                 )
+
+            READ_MORE_ITEM_TYPE ->
+                (holder as ReadMoreViewHolder).bind(onReadMoreClicked)
         }
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = products.size + 2
 
     fun refreshRecentViewedItems(toReplace: List<ProductUiModel>) {
         recentViewedProducts = toReplace.toMutableList()
@@ -54,8 +61,10 @@ class ShoppingRecyclerAdapter(
     }
 
     fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
-        products.addAll(toAdd)
-        notifyItemInserted(products.size - toAdd.size)
+        if (toAdd.isNotEmpty()) {
+            products.addAll(toAdd)
+            notifyItemInserted(products.size + 1 - toAdd.size)
+        }
     }
 
     companion object {
@@ -64,5 +73,6 @@ class ShoppingRecyclerAdapter(
         private const val INITIAL_POSITION = 0
         const val PRODUCT_ITEM_TYPE = 0
         const val RECENT_VIEWED_ITEM_TYPE = 1
+        const val READ_MORE_ITEM_TYPE = 2
     }
 }
