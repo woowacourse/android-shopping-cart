@@ -11,7 +11,7 @@ import woowacourse.shopping.shopping.viewHolder.RecentProductsViewHolder
 class ProductsAdapter(
     productItemTypes: List<ProductsItemType>,
     private val onClickItem: (data: ProductUIModel) -> Unit,
-    private val onReadMoreClick: () -> Unit
+    private val onReadMoreClick: () -> Unit,
 ) : RecyclerView.Adapter<ItemViewHolder>() {
     private var productItemTypes: MutableList<ProductsItemType> = productItemTypes.toMutableList()
 
@@ -46,6 +46,6 @@ class ProductsAdapter(
 
     fun updateData(data: List<ProductsItemType>) {
         productItemTypes = data.toMutableList()
-        notifyDataSetChanged()
+        notifyItemChanged(data.size - productItemTypes.size)
     }
 }
