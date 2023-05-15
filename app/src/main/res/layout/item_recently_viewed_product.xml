@@ -28,7 +28,7 @@
 
         <TextView
             android:id="@+id/tv_item_product_name"
-            style="@style/woowa_pro_16"
+            style="@style/woowaPro16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
