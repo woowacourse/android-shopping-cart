@@ -20,7 +20,7 @@
             android:background="@drawable/recatangle_radius_4dp_home"
             android:gravity="center"
             android:paddingVertical="16dp"
-            android:text="@string/item_more"
+            android:text="@string/itemMore"
             android:textColor="@color/woowa_dealer_black_400"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

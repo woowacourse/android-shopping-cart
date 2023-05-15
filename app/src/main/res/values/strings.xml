@@ -2,10 +2,11 @@
     <string name="app_name">Shopping</string>
     <string name="wrapper_recently_viewed">최근 본 상품</string>
 
-    <string name="detail_price_format">%,d원</string>
+    <string name="detailPriceFormat">%,d원</string>
 
     <string name="shoppingCart_title">Cart</string>
-    <string name="item_more">더보기</string>
+    <string name="itemMore">더보기</string>
+    <string name="putInShoppingCart">장바구니 담기</string>
 
 
 </resources>
