@@ -26,6 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        validateExtras()
         initBinding()
         initToolbar()
         setUpProductDetailCartButton()
@@ -52,6 +53,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun validateExtras() {
+        intent.extras?.containsKey(EXTRA_KEY_PRODUCT) ?: return finish()
+    }
+
     private fun initBinding() {
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -63,7 +68,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initPresenter() {
-        val product = intent.getSerializable<ProductModel>(EXTRA_KEY_PRODUCT) ?: return finish()
+        val product = intent.getSerializable<ProductModel>(EXTRA_KEY_PRODUCT) ?: return
         presenter = ProductDetailPresenter(
             this,
             product = product.toDomainModel(),
