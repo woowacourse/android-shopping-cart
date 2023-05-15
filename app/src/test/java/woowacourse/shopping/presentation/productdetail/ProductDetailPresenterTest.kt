@@ -32,7 +32,7 @@ class ProductDetailPresenterTest {
     fun `현재 상품의 상세 정보를 불러온다`() {
         // then
         val productModelSlot = slot<ProductModel>()
-        every { view.setProductDetail(capture(productModelSlot)) } just runs
+        every { view.showProductDetail(capture(productModelSlot)) } just runs
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
 

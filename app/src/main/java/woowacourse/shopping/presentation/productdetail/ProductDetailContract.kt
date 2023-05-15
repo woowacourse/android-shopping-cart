@@ -9,7 +9,7 @@ interface ProductDetailContract {
     }
 
     interface View {
-        fun setProductDetail(productModel: ProductModel)
+        fun showProductDetail(productModel: ProductModel)
         fun showCompleteMessage(productName: String)
     }
 }

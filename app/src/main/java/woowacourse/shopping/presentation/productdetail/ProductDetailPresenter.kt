@@ -16,7 +16,7 @@ class ProductDetailPresenter(
     override fun loadProductDetail(productId: Int) {
         val product = productRepository.findProductById(productId) ?: Product.defaultProduct
         currentProduct = product
-        view.setProductDetail(currentProduct.toPresentation())
+        view.showProductDetail(currentProduct.toPresentation())
     }
 
     override fun putProductInCart() {

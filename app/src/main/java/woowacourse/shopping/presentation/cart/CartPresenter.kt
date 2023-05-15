@@ -17,7 +17,7 @@ class CartPresenter(
     private lateinit var cartPages: CartPages
     override fun loadCart() {
         initCartPages()
-        setCartProducts()
+        loadFirstCartPage()
     }
 
     private fun initCartPages() {
@@ -33,7 +33,7 @@ class CartPresenter(
         return productItems
     }
 
-    private fun setCartProducts() {
+    private fun loadFirstCartPage() {
         val nextProducts = cartPages.getNextPageProducts()
         updateCart(nextProducts)
         checkPageAble()
