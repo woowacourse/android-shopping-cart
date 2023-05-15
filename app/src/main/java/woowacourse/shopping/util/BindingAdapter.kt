@@ -14,6 +14,7 @@ object BindingAdapter {
             ContextCompat.getDrawable(imageview.context, R.drawable.rectangle_radius_8dp)
         Glide.with(imageview.context)
             .load(image)
+            .fitCenter()
             .fallback(R.drawable.logo_square)
             .error(R.drawable.logo_square)
             .into(imageview)
