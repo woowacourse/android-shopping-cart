@@ -6,11 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentViewedProductBinding
 import woowacourse.shopping.model.ProductModel
-import woowacourse.shopping.view.productlist.ProductListAdapter
 
 class RecentViewedAdapter(
     private val products: List<ProductModel>,
-    private val onItemClick: ProductListAdapter.OnItemClick,
+    private val onProductClick: (ProductModel) -> Unit,
 ) : RecyclerView.Adapter<RecentViewedItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewedItemViewHolder {
@@ -22,6 +21,6 @@ class RecentViewedAdapter(
     override fun getItemCount(): Int = products.size
 
     override fun onBindViewHolder(holder: RecentViewedItemViewHolder, position: Int) {
-        holder.bind(products[position], onItemClick)
+        holder.bind(products[position], onProductClick)
     }
 }

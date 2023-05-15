@@ -11,7 +11,7 @@
 
         <variable
             name="onItemClick"
-            type="woowacourse.shopping.view.productlist.ProductListAdapter.OnItemClick" />
+            type="kotlin.jvm.functions.Function1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="?attr/selectableItemBackground"
-        android:onClick="@{() -> onItemClick.onProductClick(product)}">
+        android:onClick="@{() -> onItemClick.invoke(product)}">
 
         <ImageView
             android:id="@+id/img_product"

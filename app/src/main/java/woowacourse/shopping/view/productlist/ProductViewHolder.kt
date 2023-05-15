@@ -15,19 +15,19 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         ProductViewHolder(binding.root) {
         fun bind(
             recentViewedProducts: List<ProductModel>,
-            onItemClick: ProductListAdapter.OnItemClick,
+            onProductClick: (ProductModel) -> Unit,
         ) {
             binding.recyclerRecentViewed.adapter =
-                RecentViewedAdapter(recentViewedProducts, onItemClick)
+                RecentViewedAdapter(recentViewedProducts, onProductClick)
         }
     }
 
     class ProductItemViewHolder(
         private val binding: ItemProductBinding,
-        onItemClick: ProductListAdapter.OnItemClick,
+        onProductClick: (ProductModel) -> Unit,
     ) : ProductViewHolder(binding.root) {
         init {
-            binding.onItemClick = onItemClick
+            binding.onItemClick = onProductClick
         }
 
         fun bind(product: ProductModel) {
@@ -37,10 +37,10 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     class ShowMoreViewHolder(
         binding: ItemShowMoreBinding,
-        onItemClick: ProductListAdapter.OnItemClick,
+        onShowMoreClick: () -> Unit,
     ) : ProductViewHolder(binding.root) {
         init {
-            binding.onItemClick = onItemClick
+            binding.onItemClick = onShowMoreClick
         }
     }
 
@@ -48,7 +48,8 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun of(
             parent: ViewGroup,
             type: ProductListViewType,
-            onItemClick: ProductListAdapter.OnItemClick,
+            onProductClick: (ProductModel) -> Unit,
+            onShowMoreClick: () -> Unit,
         ): ProductViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(type.id, parent, false)
             return when (type) {
@@ -60,14 +61,14 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     ItemProductBinding.bind(
                         view,
                     ),
-                    onItemClick,
+                    onProductClick,
                 )
 
                 ProductListViewType.SHOW_MORE_ITEM -> ShowMoreViewHolder(
                     ItemShowMoreBinding.bind(
                         view,
                     ),
-                    onItemClick,
+                    onShowMoreClick,
                 )
             }
         }

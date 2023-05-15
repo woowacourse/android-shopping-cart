@@ -7,15 +7,16 @@ import woowacourse.shopping.model.ProductModel
 class ProductListAdapter(
     private val recentViewedProducts: List<ProductModel>,
     private val products: List<ProductModel>,
-    private val onItemClick: OnItemClick,
+    private val onProductClick: (ProductModel) -> Unit,
+    private val onShowMoreClick: () -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
-    interface OnItemClick {
-        fun onProductClick(product: ProductModel)
-        fun onShowMoreClick()
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        return ProductViewHolder.of(parent, ProductListViewType.values()[viewType], onItemClick)
+        return ProductViewHolder.of(
+            parent,
+            ProductListViewType.values()[viewType],
+            onProductClick,
+            onShowMoreClick,
+        )
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -34,7 +35,7 @@ class ProductListAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         when (holder) {
             is ProductViewHolder.RecentViewedViewHolder -> {
-                holder.bind(recentViewedProducts, onItemClick)
+                holder.bind(recentViewedProducts, onProductClick)
             }
 
             is ProductViewHolder.ProductItemViewHolder -> {

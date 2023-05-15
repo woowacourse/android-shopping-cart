@@ -57,15 +57,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.gridProducts.adapter = ProductListAdapter(
             recentViewedProducts,
             products,
-            object : ProductListAdapter.OnItemClick {
-                override fun onProductClick(product: ProductModel) {
-                    showProductDetail(product)
-                }
-
-                override fun onShowMoreClick() {
-                    presenter.showMoreProducts()
-                }
-            },
+            fun(product: ProductModel) { showProductDetail(product) },
+            fun() { presenter.showMoreProducts() },
         )
     }
 
