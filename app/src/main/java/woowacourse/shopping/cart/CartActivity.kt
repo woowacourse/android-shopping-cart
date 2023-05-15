@@ -59,10 +59,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartAdapter() {
-        cartAdapter = CartAdapter(
-            emptyList(),
-            onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) }
-        )
+        cartAdapter = CartAdapter(emptyList()) {
+            presenter.removeCartProduct(it)
+        }
+
         binding.cartProductList.adapter = cartAdapter
     }
 

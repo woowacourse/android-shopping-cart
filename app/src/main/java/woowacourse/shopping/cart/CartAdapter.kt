@@ -10,15 +10,13 @@ class CartAdapter(
     private var cartProducts: List<CartProductModel>,
     private val onCartItemRemoveButtonClick: (CartProductModel) -> Unit
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val onCartItemRemoveButtonViewClick: (Int) -> Unit =
-        { onCartItemRemoveButtonClick(cartProducts[it]) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return CartViewHolder(
             ItemCartProductListBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ),
-            onCartItemRemoveButtonViewClick
+            onCartItemRemoveButtonClick
         )
     }
 
