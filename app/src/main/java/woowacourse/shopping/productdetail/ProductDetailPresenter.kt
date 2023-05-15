@@ -8,7 +8,7 @@ import woowacourse.shopping.model.ProductUiModel
 
 class ProductDetailPresenter(
     val view: ProductDetailContract.View,
-    val product: ProductUiModel,
+    override val product: ProductUiModel,
     private val repository: ShoppingRepository,
 ) : ProductDetailContract.Presenter {
 

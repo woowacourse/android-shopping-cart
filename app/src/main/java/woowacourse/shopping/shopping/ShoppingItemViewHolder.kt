@@ -3,7 +3,6 @@ package woowacourse.shopping.shopping
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemShoppingProductBinding
 import woowacourse.shopping.model.ProductUiModel
 
@@ -13,12 +12,7 @@ class ShoppingItemViewHolder(
 
     fun bind(productUiModel: ProductUiModel, onClicked: (ProductUiModel) -> Unit) {
         with(binding) {
-            Glide.with(binding.root.context)
-                .load(productUiModel.imageUrl)
-                .into(imageProduct)
-
-            textProductName.text = productUiModel.name
-            textProductPrice.text = productUiModel.price.toString()
+            product = productUiModel
             root.setOnClickListener { onClicked(productUiModel) }
         }
     }

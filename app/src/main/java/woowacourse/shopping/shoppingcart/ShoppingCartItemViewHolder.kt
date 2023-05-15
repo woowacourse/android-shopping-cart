@@ -3,7 +3,6 @@ package woowacourse.shopping.shoppingcart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.model.ProductUiModel
 
@@ -16,12 +15,7 @@ class ShoppingCartItemViewHolder(
         onRemoveClicked: (Int) -> Unit,
     ) {
         with(binding) {
-            Glide.with(root.context)
-                .load(productUiModel.imageUrl)
-                .into(imageProduct)
-
-            textProductName.text = productUiModel.name
-            textProductPrice.text = productUiModel.price.toString()
+            product = productUiModel
             imageRemoveProduct.setOnClickListener { onRemoveClicked(adapterPosition) }
         }
     }

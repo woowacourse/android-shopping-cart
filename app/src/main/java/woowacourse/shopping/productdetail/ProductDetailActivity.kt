@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductUiModel
@@ -30,7 +29,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         binding.presenter = presenter
         setUpProductDetailToolbar()
-        setUpProductDetailView()
     }
 
     private fun setUpProductDetailToolbar() {
@@ -50,15 +48,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun setUpProductDetailView() {
-        Glide.with(this)
-            .load(product.imageUrl)
-            .into(binding.imageProductDetail)
-
-        binding.textProductName.text = product.name
-        binding.textProductPrice.text = product.price.toString()
     }
 
     override fun navigateToShoppingCartView() {
