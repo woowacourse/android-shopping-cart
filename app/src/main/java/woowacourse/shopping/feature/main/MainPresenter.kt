@@ -18,6 +18,7 @@ class MainPresenter(
 ) : MainContract.Presenter {
 
     private val products: List<Product> = productDbHandler.getAll()
+    private val recentProducts: List<RecentProduct> = recentProductDbHandler.getAll()
     private var currentItemIndex = 0
 
     override fun addProducts() {
@@ -50,11 +51,11 @@ class MainPresenter(
     }
 
     private fun loadProducts() {
-        val products: List<Product> =
-            productDbHandler.getAll().subList(currentItemIndex, currentItemIndex + ADD_SIZE)
+        val productUnit: List<Product> =
+            products.subList(currentItemIndex, currentItemIndex + ADD_SIZE)
+
+        view.setProducts(productUnit, recentProducts)
         currentItemIndex += ADD_SIZE
-        val recentProducts: List<RecentProduct> = recentProductDbHandler.getAll()
-        view.setProducts(products, recentProducts)
     }
 
     companion object {
