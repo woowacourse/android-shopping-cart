@@ -35,10 +35,4 @@ class ProductAdapter(
         this.products += products
         notifyItemRangeInserted(lastPosition, products.size)
     }
-
-    override fun getItemViewType(position: Int): Int = VIEW_TYPE
-
-    companion object {
-        const val VIEW_TYPE = 0
-    }
 }

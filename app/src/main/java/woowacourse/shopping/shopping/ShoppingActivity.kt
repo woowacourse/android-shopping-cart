@@ -137,9 +137,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         return GridLayoutManager(this, 2).apply {
             spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return when (concatAdapter.getItemViewType(position)) {
-                        ProductAdapter.VIEW_TYPE -> 1
-                        RecentProductWrapperAdapter.VIEW_TYPE -> 2
+                    return when (concatAdapter.getWrappedAdapterAndPosition(position).first) {
+                        is ProductAdapter -> 1
                         else -> 2
                     }
                 }
