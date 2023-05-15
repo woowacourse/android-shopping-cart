@@ -9,6 +9,7 @@ interface CartContract {
     interface View {
         fun setCarts(products: List<CartItemType.Cart>, pageUIModel: PageUIModel)
         fun navigateToItemDetail(product: ProductUIModel)
+        fun updateBottom(totalPrice: Int, totalCount: Int)
     }
 
     interface Presenter {
@@ -20,5 +21,6 @@ interface CartContract {
         fun getPageIndex(): Int
         fun updateItem(productId: Int, count: Int): Int
         fun updateItemSelect(productId: Int, selected: Boolean)
+        fun updatePriceAndCount()
     }
 }

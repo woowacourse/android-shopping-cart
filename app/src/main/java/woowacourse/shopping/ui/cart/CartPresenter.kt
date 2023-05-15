@@ -51,14 +51,24 @@ class CartPresenter(
     }
 
     override fun updateItem(productId: Int, count: Int): Int {
-        return when {
+        val updatedCount = when {
             count > 0 -> cartRepository.updateCount(productId, count)
             else -> 1
         }
+        updatePriceAndCount()
+        return updatedCount
     }
 
     override fun updateItemSelect(productId: Int, selected: Boolean) {
         cartRepository.updateSelected(productId, selected)
+        updatePriceAndCount()
+    }
+
+    override fun updatePriceAndCount() {
+        view.updateBottom(
+            cartRepository.getTotalPrice(),
+            cartRepository.getTotalSelectedCount()
+        )
     }
 
     companion object {

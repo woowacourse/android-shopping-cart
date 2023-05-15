@@ -31,8 +31,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        binding.price = 345600
-        binding.totalCount = 7
     }
 
     private fun initPresenter(savedInstanceState: Bundle?) {
@@ -43,6 +41,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0
         )
         presenter.setUpCarts()
+        presenter.updatePriceAndCount()
     }
 
     private fun initToolbar() {
@@ -70,6 +69,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             products.plus(CartItemType.Navigation(pageUIModel)),
             cartListener
         )
+    }
+
+    override fun updateBottom(totalPrice: Int, totalCount: Int) {
+        binding.totalCount = totalCount
+        binding.price = totalPrice
     }
 
     override fun navigateToItemDetail(product: ProductUIModel) {

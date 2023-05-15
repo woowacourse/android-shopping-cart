@@ -7,6 +7,8 @@ interface CartRepository {
     fun hasNextPage(index: Int, size: Int): Boolean
     fun hasPrevPage(index: Int, size: Int): Boolean
     fun getTotalCount(): Int
+    fun getTotalSelectedCount(): Int
+    fun getTotalPrice(): Int
     fun insert(productId: Int)
     fun remove(id: Int)
     fun updateCount(id: Int, count: Int): Int

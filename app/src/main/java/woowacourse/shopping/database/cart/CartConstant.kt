@@ -38,8 +38,8 @@ object CartConstant : BaseColumns {
             "$TABLE_COLUMN_ID," +
             "$TABLE_COLUMN_NAME," +
             "$TABLE_COLUMN_COUNT," +
-            "$TABLE_COLUMN_PRICE," +
             "$TABLE_COLUMN_SELECTED," +
+            "$TABLE_COLUMN_PRICE," +
             "$TABLE_COLUMN_IMAGE_URL," +
             "$TABLE_COLUMN_SAVE_TIME) VALUES (" +
             "${cartProduct.id}," +

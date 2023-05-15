@@ -74,6 +74,14 @@ class CartDatabase(context: Context) : CartRepository {
         return cartProducts.size
     }
 
+    override fun getTotalSelectedCount(): Int {
+        return cartProducts.all().count { it.selected }
+    }
+
+    override fun getTotalPrice(): Int {
+        return cartProducts.all().filter { it.selected }.sumOf { it.price * it.count }
+    }
+
     override fun insert(productId: Int) {
         val product = getProductById(productId)
         db.execSQL(CartConstant.getInsertQuery(product))
