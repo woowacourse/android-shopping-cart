@@ -25,8 +25,8 @@ internal class MainPresenterTest {
 
     @Before
     fun init() {
-        view = mockk()
-        productRepository = mockk()
+        view = mockk(relaxed = true)
+        productRepository = mockk(relaxed = true)
         recentProductRepository = mockk()
         presenter = MainPresenter(view, productRepository, recentProductRepository)
         ProductLocalCache.clear()
@@ -34,12 +34,15 @@ internal class MainPresenterTest {
 
     @Test
     fun `처음에 상품 목록을 제대로 불러와서 상품을 화면에 띄운다`() {
+        // given
         every { productRepository.getFirstProducts() } returns mockProducts.take(20)
         val slot = slot<List<ProductUiModel>>()
         every { view.addProducts(capture(slot)) } just Runs
 
+        // when
         presenter.loadProducts()
 
+        // then
         val actual = slot.captured.map { it.toDomain() }
         val expected = mockProducts.take(20)
         assert(actual == expected)
@@ -48,15 +51,19 @@ internal class MainPresenterTest {
 
     @Test
     fun `장바구니 화면으로 이동한다`() {
+        // given
         every { view.showCartScreen() } just Runs
 
+        // when
         presenter.moveToCart()
 
+        // then
         verify { view.showCartScreen() }
     }
 
     @Test
     fun `상품 목록을 이어서 더 불러와서 화면에 추가로 띄운다`() {
+        // given
         every { productRepository.getFirstProducts() } returns mockProducts.take(20)
         every { view.addProducts(any()) } just Runs
         presenter.loadProducts()
@@ -68,8 +75,10 @@ internal class MainPresenterTest {
         val slot = slot<List<ProductUiModel>>()
         every { view.addProducts(capture(slot)) } just Runs
 
+        // when
         presenter.loadMoreProduct()
 
+        // then
         val actual = slot.captured.map { it.toDomain() }
         val expected = mockProducts.subList(20, 40)
 
@@ -79,12 +88,15 @@ internal class MainPresenterTest {
 
     @Test
     fun `최근 본 상품 목록을 가져와서 화면에 띄운다`() {
+        // given
         every { recentProductRepository.getAll() } returns mockRecentProducts
         val slot = slot<List<RecentProductUiModel>>()
         every { view.updateRecent(capture(slot)) } just Runs
 
+        // when
         presenter.loadRecent()
 
+        // then
         val actual = slot.captured.map { it.productUiModel.toDomain() }
         val expected = mockRecentProducts.map { it.product }
         assert(actual == expected)
@@ -93,7 +105,7 @@ internal class MainPresenterTest {
 
     private val mockProducts = productsDatasource
 
-    private val mockRecentProducts = List(16) {
+    private val mockRecentProducts = List(20) {
         RecentProduct(
             mockProducts[it],
             LocalDateTime.now().plusMinutes(it.toLong())
