@@ -29,10 +29,10 @@
                 android:layout_marginStart="11dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:src="@drawable/icon_back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/icon_back" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_shoppingCart_title"
@@ -66,24 +66,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="116dp"
+            android:src="@drawable/icon_left_page_selector"
             app:layout_constraintBottom_toBottomOf="@+id/tv_shoppingCart_page_number"
             app:layout_constraintEnd_toStartOf="@+id/tv_shoppingCart_page_number"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_shoppingCart_page_number"
-            app:srcCompat="@drawable/icon_left_page_selector" />
+            app:layout_constraintTop_toTopOf="@+id/tv_shoppingCart_page_number" />
 
         <ImageView
             android:id="@+id/iv_shopping_cart_next_page"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="116dp"
+            android:src="@drawable/icon_right_page_selector"
             app:layout_constraintBottom_toBottomOf="@+id/tv_shoppingCart_page_number"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv_shoppingCart_page_number"
-            app:layout_constraintTop_toTopOf="@+id/tv_shoppingCart_page_number"
-            app:srcCompat="@drawable/icon_right_page_selector" />
+            app:layout_constraintTop_toTopOf="@+id/tv_shoppingCart_page_number" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_shoppingCart"
