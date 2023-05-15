@@ -1,7 +1,6 @@
 package woowacourse.shopping.shopping
 
 import android.content.Context
-import model.RecentViewedProducts
 import woowacourse.shopping.database.ShoppingDBRepository
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.database.product.ShoppingDao
@@ -13,14 +12,11 @@ class ShoppingPresenter(
     private val repository: ShoppingRepository,
 ) : ShoppingContract.Presenter {
 
-    override val recentViewedProducts = RecentViewedProducts(
-        products = repository.selectRecentViewedProducts(),
-    )
     private var numberOfReadProduct: Int = 0
 
     override fun loadProducts() {
         val products = selectProducts()
-        val recentViewedProducts = recentViewedProducts.values.map { it.toUiModel() }
+        val recentViewedProducts = repository.selectRecentViewedProducts().map { it.toUiModel() }
 
         view.setUpShoppingView(
             products = products,
@@ -48,15 +44,16 @@ class ShoppingPresenter(
 
     override fun addToRecentViewedProduct(id: Int) {
         val product = repository.selectProductById(id)
-        val removedProduct = recentViewedProducts.add(product)
-
-        removedProduct?.let {
-            repository.deleteFromRecentViewedProducts()
+        val recentViewedProducts = repository.selectRecentViewedProducts()
+        val isDuplicated = recentViewedProducts.contains(product)
+        if (isDuplicated) {
+            repository.deleteFromRecentViewedProducts(id)
         }
+
         repository.insertToRecentViewedProducts(id)
         view.refreshRecentViewedProductsView(
             toAdd = product.toUiModel(),
-            toRemove = removedProduct?.toUiModel(),
+            toRemove = if (isDuplicated) product.toUiModel() else null,
         )
     }
 

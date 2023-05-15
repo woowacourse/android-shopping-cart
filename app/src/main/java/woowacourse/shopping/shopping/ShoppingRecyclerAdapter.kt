@@ -52,10 +52,10 @@ class ShoppingRecyclerAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshRecentViewedItems(toRemove: ProductUiModel?, toAdd: ProductUiModel) {
-        recentViewedProducts.add(0, toAdd)
         toRemove?.let {
             recentViewedProducts.remove(it)
         }
+        recentViewedProducts.add(0, toAdd)
         notifyDataSetChanged()
     }
 

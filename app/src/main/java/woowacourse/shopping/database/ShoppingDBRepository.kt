@@ -146,23 +146,24 @@ class ShoppingDBRepository(
         val recentViewedProducts = mutableListOf<Product>()
 
         with(recentViewedCursor) {
-            while (moveToNext()) {
-                val id =
-                    getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
-                val product = selectProductById(id)
+            if (moveToFirst()) {
+                while (moveToNext()) {
+                    val id =
+                        getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
+                    val product = selectProductById(id)
 
-                recentViewedProducts.add(product)
+                    recentViewedProducts.add(product)
+                }
             }
         }
-
         return recentViewedProducts.toList().reversed()
     }
 
-    override fun deleteFromRecentViewedProducts() {
+    override fun deleteFromRecentViewedProducts(id: Int) {
         shoppingDB.delete(
             RecentViewedDBContract.TABLE_NAME,
-            "ROWID = (SELECT MIN(ROWID) FROM ${RecentViewedDBContract.TABLE_NAME})",
-            null,
+            "${RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID} = ?",
+            arrayOf(id.toString()),
         )
     }
 
