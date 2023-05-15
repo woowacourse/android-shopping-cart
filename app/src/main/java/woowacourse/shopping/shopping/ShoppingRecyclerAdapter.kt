@@ -3,6 +3,7 @@ package woowacourse.shopping.shopping
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.shopping.recentview.RecentViewedLayoutViewHolder
 
 class ShoppingRecyclerAdapter(
     products: List<ProductUiModel>,
