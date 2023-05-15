@@ -30,6 +30,7 @@ class CartDatabase(context: Context) : CartRepository {
                 id = it.id,
                 name = it.name,
                 count = it.count,
+                selected = it.selected,
                 price = it.price,
                 imageUrl = it.imageUrl
             )
@@ -45,6 +46,7 @@ class CartDatabase(context: Context) : CartRepository {
                     id = it.id,
                     name = it.name,
                     count = 1,
+                    selected = false,
                     price = it.price,
                     imageUrl = it.imageUrl
                 )

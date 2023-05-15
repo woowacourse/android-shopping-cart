@@ -9,6 +9,7 @@ object CartConstant : BaseColumns {
     private const val TABLE_COLUMN_ID = "product_id"
     private const val TABLE_COLUMN_NAME = "product_name"
     private const val TABLE_COLUMN_COUNT = "product_count"
+    private const val TABLE_COLUMN_SELECTED = "product_selected"
     private const val TABLE_COLUMN_PRICE = "product_price"
     private const val TABLE_COLUMN_IMAGE_URL = "product_img_url"
     private const val TABLE_COLUMN_SAVE_TIME = "product_save_time"
@@ -18,6 +19,7 @@ object CartConstant : BaseColumns {
             "$TABLE_COLUMN_ID INTEGER PRIMARY KEY," +
             "$TABLE_COLUMN_NAME TEXT," +
             "$TABLE_COLUMN_COUNT INTEGER," +
+            "$TABLE_COLUMN_SELECTED INTEGER," +
             "$TABLE_COLUMN_PRICE INTEGER," +
             "$TABLE_COLUMN_IMAGE_URL TEXT," +
             "$TABLE_COLUMN_SAVE_TIME INTEGER)"
@@ -37,11 +39,13 @@ object CartConstant : BaseColumns {
             "$TABLE_COLUMN_NAME," +
             "$TABLE_COLUMN_COUNT," +
             "$TABLE_COLUMN_PRICE," +
+            "$TABLE_COLUMN_SELECTED," +
             "$TABLE_COLUMN_IMAGE_URL," +
             "$TABLE_COLUMN_SAVE_TIME) VALUES (" +
             "${cartProduct.id}," +
             "'${cartProduct.name}'," +
             "${cartProduct.count}," +
+            "${cartProduct.selected}," +
             "${cartProduct.price}," +
             "'${cartProduct.imageUrl}'," +
             "${System.currentTimeMillis()})"
@@ -62,6 +66,7 @@ object CartConstant : BaseColumns {
             id = cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_ID)),
             name = cursor.getString(cursor.getColumnIndexOrThrow(TABLE_COLUMN_NAME)),
             count = cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_COUNT)),
+            selected = cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_SELECTED)) == 1,
             price = cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_PRICE)),
             imageUrl = cursor.getString(cursor.getColumnIndexOrThrow(TABLE_COLUMN_IMAGE_URL))
         )
