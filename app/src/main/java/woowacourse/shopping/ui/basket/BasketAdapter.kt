@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemBasketBinding
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.model.UiBasketProduct
 
-class BasketAdapter(private val onItemClick: (UiProduct) -> Unit) :
-    ListAdapter<UiProduct, BasketViewHolder>(basketDiffUtil) {
+class BasketAdapter(private val onItemClick: (UiBasketProduct) -> Unit) :
+    ListAdapter<UiBasketProduct, BasketViewHolder>(basketDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasketViewHolder {
         val binding =
@@ -21,12 +21,12 @@ class BasketAdapter(private val onItemClick: (UiProduct) -> Unit) :
     }
 
     companion object {
-        private val basketDiffUtil = object : DiffUtil.ItemCallback<UiProduct>() {
-            override fun areItemsTheSame(oldItem: UiProduct, newItem: UiProduct): Boolean =
-                oldItem.id == newItem.id
+        private val basketDiffUtil = object : DiffUtil.ItemCallback<UiBasketProduct>() {
+            override fun areItemsTheSame(oldItem: UiBasketProduct, newItem: UiBasketProduct):
+                Boolean = oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: UiProduct, newItem: UiProduct): Boolean =
-                oldItem == newItem
+            override fun areContentsTheSame(oldItem: UiBasketProduct, newItem: UiBasketProduct):
+                Boolean = oldItem == newItem
         }
     }
 }

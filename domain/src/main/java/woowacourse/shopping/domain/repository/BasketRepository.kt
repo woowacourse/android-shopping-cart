@@ -1,11 +1,11 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.BasketProduct
 
 typealias DomainBasketRepository = BasketRepository
 
 interface BasketRepository {
-    fun getPartially(size: Int, lastId: Int, isNext: Boolean): List<Product>
-    fun add(product: Product)
-    fun remove(product: Product)
+    fun getPartially(size: Int, lastId: Int, isNext: Boolean): List<BasketProduct>
+    fun add(basketProduct: BasketProduct)
+    fun remove(basketProduct: BasketProduct)
 }

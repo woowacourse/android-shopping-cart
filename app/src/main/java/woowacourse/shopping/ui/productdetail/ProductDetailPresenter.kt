@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productdetail
 
+import woowacourse.shopping.domain.BasketProduct
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.model.UiProduct
@@ -13,7 +14,7 @@ class ProductDetailPresenter(
 
     override fun addBasketProduct() {
         thread {
-            basketRepository.add(product.toDomain())
+            basketRepository.add(BasketProduct(product = product.toDomain()))
             view.showBasket()
         }
     }

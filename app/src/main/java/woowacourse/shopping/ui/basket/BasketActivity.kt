@@ -11,7 +11,7 @@ import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityBasketBinding
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.model.UiBasketProduct
 
 class BasketActivity : AppCompatActivity(), BasketContract.View {
     override lateinit var presenter: BasketContract.Presenter
@@ -52,7 +52,7 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         binding.btnNext.setOnClickListener { presenter.fetchBasketProducts(isNext = true) }
     }
 
-    override fun updateBasketProducts(products: List<UiProduct>) {
+    override fun updateBasketProducts(products: List<UiBasketProduct>) {
         basketAdapter.submitList(products)
     }
 

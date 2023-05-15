@@ -3,7 +3,7 @@ package woowacourse.shopping.ui.basket
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
-import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.model.UiBasketProduct
 
 class BasketPresenter(
     override val view: BasketContract.View,
@@ -28,12 +28,12 @@ class BasketPresenter(
         view.updateNavigatorEnabled(hasPrevious, hasNext)
     }
 
-    override fun removeBasketProduct(product: UiProduct) {
+    override fun removeBasketProduct(product: UiBasketProduct) {
         basketRepository.remove(product.toDomain())
         fetchBasketProducts()
     }
 
-    private fun checkHasNext(products: List<UiProduct>): Boolean =
+    private fun checkHasNext(products: List<UiBasketProduct>): Boolean =
         products.size == TOTAL_LOAD_BASKET_SIZE_AT_ONCE
 
     companion object {

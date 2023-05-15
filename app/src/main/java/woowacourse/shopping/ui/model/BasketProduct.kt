@@ -3,10 +3,10 @@ package woowacourse.shopping.ui.model
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-typealias UiRecentProduct = RecentProduct
+typealias UiBasketProduct = BasketProduct
 
 @Parcelize
-data class RecentProduct(
+data class BasketProduct(
     val id: Int,
     val product: UiProduct
 ) : Parcelable
