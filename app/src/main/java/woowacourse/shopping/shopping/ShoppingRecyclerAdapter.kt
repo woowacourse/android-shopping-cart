@@ -17,18 +17,16 @@ class ShoppingRecyclerAdapter(
 
     override fun getItemViewType(position: Int): Int {
         if (recentViewedProducts.isEmpty()) {
-            return ShoppingRecyclerItemViewType.PRODUCT.ordinal
+            return PRODUCT_ITEM_TYPE
         }
-        return ShoppingRecyclerItemViewType.valueOf(position).ordinal
+        return if (position == INITIAL_POSITION) RECENT_VIEWED_ITEM_TYPE else PRODUCT_ITEM_TYPE
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            ShoppingRecyclerItemViewType.RECENT_VIEWED.ordinal ->
-                RecentViewedLayoutViewHolder.from(parent)
+            RECENT_VIEWED_ITEM_TYPE -> RecentViewedLayoutViewHolder.from(parent)
 
-            ShoppingRecyclerItemViewType.PRODUCT.ordinal ->
-                ShoppingItemViewHolder.from(parent)
+            PRODUCT_ITEM_TYPE -> ShoppingItemViewHolder.from(parent)
 
             else -> throw IllegalArgumentException(VIEW_TYPE_ERROR)
         }
@@ -36,10 +34,10 @@ class ShoppingRecyclerAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ShoppingRecyclerItemViewType.RECENT_VIEWED.ordinal ->
+            RECENT_VIEWED_ITEM_TYPE ->
                 (holder as RecentViewedLayoutViewHolder).bind(recentViewedProducts)
 
-            ShoppingRecyclerItemViewType.PRODUCT.ordinal ->
+            PRODUCT_ITEM_TYPE ->
                 (holder as ShoppingItemViewHolder).bind(
                     productUiModel = products[position],
                     onClicked = onProductClicked,
@@ -62,5 +60,8 @@ class ShoppingRecyclerAdapter(
     companion object {
         private const val VIEW_TYPE_ERROR = "해당 타입의 뷰홀더는 생성할 수 없습니다."
         private const val RECENT_VIEWED_ITEM_SIZE = 10
+        private const val INITIAL_POSITION = 0
+        const val PRODUCT_ITEM_TYPE = 0
+        const val RECENT_VIEWED_ITEM_TYPE = 1
     }
 }

@@ -1,6 +1,7 @@
 package woowacourse.shopping.shopping
 
 import androidx.recyclerview.widget.GridLayoutManager
+import woowacourse.shopping.shopping.ShoppingRecyclerAdapter.Companion.PRODUCT_ITEM_TYPE
 
 class ShoppingRecyclerSpanSizeManager(
     private val getViewType: (position: Int) -> Int,
@@ -8,7 +9,7 @@ class ShoppingRecyclerSpanSizeManager(
 
     override fun getSpanSize(position: Int): Int {
         return when (getViewType(position)) {
-            ShoppingRecyclerItemViewType.PRODUCT.ordinal -> DEFAULT_SIZE
+            PRODUCT_ITEM_TYPE -> DEFAULT_SIZE
             else -> RECENT_VIEWED_LAYOUT_SIZE
         }
     }
