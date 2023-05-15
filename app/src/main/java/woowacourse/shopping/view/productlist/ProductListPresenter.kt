@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.productlist
 
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.toUiModel
@@ -24,6 +25,14 @@ class ProductListPresenter(
         val mark = if (viewedProducts.isNotEmpty()) products.size + 1 else products.size
         products.addAll(productListPagination.nextItems().map { it.toUiModel() })
         view.notifyAddProducts(mark, PAGINATION_SIZE)
+    }
+
+    override fun handleNextStep(itemId: Int) {
+        when (itemId) {
+            R.id.cart -> {
+                view.handleCartMenuClicked()
+            }
+        }
     }
 
     companion object {

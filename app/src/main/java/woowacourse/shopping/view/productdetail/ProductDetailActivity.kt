@@ -54,12 +54,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.close -> {
-                finish()
-            }
-        }
+        presenter.handleNextStep(item.itemId)
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun handleBackButtonClicked() {
+        finish()
     }
 
     companion object {

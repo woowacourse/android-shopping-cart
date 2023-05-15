@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.productdetail
 
+import woowacourse.shopping.R
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
@@ -16,5 +17,13 @@ class ProductDetailPresenter(
 
     override fun updateRecentViewedProducts(id: Int) {
         recentViewedRepository.add(id)
+    }
+
+    override fun handleNextStep(itemId: Int) {
+        when (itemId) {
+            R.id.close -> {
+                view.handleBackButtonClicked()
+            }
+        }
     }
 }

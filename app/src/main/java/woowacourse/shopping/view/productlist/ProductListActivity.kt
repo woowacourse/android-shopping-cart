@@ -1,8 +1,6 @@
 package woowacourse.shopping.view.productlist
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -30,7 +28,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     override fun onResume() {
         super.onResume()
-        Log.d("test", "onResume viewedData 갱신")
         presenter.fetchProducts()
     }
 
@@ -38,7 +35,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         recentViewedProducts: List<ProductModel>,
         products: List<ProductModel>,
     ) {
-        Log.d("test", "showProducts 들어와서 리사이클러뷰 달아줌")
         val gridLayoutManager = GridLayoutManagerWrapper(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -84,12 +80,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cart -> {
-                val intent = Intent(this, CartActivity::class.java)
-                startActivity(intent)
-            }
-        }
+        presenter.handleNextStep(item.itemId)
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun handleCartMenuClicked() {
+        startActivity(CartActivity.newIntent(this))
     }
 }
