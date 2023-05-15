@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
+import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.database.contract.RecentProductContract
 import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.DataProduct
+import woowacourse.shopping.data.model.DataRecentProduct
 
 class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProductDao {
 
@@ -23,30 +25,32 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
     }
 
     @SuppressLint("Range")
-    override fun getPartially(size: Int): List<DataProduct> {
-        val products = mutableListOf<DataProduct>()
+    override fun getPartially(size: Int): List<DataRecentProduct> {
+        val products = mutableListOf<DataRecentProduct>()
         database.writableDatabase.use { db ->
             val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(size.toString()))
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val productId: Int =
+                    cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_NAME))
                 val price: DataPrice =
                     DataPrice(cursor.getInt(cursor.getColumnIndex(RecentProductContract.COLUMN_PRICE)))
                 val imageUrl: String =
                     cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_IMAGE_URL))
-                products.add(DataProduct(id, name, price, imageUrl))
+                products.add(DataRecentProduct(id, DataProduct(productId, name, price, imageUrl)))
             }
             cursor.close()
         }
         return products
     }
 
-    override fun add(product: DataProduct) {
+    override fun add(recentProduct: DataRecentProduct) {
         val contentValues = ContentValues().apply {
-            put(RecentProductContract.COLUMN_NAME, product.name)
-            put(RecentProductContract.COLUMN_PRICE, product.price.value)
-            put(RecentProductContract.COLUMN_IMAGE_URL, product.imageUrl)
+            put(RecentProductContract.COLUMN_NAME, recentProduct.product.name)
+            put(RecentProductContract.COLUMN_PRICE, recentProduct.product.price.value)
+            put(RecentProductContract.COLUMN_IMAGE_URL, recentProduct.product.imageUrl)
         }
 
         database.writableDatabase.use { db ->

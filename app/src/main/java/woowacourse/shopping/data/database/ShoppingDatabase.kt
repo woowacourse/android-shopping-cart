@@ -8,7 +8,7 @@ import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.database.contract.RecentProductContract
 
 const val DATABASE_NAME = "ShoppingDatabase.db"
-const val DATABASE_VERSION = 3
+const val DATABASE_VERSION = 4
 
 class ShoppingDatabase(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -22,5 +22,6 @@ class ShoppingDatabase(context: Context) :
         db?.execSQL(ProductContract.DELETE_TABLE_QUERY)
         db?.execSQL(RecentProductContract.DELETE_TABLE_QUERY)
         db?.execSQL(BasketContract.DELETE_TABLE_QUERY)
+        onCreate(db)
     }
 }
