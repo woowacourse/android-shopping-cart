@@ -24,7 +24,7 @@
 
         <ImageView
             android:id="@+id/img_product"
-            glideImage="@{product.imageUrl}"
+            setImage="@{product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/black"

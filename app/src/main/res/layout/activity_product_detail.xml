@@ -21,7 +21,7 @@
 
         <ImageView
             android:id="@+id/img_product"
-            glideImage="@{product.imageUrl}"
+            setImage="@{product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

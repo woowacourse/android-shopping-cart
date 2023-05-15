@@ -37,7 +37,7 @@
 
         <ImageView
             android:id="@+id/img_product"
-            glideImage="@{cartProduct.imageUrl}"
+            setImage="@{cartProduct.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="26dp"

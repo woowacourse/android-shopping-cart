@@ -8,7 +8,7 @@ import woowacourse.shopping.R
 
 object BindingAdapter {
     @JvmStatic
-    @BindingAdapter("glideImage")
+    @BindingAdapter("setImage")
     fun setImage(view: ImageView, imageUrl: String) {
         Glide
             .with(view.context)
