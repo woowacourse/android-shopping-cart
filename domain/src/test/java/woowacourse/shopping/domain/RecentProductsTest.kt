@@ -1,10 +1,10 @@
 package woowacourse.shopping.domain
 
-import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
-internal class BasketProductTest {
+internal class RecentProductsTest {
     @ParameterizedTest
     @CsvSource("1, 1", "10, 5", "10, 10", "10, 11", "10, 100")
     internal fun `최근_본_목록을_최대_개수_만큼만_추가할_수_있다`(maxCount: Int, addCount: Int) {
@@ -19,6 +19,6 @@ internal class BasketProductTest {
 
         // then
         val actual = recentProducts.getItems().size
-        assertThat(actual).isEqualTo(addCount.coerceAtMost(maxCount))
+        Assertions.assertThat(actual).isEqualTo(addCount.coerceAtMost(maxCount))
     }
 }
