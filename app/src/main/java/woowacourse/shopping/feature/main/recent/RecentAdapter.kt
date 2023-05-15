@@ -1,39 +1,38 @@
 package woowacourse.shopping.feature.main.recent
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 
-class RecentAdapter(
-    items: List<RecentProductItemModel>
-) : RecyclerView.Adapter<RecentViewHolder>() {
-    private val items = items.toMutableList()
-
+class RecentAdapter : ListAdapter<RecentProductItemModel, RecentViewHolder>(RecentDiffCallBack) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewHolder {
         return RecentViewHolder.create(parent)
     }
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(holder: RecentViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
 
     fun setItems(newItems: List<RecentProductItemModel>) {
-        val recentItem = newItems.firstOrNull() ?: return
-        if (items.isEmpty()) {
-            items.addAll(newItems)
-            notifyItemRangeInserted(0, newItems.size)
-        }
-        val previousRecentItemIds = items.map { it.recentProduct.productUiModel.id }
-        val findIndex = previousRecentItemIds.indexOf(recentItem.recentProduct.productUiModel.id)
-        if (findIndex >= 0) {
-            items.removeAt(findIndex)
-            items.add(0, recentItem)
-            notifyItemMoved(findIndex, 0)
-        } else {
-            items.add(0, recentItem)
-            if (items.size > 10) items.removeLast()
-            notifyItemInserted(0)
+        submitList(newItems)
+    }
+
+    companion object {
+        private val RecentDiffCallBack = object : DiffUtil.ItemCallback<RecentProductItemModel>() {
+            override fun areItemsTheSame(
+                oldItem: RecentProductItemModel,
+                newItem: RecentProductItemModel
+            ): Boolean {
+                return oldItem.recentProduct.productUiModel.id == newItem.recentProduct.productUiModel.id
+            }
+
+            override fun areContentsTheSame(
+                oldItem: RecentProductItemModel,
+                newItem: RecentProductItemModel
+            ): Boolean {
+                return oldItem.recentProduct == newItem.recentProduct
+            }
+
         }
     }
 }

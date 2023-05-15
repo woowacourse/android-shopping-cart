@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     private fun initAdapters() {
         mainProductAdapter = MainProductAdapter(listOf())
-        recentAdapter = RecentAdapter(listOf())
+        recentAdapter = RecentAdapter()
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
         loadAdapter = LoadAdapter { presenter.loadMoreProduct() }
     }

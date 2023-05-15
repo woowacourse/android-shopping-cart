@@ -39,7 +39,6 @@ internal class CartPresenterTest {
         every { view.setPreviousButtonState(capture(previousSlot)) } just Runs
         val nextSlot = slot<Boolean>()
         every { view.setNextButtonState(capture(nextSlot)) } just Runs
-        every { view.setCount(any()) } just Runs
 
         presenter.loadInitCartProduct()
 
@@ -47,7 +46,6 @@ internal class CartPresenterTest {
         val actual = cartProductSlot.captured.map {
             CartProduct(it.cartId, it.productUiModel.toDomain())
         }
-
         assert(expected == actual)
         assert(!previousSlot.captured)
         assert(nextSlot.captured)
@@ -61,7 +59,7 @@ internal class CartPresenterTest {
 
         presenter.deleteCartProduct(4L)
 
-        verify { cartRepository.deleteProduct(any()) }
+        verify { cartRepository.deleteProduct(mockCartProducts[4]) }
         val expected = 4L
         val actual = slot.captured
 
@@ -121,9 +119,5 @@ internal class CartPresenterTest {
         "유명산지 고당도사과 1.5kg",
         "https://product-image.kurly.com/cdn-cgi/image/quality=85,width=676/product/image/b573ba85-9bfa-433b-bafc-3356b081440b.jpg",
         Price(13000)
-    )
-
-    private val mockCartProductUiModel = CartProductUiModel(
-        5L, mockProduct.toPresentation()
     )
 }
