@@ -31,8 +31,8 @@ object ProductConstant : BaseColumns {
         return "SELECT * FROM $TABLE_NAME"
     }
 
-    fun getGetNextQuery(limit: Int): String {
-        return "SELECT * FROM $TABLE_NAME DESC LIMIT $limit"
+    fun getGetNextQuery(limit: Int, offset: Int): String {
+        return "SELECT * FROM $TABLE_NAME DESC LIMIT $limit OFFSET $offset"
     }
 
     fun getInsertQuery(product: Product): String {
