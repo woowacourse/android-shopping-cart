@@ -1,6 +1,6 @@
 package woowacourse.shopping.feature.product.detail
 
-import woowacourse.shopping.feature.model.ProductState
+import woowacourse.shopping.model.ProductState
 
 interface ProductDetailContract {
 

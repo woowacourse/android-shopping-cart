@@ -14,14 +14,14 @@ import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.feature.extension.showToast
-import woowacourse.shopping.feature.list.adapter.ProductListAdapter
-import woowacourse.shopping.feature.list.item.ProductListItem
-import woowacourse.shopping.feature.model.ProductState
-import woowacourse.shopping.feature.model.mapper.toItem
-import woowacourse.shopping.feature.model.mapper.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
-import woowacourse.shopping.feature.util.SpanSizeLookUpManager
+import woowacourse.shopping.list.adapter.ProductListAdapter
+import woowacourse.shopping.list.item.ProductListItem
+import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.model.mapper.toItem
+import woowacourse.shopping.model.mapper.toUi
+import woowacourse.shopping.util.SpanSizeLookUpManager
+import woowacourse.shopping.util.extension.showToast
 
 class MainActivity : AppCompatActivity(), MainContract.View {
 

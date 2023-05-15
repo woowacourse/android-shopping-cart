@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.model
+package woowacourse.shopping.model
 
 class RecentProductState(
     val productId: Int,

@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main
+package woowacourse.shopping.list
 
 enum class ViewType() {
     HORIZONTAL,

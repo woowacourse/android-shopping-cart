@@ -10,8 +10,8 @@ import woowacourse.shopping.data.cart.CartDbHandler
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.feature.extension.showToast
-import woowacourse.shopping.feature.model.ProductState
+import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.util.extension.showToast
 import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {

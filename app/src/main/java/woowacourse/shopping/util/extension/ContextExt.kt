@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.extension
+package woowacourse.shopping.util.extension
 
 import android.content.Context
 import android.widget.Toast

@@ -1,12 +1,12 @@
-package woowacourse.shopping.feature.list.adapter
+package woowacourse.shopping.list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.list.viewholder.CartProductViewHolder
-import woowacourse.shopping.feature.list.viewholder.ItemHolder
+import woowacourse.shopping.list.item.ListItem
+import woowacourse.shopping.list.viewholder.CartProductViewHolder
+import woowacourse.shopping.list.viewholder.ItemHolder
 
 class CartProductListAdapter(
     private var items: List<ListItem> = listOf(),

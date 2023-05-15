@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.list.adapter
+package woowacourse.shopping.list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductListBinding
-import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.list.viewholder.ItemHolder
-import woowacourse.shopping.feature.list.viewholder.ProductMoreViewHolder
-import woowacourse.shopping.feature.list.viewholder.ProductViewHolder
-import woowacourse.shopping.feature.list.viewholder.RecentListItemViewHolder
-import woowacourse.shopping.feature.main.ViewType
+import woowacourse.shopping.list.ViewType
+import woowacourse.shopping.list.item.ListItem
+import woowacourse.shopping.list.viewholder.ItemHolder
+import woowacourse.shopping.list.viewholder.ProductMoreViewHolder
+import woowacourse.shopping.list.viewholder.ProductViewHolder
+import woowacourse.shopping.list.viewholder.RecentListItemViewHolder
 
 class ProductListAdapter(
     private var items: List<ListItem> = listOf(),

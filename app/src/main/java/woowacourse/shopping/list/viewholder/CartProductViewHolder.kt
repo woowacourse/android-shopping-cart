@@ -1,11 +1,11 @@
-package woowacourse.shopping.feature.list.viewholder
+package woowacourse.shopping.list.viewholder
 
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.feature.list.item.CartProductListItem
-import woowacourse.shopping.feature.list.item.ListItem
+import woowacourse.shopping.list.item.CartProductListItem
+import woowacourse.shopping.list.item.ListItem
 import java.text.DecimalFormat
 
 class CartProductViewHolder(binding: ViewBinding) : ItemHolder(binding) {

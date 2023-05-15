@@ -2,9 +2,9 @@ package woowacourse.shopping.feature.main
 
 import com.example.domain.Product
 import com.example.domain.RecentProduct
-import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.list.item.ProductListItem
-import woowacourse.shopping.feature.model.ProductState
+import woowacourse.shopping.list.item.ListItem
+import woowacourse.shopping.list.item.ProductListItem
+import woowacourse.shopping.model.ProductState
 
 interface MainContract {
 

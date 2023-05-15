@@ -8,9 +8,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbHandler
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.feature.list.adapter.CartProductListAdapter
-import woowacourse.shopping.feature.model.CartProductState
-import woowacourse.shopping.feature.model.mapper.toItem
+import woowacourse.shopping.list.adapter.CartProductListAdapter
+import woowacourse.shopping.model.CartProductState
+import woowacourse.shopping.model.mapper.toItem
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private var _binding: ActivityCartBinding? = null

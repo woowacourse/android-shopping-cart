@@ -2,11 +2,11 @@ package woowacourse.shopping.feature.cart
 
 import com.example.domain.CartProduct
 import woowacourse.shopping.data.cart.CartDbHandler
-import woowacourse.shopping.feature.list.item.CartProductListItem
-import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.model.CartProductState
-import woowacourse.shopping.feature.model.mapper.toDomain
-import woowacourse.shopping.feature.model.mapper.toUi
+import woowacourse.shopping.list.item.CartProductListItem
+import woowacourse.shopping.list.item.ListItem
+import woowacourse.shopping.model.CartProductState
+import woowacourse.shopping.model.mapper.toDomain
+import woowacourse.shopping.model.mapper.toUi
 
 class CartPresenter(
     private val view: CartContract.View,

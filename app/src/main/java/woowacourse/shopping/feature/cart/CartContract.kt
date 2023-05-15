@@ -1,7 +1,7 @@
 package woowacourse.shopping.feature.cart
 
-import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.model.CartProductState
+import woowacourse.shopping.list.item.ListItem
+import woowacourse.shopping.model.CartProductState
 
 interface CartContract {
 

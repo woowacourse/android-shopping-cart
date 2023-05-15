@@ -1,8 +1,8 @@
-package woowacourse.shopping.feature.util
+package woowacourse.shopping.util
 
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
-import woowacourse.shopping.feature.list.adapter.ProductListAdapter
-import woowacourse.shopping.feature.main.ViewType
+import woowacourse.shopping.list.ViewType
+import woowacourse.shopping.list.adapter.ProductListAdapter
 
 class SpanSizeLookUpManager(
     private val adapter: ProductListAdapter,

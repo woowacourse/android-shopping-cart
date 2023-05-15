@@ -1,11 +1,11 @@
-package woowacourse.shopping.feature.list.viewholder
+package woowacourse.shopping.list.viewholder
 
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentBinding
-import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.list.item.RecentProductListItem
+import woowacourse.shopping.list.item.ListItem
+import woowacourse.shopping.list.item.RecentProductListItem
 
 class RecentItemViewHolder(binding: ViewBinding) : ItemHolder(binding) {
     private val binding = binding as ItemRecentBinding

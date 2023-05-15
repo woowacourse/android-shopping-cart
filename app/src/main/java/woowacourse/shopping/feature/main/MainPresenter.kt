@@ -4,13 +4,13 @@ import com.example.domain.Product
 import com.example.domain.RecentProduct
 import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
-import woowacourse.shopping.feature.list.item.ListItem
-import woowacourse.shopping.feature.list.item.ProductListItem
-import woowacourse.shopping.feature.list.item.RecentProductListItem
-import woowacourse.shopping.feature.model.mapper.toDomain
-import woowacourse.shopping.feature.model.mapper.toItem
-import woowacourse.shopping.feature.model.mapper.toRecentProduct
-import woowacourse.shopping.feature.model.mapper.toUi
+import woowacourse.shopping.list.item.ListItem
+import woowacourse.shopping.list.item.ProductListItem
+import woowacourse.shopping.list.item.RecentProductListItem
+import woowacourse.shopping.model.mapper.toDomain
+import woowacourse.shopping.model.mapper.toItem
+import woowacourse.shopping.model.mapper.toRecentProduct
+import woowacourse.shopping.model.mapper.toUi
 
 class MainPresenter(
     private val view: MainContract.View,

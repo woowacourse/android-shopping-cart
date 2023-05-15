@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.list.item
+package woowacourse.shopping.list.item
 
 class CartProductListItem(
     val productId: Int,
