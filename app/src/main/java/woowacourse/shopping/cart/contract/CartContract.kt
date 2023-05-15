@@ -17,6 +17,9 @@ interface CartContract {
         fun pageDown()
         fun removeItem(id: Int)
         fun navigateToItemDetail(product: ProductUIModel)
-        fun getOffset(): Int
+
+        fun saveOffsetState(outState: MutableMap<String, Int>)
+
+        fun restoreOffsetState(state: Map<String, Int>)
     }
 }

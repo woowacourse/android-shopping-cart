@@ -70,13 +70,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        presenter.getOffset().let {
-            outState.putInt(KEY_OFFSET, it)
-        }
+        val state = mutableMapOf<String, Int>()
+        presenter.saveOffsetState(state)
+        state[KEY_OFFSET]?.let { outState.putInt(KEY_OFFSET, it) }
     }
 
     companion object {
-        private const val KEY_OFFSET = "KEY_OFFSET"
+        const val KEY_OFFSET = "KEY_OFFSET"
         fun from(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }
