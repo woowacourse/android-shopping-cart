@@ -13,7 +13,7 @@ class ShoppingRecyclerAdapter(
 
     private val products: MutableList<ProductUiModel> =
         products.toMutableList()
-    private val recentViewedProducts: MutableList<ProductUiModel> =
+    private var recentViewedProducts: MutableList<ProductUiModel> =
         recentViewedProducts.toMutableList()
 
     override fun getItemViewType(position: Int): Int {
@@ -51,11 +51,8 @@ class ShoppingRecyclerAdapter(
     override fun getItemCount(): Int = products.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun refreshRecentViewedItems(toRemove: ProductUiModel?, toAdd: ProductUiModel) {
-        toRemove?.let {
-            recentViewedProducts.remove(it)
-        }
-        recentViewedProducts.add(0, toAdd)
+    fun refreshRecentViewedItems(toReplace: List<ProductUiModel>) {
+        recentViewedProducts = toReplace.toMutableList()
         notifyDataSetChanged()
     }
 

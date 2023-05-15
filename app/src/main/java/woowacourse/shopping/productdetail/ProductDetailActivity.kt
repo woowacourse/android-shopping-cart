@@ -50,6 +50,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        setResult(ACTIVITY_RESULT_CODE)
+    }
+
     override fun navigateToShoppingCartView() {
         val intent = Intent(this, ShoppingCartActivity::class.java)
         startActivity(intent)
@@ -58,6 +63,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val PRODUCT_KEY = "product"
+        const val ACTIVITY_RESULT_CODE = 0
 
         fun getIntent(context: Context, product: ProductUiModel): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {

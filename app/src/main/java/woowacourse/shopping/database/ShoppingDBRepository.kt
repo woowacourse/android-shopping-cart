@@ -18,17 +18,6 @@ class ShoppingDBRepository(
 ) : ShoppingRepository {
 
     private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
-    private val recentViewedCursor = shoppingDB.query(
-        RecentViewedDBContract.TABLE_NAME,
-        arrayOf(
-            RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID,
-        ),
-        null,
-        null,
-        null,
-        null,
-        null,
-    )
 
     private fun addProduct(product: ProductUiModel) {
         val values = ContentValues().apply {
@@ -145,17 +134,28 @@ class ShoppingDBRepository(
     override fun selectRecentViewedProducts(): List<Product> {
         val recentViewedProducts = mutableListOf<Product>()
 
-        with(recentViewedCursor) {
-            if (moveToFirst()) {
-                while (moveToNext()) {
-                    val id =
-                        getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
-                    val product = selectProductById(id)
+        val recentViewedCursor = shoppingDB.query(
+            RecentViewedDBContract.TABLE_NAME,
+            arrayOf(
+                RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID,
+            ),
+            null,
+            null,
+            null,
+            null,
+            null,
+        )
 
-                    recentViewedProducts.add(product)
-                }
+        with(recentViewedCursor) {
+            while (moveToNext()) {
+                val id =
+                    getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
+                val product = selectProductById(id)
+
+                recentViewedProducts.add(product)
             }
         }
+        recentViewedCursor.close()
         return recentViewedProducts.toList().reversed()
     }
 

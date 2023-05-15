@@ -51,10 +51,11 @@ class ShoppingPresenter(
         }
 
         repository.insertToRecentViewedProducts(id)
-        view.refreshRecentViewedProductsView(
-            toAdd = product.toUiModel(),
-            toRemove = if (isDuplicated) product.toUiModel() else null,
-        )
+    }
+
+    override fun updateRecentViewedProducts() {
+        val recentViewedProducts = repository.selectRecentViewedProducts().map { it.toUiModel() }
+        view.refreshRecentViewedProductsView(recentViewedProducts)
     }
 
     companion object {

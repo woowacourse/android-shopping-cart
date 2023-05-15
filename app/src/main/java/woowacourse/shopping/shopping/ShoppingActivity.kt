@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,6 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.productdetail.ProductDetailActivity.Companion.ACTIVITY_RESULT_CODE
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
@@ -21,6 +24,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val presenter: ShoppingContract.Presenter by lazy {
         ShoppingPresenter.of(this, this)
     }
+    private val getResult: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            when (result.resultCode) {
+                ACTIVITY_RESULT_CODE -> {
+                    presenter.updateRecentViewedProducts()
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,14 +87,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         }
     }
 
-    override fun refreshRecentViewedProductsView(
-        toAdd: ProductUiModel,
-        toRemove: ProductUiModel?,
-    ) {
-        shoppingRecyclerAdapter.refreshRecentViewedItems(
-            toRemove = toRemove,
-            toAdd = toAdd,
-        )
+    override fun refreshRecentViewedProductsView(toReplace: List<ProductUiModel>) {
+        shoppingRecyclerAdapter.refreshRecentViewedItems(toReplace)
     }
 
     override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {
@@ -94,6 +99,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter.addToRecentViewedProduct(product.id)
         val intent = ProductDetailActivity.getIntent(this, product)
 
-        startActivity(intent)
+        getResult.launch(intent)
     }
 }
