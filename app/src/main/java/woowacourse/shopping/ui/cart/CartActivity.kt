@@ -61,6 +61,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             override fun onItemUpdate(productId: Int, count: Int): Int {
                 return presenter.updateItem(productId, count)
             }
+            override fun onItemSelectChanged(productId: Int, selected: Boolean) {
+                presenter.updateItemSelect(productId, selected)
+            }
         }
 
         binding.rvProducts.adapter = CartAdapter(

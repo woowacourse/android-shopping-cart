@@ -8,4 +8,5 @@ interface CartListener {
     fun onPageNext()
     fun onPagePrev()
     fun onItemUpdate(productId: Int, count: Int): Int
+    fun onItemSelectChanged(productId: Int, selected: Boolean)
 }

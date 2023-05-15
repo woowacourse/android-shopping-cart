@@ -87,6 +87,11 @@ class CartDatabase(context: Context) : CartRepository {
         }
     }
 
+    override fun updateSelected(id: Int, selected: Boolean) {
+        db.execSQL(CartConstant.getUpdateSelectedQuery(id, selected))
+        cartProducts = getAll()
+    }
+
     override fun remove(id: Int) {
         db.execSQL(CartConstant.getDeleteQuery(id))
         cartProducts = getAll()

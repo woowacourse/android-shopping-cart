@@ -57,6 +57,10 @@ class CartPresenter(
         }
     }
 
+    override fun updateItemSelect(productId: Int, selected: Boolean) {
+        cartRepository.updateSelected(productId, selected)
+    }
+
     companion object {
         private const val STEP = 5
     }

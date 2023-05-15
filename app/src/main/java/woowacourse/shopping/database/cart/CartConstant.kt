@@ -57,6 +57,12 @@ object CartConstant : BaseColumns {
             "WHERE $TABLE_COLUMN_ID = $id"
     }
 
+    fun getUpdateSelectedQuery(id: Int, selected: Boolean): String {
+        return "UPDATE $TABLE_NAME SET " +
+            "$TABLE_COLUMN_SELECTED = ${if (selected) 1 else 0} " +
+            "WHERE $TABLE_COLUMN_ID = $id"
+    }
+
     fun getGetAllQuery(): String {
         return "SELECT * FROM $TABLE_NAME ORDER BY $TABLE_COLUMN_SAVE_TIME"
     }

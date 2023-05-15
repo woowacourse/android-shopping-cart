@@ -19,5 +19,6 @@ interface CartContract {
         fun navigateToItemDetail(productId: Int)
         fun getPageIndex(): Int
         fun updateItem(productId: Int, count: Int): Int
+        fun updateItemSelect(productId: Int, selected: Boolean)
     }
 }
