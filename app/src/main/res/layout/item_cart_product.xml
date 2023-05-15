@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.feature.list.item.CartProductItem" />
+    </data>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_margin="@dimen/margin_large"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/product_cart_item_large_text_size"
                 android:textColor="@color/black"
+                android:text="@{cartProduct.productName}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="[든든] 동원 스위트콘"/>
@@ -41,6 +48,7 @@
                 android:layout_width="136dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="@dimen/margin_small"
+                app:imageUrl="@{cartProduct.productImageUrl}"
                 app:layout_constraintStart_toStartOf="@id/cart_product_name_tv"
                 app:layout_constraintTop_toBottomOf="@id/cart_product_name_tv"
                 tools:src="@drawable/ic_launcher_background"/>
@@ -50,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/product_cart_item_text_size"
+                android:text="@{@string/price_format(cartProduct.productPrice)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/item_layout"
                 tools:text="99,800원"/>

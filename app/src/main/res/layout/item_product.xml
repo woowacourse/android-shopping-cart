@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
+    <data>
+        <variable
+            name="product"
+            type="woowacourse.shopping.feature.list.item.ProductView.ProductItem" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,6 +18,7 @@
             android:id="@+id/product_image"
             android:layout_width="154dp"
             android:layout_height="154dp"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,19 +31,20 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/product_main_item_text_size"
             android:layout_marginTop="@dimen/margin_small"
+            android:text="@{product.name}"
             app:layout_constraintTop_toBottomOf="@id/product_image"
             app:layout_constraintStart_toStartOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@id/product_image"
             android:textColor="@color/black"
             android:maxLines="1"
-            android:ellipsize="end"
-            tools:text="PET보틀-"/>
+            android:ellipsize="end"/>
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/product_main_item_text_size"
+            android:text="@{@string/price_format(product.price)}"
             app:layout_constraintTop_toBottomOf="@id/product_name"
             app:layout_constraintStart_toStartOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@id/product_image"
