@@ -19,8 +19,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
 
-    private lateinit var productData: ProductModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
@@ -28,7 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setPresenter()
         getData()
         bindView()
-        presenter.updateRecentViewedProducts(productData.id)
+        presenter.updateRecentViewedProducts()
     }
 
     private fun setBinding() {
@@ -40,12 +38,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
     }
 
-    private fun getData() {
-        intent.getParcelableCompat<ProductModel>(PRODUCT)?.let { productData = it }
+    override fun getData() {
+        intent.getParcelableCompat<ProductModel>(PRODUCT)?.let { presenter.setProductData(it) }
     }
 
     private fun bindView() {
-        binding.product = productData
+        binding.product = presenter.getProductData()
         binding.presenter = presenter
     }
 

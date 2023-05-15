@@ -10,13 +10,24 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository,
     private val recentViewedRepository: RecentViewedRepository,
 ) : ProductDetailContract.Presenter {
+
+    private lateinit var productData: ProductModel
+
+    override fun setProductData(productModel: ProductModel) {
+        productData = productModel
+    }
+
+    override fun getProductData(): ProductModel {
+        return productData
+    }
+
     override fun putInCart(product: ProductModel) {
         cartRepository.add(product.id, 1)
         view.startCartActivity()
     }
 
-    override fun updateRecentViewedProducts(id: Int) {
-        recentViewedRepository.add(id)
+    override fun updateRecentViewedProducts() {
+        recentViewedRepository.add(productData.id)
     }
 
     override fun handleNextStep(itemId: Int) {
