@@ -10,8 +10,8 @@ class SpanSizeLookUpManager(
 ) : SpanSizeLookup() {
 
     override fun getSpanSize(position: Int): Int {
-        return if (adapter.getItemViewType(position) == ViewType.HORIZONTAL.ordinal ||
-            adapter.getItemViewType(position) == ViewType.ADD.ordinal
+        return if (adapter.getItemViewType(position) == ViewType.RECENT_PRODUCT.ordinal ||
+            adapter.getItemViewType(position) == ViewType.LOAD_MORE.ordinal
         ) {
             spanCount
         } else 1

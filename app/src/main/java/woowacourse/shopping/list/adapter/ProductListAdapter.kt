@@ -26,14 +26,14 @@ class ProductListAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (ViewType.getType(position)) {
-            ViewType.HORIZONTAL -> {
-                ViewType.HORIZONTAL.ordinal
+            ViewType.RECENT_PRODUCT -> {
+                ViewType.RECENT_PRODUCT.ordinal
             }
             ViewType.PRODUCT -> {
                 ViewType.PRODUCT.ordinal
             }
-            ViewType.ADD -> {
-                ViewType.ADD.ordinal
+            ViewType.LOAD_MORE -> {
+                ViewType.LOAD_MORE.ordinal
             }
         }
     }
@@ -42,7 +42,7 @@ class ProductListAdapter(
         val inflater = LayoutInflater.from(parent.context)
 
         return when (ViewType.get(viewType)) {
-            ViewType.HORIZONTAL -> {
+            ViewType.RECENT_PRODUCT -> {
                 val binding = ItemRecentProductListBinding.inflate(inflater, parent, false)
                 RecentListItemViewHolder(binding, recentItems)
             }
@@ -50,7 +50,7 @@ class ProductListAdapter(
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
                 ProductViewHolder(binding)
             }
-            ViewType.ADD -> {
+            ViewType.LOAD_MORE -> {
                 val binding = ItemMoreBinding.inflate(inflater, parent, false)
                 ProductMoreViewHolder(binding)
             }

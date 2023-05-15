@@ -1,14 +1,14 @@
 package woowacourse.shopping.list
 
-enum class ViewType() {
-    HORIZONTAL,
+enum class ViewType {
+    RECENT_PRODUCT,
     PRODUCT,
-    ADD;
+    LOAD_MORE;
 
     companion object {
         fun getType(position: Int): ViewType {
-            if (position == 0) return HORIZONTAL
-            if ((position + 1) % 20 == 0) return ADD
+            if (position == 0) return RECENT_PRODUCT
+            if ((position + 1) % 20 == 0) return LOAD_MORE
             return PRODUCT
         }
 
