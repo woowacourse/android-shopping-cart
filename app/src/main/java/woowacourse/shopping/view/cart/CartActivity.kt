@@ -28,7 +28,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun setUpActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = TITLE
     }
 
     private fun setUpPresenter() {
