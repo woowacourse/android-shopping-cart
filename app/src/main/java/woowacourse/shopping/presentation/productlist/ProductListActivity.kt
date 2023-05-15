@@ -9,7 +9,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.product.MockProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.data.recentproduct.RecentProductIdDbAdapter
-import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.model.ProductModel
@@ -18,15 +17,12 @@ import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.productlist.product.ProductListAdapter
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
-    private lateinit var binding: ActivityProductListBinding
 
+    private lateinit var binding: ActivityProductListBinding
     private lateinit var productListAdapter: ProductListAdapter
 
-    private val recentProductRepository: RecentProductIdRepository by lazy {
-        RecentProductIdDbAdapter(RecentProductDbHelper(this))
-    }
-
     private val presenter: ProductListPresenter by lazy {
+        val recentProductRepository = RecentProductIdDbAdapter(RecentProductDbHelper(this))
         ProductListPresenter(this, MockProductRepository, recentProductRepository)
     }
 

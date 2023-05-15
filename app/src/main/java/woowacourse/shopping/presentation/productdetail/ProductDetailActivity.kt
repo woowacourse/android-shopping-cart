@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbAdapter
 import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.MockProductRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
@@ -23,7 +24,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private val presenter: ProductDetailContract.Presenter by lazy {
-        ProductDetailPresenter(this, CartDbAdapter(CartDbHelper(this)), MockProductRepository)
+        val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
+        ProductDetailPresenter(this, cartRepository, MockProductRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +43,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         ).show()
     }
 
-    override fun setProductDetail(productModel: ProductModel) {
+    override fun showProductDetail(productModel: ProductModel) {
         binding.productModel = productModel
     }
 
