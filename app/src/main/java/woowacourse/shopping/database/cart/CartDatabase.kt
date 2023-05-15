@@ -15,7 +15,7 @@ import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_SAVE
 import woowacourse.shopping.database.cart.CartConstant.TABLE_NAME
 
 class CartDatabase(
-    private val shoppingDb: SQLiteDatabase
+    private val shoppingDb: SQLiteDatabase,
 ) : CartRepository {
     override fun getAll(): List<Product> {
         val cartProducts = mutableListOf<Product>()
@@ -52,7 +52,7 @@ class CartDatabase(
             TABLE_NAME,
             null,
             values,
-            SQLiteDatabase.CONFLICT_REPLACE
+            SQLiteDatabase.CONFLICT_REPLACE,
         )
     }
 
