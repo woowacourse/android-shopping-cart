@@ -19,7 +19,7 @@
         android:background="@drawable/shape_woowa_light_gray_line_1_rect">
 
         <TextView
-            android:id="@+id/tv_product_name"
+            android:id="@+id/product_name_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
@@ -32,26 +32,26 @@
             android:textColor="@color/woowa_text_black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/iv_close"
+            app:layout_constraintEnd_toStartOf="@+id/close_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
 
         <ImageView
-            android:id="@+id/iv_close"
+            android:id="@+id/close_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="24dp"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_product_name"
+            app:layout_constraintBottom_toBottomOf="@+id/product_name_text_view"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_product_name"
+            app:layout_constraintTop_toTopOf="@+id/product_name_text_view"
             app:srcCompat="@drawable/ic_close"
             app:tint="@color/woowa_light_gray" />
 
         <ImageView
-            android:id="@+id/iv_product"
+            android:id="@+id/product_image_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="18dp"
@@ -60,19 +60,19 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="136:72"
-            app:layout_constraintStart_toStartOf="@id/tv_product_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
+            app:layout_constraintStart_toStartOf="@id/product_name_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/product_name_text_view"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/tv_product_price"
+            android:id="@+id/product_price_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{@string/price_format(product.price.value)}"
             android:textColor="@color/woowa_text_black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_product"
-            app:layout_constraintEnd_toEndOf="@id/iv_close"
+            app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
+            app:layout_constraintEnd_toEndOf="@id/close_button"
             tools:text="99,800원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

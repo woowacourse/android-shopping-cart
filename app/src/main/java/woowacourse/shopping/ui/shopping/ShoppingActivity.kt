@@ -41,7 +41,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
 
     private fun initView() {
         binding.presenter = presenter
-        binding.tbShopping.setOnMenuItemClickListener(this)
+        binding.shoppingToolBar.setOnMenuItemClickListener(this)
         initRecyclerView()
     }
 

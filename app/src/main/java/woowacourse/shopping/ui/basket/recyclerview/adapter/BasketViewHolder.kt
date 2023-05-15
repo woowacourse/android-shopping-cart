@@ -13,7 +13,9 @@ class BasketViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) : ViewHold
     private val binding = ItemBasketBinding.bind(itemView)
 
     init {
-        binding.ivClose.setOnClickListener { onItemClick(bindingAdapterPosition) }
+        binding.closeButton.setOnClickListener {
+            onItemClick(bindingAdapterPosition)
+        }
     }
 
     fun bind(item: UiProduct) {

@@ -17,12 +17,12 @@
         android:paddingStart="20dp">
 
         <ImageView
-            android:id="@+id/iv_product"
+            android:id="@+id/product_image_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             bind:imageUrl="@{product.imageUrl}"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@id/tv_product_name"
+            app:layout_constraintBottom_toTopOf="@id/product_name_text_view"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/tv_product_name"
+            android:id="@+id/product_name_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
@@ -42,9 +42,9 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/iv_product"
-            app:layout_constraintStart_toStartOf="@+id/iv_product"
-            app:layout_constraintTop_toBottomOf="@+id/iv_product"
+            app:layout_constraintEnd_toEndOf="@+id/product_image_view"
+            app:layout_constraintStart_toStartOf="@+id/product_image_view"
+            app:layout_constraintTop_toBottomOf="@+id/product_image_view"
             tools:text="PET_보틀_정사각형" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
