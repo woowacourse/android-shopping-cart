@@ -24,34 +24,13 @@ class ProductListPresenterTest {
     }
 
     @Test
-    fun 전체_상품목록을_초기화_한다() {
-        // given
-        every { productRepository.products } returns listOf()
-        every { productRepository.getProductsWithRange(0, 20) } returns listOf()
-        // when
-        presenter.initProducts()
-        // then
-        verify { view.initProductModels(listOf()) }
-    }
-
-    @Test
-    fun 최근_상품목록을_초기화_한다() {
-        // given
-        every { recentProductRepository.getRecentProductIds(10) } returns listOf()
-        // when
-        presenter.initRecentProducts()
-        // then
-        verify { view.initRecentProductModels(listOf()) }
-    }
-
-    @Test
     fun 상품_목록을_업데이트한다() {
         // given
         every { productRepository.getProductsWithRange(20, 20) } returns listOf()
         // when
         presenter.updateProducts()
         // then
-        verify { view.setProductModels(listOf()) }
+        verify { view.loadProductModels(listOf()) }
     }
 
     @Test
@@ -64,7 +43,7 @@ class ProductListPresenterTest {
         // when
         presenter.updateRecentProducts()
         // then
-        verify { view.setRecentProductModels(productModels) }
+        verify { view.loadRecentProductModels(productModels) }
     }
 
     @Test

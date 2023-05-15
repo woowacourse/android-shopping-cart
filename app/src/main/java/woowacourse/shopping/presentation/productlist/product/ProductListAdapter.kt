@@ -12,7 +12,6 @@ import woowacourse.shopping.presentation.productlist.recentproduct.RecentProduct
 import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductContainerViewHolder
 
 class ProductListAdapter(
-    products: List<ProductModel>,
     private val showMoreProductItem: () -> Unit,
     private val showProductDetail: (ProductModel) -> Unit,
     private val recentProductAdapter: RecentProductAdapter,
@@ -21,7 +20,7 @@ class ProductListAdapter(
     private lateinit var itemProductBinding: ItemProductBinding
     private lateinit var inflater: LayoutInflater
 
-    private val _products = products.toMutableList()
+    private val _products = mutableListOf<ProductModel>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (!::inflater.isInitialized) {
             inflater = LayoutInflater.from(parent.context)

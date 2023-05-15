@@ -16,30 +16,19 @@ class ProductListPresenter(
     private val products = Products()
 
     init {
-        initRecentProducts()
-        initProducts()
-    }
-
-    override fun initProducts() {
-        val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
-        products.addProducts(receivedProducts)
-        view.initProductModels(products.toPresentation())
+        updateProducts()
+        updateRecentProducts()
     }
 
     override fun updateProducts() {
         val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
         products.addProducts(receivedProducts)
-        view.setProductModels(products.toPresentation())
-    }
-
-    override fun initRecentProducts() {
-        val recentProductModels = getRecentProductModels()
-        view.initRecentProductModels(recentProductModels)
+        view.loadProductModels(products.toPresentation())
     }
 
     override fun updateRecentProducts() {
         val recentProductModels = getRecentProductModels()
-        view.setRecentProductModels(recentProductModels)
+        view.loadRecentProductModels(recentProductModels)
     }
 
     override fun saveRecentProductId(productId: Int) {

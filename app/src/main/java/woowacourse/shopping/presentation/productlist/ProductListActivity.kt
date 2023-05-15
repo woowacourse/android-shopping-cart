@@ -34,7 +34,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbarProductList.toolbar)
+        initView()
     }
 
     override fun onStart() {
@@ -42,9 +42,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         presenter.updateRecentProducts()
     }
 
-    override fun initProductModels(productModels: List<ProductModel>) {
+    private fun initView() {
+        setSupportActionBar(binding.toolbarProductList.toolbar)
+        initRecentProductAdapter()
+        initProductAdapter()
+    }
+
+    private fun initProductAdapter() {
         productListAdapter = ProductListAdapter(
-            products = productModels,
             showMoreProductItem = ::showMoreProductItems,
             showProductDetail = ::productClick,
             recentProductAdapter = recentProductAdapter,
@@ -58,16 +63,16 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.recyclerProduct.adapter = productListAdapter
     }
 
-    override fun setProductModels(productModels: List<ProductModel>) {
+    private fun initRecentProductAdapter() {
+        recentProductAdapter = RecentProductAdapter(::productClick)
+    }
+
+    override fun loadProductModels(productModels: List<ProductModel>) {
         productListAdapter.setItems(productModels)
     }
 
-    override fun initRecentProductModels(productModels: List<ProductModel>) {
-        recentProductAdapter = RecentProductAdapter(productModels, ::productClick)
-    }
-
-    override fun setRecentProductModels(productModels: List<ProductModel>) {
-        recentProductAdapter.setItems(productModels)
+    override fun loadRecentProductModels(productModels: List<ProductModel>) {
+        recentProductAdapter.submitList(productModels)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
