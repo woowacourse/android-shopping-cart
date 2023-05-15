@@ -49,7 +49,7 @@ class CartPresenter(
     }
 
     private fun convertToCartProductModels(cartProducts: List<CartProduct>) =
-        cartProducts.asSequence().map { it.toUiModel(productRepository.find(it.id)) }.toList()
+        cartProducts.map { it.toUiModel(productRepository.find(it.id)) }
 
     private fun changeListItems(items: List<CartProduct>) {
         currentCartProducts.clear()
