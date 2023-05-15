@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray">#EBEBEB</color>
+    <color name="toolbar_background">#555555</color>
+    <color name="put_in_cart_button_color">#04C092</color>
+    <color name="button_more_item_color">#AAAAAA</color>
 </resources>
