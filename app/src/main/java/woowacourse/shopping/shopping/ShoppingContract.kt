@@ -5,7 +5,7 @@ import woowacourse.shopping.common.model.RecentProductModel
 
 interface ShoppingContract {
     interface Presenter {
-        fun resumeView()
+        fun reloadProducts()
 
         fun openProduct(productModel: ProductModel)
 

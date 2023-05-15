@@ -22,7 +22,7 @@ class ShoppingPresenter(
         loadMoreProduct()
     }
 
-    override fun resumeView() {
+    override fun reloadProducts() {
         updateRecentProducts()
     }
 
