@@ -18,12 +18,13 @@ class ShoppingPresenter(
     private var lastId: Int = -1
 
     override fun fetchProducts() {
-        val products = productRepository
+        var products = productRepository
             .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, lastId)
             .map { it.toUi() }
         lastId = products.maxOfOrNull { it.id } ?: -1
-        lastId -= if (checkHasNext(products)) 1 else 0
         hasNext = checkHasNext(products)
+        lastId -= if (hasNext) 1 else 0
+        if (hasNext) products = products.dropLast(1)
         view.updateProducts(products)
     }
 
@@ -47,7 +48,7 @@ class ShoppingPresenter(
     }
 
     override fun fetchHasNext() {
-        view.updateMoreButtonVisibility(hasNext)
+        view.updateMoreButtonState(hasNext)
     }
 
     companion object {

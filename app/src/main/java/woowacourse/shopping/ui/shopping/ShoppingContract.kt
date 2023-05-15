@@ -12,7 +12,7 @@ interface ShoppingContract {
 
         fun showProductDetail(product: UiProduct)
 
-        fun updateMoreButtonVisibility(isVisible: Boolean)
+        fun updateMoreButtonState(isVisible: Boolean)
     }
 
     interface Presenter {

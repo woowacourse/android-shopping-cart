@@ -22,6 +22,7 @@ import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.ShoppingViewType.MORE_BUTTON
 import woowacourse.shopping.ui.shopping.ShoppingViewType.PRODUCT
 import woowacourse.shopping.ui.shopping.ShoppingViewType.RECENT_PRODUCTS
+import woowacourse.shopping.ui.shopping.morebutton.MoreButtonAdapter
 import woowacourse.shopping.ui.shopping.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductWrapperAdapter
@@ -35,6 +36,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var moreButtonAdapter: MoreButtonAdapter
     private lateinit var concatAdapter: ConcatAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +68,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun updateProducts(products: List<UiProduct>) {
-        productAdapter.submitList(products)
+        productAdapter.submitList(productAdapter.currentList + products)
     }
 
     override fun updateRecentProducts(recentProducts: List<UiRecentProduct>) {
@@ -74,12 +76,27 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         recentProductWrapperAdapter.notifyDataSetChanged()
     }
 
+    override fun showProductDetail(product: UiProduct) {
+        startActivity(ProductDetailActivity.getIntent(this, product))
+    }
+
+    override fun updateMoreButtonState(isVisible: Boolean) {
+        moreButtonAdapter.hasNext = isVisible
+        moreButtonAdapter.notifyDataSetChanged()
+    }
+
     private fun initAdapter() {
         recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
         recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
         productAdapter = ProductAdapter(presenter::inquiryProductDetail)
+        moreButtonAdapter = MoreButtonAdapter(presenter::fetchProducts)
         concatAdapter =
-            ConcatAdapter(getConcatAdapterConfig(), recentProductWrapperAdapter, productAdapter)
+            ConcatAdapter(
+                getConcatAdapterConfig(),
+                recentProductWrapperAdapter,
+                productAdapter,
+                moreButtonAdapter
+            )
         binding.rvShopping.adapter = concatAdapter
         binding.rvShopping.layoutManager = getGridLayoutManager()
     }
@@ -111,23 +128,25 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initShoppingRecyclerViewScrollListener() {
         binding.rvShopping.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (!recyclerView.canScrollVertically(1)) {
+                val layoutManager = binding.rvShopping.layoutManager as GridLayoutManager
+                val lastPosition = layoutManager.findLastCompletelyVisibleItemPosition()
+                if (layoutManager.itemCount <= lastPosition + LOAD_POSITION ||
+                    !recyclerView.canScrollVertically(STATE_LOWEST)
+                ) {
                     presenter.fetchHasNext()
                 }
             }
         })
     }
 
-    override fun showProductDetail(product: UiProduct) {
-        startActivity(ProductDetailActivity.getIntent(this, product))
-    }
-
-    override fun updateMoreButtonVisibility(isVisible: Boolean) {
-    }
-
     private fun initButtonBasketClickListener() {
         binding.ivBasket.setOnSingleClickListener {
             startActivity(BasketActivity.getIntent(this))
         }
+    }
+
+    companion object {
+        private const val LOAD_POSITION = 4
+        private const val STATE_LOWEST = 1
     }
 }
