@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.CartProductUIModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.cart.cartAdapter.CartListener" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="324dp"
+        android:layout_height="153dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/layout_border_radius"
+        android:onClick="@{() -> listener.onItemClick(product)}">
+
+        <TextView
+            android:id="@+id/tv_product_title"
+            android:layout_width="266dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="@{product.name}"
+            android:textAppearance="@style/cart_item_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="PET보틀-정사각(370ml)" />
+
+        <ImageView
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="13dp"
+            android:contentDescription="@string/cart_item_product_image_description"
+            app:imageUrl="@{product.imageUrl}"
+            app:layout_constraintStart_toStartOf="@id/tv_product_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_title"
+            tools:src="@color/black" />
+
+        <ImageView
+            android:id="@+id/iv_remove"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/cart_item_product_remove_btn_description"
+            android:onClick="@{() -> listener.onItemRemove(product.id)}"
+            android:src="@drawable/ic_cart_close_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="13dp"
+            android:layout_marginBottom="18dp"
+            android:text="@{@string/product_price(product.price)}"
+            android:textColor="@color/gray_333333"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="99000원" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

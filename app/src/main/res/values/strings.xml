@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="menu_cart_title">cart</string>
+    <string name="product_price_prefix">금액</string>
+    <string name="product_price">%d원</string>
+    <string name="exit">exit</string>
+
+    <!-- Strings related to cart page -->
+    <string name="cart_page_next_btn"><![CDATA[>]]></string>
+    <string name="cart_page_prev_btn"><![CDATA[<]]></string>
+    <string name="cart_item_product_remove_btn_description">지우기 버튼</string>
+    <string name="cart_item_product_image_description">장바구니 상품</string>
+
+    <!-- Strings related to product detail -->
+    <string name="product_detail_add_to_cart_btn">장바구니 담기</string>
+
+    <!-- Strings related to shopping page -->
+    <string name="shopping_toolbar_title">Shopping</string>
+    <string name="shopping_read_more_text">더보기</string>
+    <string name="shopping_item_product_image_description">상품</string>
+
+    <!-- Strings related to recent recent product -->
+    <string name="recent_product_text">최근 본 상품</string>
+    <string name="recent_product_item_product_image_description">최근 본 상품</string>
 </resources>

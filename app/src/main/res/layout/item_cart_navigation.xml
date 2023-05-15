@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="cart"
+            type="woowacourse.shopping.model.PageUIModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.cart.cartAdapter.CartListener" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cart_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="142dp"
+        android:layout_marginTop="6dp"
+        android:visibility="@{cart.pageNext || cart.pagePrev  ? View.VISIBLE : View.GONE}">
+
+        <TextView
+            android:id="@+id/tv_page_prev"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/btn_page_prev"
+            android:enabled="@{cart.pagePrev}"
+            android:gravity="center"
+            android:onClick="@{() -> listener.onPagePrev()}"
+            android:text="@string/cart_page_prev_btn"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_page_number"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@{`` + cart.pageNumber}"
+            android:textColor="@color/gray_555555"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/tv_page_next"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/btn_page_next"
+            android:enabled="@{cart.pageNext}"
+            android:gravity="center"
+            android:onClick="@{() -> listener.onPageNext()}"
+            android:text="@string/cart_page_next_btn"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_page_number"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.495" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
