@@ -39,6 +39,11 @@ class CartPagination(private val rangeSize: Int, private val cartRepository: Car
         return cartRepository.isExistByMark(mark - rangeSize - 1)
     }
 
+    fun currentItems(): List<CartProduct> {
+        val currentMark = mark - rangeSize
+        return cartRepository.findRange(currentMark, rangeSize)
+    }
+
     fun getPageNumber(): String {
         val pageNumber = mark / rangeSize
         return pageNumber.toString()

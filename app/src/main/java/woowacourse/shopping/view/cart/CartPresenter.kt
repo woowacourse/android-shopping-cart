@@ -29,6 +29,8 @@ class CartPresenter(
         cartRepository.remove(id)
         view.notifyRemoveItem(currentCartProducts.indexOf(removedItem))
         currentCartProducts.remove(removedItem)
+        val getItems = cartPagination.currentItems()
+        updateCartItems(getItems)
     }
 
     override fun fetchNextPage() {
