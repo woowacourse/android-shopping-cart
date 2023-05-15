@@ -17,22 +17,25 @@ class MainPresenter(
     private val recentProductDbHandler: RecentProductDbHandler
 ) : MainContract.Presenter {
 
+    private val loadItemCountUnit = 20
+
     private val products: List<Product> = productDbHandler.getAll()
     private val recentProducts: List<RecentProduct> = recentProductDbHandler.getAll()
-    private var currentItemIndex = 0
+    private var loadMoreItemStartIndex = 0
 
-    override fun addProducts() {
+    override fun loadMoreProducts() {
         val addItems: List<Product>
-        if (currentItemIndex == 0) {
+        if (loadMoreItemStartIndex == 0) {
             loadProducts()
             return
         }
-        if (products.size < currentItemIndex + ADD_SIZE) {
-            addItems = products.subList(currentItemIndex, products.size - 1)
-            currentItemIndex += products.size - 1 - currentItemIndex
+        if (products.size < loadMoreItemStartIndex + loadItemCountUnit) {
+            addItems = products.subList(loadMoreItemStartIndex, products.size - 1)
+            loadMoreItemStartIndex += products.size - 1 - loadMoreItemStartIndex
         } else {
-            addItems = products.subList(currentItemIndex, currentItemIndex + ADD_SIZE)
-            currentItemIndex += ADD_SIZE
+            addItems =
+                products.subList(loadMoreItemStartIndex, loadMoreItemStartIndex + loadItemCountUnit)
+            loadMoreItemStartIndex += loadItemCountUnit
         }
         view.addProducts(addItems)
     }
@@ -52,13 +55,9 @@ class MainPresenter(
 
     private fun loadProducts() {
         val productUnit: List<Product> =
-            products.subList(currentItemIndex, currentItemIndex + ADD_SIZE)
+            products.subList(loadMoreItemStartIndex, loadMoreItemStartIndex + loadItemCountUnit)
 
         view.setProducts(productUnit, recentProducts)
-        currentItemIndex += ADD_SIZE
-    }
-
-    companion object {
-        private const val ADD_SIZE = 20
+        loadMoreItemStartIndex += loadItemCountUnit
     }
 }

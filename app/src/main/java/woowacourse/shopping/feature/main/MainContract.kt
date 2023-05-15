@@ -14,7 +14,7 @@ interface MainContract {
     }
 
     interface Presenter {
-        fun addProducts()
+        fun loadMoreProducts()
         fun showProductDetail(listItem: ListItem)
     }
 }

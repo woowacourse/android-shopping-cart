@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private val productListAdapter: ProductListAdapter by lazy {
         ProductListAdapter(
             onItemClick = { presenter.showProductDetail(it) },
-            onMoreItemClick = { presenter.addProducts() }
+            onMoreItemClick = { presenter.loadMoreProducts() }
         )
     }
 
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initList()
-        presenter.addProducts()
+        presenter.loadMoreProducts()
     }
 
     override fun onDestroy() {
