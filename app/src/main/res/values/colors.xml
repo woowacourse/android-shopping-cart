@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="toolbar">#555555</color>
+    <color name="pagination_button_disabled">#D6D6D6</color>
+    <color name="pagination_button_enabled">#04C09E</color>
 </resources>

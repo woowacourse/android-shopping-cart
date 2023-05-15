@@ -1,0 +1,69 @@
+# 쇼핑 장바구니 기능 목록
+
+- [x] MVP
+    - [x] Shopping
+        - [x] ProductList (RecyclerView)
+        - [x] RecentProductList (RecyclerView)
+        - [x] init { }
+            - [x] productDao.select()
+            - [x] recentProductDao.select()
+            - [x] view.updateProductList(products)
+            - [x] view.updateRecentProductList(recentProducts)
+        - [x] resumeView()
+            - [x] view.updateProductList(products)
+            - [x] view.updateRecentProductList(recentProducts)
+        - [x] openProduct(product)
+            - [x] RecentProducts.add()
+            - [x] view.showProductDetail()
+        - [x] openCart()
+            - [x] view.showCart()
+    - [x] ProductDetail
+        - [x] init { }
+            - [x] view.updateProductDetail(product)
+        - [x] addToCart(product)
+            - [x] cartState.load()
+            - [x] Cart.add(product)
+            - [x] cartDao.insert(product)
+            - [x] view.showCart()
+    - [x] Cart
+        - [x] ProductList (RecyclerView)
+        - [x] init { }
+            - [x] cartDao.select()
+            - [x] view.updateCart(cart)
+        - [x] resumeView()
+          - [x] cartState.load()
+          - [x] view.updateCart(cart)
+        - [x] removeProduct()
+            - [x] Cart.remove() (domain)
+            - [x] view.updateCart(cart)
+- [x] SQLite
+    - [x] RecentProduct
+        - [x] ordinal (Primary Key, Int)
+        - [x] product_id (Int)
+    - [x] Cart
+        - [x] ordinal (Primary Key, Int)
+        - [x] product_id (Int)
+    - [x] Product
+        - [x] id (Primary Key, Int)
+        - [x] picture (Text)
+        - [x] title (Text)
+        - [x] price (Int)
+- [x] Domain
+    - [x] Product
+        - [x] Picture (URL)
+        - [x] Title
+        - [x] Price
+    - [x] Cart
+        - [x] List<CartProduct>
+        - [x] add(CartProduct)
+        - [x] remove(CartProduct)
+    - [x] CartProduct
+        - [x] Ordinal
+        - [x] Product
+    - [x] RecentProducts
+        - [x] List<RecentProduct>
+        - [x] add(RecentProduct)
+        - [x] getRecentProducts(Int)
+    - [x] RecentProduct
+        - [x] Ordinal
+        - [x] Product
