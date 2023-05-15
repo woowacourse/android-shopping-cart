@@ -21,7 +21,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        cartProductAdapter = CartProductAdapter(listOf())
+        cartProductAdapter = CartProductAdapter()
         binding.cartItemRecyclerview.adapter = cartProductAdapter
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
