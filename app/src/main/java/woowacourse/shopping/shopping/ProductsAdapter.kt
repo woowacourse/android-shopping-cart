@@ -44,16 +44,13 @@ class ProductsAdapter(
         }
     }
 
-    fun updateProducts(data: List<ProductsItemType>) {
-        productItemTypes.addAll(productItemTypes.size - 1, data)
-        notifyItemChanged(productItemTypes.size - 1)
+    fun updateProducts(start: Int, products: List<ProductsItemType>) {
+        productItemTypes = products.toMutableList()
+        notifyItemRangeChanged(start, productItemTypes.size)
     }
 
-    fun updateRecentProducts(data: ProductsItemType) {
-        when {
-            productItemTypes[0] is RecentProductsItem -> productItemTypes[0] = data
-            (data as RecentProductsItem).product.isNotEmpty() -> productItemTypes.add(0, data)
-        }
+    fun updateRecentProducts(products: List<ProductsItemType>) {
+        productItemTypes = products.toMutableList()
         notifyItemChanged(0)
     }
 }

@@ -97,12 +97,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         getResult.launch(ProductDetailActivity.from(this, product))
     }
 
-    override fun addProducts(data: List<ProductsItemType>) {
-        updateProductsAdapterItem { updateProducts(data) }
+    override fun updateProducts(start: Int, products: List<ProductsItemType>) {
+        updateProductsAdapterItem { updateProducts(start, products) }
     }
 
-    override fun addRecentProducts(data: ProductsItemType) {
-        updateProductsAdapterItem { updateRecentProducts(data) }
+    override fun updateRecentProducts(products: List<ProductsItemType>) {
+        updateProductsAdapterItem { updateRecentProducts(products) }
     }
 
     private fun updateProductsAdapterItem(action: ProductsAdapter.() -> Unit) {

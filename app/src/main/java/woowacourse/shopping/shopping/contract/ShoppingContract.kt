@@ -8,8 +8,8 @@ interface ShoppingContract {
         fun setProducts(data: List<ProductsItemType>)
         fun navigateToProductDetail(product: ProductUIModel)
 
-        fun addProducts(data: List<ProductsItemType>)
-        fun addRecentProducts(data: ProductsItemType)
+        fun updateProducts(start: Int, products: List<ProductsItemType>)
+        fun updateRecentProducts(products: List<ProductsItemType>)
     }
 
     interface Presenter {
