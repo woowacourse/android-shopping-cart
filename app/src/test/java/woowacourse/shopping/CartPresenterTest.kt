@@ -29,19 +29,6 @@ class CartPresenterTest {
     }
 
     @Test
-    fun 처음_카트_상품_목록을_설정한다() {
-        // given
-        val product = Product(1, "", "", Price(1000))
-        val productModels = List(5) { product.toPresentation() }
-        every { cartRepository.getCartProductIds(5, 0) } returns listOf(1, 1, 1, 1, 1)
-        every { productRepository.findProductById(1) } returns product
-        // when
-        presenter.initCart()
-        // then
-        verify { view.initCartItems(productModels) }
-    }
-
-    @Test
     fun 상품을_삭제한다() {
         // given
         val productModel = ProductModel(1, "", "", 100)
@@ -90,9 +77,9 @@ class CartPresenterTest {
         every { cartRepository.getCartProductIds(5, 5) } returns listOf(1, 1, 1, 1, 1)
         every { productRepository.findProductById(1) } returns product
         // when
-        presenter.updateRightPageState()
+        presenter.updatePlusButtonState()
         // then
-        verify { view.setRightPageState(true) }
+        verify { view.setUpPlusPageButtonState(true) }
     }
 
     @Test
@@ -100,25 +87,25 @@ class CartPresenterTest {
         // given
         every { cartRepository.getCartProductIds(5, 5) } returns listOf()
         // when
-        presenter.updateRightPageState()
+        presenter.updatePlusButtonState()
         // then
-        verify { view.setRightPageState(false) }
+        verify { view.setUpPlusPageButtonState(false) }
     }
 
     @Test
     fun 현재_페이지가_1이라면_왼쪽버튼상태를_false로_한다() {
         // when
-        presenter.updateLeftPageState()
+        presenter.updateMinusButtonState()
         // then
-        verify { view.setLeftPageState(false) }
+        verify { view.setUpMinusPageButtonState(false) }
     }
 
     @Test
     fun 현재_페이지가_1이_아니라면_왼쪽버튼상태를_true로_한다() {
         // when
         presenter.plusPage()
-        presenter.updateLeftPageState()
+        presenter.updateMinusButtonState()
         // then
-        verify { view.setLeftPageState(true) }
+        verify { view.setUpMinusPageButtonState(true) }
     }
 }

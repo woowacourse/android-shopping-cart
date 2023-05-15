@@ -47,7 +47,7 @@
                     tools:text="1" />
 
                 <ImageView
-                    android:id="@+id/button_left_page"
+                    android:id="@+id/button_minus_page"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_left_page_true"
@@ -57,7 +57,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/text_cart_page" />
 
                 <ImageView
-                    android:id="@+id/button_right_page"
+                    android:id="@+id/button_plus_page"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/icon_right_page_true"
