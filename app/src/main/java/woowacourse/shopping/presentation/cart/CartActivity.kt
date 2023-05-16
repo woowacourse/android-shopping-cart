@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbAdapter
 import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.MockProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.model.ProductModel
@@ -15,7 +16,8 @@ import woowacourse.shopping.presentation.model.ProductModel
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private val presenter: CartContract.Presenter by lazy {
-        CartPresenter(this, CartDbAdapter(CartDbHelper(this)), MockProductRepository)
+        val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
+        CartPresenter(this, cartRepository, MockProductRepository)
     }
     private val cartAdapter: CartAdapter by lazy {
         CartAdapter(listOf(), presenter::deleteProduct)

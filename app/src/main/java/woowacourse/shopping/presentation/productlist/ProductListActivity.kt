@@ -47,7 +47,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun initProductListAdapter() {
         productListAdapter = ProductListAdapter(
-            productItems = combineProductViewItems(listOf(), listOf()),
+            productItems = combineProductViewItems(listOf()),
             showMoreProductItem = presenter::loadProducts,
             showProductDetail = ::productClick,
         )
@@ -60,11 +60,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun combineProductViewItems(
-        recentProductModels: List<ProductModel>,
         productModels: List<ProductModel>,
     ): List<ProductViewType> {
-        return listOf(ProductViewType.RecentProductModels(recentProductModels)) +
-            productModels.map { ProductViewType.ProductItem(it) } + ProductViewType.MoreItem
+        return productModels.map { ProductViewType.ProductItem(it) } + ProductViewType.MoreItem
     }
 
     override fun setRecentProductModels(productModels: List<ProductModel>) {

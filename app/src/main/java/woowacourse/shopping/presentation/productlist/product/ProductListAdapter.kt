@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.ProductViewType
+import woowacourse.shopping.presentation.model.ProductViewType.MoreItem
 import woowacourse.shopping.presentation.model.ProductViewType.ProductItem
 import woowacourse.shopping.presentation.model.ProductViewType.RecentProductModels
 
@@ -56,9 +57,9 @@ class ProductListAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (position) {
-            RECENT_PRODUCT_VIEW_POSITION -> ProductViewType.RECENT_PRODUCTS_VIEW_TYPE_NUMBER
-            _productItems.lastIndex -> ProductViewType.MORE_ITEM_VIEW_TYPE_NUMBER
+        return when (_productItems[position]) {
+            is RecentProductModels -> ProductViewType.RECENT_PRODUCTS_VIEW_TYPE_NUMBER
+            is MoreItem -> ProductViewType.MORE_ITEM_VIEW_TYPE_NUMBER
             else -> ProductViewType.PRODUCT_VIEW_TYPE_NUMBER
         }
     }
@@ -73,7 +74,7 @@ class ProductListAdapter(
     }
 
     fun setRecentProductsItems(productModel: List<ProductModel>) {
-        _productItems[RECENT_PRODUCT_VIEW_POSITION] = RecentProductModels(productModel)
+        _productItems.add(RECENT_PRODUCT_VIEW_POSITION, RecentProductModels(productModel))
         notifyItemChanged(RECENT_PRODUCT_VIEW_POSITION)
     }
 

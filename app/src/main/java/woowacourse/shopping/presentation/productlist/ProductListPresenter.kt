@@ -30,7 +30,9 @@ class ProductListPresenter(
 
     override fun loadRecentProducts() {
         val recentProductModels = getRecentProductModels()
-        view.setRecentProductModels(recentProductModels)
+        if (recentProductModels.isNotEmpty()) {
+            view.setRecentProductModels(recentProductModels)
+        }
     }
 
     override fun saveRecentProductId(productId: Int) {
