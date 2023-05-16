@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.repository.DomainProductRepository
-import woowacourse.shopping.domain.repository.DomainRecentProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUi
 import woowacourse.shopping.model.UiProduct
@@ -15,11 +15,10 @@ import woowacourse.shopping.ui.shopping.ShoppingContract.View
 class ShoppingPresenter(
     view: View,
     private val productRepository: DomainProductRepository,
-    private val recentProductRepository: DomainRecentProductRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : Presenter(view) {
     private var products = Products()
     private var recentProducts = RecentProducts()
-
 
     override fun fetchAll() {
         fetchProducts()

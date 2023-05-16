@@ -6,7 +6,7 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.repository.DomainProductRepository
-import woowacourse.shopping.domain.repository.DomainRecentProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
 
@@ -15,7 +15,7 @@ internal class ShoppingPresenterTest {
     private lateinit var presenter: ShoppingContract.Presenter
     private lateinit var view: ShoppingContract.View
     private lateinit var productRepository: DomainProductRepository
-    private lateinit var recentProductRepository: DomainRecentProductRepository
+    private lateinit var recentProductRepository: RecentProductRepository
 
     @Before
     fun setUp() {

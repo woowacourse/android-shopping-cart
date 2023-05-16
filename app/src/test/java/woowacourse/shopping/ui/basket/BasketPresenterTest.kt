@@ -9,9 +9,9 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.PageNumber
 import woowacourse.shopping.domain.repository.BasketRepository
+import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.ui.basket.BasketContract
-import woowacourse.shopping.ui.basket.BasketPresenter
+import woowacourse.shopping.model.UiPrice
 
 internal class BasketPresenterTest {
 
@@ -82,14 +82,19 @@ internal class BasketPresenterTest {
     @Test
     internal fun 장바구니_목록에_있는_제품을_제거하면_뷰를_갱신한다() {
         // given
-        val product = mockk<Product>(relaxed = true)
+        val products = MutableList(8) { id ->
+            Product(id, "상품 $id", UiPrice(1000), "")
+        }
+        val product = Product(0, "상품 0", UiPrice(1000), "")
+        every { basketRepository.remove(product.toDomain()) } answers { products.remove(product) }
+
 
         // when
         presenter.removeBasketProduct(product)
 
         // then
-        verify(exactly = 1) { basketRepository.remove(any()) }
-        verify(exactly = 1) { basketRepository.getPartially(any()) }
+        verify(exactly = 1) { basketRepository.remove(product.toDomain()) }
+        verify(exactly = 1) { basketRepository.getPartially(PageNumber(1)) }
         verify(exactly = 1) { view.updateBasket(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
         verify(exactly = 1) { view.updatePageNumber(any()) }
