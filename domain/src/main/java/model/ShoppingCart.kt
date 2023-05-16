@@ -1,18 +1,12 @@
 package model
 
 class ShoppingCart(
-    products: List<Product>
+    private val products: List<ShoppingCartProduct>,
 ) {
 
-    private val _products: MutableList<Product> = products.toMutableList()
-    val products: List<Product>
-        get() = _products.toList()
-
-    fun remove(product: Product) {
-        _products.remove(product)
-    }
-
-    fun add(product: Product) {
-        _products.add(product)
-    }
+    val totalPrice: Price
+        get() = Price(
+            products.filter { it.selected }
+                .sumOf { it.price.value }
+        )
 }
