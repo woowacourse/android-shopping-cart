@@ -36,7 +36,7 @@ class ProductDetailPresenterTest {
         // given
         every { productRepository.getDataById(0L) } returns ProductFixture.getData()
         val slot = slot<ProductModel>()
-        justRun { view.setProductInfoView(capture(slot)) }
+        justRun { view.showProductInfoView(capture(slot)) }
 
         // when
         presenter.loadProductInfoById(0L)
@@ -47,7 +47,7 @@ class ProductDetailPresenterTest {
 
         assertEquals(expected, actual)
         verify { productRepository.getDataById(actual.id) }
-        verify { view.setProductInfoView(actual) }
+        verify { view.showProductInfoView(actual) }
     }
 
     @Test

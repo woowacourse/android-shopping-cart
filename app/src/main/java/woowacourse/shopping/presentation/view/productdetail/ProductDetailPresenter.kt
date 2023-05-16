@@ -16,7 +16,7 @@ class ProductDetailPresenter(
             view.handleErrorView()
             return
         }
-        view.setProductInfoView(product)
+        view.showProductInfoView(product)
     }
 
     override fun addCart(productId: Long) {

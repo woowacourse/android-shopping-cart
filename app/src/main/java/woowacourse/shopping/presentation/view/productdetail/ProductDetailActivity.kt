@@ -49,7 +49,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setProductInfoView(productModel: ProductModel) {
+    override fun showProductInfoView(productModel: ProductModel) {
         binding.productItem = productModel
     }
 
