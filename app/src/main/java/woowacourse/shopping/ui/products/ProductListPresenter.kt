@@ -11,7 +11,30 @@ class ProductListPresenter(
     private val productRepository: ProductRepository,
 ) : ProductListContract.Presenter {
 
-    private var currentPage = 0
+    private var currentPage = 1
+
+    override fun onCreate() {
+        val products = productRepository.findAll(PAGE_SIZE, 0)
+
+        val productUIStates = products.map(ProductUIState::from)
+
+        view.addProducts(productUIStates)
+    }
+
+    override fun onStart() {
+        showRecentlyViewedProducts()
+    }
+
+    private fun showRecentlyViewedProducts() {
+        val recentlyViewedProducts = recentlyViewedProductRepository.findAll()
+            .reversed()
+            .take(10)
+
+        val recentlyViewedProductUIStates =
+            recentlyViewedProducts.map(RecentlyViewedProductUIState::from)
+
+        view.setRecentlyViewedProducts(recentlyViewedProductUIStates)
+    }
 
     override fun onLoadNextPage() {
         currentPage++
@@ -19,17 +42,10 @@ class ProductListPresenter(
         view.addProducts(productRepository.findAll(PAGE_SIZE, offset).map(ProductUIState::from))
     }
 
-    override fun loadRecentlyViewedProducts() {
-        view.setRecentlyViewedProducts(
-            recentlyViewedProductRepository.findAll().map(RecentlyViewedProductUIState::from)
-                .reversed().take(10),
-        )
-    }
+    override fun onViewProduct(productId: Long) {
+        val product = productRepository.findById(productId) ?: return
 
-    override fun addRecentlyViewedProduct(productId: Long) {
-        productRepository.findById(productId)?.run {
-            recentlyViewedProductRepository.save(this)
-        }
+        recentlyViewedProductRepository.save(product)
     }
 
     companion object {

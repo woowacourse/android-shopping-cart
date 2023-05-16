@@ -38,7 +38,12 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
         initProductList()
         initLoadingButton()
-        initRecentlyViewedProductList()
+        presenter.onCreate()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.onStart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,16 +66,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
-    private fun initRecentlyViewedProductList() {
-        presenter.loadRecentlyViewedProducts()
-    }
-
     private fun initProductList() {
         binding.recyclerViewMainProduct.adapter = ProductListAdapter(mutableListOf()) {
-            presenter.addRecentlyViewedProduct(it)
+            presenter.onViewProduct(it)
             ProductDetailActivity.startActivity(this, it)
         }
-        presenter.onLoadNextPage()
     }
 
     private fun initLoadingButton() {
@@ -83,13 +83,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         if (recentlyViewedProducts.isEmpty()) {
             binding.layoutRecentlyViewed.isVisible = false
             return
-        } else {
-            binding.layoutRecentlyViewed.isVisible = true
         }
 
         binding.recyclerViewRecentlyViewed.adapter =
             RecentlyViewedProductListAdapter(recentlyViewedProducts) {
-                ProductDetailActivity.startActivity(this, (recentlyViewedProducts[it].id))
+                ProductDetailActivity.startActivity(this, it)
             }
     }
 
