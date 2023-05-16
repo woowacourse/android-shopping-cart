@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemModel"
+            type="woowacourse.shopping.feature.main.recent.RecentProductItemModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recent_box"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:onClick="@{()->itemModel.onClick.invoke(itemModel.recentProduct.productUiModel.id)}"
+        android:padding="6dp">
+
+        <ImageView
+            android:id="@+id/product_img"
+            imgUrl="@{itemModel.recentProduct.productUiModel.imgUrl}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/product_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{itemModel.recentProduct.productUiModel.name}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/product_img"
+            tools:text="상품이름" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
