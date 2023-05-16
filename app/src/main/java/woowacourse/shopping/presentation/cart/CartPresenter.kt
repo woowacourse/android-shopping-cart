@@ -12,7 +12,7 @@ class CartPresenter(
     productRepository: ProductRepository,
 ) : CartContract.Presenter {
 
-    private val paging = Paging(cartRepository, productRepository)
+    private val paging = CartOffsetPaging(cartRepository, productRepository)
 
     init {
         setView()
@@ -31,7 +31,7 @@ class CartPresenter(
     }
 
     override fun updateCart() {
-        val cartProducts = paging.getCurrentPageProducts()
+        val cartProducts = Products(paging.getPageItems(paging.currentPage))
         view.setCartItems(cartProducts.toPresentation())
     }
 
@@ -44,7 +44,7 @@ class CartPresenter(
     }
 
     private fun setView() {
-        view.setPage(paging.page.value)
+        view.setPage(paging.currentPage.value)
         updateCart()
         updatePlusButtonState()
         updateMinusButtonState()
