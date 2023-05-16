@@ -7,12 +7,13 @@ import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
+    private val productId: Long,
     private val productRepository: ProductRepository = ProductRepositoryImpl(),
     private val cartRepository: CartRepository
 ) :
     ProductDetailContract.Presenter {
-    override fun loadProductInfoById(id: Long) {
-        val product = productRepository.getDataById(id).toUIModel()
+    override fun loadProductInfo() {
+        val product = productRepository.getDataById(productId).toUIModel()
         if (product.id == UNABLE_PRODUCT_ID) {
             view.handleErrorView()
             view.exitProductDetailView()
@@ -21,7 +22,7 @@ class ProductDetailPresenter(
         view.setProductInfoView(product)
     }
 
-    override fun addCart(productId: Long) {
+    override fun addCart() {
         cartRepository.addCart(productId)
         view.addCartSuccessView()
         view.exitProductDetailView()

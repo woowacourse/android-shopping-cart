@@ -29,7 +29,7 @@ class ProductDetailPresenterTest {
         cartRepository = mockk()
         productRepository = mockk()
 
-        presenter = ProductDetailPresenter(view, productRepository, cartRepository)
+        presenter = ProductDetailPresenter(view, 0L, productRepository, cartRepository)
     }
 
     @Test
@@ -40,7 +40,7 @@ class ProductDetailPresenterTest {
         justRun { view.setProductInfoView(capture(slot)) }
 
         // when
-        presenter.loadProductInfoById(0L)
+        presenter.loadProductInfo()
 
         // then
         val actual = slot.captured
@@ -60,11 +60,11 @@ class ProductDetailPresenterTest {
         justRun { view.exitProductDetailView() }
 
         // when
-        presenter.addCart(1)
+        presenter.addCart()
 
         // then
         val actual = slot.captured
-        val expected = 1L
+        val expected = 0L
         assertEquals(expected, actual)
         verify { cartRepository.addCart(actual) }
         verify { view.addCartSuccessView() }

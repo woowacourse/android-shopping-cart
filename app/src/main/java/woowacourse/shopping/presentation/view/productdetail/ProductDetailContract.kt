@@ -10,7 +10,7 @@ interface ProductDetailContract {
         fun exitProductDetailView()
     }
     interface Presenter {
-        fun loadProductInfoById(id: Long)
-        fun addCart(productId: Long)
+        fun loadProductInfo()
+        fun addCart()
     }
 }

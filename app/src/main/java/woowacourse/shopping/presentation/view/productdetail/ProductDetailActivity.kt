@@ -17,7 +17,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
 
     private val presenter: ProductDetailContract.Presenter by lazy {
-        ProductDetailPresenter(this, cartRepository = CartRepositoryImpl(this))
+        ProductDetailPresenter(
+            this,
+            productId = intent.getLongExtra(KEY_PRODUCT_ID, -1),
+            cartRepository = CartRepositoryImpl(this)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,11 +31,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         supportActionBar?.title = ACTION_BAR_TITLE
 
-        val productId = intent.getLongExtra(KEY_PRODUCT_ID, -1)
+        presenter.loadProductInfo()
 
-        presenter.loadProductInfoById(productId)
-
-        setAddCart(productId)
+        setAddCart()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -52,9 +54,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.product = productModel
     }
 
-    private fun setAddCart(productId: Long) {
+    private fun setAddCart() {
         binding.btProductDetailAddToCart.setOnClickListener {
-            presenter.addCart(productId)
+            presenter.addCart()
         }
     }
 
