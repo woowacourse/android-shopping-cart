@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class ProductDBHelper(context: Context) : SQLiteOpenHelper(
+class RecentProductDBHelper(context: Context) : SQLiteOpenHelper(
     context,
     DB_NAME,
     null,
@@ -19,18 +19,21 @@ class ProductDBHelper(context: Context) : SQLiteOpenHelper(
     }
 
     companion object {
-        const val DB_NAME = "ProductDB"
+        const val DB_NAME = "recentProductDB"
         private const val DB_VERSION: Int = 1
-        const val TABLE_NAME = "products"
+        const val TABLE_NAME = "recentProducts"
+        const val KEY_ID = "id"
         const val KEY_NAME = "name"
         const val KEY_IMAGE = "image"
         const val KEY_PRICE = "price"
+        const val KEY_TIME = "time"
 
         private const val CREATE_TABLE_QUERY = "CREATE TABLE $TABLE_NAME (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "$KEY_ID INTEGER," +
             "$KEY_NAME text," +
             "$KEY_IMAGE text," +
-            "$KEY_PRICE text" +
+            "$KEY_PRICE text," +
+            "$KEY_TIME INTEGER" +
             ");"
         private const val DROP_TABLE_QUERY = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
