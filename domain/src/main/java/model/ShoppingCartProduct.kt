@@ -27,4 +27,13 @@ data class ShoppingCartProduct(
             }
         )
     }
+
+    fun setSelectedState(selected: Boolean): ShoppingCartProduct {
+
+        return ShoppingCartProduct(
+            product = product,
+            count = count,
+            selected = selected
+        )
+    }
 }

@@ -9,13 +9,14 @@ import woowacourse.shopping.model.ShoppingCartProductUiModel
 class ShoppingCartRecyclerAdapter(
     products: List<ShoppingCartProductUiModel>,
     private val onRemoved: (id: Int) -> Unit,
-    private val onAdded: () -> (Unit),
-    private val onProductCountPlus: (product: ShoppingCartProductUiModel) -> (Unit),
-    private val onProductCountMinus: (product: ShoppingCartProductUiModel) -> (Unit),
+    private val onAdded: () -> Unit,
+    private val onProductCountPlus: (product: ShoppingCartProductUiModel) -> Unit,
+    private val onProductCountMinus: (product: ShoppingCartProductUiModel) -> Unit,
+    private val onTotalPriceChanged: (products: List<ShoppingCartProductUiModel>) -> Unit,
     private val onPageChanged: (pageNumber: Int) -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
-    private val shoppingCartProducts: MutableList<ShoppingCartProductUiModel> =
+    private var shoppingCartProducts: MutableList<ShoppingCartProductUiModel> =
         products.toMutableList()
     private var currentPage = Page()
     private val endPage: Page
@@ -29,6 +30,7 @@ class ShoppingCartRecyclerAdapter(
         ).toMutableList()
 
     init {
+        onTotalPriceChanged(showingProducts)
         onPageChanged(currentPage.value)
     }
 
@@ -52,6 +54,7 @@ class ShoppingCartRecyclerAdapter(
         onRemoved(product.id)
         shoppingCartProducts.remove(product)
         notifyDataSetChanged()
+        onTotalPriceChanged(showingProducts)
     }
 
     fun updateItem(product: ShoppingCartProductUiModel) {
@@ -60,12 +63,20 @@ class ShoppingCartRecyclerAdapter(
         shoppingCartProducts.removeAt(itemIndex)
         shoppingCartProducts.add(itemIndex, product)
         notifyItemChanged(showingProducts.indexOfFirst { it.id == product.id })
+        onTotalPriceChanged(showingProducts)
     }
 
     fun addItems(products: List<ShoppingCartProductUiModel>) {
         shoppingCartProducts.addAll(products)
         currentPage = currentPage.next()
         changePage()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setItems(products: List<ShoppingCartProductUiModel>) {
+        shoppingCartProducts = products.toMutableList()
+        notifyDataSetChanged()
+        onTotalPriceChanged(showingProducts)
     }
 
     fun moveToNextPage() {
@@ -85,6 +96,7 @@ class ShoppingCartRecyclerAdapter(
     private fun changePage() {
         onPageChanged(currentPage.value)
         notifyDataSetChanged()
+        onTotalPriceChanged(showingProducts)
     }
 
     override fun getItemCount(): Int = showingProducts.size

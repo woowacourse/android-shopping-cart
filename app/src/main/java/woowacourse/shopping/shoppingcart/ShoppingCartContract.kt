@@ -12,12 +12,17 @@ interface ShoppingCartContract {
             onRemoved: (id: Int) -> Unit,
             onAdded: () -> Unit,
             onProductCountPlus: (product: ShoppingCartProductUiModel) -> Unit,
-            onProductCountMinus: (product: ShoppingCartProductUiModel) -> Unit
+            onProductCountMinus: (product: ShoppingCartProductUiModel) -> Unit,
+            onTotalPriceChanged: (products: List<ShoppingCartProductUiModel>) -> Unit,
         )
+
+        fun setUpTextTotalPriceView(price: Int)
 
         fun showMoreShoppingCartProducts(products: List<ShoppingCartProductUiModel>)
 
         fun refreshShoppingCartProductView(product: ShoppingCartProductUiModel)
+
+        fun refreshShoppingCartProductView(products: List<ShoppingCartProductUiModel>)
     }
 
     interface Presenter {
@@ -31,5 +36,9 @@ interface ShoppingCartContract {
         fun plusShoppingCartProductCount(product: ShoppingCartProductUiModel)
 
         fun minusShoppingCartProductCount(product: ShoppingCartProductUiModel)
+
+        fun onTotalPriceChanged(products: List<ShoppingCartProductUiModel>)
+
+        fun changeProductsSelectedState(checked: Boolean)
     }
 }

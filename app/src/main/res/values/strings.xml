@@ -14,4 +14,6 @@
     <string name="image_of_cancel_menu">image_of_cancel_menu</string>
     <string name="image_to_minus_product_count">image to minus product count</string>
     <string name="image_to_plus_product_count">image to plus product count</string>
+    <string name="text">전체</string>
+    <string name="order">주문하기</string>
 </resources>

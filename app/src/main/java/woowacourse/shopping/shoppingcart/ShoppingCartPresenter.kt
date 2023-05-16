@@ -1,5 +1,7 @@
 package woowacourse.shopping.shoppingcart
 
+import model.ShoppingCart
+import model.ShoppingCartProduct
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.model.ShoppingCartProductUiModel
 import woowacourse.shopping.util.toDomainModel
@@ -11,28 +13,30 @@ class ShoppingCartPresenter(
 ) : ShoppingCartContract.Presenter {
 
     private var numberOfReadShoppingCartProduct: Int = 0
+    private var shoppingProducts: MutableList<ShoppingCartProduct> = mutableListOf()
 
-    private fun selectShoppingCartProducts(): List<ShoppingCartProductUiModel> {
+    private fun selectShoppingCartProducts(): List<ShoppingCartProduct> {
         val products = repository.selectShoppingCartProducts(
             from = numberOfReadShoppingCartProduct,
             count = COUNT_TO_READ
-        ).map {
-            it.toUiModel()
-        }
-        numberOfReadShoppingCartProduct += COUNT_TO_READ
+        )
+
+        numberOfReadShoppingCartProduct += products.size
 
         return products
     }
 
     override fun loadShoppingCartProducts() {
         val products = selectShoppingCartProducts()
+        shoppingProducts.addAll(products)
 
         view.setUpShoppingCartView(
-            products = products,
+            products = shoppingProducts.map { it.toUiModel() },
             onRemoved = ::removeShoppingCartProduct,
             onAdded = ::addShoppingCartProducts,
             onProductCountMinus = ::minusShoppingCartProductCount,
-            onProductCountPlus = ::plusShoppingCartProductCount
+            onProductCountPlus = ::plusShoppingCartProductCount,
+            onTotalPriceChanged = ::onTotalPriceChanged
         )
     }
 
@@ -42,8 +46,9 @@ class ShoppingCartPresenter(
 
     override fun addShoppingCartProducts() {
         val products = selectShoppingCartProducts()
+        shoppingProducts.addAll(products)
 
-        view.showMoreShoppingCartProducts(products)
+        view.showMoreShoppingCartProducts(products.map { it.toUiModel() })
     }
 
     override fun plusShoppingCartProductCount(product: ShoppingCartProductUiModel) {
@@ -64,6 +69,21 @@ class ShoppingCartPresenter(
             count = shoppingCartProduct.count.value
         )
         view.refreshShoppingCartProductView(shoppingCartProduct.toUiModel())
+    }
+
+    override fun onTotalPriceChanged(products: List<ShoppingCartProductUiModel>) {
+        val totalPrice = ShoppingCart(
+            products = products.map { it.toDomainModel() }
+        ).totalPrice
+
+        view.setUpTextTotalPriceView(price = totalPrice)
+    }
+
+    override fun changeProductsSelectedState(checked: Boolean) {
+        shoppingProducts = shoppingProducts.map { it.setSelectedState(checked) }
+            .toMutableList()
+
+        view.refreshShoppingCartProductView(shoppingProducts.map { it.toUiModel() })
     }
 
     companion object {

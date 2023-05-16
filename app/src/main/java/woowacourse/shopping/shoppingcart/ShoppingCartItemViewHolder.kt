@@ -1,6 +1,5 @@
 package woowacourse.shopping.shoppingcart
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -24,11 +23,9 @@ class ShoppingCartItemViewHolder private constructor(
                 onRemoveClicked(shoppingCartProduct)
             }
             imagePlus.setOnClickListener {
-                Log.d("WOOGI", "setOnClicked: PLUS")
                 onPlusImageClicked(shoppingCartProduct)
             }
             imageMinus.setOnClickListener {
-                Log.d("WOOGI", "setOnClicked: MINUS")
                 onMinusImageClicked(shoppingCartProduct)
             }
         }

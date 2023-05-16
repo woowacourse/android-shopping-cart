@@ -55,6 +55,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         onAdded: () -> Unit,
         onProductCountPlus: (product: ShoppingCartProductUiModel) -> Unit,
         onProductCountMinus: (product: ShoppingCartProductUiModel) -> Unit,
+        onTotalPriceChanged: (products: List<ShoppingCartProductUiModel>) -> Unit,
     ) {
         shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
             products = products,
@@ -62,18 +63,28 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             onAdded = onAdded,
             onProductCountPlus = onProductCountPlus,
             onProductCountMinus = onProductCountMinus,
+            onTotalPriceChanged = onTotalPriceChanged,
             onPageChanged = ::setUpTextPageNumber
         )
 
         with(binding) {
             recyclerViewCart.adapter = shoppingCartRecyclerAdapter
             buttonNextPage.setOnClickListener {
+                // TODO : MVP아님
                 shoppingCartRecyclerAdapter.moveToNextPage()
             }
             buttonPreviousPage.setOnClickListener {
+                // TODO : MVP아님
                 shoppingCartRecyclerAdapter.moveToPreviousPage()
             }
+            checkBoxTotalProducts.setOnCheckedChangeListener { _, isChecked ->
+                presenter.changeProductsSelectedState(isChecked)
+            }
         }
+    }
+
+    override fun setUpTextTotalPriceView(price: Int) {
+        binding.textTotalPrice.text = price.toString()
     }
 
     override fun showMoreShoppingCartProducts(products: List<ShoppingCartProductUiModel>) {
@@ -90,6 +101,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun refreshShoppingCartProductView(product: ShoppingCartProductUiModel) {
         shoppingCartRecyclerAdapter.updateItem(product = product)
+    }
+
+    override fun refreshShoppingCartProductView(products: List<ShoppingCartProductUiModel>) {
+        shoppingCartRecyclerAdapter.setItems(products = products)
     }
 
     private fun setUpTextPageNumber(pageNumber: Int) {
