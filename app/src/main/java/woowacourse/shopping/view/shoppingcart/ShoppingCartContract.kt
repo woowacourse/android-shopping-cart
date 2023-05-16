@@ -18,7 +18,7 @@ interface ShoppingCartContract {
         val cartProducts: List<CartProductUIModel>
         fun loadCartProducts(): List<CartProductUIModel>
         fun removeCartProduct(productUIModel: ProductUIModel)
-        fun pageUpClick(isActivated: Boolean)
-        fun pageDownClick(isActivated: Boolean)
+        fun loadNextPage(isActivated: Boolean)
+        fun loadPreviousPage(isActivated: Boolean)
     }
 }

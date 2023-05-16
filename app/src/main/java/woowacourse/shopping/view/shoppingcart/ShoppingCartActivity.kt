@@ -58,10 +58,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private fun setPageMoveClick() {
         binding.tvPageUp.setOnClickListener {
-            presenter.pageUpClick(it.isActivated)
+            presenter.loadNextPage(it.isActivated)
         }
         binding.tvPageDown.setOnClickListener {
-            presenter.pageDownClick(it.isActivated)
+            presenter.loadPreviousPage(it.isActivated)
         }
     }
 

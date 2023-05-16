@@ -32,11 +32,11 @@ class ShoppingMainPresenter(
         return recentProductsRepository.getAll().map { it.toUIModel() }
     }
 
-    override fun setProductOnClick() {
+    override fun loadProductDetailPage() {
         view.showProductDetailPage()
     }
 
-    override fun setLoadMoreOnClick() {
+    override fun loadMoreScroll() {
         view.showMoreProducts()
         view.deactivateButton()
     }

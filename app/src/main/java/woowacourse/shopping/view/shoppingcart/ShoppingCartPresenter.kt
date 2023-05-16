@@ -43,7 +43,7 @@ class ShoppingCartPresenter(
         view.updateCartProduct(loadCartProducts())
     }
 
-    override fun pageUpClick(isActivated: Boolean) {
+    override fun loadNextPage(isActivated: Boolean) {
         if (!isActivated) {
             return
         }
@@ -53,7 +53,7 @@ class ShoppingCartPresenter(
         view.updatePageCounter(pageCounter.add())
     }
 
-    override fun pageDownClick(isActivated: Boolean) {
+    override fun loadPreviousPage(isActivated: Boolean) {
         if (!isActivated) {
             return
         }

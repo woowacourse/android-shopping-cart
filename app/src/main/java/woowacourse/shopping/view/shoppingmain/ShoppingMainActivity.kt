@@ -81,7 +81,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
 
     private fun setButtonOnClick() {
         binding.btnLoadMore.setOnClickListener {
-            presenter.setLoadMoreOnClick()
+            presenter.loadMoreScroll()
         }
     }
 

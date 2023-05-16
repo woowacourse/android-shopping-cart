@@ -16,7 +16,7 @@ interface ShoppingMainContract {
         val isPossibleLoad: Boolean
         fun loadProducts(): List<ProductUIModel>
         fun getRecentProducts(): List<RecentProductUIModel>
-        fun setProductOnClick()
-        fun setLoadMoreOnClick()
+        fun loadProductDetailPage()
+        fun loadMoreScroll()
     }
 }
