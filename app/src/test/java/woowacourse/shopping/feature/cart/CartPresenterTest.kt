@@ -34,14 +34,14 @@ internal class CartPresenterTest {
     @Test
     fun `처음 5개를 가져와 화면에 띄운다`() {
         every { cartRepository.getProductsByPage(any(), any()) } returns mockCartProducts.take(5)
-        val cartProductSlot = slot<List<CartProductItemModel>>()
+        val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
 
         presenter.loadInitCartProduct()
 
         val expected = mockCartProducts.take(5)
         val actual = cartProductSlot.captured.map {
-            CartProduct(it.cartProduct.cartId, it.cartProduct.productUiModel.toDomain())
+            CartProduct(it.cartId, it.productUiModel.toDomain())
         }
 
         assert(expected == actual)

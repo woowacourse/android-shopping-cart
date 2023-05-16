@@ -17,15 +17,12 @@ class CartPresenter(
     override fun loadInitCartProduct() {
         val cartProducts =
             cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
-        val items = cartProducts.map {
-            it.toPresentation()
-                .toItemModel { cartProduct -> deleteCartProduct(cartProduct) }
-        }
+        val items = cartProducts.map { it.toPresentation() }
 
         changePageState(items)
     }
 
-    private fun deleteCartProduct(cartProduct: CartProductUiModel) {
+    override fun deleteCartProduct(cartProduct: CartProductUiModel) {
         cartRepository.deleteProduct(cartProduct.toDomain())
         this.page = this.page.copy(allSize = this.page.allSize - 1)
 
@@ -56,26 +53,19 @@ class CartPresenter(
 
         val restoreCartProducts =
             cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
+        val restoreItems = restoreCartProducts.map { it.toPresentation() }
 
-        val restoreItems = restoreCartProducts.map {
-            it.toPresentation()
-                .toItemModel { cartProduct -> deleteCartProduct(cartProduct) }
-        }
         changePageState(restoreItems)
     }
 
-    private fun loadCurrentPageItems(): List<CartProductItemModel> {
+    private fun loadCurrentPageItems(): List<CartProductUiModel> {
         val cartProducts =
             cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
 
-        val cartProductItems = cartProducts.map {
-            it.toPresentation()
-                .toItemModel { cartProduct -> deleteCartProduct(cartProduct) }
-        }
-        return cartProductItems
+        return cartProducts.map { it.toPresentation() }
     }
 
-    private fun changePageState(itemModels: List<CartProductItemModel>) {
+    private fun changePageState(itemModels: List<CartProductUiModel>) {
         view.changeCartProducts(itemModels)
         view.setPageState(
             this.page.hasPreviousPage(),

@@ -6,9 +6,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartProductBinding
+import woowacourse.shopping.model.CartProductUiModel
 
 class CartProductAdapter(
-    items: List<CartProductItemModel>
+    items: List<CartProductUiModel>,
+    private val onClick: (CartProductUiModel) -> Unit
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
     private val _items = items.toMutableList()
 
@@ -26,10 +28,10 @@ class CartProductAdapter(
     override fun getItemCount(): Int = _items.size
 
     override fun onBindViewHolder(holder: CartProductViewHolder, position: Int) {
-        holder.bind(_items[position])
+        holder.bind(_items[position], onClick)
     }
 
-    fun setItems(newItems: List<CartProductItemModel>) {
+    fun setItems(newItems: List<CartProductUiModel>) {
         _items.clear()
         _items.addAll(newItems)
         notifyDataSetChanged()

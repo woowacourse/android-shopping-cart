@@ -10,6 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.PageUiModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -22,7 +23,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
-        cartProductAdapter = CartProductAdapter(listOf())
+        cartProductAdapter = CartProductAdapter(listOf()) {
+            presenter.deleteCartProduct(it)
+        }
         binding.cartItemRecyclerview.adapter = cartProductAdapter
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
@@ -42,7 +45,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun changeCartProducts(newItems: List<CartProductItemModel>) {
+    override fun changeCartProducts(newItems: List<CartProductUiModel>) {
         cartProductAdapter.setItems(newItems)
     }
 

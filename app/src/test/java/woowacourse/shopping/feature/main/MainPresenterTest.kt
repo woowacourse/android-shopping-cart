@@ -14,9 +14,9 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.data.ProductCacheImpl
-import woowacourse.shopping.feature.main.product.MainProductItemModel
-import woowacourse.shopping.feature.main.recent.RecentProductItemModel
 import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentProductUiModel
 import java.time.LocalDateTime
 
 internal class MainPresenterTest {
@@ -38,12 +38,12 @@ internal class MainPresenterTest {
     @Test
     fun `처음에 상품 목록을 불러와서 상품을 화면에 띄운다`() {
         every { productRepository.getFirstProducts() } returns mockProducts
-        val slot = slot<List<MainProductItemModel>>()
+        val slot = slot<List<ProductUiModel>>()
         every { view.addProducts(capture(slot)) } just Runs
 
         presenter.loadProducts()
 
-        val actual = slot.captured.map { it.product.toDomain() }
+        val actual = slot.captured.map { it.toDomain() }
         val expected = mockProducts.toList()
         assert(actual == expected)
         verify { view.addProducts(any()) }
@@ -63,12 +63,12 @@ internal class MainPresenterTest {
         every { productRepository.getNextProducts() } answers {
             mockProducts.subList(10, 15)
         }
-        val slot = slot<List<MainProductItemModel>>()
+        val slot = slot<List<ProductUiModel>>()
         every { view.addProducts(capture(slot)) } just Runs
 
         presenter.loadMoreProduct()
 
-        val actual = slot.captured.map { it.product.toDomain() }
+        val actual = slot.captured.map { it.toDomain() }
         val expected = mockProducts.subList(10, 15)
 
         assert(actual == expected)
@@ -78,12 +78,12 @@ internal class MainPresenterTest {
     @Test
     fun `최근 본 상품 목록을 가져와서 화면에 띄운다`() {
         every { recentProductRepository.getAll() } returns mockRecentProducts
-        val slot = slot<List<RecentProductItemModel>>()
+        val slot = slot<List<RecentProductUiModel>>()
         every { view.updateRecent(capture(slot)) } just Runs
 
         presenter.loadRecent()
 
-        val actual = slot.captured.map { it.recentProduct.productUiModel.toDomain() }
+        val actual = slot.captured.map { it.productUiModel.toDomain() }
         val expected = mockRecentProducts.map { it.product }
         assert(actual == expected)
         verify { view.updateRecent(any()) }

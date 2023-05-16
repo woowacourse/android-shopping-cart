@@ -16,11 +16,10 @@ import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity
 import woowacourse.shopping.feature.main.load.LoadAdapter
 import woowacourse.shopping.feature.main.product.MainProductAdapter
-import woowacourse.shopping.feature.main.product.MainProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentAdapter
-import woowacourse.shopping.feature.main.recent.RecentProductItemModel
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.RecentProductUiModel
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var binding: ActivityMainBinding
@@ -55,8 +54,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapters() {
-        mainProductAdapter = MainProductAdapter(listOf())
-        recentAdapter = RecentAdapter(listOf())
+        mainProductAdapter = MainProductAdapter(listOf()) { product ->
+            presenter.moveToDetail(product)
+        }
+        recentAdapter = RecentAdapter(listOf()) { recentProduct ->
+            presenter.moveToDetail(recentProduct.productUiModel)
+        }
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
         loadAdapter = LoadAdapter {
             presenter.loadMoreProduct()
@@ -68,9 +71,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (concatAdapter.getItemViewType(position)) {
-                    RecentWrapperAdapter.VIEW_TYPE -> 2
+                    RecentWrapperAdapter.VIEW_TYPE, LoadAdapter.VIEW_TYPE -> 2
                     MainProductAdapter.VIEW_TYPE -> 1
-                    LoadAdapter.VIEW_TYPE -> 2
                     else -> 2
                 }
             }
@@ -86,16 +88,16 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(DetailActivity.getIntent(this, product))
     }
 
-    override fun addProducts(products: List<MainProductItemModel>) {
+    override fun addProducts(products: List<ProductUiModel>) {
         mainProductAdapter.addItems(products)
     }
 
-    override fun updateRecent(recent: List<RecentProductItemModel>) {
+    override fun updateRecent(recent: List<RecentProductUiModel>) {
         recentAdapter.setItems(recent)
     }
 
-    override fun showProductDetailScreenByRecent(recentProduct: RecentProductItemModel) {
-        startActivity(DetailActivity.getIntent(this, recentProduct.recentProduct.productUiModel))
+    override fun showProductDetailScreenByRecent(recentProduct: RecentProductUiModel) {
+        startActivity(DetailActivity.getIntent(this, recentProduct.productUiModel))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

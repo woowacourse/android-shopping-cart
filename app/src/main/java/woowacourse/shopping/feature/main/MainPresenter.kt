@@ -3,7 +3,9 @@ package woowacourse.shopping.feature.main
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
+import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toPresentation
+import woowacourse.shopping.model.ProductUiModel
 import java.time.LocalDateTime
 
 class MainPresenter(
@@ -14,13 +16,7 @@ class MainPresenter(
 
     override fun loadProducts() {
         val firstProducts = productRepository.getFirstProducts()
-        val productItems = firstProducts.map { product ->
-            product.toPresentation().toItemModel { productUiModel ->
-                addRecentProduct(RecentProduct(product, LocalDateTime.now()))
-                view.showProductDetailScreenByProduct(productUiModel)
-                loadRecent()
-            }
-        }
+        val productItems = firstProducts.map { it.toPresentation() }
         view.addProducts(productItems)
     }
 
@@ -28,26 +24,20 @@ class MainPresenter(
         view.showCartScreen()
     }
 
+    override fun moveToDetail(product: ProductUiModel) {
+        addRecentProduct(RecentProduct(product.toDomain(), LocalDateTime.now()))
+        view.showProductDetailScreenByProduct(product)
+        loadRecent()
+    }
+
     override fun loadMoreProduct() {
         val nextProducts = productRepository.getNextProducts()
-        val nextProductItems = nextProducts.map { product ->
-            product.toPresentation().toItemModel { productUiModel ->
-                addRecentProduct(RecentProduct(product, LocalDateTime.now()))
-                view.showProductDetailScreenByProduct(productUiModel)
-                loadRecent()
-            }
-        }
+        val nextProductItems = nextProducts.map { it.toPresentation() }
         view.addProducts(nextProductItems)
     }
 
     override fun loadRecent() {
-        val recent = recentProductRepository.getAll().map {
-            it.toPresentation().toItemModel { recentProduct ->
-                addRecentProduct(it)
-                view.showProductDetailScreenByRecent(recentProduct)
-                loadRecent()
-            }
-        }
+        val recent = recentProductRepository.getAll().map { it.toPresentation() }
         view.updateRecent(recent)
     }
 

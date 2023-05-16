@@ -6,19 +6,19 @@
     <data>
 
         <variable
-            name="itemModel"
-            type="woowacourse.shopping.feature.main.recent.RecentProductItemModel" />
+            name="recentProduct"
+            type="woowacourse.shopping.model.RecentProductUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recent_product_layout"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:onClick="@{()->itemModel.onClick.invoke(itemModel)}">
+        android:padding="6dp">
 
         <ImageView
             android:id="@+id/product_img"
-            imgUrl="@{itemModel.recentProduct.productUiModel}"
+            imgUrl="@{recentProduct.productUiModel}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
@@ -39,7 +39,7 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{itemModel.recentProduct.productUiModel.name}"
+            android:text="@{recentProduct.productUiModel.name}"
             app:layout_constraintTop_toBottomOf="@id/product_img"
             tools:text="상품이름" />
 
