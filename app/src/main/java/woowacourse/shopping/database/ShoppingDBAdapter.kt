@@ -3,6 +3,7 @@ package woowacourse.shopping.database
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import model.Count
 import model.Name
 import model.Price
 import model.Product
@@ -60,7 +61,7 @@ class ShoppingDBAdapter(
 
     override fun selectShoppingCartProducts(
         from: Int,
-        count: Int
+        count: Int,
     ): List<ShoppingCartProduct> {
         val shoppingCartProducts = mutableListOf<ShoppingCartProduct>()
         val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
@@ -85,7 +86,7 @@ class ShoppingDBAdapter(
         val count = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.COUNT))
         return ShoppingCartProduct(
             product = selectProductById(id),
-            count = count
+            count = Count(count)
         )
     }
 
@@ -124,8 +125,30 @@ class ShoppingDBAdapter(
             put(ShoppingCartDBContract.CART_PRODUCT_ID, id)
             put(ShoppingCartDBContract.COUNT, count)
         }
+        // todo : 함수 분리하기
+        val selection = "id = ?"
+        val selectionArgs = arrayOf(id.toString())
+        val cursor = shoppingDB.query(
+            ShoppingCartDBContract.TABLE_NAME,
+            arrayOf("id"),
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
 
-        shoppingDB.insert(ShoppingCartDBContract.TABLE_NAME, null, values)
+        if (cursor.moveToFirst()) {
+            shoppingDB.update(
+                ShoppingCartDBContract.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs
+            )
+        } else {
+            shoppingDB.insert(ShoppingCartDBContract.TABLE_NAME, null, values)
+        }
+        cursor.close()
     }
 
     override fun deleteFromShoppingCart(id: Int) {

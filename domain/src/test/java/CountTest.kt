@@ -36,7 +36,7 @@ class CountTest {
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun `개수를 감소시켰을 때 개수가 0이 되면 예외가 발생한다`() {
+    fun `개수가 1일때 개수를 감소시킨 경우 개수가 1인 인스턴스를 반환한다`() {
         // given
         val count = Count(1)
 

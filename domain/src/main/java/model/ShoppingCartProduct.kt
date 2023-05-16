@@ -15,11 +15,16 @@ data class ShoppingCartProduct(
         )
     }
 
+    // todo: 이상한 부분
     fun minusCount(): ShoppingCartProduct {
 
         return ShoppingCartProduct(
             product = product,
-            count = count.minus()
+            count = if (count.value == 1) {
+                count
+            } else {
+                count.minus()
+            }
         )
     }
 }

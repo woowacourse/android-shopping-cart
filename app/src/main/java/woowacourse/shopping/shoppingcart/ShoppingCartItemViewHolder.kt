@@ -1,5 +1,6 @@
 package woowacourse.shopping.shoppingcart
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,21 +9,45 @@ import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 class ShoppingCartItemViewHolder private constructor(
-    private val binding: ItemShoppingCartBinding
+    private val binding: ItemShoppingCartBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
+
+    private lateinit var shoppingCartProduct: ShoppingCartProductUiModel
+
+    fun setOnClicked(
+        onRemoveClicked: (ShoppingCartProductUiModel) -> Unit,
+        onPlusImageClicked: (product: ShoppingCartProductUiModel) -> Unit,
+        onMinusImageClicked: (product: ShoppingCartProductUiModel) -> Unit,
+    ) {
+        with(binding) {
+            imageRemoveProduct.setOnClickListener {
+                onRemoveClicked(shoppingCartProduct)
+            }
+            imagePlus.setOnClickListener {
+                Log.d("WOOGI", "setOnClicked: PLUS")
+                onPlusImageClicked(shoppingCartProduct)
+            }
+            imageMinus.setOnClickListener {
+                Log.d("WOOGI", "setOnClicked: MINUS")
+                onMinusImageClicked(shoppingCartProduct)
+            }
+        }
+    }
 
     fun bind(
         product: ShoppingCartProductUiModel,
-        onRemoveClicked: (Int) -> Unit
     ) {
+        shoppingCartProduct = product
+
         with(binding) {
             Glide.with(root.context)
-                .load(product.imageUrl)
+                .load(shoppingCartProduct.imageUrl)
                 .into(imageProduct)
 
-            textProductName.text = product.name
-            textProductPrice.text = product.price.toString()
-            imageRemoveProduct.setOnClickListener { onRemoveClicked(adapterPosition) }
+            textProductCount.text = shoppingCartProduct.count.toString()
+            textProductName.text = shoppingCartProduct.name
+            textProductPrice.text = shoppingCartProduct.price.toString()
+            checkBoxSelecting.isChecked = shoppingCartProduct.selected
         }
     }
 

@@ -10,7 +10,9 @@ class ShoppingCartRecyclerAdapter(
     products: List<ShoppingCartProductUiModel>,
     private val onRemoved: (id: Int) -> Unit,
     private val onAdded: () -> (Unit),
-    private val onPageChanged: (pageNumber: Int) -> Unit
+    private val onProductCountPlus: (product: ShoppingCartProductUiModel) -> (Unit),
+    private val onProductCountMinus: (product: ShoppingCartProductUiModel) -> (Unit),
+    private val onPageChanged: (pageNumber: Int) -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
     private val shoppingCartProducts: MutableList<ShoppingCartProductUiModel> =
@@ -20,11 +22,11 @@ class ShoppingCartRecyclerAdapter(
         get() = ShowingCartProductsPageRule.getPageOfEnd(
             totalProductsSize = shoppingCartProducts.size
         )
-    private val showingProducts: List<ShoppingCartProductUiModel>
+    private val showingProducts: MutableList<ShoppingCartProductUiModel>
         get() = ShowingCartProductsPageRule.getProductsOfPage(
             products = shoppingCartProducts,
             page = currentPage
-        )
+        ).toMutableList()
 
     init {
         onPageChanged(currentPage.value)
@@ -32,21 +34,32 @@ class ShoppingCartRecyclerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartItemViewHolder {
 
-        return ShoppingCartItemViewHolder.from(parent)
+        return ShoppingCartItemViewHolder.from(parent).apply {
+            setOnClicked(
+                onRemoveClicked = ::removeItem,
+                onPlusImageClicked = onProductCountPlus,
+                onMinusImageClicked = onProductCountMinus
+            )
+        }
     }
 
     override fun onBindViewHolder(holder: ShoppingCartItemViewHolder, position: Int) {
-        holder.bind(
-            product = showingProducts[position],
-            onRemoveClicked = ::removeItem
-        )
+        holder.bind(product = showingProducts[position])
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun removeItem(position: Int) {
-        onRemoved(shoppingCartProducts[position].id)
-        shoppingCartProducts.removeAt(position)
+    private fun removeItem(product: ShoppingCartProductUiModel) {
+        onRemoved(product.id)
+        shoppingCartProducts.remove(product)
         notifyDataSetChanged()
+    }
+
+    fun updateItem(product: ShoppingCartProductUiModel) {
+        val itemIndex = shoppingCartProducts.indexOfFirst { it.id == product.id }
+
+        shoppingCartProducts.removeAt(itemIndex)
+        shoppingCartProducts.add(itemIndex, product)
+        notifyItemChanged(showingProducts.indexOfFirst { it.id == product.id })
     }
 
     fun addItems(products: List<ShoppingCartProductUiModel>) {

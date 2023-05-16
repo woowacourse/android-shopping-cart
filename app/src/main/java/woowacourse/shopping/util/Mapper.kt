@@ -1,5 +1,6 @@
 package woowacourse.shopping.util
 
+import model.Count
 import model.Name
 import model.Price
 import model.Product
@@ -34,5 +35,17 @@ fun ShoppingCartProduct.toUiModel() = ShoppingCartProductUiModel(
     name = product.name.value,
     imageUrl = product.imageUrl,
     price = price.value,
-    count = count
+    count = count.value,
+    selected = selected
+)
+
+fun ShoppingCartProductUiModel.toDomainModel() = ShoppingCartProduct(
+    product = Product(
+        id = id,
+        name = Name(name),
+        imageUrl = imageUrl,
+        price = Price(price / count)
+    ),
+    count = Count(count),
+    selected = selected
 )

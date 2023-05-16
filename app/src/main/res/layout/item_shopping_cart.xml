@@ -10,15 +10,24 @@
         android:background="@drawable/item_round"
         android:paddingBottom="18dp">
 
+        <CheckBox
+            android:id="@+id/check_box_selecting"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/text_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="16dp"
             android:textColor="@color/black"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/check_box_selecting"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="아메리카노" />
 
@@ -38,22 +47,57 @@
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="13dp"
-            android:layout_marginBottom="18dp"
             android:contentDescription="@string/image_of_product"
             android:scaleType="centerCrop"
             android:src="@drawable/example"
-            app:layout_constraintStart_toStartOf="@id/text_product_name"
+            app:layout_constraintStart_toStartOf="@+id/check_box_selecting"
             app:layout_constraintTop_toBottomOf="@id/text_product_name" />
 
         <TextView
             android:id="@+id/text_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="11dp"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/image_remove_product"
+            app:layout_constraintTop_toBottomOf="@id/image_remove_product"
             tools:text="99,800원" />
+
+        <ImageView
+            android:id="@+id/image_minus"
+            android:layout_width="13dp"
+            android:layout_height="19dp"
+            android:layout_marginTop="15dp"
+            android:contentDescription="@string/image_to_minus_product_count"
+            android:src="@drawable/image_minus"
+            app:layout_constraintEnd_toEndOf="@+id/text_product_price"
+            app:layout_constraintTop_toBottomOf="@id/text_product_price" />
+
+        <TextView
+            android:id="@+id/text_product_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/image_minus"
+            app:layout_constraintStart_toEndOf="@+id/image_plus"
+            app:layout_constraintTop_toBottomOf="@id/text_product_price"
+            tools:text="1" />
+
+        <ImageView
+            android:id="@+id/image_plus"
+            android:layout_width="13dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="51dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="29dp"
+            android:contentDescription="@string/image_to_plus_product_count"
+            android:src="@drawable/image_plus"
+            app:layout_constraintStart_toEndOf="@id/image_product"
+            app:layout_constraintTop_toBottomOf="@+id/text_product_price" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

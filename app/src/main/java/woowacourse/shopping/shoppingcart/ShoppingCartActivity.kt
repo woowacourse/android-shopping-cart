@@ -52,12 +52,16 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     override fun setUpShoppingCartView(
         products: List<ShoppingCartProductUiModel>,
         onRemoved: (id: Int) -> Unit,
-        onAdded: () -> Unit
+        onAdded: () -> Unit,
+        onProductCountPlus: (product: ShoppingCartProductUiModel) -> Unit,
+        onProductCountMinus: (product: ShoppingCartProductUiModel) -> Unit,
     ) {
         shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
             products = products,
             onRemoved = onRemoved,
             onAdded = onAdded,
+            onProductCountPlus = onProductCountPlus,
+            onProductCountMinus = onProductCountMinus,
             onPageChanged = ::setUpTextPageNumber
         )
 
@@ -82,6 +86,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         }
 
         shoppingCartRecyclerAdapter.addItems(products = products)
+    }
+
+    override fun refreshShoppingCartProductView(product: ShoppingCartProductUiModel) {
+        shoppingCartRecyclerAdapter.updateItem(product = product)
     }
 
     private fun setUpTextPageNumber(pageNumber: Int) {

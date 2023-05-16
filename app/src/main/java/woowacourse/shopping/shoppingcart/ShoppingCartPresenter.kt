@@ -2,11 +2,12 @@ package woowacourse.shopping.shoppingcart
 
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.model.ShoppingCartProductUiModel
+import woowacourse.shopping.util.toDomainModel
 import woowacourse.shopping.util.toUiModel
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
-    private val repository: ShoppingRepository
+    private val repository: ShoppingRepository,
 ) : ShoppingCartContract.Presenter {
 
     private var numberOfReadShoppingCartProduct: Int = 0
@@ -29,7 +30,9 @@ class ShoppingCartPresenter(
         view.setUpShoppingCartView(
             products = products,
             onRemoved = ::removeShoppingCartProduct,
-            onAdded = ::addShoppingCartProducts
+            onAdded = ::addShoppingCartProducts,
+            onProductCountMinus = ::minusShoppingCartProductCount,
+            onProductCountPlus = ::plusShoppingCartProductCount
         )
     }
 
@@ -41,6 +44,26 @@ class ShoppingCartPresenter(
         val products = selectShoppingCartProducts()
 
         view.showMoreShoppingCartProducts(products)
+    }
+
+    override fun plusShoppingCartProductCount(product: ShoppingCartProductUiModel) {
+        val shoppingCartProduct = product.toDomainModel().plusCount()
+
+        repository.insertToShoppingCart(
+            id = shoppingCartProduct.product.id,
+            count = shoppingCartProduct.count.value
+        )
+        view.refreshShoppingCartProductView(shoppingCartProduct.toUiModel())
+    }
+
+    override fun minusShoppingCartProductCount(product: ShoppingCartProductUiModel) {
+        val shoppingCartProduct = product.toDomainModel().minusCount()
+
+        repository.insertToShoppingCart(
+            id = shoppingCartProduct.product.id,
+            count = shoppingCartProduct.count.value
+        )
+        view.refreshShoppingCartProductView(shoppingCartProduct.toUiModel())
     }
 
     companion object {

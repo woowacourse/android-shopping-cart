@@ -6,4 +6,5 @@ data class ShoppingCartProductUiModel(
     val imageUrl: String,
     val price: Int,
     val count: Int,
+    val selected: Boolean
 )
