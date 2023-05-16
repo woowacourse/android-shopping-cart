@@ -8,11 +8,12 @@ class CartPresenter(
 ) : CartContract.Presenter {
     override fun loadCartItems(currentPage: Int) {
         val startPosition = getStartItemPosition(currentPage)
-        var newCarts = cartRepository.getCarts(startPosition)
+        var newCarts = cartRepository.getCarts(startPosition, GET_CART_ITEM_COUNT)
         view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 
-        val subToIndex = if (newCarts.size > DISPLAY_CART_COUNT_CONDITION) newCarts.lastIndex else newCarts.size
+        val subToIndex =
+            if (newCarts.size > DISPLAY_CART_COUNT_CONDITION) newCarts.lastIndex else newCarts.size
         newCarts = newCarts.subList(CART_LIST_FIRST_INDEX, subToIndex)
         view.setCartItemsView(newCarts)
     }
@@ -29,5 +30,6 @@ class CartPresenter(
         private const val FIRST_PAGE_NUMBER = 1
         private const val DISPLAY_CART_COUNT_CONDITION = 3
         private const val CART_LIST_FIRST_INDEX = 0
+        private const val GET_CART_ITEM_COUNT = 4
     }
 }

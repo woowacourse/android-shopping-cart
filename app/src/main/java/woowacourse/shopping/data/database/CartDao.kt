@@ -24,9 +24,9 @@ class CartDao(context: Context) {
         )
     }
 
-    fun getItems(startPosition: Int): List<CartEntity> {
+    fun getItems(startPosition: Int, cartItemCount: Int): List<CartEntity> {
         val result = mutableListOf<CartEntity>()
-        val cursor = getCursor(startPosition)
+        val cursor = getCursor(startPosition, cartItemCount)
         with(cursor) {
             while (moveToNext()) {
                 val cartId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
@@ -40,7 +40,7 @@ class CartDao(context: Context) {
         return result.toList()
     }
 
-    private fun getCursor(startPosition: Int): Cursor {
+    private fun getCursor(startPosition: Int, cartItemCount: Int): Cursor {
         return db.query(
             CartContract.Cart.TABLE_NAME,
             null,
@@ -49,11 +49,10 @@ class CartDao(context: Context) {
             null,
             null,
             null,
-            "$startPosition, $GET_CART_ITEM_COUNT"
+            "$startPosition, $cartItemCount"
         )
     }
 
     companion object {
-        private const val GET_CART_ITEM_COUNT = 4
     }
 }

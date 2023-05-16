@@ -5,8 +5,8 @@ import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.presentation.model.CartModel
 
 class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
-    override fun getCarts(startPosition: Int): List<CartModel> {
-        return cartDao.getItems(startPosition).map { it.toUIModel() }
+    override fun getCarts(startPosition: Int, cartItemCount: Int): List<CartModel> {
+        return cartDao.getItems(startPosition, cartItemCount).map { it.toUIModel() }
     }
 
     override fun deleteCartByProductId(productId: Long) {
