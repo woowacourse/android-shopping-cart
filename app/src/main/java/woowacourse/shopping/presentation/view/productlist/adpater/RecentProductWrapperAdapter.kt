@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.view.productlist.adpater
 
-import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.view.productlist.viewholder.RecentProductWrapperViewHolder
@@ -27,15 +26,9 @@ class RecentProductWrapperAdapter(
 
     override fun getItemViewType(position: Int): Int = ViewType.RECENT_PRODUCT_LIST.ordinal
 
-    fun onSaveScrollState(outState: Bundle) {
-        outState.putInt(KEY_STATE_LAST_SCROLL, lastScroll)
-    }
+    fun getScrollPosition(): Int = lastScroll
 
-    fun onRestoreScrollState(savedInstanceState: Bundle) {
-        lastScroll = savedInstanceState.getInt(KEY_STATE_LAST_SCROLL)
-    }
-
-    companion object {
-        internal const val KEY_STATE_LAST_SCROLL = "KEY_STATE_LAST_SCROLL"
+    fun setScrollPosition(position: Int) {
+        lastScroll = position
     }
 }

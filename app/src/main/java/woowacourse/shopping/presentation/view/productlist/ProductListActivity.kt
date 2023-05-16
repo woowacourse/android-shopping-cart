@@ -146,12 +146,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        recentProductWrapperAdapter.onSaveScrollState(outState)
+        outState.putInt(KEY_STATE_LAST_SCROLL, recentProductWrapperAdapter.getScrollPosition())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        recentProductWrapperAdapter.onRestoreScrollState(savedInstanceState)
+        recentProductWrapperAdapter.setScrollPosition(savedInstanceState.getInt(KEY_STATE_LAST_SCROLL))
     }
 
     companion object {
@@ -161,5 +161,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         private const val SPAN_SIZE_OF_TWO_COLUMN = 1
         private const val RECENT_PRODUCT_ADAPTER_POSITION = 0
         private const val SCROLL_TOP_POSITION = 0
+
+        private const val KEY_STATE_LAST_SCROLL = "KEY_STATE_LAST_SCROLL"
     }
 }
