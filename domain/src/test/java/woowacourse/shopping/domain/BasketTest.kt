@@ -6,24 +6,28 @@ import org.junit.jupiter.api.Test
 class BasketTest {
     @Test
     fun `장바구니에 상품을 담는다`() {
-        val products = listOf<Product>()
-        val basket = Basket(products)
-        val product = Product("새상품", Price(1000))
+        val basketProducts = listOf<BasketProduct>()
+        val basket = Basket(basketProducts)
+        val basketProduct = BasketProduct(1, Product(1, "새상품", Price(1000), "url"))
 
-        val actual = basket.add(product)
-        val expected = Basket(products + product)
+        val actual = basket.add(basketProduct)
+        val expected = Basket(basketProducts + basketProduct)
 
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `장바구니에 상품을 삭제한다`() {
-        val products = listOf<Product>(Product("새상품", Price(1000)), Product("새상품", Price(1000)))
-        val basket = Basket(products)
-        val product = Product("새상품", Price(1000))
+        val basketProducts = listOf<BasketProduct>(
+            BasketProduct(1, Product(1, "새상품", Price(1000), "url")),
+            BasketProduct(1, Product(1, "새상품", Price(1000), "url")),
+            BasketProduct(1, Product(1, "새상품", Price(1000), "url"))
+        )
+        val basket = Basket(basketProducts)
+        val basketProduct = BasketProduct(1, Product(1, "새상품", Price(1000), "url"))
 
-        val actual = basket.delete(product)
-        val expected = Basket(products - product)
+        val actual = basket.delete(basketProduct)
+        val expected = Basket(basketProducts - basketProduct)
 
         assertThat(actual).isEqualTo(expected)
     }
