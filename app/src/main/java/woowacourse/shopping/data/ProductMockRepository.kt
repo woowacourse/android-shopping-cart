@@ -11,15 +11,17 @@ class ProductMockRepository(
 
     override fun getFirstProducts(): List<Product> {
         if (productCache.productList.isEmpty()) {
-            val products = if (LOAD_SIZE > productsDatasource.size) {
-                productsDatasource
-            } else {
-                productsDatasource.subList(0, LOAD_SIZE)
-            }
+            val products = getProducts()
             productCache.addProducts(products)
             return products
         }
         return productCache.productList
+    }
+
+    private fun getProducts() = if (LOAD_SIZE > productsDatasource.size) {
+        productsDatasource
+    } else {
+        productsDatasource.subList(0, LOAD_SIZE)
     }
 
     override fun getNextProducts(): List<Product> {
