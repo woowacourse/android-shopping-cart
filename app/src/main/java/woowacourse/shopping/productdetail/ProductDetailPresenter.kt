@@ -1,20 +1,17 @@
 package woowacourse.shopping.productdetail
 
 import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.ProductMapper.toView
-import woowacourse.shopping.data.database.dao.CartDao
-import woowacourse.shopping.data.state.CartState
-import woowacourse.shopping.data.state.State
-import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.CartRepository
+import java.time.LocalDateTime
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
     productModel: ProductModel,
-    private val cartState: State<Cart> = CartState,
-    private val cartDao: CartDao
+    private val cartRepository: CartRepository
 ) : ProductDetailContract.Presenter {
     private val product: Product
 
@@ -24,10 +21,8 @@ class ProductDetailPresenter(
     }
 
     override fun addToCart() {
-        val cart = cartState.load()
-        val cartProduct = cart.makeCartProduct(product)
-        cartState.save(cart.add(cartProduct))
-        cartDao.insertCartProduct(cartProduct.toView())
+        val cartProduct = CartProduct(LocalDateTime.now(), product)
+        cartRepository.addCartProduct(cartProduct)
         view.showCart()
     }
 }

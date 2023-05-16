@@ -8,28 +8,25 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.cart.CartContract
 import woowacourse.shopping.cart.CartPresenter
-import woowacourse.shopping.data.database.dao.CartDao
-import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.repository.CartRepository
 
 class CartPresenterTest {
     private lateinit var presenter: CartPresenter
     private lateinit var view: CartContract.View
-    private lateinit var cartState: State<Cart>
-    private lateinit var cartDao: CartDao
+    private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUP() {
         view = mockk(relaxed = true)
-        cartState = mockk(relaxed = true)
-        cartDao = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
 
         every {
-            cartDao.selectPage(any(), any())
+            cartRepository.getPage(any(), any())
         } returns Cart(emptyList())
 
         presenter = CartPresenter(
-            view, mockk(relaxed = true), cartState, cartDao, 0, 0
+            view, cartRepository, 0, 0
         )
     }
 
@@ -53,13 +50,8 @@ class CartPresenterTest {
     @Test
     fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
         // given
-        every {
-            cartState.load()
-        } returns mockk(relaxed = true)
-
         justRun {
-            cartState.save(any())
-            cartDao.deleteCartProductByTime(any())
+            cartRepository.deleteCartProductByTime(any())
             view.updateCart(any(), any(), any())
         }
 
@@ -68,8 +60,7 @@ class CartPresenterTest {
 
         // then
         verify {
-            cartState.save(any())
-            cartDao.deleteCartProductByTime(any())
+            cartRepository.deleteCartProductByTime(any())
             view.updateCart(any(), any(), any())
         }
     }

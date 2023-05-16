@@ -3,7 +3,6 @@ package woowacourse.shopping.data.database.dao
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.data.database.selectRowId
 import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlProduct
@@ -14,14 +13,14 @@ import woowacourse.shopping.domain.URL
 import java.time.LocalDateTime
 
 class CartDao(private val db: SQLiteDatabase) {
-    fun insertCartProduct(cartProductModel: CartProductModel) {
+    fun insertCartProduct(cartProduct: CartProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = cartProductModel.product.picture
-        productRow[SqlProduct.TITLE] = cartProductModel.product.title
-        productRow[SqlProduct.PRICE] = cartProductModel.product.price
+        productRow[SqlProduct.PICTURE] = cartProduct.product.picture.value
+        productRow[SqlProduct.TITLE] = cartProduct.product.title
+        productRow[SqlProduct.PRICE] = cartProduct.product.price
 
         val row = ContentValues()
-        row.put(SqlCart.TIME, cartProductModel.time.toString())
+        row.put(SqlCart.TIME, cartProduct.time.toString())
         row.put(SqlCart.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
         db.insert(SqlCart.name, null, row)
     }

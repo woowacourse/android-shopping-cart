@@ -10,6 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.utils.getSerializable
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -75,7 +76,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(
             this,
             productModel = productModel,
-            cartDao = CartDao(db)
+            cartRepository = CartRepositoryImpl(CartDao(db))
         )
     }
 

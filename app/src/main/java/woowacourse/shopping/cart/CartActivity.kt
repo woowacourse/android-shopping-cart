@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -47,7 +48,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initPresenter() {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = CartPresenter(
-            this, cartDao = CartDao(db), sizePerPage = SIZE_PER_PAGE
+            this, cartRepository = CartRepositoryImpl(CartDao(db)), sizePerPage = SIZE_PER_PAGE
         )
     }
 

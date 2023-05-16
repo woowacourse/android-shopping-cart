@@ -1,18 +1,13 @@
 package woowacourse.shopping.cart
 
 import woowacourse.shopping.common.model.CartProductModel
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
-import woowacourse.shopping.data.database.dao.CartDao
-import woowacourse.shopping.data.state.CartState
-import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.repository.CartRepository
 
 class CartPresenter(
     private val view: CartContract.View,
-    private var cart: Cart = Cart(emptyList()),
-    private val cartState: State<Cart> = CartState,
-    private val cartDao: CartDao,
+    private val cartRepository: CartRepository,
     private var currentPage: Int = 0,
     private val sizePerPage: Int
 ) : CartContract.Presenter {
@@ -22,9 +17,7 @@ class CartPresenter(
     }
 
     override fun removeCartProduct(cartProductModel: CartProductModel) {
-        cart = cartState.load().remove(cartProductModel.toDomain())
-        cartState.save(cart)
-        cartDao.deleteCartProductByTime(cartProductModel.time)
+        cartRepository.deleteCartProductByTime(cartProductModel.time)
         view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
     }
@@ -40,8 +33,7 @@ class CartPresenter(
     }
 
     private fun updateCartPage() {
-        cartState.save(cartDao.selectAll())
-        val cart = cartDao.selectPage(currentPage, sizePerPage)
+        val cart = cartRepository.getPage(currentPage, sizePerPage)
         view.updateCart(
             cartProducts = cart.cartProducts.map { it.toView() },
             currentPage = currentPage + 1,
@@ -50,12 +42,12 @@ class CartPresenter(
     }
 
     private fun isLastPageCart(cart: Cart): Boolean {
-        val cartCount = cartDao.selectAllCount()
+        val cartCount = cartRepository.getAllCount()
         return (currentPage * sizePerPage) + cart.cartProducts.size >= cartCount
     }
 
     private fun determineNavigationVisibility(): Boolean {
-        val cartCount = cartDao.selectAllCount()
+        val cartCount = cartRepository.getAllCount()
         return cartCount > sizePerPage
     }
 }
