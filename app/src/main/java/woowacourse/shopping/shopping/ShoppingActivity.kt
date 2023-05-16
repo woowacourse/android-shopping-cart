@@ -18,6 +18,7 @@ import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.ProductDao
 import woowacourse.shopping.data.database.dao.RecentProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.recyclerview.LoadMoreAdapter
@@ -146,7 +147,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter = ShoppingPresenter(
             this,
             productRepository = ProductRepositoryImpl(localProductDataSource = ProductDao(db)),
-            recentProductDao = RecentProductDao(db),
+            recentProductRepository = RecentProductRepositoryImpl(localRecentProductDataSource = RecentProductDao(db)),
             recentProductSize = 10,
             productLoadSize = 20
         )

@@ -1,48 +1,54 @@
 package woowacourse.shopping.shopping
 
 import io.mockk.every
+import io.mockk.just
 import io.mockk.justRun
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.database.dao.RecentProductDao
-import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ShoppingPresenterTest {
     private lateinit var presenter: ShoppingPresenter
     private lateinit var view: ShoppingContract.View
     private lateinit var productRepository: ProductRepository
-    private lateinit var recentProductsState: State<RecentProducts>
-    private lateinit var recentProductDao: RecentProductDao
+    private lateinit var recentProductRepository: RecentProductRepository
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
-        recentProductDao = mockk(relaxed = true)
-        recentProductsState = mockk(relaxed = true)
+        recentProductRepository = mockk(relaxed = true)
 
         every {
             productRepository.getProducts(any(), any())
         } returns Products(emptyList())
 
         every {
-            recentProductsState.load()
-        } returns RecentProducts(emptyList())
+            recentProductRepository.addRecentProduct(any())
+        } just runs
 
         every {
-            recentProductDao.selectByProduct(any())
+            recentProductRepository.getAll()
+        } returns RecentProducts()
+
+        every {
+            recentProductRepository.getByProduct(any())
         } returns null
+
+        every {
+            recentProductRepository.modifyRecentProduct(any())
+        } just runs
 
         presenter = ShoppingPresenter(
             view,
             productRepository = productRepository,
-            recentProductDao = recentProductDao,
-            recentProductsState = recentProductsState,
+            recentProductRepository = recentProductRepository,
             recentProductSize = 0,
             productLoadSize = 0
         )
@@ -68,8 +74,6 @@ class ShoppingPresenterTest {
     fun 상품을_선택하면_최근_본_상품에_추가하고_상품_상세정보를_보여준다() {
         // given
         justRun {
-            recentProductsState.save(any())
-            recentProductDao.insertRecentProduct(any())
             view.showProductDetail(any())
         }
 
@@ -78,8 +82,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            recentProductsState.save(any())
-            recentProductDao.insertRecentProduct(any())
+            recentProductRepository.addRecentProduct(any())
             view.showProductDetail(any())
         }
     }
