@@ -42,6 +42,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         )
         presenter.setUpCarts()
         presenter.updatePriceAndCount()
+        binding.cartBottom.onAllCheckClick = presenter::updateAllItemCheck
     }
 
     private fun initToolbar() {
@@ -61,7 +62,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 return presenter.updateItem(productId, count)
             }
             override fun onItemSelectChanged(productId: Int, selected: Boolean) {
-                presenter.updateItemSelect(productId, selected)
+                presenter.updateItemCheck(productId, selected)
             }
         }
 
@@ -72,8 +73,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun updateBottom(totalPrice: Int, totalCount: Int) {
-        binding.totalCount = totalCount
-        binding.price = totalPrice
+        binding.cartBottom.totalCount = totalCount
+        binding.cartBottom.price = totalPrice
+    }
+
+    override fun setAllItemCheck(all: Boolean) {
+        binding.cartBottom.cbCheckAll.isChecked = all
     }
 
     override fun navigateToItemDetail(product: ProductUIModel) {
@@ -94,6 +99,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             outState.putInt(KEY_OFFSET, it)
         }
     }
+
     companion object {
         private const val KEY_OFFSET = "KEY_OFFSET"
         fun getIntent(context: Context): Intent {

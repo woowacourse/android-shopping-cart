@@ -57,7 +57,7 @@ object CartConstant : BaseColumns {
             "WHERE $TABLE_COLUMN_ID = $id"
     }
 
-    fun getUpdateSelectedQuery(id: Int, selected: Boolean): String {
+    fun getUpdateCheckedQuery(id: Int, selected: Boolean): String {
         return "UPDATE $TABLE_NAME SET " +
             "$TABLE_COLUMN_CHECKED = ${if (selected) 1 else 0} " +
             "WHERE $TABLE_COLUMN_ID = $id"

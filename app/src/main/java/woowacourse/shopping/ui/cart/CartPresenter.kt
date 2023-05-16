@@ -12,16 +12,24 @@ class CartPresenter(
     private val productRepository: ProductRepository,
     private var index: Int = 0
 ) : CartContract.Presenter {
+    private lateinit var currentPage: List<CartItemType.Cart>
 
     override fun setUpCarts() {
+        currentPage = cartRepository.getPage(index, STEP).toUIModel().map { CartItemType.Cart(it) }
         view.setCarts(
-            cartRepository.getPage(index, STEP).toUIModel().map { CartItemType.Cart(it) },
+            currentPage,
             PageUIModel(
                 cartRepository.hasNextPage(index, STEP),
                 cartRepository.hasPrevPage(index, STEP),
                 index + 1
             )
         )
+        setUpAllItemCheck()
+    }
+
+    private fun setUpAllItemCheck() {
+        view.setAllItemCheck(currentPage.all { it.product.checked })
+        (currentPage.count { it.product.checked } == currentPage.size)
     }
 
     override fun moveToPageNext() {
@@ -59,9 +67,11 @@ class CartPresenter(
         return updatedCount
     }
 
-    override fun updateItemSelect(productId: Int, selected: Boolean) {
-        cartRepository.updateSelected(productId, selected)
+    override fun updateItemCheck(productId: Int, selected: Boolean) {
+        cartRepository.updateChecked(productId, selected)
         updatePriceAndCount()
+        currentPage = cartRepository.getPage(index, STEP).toUIModel().map { CartItemType.Cart(it) }
+        setUpAllItemCheck()
     }
 
     override fun updatePriceAndCount() {
@@ -69,6 +79,11 @@ class CartPresenter(
             cartRepository.getTotalPrice(),
             cartRepository.getTotalSelectedCount()
         )
+    }
+
+    override fun updateAllItemCheck(checked: Boolean) {
+        cartRepository.updateAllChecked(index, STEP, checked)
+        setUpCarts()
     }
 
     companion object {
