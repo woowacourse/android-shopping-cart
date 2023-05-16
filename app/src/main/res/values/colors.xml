@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="add_to_cart_button_color">#04C09E</color>
+    <color name="cart_page_button">#04C09E</color>
 </resources>

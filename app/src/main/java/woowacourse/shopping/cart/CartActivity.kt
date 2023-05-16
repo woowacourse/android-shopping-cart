@@ -10,28 +10,51 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.list.CartRecyclerViewAdapter
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.datas.CartDBHelper
-import woowacourse.shopping.datas.ProductDBRepository
-import woowacourse.shopping.uimodel.CartUIModel
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.datas.CartDBRepository
+import woowacourse.shopping.uimodel.CartProductUIModel
 
-class CartActivity : AppCompatActivity() {
+class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartRecyclerViewAdapter
+    override lateinit var presenter: CartContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         setToolBarBackButton()
-        val dbHelper = CartDBHelper(this)
-        val db = dbHelper.readableDatabase
-        val repository = ProductDBRepository(db)
-        val cartProducts = repository.getAll()
-        adapter = CartRecyclerViewAdapter(
-            CartUIModel(cartProducts),
-            setOnClickRemove()
-        )
+
+        val repository = CartDBRepository(CartDBHelper(this).writableDatabase)
+        presenter = CartPresenter(this, repository)
+        adapter =
+            CartRecyclerViewAdapter(
+                repository.getAll().take(CART_UNIT_SIZE),
+                repository,
+                presenter.setOnClickRemove()
+            )
+
+        setPagePreviousClickListener()
+        setPageNextClickListener(repository)
 
         binding.rvCartList.adapter = adapter
+    }
+
+    private fun setPageNextClickListener(repository: CartDBRepository) {
+        binding.btNext.setOnClickListener {
+            val currentPage = binding.tvCurrentPage.text.toString().toInt()
+            val nextPage = currentPage + 1
+            if (repository.getSize() + CART_UNIT_SIZE < CART_UNIT_SIZE * nextPage) return@setOnClickListener
+            adapter.changePage(nextPage)
+            binding.tvCurrentPage.text = nextPage.toString()
+        }
+    }
+
+    private fun setPagePreviousClickListener() {
+        binding.btPrevious.setOnClickListener {
+            val currentPage = binding.tvCurrentPage.text.toString().toInt()
+            if (currentPage == 1) return@setOnClickListener
+            adapter.changePage(currentPage - 1)
+            binding.tvCurrentPage.text = (currentPage - 1).toString()
+        }
     }
 
     private fun setToolBarBackButton() {
@@ -40,13 +63,8 @@ class CartActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    fun setOnClickRemove(): (ProductUIModel, Int) -> Unit = { productUIModle: ProductUIModel, position: Int ->
-        val dbHelper = CartDBHelper(this)
-        val db = dbHelper.writableDatabase
-        val repository = ProductDBRepository(db)
-        repository.remove(productUIModle)
-
-        adapter.remove(productUIModle)
+    override fun removeAdapterData(cartProductUIModel: CartProductUIModel, position: Int) {
+        adapter.remove(cartProductUIModel)
         adapter.notifyItemChanged(position)
     }
 
@@ -56,6 +74,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     companion object {
+        const val CART_UNIT_SIZE = 5
         fun intent(context: Context) = Intent(context, CartActivity::class.java)
     }
 }

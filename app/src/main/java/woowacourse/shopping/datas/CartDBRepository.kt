@@ -32,6 +32,29 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
         return products
     }
 
+    override fun getUnitData(unitSize: Int, pageNumber: Int): List<CartProductUIModel> {
+        val products = mutableListOf<CartProductUIModel>()
+        database.rawQuery(
+            "SELECT * FROM $TABLE_NAME LIMIT $unitSize OFFSET '${5 * (pageNumber - 1)}'",
+            null
+        ).use {
+            while (it.moveToNext()) {
+                val cartProductUIModel =
+                    CartProductUIModel(
+                        count = it.getInt(it.getColumnIndexOrThrow(KEY_COUNT)),
+                        ProductUIModel(
+                            id = it.getInt(it.getColumnIndexOrThrow(KEY_ID)),
+                            name = it.getString(it.getColumnIndexOrThrow(KEY_NAME)),
+                            imageUrl = it.getString(it.getColumnIndexOrThrow(KEY_IMAGE)),
+                            price = it.getInt(it.getColumnIndexOrThrow(KEY_PRICE)),
+                        )
+                    )
+                products.add(cartProductUIModel)
+            }
+        }
+        return products
+    }
+
     override fun insert(cartProduct: CartProductUIModel) {
         val record = ContentValues().apply {
             put(KEY_COUNT, 1)
@@ -47,6 +70,12 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
         database.execSQL(
             "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '${cartProduct.product.id}' "
         )
+    }
+
+    override fun getSize(): Int {
+        database.rawQuery("SELECT * FROM $TABLE_NAME", null).use {
+            return it.count
+        }
     }
 
     override fun clear() {

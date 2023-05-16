@@ -2,14 +2,15 @@ package woowacourse.shopping.cart.list
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductInCartBinding
+import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.CartUIModel
-import woowacourse.shopping.uimodel.ProductUIModel
 
 class CartRecyclerViewHolder(
     private val binding: ItemProductInCartBinding,
     cartProducts: CartUIModel,
-    onClickRemove: (ProductUIModel, Int) -> Unit
+    onClickRemove: (CartProductUIModel, Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
@@ -18,11 +19,14 @@ class CartRecyclerViewHolder(
         }
     }
 
-    fun bind(productUIModel: ProductUIModel) {
+    fun bind(cartProductUIModel: CartProductUIModel) {
         Glide.with(binding.root.context)
-            .load(productUIModel.url)
+            .load(cartProductUIModel.product.imageUrl)
             .into(binding.ivProductImage)
-        binding.tvProductName.text = productUIModel.name
-        binding.tvPrice.text = productUIModel.price.toString()
+        binding.tvProductName.text = cartProductUIModel.product.name
+        binding.tvPrice.text = binding.root.context.getString(
+            R.string.item_product_in_cart_price,
+            cartProductUIModel.product.price
+        )
     }
 }

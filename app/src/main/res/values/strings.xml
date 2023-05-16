@@ -4,4 +4,7 @@
     <string name="price">금액</string>
     <string name="item_product_read_more_button_name">더보기</string>
     <string name="item_product_in_cart_price">%,d원</string>
+    <string name="left"><![CDATA[<]]></string>
+    <string name="right"><![CDATA[>]]></string>
+    <string name="first_page">1</string>
 </resources>
