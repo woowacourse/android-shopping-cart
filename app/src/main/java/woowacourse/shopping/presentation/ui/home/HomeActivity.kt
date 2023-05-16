@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.home
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -98,7 +97,7 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
 
     private fun setClickEventOnShoppingCartButton() {
         binding.imageHomeShoppingCart.setOnClickListener {
-            startActivity(Intent(this, ShoppingCartActivity::class.java))
+            startActivity(ShoppingCartActivity.getIntent(this))
         }
     }
 

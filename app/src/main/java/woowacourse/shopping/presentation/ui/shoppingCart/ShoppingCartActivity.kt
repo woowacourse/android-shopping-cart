@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.ui.shoppingCart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.product.ProductDao
@@ -84,5 +86,8 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     companion object {
         private const val INIT_PAGE = 1
+        fun getIntent(context: Context): Intent {
+            return Intent(context, ShoppingCartActivity::class.java)
+        }
     }
 }
