@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbHandler
 import woowacourse.shopping.data.cart.CartDbHelper
@@ -12,7 +11,6 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.model.ProductState
 import woowacourse.shopping.util.extension.showToast
-import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private var _binding: ActivityProductDetailBinding? = null
@@ -40,32 +38,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         _binding = null
     }
 
-    override fun showCart() {
-        CartActivity.startActivity(this)
-    }
+    override fun showCart() { CartActivity.startActivity(this) }
 
-    override fun setProductName(name: String) {
-        binding.productName.text = name
-    }
+    override fun setViewContent(product: ProductState) { binding.product = product }
 
-    override fun setProductPrice(price: Int) {
-        binding.productPrice.text = "${DecimalFormat("#,###").format(price)}원"
-    }
+    override fun showAccessError() { showToast(getString(R.string.error_intent_message)) }
 
-    override fun setProductImage(imageUrl: String) {
-        Glide.with(this)
-            .load(imageUrl)
-            .error(R.drawable.ic_launcher_background)
-            .into(binding.productImage)
-    }
-
-    override fun showAccessError() {
-        showToast(getString(R.string.error_intent_message))
-    }
-
-    override fun closeProductDetail() {
-        finish()
-    }
+    override fun closeProductDetail() { finish() }
 
     companion object {
         const val PRODUCT_KEY = "product"

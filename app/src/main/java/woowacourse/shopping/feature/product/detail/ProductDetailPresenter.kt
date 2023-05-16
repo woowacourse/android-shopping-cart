@@ -14,9 +14,7 @@ class ProductDetailPresenter(
         if (!isValidProduct()) return
         product!!
 
-        view.setProductName(product.name)
-        view.setProductImage(product.imageUrl)
-        view.setProductPrice(product.price)
+        view.setViewContent(product)
     }
 
     override fun addCartProduct() {

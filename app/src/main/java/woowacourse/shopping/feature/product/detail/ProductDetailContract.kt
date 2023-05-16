@@ -5,10 +5,8 @@ import woowacourse.shopping.model.ProductState
 interface ProductDetailContract {
 
     interface View {
+        fun setViewContent(product: ProductState)
         fun showCart()
-        fun setProductImage(imageUrl: String)
-        fun setProductName(name: String)
-        fun setProductPrice(price: Int)
         fun showAccessError()
         fun closeProductDetail()
     }
