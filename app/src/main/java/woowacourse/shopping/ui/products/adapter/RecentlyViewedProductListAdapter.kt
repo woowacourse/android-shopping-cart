@@ -17,16 +17,7 @@ class RecentlyViewedProductListAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): RecentlyViewedProductListViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.item_recently_viewed_product,
-            parent,
-            false,
-        )
-
-        return RecentlyViewedProductListViewHolder(
-            ItemRecentlyViewedProductBinding.bind(view),
-            onClick,
-        )
+        return RecentlyViewedProductListViewHolder.create(parent, onClick)
     }
 
     override fun getItemCount(): Int = recentlyViewedProducts.size
@@ -35,7 +26,7 @@ class RecentlyViewedProductListAdapter(
         holder.bind(recentlyViewedProducts[position])
     }
 
-    class RecentlyViewedProductListViewHolder(
+    class RecentlyViewedProductListViewHolder private constructor(
         private val binding: ItemRecentlyViewedProductBinding,
         private val onClick: (Long) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -46,6 +37,18 @@ class RecentlyViewedProductListAdapter(
                 .load(recentlyViewedProduct.imageUrl)
                 .into(binding.ivRecentlyViewed)
             binding.root.setOnClickListener { onClick(recentlyViewedProduct.id) }
+        }
+
+        companion object {
+            fun create(parent: ViewGroup, onClick: (Long) -> Unit): RecentlyViewedProductListViewHolder {
+                val view = LayoutInflater.from(parent.context).inflate(
+                    R.layout.item_recently_viewed_product,
+                    parent,
+                    false,
+                )
+                val binding = ItemRecentlyViewedProductBinding.bind(view)
+                return RecentlyViewedProductListViewHolder(binding, onClick)
+            }
         }
     }
 }

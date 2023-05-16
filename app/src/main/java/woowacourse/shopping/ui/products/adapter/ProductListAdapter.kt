@@ -15,10 +15,7 @@ class ProductListAdapter(
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
-
-        return ProductListViewHolder(ItemProductBinding.bind(view), onClick)
+        return ProductListViewHolder.create(parent, onClick)
     }
 
     override fun getItemCount(): Int = products.size
@@ -31,7 +28,7 @@ class ProductListAdapter(
         products.addAll(newProducts)
     }
 
-    class ProductListViewHolder(
+    class ProductListViewHolder private constructor(
         private val binding: ItemProductBinding,
         private val onClick: (Long) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -44,6 +41,15 @@ class ProductListAdapter(
                 .load(product.imageUrl)
                 .into(binding.ivProduct)
             binding.root.setOnClickListener { onClick(product.id) }
+        }
+
+        companion object {
+            fun create(parent: ViewGroup, onClick: (Long) -> Unit): ProductListViewHolder {
+                val view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_product, parent, false)
+                val binding = ItemProductBinding.bind(view)
+                return ProductListViewHolder(binding, onClick)
+            }
         }
     }
 }

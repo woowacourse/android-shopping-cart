@@ -15,10 +15,7 @@ class CartListAdapter(
 ) : RecyclerView.Adapter<CartListAdapter.CartListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false)
-
-        return CartListViewHolder(ItemCartBinding.bind(view), onCloseButtonClick)
+        return CartListViewHolder.create(parent, onCloseButtonClick)
     }
 
     override fun getItemCount(): Int = cartItems.size
@@ -27,7 +24,7 @@ class CartListAdapter(
         holder.bind(cartItems[position])
     }
 
-    class CartListViewHolder(
+    class CartListViewHolder private constructor(
         private val binding: ItemCartBinding,
         private val onCloseButtonClick: (Long) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -42,6 +39,15 @@ class CartListAdapter(
                 .into(binding.ivCart)
             binding.btnCartClose.setOnClickListener {
                 onCloseButtonClick(cartItem.id)
+            }
+        }
+
+        companion object {
+            fun create(parent: ViewGroup, onCloseButtonClick: (Long) -> Unit): CartListViewHolder {
+                val view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false)
+                val binding = ItemCartBinding.bind(view)
+                return CartListViewHolder(binding, onCloseButtonClick)
             }
         }
     }
