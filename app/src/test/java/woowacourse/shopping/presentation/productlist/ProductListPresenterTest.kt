@@ -105,12 +105,12 @@ class ProductListPresenterTest {
         justRun { view.updateMoreProductsView(capture(slotPreSize), capture(slotDiffSize)) }
 
         // when
-        presenter.loadMoreData(0)
+        presenter.loadMoreData()
 
         // then
         val actualPreSize = slotPreSize.captured
         val actualDiffSize = slotDiffSize.captured
-        assertEquals(1, actualPreSize)
+        assertEquals(0, actualPreSize)
         assertEquals(1, actualDiffSize)
         verify { productRepository.getData(0, 20) }
         verify { view.updateMoreProductsView(actualPreSize, actualDiffSize) }

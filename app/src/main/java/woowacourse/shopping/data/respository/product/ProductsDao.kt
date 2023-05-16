@@ -199,7 +199,7 @@ object ProductsDao {
     )
 
     fun getData(startPosition: Int, count: Int): List<ProductEntity> {
-        val endIndex = if (items.size > startPosition + count) count else items.size - 1
+        val endIndex = if (items.size > startPosition + count) count else items.size
         return items.subList(startPosition, endIndex)
     }
 

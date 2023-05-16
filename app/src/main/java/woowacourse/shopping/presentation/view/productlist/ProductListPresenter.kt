@@ -17,7 +17,6 @@ class ProductListPresenter(
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()
     private val recentProducts = mutableListOf<RecentProductModel>()
-    private var recentProductsPreSize = 0
 
     override fun initRecentProductItems() {
         val today = LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN))
@@ -25,13 +24,12 @@ class ProductListPresenter(
     }
 
     override fun loadProductItems() {
-        products.addAll(productRepository.getData(0, LOAD_PRODUCT_COUNT).map { it.toUIModel() })
+        products.addAll(productRepository.getData(LOAD_PRODUCT_START_POSITION, LOAD_PRODUCT_COUNT).map { it.toUIModel() })
         view.setProductItemsView(products)
     }
 
     override fun loadRecentProductItems() {
         recentProducts.addAll(recentProductRepository.getRecentProducts().map { it.toUIModel() })
-        recentProductsPreSize = recentProducts.size
         view.setRecentProductItemsView(recentProducts)
     }
 
@@ -45,10 +43,11 @@ class ProductListPresenter(
         recentProductRepository.addCart(productId)
     }
 
-    override fun loadMoreData(startPosition: Int) {
+    override fun loadMoreData() {
+        val startPosition = products.size
         val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT).map { it.toUIModel() }
         products.addAll(newProducts)
-        view.updateMoreProductsView(startPosition + 1, newProducts.size)
+        view.updateMoreProductsView(startPosition, newProducts.size)
     }
 
     override fun actionOptionItem(itemId: Int) {
@@ -58,6 +57,7 @@ class ProductListPresenter(
     }
 
     companion object {
+        private const val LOAD_PRODUCT_START_POSITION = 0
         private const val LOCAL_DATE_PATTERN = "yyyy-MM-dd"
         private const val LOAD_PRODUCT_COUNT = 20
     }

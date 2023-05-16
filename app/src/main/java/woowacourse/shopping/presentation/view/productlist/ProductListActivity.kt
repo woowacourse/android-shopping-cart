@@ -117,6 +117,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         if (!concatAdapter.adapters.contains(recentProductWrapperAdapter)) {
             concatAdapter.addAdapter(RECENT_PRODUCT_ADAPTER_POSITION, recentProductWrapperAdapter)
             binding.rvProductList.scrollToPosition(SCROLL_TOP_POSITION)
+            return
         }
         recentProductListAdapter.updateItemChanged(preSize, diffSize)
     }
@@ -132,7 +133,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun onMoreProductList() {
-        presenter.loadMoreData(productListAdapter.itemCount - 1)
+        presenter.loadMoreData()
     }
 
     override fun updateMoreProductsView(preSize: Int, diffSize: Int) {
