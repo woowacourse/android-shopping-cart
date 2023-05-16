@@ -8,7 +8,7 @@ object ProductFakeRepository : ProductRepository {
 
     private val products = List(100) {
         Product(
-            it,
+            it.toLong(),
             "[사미헌] 갈비탕$it",
             12000,
             "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg",
@@ -29,7 +29,7 @@ object ProductFakeRepository : ProductRepository {
         return subList
     }
 
-    override fun findById(id: Int): Product {
+    override fun findById(id: Long): Product {
         return getAll().find {
             it.id == id
         } ?: throw IllegalArgumentException("해당하는 아이템이 없습니다.")

@@ -8,7 +8,7 @@ fun Product.toUIModel(): ProductUIModel {
         id = this.id,
         name = this.name,
         price = this.price,
-        imageUrl = this.imageUrl
+        imageUrl = this.imageUrl,
     )
 }
 
@@ -17,6 +17,6 @@ fun ProductUIModel.toDomain(): Product {
         id = this.id,
         name = this.name,
         price = this.price,
-        imageUrl = this.imageUrl
+        imageUrl = this.imageUrl,
     )
 }
