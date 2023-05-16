@@ -44,7 +44,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_close -> finish()
+            R.id.action_close -> exitProductDetailView()
         }
 
         return super.onOptionsItemSelected(item)
