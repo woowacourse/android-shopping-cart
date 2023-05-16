@@ -23,12 +23,12 @@ class ProductListPresenter(
 
     override fun loadProductItems() {
         products.addAll(productRepository.getData(0, LOAD_PRODUCT_COUNT))
-        view.setProductItemsView(products)
+        view.setProductItemsView(products.toList())
     }
 
     override fun loadRecentProductItems() {
         recentProducts.addAll(recentProductRepository.getRecentProducts())
-        view.setRecentProductItemsView(recentProducts)
+        view.setRecentProductItemsView(recentProducts.toList())
     }
 
     override fun updateRecentProductItems() {
