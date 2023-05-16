@@ -14,11 +14,7 @@ class CartPresenter(
 ) : CartContract.Presenter {
     private var offset = offset
         set(value) {
-            field = when {
-                value < 0 -> 0
-                value > repository.getAll().size -> repository.getAll().size
-                else -> value
-            }
+            field = value.coerceIn(0, repository.getAll().size)
         }
 
     override fun setUpCarts() {
