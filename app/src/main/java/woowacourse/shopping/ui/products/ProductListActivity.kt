@@ -38,12 +38,12 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
         initProductList()
         initLoadingButton()
-        presenter.onCreate()
+        presenter.onLoadProductsNextPage()
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.onStart()
+        presenter.onLoadRecentlyViewedProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -75,7 +75,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun initLoadingButton() {
         binding.btnLoading.setOnClickListener {
-            presenter.onLoadNextPage()
+            presenter.onLoadProductsNextPage()
         }
     }
 
@@ -84,6 +84,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             binding.layoutRecentlyViewed.isVisible = false
             return
         }
+        binding.layoutRecentlyViewed.isVisible = true
 
         binding.recyclerViewRecentlyViewed.adapter =
             RecentlyViewedProductListAdapter(recentlyViewedProducts) {

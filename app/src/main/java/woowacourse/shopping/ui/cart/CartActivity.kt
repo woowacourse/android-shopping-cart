@@ -41,6 +41,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

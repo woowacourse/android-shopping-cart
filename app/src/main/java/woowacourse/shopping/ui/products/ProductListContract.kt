@@ -5,9 +5,8 @@ import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 interface ProductListContract {
     interface Presenter {
-        fun onCreate()
-        fun onStart()
-        fun onLoadNextPage()
+        fun onLoadRecentlyViewedProducts()
+        fun onLoadProductsNextPage()
         fun onViewProduct(productId: Long)
     }
 

@@ -11,32 +11,19 @@ class ProductListPresenter(
     private val productRepository: ProductRepository,
 ) : ProductListContract.Presenter {
 
-    private var currentPage = 1
+    private var currentPage = 0
 
-    override fun onCreate() {
-        val products = productRepository.findAll(PAGE_SIZE, 0)
-
-        val productUIStates = products.map(ProductUIState::from)
-
-        view.addProducts(productUIStates)
-    }
-
-    override fun onStart() {
-        showRecentlyViewedProducts()
-    }
-
-    private fun showRecentlyViewedProducts() {
+    override fun onLoadRecentlyViewedProducts() {
         val recentlyViewedProducts = recentlyViewedProductRepository.findAll()
             .reversed()
             .take(10)
 
         val recentlyViewedProductUIStates =
             recentlyViewedProducts.map(RecentlyViewedProductUIState::from)
-
         view.setRecentlyViewedProducts(recentlyViewedProductUIStates)
     }
 
-    override fun onLoadNextPage() {
+    override fun onLoadProductsNextPage() {
         currentPage++
         val offset = (currentPage - 1) * PAGE_SIZE
         view.addProducts(productRepository.findAll(PAGE_SIZE, offset).map(ProductUIState::from))
