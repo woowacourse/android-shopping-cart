@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.ui.cart.uistate.CartUIState
+import woowacourse.shopping.ui.cart.uistate.CartItemUIState
 import java.text.DecimalFormat
 
 class CartListAdapter(
-    private val cartItems: List<CartUIState>,
-    private val onCloseButtonClick: (Int) -> Unit,
+    private val cartItems: List<CartItemUIState>,
+    private val onCloseButtonClick: (Long) -> Unit,
 ) : RecyclerView.Adapter<CartListAdapter.CartListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListViewHolder {
@@ -32,23 +32,20 @@ class CartListAdapter(
 
     class CartListViewHolder(
         private val binding: ItemCartBinding,
-        private val onCloseButtonClick: (Int) -> Unit,
+        private val onCloseButtonClick: (Long) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.btnCartClose.setOnClickListener {
-                onCloseButtonClick(adapterPosition)
-            }
-        }
-
-        fun bind(product: CartUIState) {
-            binding.tvCartName.text = product.name
+        fun bind(cartItem: CartItemUIState) {
+            binding.tvCartName.text = cartItem.name
             binding.tvCartPrice.text = itemView.context.getString(R.string.product_price).format(
-                PRICE_FORMAT.format(product.price),
+                PRICE_FORMAT.format(cartItem.price),
             )
             Glide.with(itemView)
-                .load(product.imageUrl)
+                .load(cartItem.imageUrl)
                 .into(binding.ivCart)
+            binding.btnCartClose.setOnClickListener {
+                onCloseButtonClick(cartItem.id)
+            }
         }
 
         companion object {

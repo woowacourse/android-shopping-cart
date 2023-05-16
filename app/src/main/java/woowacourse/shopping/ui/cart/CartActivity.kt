@@ -12,27 +12,23 @@ import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
-import woowacourse.shopping.ui.cart.uistate.CartUIState
-import kotlin.properties.Delegates
+import woowacourse.shopping.ui.cart.uistate.CartItemUIState
 
 class CartActivity : AppCompatActivity(), CartContract.View {
-    private lateinit var binding: ActivityCartBinding
+    private val binding: ActivityCartBinding by lazy {
+        ActivityCartBinding.inflate(layoutInflater)
+    }
     private val presenter: CartPresenter by lazy {
         CartPresenter(this, CartRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl))
-    }
-    private var page: Int by Delegates.observable(1) { _, _, new ->
-        presenter.loadCartItems(PAGE_SIZE, (new - 1) * PAGE_SIZE)
-        binding.tvCartPage.text = "$page"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setActionBar()
 
         initCartList()
-        initBottomField()
+        initPageUI()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -59,45 +55,37 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartList() {
-        presenter.loadCartItems(limit = PAGE_SIZE, offset = (page - 1) * PAGE_SIZE)
+        presenter.onLoadCartItemsNextPage()
     }
 
-    private fun initBottomField() {
-        binding.tvCartPage.text = "$page"
-        presenter.setPageButtons(PAGE_SIZE)
-    }
-
-    override fun setButtonClickListener(maxOffset: Int) {
-        updateButtonsEnabledState(maxOffset)
-
+    private fun initPageUI() {
         binding.btnPageDown.setOnClickListener {
-            if (page > 1) {
-                page--
-            }
-            updateButtonsEnabledState(maxOffset)
+            presenter.onLoadCartItemsPreviousPage()
         }
         binding.btnPageUp.setOnClickListener {
-            if (page < maxOffset) {
-                page++
-            }
-            updateButtonsEnabledState(maxOffset)
+            presenter.onLoadCartItemsNextPage()
         }
     }
 
-    override fun setCartItems(cartItems: List<CartUIState>) {
+    override fun setCartItems(cartItems: List<CartItemUIState>) {
         binding.recyclerViewCart.adapter = CartListAdapter(cartItems) {
-            presenter.deleteCartItem(cartItems[it].id)
+            presenter.onDeleteCartItem(it)
         }
     }
 
-    private fun updateButtonsEnabledState(maxOffset: Int) {
-        binding.btnPageDown.isEnabled = page > 1
-        binding.btnPageUp.isEnabled = page < maxOffset
+    override fun setStateThatCanRequestNextPage(canRequest: Boolean) {
+        binding.btnPageUp.isEnabled = canRequest
+    }
+
+    override fun setStateThatCanRequestPreviousPage(canRequest: Boolean) {
+        binding.btnPageDown.isEnabled = canRequest
+    }
+
+    override fun setPage(page: Int) {
+        binding.tvCartPage.text = page.toString()
     }
 
     companion object {
-        private const val PAGE_SIZE = 5
-
         fun startActivity(context: Context) {
             Intent(context, CartActivity::class.java).also {
                 context.startActivity(it)

@@ -1,17 +1,18 @@
 package woowacourse.shopping.ui.cart
 
-import woowacourse.shopping.ui.cart.uistate.CartUIState
+import woowacourse.shopping.ui.cart.uistate.CartItemUIState
 
 interface CartContract {
     interface Presenter {
-        fun loadCartItems()
-        fun loadCartItems(limit: Int, offset: Int)
-        fun deleteCartItem(productId: Long)
-        fun setPageButtons(limit: Int)
+        fun onLoadCartItemsNextPage()
+        fun onLoadCartItemsPreviousPage()
+        fun onDeleteCartItem(productId: Long)
     }
 
     interface View {
-        fun setCartItems(cartItems: List<CartUIState>)
-        fun setButtonClickListener(maxOffset: Int)
+        fun setCartItems(cartItems: List<CartItemUIState>)
+        fun setStateThatCanRequestPreviousPage(canRequest: Boolean)
+        fun setStateThatCanRequestNextPage(canRequest: Boolean)
+        fun setPage(page: Int)
     }
 }

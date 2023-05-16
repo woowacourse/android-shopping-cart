@@ -1,31 +1,72 @@
 package woowacourse.shopping.ui.cart
 
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.ui.cart.uistate.CartUIState
+import woowacourse.shopping.ui.cart.uistate.CartItemUIState
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
 ) : CartContract.Presenter {
 
-    override fun loadCartItems() {
-        view.setCartItems(cartRepository.findAll().map(CartUIState::from))
+    private var currentPage = 0
+    private var maxPage = getMaxPage()
+
+    private fun getMaxPage(): Int {
+        return (cartRepository.findAll().size - 1) / PAGE_SIZE + 1
+    }
+    private fun refreshMaxPage() {
+        maxPage = getMaxPage()
     }
 
-    override fun loadCartItems(limit: Int, offset: Int) {
-        view.setCartItems(
-            cartRepository.findAll(limit = limit, offset = offset).map(CartUIState::from),
-        )
+    override fun onLoadCartItemsNextPage() {
+        currentPage++
+        showCartItemsOfCurrentPage()
+        refreshPageUIState()
     }
 
-    override fun deleteCartItem(productId: Long) {
+    override fun onLoadCartItemsPreviousPage() {
+        currentPage--
+        showCartItemsOfCurrentPage()
+        refreshPageUIState()
+    }
+
+    override fun onDeleteCartItem(productId: Long) {
         cartRepository.deleteById(productId)
-        view.setCartItems(cartRepository.findAll().map(CartUIState::from))
+        showCartItemsOfCurrentPage()
+        refreshMaxPage()
+        refreshPageUIState()
     }
 
-    override fun setPageButtons(limit: Int) {
-        var size = cartRepository.findAll().size
-        if (size == 0) size = 1
-        view.setButtonClickListener((size - 1) / limit + 1)
+    private fun showCartItemsOfCurrentPage() {
+        val offset = (currentPage - 1) * PAGE_SIZE
+        val cartItems = cartRepository.findAll(PAGE_SIZE, offset)
+        val cartItemUIStates = cartItems.map(CartItemUIState::from)
+        view.setCartItems(cartItemUIStates)
+    }
+
+    private fun refreshPageUIState() {
+        refreshStateThatCanRequestPreviousPage()
+        refreshStateThatCanRequestNextPage()
+        view.setPage(currentPage)
+    }
+
+    private fun refreshStateThatCanRequestPreviousPage() {
+        if (currentPage <= 1) {
+            view.setStateThatCanRequestPreviousPage(false)
+        } else {
+            view.setStateThatCanRequestPreviousPage(true)
+        }
+    }
+
+    private fun refreshStateThatCanRequestNextPage() {
+        if (currentPage >= maxPage) {
+            view.setStateThatCanRequestNextPage(false)
+        } else {
+            view.setStateThatCanRequestNextPage(true)
+        }
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 5
     }
 }
