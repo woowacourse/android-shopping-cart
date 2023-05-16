@@ -9,15 +9,13 @@ class ProductDetailPresenter(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ProductDetailContract.Presenter {
-    override fun loadProduct(productId: Long) {
-        productRepository.findById(productId)?.run {
-            view.setProduct(ProductDetailUIState.from(this))
-        }
+    override fun onLoadProduct(productId: Long) {
+        val product = productRepository.findById(productId) ?: return
+        view.setProduct(ProductDetailUIState.from(product))
     }
 
-    override fun addProductToCart(productId: Long) {
-        productRepository.findById(productId)?.run {
-            cartRepository.save(this)
-        } ?: view.showErrorMessage()
+    override fun onAddProductToCart(productId: Long) {
+        val product = productRepository.findById(productId) ?: return
+        cartRepository.save(product)
     }
 }

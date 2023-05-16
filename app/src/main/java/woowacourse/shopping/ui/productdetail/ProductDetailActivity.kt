@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
@@ -18,7 +17,9 @@ import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
 import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
-    private lateinit var binding: ActivityProductDetailBinding
+    private val binding: ActivityProductDetailBinding by lazy {
+        ActivityProductDetailBinding.inflate(layoutInflater)
+    }
     private val presenter: ProductDetailPresenter by lazy {
         ProductDetailPresenter(
             this,
@@ -29,11 +30,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setActionBar()
 
-        presenter.loadProduct(intent.getLongExtra(PRODUCT_ID, -1))
+        presenter.onLoadProduct(intent.getLongExtra(PRODUCT_ID, -1))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -65,13 +65,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.tvProductDetailPrice.text =
             getString(R.string.product_price).format(DECIMAL_FORMAT.format(product.price))
         binding.btnProductDetailAdd.setOnClickListener {
-            presenter.addProductToCart(product.id)
+            presenter.onAddProductToCart(product.id)
             moveToCartActivity()
         }
-    }
-
-    override fun showErrorMessage() {
-        Toast.makeText(this, "존재하지 않는 상품입니다", Toast.LENGTH_SHORT).show()
     }
 
     private fun moveToCartActivity() {
