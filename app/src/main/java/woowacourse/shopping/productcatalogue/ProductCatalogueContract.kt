@@ -1,15 +1,18 @@
 package woowacourse.shopping.productcatalogue
 
+import woowacourse.shopping.datas.ProductRepository
 import woowacourse.shopping.uimodel.ProductUIModel
 
 interface ProductCatalogueContract {
     interface View {
         var presenter: Presenter
 
-        fun showProductDetailPage(): (ProductUIModel) -> Unit
+        fun showProductDetailPage(productUIModel: ProductUIModel)
+        fun notifyDataChanged()
     }
 
     interface Presenter {
-        fun setProductOnClick()
+        fun productOnClick(): (ProductUIModel) -> Unit
+        fun readMoreOnClick(): (ProductRepository, Int, Int) -> Unit
     }
 }
