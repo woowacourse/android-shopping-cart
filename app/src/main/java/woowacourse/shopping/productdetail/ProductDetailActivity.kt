@@ -13,12 +13,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.datas.CartDBHelper
-import woowacourse.shopping.datas.ProductDBHelper
-import woowacourse.shopping.datas.ProductDBRepository
+import woowacourse.shopping.datas.CartDBRepository
+import woowacourse.shopping.datas.RecentProductDBHelper
+import woowacourse.shopping.datas.RecentProductDBRepository
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.uimodel.ProductUIModel
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
+    override lateinit var presenter: ProductDetailContract.Presenter
     private lateinit var binding: ActivityProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,30 +31,27 @@ class ProductDetailActivity : AppCompatActivity() {
 
         val productData =
             intent.getSerializableCompat(BundleKeys.KEY_PRODUCT) ?: ProductUIModel.dummy
+        val recentRepository =
+            RecentProductDBRepository(RecentProductDBHelper(this).writableDatabase)
+        val cartRepository = CartDBRepository(CartDBHelper(this).writableDatabase)
 
-        val dbHelper = ProductDBHelper(this)
-        val db = dbHelper.writableDatabase
-        val repository = ProductDBRepository(db)
-        repository.insert(productData)
+        presenter = ProductDetailPresenter(this, productData, recentRepository, cartRepository)
+        presenter.insertRecentRepository(System.currentTimeMillis())
 
-        Glide.with(binding.root.context)
-            .load(productData.url)
-            .into(binding.ivProductImage)
-        binding.tvProductName.text = productData.name
-        binding.tvPrice.text = productData.price.toString()
-
-        setOnClickAddToCart(productData)
+        presenter.initPage()
     }
 
-    private fun setOnClickAddToCart(productData: ProductUIModel) {
+    override fun setViews(productData: ProductUIModel) {
+        Glide.with(binding.root.context).load(productData.imageUrl).into(binding.ivProductImage)
+        binding.tvProductName.text = productData.name
+        binding.tvPrice.text = productData.price.toString()
         binding.btAddToCart.setOnClickListener {
-            val dbHelper = CartDBHelper(this)
-            val db = dbHelper.writableDatabase
-            val repository = ProductDBRepository(db)
-            repository.insert(productData)
-
-            startActivity(CartActivity.intent(binding.root.context))
+            presenter.onClickAddToCart()
         }
+    }
+
+    override fun showCartPage() {
+        startActivity(CartActivity.intent(binding.root.context))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
