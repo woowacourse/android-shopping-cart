@@ -4,6 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.model.CartProductState" />
+    </data>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_margin="@dimen/margin_large"
         android:layout_width="match_parent"
@@ -26,7 +32,8 @@
                 android:textColor="@color/black"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                tools:text="[든든] 동원 스위트콘"/>
+                tools:text="제품명"
+                android:text="@{cartProduct.productName}"/>
 
             <ImageView
                 android:id="@+id/cart_clear_image_view"
@@ -42,6 +49,7 @@
                 android:layout_width="136dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="@dimen/margin_small"
+                loadUrl="@{cartProduct.productImageUrl}"
                 app:layout_constraintStart_toStartOf="@id/cart_product_name_tv"
                 app:layout_constraintTop_toBottomOf="@id/cart_product_name_tv"
                 tools:src="@drawable/ic_launcher_background"/>
@@ -53,7 +61,8 @@
                 android:textSize="@dimen/product_cart_item_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/item_layout"
-                tools:text="99,800원"/>
+                tools:text="0원"
+                formatMoneyWon="@{cartProduct.productPrice}"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
