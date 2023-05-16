@@ -22,7 +22,7 @@ class MainPresenter(
         val productUiModels = firstProducts.map { it.toPresentation() }
 
         products.addAll(productUiModels)
-        view.addProducts(productUiModels)
+        view.setProducts(productUiModels)
     }
 
     override fun moveToCart() {
@@ -35,7 +35,7 @@ class MainPresenter(
         val nextProductUiModels = nextProducts.map { it.toPresentation() }
 
         products.addAll(nextProductUiModels)
-        view.addProducts(nextProductUiModels)
+        view.setProducts(products.toList())
     }
 
     override fun loadRecent() {
@@ -64,7 +64,7 @@ class MainPresenter(
 
     override fun resetProducts() {
         productRepository.resetCache()
-        view.addProducts(listOf())
+        view.setProducts(listOf())
     }
 
     private fun addRecentProduct(recentProduct: RecentProductUiModel) {

@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapters() {
-        mainProductAdapter = MainProductAdapter(listOf(),productClickListener)
+        mainProductAdapter = MainProductAdapter(productClickListener)
         recentAdapter = RecentAdapter(recentProductClickListener)
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
         loadAdapter = LoadAdapter { presenter.loadMoreProduct() }
@@ -101,8 +101,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(DetailActivity.getIntent(this, productUiModel))
     }
 
-    override fun addProducts(products: List<ProductUiModel>) {
-        mainProductAdapter.addItems(products)
+    override fun setProducts(products: List<ProductUiModel>) {
+        mainProductAdapter.setItems(products)
     }
 
     override fun updateRecent(recent: List<RecentProductUiModel>) {

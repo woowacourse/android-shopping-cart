@@ -33,7 +33,7 @@ internal class MainPresenterTest {
         // given
         every { productRepository.getFirstProducts() } returns mockProducts.take(20)
         val slot = slot<List<ProductUiModel>>()
-        every { view.addProducts(capture(slot)) } just Runs
+        every { view.setProducts(capture(slot)) } just Runs
 
         // when
         presenter.loadProducts()
@@ -42,7 +42,7 @@ internal class MainPresenterTest {
         val actual = slot.captured.map { it.toDomain() }
         val expected = mockProducts.take(20)
         assert(actual == expected)
-        verify { view.addProducts(any()) }
+        verify { view.setProducts(any()) }
     }
 
     @Test
@@ -61,7 +61,7 @@ internal class MainPresenterTest {
     fun `상품 목록을 이어서 더 불러와서 화면에 추가로 띄운다`() {
         // given
         every { productRepository.getFirstProducts() } returns mockProducts.take(20)
-        every { view.addProducts(any()) } just Runs
+        every { view.setProducts(any()) } just Runs
         presenter.loadProducts()
 
         val lastProductId = 20L
@@ -69,7 +69,7 @@ internal class MainPresenterTest {
             20, 40
         )
         val slot = slot<List<ProductUiModel>>()
-        every { view.addProducts(capture(slot)) } just Runs
+        every { view.setProducts(capture(slot)) } just Runs
 
         // when
         presenter.loadMoreProduct()
@@ -79,7 +79,7 @@ internal class MainPresenterTest {
         val expected = mockProducts.subList(20, 40)
 
         assert(actual == expected)
-        verify { view.addProducts(any()) }
+        verify { view.setProducts(any()) }
     }
 
     @Test

@@ -7,7 +7,7 @@ interface MainContract {
     interface View {
         fun showCartScreen()
         fun showProductDetailScreen(productUiModel: ProductUiModel)
-        fun addProducts(products: List<ProductUiModel>)
+        fun setProducts(products: List<ProductUiModel>)
         fun updateRecent(recent: List<RecentProductUiModel>)
     }
 
