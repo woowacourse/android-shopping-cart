@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.productlist
 
+import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.toUiModel
@@ -8,10 +9,10 @@ class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductRepository,
     private val recentViewedRepository: RecentViewedRepository,
+    private val cartRepository: CartRepository,
 ) : ProductListContract.Presenter {
     private val productListPagination = ProductListPagination(PAGINATION_SIZE, productRepository)
     private val products = productListPagination.nextItems().map { it.toUiModel() }.toMutableList()
-    private val viewedProducts = recentViewedRepository.findAll().toMutableList()
 
     private val productsListItems = mutableListOf<ProductListViewItem>()
     override fun fetchProducts() {
@@ -33,6 +34,11 @@ class ProductListPresenter(
         // Notify
         view.notifyAddProducts(mark, PAGINATION_SIZE)
     }
+
+    override fun addToCartProducts(id: Int, count: Int) {
+        cartRepository.add(id, count)
+    }
+
 
     override fun updateRecentViewed(id: Int) {
         if (id == -1) return

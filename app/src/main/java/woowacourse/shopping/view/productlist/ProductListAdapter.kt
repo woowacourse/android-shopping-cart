@@ -11,6 +11,7 @@ class ProductListAdapter(
     interface OnItemClick {
         fun onProductClick(product: ProductModel)
         fun onShowMoreClick()
+        fun onProductClickAddFirst(id: Int, count: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {

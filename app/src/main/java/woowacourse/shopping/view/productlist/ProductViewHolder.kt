@@ -26,10 +26,10 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     class ProductItemViewHolder(
         private val binding: ItemProductBinding,
-        onItemClick: ProductListAdapter.OnItemClick
+        private val onItemClick: ProductListAdapter.OnItemClick
     ) : ProductViewHolder(binding.root) {
         init {
-            binding.onItemClick = onItemClick
+//            binding.onItemClick = onItemClick
         }
 
         fun bind(item: ProductListViewItem.ProductItem) {
@@ -39,6 +39,11 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 PriceFormatter.format(item.product.price)
             )
             Glide.with(binding.root.context).load(item.product.imageUrl).into(binding.imgProduct)
+            binding.btnAdd.setOnClickListener {
+                onItemClick.onProductClickAddFirst(item.product.id, 1)
+                binding.btnAdd.visibility = View.INVISIBLE
+                binding.layoutAddBtns.visibility = View.VISIBLE
+            }
         }
     }
 

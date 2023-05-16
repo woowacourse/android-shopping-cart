@@ -24,6 +24,10 @@ class CartDbRepository(context: Context) : CartRepository {
         dbHelper.insert(id, count)
     }
 
+    override fun update(id: Int, count: Int) {
+        dbHelper.update(id, count)
+    }
+
     override fun remove(id: Int) {
         dbHelper.remove(id)
     }
