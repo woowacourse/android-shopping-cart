@@ -6,13 +6,13 @@ import woowacourse.shopping.data.model.DataRecentProduct
 class LocalRecentProductDataSource(private val dao: RecentProductDao) :
     RecentProductDataSource.Local {
 
-    override fun getPartially(size: Int): List<DataRecentProduct> = dao.getPartially(size)
+    override fun getPartially(size: Int): List<DataRecentProduct> = dao.getRecentProductsPartially(size)
 
     override fun add(product: DataRecentProduct) {
         while (dao.getSize() >= STORED_DATA_SIZE) {
             dao.removeLast()
         }
-        dao.add(product)
+        dao.addRecentProduct(product)
     }
 
     companion object {

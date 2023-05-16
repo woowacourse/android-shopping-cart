@@ -32,9 +32,9 @@ class BasketActivity : AppCompatActivity(), View {
         binding.adapter?.submitList(products)
     }
 
-    override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {
-        binding.previousButton.isEnabled = previous
-        binding.nextButton.isEnabled = next
+    override fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean) {
+        binding.previousButton.isEnabled = previousEnabled
+        binding.nextButton.isEnabled = nextEnabled
     }
 
     override fun updatePageNumber(page: UiPageNumber) {

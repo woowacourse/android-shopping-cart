@@ -24,7 +24,7 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
     }
 
     @SuppressLint("Range")
-    override fun getPartially(size: Int): List<DataRecentProduct> {
+    override fun getRecentProductsPartially(size: Int): List<DataRecentProduct> {
         val products = mutableListOf<DataRecentProduct>()
         val db = database.writableDatabase
         val cursor = db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(size.toString()))
@@ -44,11 +44,11 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
         return products
     }
 
-    override fun add(recentProduct: DataRecentProduct) {
+    override fun addRecentProduct(item: DataRecentProduct) {
         val contentValues = ContentValues().apply {
-            put(RecentProductContract.COLUMN_NAME, recentProduct.product.name)
-            put(RecentProductContract.COLUMN_PRICE, recentProduct.product.price.value)
-            put(RecentProductContract.COLUMN_IMAGE_URL, recentProduct.product.imageUrl)
+            put(RecentProductContract.COLUMN_NAME, item.product.name)
+            put(RecentProductContract.COLUMN_PRICE, item.product.price.value)
+            put(RecentProductContract.COLUMN_IMAGE_URL, item.product.imageUrl)
         }
 
         database.writableDatabase.insert(RecentProductContract.TABLE_NAME, null, contentValues)

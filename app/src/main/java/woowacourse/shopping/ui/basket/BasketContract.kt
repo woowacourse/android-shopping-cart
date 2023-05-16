@@ -8,7 +8,7 @@ interface BasketContract {
         val presenter: Presenter
 
         fun updateBasket(products: List<UiProduct>)
-        fun updateNavigatorEnabled(previous: Boolean, next: Boolean)
+        fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean)
         fun closeScreen()
         fun updatePageNumber(page: PageNumber)
     }
