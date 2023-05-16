@@ -6,34 +6,28 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.database.dao.ProductDao
 import woowacourse.shopping.data.database.dao.RecentProductDao
 import woowacourse.shopping.data.state.State
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProducts
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class ShoppingPresenterTest {
     private lateinit var presenter: ShoppingPresenter
     private lateinit var view: ShoppingContract.View
-    private lateinit var productDao: ProductDao
-    private lateinit var productsState: State<Products>
+    private lateinit var productRepository: ProductRepository
     private lateinit var recentProductsState: State<RecentProducts>
     private lateinit var recentProductDao: RecentProductDao
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        productDao = mockk(relaxed = true)
-        productsState = mockk(relaxed = true)
+        productRepository = mockk(relaxed = true)
         recentProductDao = mockk(relaxed = true)
         recentProductsState = mockk(relaxed = true)
 
         every {
-            productsState.load()
-        } returns Products(emptyList())
-
-        every {
-            productDao.selectByRange(any(), any())
+            productRepository.getProducts(any(), any())
         } returns Products(emptyList())
 
         every {
@@ -46,8 +40,7 @@ class ShoppingPresenterTest {
 
         presenter = ShoppingPresenter(
             view,
-            productDao = productDao,
-            productsState = productsState,
+            productRepository = productRepository,
             recentProductDao = recentProductDao,
             recentProductsState = recentProductsState,
             recentProductSize = 0,
@@ -59,7 +52,6 @@ class ShoppingPresenterTest {
     fun 프레젠터가_생성되면_뷰의_상품_목록과_최근_상품_목록을_갱신한다() {
         // given
         justRun {
-            productsState.save(any())
             view.addProducts(any())
         }
 
@@ -67,7 +59,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            productsState.save(any())
+            productRepository.getProducts(any(), any())
             view.addProducts(any())
         }
     }
@@ -108,7 +100,6 @@ class ShoppingPresenterTest {
     fun 새로운_상품을_불러오고_갱신한다() {
         // given
         justRun {
-            productsState.save(any())
             view.addProducts(any())
         }
 
@@ -117,8 +108,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            productDao.selectByRange(any(), any())
-            productsState.save(any())
+            productRepository.getProducts(any(), any())
             view.addProducts(any())
         }
     }

@@ -17,6 +17,7 @@ import woowacourse.shopping.common.utils.convertDpToPixel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.ProductDao
 import woowacourse.shopping.data.database.dao.RecentProductDao
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.recyclerview.LoadMoreAdapter
@@ -144,7 +145,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ShoppingPresenter(
             this,
-            productDao = ProductDao(db),
+            productRepository = ProductRepositoryImpl(localProductDataSource = ProductDao(db)),
             recentProductDao = RecentProductDao(db),
             recentProductSize = 10,
             productLoadSize = 20

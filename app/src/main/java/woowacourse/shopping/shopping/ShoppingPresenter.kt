@@ -4,24 +4,22 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.ProductMapper.toView
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
-import woowacourse.shopping.data.database.dao.ProductDao
 import woowacourse.shopping.data.database.dao.RecentProductDao
-import woowacourse.shopping.data.state.ProductsState
 import woowacourse.shopping.data.state.RecentProductsState
 import woowacourse.shopping.data.state.State
-import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
-    private var productsState: State<Products> = ProductsState,
-    private val productDao: ProductDao,
+    private val productRepository: ProductRepository,
     private var recentProductsState: State<RecentProducts> = RecentProductsState,
     private val recentProductDao: RecentProductDao,
     private val recentProductSize: Int,
     private val productLoadSize: Int,
 ) : ShoppingContract.Presenter {
+    private var productSize: Int = 0
 
     init {
         loadMoreProduct()
@@ -73,9 +71,8 @@ class ShoppingPresenter(
     }
 
     override fun loadMoreProduct() {
-        val products = productsState.load()
-        val loadedProducts = productDao.selectByRange(products.value.size, productLoadSize)
-        productsState.save(products + loadedProducts)
+        val loadedProducts = productRepository.getProducts(productSize, productLoadSize)
+        productSize += loadedProducts.value.size
         view.addProducts(loadedProducts.value.map { it.toView() })
     }
 }
