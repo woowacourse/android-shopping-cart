@@ -12,7 +12,7 @@ class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
     private val shoppingDb by lazy { WoowaShoppingDbHelper(context).readableDatabase }
 
     override fun getRecentlyViewedProducts(unit: Int): List<RecentlyViewedEntity> {
-        val query = "SELECT * FROM $TABLE_NAME LIMIT $unit"
+        val query = "SELECT * FROM $TABLE_NAME ORDER BY ${BaseColumns._ID} DESC LIMIT $unit"
         val cursor = shoppingDb.rawQuery(query, null)
         val itemContainer = mutableListOf<RecentlyViewedEntity>()
         while (cursor.moveToNext()) {

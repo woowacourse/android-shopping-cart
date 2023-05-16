@@ -30,7 +30,7 @@ class ProductRepositoryImpl(
         val recentlyViewed: List<RecentlyViewedEntity> =
             recentlyViewedDataSource.getRecentlyViewedProducts(unit)
         val productEntities: List<ProductEntity> =
-            recentlyViewed.mapNotNull { productDataSource.getProductEntity(it.id) }
+            recentlyViewed.mapNotNull { productDataSource.getProductEntity(it.productId) }
         return productEntities.map { it.toDomainModel() }
     }
 
