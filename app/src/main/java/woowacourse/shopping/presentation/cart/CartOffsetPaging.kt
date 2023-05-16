@@ -2,8 +2,8 @@ package woowacourse.shopping.presentation.cart
 
 import woowacourse.shopping.Page
 import woowacourse.shopping.Product
-import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.util.OffsetPaging
 
 class CartOffsetPaging(

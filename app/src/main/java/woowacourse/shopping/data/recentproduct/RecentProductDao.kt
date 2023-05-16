@@ -3,9 +3,10 @@ package woowacourse.shopping.data.recentproduct
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.repository.RecentProductRepository
 import java.lang.String.valueOf
 
-class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepository {
+class RecentProductDao(db: RecentProductDbHelper) : RecentProductRepository {
 
     private val writableDb: SQLiteDatabase = db.writableDatabase
 

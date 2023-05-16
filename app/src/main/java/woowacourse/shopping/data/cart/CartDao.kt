@@ -3,8 +3,9 @@ package woowacourse.shopping.data.cart
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.repository.CartRepository
 
-class CartDbAdapter(db: CartDbHelper) : CartRepository {
+class CartDao(db: CartDbHelper) : CartRepository {
 
     private val writableDb: SQLiteDatabase = db.writableDatabase
     override fun addCartProductId(productId: Int) {

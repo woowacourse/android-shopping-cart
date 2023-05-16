@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.recentproduct
+package woowacourse.shopping.repository
 
-interface RecentProductIdRepository {
+interface RecentProductRepository {
 
     fun addRecentProductId(recentProductId: Int)
 

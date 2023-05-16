@@ -4,10 +4,10 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.ProductDetailContract
 import woowacourse.shopping.presentation.productdetail.ProductDetailPresenter
+import woowacourse.shopping.repository.CartRepository
 
 class ProductDetailPresenterTest {
     private lateinit var view: ProductDetailContract.View

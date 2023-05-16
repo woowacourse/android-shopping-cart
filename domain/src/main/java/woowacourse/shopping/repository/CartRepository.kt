@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.cart
+package woowacourse.shopping.repository
 
 interface CartRepository {
     fun addCartProductId(productId: Int)

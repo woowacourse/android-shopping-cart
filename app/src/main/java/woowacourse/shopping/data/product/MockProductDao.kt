@@ -2,8 +2,9 @@ package woowacourse.shopping.data.product
 
 import woowacourse.shopping.Price
 import woowacourse.shopping.Product
+import woowacourse.shopping.repository.ProductRepository
 
-object MockProductRepository : ProductRepository {
+object MockProductDao : ProductRepository {
 
     override val products: List<Product> = getProducts(100)
 

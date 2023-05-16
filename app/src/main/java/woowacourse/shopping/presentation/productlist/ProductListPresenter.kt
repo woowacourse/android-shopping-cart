@@ -2,15 +2,15 @@ package woowacourse.shopping.presentation.productlist
 
 import woowacourse.shopping.Product
 import woowacourse.shopping.Products
-import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentProductRepository
 
 class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductRepository,
-    private val recentProductIdRepository: RecentProductIdRepository,
+    private val recentProductRepository: RecentProductRepository,
 ) : ProductListContract.Presenter {
 
     private val products = Products()
@@ -32,12 +32,12 @@ class ProductListPresenter(
     }
 
     override fun saveRecentProductId(productId: Int) {
-        recentProductIdRepository.deleteRecentProductId(productId)
-        recentProductIdRepository.addRecentProductId(productId)
+        recentProductRepository.deleteRecentProductId(productId)
+        recentProductRepository.addRecentProductId(productId)
     }
 
     private fun getRecentProductModels(): List<ProductModel> {
-        val recentProductIds = recentProductIdRepository.getRecentProductIds(RECENT_PRODUCTS_SIZE)
+        val recentProductIds = recentProductRepository.getRecentProductIds(RECENT_PRODUCTS_SIZE)
         return findProductsById(recentProductIds)
     }
 

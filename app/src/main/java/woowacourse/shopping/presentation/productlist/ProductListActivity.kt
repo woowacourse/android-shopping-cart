@@ -6,28 +6,28 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.MockProductRepository
+import woowacourse.shopping.data.product.MockProductDao
+import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
-import woowacourse.shopping.data.recentproduct.RecentProductIdDbAdapter
-import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.productlist.product.ProductListAdapter
 import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductAdapter
+import woowacourse.shopping.repository.RecentProductRepository
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
 
-    private val recentProductRepository: RecentProductIdRepository by lazy {
-        RecentProductIdDbAdapter(RecentProductDbHelper(this))
+    private val recentProductRepository: RecentProductRepository by lazy {
+        RecentProductDao(RecentProductDbHelper(this))
     }
 
     private val presenter: ProductListPresenter by lazy {
-        ProductListPresenter(this, MockProductRepository, recentProductRepository)
+        ProductListPresenter(this, MockProductDao, recentProductRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

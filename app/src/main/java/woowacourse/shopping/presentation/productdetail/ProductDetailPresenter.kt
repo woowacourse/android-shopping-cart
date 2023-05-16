@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.productdetail
 
-import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.repository.CartRepository
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,

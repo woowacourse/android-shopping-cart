@@ -6,16 +6,16 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbAdapter
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDbHelper
-import woowacourse.shopping.data.product.MockProductRepository
+import woowacourse.shopping.data.product.MockProductDao
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.model.ProductModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private val presenter: CartContract.Presenter by lazy {
-        CartPresenter(this, CartDbAdapter(CartDbHelper(this)), MockProductRepository)
+        CartPresenter(this, CartDao(CartDbHelper(this)), MockProductDao)
     }
     private lateinit var cartAdapter: CartAdapter
 

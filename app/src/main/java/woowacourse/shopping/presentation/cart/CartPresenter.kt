@@ -1,10 +1,10 @@
 package woowacourse.shopping.presentation.cart
 
 import woowacourse.shopping.Products
-import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.ProductRepository
 
 class CartPresenter(
     private val view: CartContract.View,

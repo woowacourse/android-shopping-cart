@@ -7,12 +7,12 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.presentation.cart.CartContract
 import woowacourse.shopping.presentation.cart.CartPresenter
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.ProductRepository
 
 class CartPresenterTest {
     private lateinit var view: CartContract.View

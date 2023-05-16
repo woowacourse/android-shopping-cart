@@ -5,17 +5,17 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.productlist.ProductListContract
 import woowacourse.shopping.presentation.productlist.ProductListPresenter
+import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentProductRepository
 
 class ProductListPresenterTest {
     private lateinit var presenter: ProductListContract.Presenter
     private lateinit var view: ProductListContract.View
     private val productRepository: ProductRepository = mockk(relaxed = true)
-    private val recentProductRepository: RecentProductIdRepository = mockk(relaxed = true)
+    private val recentProductRepository: RecentProductRepository = mockk(relaxed = true)
 
     @Before
     fun setUp() {
