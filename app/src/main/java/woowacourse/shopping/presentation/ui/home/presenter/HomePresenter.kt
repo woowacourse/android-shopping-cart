@@ -19,7 +19,20 @@ class HomePresenter(
         val showMoreButton = ShowMoreProducts
 
         productsCount = products.size
+        if (isRecentProductsEmpty(recentlyViewProducts, products, showMoreButton)) return
         view.setUpProductsOnHome(listOf(recentlyViewProducts) + products + showMoreButton)
+    }
+
+    private fun isRecentProductsEmpty(
+        recentlyViewProducts: RecentlyViewedProducts,
+        products: List<Products>,
+        showMoreButton: ShowMoreProducts,
+    ): Boolean {
+        if (recentlyViewProducts.recentProduct.isEmpty()) {
+            view.setUpProductsOnHome(products + showMoreButton)
+            return true
+        }
+        return false
     }
 
     override fun fetchMoreProducts() {

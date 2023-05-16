@@ -7,6 +7,8 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.util.Error
 import woowacourse.shopping.domain.util.WoowaResult
+import woowacourse.shopping.domain.util.WoowaResult.FAIL
+import woowacourse.shopping.domain.util.WoowaResult.SUCCESS
 
 class ProductRepositoryImpl(
     private val productDataSource: ProductDataSource,
@@ -15,9 +17,9 @@ class ProductRepositoryImpl(
 
     override fun getProduct(id: Long): WoowaResult<Product> {
         val productEntity: ProductEntity =
-            productDataSource.getProductEntity(id) ?: return WoowaResult.FAIL(Error.NoSuchId)
+            productDataSource.getProductEntity(id) ?: return FAIL(Error.NoSuchId)
 
-        return WoowaResult.SUCCESS(productEntity.toDomainModel())
+        return SUCCESS(productEntity.toDomainModel())
     }
 
     override fun getProducts(unit: Int, lastIndex: Int): List<Product> {
