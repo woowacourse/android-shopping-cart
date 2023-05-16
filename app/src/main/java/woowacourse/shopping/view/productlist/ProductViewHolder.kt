@@ -29,7 +29,7 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val onItemClick: ProductListAdapter.OnItemClick
     ) : ProductViewHolder(binding.root) {
         init {
-//            binding.onItemClick = onItemClick
+            binding.onItemClick = onItemClick
         }
 
         fun bind(item: ProductListViewItem.ProductItem) {

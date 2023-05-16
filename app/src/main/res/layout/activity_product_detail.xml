@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="woowacourse.shopping.util.PriceFormatter" />
 
         <variable
             name="product"
@@ -69,18 +70,67 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
+            android:text="@{String.format(@string/korean_won, PriceFormatter.INSTANCE.format(product.price))}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/text_price_label"
             tools:text="99,800원" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_last_viewed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_price_label"
+            android:background="@drawable/back_rounded"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginVertical="29dp">
+
+            <TextView
+                android:id="@+id/text_viewed_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/product_viewed_last"
+                android:textColor="@color/mint"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_product_name_viewed_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_viewed_last"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <TextView
+                android:id="@+id/text_price_viewed_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/text_product_name_viewed_last"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_product_name_viewed_last"
+                tools:text="10,000원" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_put_in_cart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@color/mint"
-            android:onClick="@{()->presenter.putInCart(product)}"
             android:text="@string/put_in_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
