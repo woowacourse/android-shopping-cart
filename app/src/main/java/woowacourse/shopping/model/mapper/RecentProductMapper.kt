@@ -12,9 +12,5 @@ fun RecentProductListItem.toUi(): RecentProductState {
     return RecentProductState(productId, productImageUrl, productName)
 }
 
-fun RecentProductState.toDomain(): RecentProduct {
-    return RecentProduct(productId, productImageUrl, productName)
-}
-
 fun RecentProductState.toItem(): RecentProductListItem =
     RecentProductListItem(productId, productImageUrl, productName)

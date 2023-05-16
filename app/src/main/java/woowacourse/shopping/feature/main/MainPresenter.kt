@@ -10,6 +10,7 @@ import woowacourse.shopping.model.mapper.toDomain
 import woowacourse.shopping.model.mapper.toItem
 import woowacourse.shopping.model.mapper.toRecentProduct
 import woowacourse.shopping.model.mapper.toUi
+import java.time.LocalDateTime
 
 class MainPresenter(
     private val view: MainContract.View,
@@ -39,8 +40,9 @@ class MainPresenter(
     }
 
     override fun addRecentProduct(product: Product) {
-        storeRecentProduct(product.toRecentProduct())
-        view.addRecentProductItems(listOf(product.toRecentProduct().toUi()))
+        val nowDateTime: LocalDateTime = LocalDateTime.now()
+        storeRecentProduct(product.toRecentProduct(nowDateTime))
+        view.addRecentProductItems(listOf(product.toRecentProduct(nowDateTime).toUi()))
     }
 
     override fun loadRecentProducts() {

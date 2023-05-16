@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.example.domain.RecentProduct
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class RecentProductDao(context: Context) {
 
@@ -16,7 +18,8 @@ class RecentProductDao(context: Context) {
             arrayOf(
                 RecentProductContract.TABLE_COLUMN_PRODUCT_ID,
                 RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL,
-                RecentProductContract.TABLE_COLUMN_PRODUCT_NAME
+                RecentProductContract.TABLE_COLUMN_PRODUCT_NAME,
+                RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME
             ),
             "", arrayOf(), null, null, ""
         )
@@ -28,14 +31,27 @@ class RecentProductDao(context: Context) {
 
         with(cursor) {
             while (moveToNext()) {
-                val id =
+                val productId =
                     getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_ID))
-                val imageUrl =
+                val productImageUrl =
                     getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
-                val name =
+                val productName =
                     getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME))
+                val viewedDateTime =
+                    getLong(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME))
 
-                recentProducts.add(RecentProduct(id, imageUrl, name))
+                recentProducts.add(
+                    RecentProduct(
+                        productId = productId,
+                        productImageUrl = productImageUrl,
+                        productName = productName,
+                        viewedDateTime = LocalDateTime.ofEpochSecond(
+                            viewedDateTime,
+                            0,
+                            ZoneOffset.UTC
+                        )
+                    )
+                )
             }
         }
 
@@ -44,12 +60,23 @@ class RecentProductDao(context: Context) {
     }
 
     fun addColumn(recentProduct: RecentProduct) {
+        val deleteQuery =
+            """
+                DELETE FROM ${RecentProductContract.TABLE_NAME}
+                WHERE ${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} = ${recentProduct.productId};
+            """.trimIndent()
+
+        db.execSQL(deleteQuery)
+
         val values = ContentValues().apply {
             put(RecentProductContract.TABLE_COLUMN_PRODUCT_ID, recentProduct.productId)
             put(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, recentProduct.productImageUrl)
             put(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME, recentProduct.productName)
+            put(
+                RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME,
+                recentProduct.viewedDateTime.toEpochSecond(ZoneOffset.UTC)
+            )
         }
-
         db.insert(RecentProductContract.TABLE_NAME, null, values)
     }
 
@@ -66,8 +93,17 @@ class RecentProductDao(context: Context) {
                 CREATE TABLE ${RecentProductContract.TABLE_NAME} (
                     ${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
                     ${RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL} TEXT,
-                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_NAME} TEXT
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_NAME} TEXT,
+                    ${RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME} INT
                 )
+            """.trimIndent()
+        )
+    }
+
+    fun deleteTable() {
+        db.execSQL(
+            """
+                DROP TABLE IF EXISTS ${RecentProductContract.TABLE_NAME};
             """.trimIndent()
         )
     }
