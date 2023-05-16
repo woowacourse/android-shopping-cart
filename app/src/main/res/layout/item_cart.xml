@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.model.ProductModel" />
+
+        <variable
+            name="onItemClick"
+            type="woowacourse.shopping.view.cart.CartAdapter.OnItemClick" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="15dp"
+        android:background="@drawable/back_rounded"
+        android:paddingHorizontal="13dp"
+        android:paddingVertical="26dp">
+
+        <TextView
+            android:id="@+id/text_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{cartProduct.name}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="동원참치" />
+
+        <ImageView
+            android:id="@+id/img_product"
+            setImage="@{cartProduct.imageUrl}"
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="26dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/text_product_name"
+            app:layout_constraintTop_toBottomOf="@id/text_product_name"
+            tools:background="@color/black" />
+
+        <TextView
+            android:id="@+id/text_price"
+            setPrice="@{cartProduct.price}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="99,800원" />
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:background="@drawable/ic_close"
+            android:backgroundTint="@color/gray"
+            android:onClick="@{() -> onItemClick.onRemoveClick(cartProduct.id)}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
