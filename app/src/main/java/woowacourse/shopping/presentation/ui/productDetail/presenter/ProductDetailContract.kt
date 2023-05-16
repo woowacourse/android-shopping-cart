@@ -7,7 +7,7 @@ interface ProductDetailContract {
 
     interface Presenter {
         fun getProduct(id: Long)
-        fun addRecentlyViewedProduct(id: Long, unit: Int)
+        fun addRecentlyViewedProduct(id: Long)
         fun addProductInCart()
     }
 }

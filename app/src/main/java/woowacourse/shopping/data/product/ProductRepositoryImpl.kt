@@ -34,7 +34,7 @@ class ProductRepositoryImpl(
         return productEntities.map { it.toDomainModel() }
     }
 
-    override fun addRecentlyViewedProduct(productId: Long, unit: Int): Long {
-        return recentlyViewedDataSource.addRecentlyViewedProduct(productId, unit)
+    override fun addRecentlyViewedProduct(productId: Long): Long {
+        return recentlyViewedDataSource.addRecentlyViewedProduct(productId)
     }
 }

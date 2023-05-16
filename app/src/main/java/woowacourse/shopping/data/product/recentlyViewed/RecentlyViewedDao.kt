@@ -22,17 +22,10 @@ class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
         return itemContainer
     }
 
-    override fun addRecentlyViewedProduct(productId: Long, unit: Int): Long {
+    override fun addRecentlyViewedProduct(productId: Long): Long {
         val data = ContentValues()
         data.put(TABLE_COLUMN_PRODUCT_ID, productId)
         val id = shoppingDb.insert(TABLE_NAME, null, data)
-
-        val query = """
-            DELETE FROM $TABLE_NAME WHERE ${BaseColumns._ID} NOT IN (
-            SELECT ${BaseColumns._ID} FROM $TABLE_NAME ORDER BY ${BaseColumns._ID} DESC LIMIT $unit
-            )
-            """
-        shoppingDb.execSQL(query)
         return id
     }
 

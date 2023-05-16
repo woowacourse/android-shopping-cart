@@ -21,8 +21,8 @@ class ProductDetailPresenter(
         }
     }
 
-    override fun addRecentlyViewedProduct(id: Long, unit: Int) {
-        productRepository.addRecentlyViewedProduct(id, unit)
+    override fun addRecentlyViewedProduct(id: Long) {
+        productRepository.addRecentlyViewedProduct(id)
     }
 
     override fun addProductInCart() {
