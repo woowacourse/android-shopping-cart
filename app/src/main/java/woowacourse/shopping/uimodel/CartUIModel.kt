@@ -1,3 +1,3 @@
 package woowacourse.shopping.uimodel
 
-class CartUIModel(val products: List<ProductUIModel>)
+class CartUIModel(val products: List<CartProductUIModel>)

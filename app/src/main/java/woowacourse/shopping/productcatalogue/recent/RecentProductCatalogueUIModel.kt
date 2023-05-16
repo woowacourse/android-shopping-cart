@@ -1,5 +1,0 @@
-package woowacourse.shopping.productcatalogue.recent
-
-import woowacourse.shopping.productcatalogue.list.MainProductCatalogueUIModel
-
-class RecentProductCatalogueUIModel(var mainProductCatalogue: MainProductCatalogueUIModel)

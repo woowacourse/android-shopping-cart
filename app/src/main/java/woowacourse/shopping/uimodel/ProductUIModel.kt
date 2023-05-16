@@ -1,11 +1,14 @@
 package woowacourse.shopping.uimodel
 
+import java.io.Serializable
+
 class ProductUIModel(
-    val url: String,
+    val id: Int,
+    val imageUrl: String,
     val name: String,
     val price: Int,
-) : java.io.Serializable {
+) : Serializable {
     companion object {
-        val dummy = ProductUIModel("", "", 0)
+        val dummy = ProductUIModel(Integer.MIN_VALUE, "", "", 0)
     }
 }

@@ -1,7 +1,8 @@
 package com.shopping.domain
 
 data class Product(
-    val url: String,
+    val id: Int,
+    val imageUrl: String,
     val name: String,
-    val price: Int,
+    val price: Price,
 )
