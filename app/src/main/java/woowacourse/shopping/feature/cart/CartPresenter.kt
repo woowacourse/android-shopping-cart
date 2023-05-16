@@ -15,21 +15,17 @@ class CartPresenter(
         private set
 
     override fun loadInitCartProduct() {
-        val cartProducts =
-            cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
-        val items = cartProducts.map { it.toPresentation() }
-
-        changePageState(items)
+        changePageState(getCurrentPageItems())
     }
 
     override fun deleteCartProduct(cartProduct: CartProductUiModel) {
         cartRepository.deleteProduct(cartProduct.toDomain())
         this.page = this.page.copy(allSize = this.page.allSize - 1)
 
-        var loadedItems = loadCurrentPageItems()
+        var loadedItems = getCurrentPageItems()
         if (loadedItems.isEmpty() && this.page.currentPage != 1) {
             this.page = this.page.previousPage()
-            loadedItems = loadCurrentPageItems()
+            loadedItems = getCurrentPageItems()
         }
         changePageState(loadedItems)
     }
@@ -37,28 +33,23 @@ class CartPresenter(
     override fun loadPreviousPage() {
         this.page = this.page.previousPage()
 
-        val loadedItems = loadCurrentPageItems()
+        val loadedItems = getCurrentPageItems()
         changePageState(loadedItems)
     }
 
     override fun loadNextPage() {
         this.page = this.page.nextPage()
 
-        val loadedItems = loadCurrentPageItems()
+        val loadedItems = getCurrentPageItems()
         changePageState(loadedItems)
     }
 
     override fun setPage(page: PageUiModel) {
         this.page = page
-
-        val restoreCartProducts =
-            cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
-        val restoreItems = restoreCartProducts.map { it.toPresentation() }
-
-        changePageState(restoreItems)
+        changePageState(getCurrentPageItems())
     }
 
-    private fun loadCurrentPageItems(): List<CartProductUiModel> {
+    private fun getCurrentPageItems(): List<CartProductUiModel> {
         val cartProducts =
             cartRepository.getProductsByPage(page.currentPage, PageUiModel.PAGE_LOAD_SIZE)
 
