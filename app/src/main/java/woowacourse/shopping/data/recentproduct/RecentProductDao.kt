@@ -1,13 +1,14 @@
 package woowacourse.shopping.data.recentproduct
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.example.domain.RecentProduct
 
-class RecentProductDbHandler(
-    private val db: SQLiteDatabase
-) {
+class RecentProductDao(context: Context) {
+
+    private val db: SQLiteDatabase = RecentProductDbHelper(context).writableDatabase
 
     private fun getCursor(): Cursor {
         return db.query(
@@ -27,9 +28,12 @@ class RecentProductDbHandler(
 
         with(cursor) {
             while (moveToNext()) {
-                val id = getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_ID))
-                val imageUrl = getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
-                val name = getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME))
+                val id =
+                    getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_ID))
+                val imageUrl =
+                    getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
+                val name =
+                    getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME))
 
                 recentProducts.add(RecentProduct(id, imageUrl, name))
             }

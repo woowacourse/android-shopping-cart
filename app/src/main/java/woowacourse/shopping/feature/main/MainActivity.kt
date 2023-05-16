@@ -9,10 +9,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.Product
 import com.example.domain.RecentProduct
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductDbHandler
-import woowacourse.shopping.data.product.ProductDbHelper
-import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
-import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
+import woowacourse.shopping.data.product.ProductDao
+import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
@@ -35,10 +33,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         get() = _binding!!
 
     private val presenter: MainContract.Presenter by lazy {
-        val productDbHandler = ProductDbHandler(ProductDbHelper(this).writableDatabase)
-        val recentProductDbHandler =
-            RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
-        MainPresenter(this, productDbHandler, recentProductDbHandler)
+        val productDao = ProductDao(this)
+        val recentProductDao = RecentProductDao(this)
+        MainPresenter(this, productDao, recentProductDao)
     }
     private val productListAdapter: ProductListAdapter by lazy {
         ProductListAdapter(onItemClick = { presenter.showProductDetail(it) })

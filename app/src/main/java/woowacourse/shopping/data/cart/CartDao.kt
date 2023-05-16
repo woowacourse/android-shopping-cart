@@ -1,14 +1,15 @@
 package woowacourse.shopping.data.cart
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.example.domain.CartProduct
 import com.example.domain.Product
 
-class CartDbHandler(
-    private val db: SQLiteDatabase
-) {
+class CartDao(context: Context) {
+
+    private val db: SQLiteDatabase = CartDbHelper(context).writableDatabase
 
     private fun getCursor(): Cursor {
         return db.query(

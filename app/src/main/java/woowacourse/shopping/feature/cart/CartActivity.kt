@@ -5,8 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbHandler
-import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.list.adapter.CartProductListAdapter
 import woowacourse.shopping.model.CartProductState
@@ -18,8 +17,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         get() = _binding!!
 
     private val presenter: CartContract.Presenter by lazy {
-        val cartDbHandler = CartDbHandler(CartDbHelper(this).writableDatabase)
-        CartPresenter(this, cartDbHandler)
+        val cartDao = CartDao(this)
+        CartPresenter(this, cartDao)
     }
 
     private val adapter: CartProductListAdapter by lazy {

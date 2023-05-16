@@ -1,13 +1,13 @@
 package woowacourse.shopping.feature.product.detail
 
-import woowacourse.shopping.data.cart.CartDbHandler
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.model.ProductState
 import woowacourse.shopping.model.mapper.toDomain
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
     override val product: ProductState?,
-    private val cartDbHandler: CartDbHandler
+    private val cartDao: CartDao
 ) : ProductDetailContract.Presenter {
 
     override fun loadProduct() {
@@ -21,7 +21,7 @@ class ProductDetailPresenter(
         if (!isValidProduct()) return
         product!!
 
-        cartDbHandler.addColumn(product.toDomain())
+        cartDao.addColumn(product.toDomain())
         view.showCart()
     }
 

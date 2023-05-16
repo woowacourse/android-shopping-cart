@@ -1,7 +1,7 @@
 package woowacourse.shopping.feature.cart
 
 import com.example.domain.CartProduct
-import woowacourse.shopping.data.cart.CartDbHandler
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.list.item.CartProductListItem
 import woowacourse.shopping.list.item.ListItem
 import woowacourse.shopping.model.CartProductState
@@ -10,7 +10,7 @@ import woowacourse.shopping.model.mapper.toUi
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val cartProductDbHandler: CartDbHandler
+    private val cartProductDbHandler: CartDao
 ) : CartContract.Presenter {
 
     private val maxProductsPerPage: Int = 5

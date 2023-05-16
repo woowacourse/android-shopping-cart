@@ -5,8 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbHandler
-import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.model.ProductState
@@ -19,8 +18,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private val presenter: ProductDetailContract.Presenter by lazy {
         val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
-        val cartDbHandler = CartDbHandler(CartDbHelper(this).writableDatabase)
-        ProductDetailPresenter(this, product, cartDbHandler)
+        val cartDao = CartDao(this)
+        ProductDetailPresenter(this, product, cartDao)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

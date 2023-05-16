@@ -2,7 +2,7 @@ package woowacourse.shopping.data.product
 
 import com.example.domain.Product
 
-fun setDbProducts(dbHandler: ProductDbHandler) {
+fun setDbProducts(dbHandler: ProductDao) {
     repeat(50) { index ->
         dbHandler.addColumn(
             Product(
