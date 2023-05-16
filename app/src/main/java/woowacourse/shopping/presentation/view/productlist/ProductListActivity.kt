@@ -105,7 +105,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun setMoreProductListAdapter() {
-        moreProductListAdapter = MoreProductListAdapter(productListAdapter, ::onMoreProductList)
+        moreProductListAdapter = MoreProductListAdapter(::onMoreProductList)
     }
 
     private fun setConcatAdapter() {
@@ -135,7 +135,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         presenter.loadMoreData(productListAdapter.itemCount - 1)
     }
 
-    override fun updateMoreProductsView(preSize: Int, diffSize: Int) {
-        productListAdapter.updateDataSet(preSize, diffSize)
+    override fun updateMoreProductsView(newProducts: List<ProductModel>) {
+        productListAdapter.updateDataSet(newProducts)
     }
 }

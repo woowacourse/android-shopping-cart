@@ -6,26 +6,28 @@ import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.view.productlist.viewholder.ProductListViewHolder
 
 class ProductListAdapter(
-    private val products: List<ProductModel>,
+    products: List<ProductModel>,
     private val onButtonClick: (ProductModel) -> Unit
 ) : RecyclerView.Adapter<ProductListViewHolder>() {
+    private val _products = products.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
         return ProductListViewHolder(parent) {
-            onButtonClick(products[it])
+            onButtonClick(_products[it])
         }
     }
 
     override fun onBindViewHolder(holder: ProductListViewHolder, position: Int) {
-        holder.bind(products[position])
+        holder.bind(_products[position])
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = _products.size
 
     override fun getItemViewType(position: Int): Int = VIEW_TYPE
 
-    fun updateDataSet(preSize: Int, diffSize: Int) {
-        notifyItemRangeInserted(preSize, diffSize)
+    fun updateDataSet(newProducts: List<ProductModel>) {
+        _products.addAll(newProducts)
+        notifyItemRangeInserted(itemCount, newProducts.size)
     }
 
     companion object {

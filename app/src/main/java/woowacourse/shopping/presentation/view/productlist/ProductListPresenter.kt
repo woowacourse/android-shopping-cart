@@ -44,7 +44,7 @@ class ProductListPresenter(
     override fun loadMoreData(startPosition: Int) {
         val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT)
         products.addAll(newProducts)
-        view.updateMoreProductsView(startPosition + 1, newProducts.size)
+        view.updateMoreProductsView(newProducts)
     }
 
     companion object {
