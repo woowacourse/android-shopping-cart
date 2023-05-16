@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.product
 
+import android.util.Log
 import woowacourse.shopping.data.product.ProductMapper.toDomainModel
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDataSource
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedEntity
@@ -32,11 +33,12 @@ class ProductRepositoryImpl(
         val recentlyViewed: List<RecentlyViewedEntity> =
             recentlyViewedDataSource.getRecentlyViewedProducts(unit)
         val productEntities: List<ProductEntity> =
-            recentlyViewed.mapNotNull { productDataSource.getProductEntity(it.id) }
+            recentlyViewed.mapNotNull { productDataSource.getProductEntity(it.productId) }
         return productEntities.map { it.toDomainModel() }
     }
 
     override fun addRecentlyViewedProduct(productId: Long, unit: Int): Long {
+        Log.d("add123", productId.toString())
         return recentlyViewedDataSource.addRecentlyViewedProduct(productId, unit)
     }
 }

@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.ui.productDetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
@@ -36,6 +37,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setContentView(binding.root)
 
         val productId = intent.getLongExtra(PRODUCT_ID, DEFAULT_ID)
+        Log.d("put", productId.toString())
 
         initView(productId)
         addRecentlyViewedProduct(productId)
