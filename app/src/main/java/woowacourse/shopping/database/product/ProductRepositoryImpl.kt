@@ -13,7 +13,9 @@ object ProductRepositoryImpl : ProductRepository {
     }
 
     override fun findAll(limit: Int, offset: Int): List<Product> {
-        return products.values.toList().subList(offset, offset + limit)
+        return products.values.toList()
+            .slice(offset until products.values.size)
+            .take(limit)
     }
 
     override fun findById(id: Long): Product? {
