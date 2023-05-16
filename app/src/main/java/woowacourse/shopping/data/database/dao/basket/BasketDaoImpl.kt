@@ -12,12 +12,14 @@ import woowacourse.shopping.data.model.DataProduct
 
 class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     @SuppressLint("Range")
-    override fun getPartially(size: Int, lastId: Int, isNext: Boolean): List<DataBasketProduct> {
+    override fun getPartiallyIncludeStartId(size: Int, standard: Int): List<DataBasketProduct> {
         val products = mutableListOf<DataBasketProduct>()
-        val start = if (isNext) lastId else (lastId - size)
         database.writableDatabase.use { db ->
             val cursor =
-                db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(start.toString(), size.toString()))
+                db.rawQuery(
+                    GET_PARTIALLY_INCLUDE_START_ID_QUERY,
+                    arrayOf(standard.toString(), size.toString())
+                )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val productId: Int =
@@ -33,6 +35,61 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             cursor.close()
         }
         return products
+    }
+
+    @SuppressLint("Range")
+    override fun getPartiallyNotIncludeStartId(size: Int, standard: Int): List<DataBasketProduct> {
+        val products = mutableListOf<DataBasketProduct>()
+        database.writableDatabase.use { db ->
+            val cursor =
+                db.rawQuery(
+                    GET_PARTIALLY_NOT_INCLUDE_START_ID_QUERY,
+                    arrayOf(standard.toString(), size.toString())
+                )
+            while (cursor.moveToNext()) {
+                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val productId: Int =
+                    cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val name: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
+                val price: DataPrice =
+                    DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
+                val imageUrl: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
+                products.add(DataBasketProduct(id, DataProduct(productId, name, price, imageUrl)))
+            }
+            cursor.close()
+        }
+        return products
+    }
+
+    @SuppressLint("Range")
+    override fun getPreviousPartiallyNotIncludeStartId(
+        size: Int,
+        standard: Int
+    ): List<DataBasketProduct> {
+        val products = mutableListOf<DataBasketProduct>()
+        database.writableDatabase.use { db ->
+            val cursor =
+                db.rawQuery(
+                    GET_PREVIOUS_PARTIALLY_NOT_INCLUDE_START_ID_QUERY,
+                    arrayOf(standard.toString(), size.toString())
+                )
+            while (cursor.moveToNext()) {
+                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val productId: Int =
+                    cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val name: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
+                val price: DataPrice =
+                    DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
+                val imageUrl: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
+                products.add(DataBasketProduct(id, DataProduct(productId, name, price, imageUrl)))
+            }
+            cursor.close()
+        }
+        return products.sortedBy { it.id }
     }
 
     override fun add(basketProduct: DataProduct) {
@@ -56,12 +113,28 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     }
 
     companion object {
-        private val GET_PARTIALLY_QUERY = """
+        private val GET_PARTIALLY_INCLUDE_START_ID_QUERY = """
             SELECT ${BasketContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
             FROM ${BasketContract.TABLE_NAME}
             INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
             WHERE ${BasketContract.TABLE_NAME}.${BaseColumns._ID} >= ?
             ORDER BY ${BasketContract.TABLE_NAME}.${BaseColumns._ID} LIMIT ?        
+        """.trimIndent()
+
+        private val GET_PARTIALLY_NOT_INCLUDE_START_ID_QUERY = """
+            SELECT ${BasketContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
+            FROM ${BasketContract.TABLE_NAME}
+            INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
+            WHERE ${BasketContract.TABLE_NAME}.${BaseColumns._ID} > ?
+            ORDER BY ${BasketContract.TABLE_NAME}.${BaseColumns._ID} LIMIT ?        
+        """.trimIndent()
+
+        private val GET_PREVIOUS_PARTIALLY_NOT_INCLUDE_START_ID_QUERY = """
+            SELECT ${BasketContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
+            FROM ${BasketContract.TABLE_NAME}
+            INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
+            WHERE ${BasketContract.TABLE_NAME}.${BaseColumns._ID} < ?
+            ORDER BY ${BasketContract.TABLE_NAME}.${BaseColumns._ID} DESC LIMIT ?        
         """.trimIndent()
     }
 }

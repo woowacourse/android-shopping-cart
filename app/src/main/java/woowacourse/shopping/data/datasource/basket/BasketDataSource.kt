@@ -5,7 +5,13 @@ import woowacourse.shopping.data.model.DataProduct
 
 interface BasketDataSource {
     interface Local {
-        fun getPartially(size: Int, lastId: Int, isNext: Boolean): List<DataBasketProduct>
+        fun getPartially(
+            size: Int,
+            standard: Int,
+            isNext: Boolean,
+            includeStandard: Boolean
+        ): List<DataBasketProduct>
+
         fun add(basketProduct: DataProduct)
         fun remove(basketProduct: DataBasketProduct)
     }

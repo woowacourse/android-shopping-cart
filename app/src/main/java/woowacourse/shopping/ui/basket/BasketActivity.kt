@@ -38,7 +38,7 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
     private fun initAdapter() {
         basketAdapter = BasketAdapter(presenter::removeBasketProduct)
         binding.rvBasket.adapter = basketAdapter
-        presenter.fetchBasketProducts(true)
+        presenter.fetchBasketProducts()
     }
 
     private fun initToolbarBackButton() {
@@ -48,8 +48,14 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
     }
 
     private fun navigatorClickListener() {
-        binding.btnPrevious.setOnClickListener { presenter.fetchBasketProducts(isNext = false) }
-        binding.btnNext.setOnClickListener { presenter.fetchBasketProducts(isNext = true) }
+        binding.btnPrevious.setOnClickListener {
+            presenter.updateCurrentPage(false)
+            presenter.fetchPreviousBasketProducts(basketAdapter.currentList)
+        }
+        binding.btnNext.setOnClickListener {
+            presenter.updateCurrentPage(true)
+            presenter.fetchBasketProducts()
+        }
     }
 
     override fun updateBasketProducts(products: List<UiBasketProduct>) {
@@ -59,6 +65,10 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
     override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {
         binding.btnPrevious.isEnabled = previous
         binding.btnNext.isEnabled = next
+    }
+
+    override fun updateCurrentPage(currentPage: Int) {
+        binding.tvCurrentPage.text = currentPage.toString()
     }
 
     companion object {

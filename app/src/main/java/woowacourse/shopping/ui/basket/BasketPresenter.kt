@@ -11,20 +11,33 @@ class BasketPresenter(
 ) : BasketContract.Presenter {
     private var hasNext: Boolean = false
     override var lastId: Int = -1
-    private val hasPrevious: Boolean
-        get() = lastId > BASKET_PAGING_SIZE
+    private var currentPage: Int = 1
 
-    override fun fetchBasketProducts(isNext: Boolean, startId: Int) {
+    override fun fetchPreviousBasketProducts(currentProducts: List<UiBasketProduct>) {
         var basketProducts = basketRepository.getPartially(
-            TOTAL_LOAD_BASKET_SIZE_AT_ONCE,
-            startId,
-            isNext
+            BASKET_PAGING_SIZE,
+            standard = currentProducts.minOfOrNull { it.id } ?: -1,
+            isNext = false,
+            includeStandard = false
         ).map { it.toUi() }
-        hasNext = checkHasNext(basketProducts)
-        if (checkHasNext(basketProducts)) basketProducts = basketProducts.dropLast(1)
+        hasNext = true
         lastId = basketProducts.maxOfOrNull { it.id } ?: -1
         view.updateBasketProducts(basketProducts)
-        view.updateNavigatorEnabled(hasPrevious, hasNext)
+        view.updateNavigatorEnabled(currentPage > 1, hasNext)
+    }
+
+    override fun fetchBasketProducts(standard: Int, includeStartId: Boolean) {
+        var basketProducts = basketRepository.getPartially(
+            TOTAL_LOAD_BASKET_SIZE_AT_ONCE,
+            standard,
+            true,
+            includeStartId
+        ).map { it.toUi() }
+        hasNext = checkHasNext(basketProducts)
+        if (hasNext) basketProducts = basketProducts.dropLast(1)
+        lastId = basketProducts.maxOfOrNull { it.id } ?: -1
+        view.updateBasketProducts(basketProducts)
+        view.updateNavigatorEnabled(currentPage > 1, hasNext)
     }
 
     override fun removeBasketProduct(
@@ -37,7 +50,12 @@ class BasketPresenter(
             remove(product)
             startId = minOfOrNull { it.id } ?: -1
         }
-        fetchBasketProducts(true, startId)
+        fetchBasketProducts(startId, true)
+    }
+
+    override fun updateCurrentPage(isIncrease: Boolean) {
+        if (isIncrease) currentPage += 1 else currentPage -= 1
+        view.updateCurrentPage(currentPage)
     }
 
     private fun checkHasNext(products: List<UiBasketProduct>): Boolean =
