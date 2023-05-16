@@ -16,7 +16,7 @@
         android:paddingEnd="8dp">
 
         <ImageView
-            android:id="@+id/iv_item_product_image"
+            android:id="@+id/imageItemProductProduct"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:glideSrc="@{product.itemImage}"
@@ -26,7 +26,7 @@
             tools:src="@tools:sample/avatars" />
 
         <TextView
-            android:id="@+id/tv_item_product_name"
+            android:id="@+id/textItemProductName"
             style="@style/woowaPro16"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_item_product_image"
+            app:layout_constraintTop_toBottomOf="@+id/imageItemProductProduct"
             tools:text="[든든] 제네시스 쿠페" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

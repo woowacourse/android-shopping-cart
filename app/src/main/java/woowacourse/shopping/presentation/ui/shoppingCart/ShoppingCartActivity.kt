@@ -24,7 +24,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
         initView()
         initClickListeners()
-        binding.rvShoppingCart.adapter = shoppingCartAdapter
+        binding.listShoppingCart.adapter = shoppingCartAdapter
     }
 
     private fun initView() {
@@ -43,24 +43,24 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     override fun setPage(pageNumber: Int) {
-        binding.tvShoppingCartPageNumber.text = pageNumber.toString()
+        binding.textShoppingCartPageNumber.text = pageNumber.toString()
     }
 
     override fun clickNextPage() {
-        binding.ivShoppingCartNextPage.setOnClickListener {
+        binding.buttonShoppingCartNextPage.setOnClickListener {
             presenter.goNextPage()
         }
     }
 
     override fun clickPreviousPage() {
-        binding.ivShoppingCartPreviousButton.setOnClickListener {
+        binding.buttonShoppingCartPreviousPage.setOnClickListener {
             presenter.goPreviousPage()
         }
     }
 
     override fun setPageButtonEnable(previous: Boolean, next: Boolean) {
-        binding.ivShoppingCartNextPage.isEnabled = next
-        binding.ivShoppingCartPreviousButton.isEnabled = previous
+        binding.buttonShoppingCartNextPage.isEnabled = next
+        binding.buttonShoppingCartPreviousPage.isEnabled = previous
     }
 
     private fun clickItem(productInCart: ProductInCart) {

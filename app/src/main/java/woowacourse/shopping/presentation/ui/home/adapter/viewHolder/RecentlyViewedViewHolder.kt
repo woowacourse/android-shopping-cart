@@ -15,7 +15,7 @@ class RecentlyViewedViewHolder(
     private val adapter = RecentlyViewedProductAdapter(clickProduct)
 
     init {
-        binding.rvWrapper.adapter = adapter
+        binding.listRecentlyViewed.adapter = adapter
     }
 
     fun bind(data: List<Product>) {

@@ -56,11 +56,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun setClickEventOnCloseButton() {
-        binding.ivDetailCloseButton.setOnClickListener { finish() }
+        binding.buttonProductDetailClose.setOnClickListener { finish() }
     }
 
     private fun setClickEventOnDibsButton() {
-        binding.btnDetailAddButton.setOnClickListener {
+        binding.buttonProductDetailPutInShoppingCart.setOnClickListener {
             presenter.addProductInCart()
             startActivity(Intent(this, ShoppingCartActivity::class.java))
         }

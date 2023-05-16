@@ -18,7 +18,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_detail_toolbar"
+            android:id="@+id/layoutDetailToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/woowa_dealer_blue_400"
@@ -26,7 +26,7 @@
 
 
             <ImageView
-                android:id="@+id/iv_detail_close_button"
+                android:id="@+id/buttonProductDetailClose"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -39,87 +39,77 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/iv_detail_product"
+            android:id="@+id/imageProductDetailProduct"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:glideSrc="@{presenter.selectedProduct.itemImage}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cl_detail_toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/layoutDetailToolbar"
             tools:src="@drawable/ic_launcher_foreground" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_detail_detail"
+
+        <TextView
+            android:id="@+id/textProductDetailTitle"
+            style="@style/woowaPro24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="16dp"
+            android:text="@{presenter.selectedProduct.name}"
+            android:textColor="@color/woowa_dealer_black_400"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageProductDetailProduct"
+            tools:text="람보르기니 우루스 S" />
+
+        <TextView
+            android:id="@+id/textProductDetailPrice"
+            style="@style/woowaAir20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/price"
+            android:textColor="@color/woowa_dealer_black_400"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lineProductDetailDivider" />
+
+        <TextView
+            android:id="@+id/textProductDetailAmount"
+            style="@style/woowaAir20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:text="@{String.format(@string/detailPriceFormat, presenter.selectedProduct.price)}"
+            android:textColor="@color/woowa_dealer_black_400"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textProductDetailPrice"
+            tools:text="20,000원" />
+
+        <View
+            android:id="@+id/lineProductDetailDivider"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/woowa_dealer_gray_500"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textProductDetailTitle" />
+
+        <TextView
+            android:id="@+id/buttonProductDetailPutInShoppingCart"
+            style="@style/woowaPro24"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/woowa_dealer_blue_600"
+            android:gravity="center"
+            android:paddingVertical="16dp"
+            android:text="@string/putInShoppingCart"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_detail_product">
-
-            <TextView
-                android:id="@+id/btn_detail_add_button"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/woowa_dealer_blue_600"
-                android:gravity="center"
-                android:paddingTop="14dp"
-                android:paddingBottom="16dp"
-                android:text="@string/putInShoppingCart"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_detail_product_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="16dp"
-                android:text="@{presenter.selectedProduct.name}"
-                android:textColor="@color/woowa_dealer_black_400"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_detail_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="16dp"
-                android:text="가격"
-                android:textColor="@color/woowa_dealer_black_400"
-                android:textSize="20sp"
-                android:textStyle="normal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_detail_indicator" />
-
-            <TextView
-                android:id="@+id/tv_detail_amount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="18dp"
-                android:text="@{String.format(@string/detailPriceFormat, presenter.selectedProduct.price)}"
-                android:textColor="@color/woowa_dealer_black_400"
-                android:textSize="20sp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_detail_price" />
-
-            <View
-                android:id="@+id/view_detail_indicator"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/woowa_dealer_gray_500"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_detail_product_title" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

@@ -17,7 +17,7 @@ class ShoppingCartViewHolder(
         binding.root.setOnClickListener {
             onClick(absoluteAdapterPosition)
         }
-        binding.ivCartProductDelete.setOnClickListener {
+        binding.buttonCartProductDelete.setOnClickListener {
             clickDelete(bindingAdapterPosition)
         }
     }

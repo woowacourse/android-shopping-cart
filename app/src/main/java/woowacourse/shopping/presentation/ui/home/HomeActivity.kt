@@ -62,7 +62,7 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
     }
 
     private fun initAdapter() {
-        binding.rvMainProducts.apply {
+        binding.listHomeProducts.apply {
             adapter = homeAdapter
             addOnScrollListener(setScrollListener())
         }
@@ -79,7 +79,7 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!binding.rvMainProducts.canScrollVertically(1) &&
+                if (!binding.listHomeProducts.canScrollVertically(1) &&
                     newState == RecyclerView.SCROLL_STATE_IDLE
                 ) {
                     if (scrollState == 1) return
@@ -97,7 +97,7 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
     }
 
     private fun setClickEventOnShoppingCartButton() {
-        binding.ivMainShoppingCart.setOnClickListener {
+        binding.imageHomeShoppingCart.setOnClickListener {
             startActivity(Intent(this, ShoppingCartActivity::class.java))
         }
     }
@@ -109,6 +109,6 @@ class HomeActivity : AppCompatActivity(), HomeContract.View {
     private fun initLayoutManager() {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup = GridWeightLookedUp { homeAdapter.getItemViewType(it) }
-        binding.rvMainProducts.layoutManager = gridLayoutManager
+        binding.listHomeProducts.layoutManager = gridLayoutManager
     }
 }

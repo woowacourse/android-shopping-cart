@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/tv_wrapper_recently_viewed"
+            android:id="@+id/textRecentlyViewedWrapperTitle"
             style="@style/woowaPro16"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_wrapper"
+            android:id="@+id/listRecentlyViewed"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -34,14 +34,14 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_wrapper_recently_viewed"
+            app:layout_constraintTop_toBottomOf="@id/textRecentlyViewedWrapperTitle"
             tools:itemCount="5"
             tools:listitem="@layout/item_recently_viewed_product">
 
         </androidx.recyclerview.widget.RecyclerView>
 
         <View
-            android:id="@+id/line_wrapper"
+            android:id="@+id/lineRecentlyViewedDivider"
             android:layout_width="0dp"
             android:layout_height="6dp"
             android:layout_marginTop="36dp"
@@ -50,7 +50,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_wrapper" />
+            app:layout_constraintTop_toBottomOf="@id/listRecentlyViewed" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
