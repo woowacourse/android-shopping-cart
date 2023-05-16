@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.domain.repository.CartRepository
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.list.adapter.CartProductListAdapter
 import woowacourse.shopping.model.CartProductState
@@ -17,8 +19,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         get() = _binding!!
 
     private val presenter: CartContract.Presenter by lazy {
-        val cartDao = CartDao(this)
-        CartPresenter(this, cartDao)
+        val cartRepo: CartRepository = CartRepositoryImpl(CartDao(this))
+        CartPresenter(this, cartRepo)
     }
 
     private val adapter: CartProductListAdapter by lazy {

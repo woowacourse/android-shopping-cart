@@ -1,7 +1,7 @@
 package woowacourse.shopping.feature.cart
 
 import com.example.domain.CartProduct
-import woowacourse.shopping.data.cart.CartDao
+import com.example.domain.repository.CartRepository
 import woowacourse.shopping.list.item.CartProductListItem
 import woowacourse.shopping.list.item.ListItem
 import woowacourse.shopping.model.CartProductState
@@ -10,7 +10,7 @@ import woowacourse.shopping.model.mapper.toUi
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val cartProductDbHandler: CartDao
+    private val cartRepository: CartRepository
 ) : CartContract.Presenter {
 
     private val maxProductsPerPage: Int = 5
@@ -18,7 +18,7 @@ class CartPresenter(
     private val maxPageNumber: Int
         get() = getMaxPageNumber(cartProducts.size)
 
-    private var cartProducts: List<CartProduct> = cartProductDbHandler.getAll()
+    private var cartProducts: List<CartProduct> = cartRepository.getAll()
     private var pageNumber: Int = 1
 
     override fun loadCart() {
@@ -61,8 +61,8 @@ class CartPresenter(
     override fun deleteCartProduct(item: ListItem) {
         when (item) {
             is CartProductListItem -> {
-                cartProductDbHandler.deleteColumn(item.toDomain())
-                cartProducts = cartProductDbHandler.getAll()
+                cartRepository.deleteCartProduct(item.toDomain())
+                cartProducts = cartRepository.getAll()
                 loadCart()
             }
         }
