@@ -5,5 +5,6 @@ import androidx.viewbinding.ViewBinding
 import woowacourse.shopping.list.item.ListItem
 
 abstract class ItemHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
-    abstract fun bind(listItem: ListItem, onClick: (ListItem) -> Unit)
+    open fun bind(listItem: ListItem, onClick: (ListItem) -> Unit) {}
+    open fun bind() {}
 }

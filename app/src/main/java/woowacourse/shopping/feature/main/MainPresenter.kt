@@ -6,7 +6,6 @@ import woowacourse.shopping.data.product.ProductDbHandler
 import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
 import woowacourse.shopping.list.item.ListItem
 import woowacourse.shopping.list.item.ProductListItem
-import woowacourse.shopping.list.item.RecentProductListItem
 import woowacourse.shopping.model.mapper.toDomain
 import woowacourse.shopping.model.mapper.toItem
 import woowacourse.shopping.model.mapper.toRecentProduct
@@ -33,18 +32,25 @@ class MainPresenter(
             view.showEmptyProducts()
             return
         }
-        if (loadItemFromIndex == 0) {
-            view.setProducts(listOf(), recentProducts)
-        }
+        if (loadItemFromIndex == 0) view.setProducts(listOf())
 
         view.addProductItems(getAddProductsUnit())
         loadItemFromIndex = loadItemToIndex
     }
 
+    override fun addRecentProduct(product: Product) {
+        storeRecentProduct(product.toRecentProduct())
+        view.addRecentProductItems(listOf(product.toRecentProduct().toUi()))
+    }
+
+    override fun loadRecentProducts() {
+        view.setRecentProducts(recentProducts)
+    }
+
     override fun showProductDetail(listItem: ListItem) {
         when (listItem) {
             is ProductListItem -> {
-                storeRecentProduct(listItem.toRecentProduct())
+                addRecentProduct(listItem.toUi().toDomain())
                 view.showProductDetail(listItem.toUi())
             }
         }
@@ -55,7 +61,7 @@ class MainPresenter(
         return productsUnit.map { it.toUi().toItem() }
     }
 
-    private fun storeRecentProduct(recentProductListItem: RecentProductListItem) {
-        recentProductDbHandler.addColumn(recentProductListItem.toUi().toDomain())
+    private fun storeRecentProduct(recentProduct: RecentProduct) {
+        recentProductDbHandler.addColumn(recentProduct)
     }
 }

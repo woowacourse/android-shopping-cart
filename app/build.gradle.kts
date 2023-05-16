@@ -49,4 +49,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(project(":domain"))
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
 }

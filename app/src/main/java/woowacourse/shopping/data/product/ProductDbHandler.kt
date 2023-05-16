@@ -33,14 +33,9 @@ class ProductDbHandler(
                 val name = getString(getColumnIndexOrThrow(ProductContract.TABLE_COLUMN_NAME))
                 val price = getInt(getColumnIndexOrThrow(ProductContract.TABLE_COLUMN_PRICE))
 
-                list.add(
-                    Product(
-                        id, imageUrl, name, price
-                    )
-                )
+                list.add(Product(id, imageUrl, name, price))
             }
         }
-
         cursor.close()
         return list
     }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.Product
 import com.example.domain.RecentProduct
@@ -15,9 +16,13 @@ import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
+import woowacourse.shopping.list.adapter.LoadMoreAdapter
 import woowacourse.shopping.list.adapter.ProductListAdapter
+import woowacourse.shopping.list.adapter.RecentProductListAdapter
+import woowacourse.shopping.list.adapter.RecentProductListWrapperAdapter
 import woowacourse.shopping.list.item.ProductListItem
 import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.model.RecentProductState
 import woowacourse.shopping.model.mapper.toItem
 import woowacourse.shopping.model.mapper.toUi
 import woowacourse.shopping.util.SpanSizeLookUpManager
@@ -36,10 +41,23 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         MainPresenter(this, productDbHandler, recentProductDbHandler)
     }
     private val productListAdapter: ProductListAdapter by lazy {
-        ProductListAdapter(
-            onItemClick = { presenter.showProductDetail(it) },
-            onMoreItemClick = { presenter.loadMoreProducts() }
-        )
+        ProductListAdapter(onItemClick = { presenter.showProductDetail(it) })
+    }
+    private val recentProductListAdapter by lazy {
+        RecentProductListAdapter(emptyList())
+    }
+    private val recentProductListWrapperAdapter: RecentProductListWrapperAdapter by lazy {
+        RecentProductListWrapperAdapter(recentProductListAdapter)
+    }
+    private val loadMoreAdapter: LoadMoreAdapter by lazy {
+        LoadMoreAdapter(onClick = { presenter.loadMoreProducts() })
+    }
+
+    private val concatAdapter: ConcatAdapter by lazy {
+        val config = ConcatAdapter.Config.Builder().apply {
+            setIsolateViewTypes(false)
+        }.build()
+        ConcatAdapter(config, recentProductListWrapperAdapter, productListAdapter, loadMoreAdapter)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +65,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initList()
+        presenter.loadRecentProducts()
         presenter.loadMoreProducts()
     }
 
@@ -68,14 +87,19 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun addProductItems(products: List<ProductListItem>) {
-        productListAdapter.addItems(products.map { it })
+        productListAdapter.addItems(products)
     }
 
-    override fun setProducts(products: List<Product>, recentProducts: List<RecentProduct>) {
-        productListAdapter.setItems(
-            products.map { it.toUi().toItem() },
-            recentProducts.map { it.toUi().toItem() }
-        )
+    override fun addRecentProductItems(recentProducts: List<RecentProductState>) {
+        recentProductListAdapter.addItems(recentProducts.map(RecentProductState::toItem))
+    }
+
+    override fun setProducts(products: List<Product>) {
+        productListAdapter.setItems(products.map { it.toUi().toItem() })
+    }
+
+    override fun setRecentProducts(recentProducts: List<RecentProduct>) {
+        recentProductListAdapter.setItems(recentProducts.map { it.toUi().toItem() })
     }
 
     override fun showProductDetail(productState: ProductState) {
@@ -89,9 +113,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private fun initList() {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup =
-            SpanSizeLookUpManager(productListAdapter, gridLayoutManager.spanCount)
+            SpanSizeLookUpManager(concatAdapter, gridLayoutManager.spanCount)
 
-        binding.productRv.adapter = productListAdapter
         binding.productRv.layoutManager = gridLayoutManager
+        binding.productRv.adapter = concatAdapter
     }
 }
