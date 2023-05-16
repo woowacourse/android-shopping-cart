@@ -9,13 +9,17 @@ class CartPresenter(
 ) : CartContract.Presenter {
 
     private var currentPage = 0
-    private var maxPage = getMaxPage()
+    private val maxPage
+        get() = (cartRepository.findAll().size - 1) / PAGE_SIZE + 1
 
-    private fun getMaxPage(): Int {
-        return (cartRepository.findAll().size - 1) / PAGE_SIZE + 1
+    override fun getCurrentPage(): Int {
+        return currentPage
     }
-    private fun refreshMaxPage() {
-        maxPage = getMaxPage()
+
+    override fun restoreCurrentPage(currentPage: Int) {
+        this.currentPage = currentPage
+        showCartItemsOfCurrentPage()
+        refreshPageUIState()
     }
 
     override fun onLoadCartItemsNextPage() {
@@ -33,7 +37,6 @@ class CartPresenter(
     override fun onDeleteCartItem(productId: Long) {
         cartRepository.deleteById(productId)
         showCartItemsOfCurrentPage()
-        refreshMaxPage()
         refreshPageUIState()
     }
 

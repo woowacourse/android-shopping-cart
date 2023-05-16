@@ -29,6 +29,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         initCartList()
         initPageUI()
+        if (savedInstanceState != null) {
+            presenter.restoreCurrentPage(savedInstanceState.getInt(CURRENT_PAGE))
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -85,7 +88,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.tvCartPage.text = page.toString()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(CURRENT_PAGE, presenter.getCurrentPage())
+        super.onSaveInstanceState(outState)
+    }
+
     companion object {
+        private const val CURRENT_PAGE = "CURRENT_PAGE"
+
         fun startActivity(context: Context) {
             Intent(context, CartActivity::class.java).also {
                 context.startActivity(it)

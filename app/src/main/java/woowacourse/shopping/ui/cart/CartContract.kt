@@ -4,6 +4,8 @@ import woowacourse.shopping.ui.cart.uistate.CartItemUIState
 
 interface CartContract {
     interface Presenter {
+        fun getCurrentPage(): Int
+        fun restoreCurrentPage(currentPage: Int)
         fun onLoadCartItemsNextPage()
         fun onLoadCartItemsPreviousPage()
         fun onDeleteCartItem(productId: Long)
