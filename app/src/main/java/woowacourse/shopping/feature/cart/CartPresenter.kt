@@ -28,21 +28,21 @@ class CartPresenter(
 
         var loadedItems = loadCurrentPageItems()
         if (loadedItems.isEmpty() && this.page.currentPage != 1) {
-            this.page = this.page.copy(currentPage = this.page.currentPage - 1)
+            this.page = this.page.previousPage()
             loadedItems = loadCurrentPageItems()
         }
         changePageState(loadedItems)
     }
 
     override fun loadPreviousPage() {
-        this.page = this.page.copy(currentPage = this.page.currentPage - 1)
+        this.page = this.page.previousPage()
 
         val loadedItems = loadCurrentPageItems()
         changePageState(loadedItems)
     }
 
     override fun loadNextPage() {
-        this.page = this.page.copy(currentPage = this.page.currentPage + 1)
+        this.page = this.page.nextPage()
 
         val loadedItems = loadCurrentPageItems()
         changePageState(loadedItems)
