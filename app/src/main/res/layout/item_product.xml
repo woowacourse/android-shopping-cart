@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.ProductState" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -15,7 +21,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background" />
+            tools:src="@drawable/ic_launcher_background"
+            loadUrl="@{product.imageUrl}"/>
 
         <TextView
             android:id="@+id/product_name"
@@ -29,7 +36,8 @@
             app:layout_constraintEnd_toEndOf="@id/product_image"
             app:layout_constraintStart_toStartOf="@id/product_image"
             app:layout_constraintTop_toBottomOf="@id/product_image"
-            tools:text="PET보틀-" />
+            tools:text="PET보틀-"
+            android:text="@{product.name}"/>
 
         <TextView
             android:id="@+id/product_price"
@@ -39,7 +47,8 @@
             app:layout_constraintEnd_toEndOf="@id/product_image"
             app:layout_constraintStart_toStartOf="@id/product_image"
             app:layout_constraintTop_toBottomOf="@id/product_name"
-            tools:text="23000원" />
+            tools:text="23000원"
+            formatMoneyWon="@{product.price}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
