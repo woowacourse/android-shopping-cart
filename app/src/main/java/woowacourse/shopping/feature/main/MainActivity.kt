@@ -16,7 +16,9 @@ import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity
 import woowacourse.shopping.feature.main.load.LoadAdapter
 import woowacourse.shopping.feature.main.product.MainProductAdapter
+import woowacourse.shopping.feature.main.product.ProductClickListener
 import woowacourse.shopping.feature.main.recent.RecentAdapter
+import woowacourse.shopping.feature.main.recent.RecentProductClickListener
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentProductUiModel
@@ -34,6 +36,19 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             setIsolateViewTypes(false)
         }.build()
         ConcatAdapter(config, recentWrapperAdapter, mainProductAdapter, loadAdapter)
+    }
+
+    private val recentProductClickListener: RecentProductClickListener =
+        object : RecentProductClickListener {
+            override fun onClick(productId: Long) {
+                presenter.showRecentProductDetail(productId)
+            }
+        }
+
+    private val productClickListener:ProductClickListener = object :ProductClickListener{
+        override fun onClick(productId: Long) {
+            presenter.showProductDetail(productId)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,8 +73,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapters() {
-        mainProductAdapter = MainProductAdapter(listOf())
-        recentAdapter = RecentAdapter()
+        mainProductAdapter = MainProductAdapter(listOf(),productClickListener)
+        recentAdapter = RecentAdapter(recentProductClickListener)
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
         loadAdapter = LoadAdapter { presenter.loadMoreProduct() }
     }
@@ -87,17 +102,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun addProducts(products: List<ProductUiModel>) {
-        val productUiModels = products.map {
-            it.toItemModel { productId -> presenter.showProductDetail(productId) }
-        }
-        mainProductAdapter.addItems(productUiModels)
+        mainProductAdapter.addItems(products)
     }
 
     override fun updateRecent(recent: List<RecentProductUiModel>) {
-        val recentProductUiModels = recent.map {
-            it.toItemModel { productId -> presenter.showRecentProductDetail(productId) }
-        }
-        recentAdapter.setItems(recentProductUiModels)
+        recentAdapter.setItems(recent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

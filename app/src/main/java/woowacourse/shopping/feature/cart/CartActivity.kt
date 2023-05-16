@@ -18,10 +18,18 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var cartProductAdapter: CartProductAdapter
 
+    private val cartProductClickListener: CartProductClickListener by lazy {
+        object : CartProductClickListener {
+            override fun onClick(cartId: Long) {
+                presenter.deleteCartProduct(cartId)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        cartProductAdapter = CartProductAdapter()
+        cartProductAdapter = CartProductAdapter(cartProductClickListener)
         binding.cartItemRecyclerview.adapter = cartProductAdapter
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
@@ -32,9 +40,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun changeCartProducts(newItems: List<CartProductUiModel>) {
-        val newItemModels =
-            newItems.map { it.toItemModel { cartId -> presenter.deleteCartProduct(cartId) } }
-        cartProductAdapter.setItems(newItemModels)
+        cartProductAdapter.setItems(newItems)
     }
 
     override fun setPreviousButtonState(enabled: Boolean) {

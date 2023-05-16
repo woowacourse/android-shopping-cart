@@ -3,35 +3,37 @@ package woowacourse.shopping.feature.cart
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import woowacourse.shopping.model.CartProductUiModel
 
-class CartProductAdapter : ListAdapter<CartProductItemModel, CartProductViewHolder>(CartDiffUtil) {
+class CartProductAdapter(private val cartProductClickListener: CartProductClickListener) :
+    ListAdapter<CartProductUiModel, CartProductViewHolder>(CartDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
         return CartProductViewHolder.create(parent)
     }
 
     override fun onBindViewHolder(holder: CartProductViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position),cartProductClickListener)
     }
 
-    fun setItems(newItems: List<CartProductItemModel>) {
+    fun setItems(newItems: List<CartProductUiModel>) {
         submitList(newItems)
     }
 
     companion object {
-        private val CartDiffUtil = object : DiffUtil.ItemCallback<CartProductItemModel>() {
+        private val CartDiffUtil = object : DiffUtil.ItemCallback<CartProductUiModel>() {
             override fun areItemsTheSame(
-                oldItem: CartProductItemModel,
-                newItem: CartProductItemModel
+                oldItem: CartProductUiModel,
+                newItem: CartProductUiModel
             ): Boolean {
-                return oldItem.cartProduct.cartId == newItem.cartProduct.cartId
+                return oldItem.cartId == newItem.cartId
             }
 
             override fun areContentsTheSame(
-                oldItem: CartProductItemModel,
-                newItem: CartProductItemModel
+                oldItem: CartProductUiModel,
+                newItem: CartProductUiModel
             ): Boolean {
-                return oldItem.cartProduct == newItem.cartProduct
+                return oldItem == newItem
             }
         }
     }

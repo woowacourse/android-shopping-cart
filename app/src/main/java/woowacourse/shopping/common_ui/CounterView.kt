@@ -63,8 +63,8 @@ class CounterView @JvmOverloads constructor(
         private const val DEFAULT_MAX_COUNT_VALUE = 99
 
         @JvmStatic
-        @BindingAdapter("contentColor")
-        fun setContentColor(counterView: CounterView, color: Int) {
+        @BindingAdapter("counterContentColor")
+        fun setCounterContentColor(counterView: CounterView, color: Int) {
             counterView.contentColor = color
         }
     }

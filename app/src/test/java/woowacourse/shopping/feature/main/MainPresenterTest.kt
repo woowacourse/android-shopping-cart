@@ -2,16 +2,12 @@ package woowacourse.shopping.feature.main
 
 import com.example.domain.cache.ProductLocalCache
 import com.example.domain.datasource.productsDatasource
-import com.example.domain.model.Price
-import com.example.domain.model.Product
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
 import io.mockk.*
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.feature.main.product.MainProductItemModel
-import woowacourse.shopping.feature.main.recent.RecentProductItemModel
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentProductUiModel

@@ -75,9 +75,9 @@ class ProductCounterView @JvmOverloads constructor(
 
     companion object {
         @JvmStatic
-        @BindingAdapter("contentColor")
-        fun setContentColor(cartCounterView: ProductCounterView, color: Int) {
-            cartCounterView.contentColor = color
+        @BindingAdapter("productCounterContentColor")
+        fun setProductCounterContentColor(productCounterView: ProductCounterView, color: Int) {
+            productCounterView.contentColor = color
         }
     }
 }
