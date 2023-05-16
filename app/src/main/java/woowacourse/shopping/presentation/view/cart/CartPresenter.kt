@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.view.cart
 
 import woowacourse.shopping.data.respository.cart.CartRepository
+import woowacourse.shopping.presentation.model.CartModel
 
 class CartPresenter(
     private val view: CartContract.View,
@@ -8,15 +9,25 @@ class CartPresenter(
 ) : CartContract.Presenter {
     override fun loadCartItems(currentPage: String) {
         val currentPageNumber = currentPage.toInt()
-        val startPosition = getStartItemPosition(currentPageNumber)
-        var newCarts = cartRepository.getCarts(startPosition, GET_CART_ITEM_COUNT)
+        var newCarts = getNewCarts(currentPageNumber)
         view.setEnableLeftButton(currentPageNumber != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 
-        val subToIndex =
-            if (newCarts.size > DISPLAY_CART_COUNT_CONDITION) newCarts.lastIndex else newCarts.size
-        newCarts = newCarts.subList(CART_LIST_FIRST_INDEX, subToIndex)
+        newCarts = submitNewCarts(newCarts)
         view.setCartItemsView(newCarts, currentPage)
+    }
+
+    private fun submitNewCarts(newCarts: List<CartModel>): List<CartModel> {
+        var newCarts1 = newCarts
+        val subToIndex =
+            if (newCarts1.size > DISPLAY_CART_COUNT_CONDITION) newCarts1.lastIndex else newCarts1.size
+        newCarts1 = newCarts1.subList(CART_LIST_FIRST_INDEX, subToIndex)
+        return newCarts1
+    }
+
+    private fun getNewCarts(currentPageNumber: Int): List<CartModel> {
+        val startPosition = getStartItemPosition(currentPageNumber)
+        return cartRepository.getCarts(startPosition, GET_CART_ITEM_COUNT)
     }
 
     override fun deleteCartItem(currentPage: String, itemId: Long) {
