@@ -2,7 +2,6 @@ package woowacourse.shopping.data.shoppingCart
 
 import woowacourse.shopping.data.product.ProductDataSource
 import woowacourse.shopping.data.product.ProductMapper.toDomainModel
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
@@ -14,14 +13,11 @@ class ShoppingCartRepositoryImpl(
         val productInCartEntities =
             shoppingCartDataSource.getProductsInShoppingCart(unit, pageNumber)
 
-        val productsInCart = mutableListOf<ProductInCart>()
-        productInCartEntities.forEach {
-            val product: Product =
-                (productDataSource.getProductEntity(it.productId) ?: return@forEach).toDomainModel()
-            productsInCart.add(ProductInCart(product, it.quantity))
+        return productInCartEntities.mapNotNull {
+            val product = productDataSource.getProductEntity(it.productId)?.toDomainModel()
+                ?: return@mapNotNull null
+            return@mapNotNull ProductInCart(product, it.quantity)
         }
-
-        return productsInCart
     }
 
     override fun addProductInCart(productInCart: ProductInCart): Long {
