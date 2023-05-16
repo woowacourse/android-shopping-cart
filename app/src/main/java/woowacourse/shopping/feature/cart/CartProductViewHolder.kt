@@ -9,6 +9,6 @@ class CartProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(cartProduct: CartProductUiModel, onClick: (CartProductUiModel) -> Unit) {
         binding.cartProduct = cartProduct
-        binding.cartProductLayout.setOnClickListener { onClick.invoke(cartProduct) }
+        binding.deleteBtn.setOnClickListener { onClick.invoke(cartProduct) }
     }
 }
