@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.PageNumber
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.DomainBasketRepository
 
-class BasketRepository(private val localBasketDataSource: BasketDataSource.Local) :
+class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.Local) :
     DomainBasketRepository {
     override fun getPartially(page: PageNumber): List<Product> =
         localBasketDataSource.getPartially(page.toData()).map { it.toDomain() }
