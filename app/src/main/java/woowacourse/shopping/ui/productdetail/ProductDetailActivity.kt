@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -22,7 +23,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         ProductDetailPresenter(
             this,
             ProductRepositoryImpl,
-            CartRepositoryImpl(this, ProductRepositoryImpl),
+            CartRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl),
         )
     }
 

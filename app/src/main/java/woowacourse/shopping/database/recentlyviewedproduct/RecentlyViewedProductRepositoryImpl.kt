@@ -1,18 +1,17 @@
 package woowacourse.shopping.database.recentlyviewedproduct
 
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.database.ProductContract
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentlyViewedProductRepository
 
 class RecentlyViewedProductRepositoryImpl(
-    context: Context,
+    private val db: SQLiteDatabase,
     private val productRepository: ProductRepository,
 ) : RecentlyViewedProductRepository {
-    private val db = RecentlyViewedProductDbHelper(context).writableDatabase
 
     override fun findAll(): List<Product> {
         val products = mutableListOf<Product>()

@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
+import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -22,7 +23,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private val presenter: ProductListContract.Presenter by lazy {
         ProductListPresenter(
             this,
-            RecentlyViewedProductRepositoryImpl(this, ProductRepositoryImpl),
+            RecentlyViewedProductRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl),
             ProductRepositoryImpl,
         )
     }

@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -17,7 +18,7 @@ import kotlin.properties.Delegates
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private val presenter: CartPresenter by lazy {
-        CartPresenter(this, CartRepositoryImpl(this, ProductRepositoryImpl))
+        CartPresenter(this, CartRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl))
     }
     private var page: Int by Delegates.observable(1) { _, _, new ->
         presenter.loadCartItems(PAGE_SIZE, (new - 1) * PAGE_SIZE)
