@@ -10,4 +10,6 @@
     <string name="product_model_null_error_message">상품 정보가 올바르지 않습니다.</string>
     <string name="put_in_cart_complete_message">%s이 장바구니에 담겼습니다!</string>
     <string name="text_more_item">더보기</string>
+    <string name="counter_plus_text">+</string>
+    <string name="counter_minus_text">-</string>
 </resources>
