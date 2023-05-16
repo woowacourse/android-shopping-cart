@@ -10,7 +10,6 @@ import androidx.databinding.BindingAdapter
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.LayoutCounterBinding
 
-
 class CounterView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -41,20 +40,19 @@ class CounterView @JvmOverloads constructor(
     var countStateChangeListener: OnCountStateChangeListener? = null
 
     interface OnCountStateChangeListener {
-        fun onCountMinusChanged(counterNavigationView: CounterView?, count: Int)
-        fun onCountPlusChanged(counterNavigationView: CounterView?, count: Int)
+        fun onCountChanged(counterNavigationView: CounterView?, count: Int)
     }
 
     init {
         binding.plusButton.setOnClickListener {
             if (count == maxCountValue) return@setOnClickListener
             count++
-            countStateChangeListener?.onCountPlusChanged(this, count)
+            countStateChangeListener?.onCountChanged(this, count)
         }
         binding.minusButton.setOnClickListener {
             if (count == MIN_COUNT_VALUE) return@setOnClickListener
             count--
-            countStateChangeListener?.onCountMinusChanged(this, count)
+            countStateChangeListener?.onCountChanged(this, count)
         }
     }
 

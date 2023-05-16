@@ -15,14 +15,11 @@ class MainProductViewHolder private constructor(
         binding.listener = listener
         binding.counterView.countStateChangeListener =
             object : CounterView.OnCountStateChangeListener {
-                override fun onCountMinusChanged(counterNavigationView: CounterView?, count: Int) {
-                    listener.minusCart(product.id, count)
-                }
-
-                override fun onCountPlusChanged(counterNavigationView: CounterView?, count: Int) {
-                    listener.plusCart(product.id, count)
+                override fun onCountChanged(counterNavigationView: CounterView?, count: Int) {
+                    listener.onChangeCartCount(product.id, count)
                 }
             }
+        binding.counterView.setCountState(product.count)
     }
 
     companion object {

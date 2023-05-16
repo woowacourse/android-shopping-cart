@@ -8,6 +8,7 @@ interface CartRepository {
     fun getAllSize(): Int
     fun addProduct(product: Product)
     fun deleteProduct(cartProduct: CartProduct)
+    fun changeCartProductCount(product: Product, count: Int)
     fun getInitPageProducts(pageSize: Int): List<CartProduct>
     fun getPreviousProducts(pageSize: Int, nextId: Long?): List<CartProduct>
     fun getNextProducts(pageSize: Int, previousId: Long?): List<CartProduct>

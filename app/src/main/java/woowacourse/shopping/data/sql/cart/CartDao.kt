@@ -40,7 +40,7 @@ class CartDao(
                 cursor.getInt(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT))
             )
             val product: Product = productsDatasource.find { it.id == data.productId } ?: continue
-            cart.add(CartProduct(data.cartId, product))
+            cart.add(CartProduct(data.cartId, product, data.count))
         }
 
         cursor.close()
@@ -56,10 +56,23 @@ class CartDao(
     }
 
     fun deleteCartProduct(cartProduct: CartProduct) {
-        val selection = "${CartTableContract.TABLE_COLUMN_CART_ID} = ?"
-        val selectionArgs = arrayOf("${cartProduct.cartId}")
+        val selection = "${CartTableContract.TABLE_COLUMN_PRODUCT_ID} = ?"
+        val selectionArgs = arrayOf("${cartProduct.product.id}")
         writableDatabase.delete(CartTableContract.TABLE_NAME, selection, selectionArgs)
     }
+
+    fun updateCartProductCount(product: Product, newCount: Int) {
+        val findCartProduct =
+            selectAll().find { it.product.id == product.id } ?: return insertProduct(product)
+
+        if (newCount <= 0) return deleteCartProduct(findCartProduct)
+
+        val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
+                "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_COUNT}=${newCount} " +
+                "WHERE ${CartTableContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+        writableDatabase.execSQL(updateSql)
+    }
+
 
     companion object {
         private const val DB_NAME = "cart_db"

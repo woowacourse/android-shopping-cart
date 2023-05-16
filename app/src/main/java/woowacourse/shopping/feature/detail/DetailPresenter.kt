@@ -9,12 +9,11 @@ class DetailPresenter(
     private val cartRepository: CartRepository,
     product: ProductUiModel
 ) : DetailContract.Presenter {
-    private var _product: ProductUiModel = product
-    override val product: ProductUiModel
-        get() = _product
+    override var product: ProductUiModel = product
+        private set
 
     override fun addCart() {
-        cartRepository.addProduct(_product.toDomain())
+        cartRepository.addProduct(product.toDomain())
         view.showCartScreen()
     }
 

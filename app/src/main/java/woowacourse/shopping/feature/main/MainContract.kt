@@ -13,11 +13,12 @@ interface MainContract {
 
     interface Presenter {
         fun loadProducts()
-        fun moveToCart()
-        fun loadMoreProduct()
         fun loadRecent()
+        fun moveToCart()
         fun showProductDetail(productId: Long)
         fun showRecentProductDetail(productId: Long)
+        fun changeProductCartCount(productId: Long, count: Int)
+        fun loadMoreProduct()
         fun resetProducts()
     }
 }

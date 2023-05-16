@@ -4,7 +4,7 @@ import com.example.domain.model.CartProduct
 import woowacourse.shopping.model.CartProductUiModel
 
 fun CartProduct.toPresentation(): CartProductUiModel =
-    CartProductUiModel(cartId, product.toPresentation())
+    CartProductUiModel(cartId, product.toPresentation(), count)
 
 fun CartProductUiModel.toDomain(): CartProduct =
-    CartProduct(cartId, productUiModel.toDomain())
+    CartProduct(cartId, productUiModel.toDomain(), count)

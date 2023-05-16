@@ -8,8 +8,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ProductMockRepositoryImpl
 import woowacourse.shopping.data.RecentProductRepositoryImpl
+import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
@@ -45,17 +47,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             }
         }
 
-    private val productClickListener:ProductClickListener = object :ProductClickListener{
+    private val productClickListener: ProductClickListener = object : ProductClickListener {
         override fun onClick(productId: Long) {
             presenter.showProductDetail(productId)
         }
 
-        override fun plusCart(productId: Long, count: Int) {
-            //
-        }
-
-        override fun minusCart(productId: Long, count: Int) {
-            //
+        override fun onChangeCartCount(productId: Long, count: Int) {
+            presenter.changeProductCartCount(productId, count)
         }
     }
 
@@ -76,8 +74,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter = MainPresenter(
             this,
             ProductMockRepositoryImpl(),
+            CartRepositoryImpl(CartDao(this)),
             RecentProductRepositoryImpl(RecentDao(this))
         )
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        presenter.loadProducts()
     }
 
     private fun initAdapters() {

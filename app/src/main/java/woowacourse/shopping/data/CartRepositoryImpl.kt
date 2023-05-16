@@ -24,6 +24,10 @@ class CartRepositoryImpl(
         cartDao.deleteCartProduct(cartProduct)
     }
 
+    override fun changeCartProductCount(product: Product, count: Int) {
+        cartDao.updateCartProductCount(product, count)
+    }
+
     override fun getInitPageProducts(pageSize: Int): List<CartProduct> {
         return cartDao.selectAll().asSequence().take(pageSize).toList()
     }
@@ -36,12 +40,14 @@ class CartRepositoryImpl(
     }
 
     override fun getNextProducts(pageSize: Int, previousId: Long?): List<CartProduct> {
-        return cartDao.selectAll().asSequence().filter { it.cartId > (previousId ?: 0) }.take(pageSize)
+        return cartDao.selectAll().asSequence().filter { it.cartId > (previousId ?: 0) }
+            .take(pageSize)
             .toList()
     }
 
     override fun getPageCartProductsFromFirstId(pageSize: Int, firstId: Long?): List<CartProduct> {
-        return cartDao.selectAll().asSequence().filter { it.cartId >= (firstId ?: 0) }.take(pageSize).toList()
+        return cartDao.selectAll().asSequence().filter { it.cartId >= (firstId ?: 0) }
+            .take(pageSize).toList()
     }
 
     override fun getCartProductsFromPage(pageSize: Int, page: Int): List<CartProduct> {

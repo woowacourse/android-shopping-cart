@@ -7,7 +7,7 @@ import woowacourse.shopping.model.ProductUiModel
 
 class MainProductAdapter(
     private val listener: ProductClickListener
-) : ListAdapter<ProductUiModel,MainProductViewHolder>(ProductDiffUtil) {
+) : ListAdapter<ProductUiModel, MainProductViewHolder>(ProductDiffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainProductViewHolder {
         return MainProductViewHolder.create(parent)
     }

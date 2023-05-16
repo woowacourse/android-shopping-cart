@@ -1,10 +1,15 @@
 package woowacourse.shopping.model
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CartProductUiModel(
     val cartId: Long,
-    val productUiModel: ProductUiModel
-) : Parcelable
+    val productUiModel: ProductUiModel,
+    var count: Int
+) : Parcelable {
+    @IgnoredOnParcel
+    var purchaseSelection: Boolean = false
+}

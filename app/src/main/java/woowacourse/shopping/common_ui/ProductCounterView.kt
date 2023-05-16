@@ -20,33 +20,21 @@ class ProductCounterView @JvmOverloads constructor(
     }
 
     private val defaultClickListener = object : CounterView.OnCountStateChangeListener {
-        override fun onCountMinusChanged(counterNavigationView: CounterView?, count: Int) {
-            changeViewState(count)
-        }
-
-        override fun onCountPlusChanged(counterNavigationView: CounterView?, count: Int) {
+        override fun onCountChanged(counterNavigationView: CounterView?, count: Int) {
             changeViewState(count)
         }
     }
 
-    var countStateChangeListener: CounterView.OnCountStateChangeListener? = defaultClickListener
+    var countStateChangeListener: CounterView.OnCountStateChangeListener = defaultClickListener
         set(value) {
             binding.counterView.countStateChangeListener =
                 object : CounterView.OnCountStateChangeListener {
-                    override fun onCountMinusChanged(
+                    override fun onCountChanged(
                         counterNavigationView: CounterView?,
                         count: Int
                     ) {
                         changeViewState(count)
-                        value?.onCountMinusChanged(counterNavigationView, count)
-                    }
-
-                    override fun onCountPlusChanged(
-                        counterNavigationView: CounterView?,
-                        count: Int
-                    ) {
-                        changeViewState(count)
-                        value?.onCountPlusChanged(counterNavigationView, count)
+                        value.onCountChanged(counterNavigationView, count)
                     }
                 }
             field = value
@@ -63,7 +51,7 @@ class ProductCounterView @JvmOverloads constructor(
     init {
         binding.counterStartButton.setOnClickListener {
             binding.counterView.count = 1
-            countStateChangeListener?.onCountPlusChanged(binding.counterView, 1)
+            countStateChangeListener.onCountChanged(binding.counterView, 1)
             changeViewState(1)
         }
         binding.counterView.visibility = View.GONE
