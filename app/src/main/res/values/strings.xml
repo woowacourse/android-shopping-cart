@@ -2,4 +2,6 @@
     <string name="app_name">Shopping</string>
     <string name="add_to_cart_button_name">장바구니 담기</string>
     <string name="price">금액</string>
+    <string name="item_product_read_more_button_name">더보기</string>
+    <string name="item_product_in_cart_price">%,d원</string>
 </resources>
