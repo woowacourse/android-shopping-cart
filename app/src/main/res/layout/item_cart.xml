@@ -20,7 +20,18 @@
         android:layout_margin="15dp"
         android:background="@drawable/back_rounded"
         android:paddingHorizontal="13dp"
-        android:paddingVertical="26dp">
+        android:paddingVertical="18dp">
+
+        <CheckBox
+            android:id="@+id/checkbox_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            />
+
 
         <TextView
             android:id="@+id/text_product_name"
@@ -30,8 +41,11 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkbox_select"
+            app:layout_constraintTop_toTopOf="@id/checkbox_select"
+            app:layout_constraintBottom_toBottomOf="@id/checkbox_select"
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="3dp"
             tools:text="동원참치" />
 
         <ImageView
@@ -41,8 +55,8 @@
             android:layout_marginTop="26dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/text_product_name"
-            app:layout_constraintTop_toBottomOf="@id/text_product_name"
+            app:layout_constraintStart_toStartOf="@id/checkbox_select"
+            app:layout_constraintTop_toBottomOf="@id/checkbox_select"
             tools:background="@color/black" />
 
         <TextView
@@ -51,9 +65,55 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/layout_add_btns"
+            tools:text="99,800원" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_add_btns"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="99,800원" />
+            >
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_minus"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/back_left_rounded"
+                android:text="@string/minus"
+                android:textColor="@color/gray"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toStartOf="@id/text_count"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_count"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="1"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_plus"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/back_right_rounded"
+                android:text="@string/plus"
+                android:textColor="@color/gray"
+                android:textSize="22sp"
+                app:layout_constraintStart_toEndOf="@id/text_count"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/btn_close"
