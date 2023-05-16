@@ -13,7 +13,7 @@ class CartDatabase(context: Context) : CartRepository {
 
     private var cartProducts: CartProducts = getAll()
 
-    private fun getAll(): CartProducts {
+    override fun getAll(): CartProducts {
         val cartProducts = mutableListOf<CartProduct>()
         getCartCursor().use {
             while (it.moveToNext()) {
@@ -30,7 +30,7 @@ class CartDatabase(context: Context) : CartRepository {
                 id = it.id,
                 name = it.name,
                 count = it.count,
-                selected = it.selected,
+                checked = it.checked,
                 price = it.price,
                 imageUrl = it.imageUrl
             )
@@ -46,7 +46,7 @@ class CartDatabase(context: Context) : CartRepository {
                     id = it.id,
                     name = it.name,
                     count = 1,
-                    selected = false,
+                    checked = true,
                     price = it.price,
                     imageUrl = it.imageUrl
                 )
@@ -75,11 +75,11 @@ class CartDatabase(context: Context) : CartRepository {
     }
 
     override fun getTotalSelectedCount(): Int {
-        return cartProducts.all().count { it.selected }
+        return cartProducts.all().count { it.checked }
     }
 
     override fun getTotalPrice(): Int {
-        return cartProducts.all().filter { it.selected }.sumOf { it.price * it.count }
+        return cartProducts.all().filter { it.checked }.sumOf { it.price * it.count }
     }
 
     override fun insert(productId: Int) {

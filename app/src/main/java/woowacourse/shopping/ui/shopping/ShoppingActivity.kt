@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductFakeRepository
+import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.product.ProductDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
@@ -33,6 +34,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         initLayoutManager()
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.updateProducts()
+    }
+
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
     }
@@ -48,7 +54,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter = ShoppingPresenter(
             this,
             ProductDatabase(this),
-            RecentProductDatabase(this)
+            RecentProductDatabase(this),
+            CartDatabase(this)
         )
         presenter.setUpProducts()
     }
@@ -106,20 +113,27 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         val listener = object : ProductsListener {
             override fun onClickItem(productId: Int) { presenter.navigateToItemDetail(productId) }
             override fun onReadMoreClick() { presenter.fetchMoreProducts() }
+            override fun onAddCartOrUpdateCount(productId: Int, count: Int, block: () -> Unit) {
+                binding.rvProducts.adapter.let { adapter ->
+                    if (adapter is ProductsAdapter) { adapter.updateItemCount(productId, count) }
+                }
+                block()
+                presenter.updateItem(productId, count)
+            }
         }
-        binding.rvProducts.adapter = ProductsAdapter(data, listener)
+        binding.rvProducts.adapter = ProductsAdapter(data.toMutableList(), listener)
     }
 
-    override fun navigateToProductDetail(product: ProductUIModel) {
-        startActivity(DetailedProductActivity.getIntent(this, product))
-    }
-
-    override fun addProducts(data: List<ProductsItemType>) {
+    override fun updateProducts(data: List<ProductsItemType>) {
         binding.rvProducts.adapter?.let {
             if (it is ProductsAdapter) {
                 it.submitList(data)
             }
         }
+    }
+
+    override fun navigateToProductDetail(product: ProductUIModel) {
+        startActivity(DetailedProductActivity.getIntent(this, product))
     }
 
     private fun navigateToCart() {

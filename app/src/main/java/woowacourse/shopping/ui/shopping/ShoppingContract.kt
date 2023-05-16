@@ -7,13 +7,14 @@ interface ShoppingContract {
     interface View {
         fun setProducts(data: List<ProductsItemType>)
         fun navigateToProductDetail(product: ProductUIModel)
-
-        fun addProducts(data: List<ProductsItemType>)
+        fun updateProducts(data: List<ProductsItemType>)
     }
 
     interface Presenter {
         fun setUpProducts()
         fun fetchMoreProducts()
         fun navigateToItemDetail(productId: Int)
+        fun updateItem(productId: Int, count: Int): Int
+        fun updateProducts()
     }
 }

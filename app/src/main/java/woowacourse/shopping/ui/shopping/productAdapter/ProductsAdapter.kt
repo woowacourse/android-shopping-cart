@@ -8,7 +8,7 @@ import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ReadMoreViewHo
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.RecentViewHolder
 
 class ProductsAdapter(
-    private var products: List<ProductsItemType>,
+    private var products: MutableList<ProductsItemType>,
     private val listener: ProductsListener
 ) : RecyclerView.Adapter<ItemViewHolder>() {
 
@@ -34,7 +34,17 @@ class ProductsAdapter(
     }
 
     fun submitList(data: List<ProductsItemType>) {
-        products = data
-        notifyItemChanged(products.size - data.size)
+        products = data.toMutableList()
+        notifyItemRangeChanged(0, products.size)
+    }
+
+    fun updateItemCount(productId: Int, count: Int) {
+        val index = products
+            .indexOfFirst { it is ProductsItemType.Product && it.product.id == productId }
+        when (index) {
+            -1 -> return
+            else -> products[index] =
+                (products[index] as ProductsItemType.Product).copy(count = count)
+        }
     }
 }

@@ -26,7 +26,7 @@ class CartViewHolder private constructor(
         count = data.product.count
         binding.tvProductCountMinus.setOnClickListener { count -= 1 }
         binding.tvProductCountPlus.setOnClickListener { count += 1 }
-        binding.cbProductCheck.isChecked = data.product.selected
+        binding.cbProductCheck.isChecked = data.product.checked
         binding.cbProductCheck.setOnCheckedChangeListener { _, isChecked ->
             cartListener.onItemSelectChanged(data.product.id, isChecked)
         }

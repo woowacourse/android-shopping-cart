@@ -5,30 +5,90 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="listener"
             type="woowacourse.shopping.ui.shopping.productAdapter.ProductsListener" />
 
         <variable
-            name="product"
-            type="woowacourse.shopping.model.ProductUIModel" />
+            name="item"
+            type="woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType.Product" />
+
+        <variable
+            name="onCountChange"
+            type="kotlin.jvm.functions.Function1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:onClick="@{() -> listener.onClickItem(product.id)}">
+        android:onClick="@{() -> listener.onClickItem(item.product.id)}">
 
         <ImageView
             android:id="@+id/iv_product_image"
             android:layout_width="154dp"
             android:layout_height="154dp"
             android:contentDescription="@string/shopping_item_product_image_description"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{item.product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_add_to_cart"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/btn_plus"
+            android:onClick="@{() -> onCountChange.invoke(1)}"
+            android:visibility="@{item.count &lt; 1 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_product_count_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:onClick="@{() -> onCountChange.invoke(item.count - 1)}"
+            android:text="@string/minus"
+            android:textSize="22sp"
+            android:visibility="@{item.count >= 1 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_count"
+            app:layout_constraintEnd_toStartOf="@id/tv_product_count" />
+
+        <TextView
+            android:id="@+id/tv_product_count"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@{`` + item.count, default = 0}"
+            android:textSize="22sp"
+            android:visibility="@{item.count >= 1 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/btn_product_count_plus"
+            app:layout_constraintEnd_toStartOf="@id/btn_product_count_plus"
+            tools:text="0" />
+
+        <androidx.appcompat.widget.AppCompatButton
+
+            android:id="@+id/btn_product_count_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="11dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/plus"
+            android:onClick="@{() -> onCountChange.invoke(item.count + 1)}"
+            android:textSize="22sp"
+            android:visibility="@{item.count >= 1 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
 
         <TextView
             android:id="@+id/tv_product_name"
@@ -38,7 +98,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{item.product.name}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -50,7 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
-            android:text="@{@string/product_price(product.price)}"
+            android:text="@{@string/product_price(item.product.price)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10000원" />

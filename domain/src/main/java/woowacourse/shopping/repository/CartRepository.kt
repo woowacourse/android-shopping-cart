@@ -13,4 +13,5 @@ interface CartRepository {
     fun remove(id: Int)
     fun updateCount(id: Int, count: Int): Int
     fun updateSelected(id: Int, selected: Boolean)
+    fun getAll(): CartProducts
 }
