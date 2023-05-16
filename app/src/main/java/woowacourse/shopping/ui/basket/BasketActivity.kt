@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.model.UiPageNumber
 import woowacourse.shopping.model.UiProduct
@@ -12,13 +11,11 @@ import woowacourse.shopping.ui.basket.BasketContract.Presenter
 import woowacourse.shopping.ui.basket.BasketContract.View
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
 import woowacourse.shopping.util.extension.setContentView
-import woowacourse.shopping.util.factory.createBasketPresenter
+import woowacourse.shopping.util.inject.injectBasketPresenter
 
 class BasketActivity : AppCompatActivity(), View {
-    private val shoppingDatabase by lazy { ShoppingDatabase(this) }
-    override val presenter: Presenter by lazy { createBasketPresenter(this, shoppingDatabase) }
+    override val presenter: Presenter by lazy { injectBasketPresenter(this, this) }
     private lateinit var binding: ActivityBasketBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +39,6 @@ class BasketActivity : AppCompatActivity(), View {
 
     override fun closeScreen() {
         finish()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        shoppingDatabase.close()
     }
 
     companion object {

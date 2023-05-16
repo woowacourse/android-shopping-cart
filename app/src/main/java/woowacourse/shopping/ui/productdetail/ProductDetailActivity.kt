@@ -15,12 +15,12 @@ import woowacourse.shopping.ui.productdetail.ProductDetailContract.View
 import woowacourse.shopping.util.extension.getParcelableExtraCompat
 import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.extension.showImage
-import woowacourse.shopping.util.factory.createProductDetailPresenter
+import woowacourse.shopping.util.inject.injectProductDetailPresenter
 
 class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     override val presenter: Presenter by lazy {
-        createProductDetailPresenter(this, this, intent.getParcelableExtraCompat(PRODUCT_KEY)!!)
+        injectProductDetailPresenter(this, this, intent.getParcelableExtraCompat(PRODUCT_KEY)!!)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
