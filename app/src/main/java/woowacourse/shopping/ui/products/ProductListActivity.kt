@@ -30,7 +30,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             ProductRepositoryImpl,
         )
     }
-    private var offset: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,14 +70,12 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             presenter.addRecentlyViewedProduct(it)
             ProductDetailActivity.startActivity(this, it)
         }
-        presenter.loadProducts(PAGE_SIZE, offset)
-        offset += PAGE_SIZE
+        presenter.onLoadNextPage()
     }
 
     private fun initLoadingButton() {
         binding.btnLoading.setOnClickListener {
-            presenter.loadProducts(PAGE_SIZE, offset)
-            offset += PAGE_SIZE
+            presenter.onLoadNextPage()
         }
     }
 
@@ -100,9 +97,5 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         val adapter = binding.recyclerViewMainProduct.adapter as ProductListAdapter
         adapter.addItems(products)
         adapter.notifyDataSetChanged()
-    }
-
-    companion object {
-        private const val PAGE_SIZE = 20
     }
 }

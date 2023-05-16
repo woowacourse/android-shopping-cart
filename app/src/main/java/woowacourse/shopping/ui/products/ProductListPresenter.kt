@@ -11,6 +11,14 @@ class ProductListPresenter(
     private val productRepository: ProductRepository,
 ) : ProductListContract.Presenter {
 
+    private var currentPage = 0
+
+    override fun onLoadNextPage() {
+        currentPage++
+        val offset = (currentPage - 1) * PAGE_SIZE
+        view.addProducts(productRepository.findAll(PAGE_SIZE, offset).map(ProductUIState::from))
+    }
+
     override fun loadRecentlyViewedProducts() {
         view.setRecentlyViewedProducts(
             recentlyViewedProductRepository.findAll().map(RecentlyViewedProductUIState::from)
@@ -26,5 +34,9 @@ class ProductListPresenter(
         productRepository.findById(productId)?.run {
             recentlyViewedProductRepository.save(this)
         }
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }
