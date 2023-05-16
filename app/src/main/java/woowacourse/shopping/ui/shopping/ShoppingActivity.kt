@@ -3,8 +3,8 @@ package woowacourse.shopping.ui.shopping
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,6 +25,8 @@ import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
+
+    private var tvCount: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,14 +64,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cart_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cart -> navigateToCart()
-            else -> super.onOptionsItemSelected(item)
+        menu?.findItem(R.id.cart)?.let { item ->
+            item.actionView?.setOnClickListener { navigateToCart() }
+            item.actionView?.findViewById<TextView>(R.id.tv_counter)?.let { tvCount = it }
         }
+        presenter.updateCartProducts()
         return true
     }
 
@@ -122,6 +121,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             }
         }
         binding.rvProducts.adapter = ProductsAdapter(data.toMutableList(), listener)
+    }
+
+    override fun updateToolbar(count: Int) {
+        tvCount?.text = count.toString()
     }
 
     override fun updateProducts(data: List<ProductsItemType>) {

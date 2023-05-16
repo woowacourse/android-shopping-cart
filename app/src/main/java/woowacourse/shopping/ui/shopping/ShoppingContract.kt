@@ -8,6 +8,7 @@ interface ShoppingContract {
         fun setProducts(data: List<ProductsItemType>)
         fun navigateToProductDetail(product: ProductUIModel)
         fun updateProducts(data: List<ProductsItemType>)
+        fun updateToolbar(count: Int)
     }
 
     interface Presenter {
@@ -16,5 +17,6 @@ interface ShoppingContract {
         fun navigateToItemDetail(productId: Int)
         fun updateItem(productId: Int, count: Int): Int
         fun updateProducts()
+        fun updateCartProducts()
     }
 }

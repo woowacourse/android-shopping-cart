@@ -89,7 +89,11 @@ class CartDatabase(context: Context) : CartRepository {
     }
 
     override fun updateCount(id: Int, count: Int): Int {
-        db.execSQL(CartConstant.getUpdateCountQuery(id, count)).let {
+        val sql = when {
+            count < 1 -> CartConstant.getDeleteQuery(id)
+            else -> CartConstant.getUpdateCountQuery(id, count)
+        }
+        db.execSQL(sql).let {
             cartProducts = getAll()
             return count
         }

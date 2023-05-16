@@ -14,11 +14,7 @@ class ShoppingPresenter(
     private val cartRepository: CartRepository
 ) : ShoppingContract.Presenter {
     private var productsData: MutableList<ProductsItemType> = mutableListOf()
-    private var cartProductsData: MutableList<CartProductUIModel> = mutableListOf()
-
-    init {
-        cartProductsData = cartRepository.getAll().toUIModel().toMutableList()
-    }
+    private var cartProductsData: List<CartProductUIModel> = cartRepository.getAll().toUIModel()
 
     override fun setUpProducts() {
         setRecentProduct()
@@ -30,8 +26,8 @@ class ShoppingPresenter(
 
     override fun updateProducts() {
         setRecentProduct()
+        updateCartProducts()
 
-        cartProductsData = cartRepository.getAll().toUIModel().toMutableList()
         productsData = productsData.map {
             when (it) {
                 is ProductsItemType.Product -> {
@@ -61,11 +57,14 @@ class ShoppingPresenter(
 
     override fun updateItem(productId: Int, count: Int): Int {
         cartRepository.insert(productId)
-        val updatedCount = when {
-            count > 0 -> cartRepository.updateCount(productId, count)
-            else -> 1
-        }
+        val updatedCount = cartRepository.updateCount(productId, count)
+        updateCartProducts()
         return updatedCount
+    }
+
+    override fun updateCartProducts() {
+        cartProductsData = cartRepository.getAll().toUIModel()
+        view.updateToolbar(cartProductsData.size)
     }
 
     private fun setRecentProduct() {
