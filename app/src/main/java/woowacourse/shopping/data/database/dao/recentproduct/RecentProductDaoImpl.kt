@@ -68,7 +68,8 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
         """.trimIndent()
 
         private val GET_PARTIALLY_QUERY = """
-            SELECT * FROM ${RecentProductContract.TABLE_NAME}
+            SELECT ${RecentProductContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
+            FROM ${RecentProductContract.TABLE_NAME}
             INNER JOIN ${ProductContract.TABLE_NAME} ON ${RecentProductContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
             ORDER BY ${RecentProductContract.TABLE_NAME}.${BaseColumns._ID} DESC LIMIT ?
         """.trimIndent()
