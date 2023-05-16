@@ -8,7 +8,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
-import woowacourse.shopping.data.datasource.basket.LocalBasketDataSource
+import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.basket.BasketActivity

@@ -1,6 +1,7 @@
-package woowacourse.shopping.data.datasource.basket
+package woowacourse.shopping.data.datasource.basket.local
 
 import woowacourse.shopping.data.database.dao.basket.BasketDao
+import woowacourse.shopping.data.datasource.basket.BasketDataSource
 import woowacourse.shopping.data.model.DataBasketProduct
 import woowacourse.shopping.data.model.DataProduct
 

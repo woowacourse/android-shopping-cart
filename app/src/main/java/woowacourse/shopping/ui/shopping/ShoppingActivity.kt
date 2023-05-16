@@ -10,8 +10,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
 import woowacourse.shopping.data.database.dao.recentproduct.RecentProductDaoImpl
-import woowacourse.shopping.data.datasource.product.LocalProductDataSource
-import woowacourse.shopping.data.datasource.recentproduct.LocalRecentProductDataSource
+import woowacourse.shopping.data.datasource.product.local.LocalProductDataSource
+import woowacourse.shopping.data.datasource.recentproduct.local.LocalRecentProductDataSource
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
