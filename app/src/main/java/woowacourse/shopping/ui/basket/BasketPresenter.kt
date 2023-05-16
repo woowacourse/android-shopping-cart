@@ -15,27 +15,30 @@ class BasketPresenter(
 
     override fun fetchPreviousBasketProducts(currentProducts: List<UiBasketProduct>) {
         var basketProducts = basketRepository.getPartially(
-            BASKET_PAGING_SIZE,
+            size = BASKET_PAGING_SIZE,
             standard = currentProducts.minOfOrNull { it.id } ?: -1,
             isNext = false,
             includeStandard = false
         ).map { it.toUi() }
         hasNext = true
         lastId = basketProducts.maxOfOrNull { it.id } ?: -1
-        view.updateBasketProducts(basketProducts)
-        view.updateNavigatorEnabled(currentPage > 1, hasNext)
+        updateBasketProductViewData(basketProducts)
     }
 
-    override fun fetchBasketProducts(standard: Int, includeStartId: Boolean) {
+    override fun fetchBasketProducts(standard: Int, includeStandard: Boolean) {
         var basketProducts = basketRepository.getPartially(
-            TOTAL_LOAD_BASKET_SIZE_AT_ONCE,
-            standard,
-            true,
-            includeStartId
+            size = TOTAL_LOAD_BASKET_SIZE_AT_ONCE,
+            standard = standard,
+            isNext = true,
+            includeStandard = includeStandard
         ).map { it.toUi() }
         hasNext = checkHasNext(basketProducts)
         if (hasNext) basketProducts = basketProducts.dropLast(1)
         lastId = basketProducts.maxOfOrNull { it.id } ?: -1
+        updateBasketProductViewData(basketProducts)
+    }
+
+    private fun updateBasketProductViewData(basketProducts: List<UiBasketProduct>) {
         view.updateBasketProducts(basketProducts)
         view.updateNavigatorEnabled(currentPage > 1, hasNext)
     }
@@ -45,12 +48,15 @@ class BasketPresenter(
         currentProducts: List<UiBasketProduct>
     ) {
         basketRepository.remove(product.toDomain())
-        val startId: Int
-        currentProducts.toMutableList().apply {
-            remove(product)
-            startId = minOfOrNull { it.id } ?: -1
-        }
-        fetchBasketProducts(startId, true)
+        fetchBasketProducts(getStartId(product, currentProducts), true)
+    }
+
+    private fun getStartId(
+        product: UiBasketProduct,
+        currentProducts: List<UiBasketProduct>
+    ): Int = currentProducts.toMutableList().run {
+        remove(product)
+        minOfOrNull { it.id } ?: -1
     }
 
     override fun updateCurrentPage(isIncrease: Boolean) {
