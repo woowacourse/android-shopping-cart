@@ -19,6 +19,7 @@ import woowacourse.shopping.ui.shopping.recyclerview.adapter.loadmore.LoadMoreAd
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductWrapperAdapter
+import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.factory.createShoppingPresenter
 import woowacourse.shopping.util.isolatedViewTypeConfig
 
@@ -35,7 +36,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnMenuItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
+        binding = ActivityShoppingBinding.inflate(layoutInflater).setContentView(this)
         initView()
     }
 

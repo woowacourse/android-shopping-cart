@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.model.UiPageNumber
@@ -13,6 +11,7 @@ import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.ui.basket.BasketContract.Presenter
 import woowacourse.shopping.ui.basket.BasketContract.View
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
+import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.factory.createBasketPresenter
 
 class BasketActivity : AppCompatActivity(), View {
@@ -23,7 +22,7 @@ class BasketActivity : AppCompatActivity(), View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_basket)
+        binding = ActivityBasketBinding.inflate(layoutInflater).setContentView(this)
         binding.presenter = presenter
         binding.adapter = BasketAdapter(presenter::removeBasketProduct)
     }
