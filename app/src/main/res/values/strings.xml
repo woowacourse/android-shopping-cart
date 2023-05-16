@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="put_to_shopping_cart">장바구니 담기</string>
+    <string name="cart">Cart</string>
+    <string name="shopping">Shopping</string>
+    <string name="recent_viewed_product">최근 본 상품</string>
+    <string name="price_description">금액</string>
+    <string name="price_format">%s원</string>
+    <string name="read_more">더보기</string>
+    <string name="previous_page"><![CDATA[<]]></string>
+    <string name="next_page"><![CDATA[>]]></string>
 </resources>
