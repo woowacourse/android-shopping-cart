@@ -26,5 +26,6 @@
     <!-- Strings related to recent recent product -->
     <string name="recent_product_text">최근 본 상품</string>
     <string name="recent_product_item_product_image_description">최근 본 상품</string>
+    <string name="detailed_product_last_item">마지막으로 본 상품</string>
 
 </resources>
