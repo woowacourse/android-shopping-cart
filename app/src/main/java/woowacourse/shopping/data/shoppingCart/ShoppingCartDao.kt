@@ -1,14 +1,15 @@
 package woowacourse.shopping.data.shoppingCart
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_QUANTITY
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_NAME
 import woowacourse.shopping.data.WoowaShoppingDbHelper
 
-class ShoppingCartDao : ShoppingCartDataSource {
-    private val shoppingDb by lazy { WoowaShoppingDbHelper().readableDatabase }
+class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
+    private val shoppingDb by lazy { WoowaShoppingDbHelper(context).readableDatabase }
 
     override fun getProductsInShoppingCart(unit: Int, pageNumber: Int): List<ProductInCartEntity> {
         val offset = unit * (pageNumber - 1)

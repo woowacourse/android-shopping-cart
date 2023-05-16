@@ -1,5 +1,6 @@
 package woowacourse.shopping.data
 
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import woowacourse.shopping.data.WoowaShoppingContract.Product.CREATE_PRODUCT_TABLE
@@ -8,10 +9,9 @@ import woowacourse.shopping.data.WoowaShoppingContract.RecentlyViewed.CREATE_REC
 import woowacourse.shopping.data.WoowaShoppingContract.RecentlyViewed.DELETE_RECENTLY_VIEWED_TABLE
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.CREATE_SHOPPING_CART_TABLE
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.DELETE_SHOPPING_CART_TABLE
-import woowacourse.shopping.presentation.ui.application.WoowaApplication
 
-class WoowaShoppingDbHelper : SQLiteOpenHelper(
-    WoowaApplication().applicationContext,
+class WoowaShoppingDbHelper(context: Context) : SQLiteOpenHelper(
+    context,
     DATABASE_NAME,
     null,
     1,

@@ -1,14 +1,15 @@
 package woowacourse.shopping.data.product.recentlyViewed
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
 import woowacourse.shopping.data.WoowaShoppingContract.RecentlyViewed.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.data.WoowaShoppingContract.RecentlyViewed.TABLE_NAME
 import woowacourse.shopping.data.WoowaShoppingDbHelper
 
-class RecentlyViewedDao : RecentlyViewedDataSource {
-    private val shoppingDb by lazy { WoowaShoppingDbHelper().readableDatabase }
+class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
+    private val shoppingDb by lazy { WoowaShoppingDbHelper(context).readableDatabase }
 
     override fun getRecentlyViewedProducts(unit: Int): List<RecentlyViewedEntity> {
         val query = "SELECT * FROM $TABLE_NAME LIMIT $unit"

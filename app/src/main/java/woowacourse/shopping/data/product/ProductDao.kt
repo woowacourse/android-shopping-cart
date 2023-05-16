@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.product
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
 import woowacourse.shopping.data.WoowaShoppingContract.Product.TABLE_COLUMN_ITEM_IMAGE
@@ -9,8 +10,8 @@ import woowacourse.shopping.data.WoowaShoppingContract.Product.TABLE_COLUMN_PRIC
 import woowacourse.shopping.data.WoowaShoppingContract.Product.TABLE_NAME
 import woowacourse.shopping.data.WoowaShoppingDbHelper
 
-class ProductDao : ProductDataSource {
-    private val shoppingDb by lazy { WoowaShoppingDbHelper().readableDatabase }
+class ProductDao(context: Context) : ProductDataSource {
+    private val shoppingDb by lazy { WoowaShoppingDbHelper(context).readableDatabase }
 
     override fun getProductEntity(id: Long): ProductEntity? {
         val query: String = "SELECT * FROM $TABLE_NAME WHERE ${BaseColumns._ID} = $id"
