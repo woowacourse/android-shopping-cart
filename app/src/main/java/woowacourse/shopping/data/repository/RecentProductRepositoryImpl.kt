@@ -5,10 +5,10 @@ import woowacourse.shopping.data.mapper.toData
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
-import woowacourse.shopping.domain.repository.DomainRecentProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
-class RecentProductRepository(private val localRecentProductDataSource: RecentProductDataSource.Local) :
-    DomainRecentProductRepository {
+class RecentProductRepositoryImpl(private val localRecentProductDataSource: RecentProductDataSource.Local) :
+    RecentProductRepository {
     override fun add(recentProduct: Product) {
         localRecentProductDataSource.add(recentProduct.toData())
     }

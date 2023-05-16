@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.shopping
 
-import woowacourse.shopping.domain.repository.DomainProductRepository
-import woowacourse.shopping.domain.repository.DomainRecentProductRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.model.UiProduct
@@ -9,8 +9,8 @@ import kotlin.concurrent.thread
 
 class ShoppingPresenter(
     override val view: ShoppingContract.View,
-    private val productRepository: DomainProductRepository,
-    private val recentProductRepository: DomainRecentProductRepository
+    private val productRepository: ProductRepository,
+    private val recentProductRepository: RecentProductRepository
 ) : ShoppingContract.Presenter {
     private var hasNext: Boolean = false
     private var lastId: Int = -1

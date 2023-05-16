@@ -12,8 +12,8 @@ import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
 import woowacourse.shopping.data.database.dao.recentproduct.RecentProductDaoImpl
 import woowacourse.shopping.data.datasource.product.local.LocalProductDataSource
 import woowacourse.shopping.data.datasource.recentproduct.local.LocalRecentProductDataSource
-import woowacourse.shopping.data.repository.ProductRepository
-import woowacourse.shopping.data.repository.RecentProductRepository
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
@@ -58,10 +58,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         val shoppingDatabase = ShoppingDatabase(this)
         presenter = ShoppingPresenter(
             this,
-            ProductRepository(
+            ProductRepositoryImpl(
                 LocalProductDataSource(ProductDaoImpl(shoppingDatabase))
             ),
-            RecentProductRepository(
+            RecentProductRepositoryImpl(
                 LocalRecentProductDataSource(RecentProductDaoImpl(shoppingDatabase))
             )
         )
