@@ -81,10 +81,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     override fun setRecentlyViewedProducts(recentlyViewedProducts: List<RecentlyViewedProductUIState>) {
         if (recentlyViewedProducts.isEmpty()) {
-            binding.layoutRecentlyViewed.isVisible = false
+            binding.tvRecentlyViewedProduct.isVisible = false
+            binding.recyclerViewRecentlyViewed.isVisible = false
+            binding.viewSeparatorRecyclerView.isVisible = false
             return
         }
-        binding.layoutRecentlyViewed.isVisible = true
+        binding.tvRecentlyViewedProduct.isVisible = true
+        binding.recyclerViewRecentlyViewed.isVisible = true
+        binding.viewSeparatorRecyclerView.isVisible = true
 
         binding.recyclerViewRecentlyViewed.adapter =
             RecentlyViewedProductListAdapter(recentlyViewedProducts) {
