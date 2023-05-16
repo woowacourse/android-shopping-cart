@@ -2,7 +2,7 @@ package woowacourse.shopping.uimodel
 
 import java.io.Serializable
 
-class ProductUIModel(
+data class ProductUIModel(
     val id: Int,
     val imageUrl: String,
     val name: String,
