@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <!-- 상품 -->
+    <string name="product_price">%s원</string>
+    <string name="recently_viewed_products">최근 본 상품</string>
+
+    <!-- 상품 상세 -->
+    <string name="add_to_cart">장바구니 담기</string>
+    <string name="price_title">금액</string>
+
+    <!-- App Bar -->
+    <string name="app_bar_title_product_list">Shopping</string>
+    <string name="app_bar_title_cart">Cart</string>
+    <string name="button_load_more">더보기</string>
 </resources>
