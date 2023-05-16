@@ -12,11 +12,13 @@ import woowacourse.shopping.ui.basket.BasketContract.View
 class BasketPresenter(
     view: View,
     private val basketRepository: BasketRepository,
-    private var products: Products = Products(loadUnit = BASKET_PAGING_SIZE),
-    private var currentPage: PageNumber = PageNumber(),
 ) : Presenter(view) {
+    private var products: Products = Products(loadUnit = BASKET_PAGING_SIZE)
+    private var currentPage: PageNumber = PageNumber()
 
-    override fun fetchBasket() {
+    override fun fetchBasket(page: Int) {
+        currentPage = currentPage.copy(page)
+
         val currentProducts = basketRepository.getPartially(currentPage)
         products = products.copy(currentProducts)
 
@@ -25,19 +27,9 @@ class BasketPresenter(
         view.updatePageNumber(currentPage.toUi())
     }
 
-    override fun fetchNext() {
-        currentPage++
-        fetchBasket()
-    }
-
-    override fun fetchPrevious() {
-        currentPage--
-        fetchBasket()
-    }
-
     override fun removeBasketProduct(product: UiProduct) {
         basketRepository.remove(product.toDomain())
-        fetchBasket()
+        fetchBasket(currentPage.value)
     }
 
     override fun closeScreen() {

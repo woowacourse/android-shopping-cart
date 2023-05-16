@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.PageNumber
 import woowacourse.shopping.domain.repository.BasketRepository
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.basket.BasketContract
 import woowacourse.shopping.ui.basket.BasketPresenter
 
@@ -28,10 +29,10 @@ internal class BasketPresenterTest {
     @Test
     internal fun 장바구니를_목록을_갱신하면_현재_페이지에_해당하는_아이템을_보여주고_네비게이터를_갱신한다() {
         // given
-        /* ... */
+        val page = 1
 
         // when
-        presenter.fetchBasket()
+        presenter.fetchBasket(page)
 
         // then
         verify(exactly = 1) { basketRepository.getPartially(any()) }
@@ -44,13 +45,13 @@ internal class BasketPresenterTest {
     internal fun 이전_장바구니를_불러오면_페이지를_변경하고_장바구니를_갱신한다() {
         // given
         val page = 2
-        presenter = BasketPresenter(view, basketRepository, currentPage = PageNumber(page))
+        presenter = BasketPresenter(view, basketRepository)
 
         val currentPage = slot<PageNumber>()
         every { basketRepository.getPartially(capture(currentPage)) } returns mockk(relaxed = true)
 
         // when
-        presenter.fetchPrevious()
+        presenter.fetchBasket(page - 1)
 
         // then
         assertEquals(currentPage.captured, PageNumber(page - 1))
@@ -63,13 +64,13 @@ internal class BasketPresenterTest {
     internal fun 다음_장바구니를_불러오면_페이지를_변경하고_장바구니를_갱신한다() {
         // given
         val page = 1
-        presenter = BasketPresenter(view, basketRepository, currentPage = PageNumber(page))
+        presenter = BasketPresenter(view, basketRepository)
 
         val currentPage = slot<PageNumber>()
         every { basketRepository.getPartially(capture(currentPage)) } returns mockk(relaxed = true)
 
         // when
-        presenter.fetchNext()
+        presenter.fetchBasket(page + 1)
 
         // then
         assertEquals(currentPage.captured, PageNumber(page + 1))
@@ -81,10 +82,10 @@ internal class BasketPresenterTest {
     @Test
     internal fun 장바구니_목록에_있는_제품을_제거하면_뷰를_갱신한다() {
         // given
-        /* ... */
+        val product = mockk<Product>(relaxed = true)
 
         // when
-        presenter.removeBasketProduct(mockk(relaxed = true))
+        presenter.removeBasketProduct(product)
 
         // then
         verify(exactly = 1) { basketRepository.remove(any()) }
