@@ -25,7 +25,10 @@ class ShoppingCartRepositoryImpl(
     }
 
     override fun addProductInCart(productInCart: ProductInCart): Long {
-        return shoppingCartDataSource.addProductInShoppingCart(productInCart)
+        return shoppingCartDataSource.addProductInShoppingCart(
+            productInCart.product.id,
+            productInCart.quantity,
+        )
     }
 
     override fun deleteProductInCart(id: Long): Boolean {
