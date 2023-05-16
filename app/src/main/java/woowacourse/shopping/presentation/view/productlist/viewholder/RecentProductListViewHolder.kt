@@ -23,6 +23,6 @@ class RecentProductListViewHolder(
     }
 
     fun bind(recentProduct: RecentProductModel) {
-        binding.recentProduct = recentProduct
+        binding.product = recentProduct.product
     }
 }
