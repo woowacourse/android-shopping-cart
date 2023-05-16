@@ -2,13 +2,12 @@ package woowacourse.shopping.data.respository.cart
 
 import android.content.Context
 import woowacourse.shopping.data.database.CartDao
-import woowacourse.shopping.data.mapper.toUIModel
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.data.model.CartEntity
 
-class CartRepositoryImp(context: Context) : CartRepository {
+class CartRepositoryImpl(context: Context) : CartRepository {
     private val cartDao = CartDao(context)
-    override fun getCarts(startPosition: Int): List<CartModel> {
-        return cartDao.getItems(startPosition).map { it.toUIModel() }
+    override fun getCarts(startPosition: Int): List<CartEntity> {
+        return cartDao.getItems(startPosition)
     }
 
     override fun deleteCartByProductId(productId: Long) {

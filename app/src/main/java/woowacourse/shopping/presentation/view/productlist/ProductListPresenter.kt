@@ -1,8 +1,9 @@
 package woowacourse.shopping.presentation.view.productlist
 
 import woowacourse.shopping.R
+import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.respository.product.ProductRepository
-import woowacourse.shopping.data.respository.product.ProductRepositoryImp
+import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.RecentProductModel
@@ -11,7 +12,7 @@ import java.time.format.DateTimeFormatter
 
 class ProductListPresenter(
     private val view: ProductContract.View,
-    private val productRepository: ProductRepository = ProductRepositoryImp(),
+    private val productRepository: ProductRepository = ProductRepositoryImpl(),
     private val recentProductRepository: RecentProductRepository
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()
@@ -24,19 +25,19 @@ class ProductListPresenter(
     }
 
     override fun loadProductItems() {
-        products.addAll(productRepository.getData(0, LOAD_PRODUCT_COUNT))
+        products.addAll(productRepository.getData(0, LOAD_PRODUCT_COUNT).map { it.toUIModel() })
         view.setProductItemsView(products)
     }
 
     override fun loadRecentProductItems() {
-        recentProducts.addAll(recentProductRepository.getRecentProducts())
+        recentProducts.addAll(recentProductRepository.getRecentProducts().map { it.toUIModel() })
         recentProductsPreSize = recentProducts.size
         view.setRecentProductItemsView(recentProducts)
     }
 
     override fun updateRecentProductItems() {
         recentProducts.clear()
-        recentProducts.addAll(recentProductRepository.getRecentProducts())
+        recentProducts.addAll(recentProductRepository.getRecentProducts().map { it.toUIModel() })
         view.updateRecentProductItemsView(0, recentProducts.size)
     }
 
@@ -45,7 +46,7 @@ class ProductListPresenter(
     }
 
     override fun loadMoreData(startPosition: Int) {
-        val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT)
+        val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT).map { it.toUIModel() }
         products.addAll(newProducts)
         view.updateMoreProductsView(startPosition + 1, newProducts.size)
     }

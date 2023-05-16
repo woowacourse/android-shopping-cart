@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.view.cart
 
+import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.respository.cart.CartRepository
 
 class CartPresenter(
@@ -8,7 +9,7 @@ class CartPresenter(
 ) : CartContract.Presenter {
     override fun loadCartItems(currentPage: Int) {
         val startPosition = getStartItemPosition(currentPage)
-        var newCarts = cartRepository.getCarts(startPosition)
+        var newCarts = cartRepository.getCarts(startPosition).map { it.toUIModel() }
         view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 

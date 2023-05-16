@@ -7,7 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.respository.cart.CartRepositoryImp
+import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.model.CartModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
@@ -18,7 +18,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var cartAdapter: CartAdapter
 
     private val presenter: CartContract.Presenter by lazy {
-        CartPresenter(this, CartRepositoryImp(this))
+        CartPresenter(this, CartRepositoryImpl(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

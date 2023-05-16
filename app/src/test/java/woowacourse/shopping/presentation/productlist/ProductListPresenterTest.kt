@@ -9,6 +9,9 @@ import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.R
+import woowacourse.shopping.data.mapper.toUIModel
+import woowacourse.shopping.data.model.ProductEntity
+import woowacourse.shopping.data.model.RecentProductEntity
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
@@ -43,7 +46,7 @@ class ProductListPresenterTest {
 
         // then
         val actual = slot.captured
-        val expected = dummyData
+        val expected = dummyData.map { it.toUIModel() }
 
         assertEquals(expected, actual)
         verify { productRepository.getData(0, 20) }
@@ -62,9 +65,9 @@ class ProductListPresenterTest {
 
         // then
         val actual = slot.captured
-        val expected = dummyRecentProduct
 
-        assertEquals(expected, actual)
+        assertEquals(0L, actual[0].id)
+        assertEquals(0L, actual[0].product.id)
         verify { recentProductRepository.getRecentProducts() }
         verify { view.setRecentProductItemsView(actual) }
     }
@@ -127,7 +130,7 @@ class ProductListPresenterTest {
 
     companion object {
         private val dummyData = listOf(
-            ProductModel(
+            ProductEntity(
                 id = 0,
                 title = "[선물세트][밀크바오밥] 퍼퓸 화이트 4종 선물세트 (샴푸+트리트먼트+바디워시+바디로션)",
                 price = 24_900,
@@ -136,14 +139,9 @@ class ProductListPresenterTest {
         )
 
         private val dummyRecentProduct = listOf(
-            RecentProductModel(
-                id = 0,
-                ProductModel(
-                    id = 0,
-                    title = "[선물세트][밀크바오밥] 퍼퓸 화이트 4종 선물세트 (샴푸+트리트먼트+바디워시+바디로션)",
-                    price = 24_900,
-                    imageUrl = "https://product-image.kurly.com/product/image/2c392328-104a-4fef-8222-c11be9c5c35f.jpg"
-                )
+            RecentProductEntity(
+                id = 0L,
+                productId = 0L,
             )
         )
     }

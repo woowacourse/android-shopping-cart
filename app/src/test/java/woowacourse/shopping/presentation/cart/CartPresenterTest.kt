@@ -8,6 +8,7 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.model.CartEntity
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.presentation.CartFixture
@@ -43,7 +44,7 @@ class CartPresenterTest {
 
         // then
         val actual = slot.captured
-        val expected = CartFixture.getFixture()
+        val expected = CartFixture.getFixture().map { it.toUIModel() }
         assertEquals(expected, actual)
         verify { cartRepository.getCarts(0) }
         verify { view.setEnableLeftButton(false) }

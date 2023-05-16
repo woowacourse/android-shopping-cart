@@ -8,7 +8,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.respository.cart.CartRepositoryImp
+import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.view.util.showToast
@@ -17,7 +17,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
 
     private val presenter: ProductDetailContract.Presenter by lazy {
-        ProductDetailPresenter(this, cartRepository = CartRepositoryImp(this))
+        ProductDetailPresenter(this, cartRepository = CartRepositoryImpl(this))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
