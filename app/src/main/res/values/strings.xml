@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <!-- 공통 -->
+    <string name="price_format">%,d원</string>
+    <string name="tb_shopping">Shopping</string>
+
+    <!-- ShoppingActivity -->
+    <string name="tv_more">더보기</string>
+
+    <!-- ProductDetailActivity -->
+    <string name="tv_price_title">금액</string>
+    <string name="btn_basket">장바구니 담기</string>
+    <string name="tv_cart">Cart</string>
+
+    <!-- item_recent_products -->
+    <string name="tv_recent_product_title">최근 본 상품</string>
+    <string name="tv_previous"><![CDATA[<]]></string>
+    <string name="tv_next"><![CDATA[>]]></string>
+    <string name="default_page">1</string>
+    <string name="close_screen">화면 닫기</string>
+    <string name="basket">장바구니</string>
+
 </resources>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.Product" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingStart="20dp">
+
+        <ImageView
+            android:id="@+id/product_image_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            bind:imageUrl="@{product.imageUrl}"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/product_name_text_view"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/product_name_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/product_image_view"
+            app:layout_constraintStart_toStartOf="@+id/product_image_view"
+            app:layout_constraintTop_toBottomOf="@+id/product_image_view"
+            tools:text="PET_보틀_정사각형" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

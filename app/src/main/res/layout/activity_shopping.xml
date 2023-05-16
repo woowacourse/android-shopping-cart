@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="woowacourse.shopping.ui.shopping.recyclerview.layoutmanager.ShoppingGridLayoutManager" />
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.ui.shopping.ShoppingContract.Presenter" />
+
+        <variable
+            name="adapter"
+            type="androidx.recyclerview.widget.ConcatAdapter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.shopping.ShoppingActivity">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/shopping_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/woowa_toolbar_gray"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/menu_shopping"
+            app:title="@string/tb_shopping"
+            app:titleTextColor="@color/white" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/shopping_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            bind:adapter="@{adapter}"
+            bind:fixedSize="@{true}"
+            bind:layoutManager="@{ShoppingGridLayoutManager.create(context, adapter)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/shopping_tool_bar"
+            app:spanCount="2"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_product" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

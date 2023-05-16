@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="productDetailPresenter"
+            type="woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.productdetail.ProductDetailActivity">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/product_detail_tool_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            android:background="@color/woowa_toolbar_gray"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/menu_product_detail"
+            app:title="@string/tb_shopping"
+            app:titleTextColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/product_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_detail_tool_bar"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/product_name_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:padding="18dp"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_image_view"
+            tools:text="[든든] 동원 스위트콘" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/woowa_light_gray"
+            app:layout_constraintTop_toBottomOf="@+id/product_name_text_view" />
+
+        <TextView
+            android:id="@+id/price_title_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="16dp"
+            android:includeFontPadding="false"
+            android:text="@string/tv_price_title"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_name_text_view" />
+
+        <TextView
+            android:id="@+id/product_price_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="18dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/price_title_text_view"
+            tools:text="99,800원" />
+
+        <TextView
+            android:id="@+id/basket_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/woowa_button"
+            android:gravity="center"
+            android:onClick="@{() -> productDetailPresenter.addBasketProduct()}"
+            android:paddingVertical="12dp"
+            android:text="@string/btn_basket"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
