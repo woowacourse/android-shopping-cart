@@ -3,13 +3,12 @@ package woowacourse.shopping.data.database.dao
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.table.SqlProduct
-import woowacourse.shopping.data.product.ProductDataSource
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.URL
 
-class ProductDao(private val db: SQLiteDatabase) : ProductDataSource {
-    override fun getByRange(start: Int, range: Int): Products {
+class ProductDao(private val db: SQLiteDatabase) {
+    fun selectByRange(start: Int, range: Int): Products {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlProduct.name} LIMIT $start, $range", null
         )

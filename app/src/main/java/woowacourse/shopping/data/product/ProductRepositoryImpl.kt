@@ -1,10 +1,11 @@
 package woowacourse.shopping.data.product
 
+import woowacourse.shopping.data.database.dao.ProductDao
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.repository.ProductRepository
 
-class ProductRepositoryImpl(private val localProductDataSource: ProductDataSource) : ProductRepository {
+class ProductRepositoryImpl(private val productDao: ProductDao) : ProductRepository {
     override fun getProducts(startIndex: Int, size: Int): Products {
-        return localProductDataSource.getByRange(start = startIndex, range = size)
+        return productDao.selectByRange(start = startIndex, range = size)
     }
 }

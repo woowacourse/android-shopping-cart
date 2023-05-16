@@ -146,7 +146,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ShoppingPresenter(
             this,
-            productRepository = ProductRepositoryImpl(localProductDataSource = ProductDao(db)),
+            productRepository = ProductRepositoryImpl(productDao = ProductDao(db)),
             recentProductRepository = RecentProductRepositoryImpl(localRecentProductDataSource = RecentProductDao(db)),
             recentProductSize = 10,
             productLoadSize = 20
