@@ -28,9 +28,11 @@ class RecentProductListAdapter(
 
     fun addItems(newItems: List<ListItem>) {
         val items = this.items.toMutableList()
-        items.addAll(newItems)
+        newItems.forEach {
+            items.add(0, it)
+        }
         this.items = items.toList()
-        notifyItemRangeInserted(items.size, newItems.size)
+        notifyDataSetChanged()
     }
 
     fun setItems(items: List<ListItem>) {

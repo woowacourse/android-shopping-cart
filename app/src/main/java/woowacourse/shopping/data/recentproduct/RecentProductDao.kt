@@ -56,7 +56,7 @@ class RecentProductDao(context: Context) {
         }
 
         cursor.close()
-        return recentProducts
+        return recentProducts.sortedBy { it.viewedDateTime }.reversed()
     }
 
     fun addColumn(recentProduct: RecentProduct) {
