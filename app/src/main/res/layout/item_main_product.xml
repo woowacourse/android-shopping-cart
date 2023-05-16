@@ -18,7 +18,7 @@
 
         <ImageView
             android:id="@+id/product_img"
-            imgUrl="@{product}"
+            imgUrl="@{product.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"

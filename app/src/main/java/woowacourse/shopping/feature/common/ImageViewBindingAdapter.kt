@@ -3,11 +3,10 @@ package woowacourse.shopping.feature.common
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
-import woowacourse.shopping.model.ProductUiModel
 
 @BindingAdapter("imgUrl")
-fun setImgUrl(imageView: ImageView, productUiModel: ProductUiModel) {
+fun setImgUrl(imageView: ImageView, imgUrl: String) {
     Glide.with(imageView.context)
-        .load(productUiModel.imgUrl)
+        .load(imgUrl)
         .into(imageView)
 }
