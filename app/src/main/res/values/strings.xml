@@ -8,4 +8,6 @@
     <string name="show_more">더보기</string>
     <string name="basic_page">1</string>
     <string name="label_cart">Cart</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
 </resources>
