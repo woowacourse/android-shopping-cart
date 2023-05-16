@@ -4,14 +4,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.feature.list.item.ProductView
 import woowacourse.shopping.feature.list.viewholder.ItemViewHolder
-import woowacourse.shopping.feature.list.viewholder.ProductMoreViewHolder
 import woowacourse.shopping.feature.list.viewholder.ProductViewHolder
 import woowacourse.shopping.feature.list.viewholder.RecentProductsViewHolder
 
 class ProductsAdapter(
     private var items: List<ProductView> = listOf(),
     private val onItemClick: (ProductView) -> Unit,
-    private val onMoreItemClick: (ProductView) -> Unit,
 ) : RecyclerView.Adapter<ItemViewHolder>() {
 
     override fun getItemCount(): Int {
@@ -22,7 +20,6 @@ class ProductsAdapter(
         return when (items[position]) {
             is ProductView.ProductItem -> ProductView.TYPE_PRODUCT
             is ProductView.RecentProductsItem -> ProductView.TYPE_RECENT_PRODUCTS
-            is ProductView.MoreItem -> ProductView.TYPE_MORE
         }
     }
 
@@ -33,9 +30,6 @@ class ProductsAdapter(
             }
             ProductView.TYPE_RECENT_PRODUCTS -> {
                 RecentProductsViewHolder(parent)
-            }
-            ProductView.TYPE_MORE -> {
-                ProductMoreViewHolder(parent)
             }
             else -> throw IllegalArgumentException()
         }
@@ -48,9 +42,6 @@ class ProductsAdapter(
             }
             is RecentProductsViewHolder -> {
                 holder.bind(items[position] as ProductView.RecentProductsItem, onItemClick)
-            }
-            is ProductMoreViewHolder -> {
-                holder.bind(items[position], onMoreItemClick)
             }
         }
     }

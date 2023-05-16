@@ -5,6 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.GONE
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
+import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import com.example.domain.Product
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductDbHandler
@@ -38,14 +42,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = MainPresenter(this, productDbHandler, recentProductDbHandler)
-        initAdapter()
-        presenter.addProducts()
-    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+        presenter = MainPresenter(this, productDbHandler, recentProductDbHandler)
+
+        initAdapter()
+        initListener()
+
+        presenter.addProducts()
     }
 
     private fun initAdapter() {
@@ -57,22 +60,34 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                         ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
                     }
                     is ProductView.RecentProductsItem -> Unit
-                    is ProductView.MoreItem -> Unit
                 }
-            },
-            onMoreItemClick = {
-                presenter.addProducts()
             },
         )
         binding.productRv.adapter = productsAdapter
-        initLayout()
+        initAdapterLayout()
     }
 
-    private fun initLayout() {
+    private fun initAdapterLayout() {
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup =
             SpanSizeLookUpManager(productsAdapter, gridLayoutManager.spanCount)
         binding.productRv.layoutManager = gridLayoutManager
+    }
+
+    private fun initListener() {
+        binding.productRv.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!recyclerView.canScrollVertically(DIRECTION_DOWN) && dy > 0) {
+                    binding.mainMoreButton.visibility = VISIBLE
+                }
+            }
+        })
+
+        binding.mainMoreButton.setOnClickListener {
+            binding.mainMoreButton.visibility = GONE
+            presenter.addProducts()
+        }
     }
 
     override fun addProducts(products: List<Product>) {
@@ -98,5 +113,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             }
         }
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
+    }
+
+    companion object {
+        private const val DIRECTION_DOWN = 1
     }
 }

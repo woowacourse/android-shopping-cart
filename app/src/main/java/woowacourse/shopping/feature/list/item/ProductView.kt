@@ -13,11 +13,8 @@ sealed interface ProductView {
         val products: List<ProductItem>,
     ) : ProductView
 
-    class MoreItem : ProductView
-
     companion object {
         const val TYPE_PRODUCT = 0
         const val TYPE_RECENT_PRODUCTS = 1
-        const val TYPE_MORE = 2
     }
 }

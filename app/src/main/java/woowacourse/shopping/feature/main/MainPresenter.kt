@@ -18,18 +18,19 @@ class MainPresenter(
     private var currentItemIndex = 0
 
     override fun addProducts() {
+        if (currentItemIndex == products.lastIndex) return
         if (currentItemIndex == 0) {
             loadProducts()
             return
         }
-        val addItems: List<Product>
-        if (products.size < currentItemIndex + ADD_SIZE) {
-            addItems = products.subList(currentItemIndex, products.size - 1)
-            currentItemIndex += products.size - 1 - currentItemIndex
-        } else {
-            addItems = products.subList(currentItemIndex, currentItemIndex + ADD_SIZE)
-            currentItemIndex += ADD_SIZE
-        }
+        val addItems: List<Product> =
+            if (products.size < currentItemIndex + ADD_SIZE) {
+                currentItemIndex += products.lastIndex - currentItemIndex
+                products.subList(currentItemIndex, products.size)
+            } else {
+                currentItemIndex += ADD_SIZE
+                products.subList(currentItemIndex, currentItemIndex + ADD_SIZE)
+            }
         view.addProducts(addItems)
     }
 
