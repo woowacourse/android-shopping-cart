@@ -1,4 +1,4 @@
-package woowacourse.shopping.basket
+package woowacourse.shopping.ui.basket
 
 import io.mockk.every
 import io.mockk.mockk
