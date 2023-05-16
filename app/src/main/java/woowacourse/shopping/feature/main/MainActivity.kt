@@ -10,6 +10,7 @@ import com.example.domain.Product
 import com.example.domain.RecentProduct
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductDao
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
@@ -34,9 +35,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         get() = _binding!!
 
     private val presenter: MainContract.Presenter by lazy {
-        val productDao = ProductDao(this)
+        val productRepository = ProductRepositoryImpl(ProductDao(this))
         val recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this))
-        MainPresenter(this, productDao, recentProductRepository)
+        MainPresenter(this, productRepository, recentProductRepository)
     }
     private val productListAdapter: ProductListAdapter by lazy {
         ProductListAdapter(onItemClick = { presenter.showProductDetail(it) })
