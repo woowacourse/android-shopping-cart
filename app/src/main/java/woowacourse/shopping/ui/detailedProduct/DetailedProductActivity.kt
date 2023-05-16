@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.detailedProduct
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -74,11 +75,16 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
         startActivity(CartActivity.getIntent(this))
     }
 
+    override fun navigateToDetailedProduct(product: ProductUIModel) {
+        startActivity(getIntent(this, product))
+    }
+
     companion object {
         private const val KEY_PRODUCT = "KEY_PRODUCT"
         fun getIntent(context: Context, product: ProductUIModel): Intent {
             return Intent(context, DetailedProductActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
+                flags = FLAG_ACTIVITY_CLEAR_TOP
             }
         }
     }

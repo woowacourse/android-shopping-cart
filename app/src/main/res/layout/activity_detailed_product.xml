@@ -96,6 +96,7 @@
         <include
             android:id="@+id/layout_last_product"
             layout="@layout/layout_detailed_product_last"
+            android:onClick="@{() -> presenter.navigateToDetailedProduct()}"
             bind:product="@{lastProduct}" />
 
         <View

@@ -39,4 +39,8 @@ class DetailedProductPresenter(
         }
         recentRepository.insert(product.toDomain())
     }
+
+    override fun navigateToDetailedProduct() {
+        lastProduct?.let { view.navigateToDetailedProduct(it) }
+    }
 }
