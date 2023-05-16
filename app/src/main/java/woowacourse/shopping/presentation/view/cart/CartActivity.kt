@@ -46,8 +46,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setCartItemsView(carts: List<CartModel>) {
+    override fun setCartItemsView(carts: List<CartModel>, currentPage: String) {
         cartAdapter = CartAdapter(carts, ::deleteCartItem)
+        binding.tvCartListPageCount.text = currentPage
         binding.rvCart.adapter = cartAdapter
     }
 
@@ -65,21 +66,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun setLeftButtonClick() {
         binding.btCartListPageLeft.setOnClickListener {
-            val nextPage = getPageCount().dec()
-            binding.tvCartListPageCount.text = nextPage.toString()
-            presenter.loadCartItems(nextPage)
+            presenter.decrementPage(getPageCount())
         }
     }
 
     private fun setRightButtonClick() {
         binding.btCartListPageRight.setOnClickListener {
-            val nextPage = getPageCount().inc()
-            binding.tvCartListPageCount.text = nextPage.toString()
-            presenter.loadCartItems(nextPage)
+            presenter.incrementPage(getPageCount())
         }
     }
 
-    private fun getPageCount(): Int = binding.tvCartListPageCount.text.toString().toInt()
+    private fun getPageCount(): String = binding.tvCartListPageCount.text.toString()
 
     companion object {
         fun createIntent(context: Context): Intent {

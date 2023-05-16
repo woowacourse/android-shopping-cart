@@ -22,50 +22,61 @@ class CartPresenterTest {
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        cartRepository = mockk()
+        cartRepository = mockk(relaxed = true)
     }
 
     @Test
     fun `장바구니 데이터를 받아와 보여준다`() {
         // given
-        every { cartRepository.getCarts(0) } returns CartFixture.getFixture()
+        every { cartRepository.getCarts(0, 4) } returns CartFixture.getFixture()
+        justRun { view.setEnableLeftButton(false) }
+        justRun { view.setEnableRightButton(false) }
 
+        val cartItemSlot = slot<List<CartModel>>()
+        val pageSlot = slot<String>()
+        justRun {
+            view.setCartItemsView(
+                capture(cartItemSlot), "1"
+            )
+        }
         presenter = CartPresenter(view, cartRepository)
-
-        val slot = slot<List<CartModel>>()
-        justRun { view.setCartItemsView(capture(slot)) }
-
         // when
-        presenter.loadCartItems(1)
+        presenter.loadCartItems("1")
 
         // then
-        val actual = slot.captured
+        val actual = cartItemSlot.captured
         val expected = CartFixture.getFixture()
         assertEquals(expected, actual)
-        verify { cartRepository.getCarts(0) }
-        verify { view.setCartItemsView(actual) }
+        verify { cartRepository.getCarts(0, 4) }
+        verify { view.setEnableLeftButton(false) }
+        verify { view.setEnableRightButton(false) }
+        verify { view.setCartItemsView(actual, "1") }
     }
 
     @Test
     fun `카트 데이터가 하나 삭제된다`() {
         // given
-        val position = 0
-        every { cartRepository.getCarts(0) } returns CartFixture.getFixture()
         justRun { cartRepository.deleteCartByProductId(1) }
+        every { cartRepository.getCarts(0, 4) } returns CartFixture.getFixture().dropLast(1)
+        justRun { view.setEnableLeftButton(false) }
+        justRun { view.setEnableRightButton(false) }
 
-        val slot = slot<List<CartModel>>()
-        justRun { view.setCartItemsView(capture(slot)) }
         presenter = CartPresenter(view, cartRepository)
 
         // when
-        presenter.deleteCartItem(1, 1)
-        justRun { view.setCartItemsView(capture(slot)) }
+        val cartItemSlot = slot<List<CartModel>>()
+        justRun { view.setCartItemsView(capture(cartItemSlot), "1") }
+
+        presenter.deleteCartItem("1", 1)
 
         // then
-        val actual = slot.captured
-        val expected = slot.captured
+        val actual = cartItemSlot.captured
+        val expected = CartFixture.getFixture().dropLast(1)
         assertEquals(expected, actual)
+
         verify { cartRepository.deleteCartByProductId(1) }
-        verify { view.setCartItemsView(capture(slot)) }
+        verify { view.setEnableLeftButton(false) }
+        verify { view.setEnableRightButton(false) }
+        verify { view.setCartItemsView(actual, "1") }
     }
 }
