@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".feature.cart.CartActivity">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/cart_item_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="50dp"
+            android:clipToPadding="false"
+            android:padding="18dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/page_count_text_view"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_cart_product" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/previous_page_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_arrow_button"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back_ios_new_24"
+            app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
+            app:layout_constraintEnd_toStartOf="@id/page_count_text_view"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/page_count_text_view" />
+
+        <TextView
+            android:id="@+id/page_count_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="50dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="12dp"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/next_page_btn"
+            app:layout_constraintStart_toEndOf="@id/previous_page_btn"
+            tools:text="0" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/next_page_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_arrow_button"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_forward_ios_24"
+            app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/page_count_text_view"
+            app:layout_constraintTop_toTopOf="@id/page_count_text_view" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
