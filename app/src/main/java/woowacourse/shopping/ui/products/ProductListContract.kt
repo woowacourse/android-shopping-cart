@@ -13,5 +13,6 @@ interface ProductListContract {
     interface View {
         fun setRecentlyViewedProducts(recentlyViewedProducts: List<RecentlyViewedProductUIState>)
         fun addProducts(products: List<ProductUIState>)
+        fun setCanLoadMore(canLoadMore: Boolean)
     }
 }

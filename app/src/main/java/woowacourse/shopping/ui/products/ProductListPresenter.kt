@@ -27,6 +27,12 @@ class ProductListPresenter(
         currentPage++
         val offset = (currentPage - 1) * PAGE_SIZE
         view.addProducts(productRepository.findAll(PAGE_SIZE, offset).map(ProductUIState::from))
+        refreshCanLoadMore()
+    }
+
+    private fun refreshCanLoadMore() {
+        val maxPage = (productRepository.findAll().size - 1) / PAGE_SIZE + 1
+        if (currentPage >= maxPage) view.setCanLoadMore(false)
     }
 
     override fun onViewProduct(productId: Long) {

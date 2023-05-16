@@ -103,4 +103,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         adapter.addItems(products)
         adapter.notifyDataSetChanged()
     }
+
+    override fun setCanLoadMore(canLoadMore: Boolean) {
+        binding.btnLoading.isVisible = canLoadMore
+    }
 }
