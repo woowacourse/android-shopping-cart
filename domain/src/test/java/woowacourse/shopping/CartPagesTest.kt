@@ -44,11 +44,9 @@ class CartPagesTest {
     @Test
     fun `페이지가 2일 떄 이전 페이지 상품을 요청하면 1 페이지의 상품을 얻는다`() {
         // given
-        val cartPages = CartPages(Products(fakeProducts))
-        cartPages.getNextPageProducts()
-        cartPages.getNextPageProducts()
+        val cartPages = CartPages(Products(fakeProducts), Counter(2))
 
-        // when 다음 페이지 상품 요청
+        // when 이전 페이지 상품 요청
         val actualProducts = cartPages.getPreviousPageProducts()
 
         // then 반환 1 부터 5 상품 & 페이지 번호 1
@@ -66,10 +64,9 @@ class CartPagesTest {
     @Test
     fun `페이지가 1일 떄 4번 상품을 삭제하면 삭제 후 상품들을 얻는다`() {
         // given
-        val cartPages = CartPages(Products(fakeProducts))
-        cartPages.getNextPageProducts()
+        val cartPages = CartPages(Products(fakeProducts), Counter(1))
 
-        // when 다음 페이지 상품 요청
+        // when 삭제된 페이지 상품 요청
         val actualProducts = cartPages.getDeletedProducts(4)
 
         // then 반환 1, 2, 3, 5, 6 상품 & 페이지 번호 1
@@ -83,8 +80,7 @@ class CartPagesTest {
     @Test
     fun `상품이 10개고 페이지가 1일 떄 다음 페이지로 갈 수 있다`() {
         // given
-        val cartPages = CartPages(Products(fakeProducts))
-        cartPages.getNextPageProducts()
+        val cartPages = CartPages(Products(fakeProducts), Counter(1))
 
         // when
         val actual = cartPages.isNextPageAble()
@@ -97,9 +93,7 @@ class CartPagesTest {
     @Test
     fun `상품이 10개고 페이지가 2일 떄 다음 페이지로 갈 수 없다`() {
         // given
-        val cartPages = CartPages(Products(fakeProducts))
-        cartPages.getNextPageProducts()
-        cartPages.getNextPageProducts()
+        val cartPages = CartPages(Products(fakeProducts), Counter(2))
 
         // when
         val actual = cartPages.isNextPageAble()
@@ -112,9 +106,7 @@ class CartPagesTest {
     @Test
     fun `상품이 10개고 페이지가 2일 떄 이전 페이지로 갈 수 있다`() {
         // given
-        val cartPages = CartPages(Products(fakeProducts))
-        cartPages.getNextPageProducts()
-        cartPages.getNextPageProducts()
+        val cartPages = CartPages(Products(fakeProducts), Counter(2))
 
         // when
         val actual = cartPages.isPreviousPageAble()
@@ -127,8 +119,7 @@ class CartPagesTest {
     @Test
     fun `페이지가 1일 떄 이전 페이지로 갈 수 없다`() {
         // given
-        val cartPages = CartPages(Products(fakeProducts))
-        cartPages.getNextPageProducts()
+        val cartPages = CartPages(Products(fakeProducts), Counter(1))
 
         // when
         val actual = cartPages.isPreviousPageAble()

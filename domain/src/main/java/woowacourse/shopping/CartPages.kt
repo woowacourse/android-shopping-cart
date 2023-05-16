@@ -1,8 +1,11 @@
 package woowacourse.shopping
 
-class CartPages(private val cartProducts: Products) {
+class CartPages(
+    private val cartProducts: Products,
+    pageNumber: Counter = Counter(INITIAL_PAGE),
+) {
 
-    var pageNumber = Counter(INITIAL_PAGE)
+    var pageNumber = pageNumber
         private set
 
     fun getNextPageProducts(): Products {
