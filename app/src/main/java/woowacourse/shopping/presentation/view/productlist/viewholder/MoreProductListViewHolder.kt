@@ -5,11 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductListMoreItemBinding
-import woowacourse.shopping.presentation.view.productlist.adpater.ProductListAdapter
 
 class MoreProductListViewHolder(
     parent: ViewGroup,
-    adapter: ProductListAdapter,
     onButtonClick: () -> Unit
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context)
