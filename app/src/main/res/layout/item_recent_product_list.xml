@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="8dp">
+
+        <ImageView
+            android:id="@+id/iv_recent_product_thumbnail"
+            setImageUrl="@{product.imageUrl}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.81"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/tv_recent_product_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxLines="1"
+            android:textColor="@color/product_info_text_color"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            setText="@{product.title}"
+            app:layout_constraintEnd_toEndOf="@id/iv_recent_product_thumbnail"
+            app:layout_constraintStart_toStartOf="@id/iv_recent_product_thumbnail"
+            app:layout_constraintTop_toBottomOf="@id/iv_recent_product_thumbnail"
+            tools:text="PET보틀 뭐시기 뭐시기" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
