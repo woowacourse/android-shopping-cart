@@ -14,7 +14,7 @@ import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.ui.model.UiBasketProduct
 
 class BasketActivity : AppCompatActivity(), BasketContract.View {
-    override lateinit var presenter: BasketContract.Presenter
+    private lateinit var presenter: BasketContract.Presenter
 
     private lateinit var binding: ActivityBasketBinding
     private lateinit var basketAdapter: BasketAdapter

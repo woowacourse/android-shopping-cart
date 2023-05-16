@@ -4,7 +4,6 @@ import woowacourse.shopping.ui.model.UiBasketProduct
 
 interface BasketContract {
     interface View {
-        val presenter: Presenter
 
         fun updateBasketProducts(products: List<UiBasketProduct>)
 

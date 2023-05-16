@@ -5,9 +5,9 @@ import woowacourse.shopping.ui.model.UiRecentProduct
 
 interface ShoppingContract {
     interface View {
-        val presenter: Presenter
 
         fun updateProducts(products: List<UiProduct>)
+
         fun updateRecentProducts(recentProducts: List<UiRecentProduct>)
 
         fun showProductDetail(product: UiProduct)

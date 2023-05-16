@@ -21,7 +21,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var product: UiProduct
-    override lateinit var presenter: ProductDetailContract.Presenter
+    private lateinit var presenter: ProductDetailContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

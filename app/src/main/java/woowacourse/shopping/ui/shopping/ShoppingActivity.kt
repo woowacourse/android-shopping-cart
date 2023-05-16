@@ -30,7 +30,7 @@ import woowacourse.shopping.util.setOnSingleClickListener
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
-    override lateinit var presenter: ShoppingPresenter
+    private lateinit var presenter: ShoppingPresenter
     private lateinit var binding: ActivityShoppingBinding
 
     private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
