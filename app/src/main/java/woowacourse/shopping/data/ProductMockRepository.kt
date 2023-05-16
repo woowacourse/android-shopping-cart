@@ -5,9 +5,9 @@ import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
 
-class ProductMockRepository : ProductRepository {
-
+class ProductMockRepository(
     private val productCache: ProductCache = ProductCacheImpl
+) : ProductRepository {
 
     override fun getFirstProducts(): List<Product> {
         if (productCache.productList.isEmpty()) {
