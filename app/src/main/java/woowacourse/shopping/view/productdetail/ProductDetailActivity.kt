@@ -21,14 +21,12 @@ import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override lateinit var presenter: ProductDetailContract.Presenter
 
-    private var _binding: ActivityProductDetailBinding? = null
-    private val binding
-        get() = _binding!!
+    private lateinit var binding: ActivityProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        _binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
 
         setSupportActionBar(binding.tbProductDetail)
         setPresenter()
@@ -59,7 +57,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun setAddToCartClick() {
-        val db = CartProductDao(this).writableDatabase
         binding.btnAddToCart.setOnClickListener {
             presenter.saveCartProduct()
         }

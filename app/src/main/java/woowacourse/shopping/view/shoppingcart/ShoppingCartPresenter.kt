@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
+import com.shopping.domain.CartProduct
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
@@ -21,7 +22,7 @@ class ShoppingCartPresenter(
         paging.loadPageProducts()
 
     override fun removeCartProduct(productUIModel: ProductUIModel) {
-        cartProductRepository.remove(CartProductUIModel(productUIModel).toDomain())
+        cartProductRepository.remove(CartProduct(productUIModel.toDomain()))
 
         if (paging.isLastIndexOfCurrentPage()) {
             paging.subPage()

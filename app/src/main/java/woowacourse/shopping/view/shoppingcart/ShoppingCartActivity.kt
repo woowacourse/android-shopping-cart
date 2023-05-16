@@ -17,14 +17,12 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     override lateinit var presenter: ShoppingCartContract.Presenter
     private lateinit var adapter: ShoppingCartAdapter
 
-    private var _binding: ActivityShoppingCartBinding? = null
-    private val binding
-        get() = _binding!!
+    private lateinit var binding: ActivityShoppingCartBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        _binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
 
         setToolBar()
         setAdapter()

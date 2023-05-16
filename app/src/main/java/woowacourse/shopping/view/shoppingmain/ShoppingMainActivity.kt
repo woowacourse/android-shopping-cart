@@ -27,14 +27,12 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     private lateinit var recentProductAdapter: RecentProductAdapter
     private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
 
-    private var _binding: ActivityShoppingMainBinding? = null
-    private val binding
-        get() = _binding!!
+    private lateinit var binding: ActivityShoppingMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        _binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_main)
 
         setSupportActionBar(binding.tbProductCatalogue)
         setPresenter()

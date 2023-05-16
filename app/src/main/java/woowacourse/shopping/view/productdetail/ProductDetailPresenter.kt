@@ -1,10 +1,12 @@
 package woowacourse.shopping.view.productdetail
 
+import com.shopping.domain.CartProduct
+import com.shopping.domain.RecentProduct
 import com.shopping.repository.CartProductRepository
 import com.shopping.repository.RecentProductsRepository
+
 import woowacourse.shopping.model.uimodel.ProductUIModel
 import woowacourse.shopping.model.uimodel.mapper.toDomain
-
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
@@ -14,11 +16,11 @@ class ProductDetailPresenter(
 ) : ProductDetailContract.Presenter {
 
     override fun saveRecentProduct() {
-        return recentProductsRepository.insert(RecentProductUIModel(product).toDomain())
+        return recentProductsRepository.insert(RecentProduct(product.toDomain()))
     }
 
     override fun saveCartProduct() {
-        cartProductRepository.insert(CartProductUIModel(product).toDomain())
+        cartProductRepository.insert(CartProduct(product.toDomain()))
         view.showCartPage()
     }
 }
