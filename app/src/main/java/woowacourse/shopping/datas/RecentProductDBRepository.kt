@@ -29,10 +29,16 @@ class RecentProductDBRepository(private val database: SQLiteDatabase) : RecentRe
                 products.add(recentProductUIModel)
             }
         }
-        return products.sortedBy { it.time }.takeLast(MAX_RECENT_PRODUCTS_SIZE).reversed()
+        return products.distinctBy { it.product }.sortedBy { it.time }.takeLast(
+            MAX_RECENT_PRODUCTS_SIZE
+        ).reversed()
     }
 
     override fun insert(recentProduct: RecentProductUIModel) {
+        database.execSQL(
+            "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '${recentProduct.product.id}' "
+        )
+
         val record = ContentValues().apply {
             put(KEY_TIME, recentProduct.time)
             put(KEY_ID, recentProduct.product.id)
@@ -45,7 +51,7 @@ class RecentProductDBRepository(private val database: SQLiteDatabase) : RecentRe
 
     override fun remove(recentProduct: RecentProductUIModel) {
         database.execSQL(
-            "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '${recentProduct.product.name}' "
+            "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '${recentProduct.product.id}' "
         )
     }
 

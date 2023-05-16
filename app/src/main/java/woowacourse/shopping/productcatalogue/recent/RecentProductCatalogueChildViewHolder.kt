@@ -4,23 +4,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemProductCatalogueRecentBinding
 import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.RecentProductUIModel
 
 class RecentProductCatalogueChildViewHolder(
     private val binding: ItemProductCatalogueRecentBinding,
-    recentProducts: RecentProductCatalogueUIModel,
+    recentProducts: List<RecentProductUIModel>,
     productOnClick: (ProductUIModel) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.root.setOnClickListener {
-            productOnClick(recentProducts.mainProductCatalogue.items[adapterPosition])
+            productOnClick(recentProducts[adapterPosition].product)
         }
     }
 
-    fun bind(product: ProductUIModel) {
-        binding.tvProductName.text = product.name
+    fun bind(recentProduct: RecentProductUIModel) {
+        binding.tvProductName.text = recentProduct.product.name
         Glide.with(binding.root.context)
-            .load(product.url)
+            .load(recentProduct.product.imageUrl)
             .into(binding.ivProductImage)
     }
 }
