@@ -2,8 +2,8 @@ package woowacourse.shopping.feature.main
 
 import com.example.domain.Product
 import com.example.domain.RecentProduct
+import com.example.domain.repository.RecentProductRepository
 import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.list.item.ListItem
 import woowacourse.shopping.list.item.ProductListItem
 import woowacourse.shopping.model.mapper.toDomain
@@ -14,13 +14,13 @@ import woowacourse.shopping.model.mapper.toUi
 class MainPresenter(
     private val view: MainContract.View,
     private val productDao: ProductDao,
-    private val recentProductDao: RecentProductDao
+    private val recentProductRepository: RecentProductRepository
 ) : MainContract.Presenter {
 
     private val loadItemCountUnit = 20
 
     private val products: List<Product> = productDao.getAll()
-    private val recentProducts: List<RecentProduct> = recentProductDao.getAll()
+    private val recentProducts: List<RecentProduct> = recentProductRepository.getAll()
 
     private var loadItemFromIndex = 0
     private val loadItemToIndex: Int
@@ -62,6 +62,6 @@ class MainPresenter(
     }
 
     private fun storeRecentProduct(recentProduct: RecentProduct) {
-        recentProductDao.addColumn(recentProduct)
+        recentProductRepository.addRecentProduct(recentProduct)
     }
 }
