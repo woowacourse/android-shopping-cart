@@ -11,7 +11,6 @@ class HomePresenter(
     private val productRepository: ProductRepository,
 ) : HomeContract.Presenter {
     private var productsCount = 0
-
     override fun fetchAllProductsOnHome() {
         val recentlyViewProducts =
             productRepository.getRecentlyViewedProducts(10).toRecentProductsByView()
