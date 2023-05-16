@@ -101,7 +101,10 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
-        recentProductListAdapter = RecentProductListAdapter(recentProducts, ::moveToActivity)
+        recentProductListAdapter = RecentProductListAdapter(recentProducts) { productId ->
+            val intent = ProductDetailActivity.createIntent(this, productId)
+            startActivity(intent)
+        }
         recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductListAdapter)
     }
 
@@ -124,11 +127,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     private fun onProductClickEvent(product: ProductModel) {
         presenter.saveRecentProduct(product.id)
-        moveToActivity(product.id)
-    }
 
-    private fun moveToActivity(productId: Long) {
-        val intent = ProductDetailActivity.createIntent(this, productId)
+        val intent = ProductDetailActivity.createIntent(this, product.id)
         recentProductResultLauncher.launch(intent)
     }
 
