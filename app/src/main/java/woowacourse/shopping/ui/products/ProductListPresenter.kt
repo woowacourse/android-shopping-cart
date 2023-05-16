@@ -16,7 +16,7 @@ class ProductListPresenter(
     override fun onLoadRecentlyViewedProducts() {
         val recentlyViewedProducts = recentlyViewedProductRepository.findAll()
             .reversed()
-            .take(10)
+            .take(NUMBER_OF_RECENTLY_VIEWED_PRODUCTS)
 
         val recentlyViewedProductUIStates =
             recentlyViewedProducts.map(RecentlyViewedProductUIState::from)
@@ -37,5 +37,6 @@ class ProductListPresenter(
 
     companion object {
         private const val PAGE_SIZE = 20
+        private const val NUMBER_OF_RECENTLY_VIEWED_PRODUCTS = 10
     }
 }
