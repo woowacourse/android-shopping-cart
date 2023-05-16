@@ -26,7 +26,7 @@
                 android:layout_marginStart="26dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:text="Shopping"
+                android:text="@string/shopping"
                 android:textColor="@color/white"
                 android:textSize="21sp"
                 android:textStyle="normal"
