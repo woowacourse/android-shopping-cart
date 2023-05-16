@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.productlist
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -10,6 +11,7 @@ import woowacourse.shopping.data.product.MockProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.databinding.BadgeCartBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
@@ -21,7 +23,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
-
+    private lateinit var badgeCartCounter: TextView
     private val recentProductRepository: RecentProductRepository by lazy {
         RecentProductDao(RecentProductDbHelper(this))
     }
@@ -75,9 +77,16 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         recentProductAdapter.submitList(productModels)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_product_list_toolbar, menu)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        initCartCounter(menu)
         return true
+    }
+
+    private fun initCartCounter(menu: Menu) {
+        menuInflater.inflate(R.menu.menu_product_list_toolbar, menu)
+        val cartBinding: BadgeCartBinding = BadgeCartBinding.inflate(layoutInflater, null, false)
+        menu.findItem(R.id.icon_cart).actionView = cartBinding.root
+        badgeCartCounter = cartBinding.badgeCartCounter
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

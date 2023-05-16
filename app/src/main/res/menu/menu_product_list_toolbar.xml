@@ -7,6 +7,6 @@
         android:title="@string/toolbar_cart_title"
         android:enabled="true"
         android:icon="@drawable/ic_shopping_cart_24"
-        app:showAsAction="always"/>
-
+        app:showAsAction="always">
+    </item>
 </menu>

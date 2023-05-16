@@ -11,4 +11,5 @@
     <color name="toolbar_background">#555555</color>
     <color name="put_in_cart_button_color">#04C092</color>
     <color name="button_more_item_color">#AAAAAA</color>
+    <color name="secondary_color">#04C09E</color>
 </resources>

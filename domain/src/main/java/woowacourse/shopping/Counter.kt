@@ -5,7 +5,7 @@ class Counter(val value: Int = DEFAULT_COUNT) {
 
     open operator fun minus(number: Int): Counter {
         val result = value - number
-        if (result <= 0) return Counter(value)
+        if (result < 0) return Counter(value)
         return Counter(result)
     }
 
