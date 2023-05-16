@@ -60,7 +60,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             SELECT ${BasketContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
             FROM ${BasketContract.TABLE_NAME}
             INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
-            WHERE ${BasketContract.TABLE_NAME}.${BaseColumns._ID} > ?
+            WHERE ${BasketContract.TABLE_NAME}.${BaseColumns._ID} >= ?
             ORDER BY ${BasketContract.TABLE_NAME}.${BaseColumns._ID} LIMIT ?        
         """.trimIndent()
     }

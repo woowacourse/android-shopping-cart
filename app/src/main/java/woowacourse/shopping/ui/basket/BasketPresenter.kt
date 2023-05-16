@@ -10,17 +10,16 @@ class BasketPresenter(
     private val basketRepository: BasketRepository
 ) : BasketContract.Presenter {
     private var hasNext: Boolean = false
-    private var lastId: Int = -1
+    override var lastId: Int = -1
     private val hasPrevious: Boolean
         get() = lastId > BASKET_PAGING_SIZE
 
-    override fun fetchBasketProducts(isNext: Boolean) {
+    override fun fetchBasketProducts(isNext: Boolean, startId: Int) {
         var basketProducts = basketRepository.getPartially(
             TOTAL_LOAD_BASKET_SIZE_AT_ONCE,
-            lastId,
+            startId,
             isNext
         ).map { it.toUi() }
-
         hasNext = checkHasNext(basketProducts)
         if (checkHasNext(basketProducts)) basketProducts = basketProducts.dropLast(1)
         lastId = basketProducts.maxOfOrNull { it.id } ?: -1
@@ -28,9 +27,17 @@ class BasketPresenter(
         view.updateNavigatorEnabled(hasPrevious, hasNext)
     }
 
-    override fun removeBasketProduct(product: UiBasketProduct) {
+    override fun removeBasketProduct(
+        product: UiBasketProduct,
+        currentProducts: List<UiBasketProduct>
+    ) {
         basketRepository.remove(product.toDomain())
-        fetchBasketProducts()
+        val startId: Int
+        currentProducts.toMutableList().apply {
+            remove(product)
+            startId = minOfOrNull { it.id } ?: -1
+        }
+        fetchBasketProducts(true, startId)
     }
 
     private fun checkHasNext(products: List<UiBasketProduct>): Boolean =

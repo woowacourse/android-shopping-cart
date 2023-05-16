@@ -13,9 +13,10 @@ interface BasketContract {
 
     interface Presenter {
         val view: View
+        var lastId: Int
 
-        fun fetchBasketProducts(isNext: Boolean = true)
+        fun fetchBasketProducts(isNext: Boolean, startId: Int = lastId)
 
-        fun removeBasketProduct(product: UiBasketProduct)
+        fun removeBasketProduct(product: UiBasketProduct, currentProducts: List<UiBasketProduct>)
     }
 }

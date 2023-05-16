@@ -38,7 +38,7 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
     private fun initAdapter() {
         basketAdapter = BasketAdapter(presenter::removeBasketProduct)
         binding.rvBasket.adapter = basketAdapter
-        presenter.fetchBasketProducts()
+        presenter.fetchBasketProducts(true)
     }
 
     private fun initToolbarBackButton() {
