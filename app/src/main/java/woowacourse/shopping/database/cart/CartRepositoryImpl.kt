@@ -18,7 +18,7 @@ class CartRepositoryImpl(
     override fun findAll(): List<Product> {
         val products = mutableListOf<Product>()
         val cursor: Cursor = db.rawQuery(
-            "Select * from ${ProductContract.CartEntry.TABLE_NAME}",
+            "SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME}",
             null,
         )
 
@@ -34,8 +34,7 @@ class CartRepositoryImpl(
     override fun findAll(limit: Int, offset: Int): List<Product> {
         val products = mutableListOf<Product>()
         val cursor: Cursor = db.rawQuery(
-            "Select * from ${ProductContract.CartEntry.TABLE_NAME} " +
-                "limit $limit offset $offset",
+            """SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME} LIMIT $limit OFFSET $offset""",
             null,
         )
 
@@ -51,7 +50,7 @@ class CartRepositoryImpl(
     override fun save(product: Product) {
         val cursor =
             db.rawQuery(
-                "Select * from ${ProductContract.CartEntry.TABLE_NAME} WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = ${product.id}",
+                "SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME} WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = ${product.id}",
                 null,
             )
         if (cursor.count > 0) {

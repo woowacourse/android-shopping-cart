@@ -25,13 +25,17 @@ class ProductDBHelper(
 
     companion object {
         private const val SQL_CREATE_PRODUCT_ENTRIES =
-            "CREATE TABLE ${ProductContract.CartEntry.TABLE_NAME} (" +
-                "${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY" +
-                ");"
+            """
+                CREATE TABLE ${ProductContract.CartEntry.TABLE_NAME} 
+                (${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY
+                );
+            """
 
         private const val SQL_CREATE_RECENTLY_VIEWED_PRODUCTS_ENTRIES =
-            "CREATE TABLE ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME} (" +
-                "${ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY" +
-                ");"
+            """
+                CREATE TABLE ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME} 
+                (${ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY
+                );
+            """
     }
 }

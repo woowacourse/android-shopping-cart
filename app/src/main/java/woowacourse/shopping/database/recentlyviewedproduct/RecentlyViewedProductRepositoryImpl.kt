@@ -18,7 +18,7 @@ class RecentlyViewedProductRepositoryImpl(
     override fun findAll(): List<Product> {
         val products = mutableListOf<Product>()
         val cursor: Cursor = db.rawQuery(
-            "Select * from ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME}",
+            "SELECT * FROM ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME}",
             null,
         )
 
