@@ -19,7 +19,10 @@ import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
-    private lateinit var binding: ActivityProductListBinding
+    private val binding: ActivityProductListBinding by lazy {
+        ActivityProductListBinding.inflate(layoutInflater)
+    }
+
     private val presenter: ProductListContract.Presenter by lazy {
         ProductListPresenter(
             this,
@@ -31,16 +34,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setActionBar()
 
         initProductList()
         initLoadingButton()
-    }
-
-    override fun onResume() {
-        super.onResume()
         initRecentlyViewedProductList()
     }
 
@@ -52,7 +50,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
-                moveToCartActivity()
+                CartActivity.startActivity(this)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -71,7 +69,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private fun initProductList() {
         binding.recyclerViewMainProduct.adapter = ProductListAdapter(mutableListOf()) {
             presenter.addRecentlyViewedProduct(it)
-            moveToProductDetailActivity(it)
+            ProductDetailActivity.startActivity(this, it)
         }
         presenter.loadProducts(PAGE_SIZE, offset)
         offset += PAGE_SIZE
@@ -88,11 +86,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         if (recentlyViewedProducts.isEmpty()) {
             binding.layoutRecentlyViewed.isVisible = false
             return
+        } else {
+            binding.layoutRecentlyViewed.isVisible = true
         }
 
         binding.recyclerViewRecentlyViewed.adapter =
             RecentlyViewedProductListAdapter(recentlyViewedProducts) {
-                moveToProductDetailActivity(recentlyViewedProducts[it].id)
+                ProductDetailActivity.startActivity(this, (recentlyViewedProducts[it].id))
             }
     }
 
@@ -100,14 +100,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         val adapter = binding.recyclerViewMainProduct.adapter as ProductListAdapter
         adapter.addItems(products)
         adapter.notifyDataSetChanged()
-    }
-
-    private fun moveToProductDetailActivity(productId: Long) {
-        ProductDetailActivity.startActivity(this, productId)
-    }
-
-    private fun moveToCartActivity() {
-        CartActivity.startActivity(this)
     }
 
     companion object {

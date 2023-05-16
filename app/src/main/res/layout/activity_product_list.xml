@@ -27,14 +27,14 @@
 
         </androidx.appcompat.widget.Toolbar>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_recently_viewed"
@@ -99,7 +99,10 @@
                     android:text="@string/button_load_more"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
     </LinearLayout>
+
 </layout>
