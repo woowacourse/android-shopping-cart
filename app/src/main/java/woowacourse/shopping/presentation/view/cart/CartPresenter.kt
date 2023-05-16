@@ -5,16 +5,16 @@ import woowacourse.shopping.presentation.model.CartModel
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private var currentPage: Int = 0
 ) : CartContract.Presenter {
-    override fun loadCartItems(currentPage: String) {
-        val currentPageNumber = currentPage.toInt()
-        var newCarts = getNewCarts(currentPageNumber)
-        view.setEnableLeftButton(currentPageNumber != FIRST_PAGE_NUMBER)
+    override fun loadCartItems() {
+        var newCarts = getNewCarts()
+        view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 
         newCarts = submitNewCarts(newCarts)
-        view.setCartItemsView(newCarts, currentPage)
+        view.setCartItemsView(newCarts, (currentPage+1).toString())
     }
 
     private fun submitNewCarts(newCarts: List<CartModel>): List<CartModel> {
@@ -25,29 +25,31 @@ class CartPresenter(
         return newCarts1
     }
 
-    private fun getNewCarts(currentPageNumber: Int): List<CartModel> {
-        val startPosition = getStartItemPosition(currentPageNumber)
+    private fun getNewCarts(): List<CartModel> {
+        val startPosition = getStartItemPosition()
         return cartRepository.getCarts(startPosition, GET_CART_ITEM_COUNT)
     }
 
-    override fun deleteCartItem(currentPage: String, itemId: Long) {
+    override fun deleteCartItem(itemId: Long) {
         cartRepository.deleteCartByProductId(itemId)
-        loadCartItems(currentPage)
+        loadCartItems()
     }
 
-    private fun getStartItemPosition(currentPage: Int): Int =
-        (currentPage - 1) * DISPLAY_CART_COUNT_CONDITION
+    private fun getStartItemPosition(): Int =
+        (currentPage) * DISPLAY_CART_COUNT_CONDITION
 
-    override fun decrementPage(currentPage: String) {
-        loadCartItems(currentPage.toInt().dec().toString())
+    override fun decrementPage() {
+        currentPage--
+        loadCartItems()
     }
 
-    override fun incrementPage(currentPage: String) {
-        loadCartItems(currentPage.toInt().inc().toString())
+    override fun incrementPage() {
+        currentPage++
+        loadCartItems()
     }
 
     companion object {
-        private const val FIRST_PAGE_NUMBER = 1
+        private const val FIRST_PAGE_NUMBER = 0
         private const val DISPLAY_CART_COUNT_CONDITION = 3
         private const val CART_LIST_FIRST_INDEX = 0
         private const val GET_CART_ITEM_COUNT = 4

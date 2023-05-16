@@ -10,9 +10,9 @@ interface CartContract {
     }
 
     interface Presenter {
-        fun loadCartItems(currentPage: String)
-        fun deleteCartItem(currentPage: String, itemId: Long)
-        fun decrementPage(currentPage: String)
-        fun incrementPage(currentPage: String)
+        fun loadCartItems()
+        fun deleteCartItem(itemId: Long)
+        fun decrementPage()
+        fun incrementPage()
     }
 }

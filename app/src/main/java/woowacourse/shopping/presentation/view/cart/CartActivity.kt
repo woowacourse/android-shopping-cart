@@ -27,7 +27,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
         setSupportActionBar()
-        presenter.loadCartItems(getPageCount())
+        presenter.loadCartItems()
         setLeftButtonClick()
         setRightButtonClick()
     }
@@ -53,7 +53,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun deleteCartItem(itemId: Long) {
-        presenter.deleteCartItem(getPageCount(), itemId)
+        presenter.deleteCartItem(itemId)
     }
 
     override fun setEnableLeftButton(isEnabled: Boolean) {
@@ -66,17 +66,15 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun setLeftButtonClick() {
         binding.btCartListPageLeft.setOnClickListener {
-            presenter.decrementPage(getPageCount())
+            presenter.decrementPage()
         }
     }
 
     private fun setRightButtonClick() {
         binding.btCartListPageRight.setOnClickListener {
-            presenter.incrementPage(getPageCount())
+            presenter.incrementPage()
         }
     }
-
-    private fun getPageCount(): String = binding.tvCartListPageCount.text.toString()
 
     companion object {
         fun createIntent(context: Context): Intent {

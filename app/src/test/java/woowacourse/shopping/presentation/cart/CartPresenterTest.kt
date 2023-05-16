@@ -14,7 +14,7 @@ import woowacourse.shopping.presentation.model.CartModel
 import woowacourse.shopping.presentation.view.cart.CartContract
 import woowacourse.shopping.presentation.view.cart.CartPresenter
 
-class CartPresenterTest {
+internal class CartPresenterTest {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var view: CartContract.View
     private lateinit var cartRepository: CartRepository
@@ -33,7 +33,6 @@ class CartPresenterTest {
         justRun { view.setEnableRightButton(false) }
 
         val cartItemSlot = slot<List<CartModel>>()
-        val pageSlot = slot<String>()
         justRun {
             view.setCartItemsView(
                 capture(cartItemSlot), "1"
@@ -41,7 +40,7 @@ class CartPresenterTest {
         }
         presenter = CartPresenter(view, cartRepository)
         // when
-        presenter.loadCartItems("1")
+        presenter.loadCartItems()
 
         // then
         val actual = cartItemSlot.captured
@@ -67,7 +66,7 @@ class CartPresenterTest {
         val cartItemSlot = slot<List<CartModel>>()
         justRun { view.setCartItemsView(capture(cartItemSlot), "1") }
 
-        presenter.deleteCartItem("1", 1)
+        presenter.deleteCartItem( 1)
 
         // then
         val actual = cartItemSlot.captured
