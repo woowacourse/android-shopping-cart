@@ -12,6 +12,19 @@ class ProductListPresenter(
 ) : ProductListContract.Presenter {
 
     private var currentPage = 0
+    private val offset
+        get() = (currentPage - 1) * PAGE_SIZE
+
+    override fun getCurrentPage(): Int {
+        return currentPage
+    }
+
+    override fun restoreCurrentPage(currentPage: Int) {
+        this.currentPage = currentPage
+        val products = productRepository.findAll(offset, PAGE_SIZE)
+        val productUIStates = products.map(ProductUIState::from)
+        view.addProducts(productUIStates)
+    }
 
     override fun onLoadRecentlyViewedProducts() {
         val recentlyViewedProducts = recentlyViewedProductRepository.findAll()
@@ -25,7 +38,6 @@ class ProductListPresenter(
 
     override fun onLoadProductsNextPage() {
         currentPage++
-        val offset = (currentPage - 1) * PAGE_SIZE
         view.addProducts(productRepository.findAll(PAGE_SIZE, offset).map(ProductUIState::from))
         refreshCanLoadMore()
     }
