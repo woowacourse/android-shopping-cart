@@ -2,13 +2,16 @@ package woowacourse.shopping.home
 
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.ShowMoreProducts
@@ -38,13 +41,19 @@ class HomePresenterTest {
         every { productRepository.getRecentlyViewedProducts(any()) } returns recentlyViewProducts
         every { productRepository.getProducts(any(), any()) } returns products
 
+        val slot = slot<List<HomeAdapter.ProductsByView>>()
+        every { view.setUpProductsOnHome(capture(slot)) } answers { nothing }
+
         // when
         presenter.fetchAllProductsOnHome()
 
         // then
+        val actual = slot.captured
         verify { productRepository.getRecentlyViewedProducts(any()) }
         verify { productRepository.getProducts(any(), any()) }
-        verify { view.setUpProductsOnHome(listOf(wrappedRecentProducts) + wrappedProducts + showMoreButton) }
+        verify { view.setUpProductsOnHome(actual) }
+
+        assertEquals(listOf(wrappedRecentProducts) + wrappedProducts + showMoreButton, actual)
     }
 
     @Test
@@ -52,12 +61,18 @@ class HomePresenterTest {
         // given
         every { productRepository.getProducts(any(), any()) } returns products
 
+        val slot = slot<List<HomeAdapter.ProductsByView>>()
+        every { view.setUpMoreProducts(capture(slot)) } answers { nothing }
+
         // when
         presenter.fetchMoreProducts()
 
         // then
+        val actual = slot.captured
         verify { productRepository.getProducts(any(), any()) }
         verify { view.setUpMoreProducts(wrappedProducts) }
+
+        assertEquals(wrappedProducts, actual)
     }
 
     companion object {
