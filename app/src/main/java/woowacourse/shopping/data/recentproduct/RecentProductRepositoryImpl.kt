@@ -1,26 +1,27 @@
 package woowacourse.shopping.data.recentproduct
 
+import woowacourse.shopping.data.database.dao.RecentProductDao
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class RecentProductRepositoryImpl(
-    private val localRecentProductDataSource: RecentProductDataSource
+    private val recentProductDao: RecentProductDao
 ) : RecentProductRepository {
     override fun addRecentProduct(recentProduct: RecentProduct) {
-        localRecentProductDataSource.addRecentProduct(recentProduct)
+        recentProductDao.insertRecentProduct(recentProduct)
     }
 
     override fun getAll(): RecentProducts {
-        return localRecentProductDataSource.getAll()
+        return recentProductDao.selectAll()
     }
 
     override fun getByProduct(product: Product): RecentProduct? {
-        return localRecentProductDataSource.getByProduct(product)
+        return recentProductDao.selectByProduct(product)
     }
 
     override fun modifyRecentProduct(recentProduct: RecentProduct) {
-        localRecentProductDataSource.modifyRecentProduct(recentProduct)
+        recentProductDao.updateRecentProduct(recentProduct)
     }
 }

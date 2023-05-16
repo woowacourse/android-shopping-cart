@@ -6,15 +6,14 @@ import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.selectRowId
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.database.table.SqlRecentProduct
-import woowacourse.shopping.data.recentproduct.RecentProductDataSource
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.URL
 import java.time.LocalDateTime
 
-class RecentProductDao(private val db: SQLiteDatabase) : RecentProductDataSource {
-    override fun addRecentProduct(recentProduct: RecentProduct) {
+class RecentProductDao(private val db: SQLiteDatabase) {
+    fun insertRecentProduct(recentProduct: RecentProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
         productRow[SqlProduct.PICTURE] = recentProduct.product.picture.value
         productRow[SqlProduct.TITLE] = recentProduct.product.title
@@ -26,7 +25,7 @@ class RecentProductDao(private val db: SQLiteDatabase) : RecentProductDataSource
         db.insert(SqlRecentProduct.name, null, row)
     }
 
-    override fun getAll(): RecentProducts {
+    fun selectAll(): RecentProducts {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlRecentProduct.name}, ${SqlProduct.name} ON ${SqlRecentProduct.name}.${SqlRecentProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} " +
                 "ORDER BY ${SqlRecentProduct.TIME} DESC",
@@ -54,7 +53,7 @@ class RecentProductDao(private val db: SQLiteDatabase) : RecentProductDataSource
         )
     )
 
-    override fun getByProduct(product: Product): RecentProduct? {
+    fun selectByProduct(product: Product): RecentProduct? {
         val productRow: MutableMap<String, Any> = mutableMapOf()
         productRow[SqlProduct.PICTURE] = product.picture.value
         productRow[SqlProduct.TITLE] = product.title
@@ -72,7 +71,7 @@ class RecentProductDao(private val db: SQLiteDatabase) : RecentProductDataSource
         }
     }
 
-    override fun modifyRecentProduct(recentProduct: RecentProduct) {
+    fun updateRecentProduct(recentProduct: RecentProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
         productRow[SqlProduct.PICTURE] = recentProduct.product.picture.value
         productRow[SqlProduct.TITLE] = recentProduct.product.title
