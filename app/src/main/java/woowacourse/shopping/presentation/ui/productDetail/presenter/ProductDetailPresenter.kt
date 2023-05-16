@@ -22,7 +22,6 @@ class ProductDetailPresenter(
     }
 
     override fun addRecentlyViewedProduct(id: Long, unit: Int) {
-        Log.d("add", id.toString())
         productRepository.addRecentlyViewedProduct(id, unit)
     }
 

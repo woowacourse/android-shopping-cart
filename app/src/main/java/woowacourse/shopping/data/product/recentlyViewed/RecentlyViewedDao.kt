@@ -19,7 +19,7 @@ class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
             itemContainer.add(readRecentlyViewed(cursor))
         }
         cursor.close()
-        return itemContainer
+        return itemContainer.reversed()
     }
 
     override fun addRecentlyViewedProduct(productId: Long, unit: Int): Long {
@@ -34,6 +34,14 @@ class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
             """
         shoppingDb.execSQL(query)
         return id
+    }
+
+    override fun deleteRecentlyViewedProduct(productId: Long) {
+        shoppingDb.delete(
+            TABLE_NAME,
+            "$TABLE_COLUMN_PRODUCT_ID=?",
+            arrayOf(productId.toString()),
+        )
     }
 
     private fun readRecentlyViewed(cursor: Cursor): RecentlyViewedEntity {

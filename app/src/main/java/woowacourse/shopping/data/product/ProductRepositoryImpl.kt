@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.product
 
-import android.util.Log
 import woowacourse.shopping.data.product.ProductMapper.toDomainModel
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDataSource
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedEntity
@@ -38,7 +37,7 @@ class ProductRepositoryImpl(
     }
 
     override fun addRecentlyViewedProduct(productId: Long, unit: Int): Long {
-        Log.d("add123", productId.toString())
+        recentlyViewedDataSource.deleteRecentlyViewedProduct(productId)
         return recentlyViewedDataSource.addRecentlyViewedProduct(productId, unit)
     }
 }
