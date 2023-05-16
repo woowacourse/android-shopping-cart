@@ -11,17 +11,11 @@ class ShowMoreViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.root.setOnClickListener {
-            clickProduct()
-        }
+        binding.root.setOnClickListener { clickProduct() }
     }
 
-    fun bind() {}
-
     companion object {
-        fun getView(parent: ViewGroup): ItemShowMoreBinding {
-            val layoutInflater = LayoutInflater.from(parent.context)
-            return ItemShowMoreBinding.inflate(layoutInflater, parent, false)
-        }
+        fun getView(parent: ViewGroup, layoutInflater: LayoutInflater): ItemShowMoreBinding =
+            ItemShowMoreBinding.inflate(layoutInflater, parent, false)
     }
 }

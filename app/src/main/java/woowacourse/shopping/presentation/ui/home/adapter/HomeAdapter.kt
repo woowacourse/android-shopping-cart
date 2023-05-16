@@ -1,83 +1,79 @@
 package woowacourse.shopping.presentation.ui.home.adapter
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
+import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
+import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.ShowMoreProducts
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.PRODUCT
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.RECENTLY_VIEWED
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.SHOW_MORE
-import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.HomeViewHolder
+import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ProductViewHolder
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.RecentlyViewedViewHolder
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ShowMoreViewHolder
 
 class HomeAdapter(
-    private val clickProduct: (productId: Long) -> Unit,
-    private val clickMore: (productId: Long) -> Unit,
+    viewItems: List<ProductsByView>,
+    private val onClick: ClickListenerByViewType,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val recentlyViewed = mutableListOf<Product>()
-    private val items = mutableListOf<Product>()
-    val productsCount: Int get() = items.size
+    private lateinit var layoutInflater: LayoutInflater
+    private val _viewItems: MutableList<ProductsByView> = viewItems.toMutableList()
 
     override fun getItemViewType(position: Int): Int {
-        if (items[position].id == -1L) return SHOW_MORE.ordinal
-        if (position == 0 && recentlyViewed.isNotEmpty()) return RECENTLY_VIEWED.ordinal
-        return PRODUCT.ordinal
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (HomeViewType.valueOf(viewType)) {
-            RECENTLY_VIEWED -> RecentlyViewedViewHolder(
-                RecentlyViewedViewHolder.getView(parent),
-                clickProduct,
-            )
-            PRODUCT -> HomeViewHolder(HomeViewHolder.getView(parent)) { clickProduct(items[it].id) }
-            SHOW_MORE -> ShowMoreViewHolder(
-                ShowMoreViewHolder.getView(parent),
-            ) {
-                hideShowMoreButton()
-                clickMore(items.last().id)
-            }
+        return when (_viewItems[position]) {
+            is Products -> PRODUCT.ordinal
+            is RecentlyViewedProducts -> RECENTLY_VIEWED.ordinal
+            is ShowMoreProducts -> SHOW_MORE.ordinal
         }
     }
 
-    private fun hideShowMoreButton() {
-        items.removeLast()
-        notifyItemRemoved(itemCount - 1)
+    override fun getItemCount(): Int = _viewItems.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (!::layoutInflater.isInitialized) layoutInflater = LayoutInflater.from(parent.context)
+
+        return when (HomeViewType.valueOf(viewType)) {
+            PRODUCT -> initProductViewHolder(parent)
+            RECENTLY_VIEWED -> initRecentlyViewedViewHolder(parent)
+            SHOW_MORE -> initShowMoreViewHolder(parent)
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HomeViewHolder -> holder.bind(items[position])
-            is RecentlyViewedViewHolder -> holder.bind(recentlyViewed)
-            is ShowMoreViewHolder -> holder.bind()
+            is ProductViewHolder -> holder.bind(_viewItems[position] as Products)
+            is RecentlyViewedViewHolder -> holder.bind(_viewItems[position] as RecentlyViewedProducts)
         }
     }
 
-    override fun getItemCount(): Int {
-        // if (recentlyViewed.isEmpty()) return items.size
-        return items.size
+    private fun initProductViewHolder(parent: ViewGroup) =
+        ProductViewHolder(
+            ProductViewHolder.getView(parent, layoutInflater),
+            onClick::setClickEventOnProduct,
+        )
+
+    private fun initRecentlyViewedViewHolder(parent: ViewGroup) =
+        RecentlyViewedViewHolder(RecentlyViewedViewHolder.getView(parent, layoutInflater), onClick)
+
+    private fun initShowMoreViewHolder(parent: ViewGroup) =
+        ShowMoreViewHolder(
+            ShowMoreViewHolder.getView(parent, layoutInflater),
+            onClick::setClickEventOnShowMore,
+        )
+
+    fun addProducts(products: List<ProductsByView>) {
+        val lastIndex = _viewItems.lastIndex
+        val productsCount = products.size
+        _viewItems.addAll(lastIndex, products)
+
+        notifyItemRangeInserted(lastIndex, productsCount)
     }
 
-    fun initProducts(products: List<Product>) {
-        val preSize = items.size
-        items.addAll(products)
-        notifyItemRangeInserted(preSize, items.size - 1)
-    }
-
-    fun initShowMoreButton() {
-        items.add(Product(-1, "", "", -1))
-        notifyItemInserted(productsCount - 1)
-    }
-
-    fun initRecentlyViewedProduct(recentlyViewedProducts: List<Product>) {
-        if (recentlyViewed.isEmpty()) {
-            recentlyViewed.clear()
-            recentlyViewed.addAll(recentlyViewedProducts)
-            notifyItemInserted(0)
-            return
-        }
-        recentlyViewed.clear()
-        recentlyViewed.addAll(recentlyViewedProducts)
-        notifyItemChanged(0)
+    sealed interface ProductsByView {
+        data class Products(val product: Product) : ProductsByView
+        data class RecentlyViewedProducts(val recentProduct: List<Product>) : ProductsByView
+        object ShowMoreProducts : ProductsByView
     }
 }

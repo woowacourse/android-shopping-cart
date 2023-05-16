@@ -1,18 +1,16 @@
 package woowacourse.shopping.presentation.ui.home.presenter
 
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.BaseView
+import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView
 
 interface HomeContract {
     interface View : BaseView<Presenter> {
-        fun setUpProducts(products: List<Product>)
-        fun setUpRecentlyViewed(products: List<Product>)
-        fun getProductCount(): Int
+        fun setUpProductsOnHome(products: List<ProductsByView>)
+        fun setUpMoreProducts(products: List<ProductsByView>)
     }
 
     interface Presenter {
-        fun fetchProducts()
-        fun fetchRecentlyViewed()
-        fun fetchMoreProducts(productId: Long)
+        fun fetchAllProductsOnHome()
+        fun fetchMoreProducts()
     }
 }

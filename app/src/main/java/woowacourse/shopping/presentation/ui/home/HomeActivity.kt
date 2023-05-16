@@ -9,41 +9,48 @@ import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.BindingActivity
+import woowacourse.shopping.presentation.ui.home.adapter.ClickListenerByViewType
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
+import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView
 import woowacourse.shopping.presentation.ui.home.presenter.HomeContract
 import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
+import woowacourse.shopping.util.initProducts
 
 class HomeActivity :
     BindingActivity<ActivityHomeBinding>(R.layout.activity_home), HomeContract.View {
     override val presenter: HomeContract.Presenter by lazy { initPresenter() }
-    private val homeAdapter = HomeAdapter(::setClickEventOnProduct, ::setEventOnShowMoreButton)
+    private lateinit var homeAdapter: HomeAdapter
 
     private fun initPresenter(): HomePresenter {
         return HomePresenter(
             this,
             ProductRepositoryImpl(
-                productDataSource = ProductDao(),
-                recentlyViewedDataSource = RecentlyViewedDao(),
+                productDataSource = ProductDao(this),
+                recentlyViewedDataSource = RecentlyViewedDao(this),
             ),
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 목 데이터 추가 함수 : initProducts(this)
+        // 목 데이터 추가 함수 :
+        initProducts(this)
 
-        attachAdapter()
-        setUpLayoutManager()
         setClickEventOnShoppingCartButton()
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.fetchProducts()
-        presenter.fetchRecentlyViewed()
+        presenter.fetchAllProductsOnHome()
+    }
+
+    override fun setUpProductsOnHome(products: List<ProductsByView>) {
+        homeAdapter = HomeAdapter(products, setUpClickListener())
+        attachAdapter()
+        setUpLayoutManager()
     }
 
     private fun attachAdapter() {
@@ -61,8 +68,27 @@ class HomeActivity :
         }
     }
 
-    private fun setEventOnShowMoreButton(productId: Long) {
-        presenter.fetchMoreProducts(productId)
+    private fun setUpClickListener() = object : ClickListenerByViewType {
+        override fun setClickEventOnProduct(product: Product) {
+            setEventOnProduct(product.id)
+        }
+
+        override fun setClickEventOnShowMore() {
+            setEventOnShowMoreButton()
+        }
+    }
+
+    private fun setEventOnProduct(productId: Long) {
+        val intent = ProductDetailActivity.getIntent(this, productId)
+        startActivity(intent)
+    }
+
+    private fun setEventOnShowMoreButton() {
+        presenter.fetchMoreProducts()
+    }
+
+    override fun setUpMoreProducts(products: List<ProductsByView>) {
+        homeAdapter.addProducts(products)
     }
 
     private fun setClickEventOnShoppingCartButton() {
@@ -70,22 +96,5 @@ class HomeActivity :
             val intent = ShoppingCartActivity.getIntent(this)
             startActivity(intent)
         }
-    }
-
-    private fun setClickEventOnProduct(productId: Long) {
-        val intent = ProductDetailActivity.getIntent(this, productId)
-        startActivity(intent)
-    }
-
-    override fun setUpProducts(products: List<Product>) {
-        homeAdapter.initProducts(products)
-    }
-
-    override fun setUpRecentlyViewed(products: List<Product>) {
-        homeAdapter.initRecentlyViewedProduct(products)
-    }
-
-    override fun getProductCount(): Int {
-        return homeAdapter.productsCount
     }
 }
