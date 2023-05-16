@@ -40,7 +40,7 @@ class CartPresenterTest {
         justRun { view.setCartItemsView(capture(slot)) }
 
         // when
-        presenter.loadCartItems(1)
+        presenter.loadCartItems()
 
         // then
         val actual = slot.captured
@@ -66,7 +66,7 @@ class CartPresenterTest {
         justRun { view.setCartItemsView(capture(slot)) }
 
         // when
-        presenter.deleteCartItem(1, 1)
+        presenter.deleteCartItem(1)
 
         // then
         val actual = slot.captured
@@ -84,10 +84,10 @@ class CartPresenterTest {
         val slot = slot<Int>()
         justRun { view.setPageCountView(capture(slot)) }
 
-        presenter = CartPresenter(view, cartRepository)
+        presenter = CartPresenter(view, cartRepository, currentPage = 2)
 
         // when
-        presenter.calculatePreviousPage(2)
+        presenter.calculatePreviousPage()
 
         // then
         val actual = slot.captured
@@ -102,10 +102,10 @@ class CartPresenterTest {
         val slot = slot<Int>()
         justRun { view.setPageCountView(capture(slot)) }
 
-        presenter = CartPresenter(view, cartRepository)
+        presenter = CartPresenter(view, cartRepository, currentPage = 1)
 
         // when
-        presenter.calculateNextPage(1)
+        presenter.calculateNextPage()
 
         // then
         val actual = slot.captured

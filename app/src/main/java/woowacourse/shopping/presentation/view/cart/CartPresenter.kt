@@ -5,10 +5,13 @@ import woowacourse.shopping.data.respository.cart.CartRepository
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private var currentPage: Int = 1
 ) : CartContract.Presenter {
-    override fun loadCartItems(currentPage: Int) {
-        val startPosition = getStartItemPosition(currentPage)
+    private val startPosition: Int
+        get() = (currentPage - 1) * DISPLAY_CART_COUNT_CONDITION
+
+    override fun loadCartItems() {
         var newCarts = cartRepository.getCarts(startPosition).map { it.toUIModel() }
         view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
@@ -18,25 +21,18 @@ class CartPresenter(
         view.setCartItemsView(newCarts)
     }
 
-    override fun deleteCartItem(currentPage: Int, itemId: Long) {
+    override fun deleteCartItem(itemId: Long) {
         cartRepository.deleteCartByProductId(itemId)
-        loadCartItems(currentPage)
+        loadCartItems()
     }
 
-    override fun calculatePreviousPage(currentPage: Int): Int {
-        val previousPage = currentPage.dec()
-        view.setPageCountView(previousPage)
-        return previousPage
+    override fun calculatePreviousPage() {
+        view.setPageCountView(--currentPage)
     }
 
-    override fun calculateNextPage(currentPage: Int): Int {
-        val nextPage = currentPage.inc()
-        view.setPageCountView(nextPage)
-        return nextPage
+    override fun calculateNextPage() {
+        view.setPageCountView(++currentPage)
     }
-
-    private fun getStartItemPosition(currentPage: Int): Int =
-        (currentPage - 1) * DISPLAY_CART_COUNT_CONDITION
 
     companion object {
         private const val FIRST_PAGE_NUMBER = 1
