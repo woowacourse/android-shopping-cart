@@ -19,7 +19,17 @@ class ProductCounterView @JvmOverloads constructor(
         LayoutProductCounterBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
-    var countStateChangeListener: CounterView.OnCountStateChangeListener? = null
+    private val defaultClickListener = object : CounterView.OnCountStateChangeListener {
+        override fun onCountMinusChanged(counterNavigationView: CounterView?, count: Int) {
+            changeViewState(count)
+        }
+
+        override fun onCountPlusChanged(counterNavigationView: CounterView?, count: Int) {
+            changeViewState(count)
+        }
+    }
+
+    var countStateChangeListener: CounterView.OnCountStateChangeListener? = defaultClickListener
         set(value) {
             binding.counterView.countStateChangeListener =
                 object : CounterView.OnCountStateChangeListener {
@@ -41,6 +51,7 @@ class ProductCounterView @JvmOverloads constructor(
                 }
             field = value
         }
+
 
     @ColorRes
     var contentColor: Int = R.color.black

@@ -49,6 +49,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         override fun onClick(productId: Long) {
             presenter.showProductDetail(productId)
         }
+
+        override fun plusCart(productId: Long, count: Int) {
+            //
+        }
+
+        override fun minusCart(productId: Long, count: Int) {
+            //
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
