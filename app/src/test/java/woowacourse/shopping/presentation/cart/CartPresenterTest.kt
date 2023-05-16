@@ -77,4 +77,40 @@ class CartPresenterTest {
         verify { view.setEnableRightButton(false) }
         verify { view.setCartItemsView(actual) }
     }
+
+    @Test
+    fun `2페이지에서 이전 페이지인 1페이지로 이동한다`() {
+        // given
+        val slot = slot<Int>()
+        justRun { view.setPageCountView(capture(slot)) }
+
+        presenter = CartPresenter(view, cartRepository)
+
+        // when
+        presenter.calculatePreviousPage(2)
+
+        // then
+        val actual = slot.captured
+        val expected = 1
+        assertEquals(expected, actual)
+        verify { view.setPageCountView(actual) }
+    }
+
+    @Test
+    fun `1페이지에서 다음 페이진 2페이지로 이동한다`() {
+        // given
+        val slot = slot<Int>()
+        justRun { view.setPageCountView(capture(slot)) }
+
+        presenter = CartPresenter(view, cartRepository)
+
+        // when
+        presenter.calculateNextPage(1)
+
+        // then
+        val actual = slot.captured
+        val expected = 2
+        assertEquals(expected, actual)
+        verify { view.setPageCountView(actual) }
+    }
 }

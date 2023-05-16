@@ -64,18 +64,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun setLeftButtonClick() {
         binding.btCartListPageLeft.setOnClickListener {
-            val nextPage = getPageCount().dec()
-            binding.tvCartListPageCount.text = nextPage.toString()
-            presenter.loadCartItems(nextPage)
+            val page = presenter.calculatePreviousPage(getPageCount())
+            presenter.loadCartItems(page)
         }
     }
 
     private fun setRightButtonClick() {
         binding.btCartListPageRight.setOnClickListener {
-            val nextPage = getPageCount().inc()
-            binding.tvCartListPageCount.text = nextPage.toString()
-            presenter.loadCartItems(nextPage)
+            val page = presenter.calculateNextPage(getPageCount())
+            presenter.loadCartItems(page)
         }
+    }
+
+    override fun setPageCountView(page: Int) {
+        binding.tvCartListPageCount.text = page.toString()
     }
 
     private fun getPageCount(): Int = binding.tvCartListPageCount.text.toString().toInt()

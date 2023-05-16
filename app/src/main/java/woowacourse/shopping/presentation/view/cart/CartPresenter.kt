@@ -23,6 +23,18 @@ class CartPresenter(
         loadCartItems(currentPage)
     }
 
+    override fun calculatePreviousPage(currentPage: Int): Int {
+        val previousPage = currentPage.dec()
+        view.setPageCountView(previousPage)
+        return previousPage
+    }
+
+    override fun calculateNextPage(currentPage: Int): Int {
+        val nextPage = currentPage.inc()
+        view.setPageCountView(nextPage)
+        return nextPage
+    }
+
     private fun getStartItemPosition(currentPage: Int): Int =
         (currentPage - 1) * DISPLAY_CART_COUNT_CONDITION
 
