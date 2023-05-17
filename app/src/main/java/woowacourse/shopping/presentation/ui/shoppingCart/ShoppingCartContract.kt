@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.shoppingCart.presenter
+package woowacourse.shopping.presentation.ui.shoppingCart
 
 import woowacourse.shopping.domain.model.ProductInCart
 
@@ -8,17 +8,15 @@ interface ShoppingCartContract {
 
         fun setShoppingCart(shoppingCart: List<ProductInCart>)
         fun setPage(pageNumber: Int)
-        fun clickNextPage()
-        fun clickPreviousPage()
         fun setPageButtonEnable(previous: Boolean, next: Boolean)
     }
 
     interface Presenter {
-        fun getShoppingCart(page: Int)
+        fun getShoppingCart()
         fun setPageNumber()
         fun goNextPage()
         fun goPreviousPage()
         fun checkPageMovement()
-        fun deleteProductInCart(productId: Long): Boolean
+        fun deleteProductInCart(index: Int)
     }
 }

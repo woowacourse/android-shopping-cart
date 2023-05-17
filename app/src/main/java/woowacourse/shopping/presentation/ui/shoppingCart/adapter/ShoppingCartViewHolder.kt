@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemShoppingCartProductBinding
 import woowacourse.shopping.domain.model.ProductInCart
 
 class ShoppingCartViewHolder(
-    private val onClick: (Int) -> Unit,
+    private val onClick: (position: Int) -> Unit,
     private val clickDelete: (position: Int) -> Unit,
     private val binding: ItemShoppingCartProductBinding,
 ) :
@@ -15,7 +15,7 @@ class ShoppingCartViewHolder(
 
     init {
         binding.root.setOnClickListener {
-            onClick(absoluteAdapterPosition)
+            onClick(bindingAdapterPosition)
         }
         binding.buttonCartProductDelete.setOnClickListener {
             clickDelete(bindingAdapterPosition)

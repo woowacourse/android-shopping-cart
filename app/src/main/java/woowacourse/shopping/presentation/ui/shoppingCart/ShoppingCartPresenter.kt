@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.shoppingCart.presenter
+package woowacourse.shopping.presentation.ui.shoppingCart
 
 import woowacourse.shopping.domain.PageNumber
 import woowacourse.shopping.domain.model.ProductInCart
@@ -8,28 +8,28 @@ class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ShoppingCartContract.Presenter {
-    lateinit var shoppingCart: List<ProductInCart>
+    private var shoppingCart = mutableListOf<ProductInCart>()
     private var pageNumber = PageNumber()
 
-    override fun getShoppingCart(page: Int) {
-        val shoppingCart = shoppingCartRepository.getShoppingCart(SHOPPING_CART_ITEM_COUNT, page)
-        view.setShoppingCart(shoppingCart)
+    override fun getShoppingCart() {
+        shoppingCart.clear()
+        shoppingCart.addAll(
+            shoppingCartRepository.getShoppingCart(
+                SHOPPING_CART_ITEM_COUNT,
+                pageNumber.value,
+            ),
+        )
+        view.setShoppingCart(shoppingCart.deepCopy())
     }
 
     override fun setPageNumber() {
         view.setPage(pageNumber.value)
     }
 
-    private fun getPage() {
-        val shoppingCart =
-            shoppingCartRepository.getShoppingCart(SHOPPING_CART_ITEM_COUNT, pageNumber.value)
-        view.setShoppingCart(shoppingCart)
-    }
-
     private fun goOtherPage() {
         checkPageMovement()
         setPageNumber()
-        getPage()
+        getShoppingCart()
     }
 
     override fun goNextPage() {
@@ -49,8 +49,16 @@ class ShoppingCartPresenter(
         view.setPageButtonEnable(previousEnable, nextEnable)
     }
 
-    override fun deleteProductInCart(productId: Long): Boolean {
-        return shoppingCartRepository.deleteProductInCart(productId)
+    override fun deleteProductInCart(index: Int) {
+        val result = shoppingCartRepository.deleteProductInCart(shoppingCart[index].product.id)
+        if (result) {
+            shoppingCart.removeAt(index)
+            view.setShoppingCart(shoppingCart.deepCopy())
+        }
+    }
+
+    private fun MutableList<ProductInCart>.deepCopy(): List<ProductInCart> {
+        return this.map { it.copy() }
     }
 
     companion object {

@@ -1,40 +1,34 @@
 package woowacourse.shopping.presentation.ui.shoppingCart.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.domain.model.ProductInCart
 
 class ShoppingCartAdapter(
-    private val onClick: (productInCart: ProductInCart) -> Unit,
-    private val clickDelete: (productInCart: ProductInCart) -> Boolean,
-) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
-    private val items: MutableList<ProductInCart> = mutableListOf()
+    private val onClick: (product: ProductInCart) -> Unit,
+    private val clickDelete: (position: Int) -> Unit,
+) : ListAdapter<ProductInCart, ShoppingCartViewHolder>(ShoppingCartComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartViewHolder {
         return ShoppingCartViewHolder(
-            { onClick(items[it]) },
-            {
-                val result = clickDelete(items[it])
-                if (result) deleteItem(it)
-            },
+            { onClick(getItem(it)) },
+            { clickDelete(it) },
             ShoppingCartViewHolder.getView(parent),
         )
     }
 
-    override fun getItemCount(): Int = items.size
-
     override fun onBindViewHolder(holder: ShoppingCartViewHolder, position: Int) {
-        holder.bind(items[position])
+        holder.bind(getItem(position))
     }
 
-    private fun deleteItem(position: Int) {
-        items.removeAt(position)
-        notifyItemRemoved(position)
-    }
+    class ShoppingCartComparator : DiffUtil.ItemCallback<ProductInCart>() {
+        override fun areItemsTheSame(oldItem: ProductInCart, newItem: ProductInCart): Boolean {
+            return oldItem.product.id == newItem.product.id
+        }
 
-    fun initProducts(productsInCart: List<ProductInCart>) {
-        items.clear()
-        items.addAll(productsInCart)
-        notifyDataSetChanged()
+        override fun areContentsTheSame(oldItem: ProductInCart, newItem: ProductInCart): Boolean {
+            return oldItem == newItem
+        }
     }
 }
