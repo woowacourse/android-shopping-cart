@@ -24,8 +24,20 @@ class CartRepositoryImpl(
         cartDao.deleteCartProduct(cartProduct)
     }
 
+    override fun deleteAllCheckedCartProduct() {
+        cartDao.deleteAllCheckedCartProduct()
+    }
+
     override fun changeCartProductCount(product: Product, count: Int) {
         cartDao.updateCartProductCount(product, count)
+    }
+
+    override fun changeCartProductCheckedState(product: Product, checked: Boolean) {
+        cartDao.updateCartProductChecked(product, checked)
+    }
+
+    override fun changeAllCheckedState(checked: Boolean) {
+        cartDao.updateAllChecked(checked)
     }
 
     override fun getInitPageProducts(pageSize: Int): List<CartProduct> {

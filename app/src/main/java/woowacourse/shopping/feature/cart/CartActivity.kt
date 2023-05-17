@@ -11,7 +11,7 @@ import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.model.PageUiModel
+import woowacourse.shopping.util.convertToMoneyFormat
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -20,8 +20,16 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private val cartProductClickListener: CartProductClickListener by lazy {
         object : CartProductClickListener {
-            override fun onClick(cartId: Long) {
-                presenter.deleteCartProduct(cartId)
+            override fun onDeleteClick(cartId: Long) {
+                presenter.handleDeleteCartProductClick(cartId)
+            }
+
+            override fun onCartCountChanged(productId: Long, count: Int) {
+                presenter.handleCartProductCartCountChange(productId, count)
+            }
+
+            override fun onSelectedPurchaseChanged(productId: Long, checked: Boolean) {
+                presenter.handlePurchaseSelectedCheckedChange(productId, checked)
             }
         }
     }
@@ -33,13 +41,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartItemRecyclerview.adapter = cartProductAdapter
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
-        binding.presenter = presenter
+        initBinding()
 
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun changeCartProducts(newItems: List<CartProductUiModel>) {
+    private fun initBinding() {
+        binding.presenter = presenter
+        binding.orderCount = 0
+        binding.orderConfirmView.isEnabled = false
+        binding.money = "0"
+    }
+
+    override fun updateCartProducts(newItems: List<CartProductUiModel>) {
         cartProductAdapter.setItems(newItems)
     }
 
@@ -51,8 +66,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.nextPageBtn.isEnabled = enabled
     }
 
-    override fun setCount(count: Int) {
+    override fun setPageCount(count: Int) {
         binding.pageCountTextView.text = count.toString()
+    }
+
+    override fun setOrderButtonState(enabled: Boolean, orderCount: Int) {
+        binding.orderCount = orderCount
+        binding.orderConfirmView.isEnabled = enabled
+    }
+
+    override fun updateMoney(money: Int) {
+        binding.money = convertToMoneyFormat(money)
     }
 
     override fun exitCartScreen() {
@@ -73,19 +97,16 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(CURRENT_PAGE_KEY, presenter.page.currentPage)
-        outState.putInt(ALL_SIZE_KEY, presenter.page.allSize)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val currentPage = savedInstanceState.getInt(CURRENT_PAGE_KEY)
-        val allSize = savedInstanceState.getInt(ALL_SIZE_KEY)
-        presenter.setPage(PageUiModel(allSize, currentPage))
+        presenter.setPage(currentPage)
     }
 
     companion object {
         private const val CURRENT_PAGE_KEY = "CURRENT_PAGE_KEY"
-        private const val ALL_SIZE_KEY = "ALL_SIZE_KEY"
 
         fun getIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)

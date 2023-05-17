@@ -1,24 +1,30 @@
 package woowacourse.shopping.feature.cart
 
 import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.model.PageUiModel
+import woowacourse.shopping.model.PageNationUiModel
 
 interface CartContract {
     interface View {
-        fun changeCartProducts(newItems: List<CartProductUiModel>)
+        fun updateCartProducts(newItems: List<CartProductUiModel>)
         fun setPreviousButtonState(enabled: Boolean)
         fun setNextButtonState(enabled: Boolean)
-        fun setCount(count: Int)
+        fun setPageCount(count: Int)
+        fun setOrderButtonState(enabled: Boolean, orderCount: Int)
+        fun updateMoney(money: Int)
         fun exitCartScreen()
     }
 
     interface Presenter {
-        val page: PageUiModel
+        val page: PageNationUiModel
         fun loadInitCartProduct()
-        fun deleteCartProduct(cartId: Long)
+        fun handleDeleteCartProductClick(cartId: Long)
+        fun handleCartProductCartCountChange(cartId: Long, count: Int)
+        fun handlePurchaseSelectedCheckedChange(cartId: Long, checked: Boolean)
+        fun handleAllSelectedCheckedChange(checked: Boolean)
+        fun processOrderClick()
         fun loadPreviousPage()
         fun loadNextPage()
-        fun setPage(newPage: PageUiModel)
+        fun setPage(restorePage: Int)
         fun exit()
     }
 }

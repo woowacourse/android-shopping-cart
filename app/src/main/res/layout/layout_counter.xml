@@ -8,7 +8,6 @@
         android:orientation="horizontal"
         android:weightSum="3">
 
-
         <TextView
             android:id="@+id/minus_button"
             android:layout_width="0dp"
@@ -18,7 +17,6 @@
             android:paddingVertical="8dp"
             android:text="-"
             android:textSize="22sp" />
-
 
         <TextView
             android:id="@+id/count_number_text_view"

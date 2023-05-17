@@ -14,7 +14,6 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toDomain
-import woowacourse.shopping.mapper.toPresentation
 import woowacourse.shopping.model.CartProductUiModel
 
 internal class CartPresenterTest {
@@ -35,7 +34,7 @@ internal class CartPresenterTest {
     fun `처음 5개를 가져와 화면에 띄운다`() {
         // given
         val cartProductSlot = slot<List<CartProductUiModel>>()
-        every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
+        every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
 
         // when
         presenter.loadInitCartProduct()
@@ -55,7 +54,7 @@ internal class CartPresenterTest {
         every { cartRepository.deleteProduct(capture(slot)) } just Runs
 
         // when
-        presenter.deleteCartProduct(4L)
+        presenter.handleDeleteCartProductClick(4L)
 
         // then
         verify { cartRepository.deleteProduct(mockCartProducts[4]) }
@@ -73,7 +72,7 @@ internal class CartPresenterTest {
             mockCartProducts.filter { it.cartId < slot.captured }.take(5)
         }
         val cartProductSlot = slot<List<CartProductUiModel>>()
-        every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
+        every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
         presenter.loadInitCartProduct()
 
         // when
@@ -93,7 +92,7 @@ internal class CartPresenterTest {
             mockCartProducts.filter { it.cartId > slot.captured }.take(5)
         }
         val cartProductSlot = slot<List<CartProductUiModel>>()
-        every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
+        every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
         presenter.loadInitCartProduct()
 
         // when

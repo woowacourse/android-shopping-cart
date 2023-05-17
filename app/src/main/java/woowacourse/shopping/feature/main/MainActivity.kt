@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             presenter.showProductDetail(productId)
         }
 
-        override fun onChangeCartCount(productId: Long, count: Int) {
+        override fun onCartCountChanged(productId: Long, count: Int) {
             presenter.changeProductCartCount(productId, count)
         }
     }

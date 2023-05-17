@@ -27,7 +27,8 @@ class CartDao(
             arrayOf(
                 CartTableContract.TABLE_COLUMN_CART_ID,
                 CartTableContract.TABLE_COLUMN_PRODUCT_ID,
-                CartTableContract.TABLE_COLUMN_PRODUCT_COUNT
+                CartTableContract.TABLE_COLUMN_PRODUCT_COUNT,
+                CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED
             ),
             null, null, null, null, null
         )
@@ -37,10 +38,11 @@ class CartDao(
             val data = CartEntity(
                 cursor.getLong(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_CART_ID)),
                 cursor.getLong(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_PRODUCT_ID)),
-                cursor.getInt(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT))
+                cursor.getInt(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED))
             )
             val product: Product = productsDatasource.find { it.id == data.productId } ?: continue
-            cart.add(CartProduct(data.cartId, product, data.count))
+            cart.add(CartProduct(data.cartId, product, data.count, data.checked))
         }
 
         cursor.close()
@@ -51,6 +53,7 @@ class CartDao(
         val values = ContentValues().apply {
             put(CartTableContract.TABLE_COLUMN_PRODUCT_ID, product.id)
             put(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT, 1) // 일단 1로 고정
+            put(CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED, 0) // 처음은 체크 안함
         }
         writableDatabase.insert(CartTableContract.TABLE_NAME, null, values)
     }
@@ -58,6 +61,12 @@ class CartDao(
     fun deleteCartProduct(cartProduct: CartProduct) {
         val selection = "${CartTableContract.TABLE_COLUMN_PRODUCT_ID} = ?"
         val selectionArgs = arrayOf("${cartProduct.product.id}")
+        writableDatabase.delete(CartTableContract.TABLE_NAME, selection, selectionArgs)
+    }
+
+    fun deleteAllCheckedCartProduct(){
+        val selection = "${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED} = ?"
+        val selectionArgs = arrayOf("1")
         writableDatabase.delete(CartTableContract.TABLE_NAME, selection, selectionArgs)
     }
 
@@ -73,9 +82,28 @@ class CartDao(
         writableDatabase.execSQL(updateSql)
     }
 
+    fun updateCartProductChecked(product: Product, checked: Boolean) {
+        val findCartProduct =
+            selectAll().find { it.product.id == product.id } ?: return
+
+        val checkedState = if (checked) 1 else 0
+
+        val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
+                "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=${checkedState} " +
+                "WHERE ${CartTableContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+        writableDatabase.execSQL(updateSql)
+    }
+
+    fun updateAllChecked(checked: Boolean) {
+        val checkedState = if (checked) 1 else 0
+
+        val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
+                "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=${checkedState}"
+        writableDatabase.execSQL(updateSql)
+    }
 
     companion object {
         private const val DB_NAME = "cart_db"
-        private const val VERSION = 1
+        private const val VERSION = 4
     }
 }
