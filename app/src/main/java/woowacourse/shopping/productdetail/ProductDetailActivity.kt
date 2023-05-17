@@ -35,13 +35,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             CartDatabase(CartDBHelper(this).writableDatabase),
             RecentProductDatabase(this),
         )
-
-        presenter.setUpProductDetail()
-        presenter.addProductToRecent()
+        presenter.setUpProduct()
 
         binding.cartButton.setOnClickListener {
-            presenter.addProductToCart()
-            navigateToCart()
+            presenter.addCart()
         }
     }
 
@@ -62,7 +59,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.product = product
     }
 
-    private fun navigateToCart() {
+    override fun navigateToCart() {
         startActivity(CartActivity.from(this))
     }
 

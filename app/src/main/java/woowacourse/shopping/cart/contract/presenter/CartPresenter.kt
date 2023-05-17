@@ -18,10 +18,11 @@ class CartPresenter(
         }
 
     override fun setUpCarts() {
+        val lastItemOffset = offset + STEP
         view.setCarts(
             repository.getSubList(offset, STEP).map { CartItem(it.toUIModel()) },
             CartUIModel(
-                offset + STEP < repository.getAll().size,
+                lastItemOffset < repository.getAll().size,
                 0 < offset,
                 offset / STEP + 1,
             ),

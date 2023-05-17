@@ -12,19 +12,16 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository,
     private val recentRepository: RecentRepository,
 ) : ProductDetailContract.Presenter {
-
-    override fun setUpProductDetail() {
+    override fun setUpProduct() {
         view.setProductDetail(product)
-    }
-
-    override fun addProductToCart() {
-        cartRepository.insert(product.toDomain())
-    }
-
-    override fun addProductToRecent() {
         recentRepository.findById(product.id)?.let {
             recentRepository.delete(it.id)
         }
         recentRepository.insert(product.toDomain())
+    }
+
+    override fun addCart() {
+        cartRepository.insert(product.toDomain())
+        view.navigateToCart()
     }
 }
