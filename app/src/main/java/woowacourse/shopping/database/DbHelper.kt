@@ -26,18 +26,20 @@ class DbHelper private constructor(
     }
 
     companion object {
-        private const val SQL_CART_CREATE_ENTRIES =
-            "CREATE TABLE ${CartEntry.TABLE_NAME} (" +
-                    "${CartEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY" +
-                    ");"
+        private const val SQL_CART_CREATE_ENTRIES = """
+            CREATE TABLE ${CartEntry.TABLE_NAME} (
+            ${CartEntry.COLUMN_NAME_PRODUCT_ID} INT PRIMARY KEY
+            );
+        """
 
         private const val SQL_CART_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS ${CartEntry.TABLE_NAME};"
 
-        private const val SQL_RECENTLY_VIEWED_PRODUCT_CREATE_ENTRIES =
-            "CREATE TABLE ${RecentlyViewedProductEntry.TABLE_NAME} (" +
-                    "${RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY" +
-                    ");"
+        private const val SQL_RECENTLY_VIEWED_PRODUCT_CREATE_ENTRIES = """
+            CREATE TABLE ${RecentlyViewedProductEntry.TABLE_NAME} (
+            ${RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} INT PRIMARY KEY
+            );
+        """
 
         private const val SQL_RECENTLY_VIEWED_PRODUCT_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS ${RecentlyViewedProductEntry.TABLE_NAME};"
