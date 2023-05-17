@@ -22,6 +22,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         CartPresenter(this, cartRepository, MockProductRepository)
     }
 
+    override fun setTotalPrice(price: Int) {
+        binding.textOrderMoney.text = getString(R.string.price_format, price)
+    }
+
+    override fun setTotalCount(count: Int) {
+        binding.textOrderCount.text = getString(R.string.order_count_format, count)
+    }
+
     private val cartAdapter: CartAdapter by lazy {
         val cartListener = object : CartListener {
             override fun onAddClick(productModel: ProductModel) {
@@ -34,6 +42,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
             override fun onCloseClick(productModel: ProductModel) {
                 presenter.deleteProduct(productModel)
+            }
+
+            override fun changeSelectionProduct(productModel: ProductModel) {
+                presenter.changeProductSelected(productModel)
             }
         }
         CartAdapter(listOf(), cartListener)

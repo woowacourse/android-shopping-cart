@@ -33,7 +33,7 @@ class CartPresenter(
         val productItems = cartEntities.map { cart ->
             val cartProduct =
                 productRepository.findProductById(cart.productId) ?: Product.defaultProduct
-            CartProduct(cartProduct, cart.count)
+            CartProduct(cartProduct, cart.count, true)
         }
         return productItems
     }
@@ -41,7 +41,7 @@ class CartPresenter(
     private fun loadFirstCartPage() {
         val nextProducts = cartPages.getNextPageProducts()
         updateCart(nextProducts)
-        checkPageAble()
+        updateEvent()
     }
 
     private fun checkPageAble() {
@@ -57,14 +57,14 @@ class CartPresenter(
             return
         }
         updateCart(deletedProducts)
-        checkPageAble()
+        updateEvent()
     }
 
     override fun addProductCount(productModel: ProductModel) {
         cartRepository.addCartProduct(productModel.id)
         val addCountProducts = cartPages.getAddCountProducts(productModel.toDomain())
         updateCart(addCountProducts)
-        checkPageAble()
+        updateEvent()
     }
 
     override fun subProductCount(productModel: ProductModel) {
@@ -75,7 +75,17 @@ class CartPresenter(
             return
         }
         updateCart(subCountProducts)
-        checkPageAble()
+        updateEvent()
+    }
+
+    override fun changeProductSelected(productModel: ProductModel) {
+        cartPages.changeSelectedProduct(productModel.toDomain())
+        setTotal()
+    }
+
+    private fun setTotal() {
+        view.setTotalPrice(cartPages.getSelectedProductsPrice())
+        view.setTotalCount(cartPages.getSelectedProductsCount())
     }
 
     override fun plusPage() {
@@ -88,6 +98,11 @@ class CartPresenter(
         val previousProducts = cartPages.getPreviousPageProducts()
         updateCart(previousProducts)
         checkPageAble()
+    }
+
+    private fun updateEvent() {
+        checkPageAble()
+        setTotal()
     }
 
     private fun updateCart(cartProducts: CartProducts) {

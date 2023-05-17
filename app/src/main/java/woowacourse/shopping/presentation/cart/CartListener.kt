@@ -6,4 +6,5 @@ interface CartListener {
     fun onAddClick(productModel: ProductModel)
     fun onRemoveClick(productModel: ProductModel)
     fun onCloseClick(productModel: ProductModel)
+    fun changeSelectionProduct(productModel: ProductModel)
 }

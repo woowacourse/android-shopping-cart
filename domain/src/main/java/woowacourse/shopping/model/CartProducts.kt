@@ -18,27 +18,57 @@ class CartProducts(products: List<CartProduct> = listOf()) {
     }
 
     fun addProductByCount(product: Product, count: Int) {
-        val targetIndex = _items.indexOfFirst { it.product == product }
+        val targetIndex = _items.indexOfLast { it.product == product }
         if (targetIndex == NOT_FOUND) {
-            _items.add(CartProduct(product, count))
+            _items.add(CartProduct(product, count, true))
             return
         }
-        _items[targetIndex] =
-            CartProduct(_items[targetIndex].product, _items[targetIndex].count + count)
+        addTargetProductCount(targetIndex, count)
+    }
+
+    private fun addTargetProductCount(targetIndex: Int, count: Int) {
+        val targetProduct = _items[targetIndex]
+        _items[targetIndex] = targetProduct.plusCount(count)
     }
 
     fun deleteProduct(product: Product) {
-        _items.removeAll { it.product == product }
+        _items.removeIf { it.product == product }
     }
 
     fun subProductByCount(product: Product, count: Int) {
-        val targetIndex = _items.indexOfFirst { it.product == product }
-        when {
-            targetIndex == NOT_FOUND -> {}
-            _items[targetIndex].count <= 1 -> _items.removeAt(targetIndex)
-            else -> _items[targetIndex] =
-                CartProduct(_items[targetIndex].product, _items[targetIndex].count - count)
+        val targetIndex = _items.indexOfLast { it.product == product }
+        if (targetIndex == NOT_FOUND) {
+            return
         }
+        subTargetProductCount(targetIndex, count)
+    }
+
+    private fun subTargetProductCount(targetIndex: Int, count: Int) {
+        val targetProduct = _items[targetIndex]
+        if (targetProduct.count - count < 1) {
+            _items.removeAt(targetIndex)
+            return
+        }
+        _items[targetIndex] = targetProduct.subCount(count)
+    }
+
+    fun changeSelectedProduct(product: Product) {
+        val targetIndex = _items.indexOfLast { it.product == product }
+        println("나 왜불림")
+        val targetProduct = _items[targetIndex]
+        _items[targetIndex] = if (targetProduct.isSelected) {
+            targetProduct.unselect()
+        } else {
+            targetProduct.select()
+        }
+    }
+
+    fun getSelectedProductsPrice(): Int {
+        return _items.filter { it.isSelected }.sumOf { it.getTotalPrice() }
+    }
+
+    fun getSelectedProductsCount(): Int {
+        return _items.filter { it.isSelected }.sumOf { it.count }
     }
 
     companion object {

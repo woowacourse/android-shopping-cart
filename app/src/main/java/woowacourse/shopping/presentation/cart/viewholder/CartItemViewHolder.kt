@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.cart.viewholder
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -24,10 +23,10 @@ class CartItemViewHolder(
 
     init {
         binding.cartListener = cartListener
-        Log.d("asdfff", cartListener.toString())
     }
 
     fun bind(cartProductModel: CartProductModel) {
+        binding.checkBoxCart.isChecked = cartProductModel.isSelected
         binding.cartProductModel = cartProductModel
     }
 }

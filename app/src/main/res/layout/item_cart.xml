@@ -42,7 +42,8 @@
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/checkBox_cart"
+                    app:layout_constraintStart_toEndOf="@id/checkBox_cart"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="[든든] 동원 스위트콘" />
 
@@ -63,13 +64,12 @@
                     android:id="@+id/image_cart_product_poster"
                     android:layout_width="136dp"
                     android:layout_height="72dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="20dp"
                     app:imageGlide="@{cartProductModel.productModel.imageUrl}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_cart_product_name"
+                    app:layout_constraintTop_toBottomOf="@+id/checkBox_cart"
                     tools:src="@drawable/default_image" />
 
                 <TextView
@@ -90,12 +90,22 @@
                     layout="@layout/item_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
                     app:cartListener="@{cartListener}"
-                    app:cartProductModel="@{cartProductModel}" />
+                    app:cartProductModel="@{cartProductModel}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <CheckBox
+                    android:id="@+id/checkBox_cart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> cartListener.changeSelectionProduct(cartProductModel.productModel)}"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>

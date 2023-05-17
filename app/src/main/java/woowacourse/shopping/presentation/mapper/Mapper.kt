@@ -10,6 +10,7 @@ fun CartProduct.toPresentation(): CartProductModel {
     return CartProductModel(
         productModel = product.toPresentation(),
         count = count,
+        isSelected = isSelected,
     )
 }
 

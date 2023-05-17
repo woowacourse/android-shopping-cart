@@ -53,6 +53,14 @@ class CartPages(
         return true
     }
 
+    fun changeSelectedProduct(product: Product) {
+        cartProducts.changeSelectedProduct(product)
+    }
+
+    fun getSelectedProductsPrice() = cartProducts.getSelectedProductsPrice()
+
+    fun getSelectedProductsCount() = cartProducts.getSelectedProductsCount()
+
     companion object {
         private const val INITIAL_PAGE = 0
         private const val FIRST_PAGE = 1

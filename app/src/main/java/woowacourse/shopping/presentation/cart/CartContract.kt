@@ -9,6 +9,7 @@ interface CartContract {
         fun deleteProduct(productModel: ProductModel)
         fun subProductCount(productModel: ProductModel)
         fun addProductCount(productModel: ProductModel)
+        fun changeProductSelected(productModel: ProductModel)
 
         fun plusPage()
         fun minusPage()
@@ -19,5 +20,7 @@ interface CartContract {
         fun setPage(count: Int)
         fun setRightPageEnable(isEnable: Boolean)
         fun setLeftPageEnable(isEnable: Boolean)
+        fun setTotalPrice(price: Int)
+        fun setTotalCount(count: Int)
     }
 }
