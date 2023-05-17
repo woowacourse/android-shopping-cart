@@ -13,14 +13,15 @@ class DetailPresenter(
     override val product: ProductUiModel
         get() = _product
 
-    private var count: Int = 1
+    private var _count: Int = 1
+    override val count get() = _count
 
     override fun increaseCount() {
-        count++
+        _count++
     }
 
     override fun decreaseCount() {
-        count--
+        _count--
     }
 
     override fun selectCount() {
@@ -28,9 +29,7 @@ class DetailPresenter(
     }
 
     override fun addCart() {
-        val newCount = product.count + count
-        _product = _product.copy(count = newCount)
-        cartRepository.addProduct(_product.toDomain(), newCount)
+        cartRepository.addProduct(_product.toDomain(), product.count + _count)
         view.showCartScreen()
     }
 }

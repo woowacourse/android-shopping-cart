@@ -10,6 +10,7 @@ interface DetailContract {
 
     interface Presenter {
         val product: ProductUiModel
+        val count: Int
         fun increaseCount()
         fun decreaseCount()
         fun selectCount()

@@ -9,4 +9,5 @@
     <string name="recent_product">최근 본 상품</string>
     <string name="load_more">더보기</string>
     <string name="cart">Cart</string>
+    <string name="put_cart">담기</string>
 </resources>

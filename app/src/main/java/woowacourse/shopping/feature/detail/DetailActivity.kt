@@ -3,14 +3,17 @@ package woowacourse.shopping.feature.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.getParcelableCompat
@@ -31,6 +34,27 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
     }
 
     override fun showCartScreen() = startActivity(CartActivity.getIntent(this))
+
+    override fun showSelectCountScreen(product: ProductUiModel) {
+        val binding = DialogSelectCountBinding.inflate(LayoutInflater.from(this))
+        binding.presenter = presenter
+        val dialog: AlertDialog = createSelectCountDialog(binding)
+        dialog.show()
+    }
+
+    private fun createSelectCountDialog(binding: DialogSelectCountBinding) =
+        AlertDialog.Builder(this).apply {
+            setView(binding.root)
+            binding.countTv.text = presenter.count.toString()
+            binding.plusBtn.setOnClickListener {
+                presenter.increaseCount()
+                binding.countTv.text = presenter.count.toString()
+            }
+            binding.minusBtn.setOnClickListener {
+                presenter.decreaseCount()
+                binding.countTv.text = presenter.count.toString()
+            }
+        }.create()
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.app_bar_cancel_menu, menu)
