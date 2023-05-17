@@ -1,9 +1,9 @@
 package woowacourse.shopping.cart
 
 import android.view.View
-import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.CartOrdinalProductModel
 import woowacourse.shopping.common.model.PageNavigatorModel
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
+import woowacourse.shopping.common.model.mapper.CartOrdinalProductMapper.toViewModel
 import woowacourse.shopping.data.repository.CartRepository
 
 class CartPresenter(
@@ -16,8 +16,8 @@ class CartPresenter(
         updateCartPage()
     }
 
-    override fun removeCartProduct(cartProductModel: CartProductModel) {
-        cartRepository.deleteCartProductByOrdinal(cartProductModel.ordinal)
+    override fun removeCartProduct(cartOrdinalProductModel: CartOrdinalProductModel) {
+        cartRepository.deleteCartProductByOrdinal(cartOrdinalProductModel.ordinal)
         updateCartPage()
     }
 
@@ -35,7 +35,6 @@ class CartPresenter(
         val maxPage = calculateMaxPage()
         val cart = cartRepository.selectPage(currentPage, countPerPage)
         view.updateCart(cartProductsModel = cart.products.map { it.toViewModel() })
-        println(currentPage)
         view.updateNavigator(
             PageNavigatorModel(
                 isPagingAvailable(maxPage),

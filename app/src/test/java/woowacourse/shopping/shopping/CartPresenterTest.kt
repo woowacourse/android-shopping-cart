@@ -9,10 +9,10 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.cart.CartContract
 import woowacourse.shopping.cart.CartPresenter
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
+import woowacourse.shopping.common.model.mapper.CartOrdinalProductMapper.toViewModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.CartOrdinalProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 
@@ -42,7 +42,7 @@ class CartPresenterTest {
 
         every {
             view.updateCart(any())
-            view.updateNavigator(any(), any())
+            view.updateNavigator(any())
         } just runs
 
         presenter = CartPresenter(
@@ -60,7 +60,7 @@ class CartPresenterTest {
         verify {
             cartRepository.selectPage(0, 5)
             view.updateCart(any())
-            view.updateNavigator(1, 2)
+            view.updateNavigator(any())
         }
     }
 
@@ -83,13 +83,13 @@ class CartPresenterTest {
         verify {
             cartRepository.selectPage(0, 5)
             view.updateCart(any())
-            view.updateNavigator(1, 2)
+            view.updateNavigator(any())
         }
     }
 
     private fun makeCartMock(vararg cartOrdinals: Int): Cart = Cart(
         cartOrdinals.map {
-            CartProduct(
+            CartOrdinalProduct(
                 it,
                 Product(
                     URL(""), "", 0
@@ -98,7 +98,7 @@ class CartPresenterTest {
         }
     )
 
-    private fun makeCartProduct(ordinal: Int): CartProduct = CartProduct(
+    private fun makeCartProduct(ordinal: Int): CartOrdinalProduct = CartOrdinalProduct(
         ordinal,
         Product(
             URL(""), "", 0

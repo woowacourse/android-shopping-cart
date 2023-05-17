@@ -1,13 +1,13 @@
 package woowacourse.shopping.shopping
 
-import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 
 interface ShoppingContract {
     interface Presenter {
         fun reloadProducts()
 
-        fun openProduct(productModel: ProductModel)
+        fun openProduct(cartProductModel: CartProductModel)
 
         fun openCart()
 
@@ -15,13 +15,13 @@ interface ShoppingContract {
     }
 
     interface View {
-        fun updateProducts(productModels: List<ProductModel>)
+        fun updateProducts(cartProductModels: List<CartProductModel>)
 
-        fun addProducts(productModels: List<ProductModel>)
+        fun addProducts(cartProductModels: List<CartProductModel>)
 
         fun updateRecentProducts(recentProductModels: List<RecentProductModel>)
 
-        fun showProductDetail(productModel: ProductModel)
+        fun showProductDetail(cartProductModel: CartProductModel)
 
         fun showCart()
     }

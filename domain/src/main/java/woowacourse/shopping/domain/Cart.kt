@@ -1,17 +1,17 @@
 package woowacourse.shopping.domain
 
-data class Cart(val products: List<CartProduct>) {
-    fun add(cartProduct: CartProduct): Cart {
-        return Cart(products + cartProduct)
+data class Cart(val products: List<CartOrdinalProduct>) {
+    fun add(cartOrdinalProduct: CartOrdinalProduct): Cart {
+        return Cart(products + cartOrdinalProduct)
     }
 
-    fun remove(cartProduct: CartProduct): Cart {
-        return Cart(products - cartProduct)
+    fun remove(cartOrdinalProduct: CartOrdinalProduct): Cart {
+        return Cart(products - cartOrdinalProduct)
     }
 
-    fun makeCartProduct(product: Product): CartProduct {
+    fun makeCartOrdinalProduct(cartProduct: CartProduct): CartOrdinalProduct {
         val ordinal = getCurrentOrdinal()
-        return CartProduct(ordinal, product)
+        return CartOrdinalProduct(ordinal, cartProduct)
     }
 
     private fun getCurrentOrdinal(): Int {

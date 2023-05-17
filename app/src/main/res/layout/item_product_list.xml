@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.common.model.ProductModel" />
+            name="cartProduct"
+            type="woowacourse.shopping.common.model.CartProductModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:id="@+id/product_list_picture"
             android:layout_width="154dp"
             android:layout_height="154dp"
-            android:urlSrc="@{product.picture}"
+            android:urlSrc="@{cartProduct.product.picture}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,7 +33,7 @@
             android:layout_marginHorizontal="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.title}"
+            android:text="@{cartProduct.product.title}"
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{@string/product_price(product.price)}"
+            android:text="@{@string/product_price(cartProduct.product.price)}"
             android:textColor="#333333"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/product_list_title"

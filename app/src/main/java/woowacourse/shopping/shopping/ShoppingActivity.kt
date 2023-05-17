@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
+import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
@@ -74,12 +75,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateProducts(productModels: List<ProductModel>) {
-        productAdapter.updateProducts(productModels)
+    override fun updateProducts(cartProductModels: List<CartProductModel>) {
+        productAdapter.updateProducts(cartProductModels)
     }
 
-    override fun addProducts(productModels: List<ProductModel>) {
-        productAdapter.addProducts(productModels)
+    override fun addProducts(cartProductModels: List<CartProductModel>) {
+        productAdapter.addProducts(cartProductModels)
     }
 
     override fun updateRecentProducts(recentProductModels: List<RecentProductModel>) {
@@ -87,8 +88,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         recentProductWrapperAdapter.updateRecentProduct()
     }
 
-    override fun showProductDetail(productModel: ProductModel) {
-        startProductDetailActivity(productModel)
+    override fun showProductDetail(cartProductModel: CartProductModel) {
+        startProductDetailActivity(cartProductModel.product)
     }
 
     override fun showCart() {

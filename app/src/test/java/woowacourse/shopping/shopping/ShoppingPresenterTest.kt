@@ -11,7 +11,7 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
-import woowacourse.shopping.domain.Products
+import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.RecentProducts
 
 class ShoppingPresenterTest {
@@ -36,7 +36,7 @@ class ShoppingPresenterTest {
 
         every {
             productRepository.selectByRange(any(), any())
-        } returns Products(emptyList())
+        } returns CartProducts(emptyList())
 
         every {
             view.addProducts(any())
@@ -63,7 +63,7 @@ class ShoppingPresenterTest {
         }
 
         verify {
-            view.addProducts(Products(emptyList()).value.map { it.toViewModel() })
+            view.addProducts(CartProducts(emptyList()).value.map { it.toViewModel() })
         }
     }
 
@@ -109,7 +109,7 @@ class ShoppingPresenterTest {
         // then
         verify {
             productRepository.selectByRange(0, 0)
-            view.addProducts(Products(emptyList()).value.map { it.toViewModel() })
+            view.addProducts(CartProducts(emptyList()).value.map { it.toViewModel() })
         }
     }
 }

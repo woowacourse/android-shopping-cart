@@ -3,12 +3,12 @@ package woowacourse.shopping.domain
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class RecentProductsTest {
+class RecentCartProductsTest {
     @Test
     fun 최근_본_상품_9개를_요청하면_상품_9개를_반환하다() {
         // given
         val recentProducts = RecentProducts(
-            List(10) { createRecentProduct(ordinal = it) }
+            List(10) { makeRecentProductMock(ordinal = it) }
         )
 
         // when

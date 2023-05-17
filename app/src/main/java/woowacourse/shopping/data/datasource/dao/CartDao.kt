@@ -8,19 +8,20 @@ import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartOrdinalProduct
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 
 class CartDao(private val db: SQLiteDatabase) : CartDataSource {
-    override fun insertCartProduct(cartProduct: CartProduct) {
+    override fun insertCartProduct(cartOrdinalProduct: CartOrdinalProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = cartProduct.product.picture.value
-        productRow[SqlProduct.TITLE] = cartProduct.product.title
-        productRow[SqlProduct.PRICE] = cartProduct.product.price
+        productRow[SqlProduct.PICTURE] = cartOrdinalProduct.cartProduct.product.picture.value
+        productRow[SqlProduct.TITLE] = cartOrdinalProduct.cartProduct.product.title
+        productRow[SqlProduct.PRICE] = cartOrdinalProduct.cartProduct.product.price
 
         val row = ContentValues()
-        row.put(SqlCart.ORDINAL, cartProduct.ordinal)
+        row.put(SqlCart.ORDINAL, cartOrdinalProduct.ordinal)
         row.put(SqlCart.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
         db.insert(SqlCart.name, null, row)
     }
@@ -57,7 +58,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
 
     private fun makeCart(cursor: Cursor) = Cart(
         cursor.use {
-            val cart = mutableListOf<CartProduct>()
+            val cart = mutableListOf<CartOrdinalProduct>()
 
             while (it.moveToNext()) {
                 cart.add(
@@ -68,8 +69,8 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         }
     )
 
-    private fun makeCartProduct(it: Cursor) = CartProduct(
-        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)), makeProduct(it)
+    private fun makeCartProduct(it: Cursor) = CartOrdinalProduct(
+        it.getInt(it.getColumnIndexOrThrow(SqlCart.ORDINAL)), CartProduct(0, makeProduct(it))
     )
 
     private fun makeProduct(it: Cursor) = Product(

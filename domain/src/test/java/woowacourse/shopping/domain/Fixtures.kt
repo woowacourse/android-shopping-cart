@@ -1,17 +1,22 @@
 package woowacourse.shopping.domain
 
-fun createProduct(
+fun makeProductMock(
     url: URL = URL("www.google.com"),
     title: String = "",
     price: Int = 0
 ): Product = Product(url, title, price)
 
-fun createCartProduct(
-    ordinal: Int = 1,
-    product: Product = createProduct()
-): CartProduct = CartProduct(ordinal, product)
+fun makeCartProductMock(
+    amount: Int = 0,
+    product: Product = makeProductMock()
+): CartProduct = CartProduct(amount, product)
 
-fun createRecentProduct(
+fun makeCartOrdinalProductMock(
     ordinal: Int = 1,
-    product: Product = createProduct()
+    cartProduct: CartProduct = makeCartProductMock()
+): CartOrdinalProduct = CartOrdinalProduct(ordinal, cartProduct)
+
+fun makeRecentProductMock(
+    ordinal: Int = 1,
+    product: Product = makeProductMock()
 ): RecentProduct = RecentProduct(ordinal, product)

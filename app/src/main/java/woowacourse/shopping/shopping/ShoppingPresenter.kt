@@ -1,8 +1,8 @@
 package woowacourse.shopping.shopping
 
-import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
-import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toViewModel
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
@@ -26,13 +26,14 @@ class ShoppingPresenter(
         updateRecentProducts()
     }
 
-    override fun openProduct(productModel: ProductModel) {
+    override fun openProduct(cartProduct: CartProductModel) {
         val recentProducts = recentProductRepository.selectAll()
-        val recentProduct = recentProducts.makeRecentProduct(productModel.toDomainModel())
+        val recentProduct =
+            recentProducts.makeRecentProduct(cartProduct.product.toDomainModel())
 
         recentProductRepository.insertRecentProduct(recentProduct)
 
-        view.showProductDetail(productModel)
+        view.showProductDetail(cartProduct)
     }
 
     override fun openCart() {
