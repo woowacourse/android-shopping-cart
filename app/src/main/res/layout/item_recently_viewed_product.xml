@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.presentation.model.RecentlyViewedProduct" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.presentation.ui.home.adapter.ProductClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{()->listener.clickProduct(product.id)}"
+        android:paddingEnd="8dp">
+
+        <ImageView
+            android:id="@+id/imageItemProductProduct"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:glideSrc="@{product.itemImage}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/textItemProductName"
+            style="@style/woowaPro16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageItemProductProduct"
+            tools:text="[든든] 제네시스 쿠페" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

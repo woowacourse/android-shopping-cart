@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.ProductInCart" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rectangle_radius_4dp"
+        android:padding="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textCartProductName"
+            style="@style/woowaPro24"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{product.product.name}"
+            android:textColor="@color/woowa_dealer_black_400"
+            app:layout_constraintEnd_toStartOf="@+id/buttonCartProductDelete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="제네시스" />
+
+        <ImageView
+            android:id="@+id/buttonCartProductDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_delete"
+            app:layout_constraintBottom_toBottomOf="@+id/textCartProductName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textCartProductName" />
+
+        <ImageView
+            android:id="@+id/imageCartProductProduct"
+            android:layout_width="140dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="20dp"
+            app:glideSrc="@{product.product.itemImage}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textCartProductName"
+            tools:src="@drawable/logo_rect" />
+
+        <TextView
+            android:id="@+id/textCartProductPrice"
+            style="@style/woowaAir16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{String.format(@string/detailPriceFormat, product.product.price)}"
+            android:textColor="@color/woowa_dealer_black_400"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="40000000원" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
