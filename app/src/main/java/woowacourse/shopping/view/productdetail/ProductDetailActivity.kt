@@ -96,8 +96,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun startCartActivity() {
-        val intent = CartActivity.newIntent(this)
-        startActivity(intent)
+        val nextIntent = CartActivity.newIntent(this)
+        finish()
+        startActivity(nextIntent)
     }
 
     private fun startLastViewedDetailActivity(lastViewedProduct: ProductModel) {
