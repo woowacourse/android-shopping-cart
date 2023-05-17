@@ -75,39 +75,42 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initLayoutManager() {
-        val layoutManager = GridLayoutManager(this@ShoppingActivity, 2)
-        val spacing = resources.getDimensionPixelSize(R.dimen.item_spacing)
-        val spanCount = 2
+        val layoutManager = binding.rvProducts.layoutManager as GridLayoutManager
 
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (binding.rvProducts.adapter?.getItemViewType(position)) {
-                    ProductsItemType.TYPE_FOOTER -> spanCount
-                    ProductsItemType.TYPE_ITEM -> 1
-                    else -> spanCount
-                }
+        layoutManager.spanSizeLookup = getSpanSizeLookup()
+        binding.rvProducts.addItemDecoration(getItemDecoration())
+    }
+
+    private fun getSpanSizeLookup() = object : GridLayoutManager.SpanSizeLookup() {
+        val layoutManager = binding.rvProducts.layoutManager as GridLayoutManager
+        override fun getSpanSize(position: Int): Int {
+            return when (adapter.getItemViewType(position)) {
+                ProductsItemType.TYPE_FOOTER -> layoutManager.spanCount
+                ProductsItemType.TYPE_ITEM -> 1
+                else -> layoutManager.spanCount
             }
         }
+    }
 
-        binding.rvProducts.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                val position = parent.getChildAdapterPosition(view)
-                val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
+    private fun getItemDecoration() = object : RecyclerView.ItemDecoration() {
+        val layoutManager = binding.rvProducts.layoutManager as GridLayoutManager
 
-                if (spanSize != spanCount) {
-                    outRect.left = spacing
-                    outRect.right = spacing
-                }
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            val spacing = resources.getDimensionPixelSize(R.dimen.item_spacing)
+            val position = parent.getChildAdapterPosition(view)
+            val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
 
+            if (spanSize != layoutManager.spanCount) {
+                outRect.left = spacing
+                outRect.right = spacing
                 outRect.top = spacing
             }
-        })
-        binding.rvProducts.layoutManager = layoutManager
+        }
     }
 
     override fun setProducts(data: List<ProductsItemType>) {
