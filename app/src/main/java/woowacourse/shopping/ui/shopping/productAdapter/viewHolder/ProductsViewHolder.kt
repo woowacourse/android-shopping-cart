@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.shopping.productAdapter.viewHolder
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
@@ -17,14 +18,21 @@ class ProductsViewHolder private constructor(
     override fun bind(productItemType: ProductsItemType) {
         val productItem = productItemType as? ProductsItemType.Product ?: return
 
-        val onCountChange = { it: Int ->
-            listener.onAddCartOrUpdateCount(productItem.product.id, it) {
-                bind(productItem.copy(count = it))
+        binding.item = productItem
+
+        binding.btnProductCount.setOnClickListener { count ->
+            listener.onAddCartOrUpdateCount(productItem.product.id, count)
+            if (count == 0) {
+                binding.btnAddToCart.visibility = View.VISIBLE
+                binding.btnProductCount.visibility = View.GONE
+            } else {
+                binding.btnAddToCart.visibility = View.GONE
+                binding.btnProductCount.visibility = View.VISIBLE
             }
         }
-
-        binding.item = productItem
-        binding.onCountChange = onCountChange
+        binding.btnAddToCart.setOnClickListener {
+            binding.btnProductCount.count = 1
+        }
     }
 
     companion object {

@@ -52,38 +52,13 @@
             tools:layout_editor_absoluteX="14dp"
             tools:text="99,800원" />
 
-        <TextView
-            android:id="@+id/tv_product_count_minus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:text="@string/minus"
-            android:textColor="@color/gray_555555"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_count"
-            app:layout_constraintEnd_toStartOf="@+id/tv_product_count" />
-
-        <TextView
-            android:id="@+id/tv_product_count"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:textColor="@color/gray_555555"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_count_plus"
-            app:layout_constraintEnd_toStartOf="@+id/tv_product_count_plus"
-            tools:text="0" />
-
-        <TextView
-            android:id="@+id/tv_product_count_plus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+        <woowacourse.shopping.ui.customView.ProductCounter
+            android:id="@+id/cv_product_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="18dp"
-            android:gravity="center"
-            android:text="@string/plus"
-            android:textColor="@color/gray_555555"
-            android:textSize="22sp"
+            app:count="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

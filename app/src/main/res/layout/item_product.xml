@@ -14,10 +14,6 @@
         <variable
             name="item"
             type="woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType.Product" />
-
-        <variable
-            name="onCountChange"
-            type="kotlin.jvm.functions.Function1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,52 +39,18 @@
             android:layout_height="48dp"
             android:layout_margin="8dp"
             android:background="@drawable/btn_plus"
-            android:onClick="@{() -> onCountChange.invoke(1)}"
-            android:visibility="@{item.count &lt; 1 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
             app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_product_count_minus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:onClick="@{() -> onCountChange.invoke(item.count - 1)}"
-            android:text="@string/minus"
-            android:textSize="22sp"
-            android:visibility="@{item.count >= 1 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_count"
-            app:layout_constraintEnd_toStartOf="@id/tv_product_count" />
-
-        <TextView
-            android:id="@+id/tv_product_count"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:text="@{`` + item.count, default = 0}"
-            android:textSize="22sp"
-            android:visibility="@{item.count >= 1 ? View.VISIBLE : View.GONE}"
-            app:layout_constraintBottom_toBottomOf="@id/btn_product_count_plus"
-            app:layout_constraintEnd_toStartOf="@id/btn_product_count_plus"
-            tools:text="0" />
-
-        <androidx.appcompat.widget.AppCompatButton
-
-            android:id="@+id/btn_product_count_plus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginEnd="14dp"
-            android:layout_marginBottom="11dp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:text="@string/plus"
-            android:onClick="@{() -> onCountChange.invoke(item.count + 1)}"
-            android:textSize="22sp"
-            android:visibility="@{item.count >= 1 ? View.VISIBLE : View.GONE}"
+        <woowacourse.shopping.ui.customView.ProductCounter
+            android:id="@+id/btn_product_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="11dp"
+            android:layout_marginBottom="14dp"
+            app:count="@{item.count}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
-            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/tv_product_name"

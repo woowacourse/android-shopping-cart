@@ -75,43 +75,19 @@
             android:text="@{@string/product_price(product.price)}"
             android:textColor="@color/gray_333333"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/tv_product_count_plus"
+            app:layout_constraintBottom_toTopOf="@id/cv_product_counter"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99000원" />
 
-        <TextView
-            android:id="@+id/tv_product_count_minus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:text="@string/minus"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_count_plus"
-            app:layout_constraintEnd_toStartOf="@id/tv_product_count" />
-
-        <TextView
-            android:id="@+id/tv_product_count"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:text="@{String.valueOf(product.count)}"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_product_count_plus"
-            app:layout_constraintEnd_toStartOf="@id/tv_product_count_plus"
-            tools:text="0" />
-
-        <TextView
-            android:id="@+id/tv_product_count_plus"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+        <woowacourse.shopping.ui.customView.ProductCounter
+            android:id="@+id/cv_product_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="13dp"
             android:layout_marginBottom="18dp"
-            android:gravity="center"
-            android:text="@string/plus"
-            android:textSize="22sp"
+            app:count="@{product.count}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

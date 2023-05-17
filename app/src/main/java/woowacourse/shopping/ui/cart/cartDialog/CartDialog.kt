@@ -14,20 +14,15 @@ class CartDialog(context: Context, title: String, price: Int, addToCart: (Int) -
     private val binding: LayoutCartDialogBinding = DataBindingUtil
         .inflate(LayoutInflater.from(context), R.layout.layout_cart_dialog, null, false)
 
-    private var count: Int
-        get() = binding.tvProductCount.text.toString().toInt()
-        set(value) { binding.tvProductCount.text = value.toString() }
     init {
         setContentView(binding.root)
 
         binding.productName = title
         binding.productPrice = price
+        binding.cvProductCounter.minCount = 1
         binding.addToCartListener = {
             dismiss()
-            addToCart(count)
+            addToCart(binding.cvProductCounter.count)
         }
-        count = 1
-        binding.tvProductCountPlus.setOnClickListener { count += 1 }
-        binding.tvProductCountMinus.setOnClickListener { count -= 1 }
     }
 }

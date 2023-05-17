@@ -10,22 +10,16 @@ class CartViewHolder private constructor(
     private val binding: ItemCartBinding,
     private val cartListener: CartListener
 ) : CartItemViewHolder(binding.root) {
-    var count: Int = 1
-        get() = binding.tvProductCount.text.toString().toInt()
-        set(value) {
-            field = cartListener.onItemUpdate(binding.product!!.id, value)
-            binding.tvProductCount.text = field.toString()
-        }
-
     init {
         binding.listener = cartListener
     }
     override fun bind(data: CartItemType) {
         if (data !is CartItemType.Cart) return
         binding.product = data.product
-        count = data.product.count
-        binding.tvProductCountMinus.setOnClickListener { count -= 1 }
-        binding.tvProductCountPlus.setOnClickListener { count += 1 }
+        binding.cvProductCounter.minCount = 1
+        binding.cvProductCounter.setOnClickListener {
+            cartListener.onItemUpdate(data.product.id, it)
+        }
         binding.cbProductCheck.isChecked = data.product.checked
         binding.cbProductCheck.setOnCheckedChangeListener { _, isChecked ->
             cartListener.onItemSelectChanged(data.product.id, isChecked)
