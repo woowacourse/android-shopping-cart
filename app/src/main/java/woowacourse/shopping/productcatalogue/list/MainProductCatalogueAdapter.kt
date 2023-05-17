@@ -10,6 +10,7 @@ import woowacourse.shopping.databinding.RecentProductCatalogueBinding
 import woowacourse.shopping.datas.ProductDataRepository
 import woowacourse.shopping.datas.ProductRepository
 import woowacourse.shopping.datas.RecentRepository
+import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.productcatalogue.list.ProductViewType.MAIN_PRODUCTS
 import woowacourse.shopping.productcatalogue.list.ProductViewType.READ_MORE
 import woowacourse.shopping.productcatalogue.list.ProductViewType.RECENT_PRODUCTS
@@ -43,7 +44,7 @@ class MainProductCatalogueAdapter(
                 val inflater = LayoutInflater.from(parent.context)
                 val view = RecentProductCatalogueBinding.inflate(inflater, parent, false)
                 view.rvRecentProductCatalogue.adapter = recentAdapter
-                RecentProductCatalogueViewHolder(view, recentProducts.getAll())
+                RecentProductCatalogueViewHolder(view, recentProducts.getAll().map { it.toUIModel() })
             }
             MAIN_PRODUCTS.ordinal -> {
                 val inflater = LayoutInflater.from(parent.context)
@@ -61,7 +62,7 @@ class MainProductCatalogueAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             MAIN_PRODUCTS.ordinal -> (holder as MainProductCatalogueViewHolder).bind(
-                ProductDataRepository.products[position - FIRST_PAGE]
+                ProductDataRepository.products[position - FIRST_PAGE].toUIModel()
             )
         }
     }

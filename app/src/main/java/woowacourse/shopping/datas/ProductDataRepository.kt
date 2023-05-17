@@ -2,7 +2,6 @@ package woowacourse.shopping.datas
 
 import com.shopping.domain.Price
 import com.shopping.domain.Product
-import woowacourse.shopping.uimodel.ProductUIModel
 
 object ProductDataRepository : ProductRepository {
     private val baseProducts = listOf(
@@ -127,25 +126,25 @@ object ProductDataRepository : ProductRepository {
             Price(15_000)
         ),
     )
-    private val _products = mutableListOf<ProductUIModel>()
-    val products: List<ProductUIModel>
+    private val _products = mutableListOf<Product>()
+    val products: List<Product>
         get() = _products.toList()
 
     var productCataloguePageNumber = 1
         get() = ++field
         private set
 
-    override fun getUnitData(unitSize: Int, pageNumber: Int): List<ProductUIModel> {
-        val tempUnit = mutableListOf<ProductUIModel>()
+    override fun getUnitData(unitSize: Int, pageNumber: Int): List<Product> {
+        val tempUnit = mutableListOf<Product>()
 
         for (index in unitSize * (pageNumber - 1) until unitSize * pageNumber) {
             val originalIndex = index % unitSize
             tempUnit.add(
-                ProductUIModel(
+                Product(
                     id = index,
                     imageUrl = baseProducts[originalIndex].imageUrl,
                     name = baseProducts[originalIndex].name + "-$index",
-                    price = baseProducts[originalIndex].price.value,
+                    price = Price(baseProducts[originalIndex].price.value),
                 )
             )
         }

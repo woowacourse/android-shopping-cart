@@ -1,17 +1,17 @@
 package woowacourse.shopping.datas
 
-import woowacourse.shopping.uimodel.CartProductUIModel
+import com.shopping.domain.CartProduct
 
 interface CartRepository {
-    fun getAll(): List<CartProductUIModel>
+    fun getAll(): List<CartProduct>
 
-    fun getUnitData(unitSize: Int, pageNumber: Int): List<CartProductUIModel>
+    fun getUnitData(unitSize: Int, pageNumber: Int): List<CartProduct>
 
     fun getSize(): Int
 
-    fun insert(cartProduct: CartProductUIModel)
+    fun insert(cartProduct: CartProduct)
 
-    fun remove(cartProduct: CartProductUIModel)
+    fun remove(productId: Int)
 
     fun clear()
 

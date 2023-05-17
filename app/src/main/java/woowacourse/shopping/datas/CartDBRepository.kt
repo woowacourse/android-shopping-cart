@@ -2,73 +2,74 @@ package woowacourse.shopping.datas
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import com.shopping.domain.CartProduct
+import com.shopping.domain.Price
+import com.shopping.domain.Product
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_COUNT
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_ID
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_IMAGE
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_NAME
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_PRICE
 import woowacourse.shopping.datas.CartDBHelper.Companion.TABLE_NAME
-import woowacourse.shopping.uimodel.CartProductUIModel
-import woowacourse.shopping.uimodel.ProductUIModel
 
 class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
-    override fun getAll(): List<CartProductUIModel> {
-        val products = mutableListOf<CartProductUIModel>()
+    override fun getAll(): List<CartProduct> {
+        val products = mutableListOf<CartProduct>()
         database.rawQuery("SELECT * FROM $TABLE_NAME", null).use {
             while (it.moveToNext()) {
-                val cartProductUIModel =
-                    CartProductUIModel(
+                val cartProduct =
+                    CartProduct(
                         count = it.getInt(it.getColumnIndexOrThrow(KEY_COUNT)),
-                        ProductUIModel(
+                        Product(
                             id = it.getInt(it.getColumnIndexOrThrow(KEY_ID)),
                             name = it.getString(it.getColumnIndexOrThrow(KEY_NAME)),
                             imageUrl = it.getString(it.getColumnIndexOrThrow(KEY_IMAGE)),
-                            price = it.getInt(it.getColumnIndexOrThrow(KEY_PRICE)),
+                            price = Price(it.getInt(it.getColumnIndexOrThrow(KEY_PRICE))),
                         )
                     )
-                products.add(cartProductUIModel)
+                products.add(cartProduct)
             }
         }
         return products
     }
 
-    override fun getUnitData(unitSize: Int, pageNumber: Int): List<CartProductUIModel> {
-        val products = mutableListOf<CartProductUIModel>()
+    override fun getUnitData(unitSize: Int, pageNumber: Int): List<CartProduct> {
+        val products = mutableListOf<CartProduct>()
         database.rawQuery(
             "SELECT * FROM $TABLE_NAME LIMIT $unitSize OFFSET '${5 * (pageNumber - 1)}'",
             null
         ).use {
             while (it.moveToNext()) {
-                val cartProductUIModel =
-                    CartProductUIModel(
+                val cartProduct =
+                    CartProduct(
                         count = it.getInt(it.getColumnIndexOrThrow(KEY_COUNT)),
-                        ProductUIModel(
+                        Product(
                             id = it.getInt(it.getColumnIndexOrThrow(KEY_ID)),
                             name = it.getString(it.getColumnIndexOrThrow(KEY_NAME)),
                             imageUrl = it.getString(it.getColumnIndexOrThrow(KEY_IMAGE)),
-                            price = it.getInt(it.getColumnIndexOrThrow(KEY_PRICE)),
+                            price = Price(it.getInt(it.getColumnIndexOrThrow(KEY_PRICE))),
                         )
                     )
-                products.add(cartProductUIModel)
+                products.add(cartProduct)
             }
         }
         return products
     }
 
-    override fun insert(cartProduct: CartProductUIModel) {
+    override fun insert(cartProduct: CartProduct) {
         val record = ContentValues().apply {
             put(KEY_COUNT, 1)
             put(KEY_ID, cartProduct.product.id)
             put(KEY_NAME, cartProduct.product.name)
             put(KEY_IMAGE, cartProduct.product.imageUrl)
-            put(KEY_PRICE, cartProduct.product.price)
+            put(KEY_PRICE, cartProduct.product.price.value)
         }
         database.insert(TABLE_NAME, null, record)
     }
 
-    override fun remove(cartProduct: CartProductUIModel) {
+    override fun remove(productId: Int) {
         database.execSQL(
-            "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '${cartProduct.product.id}' "
+            "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '$productId' "
         )
     }
 

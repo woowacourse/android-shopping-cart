@@ -1,6 +1,7 @@
 package woowacourse.shopping.productcatalogue
 
 import woowacourse.shopping.datas.ProductRepository
+import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductCataloguePresenter(
@@ -14,7 +15,7 @@ class ProductCataloguePresenter(
 
     override fun readMoreOnClick(): (ProductRepository, Int, Int) -> Unit =
         { productRepository: ProductRepository, unitSize: Int, page: Int ->
-            productRepository.getUnitData(unitSize, page)
+            productRepository.getUnitData(unitSize, page).map { it.toUIModel() }
             view.notifyDataChanged()
         }
 }

@@ -1,13 +1,13 @@
 package woowacourse.shopping.datas
 
-import woowacourse.shopping.uimodel.RecentProductUIModel
+import com.shopping.domain.RecentProduct
 
 interface RecentRepository {
-    fun getAll(): List<RecentProductUIModel>
+    fun getAll(): List<RecentProduct>
 
-    fun insert(recentProduct: RecentProductUIModel)
+    fun insert(recentProduct: RecentProduct)
 
-    fun remove(recentProduct: RecentProductUIModel)
+    fun remove(recentProduct: RecentProduct)
 
     fun clear()
 
