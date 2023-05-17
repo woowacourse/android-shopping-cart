@@ -3,6 +3,7 @@ package woowacourse.shopping.view.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -33,11 +34,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setUpBinding()
         setContentView(productDetailBinding.root)
         val product = intent.getParcelableCompat<ProductModel>(PRODUCT)
+        val lastViewedProduct = intent.getParcelableCompat<ProductModel>(LAST_VIEWED_PRODUCT)
         if (product == null) {
             forceQuit()
             return
         }
-        setUpInitView(product)
+        setUpInitView(product, lastViewedProduct)
         setUpDialog(product)
         setUpResult(product.id)
         presenter.updateRecentViewedProducts(product.id)
@@ -58,8 +60,14 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         finish()
     }
 
-    private fun setUpInitView(product: ProductModel) {
+    private fun setUpInitView(product: ProductModel, lastViewedProduct: ProductModel?) {
         productDetailBinding.product = product
+        if (lastViewedProduct != null) {
+            productDetailBinding.lastViewedProduct = lastViewedProduct
+            productDetailBinding.layoutLastViewed.setOnClickListener {
+                startLastViewedDetailActivity(lastViewedProduct)
+            }
+        }
         productDetailBinding.presenter = presenter
         Glide.with(productDetailBinding.root.context).load(product.imageUrl).into(productDetailBinding.imgProduct)
         productDetailBinding.btnPutInCart.setOnClickListener {
@@ -92,6 +100,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         startActivity(intent)
     }
 
+    private fun startLastViewedDetailActivity(lastViewedProduct: ProductModel) {
+        val nextIntent = newIntent(this, lastViewedProduct, null)
+        nextIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(nextIntent)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_close, menu)
@@ -109,11 +123,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         const val PRODUCT = "PRODUCT"
+        const val LAST_VIEWED_PRODUCT = "LAST_VIEWED"
         private const val NOT_EXIST_DATA_ERROR = "데이터가 넘어오지 않았습니다."
 
-        fun newIntent(context: Context, product: ProductModel): Intent {
+        fun newIntent(context: Context, product: ProductModel, lastViewedProduct: ProductModel?): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(PRODUCT, product)
+            intent.putExtra(LAST_VIEWED_PRODUCT, lastViewedProduct)
             return intent
         }
     }

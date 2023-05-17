@@ -71,7 +71,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             items,
             object : ProductListAdapter.OnItemClick {
                 override fun onProductClick(product: ProductModel) {
-                    showProductDetail(product)
+                    presenter.showProductDetail(product)
                 }
 
                 override fun onShowMoreClick() {
@@ -99,8 +99,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.gridProducts.adapter?.notifyItemChanged(0)
     }
 
-    private fun showProductDetail(product: ProductModel) {
-        val intent = ProductDetailActivity.newIntent(binding.root.context, product)
+    override fun onClickProductDetail(product: ProductModel, lastViewedProduct: ProductModel) {
+        val intent = ProductDetailActivity.newIntent(binding.root.context, product, lastViewedProduct)
         resultLauncher.launch(intent)
     }
 

@@ -3,6 +3,7 @@ package woowacourse.shopping.view.productlist
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
+import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 
 class ProductListPresenter(
@@ -22,6 +23,12 @@ class ProductListPresenter(
         // 더보기
         if (productListPagination.isNextEnabled) productsListItems.add(ProductListViewItem.ShowMoreItem())
         view.showProducts(productsListItems)
+    }
+
+    override fun showProductDetail(product: ProductModel) {
+        val viewedProducts = recentViewedRepository.findAll()
+        val lastViewedProduct = productRepository.find(viewedProducts.last()).toUiModel()
+        view.onClickProductDetail(product, lastViewedProduct)
     }
 
     override fun showMoreProducts() {

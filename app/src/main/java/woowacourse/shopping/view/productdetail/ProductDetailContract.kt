@@ -5,7 +5,6 @@ import woowacourse.shopping.model.ProductModel
 interface ProductDetailContract {
     interface View {
         fun startCartActivity()
-
         fun updateCount(count: Int)
     }
 
