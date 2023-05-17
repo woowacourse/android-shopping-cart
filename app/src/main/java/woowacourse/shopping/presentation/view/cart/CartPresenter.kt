@@ -15,7 +15,7 @@ class CartPresenter(
 
         newCarts = submitNewCarts(newCarts)
         view.setCartItemsView(newCarts)
-        view.setCurrentPage((currentPage + 1).toString())
+        view.setCurrentPage(currentPage)
     }
 
     private fun submitNewCarts(newCarts: List<CartModel>): List<CartModel> {

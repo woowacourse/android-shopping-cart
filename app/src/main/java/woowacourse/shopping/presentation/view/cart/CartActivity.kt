@@ -51,8 +51,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.rvCart.adapter = cartAdapter
     }
 
-    override fun setCurrentPage(currentPage: String) {
-        binding.tvCartListPageCount.text = currentPage
+    override fun setCurrentPage(currentPage: Int) {
+        binding.tvCartListPageCount.text = formatPage(currentPage)
     }
 
     private fun deleteCartItem(itemId: Long) {
@@ -78,6 +78,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             presenter.incrementPage()
         }
     }
+
+    private fun formatPage(currentPage: Int): String = currentPage.inc().toString()
 
     companion object {
         fun createIntent(context: Context): Intent {
