@@ -26,7 +26,7 @@ import woowacourse.shopping.ui.shopping.morebutton.MoreButtonAdapter
 import woowacourse.shopping.ui.shopping.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductWrapperAdapter
-import woowacourse.shopping.util.setOnSingleClickListener
+import woowacourse.shopping.util.setThrottleFirstOnClickListener
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
@@ -140,7 +140,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initButtonBasketClickListener() {
-        binding.ivBasket.setOnSingleClickListener {
+        binding.ivBasket.setThrottleFirstOnClickListener {
             startActivity(BasketActivity.getIntent(this))
         }
     }

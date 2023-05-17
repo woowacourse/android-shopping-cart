@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemButtonMoreBinding
-import woowacourse.shopping.util.setOnSingleClickListener
+import woowacourse.shopping.util.setThrottleFirstOnClickListener
 
 class MoreButtonViewHolder(parent: ViewGroup, onItemClick: () -> Unit) :
     RecyclerView.ViewHolder(
@@ -14,6 +14,6 @@ class MoreButtonViewHolder(parent: ViewGroup, onItemClick: () -> Unit) :
     private val binding = ItemButtonMoreBinding.bind(itemView)
 
     init {
-        binding.tvMore.setOnSingleClickListener { onItemClick() }
+        binding.tvMore.setThrottleFirstOnClickListener { onItemClick() }
     }
 }

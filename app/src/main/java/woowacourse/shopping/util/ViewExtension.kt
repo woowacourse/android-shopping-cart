@@ -2,7 +2,7 @@ package woowacourse.shopping.util
 
 import android.view.View
 
-inline fun View.setOnSingleClickListener(
+inline fun View.setThrottleFirstOnClickListener(
     delay: Long = 500L,
     crossinline block: (View) -> Unit
 ) {

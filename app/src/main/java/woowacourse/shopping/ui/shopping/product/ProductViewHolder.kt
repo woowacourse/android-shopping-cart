@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.model.UiProduct
-import woowacourse.shopping.util.setOnSingleClickListener
+import woowacourse.shopping.util.setThrottleFirstOnClickListener
 
 class ProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :
     RecyclerView.ViewHolder(
@@ -15,7 +15,7 @@ class ProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :
     private val binding = ItemProductBinding.bind(itemView)
 
     init {
-        binding.root.setOnSingleClickListener { onItemClick(bindingAdapterPosition) }
+        binding.root.setThrottleFirstOnClickListener { onItemClick(bindingAdapterPosition) }
     }
 
     fun bind(product: UiProduct) {

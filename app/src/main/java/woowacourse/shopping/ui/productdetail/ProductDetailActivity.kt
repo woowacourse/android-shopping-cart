@@ -15,7 +15,7 @@ import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.util.getParcelableExtraCompat
 import woowacourse.shopping.util.intentDataNullProcess
-import woowacourse.shopping.util.setOnSingleClickListener
+import woowacourse.shopping.util.setThrottleFirstOnClickListener
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
@@ -52,7 +52,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initButtonCloseClickListener() {
-        binding.ivClose.setOnSingleClickListener {
+        binding.ivClose.setThrottleFirstOnClickListener {
             finish()
         }
     }
