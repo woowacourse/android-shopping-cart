@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.cart.viewholder.CartItemViewHolder
-import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartAdapter(
-    cartProducts: List<ProductModel>,
-    private val deleteItem: (ProductModel) -> Unit,
+    cartProducts: List<CartProductModel>,
+    private val cartListener: CartListener,
 ) : RecyclerView.Adapter<CartItemViewHolder>() {
 
     private val _cartProducts = cartProducts.toMutableList()
@@ -16,7 +16,7 @@ class CartAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
         initLayoutInflater(parent)
-        return CartItemViewHolder(parent, inflater, ::onCloseClick)
+        return CartItemViewHolder(parent, inflater, cartListener)
     }
 
     private fun initLayoutInflater(parent: ViewGroup) {
@@ -33,13 +33,9 @@ class CartAdapter(
         holder.bind(_cartProducts[position])
     }
 
-    fun setItems(products: List<ProductModel>) {
+    fun setItems(cartProducts: List<CartProductModel>) {
         _cartProducts.clear()
-        _cartProducts.addAll(products)
+        _cartProducts.addAll(cartProducts)
         notifyDataSetChanged()
-    }
-
-    private fun onCloseClick(position: Int) {
-        deleteItem(_cartProducts[position])
     }
 }

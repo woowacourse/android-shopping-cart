@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="productModel"
-            type="woowacourse.shopping.presentation.model.ProductModel" />
+            name="cartProductModel"
+            type="woowacourse.shopping.presentation.model.CartProductModel" />
+
+        <variable
+            name="cartListener"
+            type="woowacourse.shopping.presentation.cart.CartListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="13dp"
                     android:layout_marginTop="10dp"
-                    android:text="@{productModel.name}"
+                    android:text="@{cartProductModel.productModel.name}"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -49,6 +53,7 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="22dp"
                     android:layout_marginEnd="22dp"
+                    android:onClick="@{v -> cartListener.onCloseClick(cartProductModel.productModel)}"
                     android:src="@drawable/close_16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/text_cart_product_name"
@@ -58,26 +63,40 @@
                     android:id="@+id/image_cart_product_poster"
                     android:layout_width="136dp"
                     android:layout_height="72dp"
-                    android:layout_marginStart="13dp"
-                    android:layout_marginTop="13dp"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:imageGlide="@{cartProductModel.productModel.imageUrl}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_cart_product_name"
-                    app:imageGlide="@{productModel.imageUrl}"
                     tools:src="@drawable/default_image" />
 
                 <TextView
                     android:id="@+id/text_cart_product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="94dp"
+
                     android:layout_marginEnd="13dp"
-                    android:text="@{@string/price_format(productModel.price)}"
-                    app:layout_constraintBottom_toBottomOf="@id/image_cart_product_poster"
+                    android:text="@{@string/price_format(cartProductModel.productModel.price)}"
+                    app:layout_constraintBottom_toTopOf="@+id/item_count_cart"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/image_cart_product_poster"
+
+                    app:layout_constraintTop_toBottomOf="@+id/image_cart_delete"
                     tools:text="99000원" />
+
+                <include
+                    android:id="@+id/item_count_cart"
+                    layout="@layout/item_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:cartListener="@{cartListener}"
+                    app:cartProductModel="@{cartProductModel}" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
