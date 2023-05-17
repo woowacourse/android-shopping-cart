@@ -17,4 +17,5 @@
     <string name="item_cart_list_minus">-</string>
     <string name="cart_select_all_text">전체</string>
     <string name="cart_order_text">주문하기</string>
+    <string name="product_detail_last_product_text">마지막으로 본 상품</string>
 </resources>
