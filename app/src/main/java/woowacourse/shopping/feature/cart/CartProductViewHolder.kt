@@ -14,7 +14,7 @@ class CartProductViewHolder private constructor(
         binding.cartProduct = cartProduct
         binding.listener = listener
 
-        binding.counterView.count = cartProduct.productUiModel.count
+        binding.counterView.setCountState(cartProduct.productUiModel.count, false)
         binding.counterView.countStateChangeListener =
             object : CounterView.OnCountStateChangeListener {
                 override fun onCountChanged(counterNavigationView: CounterView?, count: Int) {

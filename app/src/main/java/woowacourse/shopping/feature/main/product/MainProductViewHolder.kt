@@ -21,7 +21,7 @@ class MainProductViewHolder private constructor(
                 }
             }
 
-        binding.counterView.setCountState(product.count)
+        binding.counterView.setCountState(product.count, false)
     }
 
     companion object {

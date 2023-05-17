@@ -60,8 +60,8 @@ class ProductCounterView @JvmOverloads constructor(
         }
     }
 
-    fun setCountState(count: Int) {
-        binding.counterView.count = count
+    fun setCountState(count: Int, isActionListener: Boolean = true) {
+        binding.counterView.setCountState(count, isActionListener)
         updateViewState(count)
     }
 

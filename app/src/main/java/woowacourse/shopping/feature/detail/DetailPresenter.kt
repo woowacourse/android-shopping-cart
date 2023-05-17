@@ -34,7 +34,7 @@ class DetailPresenter(
         recentProduct?.let {
             view.setRecentScreen(
                 it.productUiModel.name,
-                convertToMoneyFormat(it.productUiModel.price)
+                it.productUiModel.toPriceFormat()
             )
         }
     }
