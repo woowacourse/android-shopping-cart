@@ -79,8 +79,7 @@
             app:layout_constraintBottom_toBottomOf="@id/product_title"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
             app:layout_constraintTop_toTopOf="@id/product_title"
-            app:tint="@color/gray_dark"
-            tools:src="@drawable/ic_clear" />
+            app:tint="@color/gray_dark" />
 
         <ImageView
             android:id="@+id/product_img"
@@ -108,6 +107,7 @@
 
         <woowacourse.shopping.common_ui.CounterView
             android:id="@+id/counter_view"
+            counterViewMinValue="@{1}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="36dp"

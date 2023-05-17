@@ -22,19 +22,23 @@ class CounterView @JvmOverloads constructor(
 
     var count: Int = MIN_COUNT_VALUE
         set(value) {
-            require(value in MIN_COUNT_VALUE..maxCountValue) { ERROR_COUNT_RANGE_OVER }
+            require(value in minCountValue..maxCountValue) { ERROR_COUNT_RANGE_OVER }
             field = value
             binding.countNumberTextView.text = field.toString()
         }
 
-    var maxCountValue: Int = DEFAULT_MAX_COUNT_VALUE
-
-    @ColorRes
-    var contentColor: Int = R.color.black
+    // 카운터의 최대치 조정 가능
+    var minCountValue: Int = DEFAULT_MIN_COUNT_VALUE
         set(value) {
-            binding.plusButton.setTextColor(resources.getColor(value, null))
-            binding.minusButton.setTextColor(resources.getColor(value, null))
-            binding.countNumberTextView.setTextColor(resources.getColor(value, null))
+            require(maxCountValue > value) {}
+            field = value
+        }
+
+    // 카운터의 최대치 조정 가능
+    var maxCountValue: Int = DEFAULT_MAX_COUNT_VALUE
+        set(value) {
+            require(value > minCountValue) {}
+            field = value
         }
 
     var countStateChangeListener: OnCountStateChangeListener? = null
@@ -50,7 +54,7 @@ class CounterView @JvmOverloads constructor(
             countStateChangeListener?.onCountChanged(this, count)
         }
         binding.minusButton.setOnClickListener {
-            if (count == MIN_COUNT_VALUE) return@setOnClickListener
+            if (count == minCountValue) return@setOnClickListener
             count--
             countStateChangeListener?.onCountChanged(this, count)
         }
@@ -59,12 +63,19 @@ class CounterView @JvmOverloads constructor(
     companion object {
         private const val ERROR_COUNT_RANGE_OVER = "[ERROR] 카운트의 범위를 벗어났습니다"
         private const val MIN_COUNT_VALUE = 0
+        private const val DEFAULT_MIN_COUNT_VALUE = 0
         private const val DEFAULT_MAX_COUNT_VALUE = 99
 
         @JvmStatic
-        @BindingAdapter("counterContentColor")
-        fun setCounterContentColor(counterView: CounterView, color: Int) {
-            counterView.contentColor = color
+        @BindingAdapter("counterViewMinValue")
+        fun setCounterViewMinValue(counterView: CounterView, value: Int) {
+            counterView.minCountValue = value
+        }
+
+        @JvmStatic
+        @BindingAdapter("counterViewMaxValue")
+        fun setCounterViewMaxValue(counterView: CounterView, value: Int) {
+            counterView.maxCountValue = value
         }
     }
 }

@@ -4,10 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import androidx.annotation.ColorRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.LayoutProductCounterBinding
 
 class ProductCounterView @JvmOverloads constructor(
@@ -21,7 +19,7 @@ class ProductCounterView @JvmOverloads constructor(
 
     private val defaultClickListener = object : CounterView.OnCountStateChangeListener {
         override fun onCountChanged(counterNavigationView: CounterView?, count: Int) {
-            changeViewState(count)
+            updateViewState(count)
         }
     }
 
@@ -33,31 +31,26 @@ class ProductCounterView @JvmOverloads constructor(
                         counterNavigationView: CounterView?,
                         count: Int
                     ) {
-                        changeViewState(count)
+                        // 카운터 뷰한테서 받은 카운트로 뷰 상태 업데이트
+                        updateViewState(count)
+
+                        // 등록받은 리스너 호출해서 바뀐 카운트값을 외부에 전달
                         value.onCountChanged(counterNavigationView, count)
                     }
                 }
             field = value
         }
 
-
-    @ColorRes
-    var contentColor: Int = R.color.black
-        set(value) {
-            field = value
-            binding.counterView.contentColor = value
-        }
-
     init {
         binding.counterStartButton.setOnClickListener {
             binding.counterView.count = 1
             countStateChangeListener.onCountChanged(binding.counterView, 1)
-            changeViewState(1)
+            updateViewState(1)
         }
         binding.counterView.visibility = View.GONE
     }
 
-    private fun changeViewState(count: Int) {
+    private fun updateViewState(count: Int) {
         if (count == 0) {
             binding.counterStartButton.visibility = View.VISIBLE
             binding.counterView.visibility = View.GONE
@@ -69,14 +62,29 @@ class ProductCounterView @JvmOverloads constructor(
 
     fun setCountState(count: Int) {
         binding.counterView.count = count
-        changeViewState(count)
+        updateViewState(count)
     }
+
+    fun setMinCountValue(minValue: Int) {
+        binding.counterView.minCountValue = minValue
+    }
+
+    fun setMaxCountValue(maxValue: Int) {
+        binding.counterView.maxCountValue = maxValue
+    }
+
 
     companion object {
         @JvmStatic
-        @BindingAdapter("productCounterContentColor")
-        fun setProductCounterContentColor(productCounterView: ProductCounterView, color: Int) {
-            productCounterView.contentColor = color
+        @BindingAdapter("counterViewMinValue")
+        fun setProductCounterViewMinValue(productCounterView: ProductCounterView, value: Int) {
+            productCounterView.setMinCountValue(value)
+        }
+
+        @JvmStatic
+        @BindingAdapter("counterViewMaxValue")
+        fun setProductCounterViewMaxValue(productCounterView: ProductCounterView, value: Int) {
+            productCounterView.setMaxCountValue(value)
         }
     }
 }
