@@ -98,7 +98,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun addProducts(products: List<ProductUIState>) {
         val adapter = binding.recyclerViewMainProduct.adapter as ProductListAdapter
         adapter.addItems(products)
-        adapter.notifyDataSetChanged()
+        adapter.notifyItemRangeInserted(adapter.itemCount, products.size)
     }
 
     private fun moveToProductDetailActivity(productId: Long) {
