@@ -167,7 +167,8 @@ class ShoppingDBAdapter(
 
     override fun getCountOfShoppingCartProducts(): Int {
         var count = 0
-        val cursor = shoppingDB.rawQuery("SELECT COUNT(*) FROM ${ShoppingCartDBContract.TABLE_NAME}", null)
+        val cursor =
+            shoppingDB.rawQuery("SELECT COUNT(*) FROM ${ShoppingCartDBContract.TABLE_NAME}", null)
         if (cursor.moveToFirst()) {
             count = cursor.getInt(0)
         }
@@ -227,6 +228,18 @@ class ShoppingDBAdapter(
             RecentViewedDBContract.TABLE_NAME,
             "ROWID = (SELECT MIN(ROWID) FROM ${RecentViewedDBContract.TABLE_NAME})",
             null
+        )
+    }
+
+    // TODO: 이상한 부분
+    override fun selectLatestViewedProduct(): Product? {
+        val products = selectRecentViewedProducts()
+
+        if (products.size < 2) {
+            return null
+        }
+        return selectProductById(
+            id = products[1].id
         )
     }
 

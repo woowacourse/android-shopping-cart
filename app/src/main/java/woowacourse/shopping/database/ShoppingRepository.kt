@@ -26,6 +26,8 @@ interface ShoppingRepository {
 
     fun deleteFromRecentViewedProducts()
 
+    fun selectLatestViewedProduct(): Product?
+
     fun getCountOfShoppingCartProducts(): Int
 
     fun setUpDB()
