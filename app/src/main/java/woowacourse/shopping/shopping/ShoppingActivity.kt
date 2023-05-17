@@ -42,11 +42,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private val concatAdapter: ConcatAdapter by lazy {
-        val config = ConcatAdapter.Config.Builder().apply {
-            setIsolateViewTypes(false)
-        }.build()
         ConcatAdapter(
-            config, recentProductWrapperAdapter, productAdapter
+            recentProductWrapperAdapter, productAdapter
         )
     }
 
