@@ -17,6 +17,7 @@ class ProductListPresenter(
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()
     private val recentProducts = mutableListOf<RecentProductModel>()
+    private var lastScroll = 0
 
     override fun initRecentProductItems() {
         val today = LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN))
@@ -24,7 +25,10 @@ class ProductListPresenter(
     }
 
     override fun loadProductItems() {
-        products.addAll(productRepository.getData(LOAD_PRODUCT_START_POSITION, LOAD_PRODUCT_COUNT).map { it.toUIModel() })
+        products.addAll(
+            productRepository.getData(LOAD_PRODUCT_START_POSITION, LOAD_PRODUCT_COUNT)
+                .map { it.toUIModel() }
+        )
         view.setProductItemsView(products)
     }
 
@@ -45,7 +49,8 @@ class ProductListPresenter(
 
     override fun loadMoreData() {
         val startPosition = products.size
-        val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT).map { it.toUIModel() }
+        val newProducts =
+            productRepository.getData(startPosition, LOAD_PRODUCT_COUNT).map { it.toUIModel() }
         products.addAll(newProducts)
         view.updateMoreProductsView(startPosition, newProducts.size)
     }
@@ -54,6 +59,12 @@ class ProductListPresenter(
         when (itemId) {
             R.id.action_cart -> view.moveToCartView()
         }
+    }
+
+    override fun getRecentProductsLastScroll(): Int = lastScroll
+
+    override fun updateRecentProductsLastScroll(lastScroll: Int) {
+        this.lastScroll = lastScroll
     }
 
     companion object {

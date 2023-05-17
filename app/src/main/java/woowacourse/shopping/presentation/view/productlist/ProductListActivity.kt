@@ -105,7 +105,11 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
             val intent = ProductDetailActivity.createIntent(this, productId)
             startActivity(intent)
         }
-        recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductListAdapter)
+        recentProductWrapperAdapter = RecentProductWrapperAdapter(
+            presenter::getRecentProductsLastScroll,
+            presenter::updateRecentProductsLastScroll,
+            recentProductListAdapter
+        )
     }
 
     private fun setMoreProductListAdapter() {
@@ -146,12 +150,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(KEY_STATE_LAST_SCROLL, recentProductWrapperAdapter.getScrollPosition())
+        outState.putInt(KEY_STATE_LAST_SCROLL, presenter.getRecentProductsLastScroll())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        recentProductWrapperAdapter.setScrollPosition(savedInstanceState.getInt(KEY_STATE_LAST_SCROLL))
+        presenter.updateRecentProductsLastScroll(savedInstanceState.getInt(KEY_STATE_LAST_SCROLL))
     }
 
     companion object {

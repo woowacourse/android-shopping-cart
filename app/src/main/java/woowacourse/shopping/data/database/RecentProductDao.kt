@@ -50,7 +50,7 @@ class RecentProductDao(context: Context) {
             null,
             null,
             RecentProductContract.RecentProduct.CREATE_DATE + " DESC",
-            "10"
+            "20"
         )
     }
 }

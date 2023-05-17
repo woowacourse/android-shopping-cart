@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.view.productlist.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.doOnPreDraw
+import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentProductWrapperBinding
@@ -28,7 +28,7 @@ class RecentProductWrapperViewHolder(
     }
 
     fun bind(lastScrollX: Int) {
-        binding.rvRecentProductList.doOnPreDraw {
+        binding.rvRecentProductList.doOnLayout {
             binding.rvRecentProductList.scrollBy(lastScrollX, 0)
         }
     }
