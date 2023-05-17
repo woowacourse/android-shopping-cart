@@ -24,7 +24,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val presenter: ShoppingContract.Presenter by lazy {
         generateShoppingPresenter(this, this)
     }
-    private val getResult: ActivityResultLauncher<Intent> =
+    private val shoppingDetailResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             when (result.resultCode) {
                 ACTIVITY_RESULT_CODE -> {
@@ -90,6 +90,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter.addToRecentViewedProduct(product.id)
         val intent = ProductDetailActivity.getIntent(this, product)
 
-        getResult.launch(intent)
+        shoppingDetailResultLauncher.launch(intent)
     }
 }
