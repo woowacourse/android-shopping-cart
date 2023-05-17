@@ -12,17 +12,13 @@ import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
 import woowacourse.shopping.ui.cart.uistate.CartUIState
-import kotlin.properties.Delegates
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private val presenter: CartPresenter by lazy {
         CartPresenter(this, CartRepositoryImpl(this, ProductRepositoryImpl))
     }
-    private var page: Int by Delegates.observable(1) { _, _, new ->
-        presenter.loadCartItems(PAGE_SIZE, (new - 1) * PAGE_SIZE)
-        binding.tvCartPage.text = "$page"
-    }
+    private var page: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +53,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartList() {
-        presenter.loadCartItems(limit = PAGE_SIZE, offset = (page - 1) * PAGE_SIZE)
+        presenter.loadCartItems(limit = PAGE_SIZE, page = (page - 1) * PAGE_SIZE)
     }
 
     private fun initBottomField() {
@@ -71,12 +67,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.btnPageDown.setOnClickListener {
             if (page > 1) {
                 page--
+                updatePage()
             }
             updateButtonsEnabledState(maxOffset)
         }
         binding.btnPageUp.setOnClickListener {
             if (page < maxOffset) {
                 page++
+                updatePage()
             }
             updateButtonsEnabledState(maxOffset)
         }
@@ -86,6 +84,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.recyclerViewCart.adapter = CartListAdapter(cartItems) {
             presenter.deleteCartItem(cartItems[it].id)
         }
+    }
+
+    private fun updatePage() {
+        presenter.loadCartItems(PAGE_SIZE, page)
+        binding.tvCartPage.text = "$page"
     }
 
     private fun updateButtonsEnabledState(maxOffset: Int) {

@@ -32,12 +32,17 @@ class RecentlyViewedProductRepositoryImpl(
     }
 
     override fun save(product: Product) {
-        // 중복된 상품이 있을 때 삭제하고
+        deleteExistingItem(product)
+        insertItem(product)
+    }
+
+    private fun deleteExistingItem(product: Product) {
         val selection = "${ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} = ?"
         val selectionArgs = arrayOf(product.id.toString())
         db.delete(ProductContract.RecentlyViewedProductEntry.TABLE_NAME, selection, selectionArgs)
+    }
 
-        // 상품 추가
+    private fun insertItem(product: Product) {
         val value = ContentValues().apply {
             put(ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID, product.id)
         }

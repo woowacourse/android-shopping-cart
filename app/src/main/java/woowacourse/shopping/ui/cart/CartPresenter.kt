@@ -12,7 +12,8 @@ class CartPresenter(
         view.setCartItems(cartRepository.findAll().map(CartUIState::from))
     }
 
-    override fun loadCartItems(limit: Int, offset: Int) {
+    override fun loadCartItems(limit: Int, page: Int) {
+        val offset = (page - 1) * limit
         view.setCartItems(
             cartRepository.findAll(limit = limit, offset = offset).map(CartUIState::from),
         )
