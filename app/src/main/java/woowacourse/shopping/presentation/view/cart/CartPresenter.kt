@@ -14,7 +14,8 @@ class CartPresenter(
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 
         newCarts = submitNewCarts(newCarts)
-        view.setCartItemsView(newCarts, (currentPage+1).toString())
+        view.setCartItemsView(newCarts)
+        view.setCurrentPage((currentPage + 1).toString())
     }
 
     private fun submitNewCarts(newCarts: List<CartModel>): List<CartModel> {

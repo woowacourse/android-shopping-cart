@@ -35,7 +35,7 @@ internal class CartPresenterTest {
         val cartItemSlot = slot<List<CartModel>>()
         justRun {
             view.setCartItemsView(
-                capture(cartItemSlot), "1"
+                capture(cartItemSlot)
             )
         }
         presenter = CartPresenter(view, cartRepository)
@@ -49,7 +49,7 @@ internal class CartPresenterTest {
         verify { cartRepository.getCarts(0, 4) }
         verify { view.setEnableLeftButton(false) }
         verify { view.setEnableRightButton(false) }
-        verify { view.setCartItemsView(actual, "1") }
+        verify { view.setCartItemsView(actual) }
     }
 
     @Test
@@ -64,9 +64,9 @@ internal class CartPresenterTest {
 
         // when
         val cartItemSlot = slot<List<CartModel>>()
-        justRun { view.setCartItemsView(capture(cartItemSlot), "1") }
+        justRun { view.setCartItemsView(capture(cartItemSlot)) }
 
-        presenter.deleteCartItem( 1)
+        presenter.deleteCartItem(1)
 
         // then
         val actual = cartItemSlot.captured
@@ -76,6 +76,6 @@ internal class CartPresenterTest {
         verify { cartRepository.deleteCartByProductId(1) }
         verify { view.setEnableLeftButton(false) }
         verify { view.setEnableRightButton(false) }
-        verify { view.setCartItemsView(actual, "1") }
+        verify { view.setCartItemsView(actual) }
     }
 }

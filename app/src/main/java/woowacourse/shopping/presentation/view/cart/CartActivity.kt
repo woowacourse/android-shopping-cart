@@ -46,10 +46,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setCartItemsView(carts: List<CartModel>, currentPage: String) {
+    override fun setCartItemsView(carts: List<CartModel>) {
         cartAdapter = CartAdapter(carts, ::deleteCartItem)
-        binding.tvCartListPageCount.text = currentPage
         binding.rvCart.adapter = cartAdapter
+    }
+
+    override fun setCurrentPage(currentPage: String) {
+        binding.tvCartListPageCount.text = currentPage
     }
 
     private fun deleteCartItem(itemId: Long) {
