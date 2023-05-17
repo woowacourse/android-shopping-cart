@@ -70,7 +70,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun showErrorMessage() {
-        Toast.makeText(this, "존재하지 않는 상품입니다", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.error_not_found), Toast.LENGTH_SHORT).show()
     }
 
     private fun moveToCartActivity() {
