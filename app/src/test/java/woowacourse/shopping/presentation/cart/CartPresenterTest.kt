@@ -29,8 +29,6 @@ internal class CartPresenterTest {
     fun `장바구니 데이터를 받아와 보여준다`() {
         // given
         every { cartRepository.getCarts(0, 4) } returns CartFixture.getFixture()
-        justRun { view.setEnableLeftButton(false) }
-        justRun { view.setEnableRightButton(false) }
 
         val cartItemSlot = slot<List<CartModel>>()
         justRun {
@@ -57,8 +55,6 @@ internal class CartPresenterTest {
         // given
         justRun { cartRepository.deleteCartByProductId(1) }
         every { cartRepository.getCarts(0, 4) } returns CartFixture.getFixture().dropLast(1)
-        justRun { view.setEnableLeftButton(false) }
-        justRun { view.setEnableRightButton(false) }
 
         presenter = CartPresenter(view, cartRepository)
 
