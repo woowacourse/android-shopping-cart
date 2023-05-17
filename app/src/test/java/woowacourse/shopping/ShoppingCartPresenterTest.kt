@@ -42,28 +42,63 @@ class ShoppingCartPresenterTest {
 
         // then
         val expected = products.map { it.toUiModel() }
-        verify { view.setUpShoppingCartView(expected, any(), any()) }
+        verify { view.setUpShoppingCartView(expected) }
     }
 
     @Test
     fun `상품을 삭제하면 저장소에게 삭제할 상품의 아이디를 전해준다`() {
+        // given
+        val product = ShoppingCartProduct(id = 1).toUiModel()
+
         // when
-        presenter.removeShoppingCartProduct(id = 1)
+        presenter.removeShoppingCartProduct(product)
 
         // then
         verify { repository.deleteFromShoppingCart(id = 1) }
     }
 
     @Test
-    fun `상품을 추가하면 저장소에서 상품 정보를 받아서 뷰에서 더 많은 상품을 보여준다`() {
+    fun `상품의 개수를 추가시키면 저장소에 개수가 하나 증가한 상품의 데이터를 삽입한다`() {
         // given
-        every { repository.selectShoppingCartProducts(any(), any()) } returns products
+        val product = ShoppingCartProduct(
+            id = 1,
+            count = 5
+        ).toUiModel()
 
         // when
-        presenter.addShoppingCartProducts()
+        presenter.plusShoppingCartProductCount(product)
 
         // then
-        val expected = products.map { it.toUiModel() }
-        verify { view.showMoreShoppingCartProducts(products = expected) }
+        verify { repository.insertToShoppingCart(id = 1, count = 6) }
+    }
+
+    @Test
+    fun `상품의 개수를 감소시키면 저장소에 개수가 하나 감소된 상품의 데이터를 삽입한다`() {
+        val product = ShoppingCartProduct(
+            id = 1,
+            count = 5
+        ).toUiModel()
+
+        // when
+        presenter.minusShoppingCartProductCount(product)
+
+        // then
+        verify { repository.insertToShoppingCart(id = 1, count = 4) }
+    }
+
+    @Test
+    fun `상품의 총 가격을 계산해서 가격을 나타내는 텍스트 뷰를 초기화한다`() {
+        // given
+        val products = listOf(
+            ShoppingCartProduct(price = 5000),
+            ShoppingCartProduct(price = 1000),
+            ShoppingCartProduct(price = 2000),
+        ).map { it.toUiModel() }
+
+        // when
+        presenter.calcTotalPrice(products)
+
+        // then
+        verify { view.setUpTextTotalPriceView(8000) }
     }
 }

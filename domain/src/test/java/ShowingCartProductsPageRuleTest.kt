@@ -1,10 +1,7 @@
-package woowacourse.shopping
-
+import model.Page
+import model.ShowingCartProductsPageRule
 import org.junit.Assert.assertEquals
 import org.junit.Test
-import woowacourse.shopping.model.Page
-import woowacourse.shopping.shoppingcart.ShowingCartProductsPageRule
-import woowacourse.shopping.util.toUiModel
 
 class ShowingCartProductsPageRuleTest {
 
@@ -16,7 +13,7 @@ class ShowingCartProductsPageRuleTest {
         ShoppingCartProduct(name = "녹차"),
         ShoppingCartProduct(name = "카라멜 마끼아또"),
         ShoppingCartProduct(name = "스콘")
-    ).map { it.toUiModel() }
+    )
 
     @Test
     fun `페이지에 띄워줄 항목을 페이지마다 앞에서부터 세개씩 끊어서 제공한다`() {
@@ -34,7 +31,7 @@ class ShowingCartProductsPageRuleTest {
             ShoppingCartProduct(name = "얼그레이"),
             ShoppingCartProduct(name = "녹차"),
             ShoppingCartProduct(name = "카라멜 마끼아또"),
-        ).map { it.toUiModel() }
+        )
 
         assertEquals(expected, actual)
     }

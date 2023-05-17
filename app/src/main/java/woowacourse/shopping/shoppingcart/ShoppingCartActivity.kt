@@ -49,33 +49,21 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setUpShoppingCartView(
-        products: List<ShoppingCartProductUiModel>,
-        onRemoved: (id: Int) -> Unit,
-        onAdded: () -> Unit,
-        onProductCountPlus: (product: ShoppingCartProductUiModel) -> Unit,
-        onProductCountMinus: (product: ShoppingCartProductUiModel) -> Unit,
-        onTotalPriceChanged: (products: List<ShoppingCartProductUiModel>) -> Unit,
-    ) {
+    override fun setUpShoppingCartView(products: List<ShoppingCartProductUiModel>) {
         shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
-            products = products,
-            onRemoved = onRemoved,
-            onAdded = onAdded,
-            onProductCountPlus = onProductCountPlus,
-            onProductCountMinus = onProductCountMinus,
-            onTotalPriceChanged = onTotalPriceChanged,
-            onPageChanged = ::setUpTextPageNumber
+            shoppingCartProducts = products,
+            shoppingCartProductCountPicker = getShoppingCartProductCountPickerImpl(),
+            onShoppingCartProductRemoved = presenter::removeShoppingCartProduct,
+            onTotalPriceChanged = presenter::calcTotalPrice,
         )
 
         with(binding) {
             recyclerViewCart.adapter = shoppingCartRecyclerAdapter
             buttonNextPage.setOnClickListener {
-                // TODO : MVP아님
-                shoppingCartRecyclerAdapter.moveToNextPage()
+                presenter.moveToNextPage()
             }
             buttonPreviousPage.setOnClickListener {
-                // TODO : MVP아님
-                shoppingCartRecyclerAdapter.moveToPreviousPage()
+                presenter.moveToPrevPage()
             }
             checkBoxTotalProducts.setOnCheckedChangeListener { _, isChecked ->
                 presenter.changeProductsSelectedState(isChecked)
@@ -83,36 +71,38 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         }
     }
 
+    private fun getShoppingCartProductCountPickerImpl() = object : ShoppingCartProductCountPicker {
+
+        override fun onPlus(product: ShoppingCartProductUiModel) {
+            presenter.plusShoppingCartProductCount(product)
+        }
+
+        override fun onMinus(product: ShoppingCartProductUiModel) {
+            presenter.minusShoppingCartProductCount(product)
+        }
+    }
+
     override fun setUpTextTotalPriceView(price: Int) {
         binding.textTotalPrice.text = price.toString()
     }
 
-    override fun showMoreShoppingCartProducts(products: List<ShoppingCartProductUiModel>) {
-        if (products.isEmpty()) {
-            return Toast.makeText(
-                this,
-                getString(R.string.message_last_page),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-
-        shoppingCartRecyclerAdapter.addItems(products = products)
-    }
-
     override fun refreshShoppingCartProductView(product: ShoppingCartProductUiModel) {
-        shoppingCartRecyclerAdapter.updateItem(product = product)
+        shoppingCartRecyclerAdapter.removeItem(product = product)
     }
 
     override fun refreshShoppingCartProductView(products: List<ShoppingCartProductUiModel>) {
-        shoppingCartRecyclerAdapter.setItems(products = products)
+        shoppingCartRecyclerAdapter.refreshItems(products = products)
     }
 
-    private fun setUpTextPageNumber(pageNumber: Int) {
+    override fun setUpTextPageNumber(pageNumber: Int) {
         binding.textPageNumber.text = pageNumber.toString()
     }
 
-    companion object {
+    override fun showMessageReachedEndPage() {
+        Toast.makeText(this, getString(R.string.message_last_page), Toast.LENGTH_SHORT).show()
+    }
 
+    companion object {
         fun getIntent(context: Context): Intent {
 
             return Intent(context, ShoppingCartActivity::class.java)

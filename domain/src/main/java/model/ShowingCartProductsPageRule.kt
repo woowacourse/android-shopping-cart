@@ -1,14 +1,11 @@
-package woowacourse.shopping.shoppingcart
-
-import woowacourse.shopping.model.Page
-import woowacourse.shopping.model.ShoppingCartProductUiModel
+package model
 
 object ShowingCartProductsPageRule : PageRule {
 
     private const val ITEM_COUNT_ON_EACH_PAGE = 3
 
-    override fun getProductsOfPage(products: List<ShoppingCartProductUiModel>, page: Page): List<ShoppingCartProductUiModel> {
-        val shoppingCartProducts = mutableListOf<ShoppingCartProductUiModel>()
+    override fun getProductsOfPage(products: List<ShoppingCartProduct>, page: Page): List<ShoppingCartProduct> {
+        val shoppingCartProducts = mutableListOf<ShoppingCartProduct>()
         var currentIndex = page.value * ITEM_COUNT_ON_EACH_PAGE
 
         if (currentIndex >= products.size) {

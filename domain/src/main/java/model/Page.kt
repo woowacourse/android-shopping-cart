@@ -1,4 +1,4 @@
-package woowacourse.shopping.model
+package model
 
 @JvmInline
 value class Page(val value: Int = 0) : Comparable<Page> {
