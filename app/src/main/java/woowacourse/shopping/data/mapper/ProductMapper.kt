@@ -4,7 +4,19 @@ import woowacourse.shopping.data.model.DataProduct
 import woowacourse.shopping.domain.Product
 
 fun DataProduct.toDomain(): Product =
-    Product(id = id, name = name, price = price.toDomain(), imageUrl = imageUrl)
+    Product(
+        id = id,
+        name = name,
+        price = price.toDomain(),
+        imageUrl = imageUrl,
+        selectedCount = selectedCount
+    )
 
 fun Product.toData(): DataProduct =
-    DataProduct(id = id, name = name, price = price.toData(), imageUrl = imageUrl)
+    DataProduct(
+        id = id,
+        name = name,
+        price = price.toData(),
+        imageUrl = imageUrl,
+        selectedCount = selectedCount
+    )
