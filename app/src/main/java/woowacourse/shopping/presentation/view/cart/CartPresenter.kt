@@ -1,21 +1,22 @@
 package woowacourse.shopping.presentation.view.cart
 
 import woowacourse.shopping.data.respository.cart.CartRepository
+import woowacourse.shopping.domain.CartPage
 import woowacourse.shopping.presentation.model.CartModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    private var currentPage: Int = 0
+    private var cartPage: CartPage = CartPage()
 ) : CartContract.Presenter {
     override fun loadCartItems() {
         var newCarts = getNewCarts()
-        view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
+        view.setEnableLeftButton(cartPage.currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 
         newCarts = submitNewCarts(newCarts)
         view.setCartItemsView(newCarts)
-        view.setCurrentPage(currentPage)
+        view.setCurrentPage(cartPage.currentPage)
     }
 
     private fun submitNewCarts(newCarts: List<CartModel>): List<CartModel> {
@@ -27,7 +28,7 @@ class CartPresenter(
     }
 
     private fun getNewCarts(): List<CartModel> {
-        val startPosition = getStartItemPosition()
+        val startPosition = cartPage.getStartItemPosition()
         return cartRepository.getCarts(startPosition, GET_CART_ITEM_COUNT)
     }
 
@@ -36,16 +37,13 @@ class CartPresenter(
         loadCartItems()
     }
 
-    private fun getStartItemPosition(): Int =
-        (currentPage) * DISPLAY_CART_COUNT_CONDITION
-
     override fun decrementPage() {
-        currentPage--
+        cartPage = cartPage.decrementPage()
         loadCartItems()
     }
 
     override fun incrementPage() {
-        currentPage++
+        cartPage = cartPage.incrementPage()
         loadCartItems()
     }
 

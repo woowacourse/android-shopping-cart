@@ -4,8 +4,8 @@ import android.provider.BaseColumns
 
 object CartContract {
     const val CREATE_SQL = "CREATE TABLE IF NOT EXISTS ${Cart.TABLE_NAME} (" +
-        "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-        "${Cart.PRODUCT_ID} INTEGER)"
+            "${BaseColumns._ID} INTEGER PRIMARY KEY," +
+            "${Cart.PRODUCT_ID} INTEGER)"
 
     const val DROP_SQL = "DROP TABLE IF EXISTS ${Cart.TABLE_NAME}"
 

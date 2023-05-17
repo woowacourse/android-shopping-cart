@@ -64,4 +64,6 @@ dependencies {
 
     testImplementation("io.mockk:mockk-android:1.13.5")
     testImplementation("io.mockk:mockk-agent:1.13.5")
+
+    implementation(project(":domain"))
 }
