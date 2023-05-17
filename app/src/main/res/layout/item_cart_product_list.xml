@@ -18,19 +18,29 @@
         android:paddingHorizontal="13dp"
         android:paddingVertical="10dp">
 
+        <CheckBox
+            android:id="@+id/cart_product_list_check"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:layout_constraintBottom_toBottomOf="@id/cart_product_list_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cart_product_list_title" />
+
         <TextView
             android:id="@+id/cart_product_list_title"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="11dp"
             android:layout_marginEnd="7dp"
             android:ellipsize="end"
+            android:gravity="center_vertical"
             android:maxLines="1"
-            android:text="@{cartProduct.product.title}"
+            android:text="@{cartProduct.productModel.title}"
             android:textColor="#333333"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/cart_product_list_remove_button"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cart_product_list_check"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
 
@@ -50,7 +60,7 @@
             android:layout_height="72dp"
             android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"
-            android:urlSrc="@{cartProduct.product.picture}"
+            android:urlSrc="@{cartProduct.productModel.picture}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -60,12 +70,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@{@string/product_price(cartProduct.product.price)}"
+            android:text="@{@string/product_price(cartProduct.productModel.price)}"
             android:textColor="#333333"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/cart_product_list_counter"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />
+
+        <woowacourse.shopping.common.view.Counter
+            android:id="@+id/cart_product_list_counter"
+            onMinusClick="@{() -> cartProduct}"
+            onPlusClick="@{() -> cartProduct}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
