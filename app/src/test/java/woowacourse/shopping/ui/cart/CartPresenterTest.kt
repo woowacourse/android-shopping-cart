@@ -7,12 +7,12 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.model.CartProduct
 import woowacourse.shopping.model.CartProducts
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
-import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 
 class CartPresenterTest {
 
@@ -28,6 +28,19 @@ class CartPresenterTest {
         "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
     )
 
+    private val fakeCartProducts = CartProducts(
+        List(10) {
+            CartProduct(
+                1,
+                "aa",
+                1,
+                true,
+                12000,
+                "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+            )
+        }
+    )
+
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
@@ -37,7 +50,7 @@ class CartPresenterTest {
     }
 
     @Test
-    fun `장바구니에 담긴 상품을 보여준다`() {
+    fun `장바구니에 담긴 상품을 보여주고 금액과 선택된 개수를 설정한다`() {
         // given
         val fakeCartProducts = CartProducts(listOf())
         every { cartRepository.getPage(any(), any()) } returns fakeCartProducts
@@ -49,12 +62,9 @@ class CartPresenterTest {
         presenter.setUpCarts()
 
         // then
-        verify(exactly = 1) {
-            view.setCarts(
-                fakeCartProducts.toUIModel().map { CartItemType.Cart(it) },
-                PageUIModel(pageNext = true, pagePrev = true, pageNumber = 1)
-            )
-        }
+        verify(exactly = 1) { view.setCarts(any(), PageUIModel(true, true, 1)) }
+        verify(exactly = 1) { view.setBottom(any(), any()) }
+        verify(exactly = 1) { view.setAllItemCheck(any()) }
     }
 
     @Test
@@ -69,16 +79,9 @@ class CartPresenterTest {
         presenter.moveToPageNext()
 
         // then
-        verify(exactly = 1) {
-            view.setCarts(
-                any(),
-                PageUIModel(
-                    pageNext = true,
-                    pagePrev = true,
-                    pageNumber = 2
-                )
-            )
-        }
+        verify(exactly = 1) { view.setCarts(any(), PageUIModel(true, true, 2)) }
+        verify(exactly = 1) { view.setBottom(any(), any()) }
+        verify(exactly = 1) { view.setAllItemCheck(any()) }
     }
 
     @Test
@@ -91,16 +94,26 @@ class CartPresenterTest {
         // when
         presenter.moveToPagePrev()
         // then
-        verify(exactly = 1) {
-            view.setCarts(
-                any(),
-                PageUIModel(
-                    pageNext = true,
-                    pagePrev = true,
-                    pageNumber = 0
-                )
-            )
-        }
+        verify(exactly = 1) { view.setCarts(any(), PageUIModel(true, true, 0)) }
+        verify(exactly = 1) { view.setBottom(any(), any()) }
+        verify(exactly = 1) { view.setAllItemCheck(any()) }
+    }
+
+    @Test
+    fun `현재 페이지의 모든 상품을 선택한다`() {
+        // given
+        every { cartRepository.getPage(any(), any()) } returns fakeCartProducts
+        every { cartRepository.hasNextPage(any(), any()) } returns true
+        every { cartRepository.hasPrevPage(any(), any()) } returns true
+        every { view.setCarts(any(), any()) } answers { nothing }
+        // when
+        presenter.setProductsCheck(true)
+
+        // then
+        verify(exactly = 1) { view.setCarts(any(), any()) }
+        verify(exactly = 1) { view.setBottom(any(), any()) }
+        verify(exactly = 1) { view.setAllItemCheck(any()) }
+        verify(exactly = 10) { cartRepository.updateChecked(any(), true) }
     }
 
     @Test
@@ -109,11 +122,13 @@ class CartPresenterTest {
         every { cartRepository.remove(any()) } answers { nothing }
 
         // when
-        presenter.removeItem(1)
+        presenter.removeProduct(1)
 
         // then
-        verify(exactly = 1) { cartRepository.remove(1) }
         verify(exactly = 1) { view.setCarts(any(), any()) }
+        verify(exactly = 1) { view.setBottom(any(), any()) }
+        verify(exactly = 1) { view.setAllItemCheck(any()) }
+        verify(exactly = 1) { cartRepository.remove(1) }
     }
 
     @Test
@@ -140,5 +155,31 @@ class CartPresenterTest {
 
         // then
         assertEquals(presenter.getPageIndex(), index)
+    }
+
+    @Test
+    fun `아이템의 개수를 변경한다`() {
+        // given
+
+        // when
+        presenter.updateItemCount(1, 0)
+
+        // then
+        verify(exactly = 1) { cartRepository.updateCount(1, 0) }
+        verify(exactly = 1) { view.setBottom(any(), any()) }
+        verify(exactly = 1) { view.setAllItemCheck(any()) }
+    }
+
+    @Test
+    fun `아이템의 선택을 변경한다`() {
+        // given
+
+        // when
+        presenter.updateItemCheck(1, true)
+
+        // then
+        verify(exactly = 1) { cartRepository.updateChecked(1, true) }
+        verify(exactly = 1) { view.setBottom(any(), any()) }
+        verify(exactly = 1) { view.setAllItemCheck(any()) }
     }
 }
