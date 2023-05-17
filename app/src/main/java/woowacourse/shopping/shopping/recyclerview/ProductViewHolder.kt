@@ -1,7 +1,7 @@
 package woowacourse.shopping.shopping.recyclerview
 
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductViewHolder(
@@ -12,7 +12,7 @@ class ProductViewHolder(
         binding.root.setOnClickListener { onItemViewClick(bindingAdapterPosition) }
     }
 
-    fun bind(product: ProductModel) {
-        binding.product = product
+    fun bind(product: ShoppingProductModel) {
+        binding.shoppingProduct = product
     }
 }

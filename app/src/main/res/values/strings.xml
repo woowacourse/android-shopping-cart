@@ -8,4 +8,7 @@
     <string name="load_more_button_text">더보기</string>
     <string name="pagination_previous_button"><![CDATA[<]]></string>
     <string name="pagination_next_button"><![CDATA[>]]></string>
+
+    <string name="plus">+</string>
+    <string name="minus">-</string>
 </resources>

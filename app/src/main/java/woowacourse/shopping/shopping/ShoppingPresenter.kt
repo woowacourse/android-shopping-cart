@@ -2,8 +2,8 @@ package woowacourse.shopping.shopping
 
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
-import woowacourse.shopping.common.model.mapper.ProductMapper.toView
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
+import woowacourse.shopping.common.model.mapper.ShoppingProductMapper.toView
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository

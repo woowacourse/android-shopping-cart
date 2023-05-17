@@ -3,8 +3,10 @@
 - [ ] MVP
     - Presenter
     - [ ] Shopping
+        - CartRepository
         - [ ] init { }
-            - [ ] view.updateCartAmount
+            - [ ] cartRepository.getAllCount()
+            - [ ] view.updateCartAmount(amount)
         - [ ] decreaseCartProductAmount(productModel)
             - [ ] getCartProduct(productModel)
             - [ ] cartProduct.decreaseAmount()
@@ -17,12 +19,14 @@
             - [ ] if(cartProduct == null) CartProduct(...)
         - [ ] private updateCartProduct(cartProduct, productModel)
             - [ ] cartRepository.modifyCartProduct(cartProduct)
-            - [ ] view.updateProductAmount(productModel, amount)
+            - [ ] update shoppingProduct amount
+            - [ ] view.updateProduct(shoppingProductModel)
         - [ ] private removeFromCart(cartProduct, productModel)
             - [ ] cartRepository.deleteCartProductByTime(time: LocalDateTime)
-            - [ ] view.updateProductAmount(productModel, amount)
-            - [ ] cartRepository.getAllCount()
-            - [ ] view.updateCartAmount(cartAmount)
+                - [ ] update shoppingProduct amount
+                - [ ] view.updateProduct(shoppingProductModel)
+                - [ ] cartRepository.getAllCount()
+                - [ ] view.updateCartAmount(cartAmount)
         - [ ] increaseCartProductAmount(productModel)
             - [ ] getCartProduct(productModel)
             - [ ] cartProduct.increaseAmount()
@@ -32,9 +36,10 @@
                 - [ ] addToCart(cartProduct, productModel)
         - [ ] private addToCart(cartProduct, productModel)
             - [ ] cartRepository.addCartProduct(cartProduct)
-            - [ ] view.updateProductAmount(productModel, amount)
-            - [ ] cartRepository.getAllCount()
-            - [ ] view.updateCartAmount(cartAmount)
+                - [ ] update shoppingProduct amount
+                - [ ] view.updateProduct(shoppingProductModel)
+                - [ ] cartRepository.getAllCount()
+                - [ ] view.updateCartAmount(cartAmount)
     - [ ] ProductDetail
         - [ ] init { }
             - [ ] view.updateRecentProduct(recentProductModel)

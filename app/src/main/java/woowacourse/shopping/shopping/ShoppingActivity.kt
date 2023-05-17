@@ -13,6 +13,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
+import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.common.utils.convertDpToPixel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.ProductDao
@@ -31,7 +32,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var presenter: ShoppingContract.Presenter
 
     private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it) })
+        ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it.product) })
     }
 
     private val recentProductAdapter: RecentProductAdapter by lazy {
@@ -110,11 +111,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateProducts(productModels: List<ProductModel>) {
-        productAdapter.updateProducts(productModels)
-    }
-
-    override fun addProducts(productModels: List<ProductModel>) {
+    override fun addProducts(productModels: List<ShoppingProductModel>) {
         productAdapter.addProducts(productModels)
     }
 

@@ -3,12 +3,12 @@ package woowacourse.shopping.shopping.recyclerview
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductAdapter(
-    private var products: List<ProductModel>,
-    private val onProductItemClick: (ProductModel) -> Unit,
+    private var products: List<ShoppingProductModel>,
+    private val onProductItemClick: (ShoppingProductModel) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private val onProductItemViewClick: (Int) -> Unit = { onProductItemClick(products[it]) }
 
@@ -27,12 +27,7 @@ class ProductAdapter(
         holder.bind(products[position])
     }
 
-    fun updateProducts(products: List<ProductModel>) {
-        this.products = products
-        notifyDataSetChanged()
-    }
-
-    fun addProducts(products: List<ProductModel>) {
+    fun addProducts(products: List<ShoppingProductModel>) {
         val lastPosition = itemCount
         this.products += products
         notifyItemRangeInserted(lastPosition, products.size)
