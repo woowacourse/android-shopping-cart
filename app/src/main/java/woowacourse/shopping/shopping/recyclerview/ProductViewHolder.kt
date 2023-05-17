@@ -21,7 +21,6 @@ class ProductViewHolder(
     }
 
     fun bind(cartProduct: CartProductModel) {
-        println(cartProduct)
         binding.cartProduct = cartProduct
     }
 }

@@ -21,10 +21,11 @@ class ShoppingPresenter(
 
     init {
         shoppingRepository.initMockData()
-        loadMoreProduct()
+        productLoadedCount += productLoadSize
     }
 
     override fun reloadProducts() {
+        updateProducts()
         updateRecentProducts()
     }
 
@@ -53,6 +54,11 @@ class ShoppingPresenter(
 
     override fun plusCartProduct(cartProduct: CartProductModel) {
         cartRepository.insertCartProduct(cartProduct.product.toDomainModel())
+    }
+
+    private fun updateProducts() {
+        val loadedProducts = shoppingRepository.selectByRange(0, productLoadSize)
+        view.updateProducts(loadedProducts.products.map { it.toViewModel() })
     }
 
     private fun updateRecentProducts() {
