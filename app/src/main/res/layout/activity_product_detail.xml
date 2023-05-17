@@ -82,7 +82,7 @@
             android:id="@+id/bt_product_detail_add_to_cart"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/product_detail_button_color"
+            android:background="@color/button_color"
             android:text="@string/product_detail_button_text"
             android:textColor="@color/white"
             android:textSize="20sp"

@@ -8,9 +8,11 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="toolbar_color">#555555</color>
+    <color name="cart_bottom_container_color">#555555</color>
 
     <color name="product_info_text_color">#333333</color>
     <color name="product_view_line_color">#AAAAAA</color>
     <color name="recent_product_view_line_color">#EBEBEB</color>
-    <color name="product_detail_button_color">#04C09E</color>
+
+    <color name="button_color">#04C09E</color>
 </resources>
