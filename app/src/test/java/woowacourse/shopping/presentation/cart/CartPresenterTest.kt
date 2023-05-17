@@ -8,10 +8,12 @@ import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.Price
-import woowacourse.shopping.Product
+import woowacourse.shopping.data.cart.CartEntity
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.model.Price
+import woowacourse.shopping.model.Product
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
 
 class CartPresenterTest {
@@ -33,12 +35,12 @@ class CartPresenterTest {
     fun `카트의 첫번째 페이지 상품 목록을 불러온다`() {
         // given
         val pageSlot = slot<Int>()
-        val cartProductsSlot = slot<List<ProductModel>>()
+        val cartProductsSlot = slot<List<CartProductModel>>()
 
         every { view.setPage(capture(pageSlot)) } just runs
         every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
 
-        every { cartRepository.getCartProductIds() } returns (1..8).toList()
+        every { cartRepository.getCartProducts() } returns (1..8).map { CartEntity(it, 1) }
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
 
@@ -51,7 +53,7 @@ class CartPresenterTest {
 
         assertThat(actualPage).isEqualTo(1)
         assertThat(cartProducts).isEqualTo(
-            List(5) { ProductModel(1, "test.com", "햄버거", 10000) },
+            List(5) { CartProductModel(ProductModel(1, "test.com", "햄버거", 10000), 1) },
         )
     }
 
@@ -59,10 +61,10 @@ class CartPresenterTest {
     fun `1 에서 페이지를 증가하면 다음 2 페이지 상품을 본다`() {
         // given
         val pageSlot = slot<Int>()
-        val cartProductsSlot = slot<List<ProductModel>>()
+        val cartProductsSlot = slot<List<CartProductModel>>()
         every { view.setPage(capture(pageSlot)) } just runs
         every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
-        every { cartRepository.getCartProductIds() } returns (1..8).toList()
+        every { cartRepository.getCartProducts() } returns (1..8).map { CartEntity(it, 1) }
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
 
@@ -77,7 +79,7 @@ class CartPresenterTest {
 
         assertThat(actual).isEqualTo(2)
         assertThat(cartProducts).isEqualTo(
-            List(3) { ProductModel(1, "test.com", "햄버거", 10000) },
+            List(3) { CartProductModel(ProductModel(1, "test.com", "햄버거", 10000), 1) },
         )
     }
 
@@ -85,10 +87,10 @@ class CartPresenterTest {
     fun `2 에서 페이지를 감소하면 이전 1 페이지 상품을 본다`() {
         // given
         val pageSlot = slot<Int>()
-        val cartProductsSlot = slot<List<ProductModel>>()
+        val cartProductsSlot = slot<List<CartProductModel>>()
         every { view.setPage(capture(pageSlot)) } just runs
         every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
-        every { cartRepository.getCartProductIds() } returns (1..8).toList()
+        every { cartRepository.getCartProducts() } returns (1..8).map { CartEntity(it, 1) }
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
 
@@ -104,7 +106,7 @@ class CartPresenterTest {
 
         assertThat(actual).isEqualTo(1)
         assertThat(cartProducts).isEqualTo(
-            List(5) { ProductModel(1, "test.com", "햄버거", 10000) },
+            List(5) { CartProductModel(ProductModel(1, "test.com", "햄버거", 10000), 1) },
         )
     }
 
@@ -112,10 +114,10 @@ class CartPresenterTest {
     fun deleteProduct() {
         // given
         val pageSlot = slot<Int>()
-        val cartProductsSlot = slot<List<ProductModel>>()
+        val cartProductsSlot = slot<List<CartProductModel>>()
         every { view.setPage(capture(pageSlot)) } just runs
         every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
-        every { cartRepository.getCartProductIds() } returns listOf(1)
+        every { cartRepository.getCartProducts() } returns listOf(CartEntity(1, 1))
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
 
@@ -129,6 +131,6 @@ class CartPresenterTest {
         val cartProducts = cartProductsSlot.captured
 
         assertThat(actual).isEqualTo(1)
-        assertThat(cartProducts).isEqualTo(listOf<ProductModel>())
+        assertThat(cartProducts).isEqualTo(listOf<CartProductModel>())
     }
 }

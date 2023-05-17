@@ -1,11 +1,14 @@
 package woowacourse.shopping.presentation.cart
 
-import woowacourse.shopping.CartPages
-import woowacourse.shopping.Product
-import woowacourse.shopping.Products
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.model.CartPages
+import woowacourse.shopping.model.CartProduct
+import woowacourse.shopping.model.CartProducts
+import woowacourse.shopping.model.Product
+import woowacourse.shopping.presentation.mapper.toDomain
 import woowacourse.shopping.presentation.mapper.toPresentation
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
 
 class CartPresenter(
@@ -22,13 +25,15 @@ class CartPresenter(
 
     private fun initCartPages() {
         val productItems = loadCartProducts()
-        cartPages = CartPages(Products(productItems))
+        cartPages = CartPages(CartProducts(productItems))
     }
 
-    private fun loadCartProducts(): List<Product> {
-        val recentProductIds = cartRepository.getCartProductIds()
-        val productItems = recentProductIds.map {
-            productRepository.findProductById(it) ?: Product.defaultProduct
+    private fun loadCartProducts(): List<CartProduct> {
+        val cartEntities = cartRepository.getCartProducts()
+        val productItems = cartEntities.map { cart ->
+            val cartProduct =
+                productRepository.findProductById(cart.productId) ?: Product.defaultProduct
+            CartProduct(cartProduct, cart.count)
         }
         return productItems
     }
@@ -45,13 +50,31 @@ class CartPresenter(
     }
 
     override fun deleteProduct(productModel: ProductModel) {
-        cartRepository.deleteCartProductId(productModel.id)
-        val deletedProducts = cartPages.getDeletedProducts(productModel.id)
+        cartRepository.deleteCartProduct(productModel.id)
+        val deletedProducts = cartPages.getDeletedProducts(productModel.toDomain())
         if (deletedProducts.size == 0) {
             minusPage()
             return
         }
         updateCart(deletedProducts)
+        checkPageAble()
+    }
+
+    override fun addProductCount(productModel: ProductModel) {
+        cartRepository.addCartProduct(productModel.id)
+        val addCountProducts = cartPages.getAddCountProducts(productModel.toDomain())
+        updateCart(addCountProducts)
+        checkPageAble()
+    }
+
+    override fun subProductCount(productModel: ProductModel) {
+        cartRepository.subProductCount(productModel.id)
+        val subCountProducts = cartPages.getSubCountProducts(productModel.toDomain())
+        if (subCountProducts.size == 0) {
+            minusPage()
+            return
+        }
+        updateCart(subCountProducts)
         checkPageAble()
     }
 
@@ -67,12 +90,12 @@ class CartPresenter(
         checkPageAble()
     }
 
-    private fun updateCart(products: Products) {
+    private fun updateCart(cartProducts: CartProducts) {
         view.setPage(cartPages.pageNumber.value)
-        view.setCartProductModels(products.toPresentation())
+        view.setCartProductModels(cartProducts.toPresentation())
     }
 
-    private fun Products.toPresentation(): List<ProductModel> {
+    private fun CartProducts.toPresentation(): List<CartProductModel> {
         return items.map { it.toPresentation() }
     }
 
