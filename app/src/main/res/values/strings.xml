@@ -20,4 +20,5 @@
     <string name="plus_description">+</string>
     <string name="initial_count">1</string>
     <string name="latest_viewed_product">마지막으로 본 상품</string>
+    <string name="add_to_cart">담기</string>
 </resources>

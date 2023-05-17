@@ -87,7 +87,6 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="@color/button_color"
-            android:onClick="@{()->presenter.addToShoppingCart()}"
             android:text="@string/put_to_shopping_cart"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
