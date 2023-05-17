@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.model
 
 data class Counter(val value: Int) {
     operator fun plus(number: Int): Counter = Counter(value + number)

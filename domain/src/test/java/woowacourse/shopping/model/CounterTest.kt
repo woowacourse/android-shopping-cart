@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.model
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
