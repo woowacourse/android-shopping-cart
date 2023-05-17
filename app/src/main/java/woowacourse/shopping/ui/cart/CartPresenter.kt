@@ -73,13 +73,6 @@ class CartPresenter(
         setUpAllItemCheck()
     }
 
-    override fun updatePriceAndCount() {
-        view.updateBottom(
-            cartRepository.getTotalPrice(),
-            cartRepository.getTotalSelectedCount()
-        )
-    }
-
     override fun setProductsCheck(checked: Boolean) {
         cartRepository.updateChecked(productId, checked)
         setUpCarts()

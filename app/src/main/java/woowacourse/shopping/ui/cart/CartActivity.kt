@@ -59,8 +59,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         override fun onItemClick(product: CartProductUIModel) {
             presenter.navigateToItemDetail(product.id)
         }
-        override fun onItemUpdate(productId: Int, count: Int): Int {
-            return presenter.updateItemCount(productId, count)
+        override fun onItemUpdate(productId: Int, count: Int) {
+            presenter.updateItemCount(productId, count)
         }
         override fun onItemCheckChanged(productId: Int, checked: Boolean) {
             binding.cartBottom.onAllCheckClick = { }
