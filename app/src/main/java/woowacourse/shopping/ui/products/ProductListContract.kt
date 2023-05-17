@@ -9,7 +9,6 @@ interface ProductListContract {
         fun restoreCurrentPage(currentPage: Int)
         fun onLoadRecentlyViewedProducts()
         fun onLoadProductsNextPage()
-        fun onViewProduct(productId: Long)
     }
 
     interface View {

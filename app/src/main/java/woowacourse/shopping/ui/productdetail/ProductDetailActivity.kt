@@ -11,6 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartItemRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
+import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
@@ -25,6 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             this,
             ProductRepositoryImpl,
             CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl),
+            RecentlyViewedProductRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl)
         )
     }
 
@@ -47,6 +49,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

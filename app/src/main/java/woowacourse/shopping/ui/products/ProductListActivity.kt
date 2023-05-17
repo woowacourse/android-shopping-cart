@@ -71,7 +71,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun initProductList() {
         binding.recyclerViewMainProduct.adapter = ProductListAdapter(mutableListOf()) {
-            presenter.onViewProduct(it)
             ProductDetailActivity.startActivity(this, it)
         }
     }
