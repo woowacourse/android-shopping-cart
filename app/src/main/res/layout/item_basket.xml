@@ -8,6 +8,10 @@
         <variable
             name="basketProduct"
             type="woowacourse.shopping.ui.model.BasketProduct" />
+
+        <variable
+            name="ivCloseClickListener"
+            type="kotlin.jvm.functions.Function1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,6 +48,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/iv_close"
+            android:onClickListener="@{()->ivCloseClickListener.invoke(basketProduct)}"
             android:layout_marginEnd="24dp"
             app:layout_constraintTop_toTopOf="@+id/tv_name"
             app:layout_constraintBottom_toBottomOf="@+id/tv_name"

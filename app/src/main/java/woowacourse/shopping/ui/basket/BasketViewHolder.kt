@@ -9,14 +9,12 @@ class BasketViewHolder(
     onItemClick: (UiBasketProduct) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
-    private lateinit var basketProduct: UiBasketProduct
 
     init {
-        binding.ivClose.setOnClickListener { onItemClick(basketProduct) }
+        binding.ivCloseClickListener = onItemClick
     }
 
     fun bind(item: UiBasketProduct) {
-        basketProduct = item
         binding.basketProduct = item
     }
 }
