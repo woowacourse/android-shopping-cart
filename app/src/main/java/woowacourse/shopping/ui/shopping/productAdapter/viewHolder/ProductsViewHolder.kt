@@ -16,14 +16,15 @@ class ProductsViewHolder private constructor(
 
     override fun bind(productItemType: ProductsItemType) {
         val productItem = productItemType as? ProductsItemType.Product ?: return
-        binding.item = productItem
-        binding.onCountChange = {
-            if (it is Int) {
-                listener.onAddCartOrUpdateCount(productItem.product.id, it) {
-                    bind(productItem.copy(count = it))
-                }
+
+        val onCountChange = { it: Int ->
+            listener.onAddCartOrUpdateCount(productItem.product.id, it) {
+                bind(productItem.copy(count = it))
             }
         }
+
+        binding.item = productItem
+        binding.onCountChange = onCountChange
     }
 
     companion object {

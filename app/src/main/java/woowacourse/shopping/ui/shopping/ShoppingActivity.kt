@@ -26,6 +26,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
+    private lateinit var adapter: ProductsAdapter
+
     private var tvCount: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,15 +114,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         val listener = object : ProductsListener {
             override fun onClickItem(productId: Int) { presenter.navigateToItemDetail(productId) }
             override fun onReadMoreClick() { presenter.fetchMoreProducts() }
-            override fun onAddCartOrUpdateCount(productId: Int, count: Int, block: () -> Unit) {
-                binding.rvProducts.adapter.let { adapter ->
-                    if (adapter is ProductsAdapter) { adapter.updateItemCount(productId, count) }
-                }
-                block()
+            override fun onAddCartOrUpdateCount(productId: Int, count: Int, bindItem: () -> Unit) {
+                adapter.let { adapter.updateItemCount(productId, count) }
+                bindItem()
                 presenter.updateItem(productId, count)
             }
         }
-        binding.rvProducts.adapter = ProductsAdapter(data.toMutableList(), listener)
+        adapter = ProductsAdapter(data.toMutableList(), listener)
+        binding.rvProducts.adapter = adapter
     }
 
     override fun updateToolbar(count: Int) {
@@ -128,11 +129,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun updateProducts(data: List<ProductsItemType>) {
-        binding.rvProducts.adapter?.let {
-            if (it is ProductsAdapter) {
-                it.submitList(data)
-            }
-        }
+        adapter.submitList(data)
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {

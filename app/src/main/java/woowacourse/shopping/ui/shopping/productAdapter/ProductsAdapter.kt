@@ -41,10 +41,6 @@ class ProductsAdapter(
     fun updateItemCount(productId: Int, count: Int) {
         val index = products
             .indexOfFirst { it is ProductsItemType.Product && it.product.id == productId }
-        when (index) {
-            -1 -> return
-            else -> products[index] =
-                (products[index] as ProductsItemType.Product).copy(count = count)
-        }
+        products[index] = (products[index] as ProductsItemType.Product).copy(count = count)
     }
 }
