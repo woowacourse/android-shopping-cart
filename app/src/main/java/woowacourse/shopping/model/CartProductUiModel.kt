@@ -8,6 +8,5 @@ import kotlinx.parcelize.Parcelize
 data class CartProductUiModel(
     val cartId: Long,
     val productUiModel: ProductUiModel,
-    var count: Int,
     var checked: Boolean
 ) : Parcelable

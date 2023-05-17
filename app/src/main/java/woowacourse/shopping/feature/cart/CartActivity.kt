@@ -24,12 +24,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 presenter.handleDeleteCartProductClick(cartId)
             }
 
-            override fun onCartCountChanged(productId: Long, count: Int) {
-                presenter.handleCartProductCartCountChange(productId, count)
+            override fun onCartCountChanged(cartId: Long, count: Int) {
+                presenter.handleCartProductCartCountChange(cartId, count)
             }
 
-            override fun onSelectedPurchaseChanged(productId: Long, checked: Boolean) {
-                presenter.handlePurchaseSelectedCheckedChange(productId, checked)
+            override fun onSelectedPurchaseChanged(cartId: Long, checked: Boolean) {
+                presenter.handlePurchaseSelectedCheckedChange(cartId, checked)
             }
         }
     }

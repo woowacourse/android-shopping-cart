@@ -8,6 +8,7 @@
         <variable
             name="cartProduct"
             type="woowacourse.shopping.model.CartProductUiModel" />
+
         <variable
             name="listener"
             type="woowacourse.shopping.feature.cart.CartProductClickListener" />
@@ -34,19 +35,37 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="0dp" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/center_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <CheckBox
+            android:id="@+id/purchase_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/product_title"
+            app:layout_constraintEnd_toStartOf="@id/product_title"
+            app:layout_constraintStart_toEndOf="@id/start_guideline"
+            app:layout_constraintTop_toTopOf="@id/product_title" />
+
         <TextView
             android:id="@+id/product_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:paddingBottom="4dp"
+            android:paddingVertical="4dp"
             android:text="@{cartProduct.productUiModel.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/delete_btn"
-            app:layout_constraintStart_toEndOf="@id/start_guideline"
+            app:layout_constraintStart_toEndOf="@id/purchase_check_box"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="상품 이름" />
 
@@ -57,8 +76,9 @@
             android:contentDescription="@string/cancel_button"
             android:onClick="@{()->listener.onDeleteClick(cartProduct.cartId)}"
             android:src="@drawable/ic_clear"
+            app:layout_constraintBottom_toBottomOf="@id/product_title"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/product_title"
             app:tint="@color/gray_dark"
             tools:src="@drawable/ic_clear" />
 
@@ -82,9 +102,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{@string/price_format(cartProduct.productUiModel.toPriceFormat())}"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
+            app:layout_constraintTop_toBottomOf="@id/delete_btn"
             tools:text="1,000원" />
+
+        <woowacourse.shopping.common_ui.CounterView
+            android:id="@+id/counter_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="36dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/end_guideline"
+            app:layout_constraintStart_toEndOf="@id/center_guideline"
+            app:layout_constraintTop_toBottomOf="@id/product_price" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

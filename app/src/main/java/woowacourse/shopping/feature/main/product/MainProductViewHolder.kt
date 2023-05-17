@@ -13,12 +13,14 @@ class MainProductViewHolder private constructor(
     fun bind(product: ProductUiModel, listener: ProductClickListener) {
         binding.product = product
         binding.listener = listener
+
         binding.counterView.countStateChangeListener =
             object : CounterView.OnCountStateChangeListener {
                 override fun onCountChanged(counterNavigationView: CounterView?, count: Int) {
                     listener.onCartCountChanged(product.id, count)
                 }
             }
+
         binding.counterView.setCountState(product.count)
     }
 

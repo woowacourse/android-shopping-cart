@@ -85,12 +85,11 @@ class CartDao(
     fun updateCartProductChecked(product: Product, checked: Boolean) {
         val findCartProduct =
             selectAll().find { it.product.id == product.id } ?: return
-
         val checkedState = if (checked) 1 else 0
 
         val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
                 "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=${checkedState} " +
-                "WHERE ${CartTableContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+                "WHERE ${CartTableContract.TABLE_COLUMN_CART_ID}=${findCartProduct.cartId}"
         writableDatabase.execSQL(updateSql)
     }
 

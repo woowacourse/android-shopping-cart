@@ -17,9 +17,8 @@ class CartPresenter(
 
     override fun loadInitCartProduct() {
         page = PageNation(CartProducts(cartRepository.getAll()), 1).toPresentation()
-        val initCartProductUiModels = page.currentPageCartProducts
 
-        changePageState(initCartProductUiModels)
+        changePageState(page.currentPageCartProducts)
     }
 
     override fun loadPreviousPage() {
@@ -57,8 +56,7 @@ class CartPresenter(
     override fun handlePurchaseSelectedCheckedChange(cartId: Long, checked: Boolean) {
         val findCartProduct =
             page.currentPageCartProducts.find { it.cartId == cartId } ?: return
-
-        page = page.toDomain().changeChecked(findCartProduct.cartId, checked).toPresentation()
+        page = page.toDomain().changeChecked(cartId, checked).toPresentation()
 
         cartRepository.changeCartProductCheckedState(
             findCartProduct.productUiModel.toDomain(),

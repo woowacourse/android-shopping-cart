@@ -34,7 +34,7 @@ class MainPresenter(
             val findCartProduct = cartProducts.find { cartProduct ->
                 product.id == cartProduct.productUiModel.id
             } ?: return@map product.toPresentation()
-            product.toPresentation().apply { this.count = findCartProduct.count }
+            product.toPresentation().apply { this.count = findCartProduct.productUiModel.count }
         }
         return productUiModels
     }

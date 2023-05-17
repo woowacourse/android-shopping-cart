@@ -2,6 +2,6 @@ package woowacourse.shopping.feature.cart
 
 interface CartProductClickListener {
     fun onDeleteClick(cartId: Long)
-    fun onCartCountChanged(productId: Long, count: Int)
-    fun onSelectedPurchaseChanged(productId: Long, checked: Boolean)
+    fun onCartCountChanged(cartId: Long, count: Int)
+    fun onSelectedPurchaseChanged(cartId: Long, checked: Boolean)
 }
