@@ -12,7 +12,8 @@ class ProductListPresenter(
     private val cartRepository: CartRepository,
 ) : ProductListContract.Presenter {
     private val productListPagination = ProductListPagination(PAGINATION_SIZE, productRepository)
-    private val products = productListPagination.nextItems().map { it.toUiModel() }.toMutableList()
+    private val products = productListPagination.nextItems()
+        .map { it.toUiModel(cartRepository.find(it.id)?.count ?: 0) }.toMutableList()
 
     private val productsListItems = mutableListOf<ProductListViewItem>()
     override fun fetchProducts() {
@@ -37,6 +38,10 @@ class ProductListPresenter(
 
     override fun addToCartProducts(id: Int, count: Int) {
         cartRepository.add(id, count)
+    }
+
+    override fun updateCartProductCount(id: Int, count: Int) {
+        cartRepository.update(id, count)
     }
 
 

@@ -22,7 +22,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var presenter: ProductListContract.Presenter
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_VIEWED) {
-            val id = it.data?.getIntExtra("id", -1)
+            val id = it.data?.getIntExtra(ID, -1)
             presenter.updateRecentViewed(id ?: -1)
         }
     }
@@ -76,6 +76,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
                 override fun onProductClickAddFirst(id: Int, count: Int) {
                     presenter.addToCartProducts(id, count)
+                }
+
+                override fun onProductUpdateCount(id: Int, count: Int) {
+                    presenter.updateCartProductCount(id, count)
                 }
 
             },

@@ -2,6 +2,7 @@ package woowacourse.shopping.domain
 
 interface CartRepository {
     fun findAll(): List<CartProduct>
+    fun find(id: Int): CartProduct?
     fun add(id: Int, count: Int)
     fun update(id: Int, count: Int)
     fun remove(id: Int)

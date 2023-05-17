@@ -34,15 +34,20 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(item: ProductListViewItem.ProductItem) {
             binding.product = item.product
-            binding.textPrice.text = binding.root.context.getString(
-                R.string.korean_won,
-                PriceFormatter.format(item.product.price)
-            )
             Glide.with(binding.root.context).load(item.product.imageUrl).into(binding.imgProduct)
             binding.btnAdd.setOnClickListener {
                 onItemClick.onProductClickAddFirst(item.product.id, 1)
+                binding.textCount.text = "1"
                 binding.btnAdd.visibility = View.INVISIBLE
                 binding.layoutAddBtns.visibility = View.VISIBLE
+            }
+            binding.btnPlus.setOnClickListener {
+                onItemClick.onProductUpdateCount(item.product.id, Integer.parseInt(binding.textCount.text.toString()) + 1)
+                binding.textCount.text = (Integer.parseInt(binding.textCount.text.toString()) + 1).toString()
+            }
+            binding.btnMinus.setOnClickListener {
+                onItemClick.onProductUpdateCount(item.product.id, Integer.parseInt(binding.textCount.text.toString()) - 1)
+                binding.textCount.text = (Integer.parseInt(binding.textCount.text.toString()) - 1).toString()
             }
         }
     }

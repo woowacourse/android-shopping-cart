@@ -11,7 +11,7 @@ class CartDbRepository(context: Context) : CartRepository {
         return dbHelper.selectAll()
     }
 
-    private fun find(id: Int): CartProduct? {
+    override fun find(id: Int): CartProduct? {
         return dbHelper.selectWhereId(id)
     }
 
