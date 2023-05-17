@@ -45,7 +45,7 @@
                 android:id="@+id/button_previous_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@color/button_color"
+                android:background="@drawable/cart_page_button_selector"
                 android:text="@string/previous_page"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
@@ -63,7 +63,7 @@
                 android:id="@+id/button_next_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@color/button_color"
+                android:background="@drawable/cart_page_button_selector"
                 android:text="@string/next_page"
                 android:textColor="@color/white"
                 android:textSize="22sp" />

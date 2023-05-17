@@ -3,7 +3,6 @@ package woowacourse.shopping.shoppingcart
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
@@ -73,8 +72,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         binding.textPageNumber.text = "${pageNumber + NEXT_PAGE}"
         binding.buttonPreviousPage.isEnabled = pageNumber != INITIAL_PAGE_NUMBER
         binding.buttonNextPage.isEnabled = hasNextPage(pageNumber, totalSize)
-        setButtonBackgroundColor(binding.buttonPreviousPage)
-        setButtonBackgroundColor(binding.buttonNextPage)
     }
 
     private fun hasNextPage(pageNumber: Int, totalSize: Int): Boolean {
@@ -83,14 +80,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
                 pageNumber + NEXT_PAGE == totalSize / COUNT_TO_READ &&
                     totalSize % COUNT_TO_READ == 0
                 )
-    }
-
-    private fun setButtonBackgroundColor(button: AppCompatButton) {
-        if (button.isEnabled) {
-            button.setBackgroundColor(getColor(R.color.button_color))
-        } else {
-            button.setBackgroundColor(getColor(R.color.button_disabled))
-        }
     }
 
     companion object {
