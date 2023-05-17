@@ -17,6 +17,7 @@
 
         <ImageView
             android:id="@+id/iv_product_image"
+            glideImgUrl="@{product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
@@ -32,6 +33,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.name}"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,6 +45,7 @@
             android:id="@+id/tv_product_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{@string/formatted_price(product.price)}"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

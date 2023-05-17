@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.uimodel.CartProductUIModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
@@ -14,6 +21,7 @@
             android:id="@+id/tv_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{cartProduct.product.name}"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -22,6 +30,7 @@
 
         <ImageView
             android:id="@+id/iv_product_image"
+            glideImgUrl="@{cartProduct.product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
@@ -43,6 +52,7 @@
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{@string/formatted_price(cartProduct.product.price)}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

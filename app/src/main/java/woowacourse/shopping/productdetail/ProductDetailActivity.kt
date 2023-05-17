@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import woowacourse.shopping.BundleKeys
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
@@ -36,6 +35,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val cartRepository = CartDBRepository(CartDBHelper(this).writableDatabase)
 
         presenter = ProductDetailPresenter(this, productData, recentRepository, cartRepository)
+        binding.presenter = presenter
         presenter.insertRecentRepository(System.currentTimeMillis())
 
         presenter.initPage()

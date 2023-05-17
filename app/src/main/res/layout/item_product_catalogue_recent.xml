@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="recentProduct"
+            type="woowacourse.shopping.uimodel.RecentProductUIModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="98dp"
         android:layout_height="130dp"
@@ -10,6 +17,7 @@
 
         <ImageView
             android:id="@+id/iv_product_image"
+            glideImgUrl="@{recentProduct.product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
@@ -23,13 +31,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            tools:text="정사각형-페트보틀"
-            android:textSize="16sp"
-            android:textStyle="bold"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{recentProduct.product.name}"
+            android:textSize="16sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_product_image" />
+            app:layout_constraintTop_toBottomOf="@id/iv_product_image"
+            tools:text="정사각형-페트보틀" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

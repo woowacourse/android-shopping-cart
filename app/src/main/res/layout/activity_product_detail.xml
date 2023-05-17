@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.productdetail.ProductDetailContract.Presenter" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +28,7 @@
 
         <ImageView
             android:id="@+id/iv_product_image"
+            glideImgUrl="@{presenter.product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
@@ -35,6 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="16dp"
+            android:text="@{presenter.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -71,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
+            android:text="@{@string/formatted_price(presenter.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -84,6 +94,7 @@
             android:background="@color/add_to_cart_button_color"
             android:text="@string/add_to_cart_button_name"
             android:textColor="@color/white"
+            android:onClick="@{()->presenter.addToCart()}"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
