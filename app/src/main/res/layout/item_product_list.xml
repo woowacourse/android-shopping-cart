@@ -10,6 +10,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_product_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="6dp"
@@ -56,6 +57,15 @@
             app:layout_constraintStart_toStartOf="@id/iv_product_thumbnail"
             app:layout_constraintTop_toBottomOf="@id/tv_product_title"
             tools:text="10,000원" />
+
+        <woowacourse.shopping.presentation.view.custom.ProductCountView
+            android:id="@+id/product_count_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="@id/iv_product_thumbnail"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_thumbnail" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
