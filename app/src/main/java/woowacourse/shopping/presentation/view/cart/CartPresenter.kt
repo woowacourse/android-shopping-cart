@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.view.cart
 
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.domain.CartPage
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartPresenter(
     private val view: CartContract.View,
@@ -19,7 +19,7 @@ class CartPresenter(
         view.setCurrentPage(cartPage.currentPage)
     }
 
-    private fun submitNewCarts(newCarts: List<CartModel>): List<CartModel> {
+    private fun submitNewCarts(newCarts: List<CartProductModel>): List<CartProductModel> {
         var newCarts1 = newCarts
         val subToIndex =
             if (newCarts1.size > DISPLAY_CART_COUNT_CONDITION) newCarts1.lastIndex else newCarts1.size
@@ -27,7 +27,7 @@ class CartPresenter(
         return newCarts1
     }
 
-    private fun getNewCarts(): List<CartModel> {
+    private fun getNewCarts(): List<CartProductModel> {
         val startPosition = cartPage.getStartItemPosition()
         return cartRepository.getCarts(startPosition, GET_CART_ITEM_COUNT)
     }

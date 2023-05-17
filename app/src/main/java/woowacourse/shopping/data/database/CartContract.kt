@@ -9,8 +9,16 @@ object CartContract {
 
     const val DROP_SQL = "DROP TABLE IF EXISTS ${Cart.TABLE_NAME}"
 
+    fun getCartSql(startPosition: Int, CartItemCount: Int): String {
+        return "SELECT count(*) as ProductCount,${Cart.PRODUCT_ID} " +
+                "FROM ${Cart.TABLE_NAME} " +
+                "GROUP BY ${Cart.PRODUCT_ID} " +
+                "LIMIT $startPosition, $CartItemCount"
+    }
+
     object Cart : BaseColumns {
         const val TABLE_NAME = "Cart"
         const val PRODUCT_ID = "ProductId"
+        const val PRODUCT_COUNT = "ProductCount"
     }
 }

@@ -3,8 +3,7 @@ package woowacourse.shopping.data.database
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.provider.BaseColumns
-import woowacourse.shopping.data.model.CartEntity
+import woowacourse.shopping.data.model.CartProductEntity
 
 class CartDao(context: Context) {
     private val db = CartHelper(context).writableDatabase
@@ -24,15 +23,16 @@ class CartDao(context: Context) {
         )
     }
 
-    fun getItems(startPosition: Int, cartItemCount: Int): List<CartEntity> {
-        val result = mutableListOf<CartEntity>()
+    fun getItems(startPosition: Int, cartItemCount: Int): List<CartProductEntity> {
+        val result = mutableListOf<CartProductEntity>()
         val cursor = getCursor(startPosition, cartItemCount)
         with(cursor) {
             while (moveToNext()) {
-                val cartId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                 val productId =
                     getLong(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_ID))
-                result.add(CartEntity(cartId, productId))
+                val productCount =
+                    getInt(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_COUNT))
+                result.add(CartProductEntity(productId, productCount))
             }
         }
         cursor.close()
@@ -41,18 +41,10 @@ class CartDao(context: Context) {
     }
 
     private fun getCursor(startPosition: Int, cartItemCount: Int): Cursor {
-        return db.query(
-            CartContract.Cart.TABLE_NAME,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            "$startPosition, $cartItemCount"
-        )
+        return db.rawQuery(CartContract.getCartSql(startPosition, cartItemCount), null)
     }
 
-    companion object {
-    }
+    companion object
 }
+
+// https://hongal.tistory.com/50

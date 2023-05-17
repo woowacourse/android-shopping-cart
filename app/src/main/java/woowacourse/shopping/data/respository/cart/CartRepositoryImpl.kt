@@ -2,10 +2,10 @@ package woowacourse.shopping.data.respository.cart
 
 import woowacourse.shopping.data.database.CartDao
 import woowacourse.shopping.data.mapper.toUIModel
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
-    override fun getCarts(startPosition: Int, cartItemCount: Int): List<CartModel> {
+    override fun getCarts(startPosition: Int, cartItemCount: Int): List<CartProductModel> {
         return cartDao.getItems(startPosition, cartItemCount).map { it.toUIModel() }
     }
 

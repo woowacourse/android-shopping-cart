@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartListBinding
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartViewHolder(
     parent: ViewGroup,
@@ -22,7 +22,7 @@ class CartViewHolder(
         }
     }
 
-    fun bind(cart: CartModel) {
+    fun bind(cart: CartProductModel) {
         binding.cartItem = cart
     }
 }

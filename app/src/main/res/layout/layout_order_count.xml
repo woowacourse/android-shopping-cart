@@ -1,46 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout>
 
-    <Button
-        android:id="@+id/bt_order_count_plus"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:text="@string/item_cart_list_plus"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="H,1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_order_count" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_order_count"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@id/bt_order_count_plus"
-        app:layout_constraintDimensionRatio="W,1:1"
-        app:layout_constraintEnd_toStartOf="@id/bt_order_count_plus"
-        app:layout_constraintStart_toEndOf="@id/bt_order_count_minus"
-        app:layout_constraintTop_toTopOf="@id/bt_order_count_plus" />
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.presentation.model.CartProductModel" />
+    </data>
 
-    <Button
-        android:id="@+id/bt_order_count_minus"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@android:color/transparent"
-        android:text="@string/item_cart_list_minus"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="@id/bt_order_count_plus"
-        app:layout_constraintDimensionRatio="W,1:1"
-        app:layout_constraintEnd_toStartOf="@id/tv_order_count"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/bt_order_count_plus" />
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/bt_order_count_plus"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:text="@string/item_cart_list_plus"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_order_count" />
+
+        <TextView
+            android:id="@+id/tv_order_count"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="@{String.valueOf(cartItem.count)}"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/bt_order_count_plus"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintEnd_toStartOf="@id/bt_order_count_plus"
+            app:layout_constraintStart_toEndOf="@id/bt_order_count_minus"
+            app:layout_constraintTop_toTopOf="@id/bt_order_count_plus" />
+
+        <Button
+            android:id="@+id/bt_order_count_minus"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@android:color/transparent"
+            android:text="@string/item_cart_list_minus"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/bt_order_count_plus"
+            app:layout_constraintDimensionRatio="W,1:1"
+            app:layout_constraintEnd_toStartOf="@id/tv_order_count"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/bt_order_count_plus" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

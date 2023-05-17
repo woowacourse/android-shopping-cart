@@ -2,11 +2,11 @@ package woowacourse.shopping.presentation.view.cart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.view.cart.viewholder.CartViewHolder
 
 class CartAdapter(
-    items: List<CartModel>,
+    items: List<CartProductModel>,
     private val onCloseClick: (Long) -> Unit
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val items = items.toMutableList()

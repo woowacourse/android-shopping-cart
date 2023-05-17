@@ -1,10 +1,10 @@
 package woowacourse.shopping.presentation.view.cart
 
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.model.CartProductModel
 
 interface CartContract {
     interface View {
-        fun setCartItemsView(carts: List<CartModel>)
+        fun setCartItemsView(carts: List<CartProductModel>)
         fun setCurrentPage(currentPage: Int)
         fun setEnableLeftButton(isEnabled: Boolean)
         fun setEnableRightButton(isEnabled: Boolean)

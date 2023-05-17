@@ -10,7 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.database.CartDao
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -46,7 +46,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setCartItemsView(carts: List<CartModel>) {
+    override fun setCartItemsView(carts: List<CartProductModel>) {
         cartAdapter = CartAdapter(carts, ::deleteCartItem)
         binding.rvCart.adapter = cartAdapter
     }

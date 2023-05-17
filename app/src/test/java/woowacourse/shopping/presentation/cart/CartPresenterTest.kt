@@ -9,8 +9,8 @@ import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.data.respository.cart.CartRepository
-import woowacourse.shopping.presentation.CartFixture
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.CartProductFixture
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.view.cart.CartContract
 import woowacourse.shopping.presentation.view.cart.CartPresenter
 
@@ -28,9 +28,9 @@ internal class CartPresenterTest {
     @Test
     fun `장바구니 데이터를 받아와 보여준다`() {
         // given
-        every { cartRepository.getCarts(0, 4) } returns CartFixture.getFixture()
+        every { cartRepository.getCarts(0, 4) } returns CartProductFixture.getFixture()
 
-        val cartItemSlot = slot<List<CartModel>>()
+        val cartItemSlot = slot<List<CartProductModel>>()
         justRun {
             view.setCartItemsView(
                 capture(cartItemSlot)
@@ -42,7 +42,7 @@ internal class CartPresenterTest {
 
         // then
         val actual = cartItemSlot.captured
-        val expected = CartFixture.getFixture()
+        val expected = CartProductFixture.getFixture()
         assertEquals(expected, actual)
         verify { cartRepository.getCarts(0, 4) }
         verify { view.setEnableLeftButton(false) }
@@ -54,19 +54,19 @@ internal class CartPresenterTest {
     fun `카트 데이터가 하나 삭제된다`() {
         // given
         justRun { cartRepository.deleteCartByProductId(1) }
-        every { cartRepository.getCarts(0, 4) } returns CartFixture.getFixture().dropLast(1)
+        every { cartRepository.getCarts(0, 4) } returns CartProductFixture.getFixture().dropLast(1)
 
         presenter = CartPresenter(view, cartRepository)
 
         // when
-        val cartItemSlot = slot<List<CartModel>>()
+        val cartItemSlot = slot<List<CartProductModel>>()
         justRun { view.setCartItemsView(capture(cartItemSlot)) }
 
         presenter.deleteCartItem(1)
 
         // then
         val actual = cartItemSlot.captured
-        val expected = CartFixture.getFixture().dropLast(1)
+        val expected = CartProductFixture.getFixture().dropLast(1)
         assertEquals(expected, actual)
 
         verify { cartRepository.deleteCartByProductId(1) }
