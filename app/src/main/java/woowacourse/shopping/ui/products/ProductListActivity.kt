@@ -38,8 +38,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         initLoadingButton()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         initRecentlyViewedProductList()
     }
 
@@ -92,6 +92,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             return
         }
 
+        binding.layoutRecentlyViewed.isVisible = true
         binding.recyclerViewRecentlyViewed.adapter =
             RecentlyViewedProductListAdapter(recentlyViewedProducts) {
                 moveToProductDetailActivity(recentlyViewedProducts[it].id)
