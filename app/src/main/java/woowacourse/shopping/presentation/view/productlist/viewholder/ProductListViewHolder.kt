@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductListBinding
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.view.custom.CountView
 
 class ProductListViewHolder(
     parent: ViewGroup,
@@ -17,8 +18,13 @@ class ProductListViewHolder(
     private val binding = ItemProductListBinding.bind(itemView)
 
     init {
-        binding.root.setOnClickListener {
+        binding.clProductItem.setOnClickListener {
             onClick(bindingAdapterPosition)
+        }
+        binding.productCountView.countStateChangeListener = object : CountView.OnCountStateChangeListener {
+            override fun onCountChanged(countView: CountView?, count: Int) {
+                // count 변동 시 이벤트 처리
+            }
         }
     }
 
