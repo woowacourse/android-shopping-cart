@@ -13,4 +13,8 @@
     <string name="toast_message_system_error">시스템 오류가 발생했습니다. 다시 시도 해주세요.</string>
     <string name="product_detail_price_info">금액</string>
     <string name="item_product_list_more_text">더보기</string>
+    <string name="item_cart_list_plus">+</string>
+    <string name="item_cart_list_minus">-</string>
+    <string name="cart_select_all_text">전체</string>
+    <string name="cart_order_text">주문하기</string>
 </resources>
