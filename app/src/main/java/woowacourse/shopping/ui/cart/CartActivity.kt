@@ -55,12 +55,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun getCartListener() = object : CartListener {
         override fun onPageNext() { presenter.moveToPageNext() }
         override fun onPagePrev() { presenter.moveToPagePrev() }
-        override fun onItemRemove(productId: Int) { presenter.removeItem(productId) }
+        override fun onItemRemove(productId: Int) { presenter.removeProduct(productId) }
         override fun onItemClick(product: CartProductUIModel) {
             presenter.navigateToItemDetail(product.id)
         }
         override fun onItemUpdate(productId: Int, count: Int): Int {
-            return presenter.updateItem(productId, count)
+            return presenter.updateItemCount(productId, count)
         }
         override fun onItemCheckChanged(productId: Int, checked: Boolean) {
             presenter.updateItemCheck(productId, checked)
@@ -71,7 +71,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         adapter.submitList(products, pageUIModel)
     }
 
-    override fun updateBottom(totalPrice: Int, totalCount: Int) {
+    override fun setBottom(totalPrice: Int, totalCount: Int) {
         binding.cartBottom.totalCount = totalCount
         binding.cartBottom.price = totalPrice
     }

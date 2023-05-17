@@ -9,7 +9,7 @@ interface CartContract {
     interface View {
         fun setCarts(products: List<CartProductUIModel>, pageUIModel: PageUIModel)
         fun navigateToItemDetail(product: ProductUIModel)
-        fun updateBottom(totalPrice: Int, totalCount: Int)
+        fun setBottom(totalPrice: Int, totalCount: Int)
         fun setAllItemCheck(all: Boolean)
     }
 
@@ -17,12 +17,12 @@ interface CartContract {
         fun setUpCarts()
         fun moveToPageNext()
         fun moveToPagePrev()
-        fun removeItem(id: Int)
+        fun removeProduct(productId: Int)
         fun navigateToItemDetail(productId: Int)
         fun getPageIndex(): Int
-        fun updateItem(productId: Int, count: Int): Int
-        fun updateItemCheck(productId: Int, selected: Boolean)
+        fun updateItemCount(productId: Int, count: Int): Int
+        fun updateItemCheck(productId: Int, checked: Boolean)
         fun updatePriceAndCount()
-        fun updateAllItemCheck(checked: Boolean)
+        fun setProductsCheck(checked: Boolean)
     }
 }

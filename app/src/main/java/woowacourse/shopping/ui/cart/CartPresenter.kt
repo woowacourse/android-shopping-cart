@@ -41,8 +41,8 @@ class CartPresenter(
         setUpCarts()
     }
 
-    override fun removeItem(id: Int) {
-        cartRepository.remove(id)
+    override fun removeProduct(productId: Int) {
+        cartRepository.remove(productId)
         if (cartRepository.getPage(index, STEP).toUIModel().isEmpty()) {
             index -= 1
         }
@@ -57,7 +57,7 @@ class CartPresenter(
         return index
     }
 
-    override fun updateItem(productId: Int, count: Int): Int {
+    override fun updateItemCount(productId: Int, count: Int): Int {
         val updatedCount = when {
             count > 0 -> cartRepository.updateCount(productId, count)
             else -> 1
@@ -80,7 +80,7 @@ class CartPresenter(
         )
     }
 
-    override fun updateAllItemCheck(checked: Boolean) {
+    override fun setProductsCheck(checked: Boolean) {
         cartRepository.updateChecked(productId, checked)
         setUpCarts()
     }
