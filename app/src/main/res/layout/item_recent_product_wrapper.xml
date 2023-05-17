@@ -32,7 +32,7 @@
             tools:listitem="@layout/item_recent_product"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title"/>
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
 
         <View
             android:layout_width="match_parent"
