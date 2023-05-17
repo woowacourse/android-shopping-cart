@@ -52,10 +52,10 @@
     - [x] Cart
         - [x] amount(Int)
         - [x] is_checked(Int : 0 or 1)
-- [ ] Domain
-    - [ ] CartProduct
-        - [ ] Amount
-        - [ ] Checked
-        - [ ] decreaseAmount()
-        - [ ] increaseAmount()
-        - [ ] changeChecked(isChecked)
+- [x] Domain
+    - [x] CartProduct
+        - [x] Amount
+        - [x] Checked
+        - [x] decreaseAmount()
+        - [x] increaseAmount()
+        - [x] changeChecked(isChecked)

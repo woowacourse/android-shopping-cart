@@ -46,6 +46,8 @@ class CartDao(private val db: SQLiteDatabase) {
 
     private fun createCartProduct(cursor: Cursor) = CartProduct(
         LocalDateTime.parse(cursor.getString(cursor.getColumnIndexOrThrow(SqlCart.TIME))),
+        cursor.getInt(cursor.getColumnIndexOrThrow(SqlCart.AMOUNT)),
+        cursor.getInt(cursor.getColumnIndexOrThrow(SqlCart.IS_CHECKED)) == 1,
         Product(
             URL(cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.PICTURE))),
             cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.TITLE)),

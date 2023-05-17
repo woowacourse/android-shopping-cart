@@ -9,6 +9,8 @@ object CartProductMapper : Mapper<CartProduct, CartProductModel> {
     override fun CartProduct.toView(): CartProductModel {
         return CartProductModel(
             time,
+            amount,
+            isChecked,
             product.toView()
         )
     }
@@ -16,6 +18,8 @@ object CartProductMapper : Mapper<CartProduct, CartProductModel> {
     override fun CartProductModel.toDomain(): CartProduct {
         return CartProduct(
             time,
+            amount,
+            isChecked,
             product.toDomain()
         )
     }

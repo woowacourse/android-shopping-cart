@@ -21,7 +21,7 @@ class ProductDetailPresenter(
     }
 
     override fun addToCart() {
-        val cartProduct = CartProduct(LocalDateTime.now(), product)
+        val cartProduct = CartProduct(LocalDateTime.now(), amount = 1, isChecked = true, product)
         cartRepository.addCartProduct(cartProduct)
         view.showCart()
     }
