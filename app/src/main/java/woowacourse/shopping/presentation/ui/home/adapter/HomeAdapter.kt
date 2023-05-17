@@ -2,82 +2,97 @@ package woowacourse.shopping.presentation.ui.home.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.model.HomeData
+import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.model.RecentlyViewed
+import woowacourse.shopping.presentation.model.RecentlyViewedProduct
+import woowacourse.shopping.presentation.model.ShowMoreItem
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.PRODUCT
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.RECENTLY_VIEWED
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.SHOW_MORE
-import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.HomeViewHolder
+import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ProductViewHolder
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.RecentlyViewedViewHolder
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ShowMoreViewHolder
 
 class HomeAdapter(
-    private val clickProduct: (productId: Long) -> Unit,
-    private val clickMore: (productId: Long) -> Unit,
+    private val productClickListener: ProductClickListener,
+    private val clickShowMore: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val recentlyViewed = mutableListOf<Product>()
-    private val items = mutableListOf<Product>()
-    val productsCount: Int get() = items.size
+    private val items = mutableListOf<HomeData>()
+    private val recentlyViewedAdapter = RecentlyViewedProductAdapter(productClickListener)
 
-    override fun getItemViewType(position: Int): Int {
-        if (items[position].id == -1L) return SHOW_MORE.ordinal
-        if (position == 0 && recentlyViewed.isNotEmpty()) return RECENTLY_VIEWED.ordinal
-        return PRODUCT.ordinal
+    override fun getItemCount(): Int {
+        return items.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (HomeViewType.valueOf(viewType)) {
-            RECENTLY_VIEWED -> RecentlyViewedViewHolder(
-                RecentlyViewedViewHolder.getView(parent),
-                clickProduct,
-            )
-            PRODUCT -> HomeViewHolder(HomeViewHolder.getView(parent)) { clickProduct(items[it].id) }
-            SHOW_MORE -> ShowMoreViewHolder(
-                ShowMoreViewHolder.getView(parent),
-            ) {
-                hideShowMoreButton()
-                clickMore(items.last().id)
-            }
+    override fun getItemViewType(position: Int): Int {
+        return when (items[position].viewType) {
+            PRODUCT -> PRODUCT.ordinal
+            RECENTLY_VIEWED -> RECENTLY_VIEWED.ordinal
+            SHOW_MORE -> SHOW_MORE.ordinal
         }
     }
 
-    private fun hideShowMoreButton() {
-        items.removeLast()
-        notifyItemRemoved(itemCount - 1)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            PRODUCT.ordinal -> {
+                ProductViewHolder(
+                    ProductViewHolder.getView(parent),
+                    productClickListener,
+                )
+            }
+            RECENTLY_VIEWED.ordinal -> {
+                RecentlyViewedViewHolder(
+                    RecentlyViewedViewHolder.getView(parent),
+                    recentlyViewedAdapter,
+                )
+            }
+            SHOW_MORE.ordinal -> {
+                ShowMoreViewHolder(ShowMoreViewHolder.getView(parent)) { showMoreProducts() }
+            }
+            else -> throw IllegalArgumentException("HomeAdapter의 아이템 viewType이 이상합니다.")
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is HomeViewHolder -> holder.bind(items[position])
-            is RecentlyViewedViewHolder -> holder.bind(recentlyViewed)
-            is ShowMoreViewHolder -> holder.bind()
+            is ProductViewHolder -> holder.bind(items[position] as ProductUiModel)
+            is RecentlyViewedViewHolder -> Unit
+            is ShowMoreViewHolder -> Unit
         }
     }
 
-    override fun getItemCount(): Int {
-        // if (recentlyViewed.isEmpty()) return items.size
-        return items.size
-    }
-
-    fun initProducts(products: List<Product>) {
+    fun initProducts(products: List<ProductUiModel>) {
         val preSize = items.size
         items.addAll(products)
         notifyItemRangeInserted(preSize, items.size - 1)
     }
 
-    fun initShowMoreButton() {
-        items.add(Product(-1, "", "", -1))
-        notifyItemInserted(productsCount - 1)
+    fun initRecentlyViewedProducts(products: List<RecentlyViewedProduct>) {
+        if (items.isNotEmpty() and (items[0] is RecentlyViewed)) {
+            items.removeFirst()
+            notifyItemRemoved(0)
+        }
+        items.add(0, RecentlyViewed(recentlyViewedProducts = products))
+        notifyItemInserted(0)
+        recentlyViewedAdapter.submitList((items.first() as RecentlyViewed).recentlyViewedProducts)
     }
 
-    fun initRecentlyViewedProduct(recentlyViewedProducts: List<Product>) {
-        if (recentlyViewed.isEmpty()) {
-            recentlyViewed.clear()
-            recentlyViewed.addAll(recentlyViewedProducts)
-            notifyItemInserted(0)
-            return
+    fun initShowMoreItem() {
+        items.add(ShowMoreItem())
+        notifyItemInserted(itemCount - 1)
+    }
+
+    private fun showMoreProducts() {
+        deleteShowMore()
+        clickShowMore()
+    }
+
+    private fun deleteShowMore() {
+        val lastItem = items.last()
+        if (lastItem.viewType == SHOW_MORE) {
+            items.removeLast()
+            notifyItemRemoved(itemCount)
         }
-        recentlyViewed.clear()
-        recentlyViewed.addAll(recentlyViewedProducts)
-        notifyItemChanged(0)
     }
 }

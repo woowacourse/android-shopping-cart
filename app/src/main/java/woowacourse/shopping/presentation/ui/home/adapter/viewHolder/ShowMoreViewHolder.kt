@@ -7,16 +7,14 @@ import woowacourse.shopping.databinding.ItemShowMoreBinding
 
 class ShowMoreViewHolder(
     private val binding: ItemShowMoreBinding,
-    private val clickProduct: () -> Unit,
+    private val clickShowMore: () -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.root.setOnClickListener {
-            clickProduct()
+            clickShowMore()
         }
     }
-
-    fun bind() {}
 
     companion object {
         fun getView(parent: ViewGroup): ItemShowMoreBinding {

@@ -4,22 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentlyViewedBinding
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.home.adapter.RecentlyViewedProductAdapter
 
 class RecentlyViewedViewHolder(
-    private val binding: ItemRecentlyViewedBinding,
-    private val clickProduct: (productId: Long) -> Unit,
-) :
-    RecyclerView.ViewHolder(binding.root) {
-    private val adapter = RecentlyViewedProductAdapter(clickProduct)
+    binding: ItemRecentlyViewedBinding,
+    adapter: RecentlyViewedProductAdapter,
+) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.listRecentlyViewed.adapter = adapter
-    }
-
-    fun bind(data: List<Product>) {
-        adapter.initItems(data)
     }
 
     companion object {

@@ -20,8 +20,9 @@ class ProductDao(context: Context) : ProductDataSource {
         return readProduct(cursor)
     }
 
-    override fun getProductEntities(unit: Int, lastIndex: Int): List<ProductEntity> {
-        val query: String = "SELECT * FROM $TABLE_NAME LIMIT $unit OFFSET $lastIndex"
+    override fun getProductEntities(unit: Int, lastId: Long): List<ProductEntity> {
+        val query: String =
+            "SELECT * FROM $TABLE_NAME WHERE ${BaseColumns._ID} > $lastId ORDER BY ${BaseColumns._ID} LIMIT $unit"
         val cursor: Cursor = shoppingDb.rawQuery(query, null)
         val itemContainer = mutableListOf<ProductEntity>()
         while (cursor.moveToNext()) {
@@ -40,6 +41,14 @@ class ProductDao(context: Context) : ProductDataSource {
         data.put(TABLE_COLUMN_PRICE, price)
         data.put(TABLE_COLUMN_ITEM_IMAGE, itemImage)
         return shoppingDb.insert(TABLE_NAME, null, data)
+    }
+
+    override fun isLastProductEntity(id: Long): Boolean {
+        val query = "SELECT * FROM $TABLE_NAME WHERE ${BaseColumns._ID} > $id"
+        val cursor: Cursor = shoppingDb.rawQuery(query, null)
+        val isLast = !cursor.moveToFirst()
+        cursor.close()
+        return isLast
     }
 
     private fun readProduct(cursor: Cursor): ProductEntity {

@@ -20,8 +20,8 @@ class ProductRepositoryImpl(
         return WoowaResult.SUCCESS(productEntity.toDomainModel())
     }
 
-    override fun getProducts(unit: Int, lastIndex: Int): List<Product> {
-        return productDataSource.getProductEntities(unit, lastIndex).map { productEntity ->
+    override fun getProducts(unit: Int, lastId: Long): List<Product> {
+        return productDataSource.getProductEntities(unit, lastId).map { productEntity ->
             productEntity.toDomainModel()
         }
     }
@@ -36,5 +36,9 @@ class ProductRepositoryImpl(
 
     override fun addRecentlyViewedProduct(productId: Long): Long {
         return recentlyViewedDataSource.addRecentlyViewedProduct(productId)
+    }
+
+    override fun isLastProduct(id: Long): Boolean {
+        return productDataSource.isLastProductEntity(id)
     }
 }

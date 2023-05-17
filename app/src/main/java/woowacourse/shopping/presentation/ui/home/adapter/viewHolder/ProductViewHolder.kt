@@ -4,21 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.ui.home.adapter.ProductClickListener
 
-class HomeViewHolder(
+class ProductViewHolder(
     private val binding: ItemProductBinding,
-    private val clickProduct: (productId: Int) -> Unit,
-) :
-    RecyclerView.ViewHolder(binding.root) {
+    productClickListener: ProductClickListener,
+) : RecyclerView.ViewHolder(binding.root) {
 
     init {
-        binding.root.setOnClickListener {
-            clickProduct(bindingAdapterPosition)
-        }
+        binding.listener = productClickListener
     }
 
-    fun bind(data: Product) {
+    fun bind(data: ProductUiModel) {
         binding.product = data
     }
 

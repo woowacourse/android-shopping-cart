@@ -7,12 +7,17 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            type="woowacourse.shopping.presentation.model.ProductUiModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.presentation.ui.home.adapter.ProductClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{()->listener.clickProduct(product.id)}"
         android:paddingHorizontal="8dp"
         android:paddingTop="20dp">
 
