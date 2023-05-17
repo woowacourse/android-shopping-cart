@@ -1,10 +1,10 @@
 package woowacourse.shopping.ui.cart
 
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
-import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 
 class CartPresenter(
     private val view: CartContract.View,
@@ -12,10 +12,10 @@ class CartPresenter(
     private val productRepository: ProductRepository,
     private var index: Int = 0
 ) : CartContract.Presenter {
-    private lateinit var currentPage: List<CartItemType.Cart>
+    private lateinit var currentPage: List<CartProductUIModel>
 
     override fun setUpCarts() {
-        currentPage = cartRepository.getPage(index, STEP).toUIModel().map { CartItemType.Cart(it) }
+        currentPage = cartRepository.getPage(index, STEP).toUIModel()
         view.setCarts(
             currentPage,
             PageUIModel(
@@ -28,8 +28,8 @@ class CartPresenter(
     }
 
     private fun setUpAllItemCheck() {
-        view.setAllItemCheck(currentPage.all { it.product.checked })
-        (currentPage.count { it.product.checked } == currentPage.size)
+        view.setAllItemCheck(currentPage.all { it.checked })
+        (currentPage.count { it.checked } == currentPage.size)
     }
 
     override fun moveToPageNext() {
@@ -70,7 +70,7 @@ class CartPresenter(
     override fun updateItemCheck(productId: Int, selected: Boolean) {
         cartRepository.updateChecked(productId, selected)
         updatePriceAndCount()
-        currentPage = cartRepository.getPage(index, STEP).toUIModel().map { CartItemType.Cart(it) }
+        currentPage = cartRepository.getPage(index, STEP).toUIModel()
         setUpAllItemCheck()
     }
 

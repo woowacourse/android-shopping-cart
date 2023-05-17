@@ -2,14 +2,14 @@ package woowacourse.shopping.ui.cart.cartAdapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.model.CartProductUIModel
+import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartItemViewHolder
 import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartViewHolder
 import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.NavigationViewHolder
 
-class CartAdapter(
-    private val cartItems: List<CartItemType>,
-    private val cartListener: CartListener
-) : RecyclerView.Adapter<CartItemViewHolder>() {
+class CartAdapter(private val cartListener: CartListener) : RecyclerView.Adapter<CartItemViewHolder>() {
+    private val cartItems = mutableListOf<CartItemType>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
         return when (viewType) {
@@ -29,5 +29,12 @@ class CartAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return cartItems[position].viewType
+    }
+
+    fun submitList(cartProducts: List<CartProductUIModel>, pageUIModel: PageUIModel) {
+        cartItems.clear()
+        cartItems.addAll(cartProducts.map { CartItemType.Cart(it) })
+        cartItems.add(CartItemType.Navigation(pageUIModel))
+        notifyItemChanged(0)
     }
 }

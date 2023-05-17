@@ -1,13 +1,13 @@
 package woowacourse.shopping.ui.cart
 
+import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 
 interface CartContract {
 
     interface View {
-        fun setCarts(products: List<CartItemType.Cart>, pageUIModel: PageUIModel)
+        fun setCarts(products: List<CartProductUIModel>, pageUIModel: PageUIModel)
         fun navigateToItemDetail(product: ProductUIModel)
         fun updateBottom(totalPrice: Int, totalCount: Int)
         fun setAllItemCheck(all: Boolean)

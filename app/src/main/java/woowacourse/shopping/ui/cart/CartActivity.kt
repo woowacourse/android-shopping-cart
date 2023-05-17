@@ -14,13 +14,14 @@ import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.cartAdapter.CartAdapter
-import woowacourse.shopping.ui.cart.cartAdapter.CartItemType
 import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 import woowacourse.shopping.ui.detailedProduct.DetailedProductActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
+
+    private val adapter = CartAdapter(getCartListener())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,26 +51,24 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun setCarts(products: List<CartItemType.Cart>, pageUIModel: PageUIModel) {
-        val cartListener = object : CartListener {
-            override fun onPageNext() { presenter.moveToPageNext() }
-            override fun onPagePrev() { presenter.moveToPagePrev() }
-            override fun onItemRemove(productId: Int) { presenter.removeItem(productId) }
-            override fun onItemClick(product: CartProductUIModel) {
-                presenter.navigateToItemDetail(product.id)
-            }
-            override fun onItemUpdate(productId: Int, count: Int): Int {
-                return presenter.updateItem(productId, count)
-            }
-            override fun onItemSelectChanged(productId: Int, selected: Boolean) {
-                presenter.updateItemCheck(productId, selected)
-            }
+    private fun getCartListener() = object : CartListener {
+        override fun onPageNext() { presenter.moveToPageNext() }
+        override fun onPagePrev() { presenter.moveToPagePrev() }
+        override fun onItemRemove(productId: Int) { presenter.removeItem(productId) }
+        override fun onItemClick(product: CartProductUIModel) {
+            presenter.navigateToItemDetail(product.id)
         }
+        override fun onItemUpdate(productId: Int, count: Int): Int {
+            return presenter.updateItem(productId, count)
+        }
+        override fun onItemSelectChanged(productId: Int, selected: Boolean) {
+            presenter.updateItemCheck(productId, selected)
+        }
+    }
 
-        binding.rvProducts.adapter = CartAdapter(
-            products.plus(CartItemType.Navigation(pageUIModel)),
-            cartListener
-        )
+    override fun setCarts(products: List<CartProductUIModel>, pageUIModel: PageUIModel) {
+        adapter.submitList(products, pageUIModel)
+        binding.rvProducts.adapter = adapter
     }
 
     override fun updateBottom(totalPrice: Int, totalCount: Int) {
