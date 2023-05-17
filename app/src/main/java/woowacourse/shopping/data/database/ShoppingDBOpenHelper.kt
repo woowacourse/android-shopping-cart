@@ -3,14 +3,14 @@ package woowacourse.shopping.data.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import woowacourse.shopping.data.database.table.SqlCartProduct
+import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.database.table.SqlRecentProduct
 import woowacourse.shopping.data.database.table.SqlTable
 
 class ShoppingDBOpenHelper(context: Context) :
     SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
-    private val tables: List<SqlTable> = listOf(SqlProduct, SqlCartProduct, SqlRecentProduct)
+    private val tables: List<SqlTable> = listOf(SqlProduct, SqlCart, SqlRecentProduct)
 
     override fun onCreate(db: SQLiteDatabase?) {
         tables.forEach {

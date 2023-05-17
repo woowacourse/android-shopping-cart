@@ -3,7 +3,7 @@ package woowacourse.shopping.data.datasource.dao
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.selectRowId
-import woowacourse.shopping.data.database.table.SqlCartProduct
+import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.domain.Cart
@@ -24,7 +24,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
 
     override fun selectAllCount(): Int {
         val cursor = db.rawQuery(
-            "SELECT COUNT(*) FROM ${SqlCartProduct.name}", null
+            "SELECT COUNT(*) FROM ${SqlCart.name}", null
         )
         return cursor.use {
             it.moveToNext()
@@ -34,7 +34,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
 
     override fun selectAll(): Cart {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCartProduct.name}, ${SqlProduct.name} on ${SqlCartProduct.name}.${SqlCartProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
             null
         )
         return makeCart(cursor)
@@ -42,7 +42,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
 
     override fun selectPage(page: Int, countPerPage: Int): Cart {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCartProduct.name}, ${SqlProduct.name} on ${SqlCartProduct.name}.${SqlCartProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * countPerPage}, $countPerPage",
+            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * countPerPage}, $countPerPage",
             null
         )
         return makeCart(cursor)
@@ -59,14 +59,14 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
 
     private fun insertOrUpdateCartProduct(productId: Int) {
         val query =
-            "INSERT INTO ${SqlCartProduct.name} (${SqlCartProduct.AMOUNT}, ${SqlCartProduct.PRODUCT_ID}) VALUES (1, $productId) " + "ON CONFLICT(${SqlCartProduct.PRODUCT_ID}) DO UPDATE SET ${SqlCartProduct.AMOUNT} = ${SqlCartProduct.AMOUNT} + 1"
+            "INSERT INTO ${SqlCart.name} (${SqlCart.AMOUNT}, ${SqlCart.PRODUCT_ID}) VALUES (1, $productId) " + "ON CONFLICT(${SqlCart.PRODUCT_ID}) DO UPDATE SET ${SqlCart.AMOUNT} = ${SqlCart.AMOUNT} + 1"
 
         db.execSQL(query)
     }
 
     private fun updateOrDeleteCartProduct(productId: Int) {
-        db.execSQL("UPDATE ${SqlCartProduct.name} SET ${SqlCartProduct.AMOUNT} = CASE WHEN ${SqlCartProduct.AMOUNT} > 1 THEN ${SqlCartProduct.AMOUNT} - 1 ELSE 0 END WHERE ${SqlCartProduct.PRODUCT_ID} = $productId")
-        db.execSQL("DELETE FROM ${SqlCartProduct.name} WHERE ${SqlCartProduct.PRODUCT_ID} = $productId AND ${SqlCartProduct.AMOUNT} = 0")
+        db.execSQL("UPDATE ${SqlCart.name} SET ${SqlCart.AMOUNT} = CASE WHEN ${SqlCart.AMOUNT} > 1 THEN ${SqlCart.AMOUNT} - 1 ELSE 0 END WHERE ${SqlCart.PRODUCT_ID} = $productId")
+        db.execSQL("DELETE FROM ${SqlCart.name} WHERE ${SqlCart.PRODUCT_ID} = $productId AND ${SqlCart.AMOUNT} = 0")
     }
 
     private fun makeCart(cursor: Cursor) = Cart(
@@ -83,7 +83,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
     )
 
     private fun makeCartProduct(it: Cursor) = CartProduct(
-        it.getColumnIndexOrThrow(SqlCartProduct.AMOUNT),
+        it.getInt(it.getColumnIndexOrThrow(SqlCart.AMOUNT)),
         makeProduct(it)
     )
 

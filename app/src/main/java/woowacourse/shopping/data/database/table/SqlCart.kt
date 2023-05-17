@@ -3,7 +3,7 @@ package woowacourse.shopping.data.database.table
 import woowacourse.shopping.data.database.SqlColumn
 import woowacourse.shopping.data.database.SqlType
 
-object SqlCartProduct : SqlTable {
+object SqlCart : SqlTable {
     const val AMOUNT = "amount"
     const val PRODUCT_ID = "product_id"
 
