@@ -9,6 +9,6 @@ interface ProductDetailContract {
     interface Presenter {
         val view: View
 
-        fun addBasketProduct()
+        fun addBasketProduct(): Thread
     }
 }
