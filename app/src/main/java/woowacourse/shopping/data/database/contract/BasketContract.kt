@@ -8,6 +8,7 @@ object BasketContract {
     internal const val COLUMN_PRICE = "price"
     internal const val COLUMN_IMAGE_URL = "image_url"
     internal const val COLUMN_CREATED = "created"
+    internal const val COLUMN_COUNT = "count"
 
     internal val CREATE_TABLE_QUERY = """
         CREATE TABLE IF NOT EXISTS $TABLE_NAME (
@@ -15,7 +16,8 @@ object BasketContract {
             $COLUMN_NAME TEXT,
             $COLUMN_PRICE INTEGER,
             $COLUMN_IMAGE_URL TEXT,
-            $COLUMN_CREATED LONG
+            $COLUMN_CREATED LONG,
+            $COLUMN_COUNT INTEGER
         )
     """.trimIndent()
 

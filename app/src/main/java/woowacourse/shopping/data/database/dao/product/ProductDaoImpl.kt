@@ -23,7 +23,9 @@ class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
                 DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
             val imageUrl: String =
                 cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-            products.add(DataProduct(id, name, price, imageUrl))
+            val selectedCount: Int =
+                cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_COUNT))
+            products.add(DataProduct(id, name, price, imageUrl, selectedCount))
         }
         cursor.close()
         return products
@@ -34,6 +36,7 @@ class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
             put(ProductContract.COLUMN_NAME, product.name)
             put(ProductContract.COLUMN_PRICE, product.price.value)
             put(ProductContract.COLUMN_IMAGE_URL, product.imageUrl)
+            put(ProductContract.COLUMN_COUNT, product.selectedCount)
         }
 
         database.writableDatabase.insert(ProductContract.TABLE_NAME, null, contentValues)

@@ -26,7 +26,9 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 DataPrice(cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_PRICE)))
             val imageUrl: String =
                 cursor.getString(cursor.getColumnIndex(BasketContract.COLUMN_IMAGE_URL))
-            products.add(DataProduct(id, name, price, imageUrl))
+            val selectedCount: Int =
+                cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_IMAGE_URL))
+            products.add(DataProduct(id, name, price, imageUrl, selectedCount))
         }
         cursor.close()
 
@@ -39,6 +41,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             put(BasketContract.COLUMN_PRICE, product.price.value)
             put(BasketContract.COLUMN_IMAGE_URL, product.imageUrl)
             put(BasketContract.COLUMN_CREATED, System.currentTimeMillis())
+            put(BasketContract.COLUMN_COUNT, product.selectedCount)
         }
 
         database.writableDatabase.insert(BasketContract.TABLE_NAME, null, contentValues)
