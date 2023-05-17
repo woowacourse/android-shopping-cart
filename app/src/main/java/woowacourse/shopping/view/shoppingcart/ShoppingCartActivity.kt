@@ -11,7 +11,6 @@ import woowacourse.shopping.data.db.CartProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.model.uimodel.CartProductUIModel
-import woowacourse.shopping.model.uimodel.PageCounter
 import woowacourse.shopping.model.uimodel.ProductUIModel
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
@@ -42,8 +41,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private fun setPresenter() {
         presenter = ShoppingCartPresenter(
             view = this,
-            cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
-            pageCounter = PageCounter()
+            cartProductRepository = CartProductRepositoryImpl(CartProductDao(this))
         )
     }
 

@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
+import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
 import woowacourse.shopping.model.uimodel.ProductUIModel
 
@@ -15,7 +16,7 @@ interface ShoppingCartContract {
     }
 
     interface Presenter {
-        val cartProducts: List<CartProductUIModel>
+        val paging: Paging
         fun loadCartProducts(): List<CartProductUIModel>
         fun removeCartProduct(productUIModel: ProductUIModel)
         fun loadNextPage(isActivated: Boolean)
