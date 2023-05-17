@@ -18,6 +18,10 @@ object ProductRepositoryImpl : ProductRepository {
             .take(limit)
     }
 
+    override fun countAll(): Int {
+        return products.values.size
+    }
+
     override fun findById(id: Long): Product? {
         return products[id]
     }
