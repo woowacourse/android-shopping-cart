@@ -14,37 +14,42 @@ class ShoppingCartItemViewHolder private constructor(
     private lateinit var shoppingCartProduct: ShoppingCartProductUiModel
 
     fun setOnClicked(
-        onRemoveClicked: (ShoppingCartProductUiModel) -> Unit,
-        onPlusImageClicked: (product: ShoppingCartProductUiModel) -> Unit,
-        onMinusImageClicked: (product: ShoppingCartProductUiModel) -> Unit,
+        onRemoveClicked: (product: ShoppingCartProductUiModel) -> Unit,
+        productCountPickerListener: ShoppingCartProductCountPicker,
+        onSelectingChanged: (product: ShoppingCartProductUiModel, isSelected: Boolean) -> Unit,
     ) {
         with(binding) {
             imageRemoveProduct.setOnClickListener {
                 onRemoveClicked(shoppingCartProduct)
             }
             imagePlus.setOnClickListener {
-                onPlusImageClicked(shoppingCartProduct)
+                productCountPickerListener.onPlus(shoppingCartProduct)
             }
             imageMinus.setOnClickListener {
-                onMinusImageClicked(shoppingCartProduct)
+                productCountPickerListener.onMinus(shoppingCartProduct)
+            }
+            checkBoxSelecting.setOnCheckedChangeListener { _, isChecked ->
+                onSelectingChanged(
+                    shoppingCartProduct,
+                    isChecked
+                )
             }
         }
     }
 
+    // TODO: 바인딩을 생성할 때 해줘버리면
+    // TODO: 고차함수 바인딩은 어떻게 넘겨줘야할까
+    // TODO: 모델 가지고 있기가 싫다
     fun bind(
         product: ShoppingCartProductUiModel,
     ) {
         shoppingCartProduct = product
+        binding.product = shoppingCartProduct
 
         with(binding) {
             Glide.with(root.context)
                 .load(shoppingCartProduct.imageUrl)
                 .into(imageProduct)
-
-            textProductCount.text = shoppingCartProduct.count.toString()
-            textProductName.text = shoppingCartProduct.name
-            textProductPrice.text = shoppingCartProduct.price.toString()
-            checkBoxSelecting.isChecked = shoppingCartProduct.selected
         }
     }
 

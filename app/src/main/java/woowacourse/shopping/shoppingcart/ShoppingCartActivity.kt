@@ -49,10 +49,14 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setUpShoppingCartView(products: List<ShoppingCartProductUiModel>) {
+    override fun setUpShoppingCartView(
+        products: List<ShoppingCartProductUiModel>,
+        currentPage: Int,
+    ) {
         shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
             shoppingCartProducts = products,
             shoppingCartProductCountPicker = getShoppingCartProductCountPickerImpl(),
+            onProductSelectingChanged = presenter::changeProductSelectedState,
             onShoppingCartProductRemoved = presenter::removeShoppingCartProduct,
             onTotalPriceChanged = presenter::calcTotalPrice,
         )
@@ -68,6 +72,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             checkBoxTotalProducts.setOnCheckedChangeListener { _, isChecked ->
                 presenter.changeProductsSelectedState(isChecked)
             }
+            textPageNumber.text = currentPage.toString()
         }
     }
 
@@ -84,10 +89,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun setUpTextTotalPriceView(price: Int) {
         binding.textTotalPrice.text = price.toString()
-    }
-
-    override fun refreshShoppingCartProductView(product: ShoppingCartProductUiModel) {
-        shoppingCartRecyclerAdapter.removeItem(product = product)
     }
 
     override fun refreshShoppingCartProductView(products: List<ShoppingCartProductUiModel>) {

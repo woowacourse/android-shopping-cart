@@ -6,11 +6,9 @@ interface ShoppingCartContract {
 
     interface View {
 
-        fun setUpShoppingCartView(products: List<ShoppingCartProductUiModel>)
+        fun setUpShoppingCartView(products: List<ShoppingCartProductUiModel>, currentPage: Int)
 
         fun setUpTextTotalPriceView(price: Int)
-
-        fun refreshShoppingCartProductView(product: ShoppingCartProductUiModel)
 
         fun refreshShoppingCartProductView(products: List<ShoppingCartProductUiModel>)
 
@@ -29,7 +27,9 @@ interface ShoppingCartContract {
 
         fun minusShoppingCartProductCount(product: ShoppingCartProductUiModel)
 
-        fun calcTotalPrice(products: List<ShoppingCartProductUiModel>)
+        fun calcTotalPrice()
+
+        fun changeProductSelectedState(product: ShoppingCartProductUiModel, isSelected: Boolean)
 
         fun changeProductsSelectedState(checked: Boolean)
 

@@ -46,7 +46,8 @@ class ShoppingCartPresenter(
         shoppingCartProducts.addAll(products)
 
         view.setUpShoppingCartView(
-            products = shoppingCartProducts.map { it.toUiModel() }
+            products = shoppingCartProducts.map { it.toUiModel() },
+            currentPage = currentPage.value
         )
     }
 
@@ -56,37 +57,60 @@ class ShoppingCartPresenter(
         view.refreshShoppingCartProductView(showingProducts)
     }
 
+    // TODO: ShoppingCart의 역할이 애매모호해짐
     override fun plusShoppingCartProductCount(product: ShoppingCartProductUiModel) {
+        val indexOfProduct = showingProducts.indexOfFirst { it.id == product.id }
         val shoppingCartProduct = product.toDomainModel().plusCount()
+        shoppingCartProducts.removeAt(indexOfProduct)
+        shoppingCartProducts.add(indexOfProduct, shoppingCartProduct)
 
         repository.insertToShoppingCart(
             id = shoppingCartProduct.product.id,
             count = shoppingCartProduct.count.value
         )
         view.refreshShoppingCartProductView(
-            product = shoppingCartProduct.toUiModel()
+            products = showingProducts
         )
     }
 
     override fun minusShoppingCartProductCount(product: ShoppingCartProductUiModel) {
+        val indexOfProduct = showingProducts.indexOfFirst { it.id == product.id }
         val shoppingCartProduct = product.toDomainModel().minusCount()
+        shoppingCartProducts.removeAt(indexOfProduct)
+        shoppingCartProducts.add(indexOfProduct, shoppingCartProduct)
 
         repository.insertToShoppingCart(
             id = shoppingCartProduct.product.id,
             count = shoppingCartProduct.count.value
         )
-        view.refreshShoppingCartProductView(shoppingCartProduct.toUiModel())
+        view.refreshShoppingCartProductView(
+            products = showingProducts
+        )
     }
 
-    override fun calcTotalPrice(products: List<ShoppingCartProductUiModel>) {
+    override fun calcTotalPrice() {
         val totalPrice = ShoppingCart(
-            products = products.map { it.toDomainModel() }
+            products = showingProducts.map { it.toDomainModel() }
         ).totalPrice
 
         view.setUpTextTotalPriceView(price = totalPrice)
     }
 
     // TODO: 페이지 관련 테스트
+    // TODO: ShoppingCart의 역할이 애매모호해짐
+    override fun changeProductSelectedState(
+        product: ShoppingCartProductUiModel,
+        isSelected: Boolean,
+    ) {
+        val indexOfProduct = showingProducts.indexOfFirst { it == product }
+        val shoppingCartProduct = product.toDomainModel()
+            .setSelectedState(isSelected)
+
+        shoppingCartProducts.removeAt(indexOfProduct)
+        shoppingCartProducts.add(indexOfProduct, shoppingCartProduct)
+        view.refreshShoppingCartProductView(showingProducts)
+    }
+
     override fun changeProductsSelectedState(checked: Boolean) {
         shoppingCartProducts = shoppingCartProducts.map { it.setSelectedState(checked) }
             .toMutableList()

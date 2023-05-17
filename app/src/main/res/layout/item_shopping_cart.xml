@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.ShoppingCartProductUiModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,10 +19,13 @@
 
         <CheckBox
             android:id="@+id/check_box_selecting"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginStart="19dp"
             android:layout_marginTop="25dp"
+            android:checked="@{product.selected}"
+            app:layout_constraintBottom_toBottomOf="@+id/text_product_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
             android:layout_marginTop="16dp"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@id/check_box_selecting"
@@ -59,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:layout_marginBottom="11dp"
+            android:text="@{String.valueOf(product.price)}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/image_remove_product"
@@ -80,6 +92,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
+            android:text="@{String.valueOf(product.count)}"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/image_minus"
