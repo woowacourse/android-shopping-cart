@@ -11,7 +11,7 @@ import woowacourse.shopping.utils.SharedPreferenceUtils
 class DetailedProductPresenter(
     private val view: DetailedProductContract.View,
     private val product: ProductUIModel,
-    sharedPreferenceUtils: SharedPreferenceUtils,
+    private val sharedPreferenceUtils: SharedPreferenceUtils,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentRepository: RecentRepository
@@ -42,7 +42,10 @@ class DetailedProductPresenter(
     }
 
     override fun navigateToDetailedProduct() {
-        lastProduct?.let { view.navigateToDetailedProduct(it) }
+        lastProduct?.let {
+            sharedPreferenceUtils.setLastProductId(-1)
+            view.navigateToDetailedProduct(it)
+        }
     }
 
     override fun navigateToAddToCartDialog() {
