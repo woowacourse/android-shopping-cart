@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.ui.cart.uistate.CartUIState
-import java.text.DecimalFormat
+import woowacourse.shopping.utils.PRICE_FORMAT
 
 class CartListAdapter(
     private val cartItems: List<CartUIState>,
@@ -49,10 +49,6 @@ class CartListAdapter(
             Glide.with(itemView)
                 .load(product.imageUrl)
                 .into(binding.ivCart)
-        }
-
-        companion object {
-            private val PRICE_FORMAT = DecimalFormat("#,###")
         }
     }
 }

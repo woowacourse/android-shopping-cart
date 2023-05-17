@@ -14,7 +14,7 @@ import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
-import java.text.DecimalFormat
+import woowacourse.shopping.utils.PRICE_FORMAT
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
@@ -62,7 +62,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         binding.tvProductDetailName.text = product.name
         binding.tvProductDetailPrice.text =
-            getString(R.string.product_price).format(DECIMAL_FORMAT.format(product.price))
+            getString(R.string.product_price).format(PRICE_FORMAT.format(product.price))
         binding.btnProductDetailAdd.setOnClickListener {
             presenter.addProductToCart(product.id)
             moveToCartActivity()
@@ -80,7 +80,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val PRODUCT_ID = "PRODUCT_ID"
-        private val DECIMAL_FORMAT = DecimalFormat("#,###")
 
         fun startActivity(context: Context, productId: Long) {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {

@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.products.uistate.ProductUIState
-import java.text.DecimalFormat
+import woowacourse.shopping.utils.PRICE_FORMAT
 
 class ProductListAdapter(
     private val products: MutableList<ProductUIState>,
@@ -47,10 +47,6 @@ class ProductListAdapter(
                 .load(product.imageUrl)
                 .into(binding.ivProduct)
             binding.root.setOnClickListener { onClick(product.id) }
-        }
-
-        companion object {
-            private val PRICE_FORMAT = DecimalFormat("#,###")
         }
     }
 }
