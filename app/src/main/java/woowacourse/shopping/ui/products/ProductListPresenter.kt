@@ -14,7 +14,7 @@ class ProductListPresenter(
     override fun loadRecentlyViewedProducts() {
         view.setRecentlyViewedProducts(
             recentlyViewedProductRepository.findAll().map(RecentlyViewedProductUIState::from)
-                .reversed().take(10),
+                .reversed().take(MAX_SIZE_RECENTLY_VIEWED_PRODUCTS),
         )
     }
 
@@ -26,5 +26,9 @@ class ProductListPresenter(
         productRepository.findById(productId)?.run {
             recentlyViewedProductRepository.save(this)
         }
+    }
+
+    companion object {
+        private const val MAX_SIZE_RECENTLY_VIEWED_PRODUCTS = 10
     }
 }
