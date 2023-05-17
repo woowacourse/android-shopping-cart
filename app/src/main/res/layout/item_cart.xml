@@ -27,11 +27,12 @@
             android:id="@+id/text_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="11dp"
             android:text="@{cartProduct.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cart_check"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="동원참치" />
 
@@ -43,7 +44,7 @@
             android:layout_marginTop="26dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/text_product_name"
+            app:layout_constraintStart_toStartOf="@+id/cart_check"
             app:layout_constraintTop_toBottomOf="@id/text_product_name"
             tools:background="@color/black" />
 
@@ -52,20 +53,64 @@
             setPrice="@{cartProduct.price}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="13dp"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_close"
             tools:text="99,800원" />
 
         <Button
             android:id="@+id/btn_close"
             android:layout_width="26dp"
             android:layout_height="26dp"
+            android:layout_marginEnd="13dp"
             android:background="@drawable/ic_close"
             android:backgroundTint="@color/gray"
             android:onClick="@{() -> onItemClick.onRemoveClick(cartProduct.id)}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/cart_minus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:text="@string/minus"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cart_count" />
+
+        <TextView
+            android:id="@+id/cart_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:text="@{}"
+            tools:text="1"
+            android:textSize="22sp"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/cart_plus" />
+
+        <TextView
+            android:id="@+id/cart_plus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="13dp"
+            android:text="@string/plus"
+            android:textSize="22sp"
+            android:textColor="@color/gray"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <CheckBox
+            android:id="@+id/cart_check"
+            android:layout_width="25dp"
+            android:layout_height="28dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
