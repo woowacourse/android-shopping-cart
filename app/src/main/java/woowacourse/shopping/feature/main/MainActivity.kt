@@ -8,8 +8,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.data.RecentProductRepositoryImpl
+import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
@@ -43,7 +45,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter = MainPresenter(
             this,
             ProductMockRepository(),
-            RecentProductRepositoryImpl(RecentDao(this))
+            RecentProductRepositoryImpl(RecentDao(this)),
+            CartRepositoryImpl(CartDao(this))
         )
 
         initAdapters()

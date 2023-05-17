@@ -9,7 +9,8 @@ data class ProductUiModel(
     val id: Long,
     val name: String,
     val imgUrl: String,
-    val price: Int
+    val price: Int,
+    val count: Int
 ) : Parcelable {
     fun toPriceFormat(): String {
         return DecimalFormat("#,###").format(price)

@@ -96,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint"
-            android:onClick="@{()->presenter.addCart()}"
+            android:onClick="@{()->presenter.selectCount()}"
             android:text="@string/add_cart"
             android:textSize="20sp"
             android:paddingHorizontal="8dp"

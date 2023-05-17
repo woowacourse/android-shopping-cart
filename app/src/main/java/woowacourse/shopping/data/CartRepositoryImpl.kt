@@ -12,8 +12,8 @@ class CartRepositoryImpl(
         return cartDao.selectAll()
     }
 
-    override fun addProduct(product: Product) {
-        cartDao.insertProduct(product)
+    override fun addProduct(product: Product, count: Int) {
+        cartDao.putProduct(product, count)
     }
 
     override fun deleteProduct(cartProduct: CartProduct) {

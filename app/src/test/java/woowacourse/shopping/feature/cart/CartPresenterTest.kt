@@ -41,7 +41,7 @@ internal class CartPresenterTest {
 
         val expected = mockCartProducts.take(5)
         val actual = cartProductSlot.captured.map {
-            CartProduct(it.cartId, it.productUiModel.toDomain())
+            CartProduct(it.productUiModel.toDomain(), 1, true)
         }
 
         assert(expected == actual)
@@ -93,7 +93,7 @@ internal class CartPresenterTest {
 
     private val mockCartProducts = List(41) {
         CartProduct(
-            it.toLong(), productsDatasource[it]
+            productsDatasource[it], 1, true
         )
     }
 
@@ -105,6 +105,6 @@ internal class CartPresenterTest {
     )
 
     private val mockCartProductUiModel = CartProductUiModel(
-        5L, mockProduct.toPresentation()
+        mockProduct.toPresentation(1), 1, true
     )
 }

@@ -1,6 +1,8 @@
 package woowacourse.shopping.feature.main
 
+import com.example.domain.model.Product
 import com.example.domain.model.RecentProduct
+import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
 import woowacourse.shopping.mapper.toDomain
@@ -11,13 +13,23 @@ import java.time.LocalDateTime
 class MainPresenter(
     private val view: MainContract.View,
     private val productRepository: ProductRepository,
-    private val recentProductRepository: RecentProductRepository
+    private val recentProductRepository: RecentProductRepository,
+    private val cartRepository: CartRepository
 ) : MainContract.Presenter {
 
     override fun loadProducts() {
         val firstProducts = productRepository.getFirstProducts()
-        val productItems = firstProducts.map { it.toPresentation() }
+
+        val productItems = matchCartProductCount(firstProducts)
         view.addProducts(productItems)
+    }
+
+    private fun matchCartProductCount(products: List<Product>): List<ProductUiModel> {
+        val cartProducts = cartRepository.getAll()
+        return products.map { product ->
+            val count = cartProducts.find { it.product.id == product.id }?.count ?: 0
+            product.toPresentation(count)
+        }
     }
 
     override fun moveToCart() {
@@ -32,7 +44,7 @@ class MainPresenter(
 
     override fun loadMoreProduct() {
         val nextProducts = productRepository.getNextProducts()
-        val nextProductItems = nextProducts.map { it.toPresentation() }
+        val nextProductItems = matchCartProductCount(nextProducts)
         view.addProducts(nextProductItems)
     }
 

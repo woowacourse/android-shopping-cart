@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.main
 import com.example.domain.ProductCache
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.RecentProduct
+import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
 import io.mockk.Runs
@@ -25,6 +26,7 @@ internal class MainPresenterTest {
     private lateinit var productRepository: ProductRepository
     private lateinit var recentProductRepository: RecentProductRepository
     private lateinit var productCache: ProductCache
+    private lateinit var cartRepository: CartRepository
 
     @Before
     fun init() {
@@ -32,7 +34,9 @@ internal class MainPresenterTest {
         productRepository = mockk(relaxed = true)
         recentProductRepository = mockk()
         productCache = ProductCacheImpl
-        presenter = MainPresenter(view, productRepository, recentProductRepository)
+        cartRepository = mockk()
+
+        presenter = MainPresenter(view, productRepository, recentProductRepository, cartRepository)
     }
 
     @Test
@@ -40,6 +44,7 @@ internal class MainPresenterTest {
         every { productRepository.getFirstProducts() } returns mockProducts
         val slot = slot<List<ProductUiModel>>()
         every { view.addProducts(capture(slot)) } just Runs
+        every { cartRepository.getAll() } returns emptyList()
 
         presenter.loadProducts()
 
@@ -65,6 +70,7 @@ internal class MainPresenterTest {
         }
         val slot = slot<List<ProductUiModel>>()
         every { view.addProducts(capture(slot)) } just Runs
+        every { cartRepository.getAll() } returns emptyList()
 
         presenter.loadMoreProduct()
 
