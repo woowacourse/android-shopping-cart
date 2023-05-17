@@ -64,15 +64,17 @@ class MainPresenter(
 
     override fun showProductDetail(productId: Long) {
         val product = products.find { it.id == productId } ?: return
-        view.showProductDetailScreen(product)
+        val recentProduct = recentProducts.firstOrNull()
+        view.showProductDetailScreen(product, recentProduct)
         addRecentProduct(product)
         loadRecent()
     }
 
     override fun showRecentProductDetail(productId: Long) {
-        val recentProduct = recentProducts.find { it.productUiModel.id == productId } ?: return
-        view.showProductDetailScreen(recentProduct.productUiModel)
-        addRecentProduct(recentProduct)
+        val recentClickProduct = recentProducts.find { it.productUiModel.id == productId } ?: return
+        val recentProduct = recentProducts.firstOrNull()
+        view.showProductDetailScreen(recentClickProduct.productUiModel, recentProduct)
+        addRecentProduct(recentClickProduct)
         loadRecent()
     }
 

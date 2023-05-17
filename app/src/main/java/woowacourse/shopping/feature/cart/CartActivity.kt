@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -41,15 +40,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartItemRecyclerview.adapter = cartProductAdapter
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
-        initBinding()
+        binding.presenter = presenter
         initClickListener()
 
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun initBinding() {
-        binding.presenter = presenter
     }
 
     private fun initClickListener() {
@@ -91,7 +86,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun updateMoney(money: String) {
-        Log.d("mendel", "money: ${money}")
         binding.money = money
     }
 

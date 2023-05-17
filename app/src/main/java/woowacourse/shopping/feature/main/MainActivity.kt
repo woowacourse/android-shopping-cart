@@ -1,5 +1,7 @@
 package woowacourse.shopping.feature.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -109,8 +111,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(CartActivity.getIntent(this))
     }
 
-    override fun showProductDetailScreen(productUiModel: ProductUiModel) {
-        startActivity(DetailActivity.getIntent(this, productUiModel))
+    override fun showProductDetailScreen(
+        productUiModel: ProductUiModel,
+        recentProductUiModel: RecentProductUiModel?
+    ) {
+        startActivity(DetailActivity.getIntent(this, productUiModel, recentProductUiModel))
     }
 
     override fun setProducts(products: List<ProductUiModel>) {
@@ -151,6 +156,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onDestroy()
         if (isFinishing) {
             presenter.resetProducts()
+        }
+    }
+
+    companion object {
+        fun getIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
         }
     }
 }
