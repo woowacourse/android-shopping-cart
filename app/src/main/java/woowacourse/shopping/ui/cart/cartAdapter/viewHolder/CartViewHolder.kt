@@ -22,7 +22,7 @@ class CartViewHolder private constructor(
         }
         binding.cbProductCheck.isChecked = data.product.checked
         binding.cbProductCheck.setOnCheckedChangeListener { _, isChecked ->
-            cartListener.onItemSelectChanged(data.product.id, isChecked)
+            cartListener.onItemCheckChanged(data.product.id, isChecked)
         }
     }
 

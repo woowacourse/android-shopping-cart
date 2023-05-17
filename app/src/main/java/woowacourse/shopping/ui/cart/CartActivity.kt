@@ -42,8 +42,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0
         )
         presenter.setUpCarts()
-        presenter.updatePriceAndCount()
-        binding.cartBottom.onAllCheckClick = presenter::updateAllItemCheck
+        binding.cartBottom.onAllCheckClick = presenter::setProductsCheck
         binding.rvProducts.adapter = adapter
     }
 

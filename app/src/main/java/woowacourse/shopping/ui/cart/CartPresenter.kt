@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.cart
 
 import woowacourse.shopping.mapper.toUIModel
-import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
@@ -12,40 +11,36 @@ class CartPresenter(
     private val productRepository: ProductRepository,
     private var index: Int = 0
 ) : CartContract.Presenter {
-    private lateinit var currentPage: List<CartProductUIModel>
+    private val currentPage get() = cartRepository.getPage(index, STEP).toUIModel()
+
+    private val pageUIModel get() = PageUIModel(
+        cartRepository.hasNextPage(index, STEP),
+        cartRepository.hasPrevPage(index, STEP),
+        index + 1
+    )
 
     override fun setUpCarts() {
-        currentPage = cartRepository.getPage(index, STEP).toUIModel()
-        view.setCarts(
-            currentPage,
-            PageUIModel(
-                cartRepository.hasNextPage(index, STEP),
-                cartRepository.hasPrevPage(index, STEP),
-                index + 1
-            )
-        )
-        setUpAllItemCheck()
+        view.setCarts(currentPage, pageUIModel)
+        setBottom()
     }
 
-    private fun setUpAllItemCheck() {
+    private fun setBottom() {
+        view.setBottom(cartRepository.getTotalPrice(), cartRepository.getTotalSelectedCount())
         view.setAllItemCheck(currentPage.all { it.checked })
     }
 
-    override fun moveToPageNext() {
-        index += 1
-        setUpCarts()
-    }
+    override fun moveToPageNext() { index += 1 ; setUpCarts() }
 
-    override fun moveToPagePrev() {
-        index -= 1
+    override fun moveToPagePrev() { index -= 1; setUpCarts() }
+
+    override fun setProductsCheck(checked: Boolean) {
+        currentPage.forEach { cartRepository.updateChecked(it.id, checked) }
         setUpCarts()
     }
 
     override fun removeProduct(productId: Int) {
         cartRepository.remove(productId)
-        if (cartRepository.getPage(index, STEP).toUIModel().isEmpty()) {
-            index -= 1
-        }
+        if (currentPage.isEmpty() && index > 0) { index -= 1 }
         setUpCarts()
     }
 
@@ -56,26 +51,14 @@ class CartPresenter(
     override fun getPageIndex(): Int {
         return index
     }
-
-    override fun updateItemCount(productId: Int, count: Int): Int {
-        val updatedCount = when {
-            count > 0 -> cartRepository.updateCount(productId, count)
-            else -> 1
-        }
-        updatePriceAndCount()
-        return updatedCount
+    override fun updateItemCount(productId: Int, count: Int) {
+        cartRepository.updateCount(productId, count)
+        setBottom()
     }
 
-    override fun updateItemCheck(productId: Int, selected: Boolean) {
-        cartRepository.updateChecked(productId, selected)
-        updatePriceAndCount()
-        currentPage = cartRepository.getPage(index, STEP).toUIModel()
-        setUpAllItemCheck()
-    }
-
-    override fun setProductsCheck(checked: Boolean) {
+    override fun updateItemCheck(productId: Int, checked: Boolean) {
         cartRepository.updateChecked(productId, checked)
-        setUpCarts()
+        setBottom()
     }
 
     companion object {
