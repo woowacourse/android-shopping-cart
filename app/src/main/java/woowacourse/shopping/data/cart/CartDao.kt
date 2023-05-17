@@ -18,7 +18,9 @@ class CartDao(context: Context) {
                 CartContract.TABLE_COLUMN_PRODUCT_ID,
                 CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL,
                 CartContract.TABLE_COLUMN_PRODUCT_NAME,
-                CartContract.TABLE_COLUMN_PRODUCT_PRICE
+                CartContract.TABLE_COLUMN_PRODUCT_PRICE,
+                CartContract.TABLE_COLUMN_COUNT,
+                CartContract.TABLE_COLUMN_CHECKED
             ),
             "", arrayOf(), null, null, ""
         )
@@ -31,13 +33,19 @@ class CartDao(context: Context) {
         with(cursor) {
             while (moveToNext()) {
                 val productId = getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_ID))
-                val productImageUrl = getString(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
-                val productName = getString(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_NAME))
-                val productPrice = getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_PRICE))
+                val productImageUrl =
+                    getString(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
+                val productName =
+                    getString(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_NAME))
+                val productPrice =
+                    getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_PRICE))
+                val count = getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
+                val checked: Boolean =
+                    getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECKED)) == CHECKED_TRUE
 
                 list.add(
                     CartProduct(
-                        productId, productImageUrl, productName, productPrice
+                        productId, productImageUrl, productName, productPrice, count, checked
                     )
                 )
             }
@@ -53,6 +61,8 @@ class CartDao(context: Context) {
             put(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
             put(CartContract.TABLE_COLUMN_PRODUCT_NAME, product.name)
             put(CartContract.TABLE_COLUMN_PRODUCT_PRICE, product.price)
+            put(CartContract.TABLE_COLUMN_COUNT, 1) // 담았을 때 기준 기본 1
+            put(CartContract.TABLE_COLUMN_CHECKED, CHECKED_FALSE)
         }
 
         db.insert(CartContract.TABLE_NAME, null, values)
@@ -63,5 +73,59 @@ class CartDao(context: Context) {
             CartContract.TABLE_NAME,
             CartContract.TABLE_COLUMN_PRODUCT_ID + "=" + cartProduct.productId, null
         )
+    }
+
+    fun updateCartProductCount(product: Product, count: Int) {
+        val findCartProduct =
+            getAll().find { it.productId == product.id } ?: return addColumn(product)
+
+        if (count <= 0) return deleteColumn(findCartProduct)
+
+        val updateSql = "UPDATE ${CartContract.TABLE_NAME} " +
+            "SET ${CartContract.TABLE_COLUMN_COUNT}=$count " +
+            "WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+
+        db.execSQL(updateSql)
+    }
+
+    fun updateCartProductChecked(product: Product, checked: Boolean) {
+        val findCartProduct =
+            getAll().find { it.productId == product.id } ?: return
+
+        val checkedState = if (checked) CHECKED_TRUE else CHECKED_FALSE
+
+        val updateSql = "UPDATE ${CartContract.TABLE_NAME} " +
+            "SET ${CartContract.TABLE_COLUMN_CHECKED}=$checkedState " +
+            "WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID}=${findCartProduct.productId}"
+
+        db.execSQL(updateSql)
+    }
+
+    fun createTable() {
+        db.execSQL(
+            """
+                CREATE TABLE ${CartContract.TABLE_NAME} (
+                    ${CartContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
+                    ${CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL} TEXT,
+                    ${CartContract.TABLE_COLUMN_PRODUCT_NAME} TEXT,
+                    ${CartContract.TABLE_COLUMN_PRODUCT_PRICE} INTEGER,
+                    ${CartContract.TABLE_COLUMN_COUNT} INTEGER,
+                    ${CartContract.TABLE_COLUMN_CHECKED} INTEGER
+                )
+            """.trimIndent()
+        )
+    }
+
+    fun deleteTable() {
+        db.execSQL(
+            """
+                DROP TABLE IF EXISTS ${CartContract.TABLE_NAME};
+            """.trimIndent()
+        )
+    }
+
+    companion object {
+        private const val CHECKED_TRUE = 1
+        private const val CHECKED_FALSE = 0
     }
 }
