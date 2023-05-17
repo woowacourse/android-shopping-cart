@@ -124,10 +124,30 @@ class ShoppingDBRepository(
     }
 
     override fun insertToRecentViewedProducts(id: Int) {
+        val recentViewedId = mutableListOf<Int>()
+        val query = "SELECT * FROM ${RecentViewedDBContract.TABLE_NAME}"
+        val cursor = shoppingDB.rawQuery(query, null)
+
+        cursor?.apply {
+            if (moveToFirst()) {
+                do {
+                    recentViewedId.add(
+                        getInt(
+                            getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID),
+                        ),
+                    )
+                } while (moveToNext())
+            }
+        }
+        cursor?.close()
+
+        if (recentViewedId.contains(id)) {
+            deleteFromRecentViewedProducts(id)
+        }
+
         val values = ContentValues().apply {
             put(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID, id)
         }
-
         shoppingDB.insert(RecentViewedDBContract.TABLE_NAME, null, values)
     }
 
@@ -154,8 +174,8 @@ class ShoppingDBRepository(
 
                 recentViewedProducts.add(product)
             }
+            close()
         }
-        recentViewedCursor.close()
         return recentViewedProducts.toList().reversed()
     }
 

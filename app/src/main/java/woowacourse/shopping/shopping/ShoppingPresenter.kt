@@ -40,13 +40,6 @@ class ShoppingPresenter(
     }
 
     override fun addToRecentViewedProduct(id: Int) {
-        val product = repository.selectProductById(id)
-        val recentViewedProducts = repository.selectRecentViewedProducts()
-        val isDuplicated = recentViewedProducts.contains(product)
-        if (isDuplicated) {
-            repository.deleteFromRecentViewedProducts(id)
-        }
-
         repository.insertToRecentViewedProducts(id)
     }
 
