@@ -26,15 +26,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        initExtraData()
+        if (!initExtraData()) return
         initPresenter()
         initBindingData()
         initButtonCloseClickListener()
     }
 
-    private fun initExtraData() {
+    private fun initExtraData(): Boolean {
         product = intent.getParcelableExtraCompat(PRODUCT_KEY)
             ?: return intentDataNullProcess(PRODUCT_KEY)
+        return true
     }
 
     private fun initBindingData() {
