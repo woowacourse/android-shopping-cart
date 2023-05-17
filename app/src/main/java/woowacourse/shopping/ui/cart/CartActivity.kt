@@ -62,8 +62,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         override fun onItemUpdate(productId: Int, count: Int): Int {
             return presenter.updateItem(productId, count)
         }
-        override fun onItemSelectChanged(productId: Int, selected: Boolean) {
-            presenter.updateItemCheck(productId, selected)
+        override fun onItemCheckChanged(productId: Int, checked: Boolean) {
+            presenter.updateItemCheck(productId, checked)
         }
     }
 
