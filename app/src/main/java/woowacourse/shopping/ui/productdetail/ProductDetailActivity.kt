@@ -21,7 +21,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private val binding: ActivityProductDetailBinding by lazy {
         ActivityProductDetailBinding.inflate(layoutInflater)
     }
-    private val presenter: ProductDetailPresenter by lazy {
+    private val presenter: ProductDetailContract.Presenter by lazy {
         ProductDetailPresenter(
             this,
             ProductRepositoryImpl,
