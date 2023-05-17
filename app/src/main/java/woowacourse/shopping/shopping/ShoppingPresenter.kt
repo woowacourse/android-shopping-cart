@@ -4,13 +4,15 @@ import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toViewModel
-import woowacourse.shopping.data.repository.ProductRepository
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
+import woowacourse.shopping.data.repository.ShoppingRepository
 import woowacourse.shopping.domain.RecentProduct
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
-    private val productRepository: ProductRepository,
+    private val shoppingRepository: ShoppingRepository,
+    private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
     private val recentProductSize: Int,
     private val productLoadSize: Int,
@@ -18,7 +20,7 @@ class ShoppingPresenter(
     private var productLoadedCount: Int = 0
 
     init {
-        productRepository.initMockData()
+        shoppingRepository.initMockData()
         loadMoreProduct()
     }
 
@@ -28,8 +30,7 @@ class ShoppingPresenter(
 
     override fun openProduct(cartProduct: CartProductModel) {
         val recentProducts = recentProductRepository.selectAll()
-        val recentProduct =
-            recentProducts.makeRecentProduct(cartProduct.product.toDomainModel())
+        val recentProduct = recentProducts.makeRecentProduct(cartProduct.product.toDomainModel())
 
         recentProductRepository.insertRecentProduct(recentProduct)
 
@@ -41,9 +42,17 @@ class ShoppingPresenter(
     }
 
     override fun loadMoreProduct() {
-        val loadedProducts = productRepository.selectByRange(productLoadedCount, productLoadSize)
+        val loadedProducts = shoppingRepository.selectByRange(productLoadedCount, productLoadSize)
         productLoadedCount += productLoadSize
-        view.addProducts(loadedProducts.value.map { it.toViewModel() })
+        view.addProducts(loadedProducts.products.map { it.toViewModel() })
+    }
+
+    override fun minusCartProduct(cartProduct: CartProductModel) {
+        cartRepository.deleteCartProductByProduct(cartProduct.product.toDomainModel())
+    }
+
+    override fun plusCartProduct(cartProduct: CartProductModel) {
+        cartRepository.insertCartProduct(cartProduct.product.toDomainModel())
     }
 
     private fun updateRecentProducts() {

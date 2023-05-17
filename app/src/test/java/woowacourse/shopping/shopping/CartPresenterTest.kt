@@ -9,10 +9,11 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.cart.CartContract
 import woowacourse.shopping.cart.CartPresenter
-import woowacourse.shopping.common.model.mapper.CartOrdinalProductMapper.toViewModel
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
+import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartOrdinalProduct
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 
@@ -68,7 +69,7 @@ class CartPresenterTest {
     fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
         // given
         every {
-            cartRepository.deleteCartProductByOrdinal(any())
+            cartRepository.deleteCartProductByProduct(any())
         } just runs
 
         // when
@@ -77,7 +78,7 @@ class CartPresenterTest {
 
         // then
         verify {
-            cartRepository.deleteCartProductByOrdinal(0)
+            cartRepository.deleteCartProductByProduct(cartProductModel.product.toDomainModel())
         }
 
         verify {
@@ -89,7 +90,7 @@ class CartPresenterTest {
 
     private fun makeCartMock(vararg cartOrdinals: Int): Cart = Cart(
         cartOrdinals.map {
-            CartOrdinalProduct(
+            CartProduct(
                 it,
                 Product(
                     URL(""), "", 0
@@ -98,7 +99,7 @@ class CartPresenterTest {
         }
     )
 
-    private fun makeCartProduct(ordinal: Int): CartOrdinalProduct = CartOrdinalProduct(
+    private fun makeCartProduct(ordinal: Int): CartProduct = CartProduct(
         ordinal,
         Product(
             URL(""), "", 0

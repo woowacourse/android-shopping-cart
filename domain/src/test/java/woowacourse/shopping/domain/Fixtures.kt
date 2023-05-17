@@ -11,11 +11,6 @@ fun makeCartProductMock(
     product: Product = makeProductMock()
 ): CartProduct = CartProduct(amount, product)
 
-fun makeCartOrdinalProductMock(
-    ordinal: Int = 1,
-    cartProduct: CartProduct = makeCartProductMock()
-): CartOrdinalProduct = CartOrdinalProduct(ordinal, cartProduct)
-
 fun makeRecentProductMock(
     ordinal: Int = 1,
     product: Product = makeProductMock()

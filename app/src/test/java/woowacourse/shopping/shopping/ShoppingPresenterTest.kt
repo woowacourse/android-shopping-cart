@@ -7,27 +7,31 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
-import woowacourse.shopping.data.repository.ProductRepository
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
-import woowacourse.shopping.domain.CartProducts
+import woowacourse.shopping.data.repository.ShoppingRepository
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.RecentProducts
 
 class ShoppingPresenterTest {
     private lateinit var presenter: ShoppingPresenter
     private lateinit var view: ShoppingContract.View
-    private lateinit var productRepository: ProductRepository
+    private lateinit var shoppingRepository: ShoppingRepository
+    private lateinit var cartRepository: CartRepository
     private lateinit var recentProductRepository: RecentProductRepository
 
     @Before
     fun setUp() {
         view = mockk()
-        productRepository = mockk()
+        shoppingRepository = mockk()
+        cartRepository = mockk()
         recentProductRepository = mockk()
 
         every {
-            productRepository.initMockData()
+            shoppingRepository.initMockData()
         } just runs
 
         every {
@@ -35,8 +39,8 @@ class ShoppingPresenterTest {
         } returns RecentProducts(emptyList())
 
         every {
-            productRepository.selectByRange(any(), any())
-        } returns CartProducts(emptyList())
+            shoppingRepository.selectByRange(any(), any())
+        } returns Cart(emptyList())
 
         every {
             view.addProducts(any())
@@ -44,7 +48,8 @@ class ShoppingPresenterTest {
 
         presenter = ShoppingPresenter(
             view,
-            productRepository = productRepository,
+            shoppingRepository = shoppingRepository,
+            cartRepository = cartRepository,
             recentProductRepository = recentProductRepository,
             recentProductSize = 0,
             productLoadSize = 0
@@ -59,18 +64,18 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            productRepository.initMockData()
+            shoppingRepository.initMockData()
         }
 
         verify {
-            view.addProducts(CartProducts(emptyList()).value.map { it.toViewModel() })
+            view.addProducts(Cart(emptyList()).products.map { it.toViewModel() })
         }
     }
 
     @Test
     fun 상품을_선택하면_최근_본_상품에_추가하고_상품_상세정보를_보여준다() {
         // given
-        val productModel = ProductModel("", "", 0)
+        val cartProductModel = CartProductModel(0, ProductModel("", "", 0))
 
         every {
             recentProductRepository.insertRecentProduct(any())
@@ -78,12 +83,12 @@ class ShoppingPresenterTest {
         } just runs
 
         // when
-        presenter.openProduct(productModel)
+        presenter.openProduct(cartProductModel)
 
         // then
         verify {
             recentProductRepository.insertRecentProduct(any())
-            view.showProductDetail(productModel)
+            view.showProductDetail(cartProductModel)
         }
     }
 
@@ -108,8 +113,8 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            productRepository.selectByRange(0, 0)
-            view.addProducts(CartProducts(emptyList()).value.map { it.toViewModel() })
+            shoppingRepository.selectByRange(0, 0)
+            view.addProducts(Cart(emptyList()).products.map { it.toViewModel() })
         }
     }
 }

@@ -7,11 +7,15 @@ interface ShoppingContract {
     interface Presenter {
         fun reloadProducts()
 
-        fun openProduct(cartProductModel: CartProductModel)
+        fun openProduct(cartProduct: CartProductModel)
 
         fun openCart()
 
         fun loadMoreProduct()
+
+        fun minusCartProduct(cartProduct: CartProductModel)
+
+        fun plusCartProduct(cartProduct: CartProductModel)
     }
 
     interface View {

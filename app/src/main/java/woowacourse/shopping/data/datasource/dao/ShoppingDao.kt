@@ -7,18 +7,18 @@ import woowacourse.shopping.data.database.table.SqlCartProduct
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.ShoppingDataSource
 import woowacourse.shopping.data.mock.ProductMock
+import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 
 class ShoppingDao(private val db: SQLiteDatabase) : ShoppingDataSource {
-    override fun selectByRange(start: Int, range: Int): CartProducts {
+    override fun selectByRange(start: Int, range: Int): Cart {
         val cursor = db.rawQuery(
             "SELECT ${SqlProduct.name}.*, COALESCE(${SqlCartProduct.AMOUNT}, 0) as ${SqlCartProduct.AMOUNT} FROM ${SqlProduct.name} left join ${SqlCartProduct.name} on ${SqlProduct.ID} = ${SqlCartProduct.PRODUCT_ID} LIMIT $start, $range",
             null
         )
-        return makeCartProducts(cursor)
+        return makeCart(cursor)
     }
 
     override fun initMockData() {
@@ -46,18 +46,19 @@ class ShoppingDao(private val db: SQLiteDatabase) : ShoppingDataSource {
         }
     }
 
-    private fun makeCartProducts(cursor: Cursor) = CartProducts(
+    private fun makeCart(cursor: Cursor) = Cart(
         cursor.use {
-            val cartProducts = mutableListOf<CartProduct>()
-            while (it.moveToNext()) cartProducts.add(
+            val cart = mutableListOf<CartProduct>()
+            while (it.moveToNext()) cart.add(
                 makeCartProduct(it)
             )
-            cartProducts
+            cart
         }
     )
 
     private fun makeCartProduct(it: Cursor) = CartProduct(
-        it.getInt(it.getColumnIndexOrThrow(SqlCartProduct.AMOUNT)), makeProduct(it)
+        it.getInt(it.getColumnIndexOrThrow(SqlCartProduct.AMOUNT)),
+        makeProduct(it)
     )
 
     private fun makeProduct(it: Cursor) = Product(

@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.datasource.dao
 
-import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.selectRowId
@@ -8,23 +7,19 @@ import woowacourse.shopping.data.database.table.SqlCartProduct
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartOrdinalProduct
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 
 class CartDao(private val db: SQLiteDatabase) : CartDataSource {
-    override fun insertCartProduct(cartOrdinalProduct: CartOrdinalProduct) {
+    override fun insertCartProduct(product: Product) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = cartOrdinalProduct.cartProduct.product.picture.value
-        productRow[SqlProduct.TITLE] = cartOrdinalProduct.cartProduct.product.title
-        productRow[SqlProduct.PRICE] = cartOrdinalProduct.cartProduct.product.price
+        productRow[SqlProduct.PICTURE] = product.picture.value
+        productRow[SqlProduct.TITLE] = product.title
+        productRow[SqlProduct.PRICE] = product.price
+        val productId = SqlProduct.selectRowId(db, productRow)
 
-        val row = ContentValues()
-        row.put(SqlCartProduct.ORDINAL, cartOrdinalProduct.ordinal)
-        row.put(SqlCartProduct.AMOUNT, cartOrdinalProduct.cartProduct.amount)
-        row.put(SqlCartProduct.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
-        db.insert(SqlCartProduct.name, null, row)
+        insertOrUpdateCartProduct(productId)
     }
 
     override fun selectAllCount(): Int {
@@ -53,13 +48,30 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         return makeCart(cursor)
     }
 
-    override fun deleteCartProductByOrdinal(ordinal: Int) {
-        db.delete(SqlCartProduct.name, "${SqlCartProduct.ORDINAL} = ?", arrayOf(ordinal.toString()))
+    override fun deleteCartProductByOrdinal(product: Product) {
+        val productRow: MutableMap<String, Any> = mutableMapOf()
+        productRow[SqlProduct.PICTURE] = product.picture.value
+        productRow[SqlProduct.TITLE] = product.title
+        productRow[SqlProduct.PRICE] = product.price
+        val productId = SqlProduct.selectRowId(db, productRow)
+        updateOrDeleteCartProduct(productId)
+    }
+
+    private fun insertOrUpdateCartProduct(productId: Int) {
+        val query =
+            "INSERT INTO ${SqlCartProduct.name} (${SqlCartProduct.AMOUNT}, ${SqlCartProduct.PRODUCT_ID}) VALUES (1, $productId) " + "ON CONFLICT(${SqlCartProduct.PRODUCT_ID}) DO UPDATE SET ${SqlCartProduct.AMOUNT} = ${SqlCartProduct.AMOUNT} + 1"
+
+        db.execSQL(query)
+    }
+
+    private fun updateOrDeleteCartProduct(productId: Int) {
+        db.execSQL("UPDATE ${SqlCartProduct.name} SET ${SqlCartProduct.AMOUNT} = CASE WHEN ${SqlCartProduct.AMOUNT} > 1 THEN ${SqlCartProduct.AMOUNT} - 1 ELSE 0 END WHERE ${SqlCartProduct.PRODUCT_ID} = $productId")
+        db.execSQL("DELETE FROM ${SqlCartProduct.name} WHERE ${SqlCartProduct.PRODUCT_ID} = $productId AND ${SqlCartProduct.AMOUNT} = 0")
     }
 
     private fun makeCart(cursor: Cursor) = Cart(
         cursor.use {
-            val cart = mutableListOf<CartOrdinalProduct>()
+            val cart = mutableListOf<CartProduct>()
 
             while (it.moveToNext()) {
                 cart.add(
@@ -70,11 +82,9 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         }
     )
 
-    private fun makeCartProduct(it: Cursor) = CartOrdinalProduct(
-        it.getInt(it.getColumnIndexOrThrow(SqlCartProduct.ORDINAL)),
-        CartProduct(
-            it.getColumnIndexOrThrow(SqlCartProduct.AMOUNT), makeProduct(it)
-        )
+    private fun makeCartProduct(it: Cursor) = CartProduct(
+        it.getColumnIndexOrThrow(SqlCartProduct.AMOUNT),
+        makeProduct(it)
     )
 
     private fun makeProduct(it: Cursor) = Product(

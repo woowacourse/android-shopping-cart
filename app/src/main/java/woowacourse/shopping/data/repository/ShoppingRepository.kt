@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.ShoppingDataSource
-import woowacourse.shopping.domain.CartProducts
+import woowacourse.shopping.domain.Cart
 
-class ProductRepository(private val localDataSource: ShoppingDataSource) {
-    fun selectByRange(start: Int, range: Int): CartProducts {
+class ShoppingRepository(private val localDataSource: ShoppingDataSource) {
+    fun selectByRange(start: Int, range: Int): Cart {
         return localDataSource.selectByRange(start, range)
     }
 

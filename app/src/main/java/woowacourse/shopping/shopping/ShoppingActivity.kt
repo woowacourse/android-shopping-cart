@@ -12,10 +12,12 @@ import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
+import woowacourse.shopping.data.datasource.dao.CartDao
 import woowacourse.shopping.data.datasource.dao.RecentProductDao
 import woowacourse.shopping.data.datasource.dao.ShoppingDao
-import woowacourse.shopping.data.repository.ProductRepository
+import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
+import woowacourse.shopping.data.repository.ShoppingRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.recyclerview.ProductAdapter
@@ -31,7 +33,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it) })
+        ProductAdapter(
+            emptyList(),
+            onProductItemClick = { presenter.openProduct(it) },
+            onMinusClick = { presenter.minusCartProduct(it) },
+            onPlusClick = { presenter.plusCartProduct(it) }
+        )
     }
 
     private val recentProductAdapter: RecentProductAdapter by lazy {
@@ -119,7 +126,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initPresenter() {
         presenter = ShoppingPresenter(
             this,
-            productRepository = ProductRepository(ShoppingDao(shoppingDBOpenHelper.writableDatabase)),
+            shoppingRepository = ShoppingRepository(ShoppingDao(shoppingDBOpenHelper.writableDatabase)),
+            cartRepository = CartRepository(CartDao(shoppingDBOpenHelper.writableDatabase)),
             recentProductRepository = RecentProductRepository(RecentProductDao(shoppingDBOpenHelper.writableDatabase)),
             recentProductSize = 10,
             productLoadSize = 20

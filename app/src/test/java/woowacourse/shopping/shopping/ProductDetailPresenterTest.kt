@@ -10,7 +10,7 @@ import org.junit.Test
 import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartOrdinalProduct
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 import woowacourse.shopping.productdetail.ProductDetailContract
@@ -51,9 +51,9 @@ class ProductDetailPresenterTest {
     fun 카트에_상품을_담으면_카트에_상품을_추가하고_카트를_보여준다() {
         // given
         val cart: Cart = mockk()
-        val cartOrdinalProduct = CartOrdinalProduct(0, product)
+        val cartProduct = CartProduct(0, product)
         val addedCart = Cart(
-            listOf(cartOrdinalProduct)
+            listOf(cartProduct)
         )
 
         every {
@@ -61,11 +61,7 @@ class ProductDetailPresenterTest {
         } returns cart
 
         every {
-            cart.makeCartOrdinalProduct(any())
-        } returns cartOrdinalProduct
-
-        every {
-            cart.add(cartOrdinalProduct)
+            cart.add(cartProduct)
         } returns addedCart
 
         every {
@@ -79,7 +75,7 @@ class ProductDetailPresenterTest {
         // then
         verify {
             cartRepository.selectAll()
-            cartRepository.insertCartProduct(cartOrdinalProduct)
+            cartRepository.insertCartProduct(cartProduct.product)
             view.showCart()
         }
     }

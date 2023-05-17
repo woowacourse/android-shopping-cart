@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.common.model.CartOrdinalProductModel
+import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.PageNavigatorModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.datasource.dao.CartDao
@@ -38,10 +38,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateCart(
-        cartProductsModel: List<CartOrdinalProductModel>
-    ) {
-        cartAdapter.updateCartProducts(cartProductsModel)
+    override fun updateCart(cartProducts: List<CartProductModel>) {
+        cartAdapter.updateCartProducts(cartProducts)
     }
 
     override fun updateNavigator(pageNavigatorModel: PageNavigatorModel) {

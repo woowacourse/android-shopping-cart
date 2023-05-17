@@ -6,6 +6,14 @@
     <data>
 
         <variable
+            name="onMinusClick"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="onPlusClick"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
             name="cartProduct"
             type="woowacourse.shopping.common.model.CartProductModel" />
     </data>
@@ -38,12 +46,12 @@
 
         <woowacourse.shopping.common.view.Counter
             count="@{cartProduct.amount}"
+            onMinusClick="@{() -> onMinusClick.invoke(cartProduct)}"
+            onPlusClick="@{() -> onPlusClick.invoke(cartProduct)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/plus"
             app:layout_constraintBottom_toBottomOf="@id/product_list_picture"
             app:layout_constraintEnd_toEndOf="@id/product_list_picture" />
 
