@@ -28,8 +28,9 @@ class DetailedProductPresenter(
         view.setProductDetail(product, lastProduct)
     }
 
-    override fun addProductToCart() {
+    override fun addProductToCart(count: Int) {
         cartRepository.insert(product.id)
+        cartRepository.updateCount(product.id, count)
         view.navigateToCart()
     }
 
@@ -42,5 +43,10 @@ class DetailedProductPresenter(
 
     override fun navigateToDetailedProduct() {
         lastProduct?.let { view.navigateToDetailedProduct(it) }
+    }
+
+    override fun navigateToAddToCartDialog() {
+        cartRepository.insert(product.id)
+        view.navigateToAddToCartDialog(product)
     }
 }

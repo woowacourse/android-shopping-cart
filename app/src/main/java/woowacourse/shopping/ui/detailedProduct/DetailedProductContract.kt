@@ -7,12 +7,14 @@ interface DetailedProductContract {
         fun setProductDetail(product: ProductUIModel, lastProduct: ProductUIModel?)
         fun navigateToCart()
         fun navigateToDetailedProduct(product: ProductUIModel)
+        fun navigateToAddToCartDialog(product: ProductUIModel)
     }
 
     interface Presenter {
         fun setUpProductDetail()
-        fun addProductToCart()
+        fun addProductToCart(count: Int)
         fun addProductToRecent()
         fun navigateToDetailedProduct()
+        fun navigateToAddToCartDialog()
     }
 }

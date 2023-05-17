@@ -15,6 +15,7 @@ import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityDetailedProductBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.cart.cartDialog.CartDialog
 import woowacourse.shopping.utils.ActivityUtils
 import woowacourse.shopping.utils.SharedPreferenceUtils
 import woowacourse.shopping.utils.getSerializableExtraCompat
@@ -77,6 +78,16 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
 
     override fun navigateToDetailedProduct(product: ProductUIModel) {
         startActivity(getIntent(this, product))
+    }
+
+    override fun navigateToAddToCartDialog(product: ProductUIModel) {
+        CartDialog(this, product.name, product.price) { count ->
+            presenter.addProductToCart(count)
+        }.apply {
+            val density = resources.displayMetrics.density * 1.2
+            window?.setLayout((314 * density).toInt(), (150 * density).toInt())
+            show()
+        }
     }
 
     companion object {

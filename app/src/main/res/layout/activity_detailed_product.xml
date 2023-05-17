@@ -110,7 +110,7 @@
             android:layout_height="50dp"
             android:background="@color/blue_green_04c09e"
             android:gravity="center"
-            android:onClick="@{() -> presenter.addProductToCart()}"
+            android:onClick="@{() -> presenter.navigateToAddToCartDialog()}"
             android:text="@string/product_detail_add_to_cart_btn"
             android:textColor="@color/white"
             android:textSize="20sp"
