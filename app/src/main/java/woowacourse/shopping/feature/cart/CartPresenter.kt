@@ -7,6 +7,8 @@ import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toPresentation
 import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.PageNationUiModel
+import woowacourse.shopping.util.convertToMoneyFormat
+import java.text.DecimalFormat
 
 class CartPresenter(
     val view: CartContract.View,
@@ -93,5 +95,17 @@ class CartPresenter(
         view.setPreviousButtonState(page.hasPreviousPage)
         view.setNextButtonState(page.hasNextPage)
         view.setPageCount(page.currentPage)
+        changePurchaseNavigation()
+    }
+
+    private fun changePurchaseNavigation() {
+        if (page.checkedCount > 0) {
+            view.setOrderButtonState(true, page.checkedCount)
+        } else {
+            view.setOrderButtonState(false, page.checkedCount)
+        }
+
+        view.updateMoney(convertToMoneyFormat(page.totalCheckedMoney))
+        view.setAllCheckedButtonState(page.isAllChecked)
     }
 }

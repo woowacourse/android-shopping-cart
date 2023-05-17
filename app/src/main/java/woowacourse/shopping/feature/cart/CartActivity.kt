@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -11,7 +12,6 @@ import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.util.convertToMoneyFormat
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -42,6 +42,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
         initBinding()
+        initClickListener()
 
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -49,9 +50,15 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initBinding() {
         binding.presenter = presenter
-        binding.orderCount = 0
-        binding.orderConfirmView.isEnabled = false
-        binding.money = "0"
+    }
+
+    private fun initClickListener() {
+        binding.allCheckView.setOnCheckedChangeListener { _, isChecked ->
+            presenter.handleAllSelectedCheckedChange(isChecked)
+        }
+        binding.orderConfirmView.setOnClickListener {
+            presenter.processOrderClick()
+        }
     }
 
     override fun updateCartProducts(newItems: List<CartProductUiModel>) {
@@ -70,13 +77,22 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.pageCountTextView.text = count.toString()
     }
 
+    override fun setAllCheckedButtonState(isAllChecked: Boolean) {
+        binding.allCheckView.setOnCheckedChangeListener { _, isChecked -> }
+        binding.allCheckView.isChecked = isAllChecked
+        binding.allCheckView.setOnCheckedChangeListener { _, isChecked ->
+            presenter.handleAllSelectedCheckedChange(isChecked)
+        }
+    }
+
     override fun setOrderButtonState(enabled: Boolean, orderCount: Int) {
         binding.orderCount = orderCount
         binding.orderConfirmView.isEnabled = enabled
     }
 
-    override fun updateMoney(money: Int) {
-        binding.money = convertToMoneyFormat(money)
+    override fun updateMoney(money: String) {
+        Log.d("mendel", "money: ${money}")
+        binding.money = money
     }
 
     override fun exitCartScreen() {

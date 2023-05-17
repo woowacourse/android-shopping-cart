@@ -17,6 +17,8 @@ fun PageNation.toPresentation(): PageNationUiModel {
         hasPreviousPage(),
         hasNextPage(),
         isAllChecked,
-        isAnyChecked
+        isAnyChecked,
+        checkedCount,
+        totalCheckedMoney
     )
 }

@@ -30,6 +30,12 @@ data class PageNation(
     val isAnyChecked: Boolean
         get() = allList.any { it.checked }
 
+    val checkedCount: Int
+        get() = allList.count { it.checked }
+
+    val totalCheckedMoney: Int
+        get() = cartProducts.totalCheckedMoney
+
     fun hasPreviousPage(): Boolean {
         return currentPage > 1
     }

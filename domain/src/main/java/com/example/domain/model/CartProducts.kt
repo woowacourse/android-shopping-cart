@@ -9,6 +9,9 @@ class CartProducts(
     val size: Int
         get() = list.size
 
+    val totalCheckedMoney: Int
+        get() = list.filter { it.checked }.sumOf { it.count * it.product.price.value }
+
     init {
         require(list.all { it.count > 0 }) { }
     }
