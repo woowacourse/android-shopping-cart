@@ -4,20 +4,13 @@ import java.time.LocalDateTime
 
 data class CartProduct(
     val time: LocalDateTime,
-    val amount: Int = 1,
+    val amount: Int = 0,
     val isChecked: Boolean,
     val product: Product
 ) {
-    fun decreaseAmount(): CartProduct {
-        if (amount > 1) return copy(amount = amount - 1)
-        return this
-    }
+    fun decreaseAmount(): CartProduct = copy(amount = amount - 1)
 
-    fun increaseAmount(): CartProduct {
-        return copy(amount = amount + 1)
-    }
+    fun increaseAmount(): CartProduct = copy(amount = amount + 1)
 
-    fun changeChecked(isChecked: Boolean): CartProduct {
-        return copy(isChecked = isChecked)
-    }
+    fun changeChecked(isChecked: Boolean): CartProduct = copy(isChecked = isChecked)
 }

@@ -10,7 +10,7 @@ fun createProduct(
 
 fun createCartProduct(
     time: LocalDateTime = LocalDateTime.now(),
-    amount: Int = 1,
+    amount: Int = 0,
     isChecked: Boolean = false,
     product: Product = createProduct()
 ): CartProduct = CartProduct(time, amount, isChecked, product)
