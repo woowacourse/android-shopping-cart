@@ -2,9 +2,12 @@ package woowacourse.shopping.view.productlist
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,6 +23,7 @@ import woowacourse.shopping.view.productdetail.ProductDetailActivity
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var presenter: ProductListContract.Presenter
+    private lateinit var cartCountInAppBar: TextView
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_VIEWED) {
             val id = it.data?.getIntExtra(ID, -1)
@@ -76,6 +80,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
                 override fun onProductClickAddFirst(id: Int, count: Int) {
                     presenter.addToCartProducts(id, count)
+                    presenter.fetchCartCount()
                 }
 
                 override fun onProductUpdateCount(id: Int, count: Int) {
@@ -99,9 +104,24 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         resultLauncher.launch(intent)
     }
 
+    override fun showCartCount(count: Int) {
+        cartCountInAppBar.text = count.toString()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_item, menu)
+        val itemActionView = menu?.findItem(R.id.cart)?.actionView
+        if (itemActionView != null) {
+            cartCountInAppBar = itemActionView.findViewById(R.id.text_cart_count)
+            presenter.fetchCartCount()
+
+            val imageButton = itemActionView.findViewById<ImageButton>(R.id.btn_cart)
+            imageButton?.setOnClickListener {
+                val intent = Intent(this, CartActivity::class.java)
+                startActivity(intent)
+            }
+        }
         return true
     }
 

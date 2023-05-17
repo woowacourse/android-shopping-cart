@@ -44,6 +44,10 @@ class ProductListPresenter(
         cartRepository.update(id, count)
     }
 
+    override fun fetchCartCount() {
+        view.showCartCount(cartRepository.findAll().size)
+    }
+
 
     override fun updateRecentViewed(id: Int) {
         if (id == -1) return
