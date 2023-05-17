@@ -3,27 +3,37 @@ package woowacourse.shopping.data.datasource.dao
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.data.database.table.SqlCartProduct
 import woowacourse.shopping.data.database.table.SqlProduct
-import woowacourse.shopping.data.datasource.ProductDataSource
+import woowacourse.shopping.data.datasource.ShoppingDataSource
 import woowacourse.shopping.data.mock.ProductMock
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartProducts
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 
-class ProductDao(private val db: SQLiteDatabase) : ProductDataSource {
+class ShoppingDao(private val db: SQLiteDatabase) : ShoppingDataSource {
     override fun selectByRange(start: Int, range: Int): CartProducts {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlProduct.name} LIMIT $start, $range", null
+            "SELECT ${SqlProduct.name}.*, COALESCE(${SqlCartProduct.AMOUNT}, 0) as ${SqlCartProduct.AMOUNT} FROM ${SqlProduct.name} left join ${SqlCartProduct.name} on ${SqlProduct.ID} = ${SqlCartProduct.PRODUCT_ID} LIMIT $start, $range",
+            null
         )
-        return makeProducts(cursor)
+        return makeCartProducts(cursor)
     }
 
     override fun initMockData() {
         if (selectAllCount() != 0) return
         repeat(100) {
-            insert(ProductMock.make())
+            insertProduct(ProductMock.make())
         }
+    }
+
+    private fun insertProduct(product: Product) {
+        val row = ContentValues()
+        row.put(SqlProduct.TITLE, product.title)
+        row.put(SqlProduct.PRICE, product.price)
+        row.put(SqlProduct.PICTURE, product.picture.value)
+        db.insert(SqlProduct.name, null, row)
     }
 
     private fun selectAllCount(): Int {
@@ -36,14 +46,18 @@ class ProductDao(private val db: SQLiteDatabase) : ProductDataSource {
         }
     }
 
-    private fun makeProducts(cursor: Cursor) = CartProducts(
+    private fun makeCartProducts(cursor: Cursor) = CartProducts(
         cursor.use {
             val cartProducts = mutableListOf<CartProduct>()
             while (it.moveToNext()) cartProducts.add(
-                CartProduct(0, makeProduct(it))
+                makeCartProduct(it)
             )
             cartProducts
         }
+    )
+
+    private fun makeCartProduct(it: Cursor) = CartProduct(
+        it.getInt(it.getColumnIndexOrThrow(SqlCartProduct.AMOUNT)), makeProduct(it)
     )
 
     private fun makeProduct(it: Cursor) = Product(
@@ -51,12 +65,4 @@ class ProductDao(private val db: SQLiteDatabase) : ProductDataSource {
         it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
         it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
     )
-
-    private fun insert(product: Product) {
-        val row = ContentValues()
-        row.put(SqlProduct.TITLE, product.title)
-        row.put(SqlProduct.PRICE, product.price)
-        row.put(SqlProduct.PICTURE, product.picture.value)
-        db.insert(SqlProduct.name, null, row)
-    }
 }

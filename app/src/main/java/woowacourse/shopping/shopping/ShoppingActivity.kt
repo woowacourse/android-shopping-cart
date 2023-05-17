@@ -12,8 +12,8 @@ import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.data.datasource.dao.ProductDao
 import woowacourse.shopping.data.datasource.dao.RecentProductDao
+import woowacourse.shopping.data.datasource.dao.ShoppingDao
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
@@ -119,7 +119,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initPresenter() {
         presenter = ShoppingPresenter(
             this,
-            productRepository = ProductRepository(ProductDao(shoppingDBOpenHelper.writableDatabase)),
+            productRepository = ProductRepository(ShoppingDao(shoppingDBOpenHelper.writableDatabase)),
             recentProductRepository = RecentProductRepository(RecentProductDao(shoppingDBOpenHelper.writableDatabase)),
             recentProductSize = 10,
             productLoadSize = 20

@@ -16,21 +16,12 @@ class Counter(context: Context, attrs: AttributeSet) : LinearLayout(context, att
 
     private var count: Int = 0
 
-    init {
-        setCounterText(count)
-    }
-
-    fun setCounterText(count: Int) {
-        this.count = count
-        binding.counterText.text = count.toString()
-    }
-
     companion object {
         @BindingAdapter("onMinusClick")
         @JvmStatic
         fun minusClick(counter: Counter, onClick: (Int) -> Unit) {
             counter.binding.counterMinusButton.setOnClickListener {
-                counter.setCounterText(counter.count - 1)
+                setCounterText(counter, counter.count - 1)
                 onClick(counter.count)
             }
         }
@@ -39,9 +30,16 @@ class Counter(context: Context, attrs: AttributeSet) : LinearLayout(context, att
         @JvmStatic
         fun plusClick(counter: Counter, onClick: (Int) -> Unit) {
             counter.binding.counterPlusButton.setOnClickListener {
-                counter.setCounterText(counter.count + 1)
+                setCounterText(counter, counter.count + 1)
                 onClick(counter.count)
             }
+        }
+
+        @BindingAdapter("count")
+        @JvmStatic
+        fun setCounterText(counter: Counter, count: Int) {
+            counter.count = count
+            counter.binding.counterText.text = count.toString()
         }
     }
 }

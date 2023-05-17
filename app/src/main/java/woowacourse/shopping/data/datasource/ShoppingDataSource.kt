@@ -2,7 +2,7 @@ package woowacourse.shopping.data.datasource
 
 import woowacourse.shopping.domain.CartProducts
 
-interface ProductDataSource {
+interface ShoppingDataSource {
     fun selectByRange(start: Int, range: Int): CartProducts
     fun initMockData()
 }
