@@ -20,7 +20,7 @@ import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.View {
     private lateinit var binding: ActivityProductCatalogueBinding
-    override lateinit var presenter: ProductCatalogueContract.Presenter
+    private lateinit var presenter: ProductCatalogueContract.Presenter
     private val recentDataRepository: RecentRepository by lazy {
         RecentProductDBRepository(RecentProductDBHelper(this).writableDatabase)
     }

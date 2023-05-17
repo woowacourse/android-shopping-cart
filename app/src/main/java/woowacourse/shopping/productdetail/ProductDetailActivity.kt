@@ -19,7 +19,7 @@ import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
-    override lateinit var presenter: ProductDetailContract.Presenter
+    private lateinit var presenter: ProductDetailContract.Presenter
     private lateinit var binding: ActivityProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

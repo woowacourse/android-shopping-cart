@@ -4,7 +4,8 @@ import woowacourse.shopping.uimodel.CartProductUIModel
 
 interface CartContract {
     interface View {
-        var presenter: Presenter
+        fun setCartProducts(newCartProducts: List<CartProductUIModel>)
+        fun setPage(page: Int)
         fun removeAdapterData(cartProductUIModel: CartProductUIModel, position: Int)
     }
 

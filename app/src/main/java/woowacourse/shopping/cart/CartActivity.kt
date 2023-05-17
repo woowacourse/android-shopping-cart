@@ -15,8 +15,10 @@ import woowacourse.shopping.uimodel.CartProductUIModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
-    private lateinit var adapter: CartRecyclerViewAdapter
-    override lateinit var presenter: CartContract.Presenter
+    private val adapter: CartRecyclerViewAdapter =
+        CartRecyclerViewAdapter(::clickProduct, ::clickDeleteButton)
+    private lateinit var presenter: CartContract.Presenter
+    private val repository: CartDBRepository by lazy { CartDBRepository(CartDBHelper(this).writableDatabase) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
