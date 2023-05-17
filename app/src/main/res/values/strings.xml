@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="menu_cart_title">cart</string>
+    <string name="product_price">%d원</string>
+    <string name="exit">exit</string>
+    <string name="product_list_read_more_text">더보기</string>
+    <string name="recent_product_text">최근 본 상품</string>
+    <string name="add_cart_text">장바구니 담기</string>
+    <string name="product_price_text">금액</string>
+    <string name="product_image_description">재품 이미지</string>
 </resources>
