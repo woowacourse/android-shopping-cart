@@ -2,8 +2,8 @@ package woowacourse.shopping.view.shoppingcart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.uimodel.CartProductUIModel
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.CartProductUIModel
+import woowacourse.shopping.model.uimodel.ProductUIModel
 
 class ShoppingCartAdapter(
     private var cartProducts: List<CartProductUIModel>,

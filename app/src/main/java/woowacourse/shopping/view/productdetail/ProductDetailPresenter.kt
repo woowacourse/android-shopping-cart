@@ -2,10 +2,9 @@ package woowacourse.shopping.view.productdetail
 
 import com.shopping.repository.CartProductRepository
 import com.shopping.repository.RecentProductsRepository
-import woowacourse.shopping.uimodel.CartProductUIModel
-import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductUIModel
-import woowacourse.shopping.uimodel.mapper.toDomain
+import woowacourse.shopping.model.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.mapper.toDomain
+
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,

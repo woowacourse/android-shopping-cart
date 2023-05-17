@@ -1,11 +1,11 @@
 package woowacourse.shopping.view.shoppingcart
 
 import com.shopping.repository.CartProductRepository
-import woowacourse.shopping.uimodel.CartProductUIModel
-import woowacourse.shopping.uimodel.PageCounter
-import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.mapper.toDomain
-import woowacourse.shopping.uimodel.mapper.toUIModel
+import woowacourse.shopping.model.uimodel.CartProductUIModel
+import woowacourse.shopping.model.uimodel.PageCounter
+import woowacourse.shopping.model.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.mapper.toDomain
+import woowacourse.shopping.model.uimodel.mapper.toUIModel
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,

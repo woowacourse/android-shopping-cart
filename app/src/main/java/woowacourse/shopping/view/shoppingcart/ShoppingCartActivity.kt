@@ -10,9 +10,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.db.CartProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.uimodel.CartProductUIModel
-import woowacourse.shopping.uimodel.PageCounter
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.CartProductUIModel
+import woowacourse.shopping.model.uimodel.PageCounter
+import woowacourse.shopping.model.uimodel.ProductUIModel
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     override lateinit var presenter: ShoppingCartContract.Presenter

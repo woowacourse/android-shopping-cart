@@ -1,4 +1,4 @@
-package woowacourse.shopping.uimodel
+package woowacourse.shopping.model.uimodel
 
 class PageCounter {
     private var count = MINIMUM_PAGE_COUNT

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductMainBinding
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.ProductUIModel
 
 class ProductViewHolder(
     parent: ViewGroup,

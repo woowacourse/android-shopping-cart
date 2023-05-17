@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.productdetail
 
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.ProductUIModel
 
 interface ProductDetailContract {
     interface View {

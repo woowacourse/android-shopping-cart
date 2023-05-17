@@ -1,4 +1,4 @@
-package woowacourse.shopping.uimodel
+package woowacourse.shopping.model.uimodel
 
 class CartProductUIModel(
     val productUIModel: ProductUIModel

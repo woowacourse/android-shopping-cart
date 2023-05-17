@@ -2,9 +2,9 @@ package woowacourse.shopping.view.shoppingmain
 
 import com.shopping.repository.ProductRepository
 import com.shopping.repository.RecentProductsRepository
-import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductUIModel
-import woowacourse.shopping.uimodel.mapper.toUIModel
+import woowacourse.shopping.model.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.RecentProductUIModel
+import woowacourse.shopping.model.uimodel.mapper.toUIModel
 
 class ShoppingMainPresenter(
     private val view: ShoppingMainContract.View,

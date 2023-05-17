@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductRecentBinding
-import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductUIModel
+import woowacourse.shopping.model.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.RecentProductUIModel
 
 class RecentProductViewHolder(
     parent: ViewGroup,

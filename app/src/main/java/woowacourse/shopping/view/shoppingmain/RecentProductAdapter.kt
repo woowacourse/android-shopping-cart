@@ -2,8 +2,8 @@ package woowacourse.shopping.view.shoppingmain
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductUIModel
+import woowacourse.shopping.model.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.RecentProductUIModel
 
 class RecentProductAdapter(
     private var recentProducts: List<RecentProductUIModel>,

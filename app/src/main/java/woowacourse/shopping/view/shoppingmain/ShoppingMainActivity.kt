@@ -16,7 +16,7 @@ import woowacourse.shopping.data.db.RecentProductDao
 import woowacourse.shopping.data.repository.ProductMockRepository
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingMainBinding
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.ProductUIModel
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
 import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
 

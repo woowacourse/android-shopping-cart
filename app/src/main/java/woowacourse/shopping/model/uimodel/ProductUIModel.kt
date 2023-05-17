@@ -1,4 +1,4 @@
-package woowacourse.shopping.uimodel
+package woowacourse.shopping.model.uimodel
 
 import java.io.Serializable
 
