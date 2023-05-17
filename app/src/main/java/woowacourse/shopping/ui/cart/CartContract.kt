@@ -8,6 +8,7 @@ interface CartContract {
         fun restoreCurrentPage(currentPage: Int)
         fun onLoadCartItemsNextPage()
         fun onLoadCartItemsPreviousPage()
+        fun onLoadCartItemsLastPage()
         fun onDeleteCartItem(productId: Long)
     }
 

@@ -34,7 +34,7 @@ class CartPresenter(
         refreshPageUIState()
     }
 
-    fun onLoadCartItemsLastPage() {
+    override fun onLoadCartItemsLastPage() {
         currentPage = maxPage
         showCartItemsOfCurrentPage()
         refreshPageUIState()

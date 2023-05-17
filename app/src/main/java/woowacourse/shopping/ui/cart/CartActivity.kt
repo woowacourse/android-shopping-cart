@@ -18,7 +18,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val binding: ActivityCartBinding by lazy {
         ActivityCartBinding.inflate(layoutInflater)
     }
-    private val presenter: CartPresenter by lazy {
+    private val presenter: CartContract.Presenter by lazy {
         CartPresenter(this, CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl))
     }
 
