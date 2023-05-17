@@ -36,7 +36,7 @@ class RecentlyViewedProductListAdapter(
             Glide.with(itemView)
                 .load(recentlyViewedProduct.imageUrl)
                 .into(binding.ivRecentlyViewed)
-            binding.root.setOnClickListener { onClick(recentlyViewedProduct.id) }
+            binding.root.setOnClickListener { onClick(recentlyViewedProduct.productId) }
         }
 
         companion object {

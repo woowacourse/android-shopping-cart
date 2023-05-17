@@ -1,16 +1,16 @@
 package woowacourse.shopping.ui.cart
 
-import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.CartItemRepository
 import woowacourse.shopping.ui.cart.uistate.CartItemUIState
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val cartRepository: CartRepository,
+    private val cartItemRepository: CartItemRepository,
 ) : CartContract.Presenter {
 
     private var currentPage = 0
     private val maxPage
-        get() = (cartRepository.findAll().size - 1) / PAGE_SIZE + 1
+        get() = (cartItemRepository.countAll() - 1) / PAGE_SIZE + 1
 
     override fun getCurrentPage(): Int {
         return currentPage
@@ -41,14 +41,14 @@ class CartPresenter(
     }
 
     override fun onDeleteCartItem(productId: Long) {
-        cartRepository.deleteById(productId)
+        cartItemRepository.deleteByProductId(productId)
         showCartItemsOfCurrentPage()
         refreshPageUIState()
     }
 
     private fun showCartItemsOfCurrentPage() {
         val offset = (currentPage - 1) * PAGE_SIZE
-        val cartItems = cartRepository.findAll(PAGE_SIZE, offset)
+        val cartItems = cartItemRepository.findAllOrderByAddedTime(PAGE_SIZE, offset)
         val cartItemUIStates = cartItems.map(CartItemUIState::from)
         view.setCartItems(cartItemUIStates)
     }

@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import woowacourse.shopping.database.DbHelper
-import woowacourse.shopping.database.cart.CartRepositoryImpl
+import woowacourse.shopping.database.cart.CartItemRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
@@ -19,7 +19,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         ActivityCartBinding.inflate(layoutInflater)
     }
     private val presenter: CartPresenter by lazy {
-        CartPresenter(this, CartRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl))
+        CartPresenter(this, CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

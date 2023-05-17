@@ -3,7 +3,8 @@ package woowacourse.shopping.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import woowacourse.shopping.database.ProductContract.CartEntry
+import android.provider.BaseColumns
+import woowacourse.shopping.database.ProductContract.CartItemEntry
 import woowacourse.shopping.database.ProductContract.DATABASE_NAME
 import woowacourse.shopping.database.ProductContract.RecentlyViewedProductEntry
 
@@ -27,17 +28,22 @@ class DbHelper private constructor(
 
     companion object {
         private const val SQL_CART_CREATE_ENTRIES = """
-            CREATE TABLE ${CartEntry.TABLE_NAME} (
-            ${CartEntry.COLUMN_NAME_PRODUCT_ID} INT PRIMARY KEY
+            CREATE TABLE ${CartItemEntry.TABLE_NAME} (
+            ${BaseColumns._ID} INT PRIMARY KEY,
+            ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} INT UNIQUE,
+            ${CartItemEntry.COLUMN_NAME_ADDED_TIME} TEXT,
+            ${CartItemEntry.COLUMN_NAME_COUNT} INT
             );
         """
 
         private const val SQL_CART_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS ${CartEntry.TABLE_NAME};"
+            "DROP TABLE IF EXISTS ${CartItemEntry.TABLE_NAME};"
 
         private const val SQL_RECENTLY_VIEWED_PRODUCT_CREATE_ENTRIES = """
             CREATE TABLE ${RecentlyViewedProductEntry.TABLE_NAME} (
-            ${RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} INT PRIMARY KEY
+            ${BaseColumns._ID} INT PRIMARY KEY,
+            ${RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} INT UNIQUE,
+            ${RecentlyViewedProductEntry.COLUMN_NAME_VIEWED_TIME} TEXT
             );
         """
 

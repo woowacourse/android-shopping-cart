@@ -1,9 +1,11 @@
 package woowacourse.shopping.ui.products
 
+import woowacourse.shopping.domain.RecentlyViewedProduct
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.ui.products.uistate.ProductUIState
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
+import java.time.LocalDateTime
 
 class ProductListPresenter(
     private val view: ProductListContract.View,
@@ -24,12 +26,12 @@ class ProductListPresenter(
         val products = productRepository.findAll(offset, PAGE_SIZE)
         val productUIStates = products.map(ProductUIState::from)
         view.addProducts(productUIStates)
+        refreshCanLoadMore()
     }
 
     override fun onLoadRecentlyViewedProducts() {
-        val recentlyViewedProducts = recentlyViewedProductRepository.findAll()
-            .reversed()
-            .take(NUMBER_OF_RECENTLY_VIEWED_PRODUCTS)
+        val recentlyViewedProducts =
+            recentlyViewedProductRepository.findFirst10OrderByViewedTimeDesc()
 
         val recentlyViewedProductUIStates =
             recentlyViewedProducts.map(RecentlyViewedProductUIState::from)
@@ -43,18 +45,17 @@ class ProductListPresenter(
     }
 
     private fun refreshCanLoadMore() {
-        val maxPage = (productRepository.findAll().size - 1) / PAGE_SIZE + 1
+        val maxPage = (productRepository.countAll() - 1) / PAGE_SIZE + 1
         if (currentPage >= maxPage) view.setCanLoadMore(false)
     }
 
     override fun onViewProduct(productId: Long) {
         val product = productRepository.findById(productId) ?: return
-
-        recentlyViewedProductRepository.save(product)
+        val recentlyViewedProduct = RecentlyViewedProduct(product, LocalDateTime.now())
+        recentlyViewedProductRepository.save(recentlyViewedProduct)
     }
 
     companion object {
         private const val PAGE_SIZE = 20
-        private const val NUMBER_OF_RECENTLY_VIEWED_PRODUCTS = 10
     }
 }

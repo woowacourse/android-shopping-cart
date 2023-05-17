@@ -1,13 +1,15 @@
 package woowacourse.shopping.ui.productdetail
 
-import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.repository.CartItemRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
+import java.time.LocalDateTime
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
     private val productRepository: ProductRepository,
-    private val cartRepository: CartRepository,
+    private val cartItemRepository: CartItemRepository
 ) : ProductDetailContract.Presenter {
     override fun onLoadProduct(productId: Long) {
         val product = productRepository.findById(productId) ?: return
@@ -16,6 +18,7 @@ class ProductDetailPresenter(
 
     override fun onAddProductToCart(productId: Long) {
         val product = productRepository.findById(productId) ?: return
-        cartRepository.save(product)
+        val cartItem = CartItem(product, LocalDateTime.now(), 1)
+        cartItemRepository.save(cartItem)
     }
 }

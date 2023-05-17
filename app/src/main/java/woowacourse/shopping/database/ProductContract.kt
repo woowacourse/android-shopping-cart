@@ -6,7 +6,7 @@ object ProductContract {
     const val DATABASE_NAME = "product.db"
     const val DATABASE_VERSION = 1
 
-    object CartEntry : BaseColumns {
+    object CartItemEntry : BaseColumns {
         const val TABLE_NAME = "cart"
         const val COLUMN_NAME_PRODUCT_ID = "product_id"
         const val COLUMN_NAME_ADDED_TIME = "added_time"

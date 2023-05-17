@@ -10,5 +10,5 @@ interface CartItemRepository {
 
     fun countAll(): Int
 
-    fun deleteById(cartItemId: Long)
+    fun deleteByProductId(productId: Long)
 }

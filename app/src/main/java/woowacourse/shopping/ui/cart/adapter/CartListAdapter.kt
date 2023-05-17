@@ -38,7 +38,7 @@ class CartListAdapter(
                 .load(cartItem.imageUrl)
                 .into(binding.ivCart)
             binding.btnCartClose.setOnClickListener {
-                onCloseButtonClick(cartItem.id)
+                onCloseButtonClick(cartItem.productId)
             }
         }
 

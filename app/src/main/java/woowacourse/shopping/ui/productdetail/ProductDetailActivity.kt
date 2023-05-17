@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
-import woowacourse.shopping.database.cart.CartRepositoryImpl
+import woowacourse.shopping.database.cart.CartItemRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
@@ -24,7 +24,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         ProductDetailPresenter(
             this,
             ProductRepositoryImpl,
-            CartRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl),
+            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl),
         )
     }
 
