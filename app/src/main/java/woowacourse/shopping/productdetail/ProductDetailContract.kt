@@ -1,13 +1,15 @@
 package woowacourse.shopping.productdetail
 
+import woowacourse.shopping.uimodel.ProductUIModel
+
 interface ProductDetailContract {
     interface View {
         fun showCartPage()
     }
 
     interface Presenter {
-        fun initPage()
+        val product: ProductUIModel
         fun insertRecentRepository(currentTime: Long)
-        fun onClickAddToCart()
+        fun addToCart()
     }
 }

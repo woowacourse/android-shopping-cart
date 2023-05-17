@@ -1,28 +1,27 @@
 package woowacourse.shopping.productdetail
 
+import com.shopping.domain.CartProduct
+import com.shopping.domain.RecentProduct
 import woowacourse.shopping.datas.CartRepository
 import woowacourse.shopping.datas.RecentRepository
-import woowacourse.shopping.uimodel.CartProductUIModel
+import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductUIModel
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
-    private val productUIModel: ProductUIModel,
+    productUIModel: ProductUIModel,
     private val recentRepository: RecentRepository,
     private val cartRepository: CartRepository,
 ) : ProductDetailContract.Presenter {
-
-    override fun initPage() {
-        view.setViews(productUIModel)
-    }
+    override var product = productUIModel
+        private set
 
     override fun insertRecentRepository(currentTime: Long) {
-        recentRepository.insert(RecentProductUIModel(currentTime, productUIModel))
+        recentRepository.insert(RecentProduct(currentTime, product.toDomain()))
     }
 
-    override fun onClickAddToCart() {
-        cartRepository.insert(CartProductUIModel(1, productUIModel))
+    override fun addToCart() {
+        cartRepository.insert(CartProduct(1, product.toDomain()))
         view.showCartPage()
     }
 }

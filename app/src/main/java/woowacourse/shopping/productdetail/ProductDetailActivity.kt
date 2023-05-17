@@ -37,17 +37,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(this, productData, recentRepository, cartRepository)
         binding.presenter = presenter
         presenter.insertRecentRepository(System.currentTimeMillis())
-
-        presenter.initPage()
-    }
-
-    override fun setViews(productData: ProductUIModel) {
-        Glide.with(binding.root.context).load(productData.imageUrl).into(binding.ivProductImage)
-        binding.tvProductName.text = productData.name
-        binding.tvPrice.text = productData.price.toString()
-        binding.btAddToCart.setOnClickListener {
-            presenter.onClickAddToCart()
-        }
     }
 
     override fun showCartPage() {
