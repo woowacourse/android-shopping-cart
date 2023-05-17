@@ -1,6 +1,10 @@
+
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
+    kotlin("kapt")
 }
 
 android {
@@ -33,6 +37,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    dataBinding {
+        enable = true
+    }
 }
 
 dependencies {
@@ -43,4 +50,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(project(":domain"))
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
 }
