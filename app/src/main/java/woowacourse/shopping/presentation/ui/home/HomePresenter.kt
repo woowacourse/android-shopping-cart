@@ -19,7 +19,7 @@ class HomePresenter(
     }
 
     override fun getRecentlyViewed() {
-        val recentlyViewed = productRepository.getRecentlyViewedProducts(30)
+        val recentlyViewed = productRepository.getRecentlyViewedProducts(10)
         if (recentlyViewed.isEmpty()) return
         view.setRecentlyViewed(recentlyViewed)
     }
