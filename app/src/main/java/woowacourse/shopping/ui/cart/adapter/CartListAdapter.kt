@@ -44,8 +44,8 @@ class CartListAdapter(
 
         companion object {
             fun create(parent: ViewGroup, onCloseButtonClick: (Long) -> Unit): CartListViewHolder {
-                val view =
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false)
+                val view = LayoutInflater.from(parent.context)
+                        .inflate(R.layout.item_cart, parent, false)
                 val binding = ItemCartBinding.bind(view)
                 return CartListViewHolder(binding, onCloseButtonClick)
             }
