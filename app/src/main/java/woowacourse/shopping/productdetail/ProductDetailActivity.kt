@@ -11,6 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.util.generateProductDetailPresenter
 import woowacourse.shopping.util.getSerializableCompat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
@@ -19,7 +20,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private val product: ProductUiModel by lazy { intent.getSerializableCompat(PRODUCT_KEY)!! }
     private val presenter: ProductDetailPresenter by lazy {
-        ProductDetailPresenter.of(this, product, this)
+        generateProductDetailPresenter(this, product, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

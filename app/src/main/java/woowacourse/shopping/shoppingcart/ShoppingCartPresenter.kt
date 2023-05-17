@@ -1,9 +1,6 @@
 package woowacourse.shopping.shoppingcart
 
-import android.content.Context
-import woowacourse.shopping.database.ShoppingDBRepository
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toUiModel
 
@@ -36,16 +33,5 @@ class ShoppingCartPresenter(
     override fun readMoreShoppingCartProducts() {
         val products = selectShoppingCartProducts()
         view.showMoreShoppingCartProducts(products)
-    }
-
-    companion object {
-        fun of(view: ShoppingCartContract.View, context: Context): ShoppingCartPresenter {
-            return ShoppingCartPresenter(
-                view,
-                ShoppingDBRepository(
-                    ShoppingDao(context),
-                ),
-            )
-        }
     }
 }

@@ -8,12 +8,13 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.util.generateShoppingCartPresenter
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private lateinit var shoppingCartRecyclerAdapter: ShoppingCartRecyclerAdapter
     private val presenter: ShoppingCartContract.Presenter by lazy {
-        ShoppingCartPresenter.of(this, this)
+        generateShoppingCartPresenter(this, this)
     }
     private lateinit var binding: ActivityShoppingCartBinding
 

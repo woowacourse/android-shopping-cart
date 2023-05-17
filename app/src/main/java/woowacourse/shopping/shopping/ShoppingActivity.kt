@@ -15,13 +15,14 @@ import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.productdetail.ProductDetailActivity.Companion.ACTIVITY_RESULT_CODE
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.util.generateShoppingPresenter
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var shoppingRecyclerAdapter: ShoppingRecyclerAdapter
     private val presenter: ShoppingContract.Presenter by lazy {
-        ShoppingPresenter.of(this, this)
+        generateShoppingPresenter(this, this)
     }
     private val getResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
