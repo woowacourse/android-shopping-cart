@@ -10,6 +10,8 @@
     <string name="layout_count_view_minus_text">－</string>
     <string name="layout_count_view_plus_text">＋</string>
 
+    <string name="layout_cart_dialog_button_text">담기</string>
+
     <string name="product_price_format">%,d원</string>
 
     <string name="toolbar_item_cart">장바구니</string>
