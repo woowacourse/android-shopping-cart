@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -33,9 +35,18 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    dataBinding {
+        enable = true
+    }
+    viewBinding {
+        enable = true
+    }
 }
 
 dependencies {
+    // 프로젝트내 의존성
+    implementation(project(":domain"))
+
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.0")
     implementation("com.google.android.material:material:1.7.0")
@@ -43,4 +54,14 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    testImplementation("org.assertj:assertj-core:3.22.0")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.15.1")
+
+    // Mockk
+    testImplementation("io.mockk:mockk:1.13.5")
+
+    // concatAdapter
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
 }
