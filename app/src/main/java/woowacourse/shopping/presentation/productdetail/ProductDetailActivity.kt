@@ -39,7 +39,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         Toast.makeText(
             this,
             getString(R.string.put_in_cart_complete_message, productName),
-            Toast.LENGTH_LONG,
+            Toast.LENGTH_SHORT,
         ).show()
     }
 

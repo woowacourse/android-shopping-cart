@@ -74,8 +74,13 @@ class ProductListAdapter(
     }
 
     fun setRecentProductsItems(productModel: List<ProductModel>) {
-        _productItems.add(RECENT_PRODUCT_VIEW_POSITION, RecentProductModels(productModel))
-        notifyItemChanged(RECENT_PRODUCT_VIEW_POSITION)
+        if (_productItems[RECENT_PRODUCT_VIEW_POSITION] is RecentProductModels) {
+            _productItems[RECENT_PRODUCT_VIEW_POSITION] = RecentProductModels(productModel)
+            notifyItemChanged(RECENT_PRODUCT_VIEW_POSITION)
+        } else {
+            _productItems.add(RECENT_PRODUCT_VIEW_POSITION, RecentProductModels(productModel))
+            notifyItemInserted(RECENT_PRODUCT_VIEW_POSITION)
+        }
     }
 
     private fun onItemClick(position: Int) {

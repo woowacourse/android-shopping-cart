@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.product
 
-import woowacourse.shopping.Price
-import woowacourse.shopping.Product
+import woowacourse.shopping.model.Price
+import woowacourse.shopping.model.Product
 
 object MockProductRepository : ProductRepository {
 

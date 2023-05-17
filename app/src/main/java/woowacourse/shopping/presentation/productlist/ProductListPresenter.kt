@@ -1,9 +1,9 @@
 package woowacourse.shopping.presentation.productlist
 
-import woowacourse.shopping.Counter
-import woowacourse.shopping.Product
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
+import woowacourse.shopping.model.Counter
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.ProductModel
 

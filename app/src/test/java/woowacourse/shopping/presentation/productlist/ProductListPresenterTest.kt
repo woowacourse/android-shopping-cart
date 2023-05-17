@@ -8,10 +8,10 @@ import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.Price
-import woowacourse.shopping.Product
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
+import woowacourse.shopping.model.Price
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.presentation.model.ProductModel
 
 class ProductListPresenterTest {

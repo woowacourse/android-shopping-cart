@@ -8,10 +8,10 @@ import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.Price
-import woowacourse.shopping.Product
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.model.Price
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.presentation.model.ProductModel
 
 class ProductDetailPresenterTest {
@@ -50,7 +50,7 @@ class ProductDetailPresenterTest {
     fun `현재 상품의 Id 를 cart 상품 저장소에 저장한다`() {
         // then 상품 1을 불러온 상태
         val cartProductIdSlot = slot<Int>()
-        every { cartRepository.addCartProductId(capture(cartProductIdSlot)) } just runs
+        every { cartRepository.addCartProduct(capture(cartProductIdSlot)) } just runs
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
         presenter.loadProductDetail(1)
