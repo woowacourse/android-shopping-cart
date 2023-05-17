@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.productDetail.presenter
+package woowacourse.shopping.presentation.ui.productDetail
 
 import android.util.Log
 import woowacourse.shopping.domain.model.Product
@@ -9,20 +9,22 @@ import woowacourse.shopping.domain.util.WoowaResult.FAIL
 import woowacourse.shopping.domain.util.WoowaResult.SUCCESS
 
 class ProductDetailPresenter(
-    private val productRepository: ProductRepository,
+    view: ProductDetailContract.View,
+    productId: Long,
+    productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ProductDetailContract.Presenter {
     lateinit var selectedProduct: Product
 
-    override fun getProduct(id: Long) {
-        when (val woowaResult = productRepository.getProduct(id)) {
+    init {
+        when (val woowaResult = productRepository.getProduct(productId)) {
             is SUCCESS -> selectedProduct = woowaResult.data
-            is FAIL -> Log.d("ERROR", woowaResult.error.errorMessage)
+            is FAIL -> {
+                view.handleNoSuchProductError()
+                Log.d("ERROR", woowaResult.error.errorMessage)
+            }
         }
-    }
-
-    override fun addRecentlyViewedProduct(id: Long) {
-        productRepository.addRecentlyViewedProduct(id)
+        productRepository.addRecentlyViewedProduct(productId)
     }
 
     override fun addProductInCart() {

@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.ui.productDetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
@@ -10,15 +11,15 @@ import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailContract
-import woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailPresenter
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
-    override val presenter: ProductDetailContract.Presenter by lazy { initPresenter() }
-    private fun initPresenter(): ProductDetailPresenter {
+    override lateinit var presenter: ProductDetailPresenter
+    private fun initPresenter(productId: Long): ProductDetailPresenter {
         return ProductDetailPresenter(
+            this,
+            productId,
             ProductRepositoryImpl(
                 productDataSource = ProductDao(this),
                 recentlyViewedDataSource = RecentlyViewedDao(this),
@@ -35,31 +36,26 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val productId = intent.getLongExtra(PRODUCT_ID, DEFAULT_ID)
-
-        initView(productId)
-        addRecentlyViewedProduct(productId)
+        presenter = initPresenter(intent.getLongExtra(PRODUCT_ID, DEFAULT_ID))
+        binding.presenter = presenter
         setClickEvent()
     }
 
-    private fun initView(productId: Long) {
-        presenter.getProduct(productId)
-        binding.presenter = presenter as ProductDetailPresenter
+    override fun handleNoSuchProductError() {
+        Toast.makeText(this, "상품을 찾을 수 없습니다", Toast.LENGTH_SHORT).show()
+        finish()
     }
-
-    private fun addRecentlyViewedProduct(productId: Long) =
-        presenter.addRecentlyViewedProduct(productId)
 
     private fun setClickEvent() {
-        setClickEventOnCloseButton()
-        setClickEventOnDibsButton()
+        clickClose()
+        clickShoppingCart()
     }
 
-    private fun setClickEventOnCloseButton() {
+    private fun clickClose() {
         binding.buttonProductDetailClose.setOnClickListener { finish() }
     }
 
-    private fun setClickEventOnDibsButton() {
+    private fun clickShoppingCart() {
         binding.buttonProductDetailPutInShoppingCart.setOnClickListener {
             presenter.addProductInCart()
             startActivity(Intent(this, ShoppingCartActivity::class.java))

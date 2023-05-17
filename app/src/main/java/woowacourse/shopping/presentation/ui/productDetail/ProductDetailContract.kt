@@ -1,13 +1,12 @@
-package woowacourse.shopping.presentation.ui.productDetail.presenter
+package woowacourse.shopping.presentation.ui.productDetail
 
 interface ProductDetailContract {
     interface View {
         val presenter: Presenter
+        fun handleNoSuchProductError()
     }
 
     interface Presenter {
-        fun getProduct(id: Long)
-        fun addRecentlyViewedProduct(id: Long)
         fun addProductInCart()
     }
 }
