@@ -7,6 +7,8 @@
     <string name="shoppingCart_title">Cart</string>
     <string name="item_more">더보기</string>
     <string name="tv_home_title">Shopping</string>
+    <string name="tv_quantity_plus">+</string>
+    <string name="tv_quantity_minus">-</string>
 
 
 </resources>

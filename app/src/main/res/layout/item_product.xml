@@ -8,11 +8,17 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
+            name="setClickListener"
+            type="woowacourse.shopping.presentation.ui.home.adapter.SetClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> setClickListener.setClickEventOnProduct(product)}"
         android:paddingHorizontal="8dp"
         android:paddingTop="20dp">
 
@@ -24,6 +30,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_item_product_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/woowa_dealer_gray_200"
+                android:src="@drawable/icon_quantity_button"
+                app:borderWidth="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_item_product_image"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
             <ImageView
                 android:id="@+id/iv_item_product_image"
                 android:layout_width="0dp"
@@ -31,9 +50,9 @@
                 app:glideSrc="@{product.itemImage}"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_item_product_name"
@@ -67,6 +86,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_item_product_name"
                 tools:text="10,000원" />
+
+            <include
+                android:id="@+id/layout_quantity"
+                layout="@layout/layout_control_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/fab_item_product_quantity"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/fab_item_product_quantity"
+                app:setQuantityClickListener="@{setClickListener}" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

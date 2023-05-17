@@ -51,7 +51,7 @@ class HomeAdapter(
     private fun initProductViewHolder(parent: ViewGroup) =
         ProductViewHolder(
             ProductViewHolder.getView(parent, layoutInflater),
-            onClick::setClickEventOnProduct,
+            onClick,
         )
 
     private fun initRecentlyViewedViewHolder(parent: ViewGroup) =

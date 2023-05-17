@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="setQuantityClickListener"
+            type="woowacourse.shopping.presentation.ui.home.adapter.SetClickListener" />
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_radius_4dp_grey">
+
+        <TextView
+            android:id="@+id/tv_quantity_minus"
+            style="@style/Woowa_air_32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{() ->setQuantityClickListener.setClickEventOnOperatorButton(false)}"
+            android:paddingHorizontal="20dp"
+            android:text="@string/tv_quantity_minus"
+            android:textColor="@color/woowa_dealer_gray_700"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_quantity_amount"
+            app:layout_constraintEnd_toStartOf="@+id/tv_quantity_amount"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_quantity_amount" />
+
+        <TextView
+            android:id="@+id/tv_quantity_amount"
+            style="@style/Woowa_air_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="1"
+            android:textColor="@color/woowa_dealer_gray_700"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_quantity_plus"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_quantity_minus"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/tv_quantity_plus"
+            style="@style/Woowa_air_32"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:onClick="@{() ->setQuantityClickListener.setClickEventOnOperatorButton(true)}"
+            android:paddingHorizontal="20dp"
+            android:text="@string/tv_quantity_plus"
+            android:textColor="@color/woowa_dealer_gray_700"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_quantity_amount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_quantity_amount"
+            app:layout_constraintTop_toTopOf="@+id/tv_quantity_amount" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
