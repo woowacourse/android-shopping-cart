@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart.cartAdapter
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.CartProductUIModel
@@ -10,6 +11,10 @@ import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.NavigationViewHolder
 
 class CartAdapter(private val cartListener: CartListener) : RecyclerView.Adapter<CartItemViewHolder>() {
     private val cartItems = mutableListOf<CartItemType>()
+
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
         return when (viewType) {
@@ -31,10 +36,18 @@ class CartAdapter(private val cartListener: CartListener) : RecyclerView.Adapter
         return cartItems[position].viewType
     }
 
+    override fun getItemId(position: Int): Long {
+        return when (val item = cartItems[position]) {
+            is CartItemType.Cart -> item.product.id.toLong()
+            is CartItemType.Navigation -> -1
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     fun submitList(cartProducts: List<CartProductUIModel>, pageUIModel: PageUIModel) {
         cartItems.clear()
         cartItems.addAll(cartProducts.map { CartItemType.Cart(it) })
         cartItems.add(CartItemType.Navigation(pageUIModel))
-        notifyItemChanged(0)
+        notifyDataSetChanged()
     }
 }

@@ -21,7 +21,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
 
-    private val adapter = CartAdapter(getCartListener())
+    private val adapter: CartAdapter = CartAdapter(getCartListener())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +44,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.setUpCarts()
         presenter.updatePriceAndCount()
         binding.cartBottom.onAllCheckClick = presenter::updateAllItemCheck
+        binding.rvProducts.adapter = adapter
     }
 
     private fun initToolbar() {
@@ -68,7 +69,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setCarts(products: List<CartProductUIModel>, pageUIModel: PageUIModel) {
         adapter.submitList(products, pageUIModel)
-        binding.rvProducts.adapter = adapter
     }
 
     override fun updateBottom(totalPrice: Int, totalCount: Int) {
