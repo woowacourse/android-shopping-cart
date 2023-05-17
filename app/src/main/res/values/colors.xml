@@ -8,12 +8,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="woowa_toolbar_gray">#555555</color>
+    <color name="woowa_dark_gray">#555555</color>
     <color name="woowa_text_black">#333333</color>
     <color name="woowa_light_gray">#AAAAAA</color>
     <color name="woowa_button">#04C09E</color>
     <color name="woowa_divider">#EBEBEB</color>
     <color name="woowa_previous_disable">#E6E6E6</color>
     <color name="woowa_previous_enable">#04C09E</color>
-
+    <color name="woowa_highlight">#D5D5D5</color>
 </resources>

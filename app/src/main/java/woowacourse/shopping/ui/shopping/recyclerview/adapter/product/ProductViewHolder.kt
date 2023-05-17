@@ -8,10 +8,9 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.util.extension.setOnSingleClickListener
 
-class ProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :
-    RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
-    ) {
+class ProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
+) {
     private val binding = ItemProductBinding.bind(itemView)
 
     init {

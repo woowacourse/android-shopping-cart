@@ -29,6 +29,36 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
 
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/plus_floating_button"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            app:backgroundTint="@color/white"
+            app:icon="@drawable/ic_plus"
+            app:iconTint="@color/woowa_dark_gray"
+            app:layout_constraintBottom_toBottomOf="@id/product_image_view"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="@id/product_image_view"
+            app:layout_constraintWidth_percent="0.3"
+            app:tint="@color/woowa_dark_gray" />
+
+        <woowacourse.shopping.widget.CounterView
+            android:id="@+id/counter_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:visibility="gone"
+            app:count="1"
+            app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
+            app:layout_constraintEnd_toEndOf="@id/product_image_view"
+            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintStart_toStartOf="@id/product_image_view"
+            app:max_count="99"
+            app:min_count="1" />
+
         <TextView
             android:id="@+id/product_name_text_view"
             android:layout_width="wrap_content"
@@ -57,5 +87,6 @@
             app:layout_constraintStart_toStartOf="@+id/product_name_text_view"
             app:layout_constraintTop_toBottomOf="@+id/product_name_text_view"
             tools:text="10,000원" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

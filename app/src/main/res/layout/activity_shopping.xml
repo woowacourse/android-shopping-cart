@@ -26,7 +26,7 @@
             android:id="@+id/shopping_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:background="@color/woowa_toolbar_gray"
+            android:background="@color/woowa_dark_gray"
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/menu_shopping"
             app:title="@string/tb_shopping"
