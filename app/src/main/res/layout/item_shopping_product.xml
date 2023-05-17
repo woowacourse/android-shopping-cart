@@ -10,6 +10,17 @@
         android:layout_marginStart="10dp">
 
         <ImageView
+            android:id="@+id/image_add_to_cart"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/image_add_to_cart"
+            android:translationZ="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/image_product"
+            app:layout_constraintEnd_toEndOf="@+id/image_product"
+            android:contentDescription="@string/image_of_product" />
+
+        <ImageView
             android:id="@+id/image_product"
             android:layout_width="154dp"
             android:layout_height="154dp"
@@ -40,6 +51,44 @@
             app:layout_constraintStart_toStartOf="@+id/text_product_name"
             app:layout_constraintTop_toBottomOf="@id/text_product_name"
             tools:text="10,000원" />
+
+        <LinearLayout
+            android:id="@+id/layout_select_product_count"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/image_product"
+            app:layout_constraintEnd_toEndOf="@+id/image_product"
+            app:layout_constraintStart_toStartOf="@+id/image_product">
+
+            <Button
+                android:id="@+id/button_minus_product_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/left_corner_round_button"
+                android:text="@string/minus_description" />
+
+            <TextView
+                android:id="@+id/text_product_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:gravity="center"
+                android:text="@string/initial_count" />
+
+            <Button
+                android:id="@+id/button_plus_product_count"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/right_corner_round_button"
+                android:text="@string/plus_description" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

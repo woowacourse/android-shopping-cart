@@ -10,6 +10,8 @@ interface ShoppingRepository {
 
     fun selectShoppingCartProducts(from: Int, count: Int): List<ShoppingCartProduct>
 
+    fun selectShoppingCartProductById(id: Int): ShoppingCartProduct
+
     fun selectProductById(id: Int): Product
 
     fun insertToShoppingCart(id: Int, count: Int = 1)
@@ -23,6 +25,8 @@ interface ShoppingRepository {
     fun selectRecentViewedProductById(id: Int): RecentViewedProduct
 
     fun deleteFromRecentViewedProducts()
+
+    fun getCountOfShoppingCartProducts(): Int
 
     fun setUpDB()
 }

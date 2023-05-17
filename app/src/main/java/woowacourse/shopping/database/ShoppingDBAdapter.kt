@@ -72,7 +72,7 @@ class ShoppingDBAdapter(
         cursor?.apply {
             if (moveToFirst()) {
                 do {
-                    shoppingCartProducts.add(cursor.getShoppingCartProductById())
+                    shoppingCartProducts.add(cursor.getShoppingCartProduct())
                 } while (moveToNext())
             }
         }
@@ -81,7 +81,21 @@ class ShoppingDBAdapter(
         return shoppingCartProducts.toList()
     }
 
-    private fun Cursor.getShoppingCartProductById(): ShoppingCartProduct {
+    override fun selectShoppingCartProductById(id: Int): ShoppingCartProduct {
+        val cursor = shoppingDB.rawQuery(
+            "select * from ${ShoppingCartDBContract.TABLE_NAME} where ${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
+            arrayOf(id.toString())
+        ).apply {
+            moveToNext()
+        }
+        val shoppingCartProduct = cursor.getShoppingCartProduct()
+
+        cursor.close()
+
+        return shoppingCartProduct
+    }
+
+    private fun Cursor.getShoppingCartProduct(): ShoppingCartProduct {
         val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
         val count = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.COUNT))
         return ShoppingCartProduct(
@@ -149,6 +163,17 @@ class ShoppingDBAdapter(
             shoppingDB.insert(ShoppingCartDBContract.TABLE_NAME, null, values)
         }
         cursor.close()
+    }
+
+    override fun getCountOfShoppingCartProducts(): Int {
+        var count = 0
+        val cursor = shoppingDB.rawQuery("SELECT COUNT(*) FROM ${ShoppingCartDBContract.TABLE_NAME}", null)
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0)
+        }
+        cursor.close()
+
+        return count
     }
 
     override fun deleteFromShoppingCart(id: Int) {

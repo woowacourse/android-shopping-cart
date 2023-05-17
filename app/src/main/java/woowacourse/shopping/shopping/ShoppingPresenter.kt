@@ -7,7 +7,7 @@ import woowacourse.shopping.util.toUiModel
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
-    private val repository: ShoppingRepository
+    private val repository: ShoppingRepository,
 ) : ShoppingContract.Presenter {
 
     override val recentViewedProducts = RecentViewedProducts(
@@ -26,7 +26,13 @@ class ShoppingPresenter(
         view.setUpShoppingView(
             products = products,
             recentViewedProducts = recentViewedProducts,
-            readMoreShoppingProducts = ::readMoreShoppingProducts
+            readMoreShoppingProducts = ::readMoreShoppingProducts,
+            onProductCountPlus = ::plusShoppingCartProductCount,
+            onProductCountMinus = ::minusShoppingCartProductCount,
+            onProductAddedToShoppingCart = ::addProductToShoppingCart
+        )
+        view.refreshProductCount(
+            count = repository.getCountOfShoppingCartProducts()
         )
     }
 
@@ -34,6 +40,34 @@ class ShoppingPresenter(
         val products = selectProducts()
 
         view.refreshShoppingProductsView(products)
+    }
+
+    override fun plusShoppingCartProductCount(product: ProductUiModel) {
+        val shoppingCartProduct = repository.selectShoppingCartProductById(product.id)
+            .plusCount()
+
+        repository.insertToShoppingCart(
+            id = product.id,
+            count = shoppingCartProduct.count.value
+        )
+    }
+
+    override fun minusShoppingCartProductCount(product: ProductUiModel) {
+        val shoppingCartProduct = repository.selectShoppingCartProductById(product.id)
+            .minusCount()
+
+        repository.insertToShoppingCart(
+            id = product.id,
+            count = shoppingCartProduct.count.value
+        )
+    }
+
+    override fun addProductToShoppingCart(product: ProductUiModel) {
+        repository.insertToShoppingCart(id = product.id)
+
+        view.refreshProductCount(
+            count = repository.getCountOfShoppingCartProducts()
+        )
     }
 
     private fun selectProducts(): List<ProductUiModel> {

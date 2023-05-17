@@ -16,4 +16,7 @@
     <string name="image_to_plus_product_count">image to plus product count</string>
     <string name="text">전체</string>
     <string name="order">주문하기</string>
+    <string name="minus_description">-</string>
+    <string name="plus_description">+</string>
+    <string name="initial_count">1</string>
 </resources>

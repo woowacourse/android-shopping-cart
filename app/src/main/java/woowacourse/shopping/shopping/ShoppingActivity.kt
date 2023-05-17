@@ -58,14 +58,20 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun setUpShoppingView(
         products: List<ProductUiModel>,
         recentViewedProducts: List<RecentViewedProductUiModel>,
-        readMoreShoppingProducts: () -> (Unit)
+        readMoreShoppingProducts: () -> Unit,
+        onProductCountPlus: (product: ProductUiModel) -> Unit,
+        onProductCountMinus: (product: ProductUiModel) -> Unit,
+        onProductAddedToShoppingCart: (product: ProductUiModel) -> Unit,
     ) {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView,
             onReadMoreButtonClicked = readMoreShoppingProducts,
-            readMoreButtonDescription = getString(R.string.read_more)
+            readMoreButtonDescription = getString(R.string.read_more),
+            onProductCountPlus = onProductCountPlus,
+            onProductCountMinus = onProductCountMinus,
+            onProductAddedToShoppingCart = onProductAddedToShoppingCart,
         )
 
         with(binding) {
@@ -90,6 +96,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             ).show()
         }
         shoppingRecyclerAdapter.refreshShoppingItems(toAdd = toAdd)
+    }
+
+    override fun refreshProductCount(count: Int) {
+        binding.textShoppingCartProductsCount.text = count.toString()
     }
 
     private fun navigateToProductDetailView(product: ProductUiModel) {

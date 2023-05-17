@@ -16,9 +16,12 @@ import woowacourse.shopping.shopping.ShoppingRecyclerItemViewType.RECENT_VIEWED
 class ShoppingRecyclerAdapter(
     products: List<ProductUiModel>,
     private var recentViewedProducts: List<RecentViewedProductUiModel>,
-    private val onProductClicked: (ProductUiModel) -> Unit,
+    private val onProductClicked: (product: ProductUiModel) -> Unit,
     private val onReadMoreButtonClicked: () -> Unit,
     private val readMoreButtonDescription: String,
+    private val onProductCountPlus: (product: ProductUiModel) -> Unit,
+    private val onProductCountMinus: (product: ProductUiModel) -> Unit,
+    private val onProductAddedToShoppingCart: (product: ProductUiModel) -> Unit,
 ) : RecyclerView.Adapter<ShoppingRecyclerItemViewHolder<out ShoppingRecyclerItem, out ViewDataBinding>>() {
 
     private val products: MutableList<ProductUiModel> =
@@ -46,7 +49,12 @@ class ShoppingRecyclerAdapter(
                 ShoppingProductViewHolder
                     .from(parent)
                     .apply {
-                        setOnClicked(onClicked = onProductClicked)
+                        setOnClicked(
+                            onProductImageClicked = onProductClicked,
+                            onPlusButtonClicked = onProductCountPlus,
+                            onMinusButtonClicked = onProductCountMinus,
+                            onAddToCartImageClicked = onProductAddedToShoppingCart
+                        )
                     }
 
             READ_MORE ->
