@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -105,7 +106,12 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     override fun showCartCount(count: Int) {
+        if(count == 0) {
+            cartCountInAppBar.visibility = View.GONE
+            return
+        }
         cartCountInAppBar.text = count.toString()
+        cartCountInAppBar.visibility = View.VISIBLE
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
