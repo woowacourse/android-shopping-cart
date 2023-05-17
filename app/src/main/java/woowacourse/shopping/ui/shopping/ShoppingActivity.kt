@@ -1,33 +1,32 @@
 package woowacourse.shopping.ui.shopping
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductFakeRepository
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.product.ProductDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.RecentProductUIModel
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detailedProduct.DetailedProductActivity
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapter
-import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapterDecoration.getItemDecoration
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapterDecoration.getSpanSizeLookup
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
-    private lateinit var adapter: ProductsAdapter
-
+    private val adapter: ProductsAdapter = ProductsAdapter(getAdapterListener())
     private var tvCount: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,6 +35,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         initToolbar()
         initPresenter()
         initLayoutManager()
+        presenter.setUpProducts()
     }
 
     override fun onResume() {
@@ -61,78 +61,56 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             RecentProductDatabase(this),
             CartDatabase(this)
         )
-        presenter.setUpProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cart_menu, menu)
-        menu?.findItem(R.id.cart)?.let { item ->
-            item.actionView?.setOnClickListener { navigateToCart() }
-            item.actionView?.findViewById<TextView>(R.id.tv_counter)?.let { tvCount = it }
+        menu?.findItem(R.id.cart)?.actionView?.let { view ->
+            view.setOnClickListener { navigateToCart() }
+            view.findViewById<TextView>(R.id.tv_counter)?.let { tvCount = it }
         }
-        presenter.updateCartProducts()
+        presenter.updateToolbar()
         return true
     }
 
     private fun initLayoutManager() {
         val layoutManager = binding.rvProducts.layoutManager as GridLayoutManager
-
-        layoutManager.spanSizeLookup = getSpanSizeLookup()
-        binding.rvProducts.addItemDecoration(getItemDecoration())
+        layoutManager.spanSizeLookup = getSpanSizeLookup(layoutManager, adapter)
+        binding.rvProducts.addItemDecoration(getItemDecoration(layoutManager, resources))
     }
 
-    private fun getSpanSizeLookup() = object : GridLayoutManager.SpanSizeLookup() {
-        val layoutManager = binding.rvProducts.layoutManager as GridLayoutManager
-        override fun getSpanSize(position: Int): Int {
-            return when (adapter.getItemViewType(position)) {
-                ProductsItemType.TYPE_FOOTER -> layoutManager.spanCount
-                ProductsItemType.TYPE_ITEM -> 1
-                else -> layoutManager.spanCount
-            }
+    private fun getAdapterListener() = object : ProductsListener {
+        override fun onClickItem(productId: Int) { presenter.navigateToItemDetail(productId) }
+        override fun onReadMoreClick() { presenter.addMoreProducts() }
+        override fun onAddCartOrUpdateCount(productId: Int, count: Int, bindItem: () -> Unit) {
+            adapter.let { adapter.updateItemCount(productId, count) }
+            bindItem()
+            presenter.updateItem(productId, count)
         }
     }
 
-    private fun getItemDecoration() = object : RecyclerView.ItemDecoration() {
-        val layoutManager = binding.rvProducts.layoutManager as GridLayoutManager
-
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            val spacing = resources.getDimensionPixelSize(R.dimen.item_spacing)
-            val position = parent.getChildAdapterPosition(view)
-            val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
-
-            if (spanSize != layoutManager.spanCount) {
-                outRect.left = spacing
-                outRect.right = spacing
-                outRect.top = spacing
-            }
-        }
-    }
-
-    override fun setProducts(data: List<ProductsItemType>) {
-        val listener = object : ProductsListener {
-            override fun onClickItem(productId: Int) { presenter.navigateToItemDetail(productId) }
-            override fun onReadMoreClick() { presenter.fetchMoreProducts() }
-            override fun onAddCartOrUpdateCount(productId: Int, count: Int, bindItem: () -> Unit) {
-                adapter.let { adapter.updateItemCount(productId, count) }
-                bindItem()
-                presenter.updateItem(productId, count)
-            }
-        }
-        adapter = ProductsAdapter(data.toMutableList(), listener)
+    override fun setProducts(
+        products: List<ProductUIModel>,
+        recentProducts: List<RecentProductUIModel>,
+        cartProducts: List<CartProductUIModel>
+    ) {
+        adapter.submitList(products, recentProducts, cartProducts)
         binding.rvProducts.adapter = adapter
+    }
+
+    override fun addMoreProducts(products: List<ProductUIModel>) {
+        adapter.addList(products)
+    }
+
+    override fun refreshProducts(
+        recentProducts: List<RecentProductUIModel>,
+        cartProducts: List<CartProductUIModel>
+    ) {
+        adapter.updateList(recentProducts, cartProducts)
     }
 
     override fun updateToolbar(count: Int) {
         tvCount?.text = count.toString()
-    }
-
-    override fun updateProducts(data: List<ProductsItemType>) {
-        adapter.submitList(data)
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {

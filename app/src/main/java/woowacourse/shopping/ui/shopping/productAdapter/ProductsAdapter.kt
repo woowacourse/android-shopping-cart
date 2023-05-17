@@ -2,15 +2,17 @@ package woowacourse.shopping.ui.shopping.productAdapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.model.CartProductUIModel
+import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.RecentProductUIModel
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ItemViewHolder
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ProductsViewHolder
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ReadMoreViewHolder
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.RecentViewHolder
 
-class ProductsAdapter(
-    private var products: MutableList<ProductsItemType>,
-    private val listener: ProductsListener
-) : RecyclerView.Adapter<ItemViewHolder>() {
+class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Adapter<ItemViewHolder>() {
+    private val productItems: MutableList<ProductsItemType> = mutableListOf()
+    private val carts: MutableList<CartProductUIModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return when (viewType) {
@@ -22,25 +24,64 @@ class ProductsAdapter(
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        holder.bind(products[position])
+        holder.bind(productItems[position])
     }
 
     override fun getItemCount(): Int {
-        return products.size
+        return productItems.size
     }
 
     override fun getItemViewType(position: Int): Int {
-        return products[position].viewType
+        return productItems[position].viewType
     }
 
-    fun submitList(data: List<ProductsItemType>) {
-        products = data.toMutableList()
-        notifyItemRangeChanged(0, products.size)
+    fun submitList(
+        products: List<ProductUIModel>,
+        recentProducts: List<RecentProductUIModel>,
+        cartProducts: List<CartProductUIModel>
+    ) {
+        carts.addAll(cartProducts)
+        productItems.clear()
+        if (recentProducts.isNotEmpty()) {
+            productItems.add(ProductsItemType.RecentProducts(recentProducts))
+        }
+        productItems.addAll(
+            products.map { ProductsItemType.Product(it, getCount(it.id)) }
+        )
+        productItems.add(ProductsItemType.ReadMore)
+        notifyItemChanged(0)
+    }
+
+    fun addList(products: List<ProductUIModel>) {
+        productItems.removeIf { it is ProductsItemType.ReadMore }
+        productItems.addAll(
+            products.map { ProductsItemType.Product(it, getCount(it.id)) }
+        )
+        productItems.add(ProductsItemType.ReadMore)
+        notifyItemChanged(0)
+    }
+
+    fun updateList(
+        recentProducts: List<RecentProductUIModel>,
+        cartProducts: List<CartProductUIModel>
+    ) {
+        carts.clear()
+        carts.addAll(cartProducts)
+        productItems[0] = ProductsItemType.RecentProducts(recentProducts)
+        if (recentProducts.isEmpty()) { productItems.removeAt(0) }
+        productItems.filterIsInstance<ProductsItemType.Product>()
+            .forEach { it.count = getCount(it.product.id) }
+
+        notifyItemRangeChanged(0, productItems.size - 1)
+    }
+
+    private fun getCount(productId: Int): Int {
+        return carts.firstOrNull { it.id == productId }?.count ?: 0
     }
 
     fun updateItemCount(productId: Int, count: Int) {
-        val index = products
+        val index = productItems
             .indexOfFirst { it is ProductsItemType.Product && it.product.id == productId }
-        products[index] = (products[index] as ProductsItemType.Product).copy(count = count)
+        productItems[index] = (productItems[index] as ProductsItemType.Product).copy(count = count)
     }
 }

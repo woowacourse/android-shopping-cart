@@ -12,7 +12,7 @@ sealed interface ProductsItemType {
         }
 
     data class RecentProducts(val product: List<RecentProductUIModel>) : ProductsItemType
-    data class Product(val product: ProductUIModel, val count: Int) : ProductsItemType
+    data class Product(val product: ProductUIModel, var count: Int) : ProductsItemType
     object ReadMore : ProductsItemType
 
     companion object {

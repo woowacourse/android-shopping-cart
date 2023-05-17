@@ -12,7 +12,7 @@ class RecentViewHolder(
     binding: ItemProductRecentBinding,
     listener: ProductsListener
 ) : ItemViewHolder(binding.root) {
-    private val adapter = RecentProductsAdapter(listOf(), listener::onClickItem)
+    private val adapter = RecentProductsAdapter(mutableListOf(), listener::onClickItem)
 
     init {
         binding.rvProducts.adapter = adapter

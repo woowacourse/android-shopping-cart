@@ -5,7 +5,6 @@ import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentRepository
-import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
@@ -13,68 +12,47 @@ class ShoppingPresenter(
     private val recentRepository: RecentRepository,
     private val cartRepository: CartRepository
 ) : ShoppingContract.Presenter {
-    private var productsData: MutableList<ProductsItemType> = mutableListOf()
     private var cartProductsData: List<CartProductUIModel> = cartRepository.getAll().toUIModel()
 
     override fun setUpProducts() {
-        setRecentProduct()
+        val recentProductsData = recentRepository.getRecent(RECENT_PRODUCT_COUNT)
+            .map { it.toUIModel() }
+        val productsData = productRepository.getNext(PRODUCT_COUNT).map { it.toUIModel() }
+        val cartProductsData = cartRepository.getAll().toUIModel()
 
-        productsData += productRepository.getNext(PRODUCT_COUNT)
-            .map { ProductsItemType.Product(it.toUIModel(), findCountById(it.id)) }
-        view.setProducts(productsData.plus(ProductsItemType.ReadMore))
+        view.setProducts(productsData, recentProductsData, cartProductsData)
+    }
+
+    override fun addMoreProducts() {
+        val productsData = productRepository.getNext(PRODUCT_COUNT).map { it.toUIModel() }
+
+        view.addMoreProducts(productsData)
     }
 
     override fun updateProducts() {
-        setRecentProduct()
-        updateCartProducts()
+        val recentProductsData = recentRepository.getRecent(RECENT_PRODUCT_COUNT)
+            .map { it.toUIModel() }
+        val cartProductsData = cartRepository.getAll().toUIModel()
 
-        productsData = productsData.map {
-            when (it) {
-                is ProductsItemType.Product -> {
-                    ProductsItemType.Product(it.product, findCountById(it.product.id))
-                }
-                else -> it
-            }
-        }.toMutableList()
-        view.updateProducts(productsData.plus(ProductsItemType.ReadMore))
-    }
-
-    private fun findCountById(productId: Int): Int {
-        return cartProductsData.firstOrNull { it.id == productId }?.count ?: 0
-    }
-
-    override fun fetchMoreProducts() {
-        productsData += productRepository.getNext(PRODUCT_COUNT)
-            .map { ProductsItemType.Product(it.toUIModel(), findCountById(it.id)) }
-        view.updateProducts(productsData.plus(ProductsItemType.ReadMore))
-    }
-
-    override fun navigateToItemDetail(productId: Int) {
-        productRepository.findById(productId).let {
-            view.navigateToProductDetail(it.toUIModel())
-        }
+        view.refreshProducts(recentProductsData, cartProductsData)
+        updateToolbar()
     }
 
     override fun updateItem(productId: Int, count: Int): Int {
         cartRepository.insert(productId)
         val updatedCount = cartRepository.updateCount(productId, count)
-        updateCartProducts()
+        cartProductsData = cartRepository.getAll().toUIModel()
+        updateToolbar()
         return updatedCount
     }
 
-    override fun updateCartProducts() {
-        cartProductsData = cartRepository.getAll().toUIModel()
+    override fun updateToolbar() {
         view.updateToolbar(cartProductsData.size)
     }
 
-    private fun setRecentProduct() {
-        val recentProductsData = ProductsItemType.RecentProducts(
-            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
-        )
-
-        when {
-            productsData.isNotEmpty() && productsData[0] is ProductsItemType.RecentProducts -> productsData[0] = recentProductsData
-            recentProductsData.product.isNotEmpty() -> productsData.add(0, recentProductsData)
+    override fun navigateToItemDetail(productId: Int) {
+        productRepository.findById(productId).let {
+            view.navigateToProductDetail(it.toUIModel())
         }
     }
 

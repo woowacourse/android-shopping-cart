@@ -6,7 +6,7 @@ import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 import woowacourse.shopping.ui.shopping.recentProductAdapter.viewHolder.RecentProductViewHolder
 
 class RecentProductsAdapter(
-    private var recentProducts: List<RecentProductItem>,
+    private val recentProducts: MutableList<RecentProductItem>,
     private val onClickListener: RecentProductsListener
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
 
@@ -27,6 +27,8 @@ class RecentProductsAdapter(
     }
 
     fun submitList(data: List<RecentProductItem>) {
-        recentProducts = data
+        recentProducts.clear()
+        recentProducts.addAll(data)
+        notifyItemRangeChanged(0, data.size)
     }
 }
