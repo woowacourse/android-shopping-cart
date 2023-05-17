@@ -14,5 +14,4 @@ interface CartRepository {
     fun updateCount(id: Int, count: Int): Int
     fun updateChecked(id: Int, checked: Boolean)
     fun getAll(): CartProducts
-    fun updateAllChecked(index: Int, size: Int, checked: Boolean)
 }

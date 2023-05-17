@@ -29,7 +29,6 @@ class CartPresenter(
 
     private fun setUpAllItemCheck() {
         view.setAllItemCheck(currentPage.all { it.checked })
-        (currentPage.count { it.checked } == currentPage.size)
     }
 
     override fun moveToPageNext() {
@@ -82,7 +81,7 @@ class CartPresenter(
     }
 
     override fun updateAllItemCheck(checked: Boolean) {
-        cartRepository.updateAllChecked(index, STEP, checked)
+        cartRepository.updateChecked(productId, checked)
         setUpCarts()
     }
 

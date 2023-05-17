@@ -23,12 +23,6 @@ class CartDatabase(context: Context) : CartRepository {
         return CartProducts(cartProducts)
     }
 
-    override fun updateAllChecked(index: Int, size: Int, checked: Boolean) {
-        cartProducts.subList(index * size, size).forEach {
-            updateChecked(it.id, checked)
-        }
-    }
-
     @SuppressLint("Range")
     private fun getCartProduct(cursor: Cursor): CartProduct {
         CartConstant.fromCursor(cursor).let {
