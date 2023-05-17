@@ -2,8 +2,6 @@ package woowacourse.shopping.feature.cart
 
 import com.example.domain.CartProduct
 import com.example.domain.repository.CartRepository
-import woowacourse.shopping.list.item.CartProductListItem
-import woowacourse.shopping.list.item.ListItem
 import woowacourse.shopping.model.CartProductState
 import woowacourse.shopping.model.mapper.toDomain
 import woowacourse.shopping.model.mapper.toUi
@@ -58,14 +56,10 @@ class CartPresenter(
         loadCart()
     }
 
-    override fun deleteCartProduct(item: ListItem) {
-        when (item) {
-            is CartProductListItem -> {
-                cartRepository.deleteCartProduct(item.toDomain())
-                cartProducts = cartRepository.getAll()
-                loadCart()
-            }
-        }
+    override fun deleteCartProduct(cartProductState: CartProductState) {
+        cartRepository.deleteCartProduct(cartProductState.toDomain())
+        cartProducts = cartRepository.getAll()
+        loadCart()
     }
 
     private fun getMaxPageNumber(cartsSize: Int): Int {

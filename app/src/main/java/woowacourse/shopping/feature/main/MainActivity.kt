@@ -20,10 +20,8 @@ import woowacourse.shopping.list.adapter.LoadMoreAdapter
 import woowacourse.shopping.list.adapter.ProductListAdapter
 import woowacourse.shopping.list.adapter.RecentProductListAdapter
 import woowacourse.shopping.list.adapter.RecentProductListWrapperAdapter
-import woowacourse.shopping.list.item.ProductListItem
 import woowacourse.shopping.model.ProductState
 import woowacourse.shopping.model.RecentProductState
-import woowacourse.shopping.model.mapper.toItem
 import woowacourse.shopping.model.mapper.toUi
 import woowacourse.shopping.util.SpanSizeLookUpManager
 import woowacourse.shopping.util.extension.showToast
@@ -85,20 +83,20 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         return true
     }
 
-    override fun addProductItems(products: List<ProductListItem>) {
+    override fun addProductItems(products: List<ProductState>) {
         productListAdapter.addItems(products)
     }
 
     override fun addRecentProductItems(recentProducts: List<RecentProductState>) {
-        recentProductListAdapter.addItems(recentProducts.map(RecentProductState::toItem))
+        recentProductListAdapter.addItems(recentProducts)
     }
 
     override fun setProducts(products: List<Product>) {
-        productListAdapter.setItems(products.map { it.toUi().toItem() })
+        productListAdapter.setItems(products.map(Product::toUi))
     }
 
     override fun setRecentProducts(recentProducts: List<RecentProduct>) {
-        recentProductListAdapter.setItems(recentProducts.map { it.toUi().toItem() })
+        recentProductListAdapter.setItems(recentProducts.map(RecentProduct::toUi))
     }
 
     override fun showProductDetail(productState: ProductState) {

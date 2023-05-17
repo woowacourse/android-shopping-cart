@@ -4,31 +4,30 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.list.item.ListItem
 import woowacourse.shopping.list.viewholder.CartProductViewHolder
-import woowacourse.shopping.list.viewholder.ItemHolder
+import woowacourse.shopping.model.CartProductState
 
 class CartProductListAdapter(
-    private var items: List<ListItem> = listOf(),
-    private val onXClick: (ListItem) -> Unit
-) : RecyclerView.Adapter<ItemHolder>() {
+    private var cartProductStates: List<CartProductState> = listOf(),
+    private val onXClick: (CartProductState) -> Unit
+) : RecyclerView.Adapter<CartProductViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartProductBinding.inflate(inflater, parent, false)
         return CartProductViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return cartProductStates.size
     }
 
-    override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        holder.bind(items[position], onXClick)
+    override fun onBindViewHolder(holder: CartProductViewHolder, position: Int) {
+        holder.bind(cartProductStates[position], onXClick)
     }
 
-    fun setItems(items: List<ListItem>) {
-        this.items = items.toList()
+    fun setItems(cartProducts: List<CartProductState>) {
+        this.cartProductStates = cartProducts.toList()
         notifyDataSetChanged()
     }
 }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.cart
 
-import woowacourse.shopping.list.item.ListItem
 import woowacourse.shopping.model.CartProductState
 
 interface CartContract {
@@ -16,6 +15,6 @@ interface CartContract {
         fun loadCart()
         fun plusPageNumber()
         fun minusPageNumber()
-        fun deleteCartProduct(item: ListItem)
+        fun deleteCartProduct(cartProductState: CartProductState)
     }
 }

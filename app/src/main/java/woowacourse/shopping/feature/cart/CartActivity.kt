@@ -11,7 +11,6 @@ import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.list.adapter.CartProductListAdapter
 import woowacourse.shopping.model.CartProductState
-import woowacourse.shopping.model.mapper.toItem
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private var _binding: ActivityCartBinding? = null
@@ -39,7 +38,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartProducts(cartProducts: List<CartProductState>) {
-        adapter.setItems(cartProducts.map(CartProductState::toItem))
+        adapter.setItems(cartProducts)
     }
 
     override fun setCartPageNumber(number: Int) {

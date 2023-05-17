@@ -1,16 +1,16 @@
 package woowacourse.shopping.list.viewholder
 
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemMoreBinding
 
 class LoadMoreViewHolder(
-    val binding: ViewDataBinding,
+    binding: ViewDataBinding,
     val onClick: () -> Unit
-) : ItemHolder(binding) {
+) : RecyclerView.ViewHolder(binding.root) {
+    val binding = binding as ItemMoreBinding
 
-    override fun bind() {
-        binding as ItemMoreBinding
-
+    fun bind() {
         binding.moreTv.setOnClickListener { onClick() }
     }
 }

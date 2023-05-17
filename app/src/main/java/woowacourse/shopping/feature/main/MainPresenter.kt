@@ -4,10 +4,8 @@ import com.example.domain.Product
 import com.example.domain.RecentProduct
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
-import woowacourse.shopping.list.item.ListItem
-import woowacourse.shopping.list.item.ProductListItem
+import woowacourse.shopping.model.ProductState
 import woowacourse.shopping.model.mapper.toDomain
-import woowacourse.shopping.model.mapper.toItem
 import woowacourse.shopping.model.mapper.toRecentProduct
 import woowacourse.shopping.model.mapper.toUi
 import java.time.LocalDateTime
@@ -49,18 +47,14 @@ class MainPresenter(
         view.setRecentProducts(recentProducts)
     }
 
-    override fun showProductDetail(listItem: ListItem) {
-        when (listItem) {
-            is ProductListItem -> {
-                addRecentProduct(listItem.toUi().toDomain())
-                view.showProductDetail(listItem.toUi())
-            }
-        }
+    override fun showProductDetail(productState: ProductState) {
+        addRecentProduct(productState.toDomain())
+        view.showProductDetail(productState)
     }
 
-    private fun getAddProductsUnit(): List<ProductListItem> {
+    private fun getAddProductsUnit(): List<ProductState> {
         val productsUnit: List<Product> = products.subList(loadItemFromIndex, loadItemToIndex)
-        return productsUnit.map { it.toUi().toItem() }
+        return productsUnit.map(Product::toUi)
     }
 
     private fun storeRecentProduct(recentProduct: RecentProduct) {

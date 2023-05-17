@@ -5,40 +5,39 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.list.ViewType
-import woowacourse.shopping.list.item.ListItem
-import woowacourse.shopping.list.viewholder.ItemHolder
 import woowacourse.shopping.list.viewholder.ProductViewHolder
+import woowacourse.shopping.model.ProductState
 
 class ProductListAdapter(
-    private var items: List<ListItem> = listOf(),
-    private val onItemClick: (ListItem) -> Unit
-) : RecyclerView.Adapter<ItemHolder>() {
+    private var productStates: List<ProductState> = listOf(),
+    private val onItemClick: (ProductState) -> Unit
+) : RecyclerView.Adapter<ProductViewHolder>() {
 
     override fun getItemCount(): Int {
-        return items.size
+        return productStates.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemProductBinding.inflate(inflater, parent, false)
         return ProductViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ItemHolder, position: Int) {
-        holder.bind(items[position], onItemClick)
+    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+        holder.bind(productStates[position], onItemClick)
     }
 
     override fun getItemViewType(position: Int): Int = ViewType.PRODUCT.ordinal
 
-    fun addItems(newItems: List<ListItem>) {
-        val items = this.items.toMutableList()
+    fun addItems(newItems: List<ProductState>) {
+        val items = this.productStates.toMutableList()
         items.addAll(newItems)
-        this.items = items.toList()
+        this.productStates = items.toList()
         notifyItemRangeInserted(items.size, newItems.size)
     }
 
-    fun setItems(items: List<ListItem>) {
-        this.items = items.toList()
+    fun setItems(items: List<ProductState>) {
+        this.productStates = items.toList()
         notifyDataSetChanged()
     }
 }

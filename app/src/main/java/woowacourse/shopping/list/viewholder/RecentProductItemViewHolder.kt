@@ -1,17 +1,14 @@
 package woowacourse.shopping.list.viewholder
 
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import woowacourse.shopping.databinding.ItemRecentBinding
-import woowacourse.shopping.list.item.ListItem
-import woowacourse.shopping.list.item.RecentProductListItem
-import woowacourse.shopping.model.mapper.toUi
+import woowacourse.shopping.model.RecentProductState
 
-class RecentProductItemViewHolder(binding: ViewBinding) : ItemHolder(binding) {
+class RecentProductItemViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
     val binding = binding as ItemRecentBinding
 
-    override fun bind(listItem: ListItem, onClick: (ListItem) -> Unit) {
-        listItem as RecentProductListItem
-
-        binding.recentProduct = listItem.toUi()
+    fun bind(recentProductState: RecentProductState) {
+        binding.recentProduct = recentProductState
     }
 }
