@@ -59,6 +59,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.buttonProductDetailPutInShoppingCart.setOnClickListener {
             presenter.addProductInCart()
             startActivity(Intent(this, ShoppingCartActivity::class.java))
+            finish()
         }
     }
 
