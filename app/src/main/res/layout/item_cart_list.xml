@@ -29,22 +29,30 @@
             android:background="@drawable/stroke_cart_list_item"
             app:layout_constraintTop_toBottomOf="@id/space1_cart_list">
 
-            <TextView
-                android:id="@+id/tv_cart_list_title"
-                android:layout_width="0dp"
+            <CheckBox
+                android:id="@+id/cb_cart_list_item"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="13dp"
                 android:layout_marginTop="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_cart_list_title"
+                setText="@{cart.product.title}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textColor="@color/product_info_text_color"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                setText="@{cart.product.title}"
+                app:layout_constraintBottom_toBottomOf="@id/cb_cart_list_item"
                 app:layout_constraintEnd_toStartOf="@+id/bt_iv_cart_list_close"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cb_cart_list_item"
+                app:layout_constraintTop_toTopOf="@id/cb_cart_list_item"
                 tools:text="[든든] 동원 스위트콘" />
 
             <Button
@@ -75,15 +83,26 @@
 
             <TextView
                 android:id="@+id/tv_cart_list_price"
+                setPrice="@{cart.product.price}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="18dp"
+                android:paddingBottom="10dp"
                 android:textColor="@color/product_info_text_color"
                 android:textSize="16sp"
-                setPrice="@{cart.product.price}"
                 app:layout_constraintBottom_toBottomOf="@id/iv_cart_list_thumbnail"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_cart_list_thumbnail"
                 tools:text="84,400원" />
+
+            <woowacourse.shopping.presentation.view.custom.CountView
+                android:id="@+id/count_view_cart_list_item"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/iv_cart_list_thumbnail"
+                app:layout_constraintTop_toBottomOf="@id/tv_cart_list_price" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
