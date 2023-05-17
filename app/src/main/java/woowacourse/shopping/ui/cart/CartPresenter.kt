@@ -34,6 +34,12 @@ class CartPresenter(
         refreshPageUIState()
     }
 
+    fun onLoadCartItemsLastPage() {
+        currentPage = maxPage
+        showCartItemsOfCurrentPage()
+        refreshPageUIState()
+    }
+
     override fun onDeleteCartItem(productId: Long) {
         cartRepository.deleteById(productId)
         showCartItemsOfCurrentPage()

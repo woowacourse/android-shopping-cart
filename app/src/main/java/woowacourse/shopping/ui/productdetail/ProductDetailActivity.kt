@@ -72,7 +72,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun moveToCartActivity() {
         finish()
-        CartActivity.startActivity(this)
+        CartActivity.startActivity(this, true)
     }
 
     companion object {

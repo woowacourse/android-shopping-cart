@@ -29,6 +29,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         initCartList()
         initPageUI()
+        loadLastPageIfFromCartItemAdd()
+        restoreCurrentPageIfSavedInstanceStateIsNotNull(savedInstanceState)
+    }
+
+    private fun loadLastPageIfFromCartItemAdd() {
+        if (intent.getBooleanExtra(JUST_ADDED_CART_ITEM, false)) {
+            presenter.onLoadCartItemsLastPage()
+        }
+    }
+
+    private fun restoreCurrentPageIfSavedInstanceStateIsNotNull(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             presenter.restoreCurrentPage(savedInstanceState.getInt(CURRENT_PAGE))
         }
@@ -95,10 +106,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     companion object {
         private const val CURRENT_PAGE = "CURRENT_PAGE"
+        private const val JUST_ADDED_CART_ITEM = "JUST_ADDED_CART_ITEM"
 
-        fun startActivity(context: Context) {
-            Intent(context, CartActivity::class.java).also {
-                context.startActivity(it)
+        fun startActivity(context: Context, justAddedCartItem: Boolean = false) {
+            Intent(context, CartActivity::class.java).apply {
+                putExtra(JUST_ADDED_CART_ITEM, justAddedCartItem)
+            }.run {
+                context.startActivity(this)
             }
         }
     }
