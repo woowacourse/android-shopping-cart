@@ -19,7 +19,7 @@ class ShoppingCartPresenter(
                 pageNumber.value,
             ),
         )
-        view.setShoppingCart(shoppingCart.deepCopy())
+        view.setShoppingCart(shoppingCart)
     }
 
     override fun setPageNumber() {
@@ -53,12 +53,8 @@ class ShoppingCartPresenter(
         val result = shoppingCartRepository.deleteProductInCart(shoppingCart[index].product.id)
         if (result) {
             shoppingCart.removeAt(index)
-            view.setShoppingCart(shoppingCart.deepCopy())
+            view.deleteProduct(index)
         }
-    }
-
-    private fun MutableList<ProductInCart>.deepCopy(): List<ProductInCart> {
-        return this.map { it.copy() }.toList()
     }
 
     companion object {

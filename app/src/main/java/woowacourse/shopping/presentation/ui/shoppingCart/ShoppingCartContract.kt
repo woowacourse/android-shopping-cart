@@ -9,6 +9,7 @@ interface ShoppingCartContract {
         fun setShoppingCart(shoppingCart: List<ProductInCart>)
         fun setPage(pageNumber: Int)
         fun setPageButtonEnable(previous: Boolean, next: Boolean)
+        fun deleteProduct(index: Int)
     }
 
     interface Presenter {

@@ -55,6 +55,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         shoppingCartAdapter.submitList(shoppingCart)
     }
 
+    override fun deleteProduct(index: Int) {
+        shoppingCartAdapter.notifyItemRemoved(index)
+    }
+
     override fun setPage(pageNumber: Int) {
         binding.textShoppingCartPageNumber.text = pageNumber.toString()
     }
