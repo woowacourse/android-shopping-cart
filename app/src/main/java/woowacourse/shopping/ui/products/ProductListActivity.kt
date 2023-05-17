@@ -72,15 +72,18 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             presenter.addRecentlyViewedProduct(it)
             moveToProductDetailActivity(it)
         }
-        presenter.loadProducts(PAGE_SIZE, offset)
-        offset += PAGE_SIZE
+        loadMorePage()
     }
 
     private fun initLoadingButton() {
         binding.btnLoading.setOnClickListener {
-            presenter.loadProducts(PAGE_SIZE, offset)
-            offset += PAGE_SIZE
+            loadMorePage()
         }
+    }
+
+    private fun loadMorePage() {
+        presenter.loadProducts(PAGE_SIZE, offset)
+        offset += PAGE_SIZE
     }
 
     override fun setRecentlyViewedProducts(recentlyViewedProducts: List<RecentlyViewedProductUIState>) {
