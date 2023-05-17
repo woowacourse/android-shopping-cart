@@ -48,10 +48,10 @@
             - [ ] view.updateCartAmount(amount)
         - [ ] updateCartProductCheckedInPage(List<CartProductModel>)
             - [ ] if(!isChecked) updateCartProduct(cartProduct)
-- [ ] SQLite
-    - [ ] Cart
-        - [ ] amount(Int)
-        - [ ] is_checked(Int : 0 or 1)
+- [x] SQLite
+    - [x] Cart
+        - [x] amount(Int)
+        - [x] is_checked(Int : 0 or 1)
 - [ ] Domain
     - [ ] CartProduct
         - [ ] Amount
