@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.domain.model.CartRepository
 import com.domain.model.Product
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_ID
@@ -21,7 +20,6 @@ class CartDatabase(
         val cartProducts = mutableListOf<Product>()
         getCartCursor().use {
             while (it.moveToNext()) {
-                Log.d("cart", getCartProduct(it).toString())
                 cartProducts.add(getCartProduct(it))
             }
         }
