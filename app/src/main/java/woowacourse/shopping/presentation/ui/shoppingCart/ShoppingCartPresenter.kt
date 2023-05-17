@@ -58,7 +58,7 @@ class ShoppingCartPresenter(
     }
 
     private fun MutableList<ProductInCart>.deepCopy(): List<ProductInCart> {
-        return this.map { it.copy() }
+        return this.map { it.copy() }.toList()
     }
 
     companion object {
