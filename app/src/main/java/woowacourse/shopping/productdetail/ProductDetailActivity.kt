@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.common.utils.getSerializable
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.datasource.dao.CartDao
@@ -29,12 +28,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         validateExtras()
         initBinding()
         initToolbar()
-        setUpProductDetailCartButton()
+        initProductDetailCartButton()
         initPresenter()
     }
 
-    override fun updateProductDetail(productModel: ProductModel) {
-        binding.product = productModel
+    override fun initRecentProduct(recentProduct: ProductModel?) {
+        binding.recentProduct = recentProduct
+    }
+
+    override fun updateProductDetail(product: ProductModel) {
+        binding.product = product
     }
 
     override fun showCart() {
@@ -54,7 +57,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun validateExtras() {
-        intent.extras?.containsKey(EXTRA_KEY_PRODUCT) ?: return finish()
+        intent.extras?.containsKey(PRODUCT_EXTRA_NAME) ?: return finish()
     }
 
     private fun initBinding() {
@@ -68,10 +71,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initPresenter() {
-        val product = intent.getSerializable<ProductModel>(EXTRA_KEY_PRODUCT) ?: return
+        val product = intent.getSerializable<ProductModel>(PRODUCT_EXTRA_NAME) ?: return
+        val recentProduct =
+            intent.getSerializable<ProductModel>(RECENT_PRODUCT_EXTRA_NAME) ?: return
         presenter = ProductDetailPresenter(
             this,
-            product = product.toDomainModel(),
+            product = product,
+            recentProduct = recentProduct,
             cartRepository = CartRepository(CartDao(shoppingDBOpenHelper.writableDatabase))
         )
     }
@@ -81,17 +87,24 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         startActivity(intent)
     }
 
-    private fun setUpProductDetailCartButton() {
+    private fun initProductDetailCartButton() {
         binding.productDetailCartButton.setOnClickListener {
             presenter.addToCart()
         }
     }
 
     companion object {
-        private const val EXTRA_KEY_PRODUCT = "product"
-        fun createIntent(context: Context, productModel: ProductModel): Intent {
+        private const val PRODUCT_EXTRA_NAME = "product"
+        private const val RECENT_PRODUCT_EXTRA_NAME = "recentProduct"
+
+        fun createIntent(
+            context: Context,
+            product: ProductModel,
+            recentProduct: ProductModel?
+        ): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
-            intent.putExtra(EXTRA_KEY_PRODUCT, productModel)
+            intent.putExtra(PRODUCT_EXTRA_NAME, product)
+            intent.putExtra(RECENT_PRODUCT_EXTRA_NAME, recentProduct)
             return intent
         }
     }

@@ -69,21 +69,21 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter.reloadProducts()
     }
 
-    override fun updateProducts(cartProductModels: List<CartProductModel>) {
-        productAdapter.updateProducts(cartProductModels)
+    override fun updateProducts(cartProducts: List<CartProductModel>) {
+        productAdapter.updateProducts(cartProducts)
     }
 
-    override fun addProducts(cartProductModels: List<CartProductModel>) {
-        productAdapter.addProducts(cartProductModels)
+    override fun addProducts(cartProducts: List<CartProductModel>) {
+        productAdapter.addProducts(cartProducts)
     }
 
-    override fun updateRecentProducts(recentProductModels: List<RecentProductModel>) {
-        recentProductAdapter.updateRecentProducts(recentProductModels)
+    override fun updateRecentProducts(recentProducts: List<RecentProductModel>) {
+        recentProductAdapter.updateRecentProducts(recentProducts)
         recentProductWrapperAdapter.updateRecentProduct()
     }
 
-    override fun showProductDetail(cartProductModel: CartProductModel) {
-        startProductDetailActivity(cartProductModel.product)
+    override fun showProductDetail(cartProduct: CartProductModel, recentProduct: ProductModel?) {
+        startProductDetailActivity(cartProduct.product, recentProduct)
     }
 
     override fun showCart() {
@@ -149,8 +149,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         }
     }
 
-    private fun startProductDetailActivity(productModel: ProductModel) {
-        val intent = ProductDetailActivity.createIntent(this, productModel)
+    private fun startProductDetailActivity(product: ProductModel, recentProduct: ProductModel?) {
+        val intent = ProductDetailActivity.createIntent(this, product, recentProduct)
         startActivity(intent)
     }
 }

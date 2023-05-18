@@ -8,8 +8,8 @@ interface ProductDetailContract {
     }
 
     interface View {
-        fun updateProductDetail(productModel: ProductModel)
-
+        fun initRecentProduct(recentProduct: ProductModel?)
+        fun updateProductDetail(product: ProductModel)
         fun showCart()
     }
 }
