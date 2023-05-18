@@ -64,7 +64,7 @@ object CartConstant : BaseColumns {
     }
 
     fun getGetAllQuery(): String {
-        return "SELECT * FROM $TABLE_NAME ORDER BY $TABLE_COLUMN_ID"
+        return "SELECT * FROM $TABLE_NAME ORDER BY $TABLE_COLUMN_SAVE_TIME"
     }
 
     fun fromCursor(cursor: Cursor): CartProduct {
