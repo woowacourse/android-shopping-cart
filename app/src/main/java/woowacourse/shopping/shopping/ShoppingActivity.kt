@@ -1,5 +1,6 @@
 package woowacourse.shopping.shopping
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -33,7 +34,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
             emptyList(),
-            onProductItemClick = { presenter.openProduct(it) },
+            onProductItemClick = { presenter.showProductDetail(it) },
             onMinusClick = { presenter.minusCartProduct(it) },
             onPlusClick = { presenter.plusCartProduct(it) },
             onCartAddClick = { presenter.plusCartProduct(it) }
@@ -83,7 +84,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun showProductDetail(cartProduct: CartProductModel, recentProduct: ProductModel?) {
-        startProductDetailActivity(cartProduct.product, recentProduct)
+        val intent = ProductDetailActivity.createIntent(this, cartProduct.product, recentProduct)
+        intent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY
+        startActivity(intent)
     }
 
     override fun showCart() {
@@ -147,10 +150,5 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 }
             }
         }
-    }
-
-    private fun startProductDetailActivity(product: ProductModel, recentProduct: ProductModel?) {
-        val intent = ProductDetailActivity.createIntent(this, product, recentProduct)
-        startActivity(intent)
     }
 }

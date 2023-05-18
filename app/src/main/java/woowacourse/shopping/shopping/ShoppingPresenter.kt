@@ -32,7 +32,7 @@ class ShoppingPresenter(
         updateRecentProducts()
     }
 
-    override fun openProduct(cartProduct: CartProductModel) {
+    override fun showProductDetail(cartProduct: CartProductModel) {
         val recentProducts = recentProductRepository.selectAll()
         val recentProduct = recentProducts.makeRecentProduct(cartProduct.product.toDomainModel())
 

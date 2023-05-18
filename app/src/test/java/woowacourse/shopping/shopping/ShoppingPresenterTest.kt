@@ -79,16 +79,16 @@ class ShoppingPresenterTest {
 
         every {
             recentProductRepository.insertRecentProduct(any())
-            view.showProductDetail(any())
+            view.showProductDetail(any(), any())
         } just runs
 
         // when
-        presenter.openProduct(cartProductModel)
+        presenter.showProductDetail(cartProductModel)
 
         // then
         verify {
             recentProductRepository.insertRecentProduct(any())
-            view.showProductDetail(cartProductModel)
+            view.showProductDetail(cartProductModel, any())
         }
     }
 
