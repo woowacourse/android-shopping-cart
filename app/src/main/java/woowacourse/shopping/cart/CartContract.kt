@@ -12,6 +12,7 @@ interface CartContract {
         fun minusCartProduct(cartProduct: CartProductModel)
         fun plusCartProduct(cartProduct: CartProductModel)
         fun checkCartProduct(checkableCartProduct: CheckableCartProductModel, isChecked: Boolean)
+        fun checkWholeCartProduct(isChecked: Boolean)
     }
 
     interface View {
@@ -19,5 +20,6 @@ interface CartContract {
         fun updateNavigator(pageNavigatorModel: PageNavigatorModel)
         fun updateTotalPrice(price: Int)
         fun updateOrderText(countOfCartProducts: Int)
+        fun updateTotalCheck(isTotalChecked: Boolean)
     }
 }

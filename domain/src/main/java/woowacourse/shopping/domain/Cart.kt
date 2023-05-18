@@ -22,4 +22,8 @@ data class Cart(val products: List<CheckableCartProduct>) {
     fun calculateCheckedProductsPrice(): Int {
         return products.filter { it.checked }.sumOf { it.product.product.price * it.product.amount }
     }
+
+    fun isTotalChecked(): Boolean {
+        return products.all { it.checked }
+    }
 }

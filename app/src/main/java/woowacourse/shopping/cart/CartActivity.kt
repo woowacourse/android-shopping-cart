@@ -29,6 +29,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         initToolbar()
         initCartAdapter()
         initNavigator()
+        initTotalCheckBox()
         initPresenter()
     }
 
@@ -53,6 +54,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun updateOrderText(countOfCartProducts: Int) {
         binding.cartOrderButton.text = getString(R.string.cart_order_text, countOfCartProducts)
+    }
+
+    override fun updateTotalCheck(isTotalChecked: Boolean) {
+        binding.cartTotalCheck.isChecked = isTotalChecked
     }
 
     private fun initBinding() {
@@ -85,6 +90,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
         binding.cartNavigatorNextButton.setOnClickListener {
             presenter.loadNextPage()
+        }
+    }
+
+    private fun initTotalCheckBox() {
+        binding.cartTotalCheck.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed)
+                presenter.checkWholeCartProduct(isChecked)
         }
     }
 

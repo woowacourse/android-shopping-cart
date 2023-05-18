@@ -56,11 +56,18 @@ class CartPresenter(
         updateCartPage()
     }
 
+    override fun checkWholeCartProduct(isChecked: Boolean) {
+        cart.products.forEach {
+            checkCartProduct(it.toViewModel(), isChecked)
+        }
+    }
+
     private fun updateCartPage() {
         updateCart()
         updateNavigator()
         updateTotalPrice()
         updateOrderText()
+        updateTotalCheck()
     }
 
     private fun updateCart() {
@@ -86,6 +93,10 @@ class CartPresenter(
 
     private fun updateOrderText() {
         view.updateOrderText(cart.calculateCheckedProductsCount())
+    }
+
+    private fun updateTotalCheck() {
+        view.updateTotalCheck(cart.isTotalChecked())
     }
 
     private fun getPagedCart(): Cart {
