@@ -49,10 +49,10 @@ class CartDao(
         return cart
     }
 
-    fun insertProduct(product: Product) {
+    fun insertProduct(product: Product, count: Int = 1) {
         val values = ContentValues().apply {
             put(CartTableContract.TABLE_COLUMN_PRODUCT_ID, product.id)
-            put(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT, 1) // 일단 1로 고정
+            put(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT, count) // 일단 1로 고정
             put(CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED, 0) // 처음은 체크 안함
         }
         writableDatabase.insert(CartTableContract.TABLE_NAME, null, values)
@@ -64,7 +64,7 @@ class CartDao(
         writableDatabase.delete(CartTableContract.TABLE_NAME, selection, selectionArgs)
     }
 
-    fun deleteAllCheckedCartProduct(){
+    fun deleteAllCheckedCartProduct() {
         val selection = "${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED} = ?"
         val selectionArgs = arrayOf("1")
         writableDatabase.delete(CartTableContract.TABLE_NAME, selection, selectionArgs)
@@ -72,7 +72,8 @@ class CartDao(
 
     fun updateCartProductCount(product: Product, newCount: Int) {
         val findCartProduct =
-            selectAll().find { it.product.id == product.id } ?: return insertProduct(product)
+            selectAll().find { it.product.id == product.id } ?:
+                return insertProduct(product, newCount)
 
         if (newCount <= 0) return deleteCartProduct(findCartProduct)
 

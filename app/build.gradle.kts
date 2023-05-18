@@ -57,4 +57,6 @@ dependencies {
 
     testImplementation("io.mockk:mockk-android:1.13.5")
     androidTestImplementation("io.mockk:mockk-android:1.13.5")
+
+    implementation("androidx.fragment:fragment-ktx:1.5.7")
 }

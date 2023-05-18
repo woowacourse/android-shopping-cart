@@ -11,14 +11,17 @@ interface DetailContract {
         fun showRecentProductDetailScreen(recentProductUiModel: RecentProductUiModel)
         fun exitDetailScreen()
         fun navigateMainScreen()
+        fun showSelectCartProductCountScreen(product: ProductUiModel)
     }
 
     interface Presenter {
         val product: ProductUiModel
         val recentProduct: RecentProductUiModel?
         fun initScreen()
-        fun addCart()
+        fun updateProductCount(count: Int)
         fun navigateRecentProductDetail()
+        fun handleAddCartClick()
+        fun setProductCountInfo(count: Int)
         fun exit()
     }
 }

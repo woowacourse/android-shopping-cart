@@ -11,12 +11,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.RecentProductRepositoryImpl
-import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
+import woowacourse.shopping.feature.detail.dialog.CounterDialog
 import woowacourse.shopping.feature.main.MainActivity
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentProductUiModel
@@ -47,12 +46,17 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
         presenter.initScreen()
 
         onBackPressedDispatcher.addCallback(this, callback)
+
+        supportFragmentManager.setFragmentResultListener(CounterDialog.CHANGE_COUNTER_APPLY_KEY,this) { _, bundle ->
+            val changeCount = bundle.getInt(CounterDialog.COUNT_KEY, -1)
+            if (changeCount < 0) return@setFragmentResultListener
+            presenter.updateProductCount(changeCount)
+        }
     }
 
     private fun initPresenter(product: ProductUiModel, recentProduct: RecentProductUiModel?) {
         presenter = DetailPresenter(
             this,
-            CartRepositoryImpl(CartDao(this)),
             RecentProductRepositoryImpl(RecentDao(this)),
             product,
             recentProduct
@@ -82,6 +86,11 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
         startActivity(MainActivity.getIntent(this).apply { addFlags(FLAG_ACTIVITY_CLEAR_TOP) })
     }
 
+    override fun showSelectCartProductCountScreen(product: ProductUiModel) {
+        val counterDialog = CounterDialog.newInstance(product)
+        counterDialog.show(supportFragmentManager, COUNTER_DIALOG_TAG)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.app_bar_cancel_menu, menu)
         return true
@@ -101,6 +110,8 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
     companion object {
         private const val PRODUCT_KEY = "PRODUCT_KEY"
         private const val RECENT_PRODUCT_KEY = "RECENT_PRODUCT_KEY"
+        private const val COUNTER_DIALOG_TAG = "counter_dialog_tag"
+
         fun getIntent(
             context: Context,
             product: ProductUiModel,

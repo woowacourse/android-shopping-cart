@@ -45,6 +45,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.cartItemRecyclerview.itemAnimator = null
     }
 
     private fun initClickListener() {

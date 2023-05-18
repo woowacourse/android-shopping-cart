@@ -1,16 +1,13 @@
 package woowacourse.shopping.feature.detail
 
-import com.example.domain.repository.CartRepository
 import com.example.domain.repository.RecentProductRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentProductUiModel
-import woowacourse.shopping.util.convertToMoneyFormat
 import java.time.LocalDateTime
 
 class DetailPresenter(
     val view: DetailContract.View,
-    private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
     product: ProductUiModel,
     recentProductUiModel: RecentProductUiModel?
@@ -39,9 +36,12 @@ class DetailPresenter(
         }
     }
 
-    override fun addCart() {
-        cartRepository.addProduct(product.toDomain())
-        view.showCartScreen()
+    override fun updateProductCount(count: Int) {
+        product.count = count
+    }
+
+    override fun handleAddCartClick() {
+        view.showSelectCartProductCountScreen(product)
     }
 
     override fun navigateRecentProductDetail() {
@@ -51,6 +51,10 @@ class DetailPresenter(
             )
             view.showRecentProductDetailScreen(it)
         }
+    }
+
+    override fun setProductCountInfo(count: Int) {
+        product = product.copy(count = count)
     }
 
     override fun exit() {
