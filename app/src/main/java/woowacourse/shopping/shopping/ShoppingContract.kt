@@ -10,11 +10,7 @@ interface ShoppingContract {
 
         fun setUpShoppingView(
             products: List<ProductUiModel>,
-            recentViewedProducts: List<RecentViewedProductUiModel>,
-            readMoreShoppingProducts: () -> Unit,
-            onProductCountPlus: (product: ProductUiModel) -> Unit,
-            onProductCountMinus: (product: ProductUiModel) -> Unit,
-            onProductAddedToShoppingCart: (product: ProductUiModel) -> Unit
+            recentViewedProducts: List<RecentViewedProductUiModel>
         )
 
         fun refreshRecentViewedProductsView(

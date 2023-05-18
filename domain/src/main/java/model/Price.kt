@@ -4,7 +4,7 @@ package model
 value class Price(val value: Int) {
 
     init {
-        require(value > 0) {
+        require(value >= 0) {
             PRICE_AMOUNT_ERROR
         }
     }
@@ -15,6 +15,6 @@ value class Price(val value: Int) {
     }
 
     companion object {
-        private const val PRICE_AMOUNT_ERROR = "가격은 0원보다 커야합니다."
+        private const val PRICE_AMOUNT_ERROR = "가격은 음수 일 수 없습니다."
     }
 }

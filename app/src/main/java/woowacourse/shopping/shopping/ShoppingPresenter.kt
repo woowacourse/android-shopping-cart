@@ -26,10 +26,6 @@ class ShoppingPresenter(
         view.setUpShoppingView(
             products = products,
             recentViewedProducts = recentViewedProducts,
-            readMoreShoppingProducts = ::readMoreShoppingProducts,
-            onProductCountPlus = ::plusShoppingCartProductCount,
-            onProductCountMinus = ::minusShoppingCartProductCount,
-            onProductAddedToShoppingCart = ::addProductToShoppingCart
         )
         view.refreshProductCount(
             count = repository.getCountOfShoppingCartProducts()
@@ -56,6 +52,13 @@ class ShoppingPresenter(
         val shoppingCartProduct = repository.selectShoppingCartProductById(product.id)
             .minusCount()
 
+        if (shoppingCartProduct.count.value == 0) {
+            repository.deleteFromShoppingCart(shoppingCartProduct.product.id)
+
+            return view.refreshProductCount(
+                count = repository.getCountOfShoppingCartProducts()
+            )
+        }
         repository.insertToShoppingCart(
             id = product.id,
             count = shoppingCartProduct.count.value

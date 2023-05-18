@@ -9,5 +9,9 @@ sealed interface ShoppingRecyclerItem {
 
     data class ShoppingProduct(val value: ProductUiModel) : ShoppingRecyclerItem
 
-    data class ReadMoreDescription(val value: String) : ShoppingRecyclerItem
+    data class ReadMoreDescription(val value: String = DEFAULT_DESCRIPTION) : ShoppingRecyclerItem
+
+    companion object {
+        private const val DEFAULT_DESCRIPTION = "더 보기"
+    }
 }

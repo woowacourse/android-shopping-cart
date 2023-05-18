@@ -18,10 +18,7 @@ class ShoppingRecyclerAdapter(
     private var recentViewedProducts: List<RecentViewedProductUiModel>,
     private val onProductClicked: (product: ProductUiModel) -> Unit,
     private val onReadMoreButtonClicked: () -> Unit,
-    private val readMoreButtonDescription: String,
-    private val onProductCountPlus: (product: ProductUiModel) -> Unit,
-    private val onProductCountMinus: (product: ProductUiModel) -> Unit,
-    private val onProductAddedToShoppingCart: (product: ProductUiModel) -> Unit,
+    private val productCountPickerListener: ShoppingProductCountPicker,
 ) : RecyclerView.Adapter<ShoppingRecyclerItemViewHolder<out ShoppingRecyclerItem, out ViewDataBinding>>() {
 
     private val products: MutableList<ProductUiModel> =
@@ -45,24 +42,18 @@ class ShoppingRecyclerAdapter(
         return when (ShoppingRecyclerItemViewType.find(viewType)) {
             RECENT_VIEWED -> RecentViewedViewHolder.from(parent)
 
-            PRODUCT ->
-                ShoppingProductViewHolder
-                    .from(parent)
-                    .apply {
-                        setOnClicked(
-                            onProductImageClicked = onProductClicked,
-                            onPlusButtonClicked = onProductCountPlus,
-                            onMinusButtonClicked = onProductCountMinus,
-                            onAddToCartImageClicked = onProductAddedToShoppingCart
-                        )
-                    }
+            PRODUCT -> ShoppingProductViewHolder.from(parent)
+                .apply {
+                    setOnClicked(
+                        onProductImageClicked = onProductClicked,
+                        productCountPickerListener = productCountPickerListener
+                    )
+                }
 
-            READ_MORE ->
-                ReadMoreViewHolder
-                    .from(parent)
-                    .apply {
-                        setOnClicked(onClicked = onReadMoreButtonClicked)
-                    }
+            READ_MORE -> ReadMoreViewHolder.from(parent)
+                .apply {
+                    setOnClicked(onClicked = onReadMoreButtonClicked)
+                }
         }
     }
 
@@ -80,7 +71,7 @@ class ShoppingRecyclerAdapter(
             )
 
             is ReadMoreViewHolder -> holder.bind(
-                itemData = ReadMoreDescription(readMoreButtonDescription)
+                itemData = ReadMoreDescription()
             )
         }
     }

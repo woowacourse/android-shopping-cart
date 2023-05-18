@@ -4,7 +4,7 @@ package model
 value class Count(val value: Int = 1) {
 
     init {
-        require(value > MINIMUM_COUNT) {
+        require(value >= MINIMUM_COUNT) {
             MINIMUM_COUNT_ERROR
         }
     }
@@ -12,7 +12,7 @@ value class Count(val value: Int = 1) {
     fun plus() = Count(value + 1)
 
     fun minus(): Count {
-        if (value == 1) {
+        if (value == 0) {
             return this
         }
         return Count(value - 1)

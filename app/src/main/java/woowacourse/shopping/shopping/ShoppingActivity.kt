@@ -58,20 +58,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun setUpShoppingView(
         products: List<ProductUiModel>,
         recentViewedProducts: List<RecentViewedProductUiModel>,
-        readMoreShoppingProducts: () -> Unit,
-        onProductCountPlus: (product: ProductUiModel) -> Unit,
-        onProductCountMinus: (product: ProductUiModel) -> Unit,
-        onProductAddedToShoppingCart: (product: ProductUiModel) -> Unit,
     ) {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
             onProductClicked = ::navigateToProductDetailView,
-            onReadMoreButtonClicked = readMoreShoppingProducts,
-            readMoreButtonDescription = getString(R.string.read_more),
-            onProductCountPlus = onProductCountPlus,
-            onProductCountMinus = onProductCountMinus,
-            onProductAddedToShoppingCart = onProductAddedToShoppingCart,
+            onReadMoreButtonClicked = presenter::readMoreShoppingProducts,
+            productCountPickerListener = getProductCountPickerListenerImpl()
         )
 
         with(binding) {
@@ -80,6 +73,20 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                     ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
             }
             productRecyclerView.adapter = shoppingRecyclerAdapter
+        }
+    }
+
+    private fun getProductCountPickerListenerImpl() = object : ShoppingProductCountPicker {
+        override fun onPlus(product: ProductUiModel) {
+            presenter.plusShoppingCartProductCount(product)
+        }
+
+        override fun onMinus(product: ProductUiModel) {
+            presenter.minusShoppingCartProductCount(product)
+        }
+
+        override fun onAdded(product: ProductUiModel) {
+            presenter.addProductToShoppingCart(product)
         }
     }
 
