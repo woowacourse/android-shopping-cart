@@ -35,7 +35,7 @@ class ProductListPresenter(
     }
 
     override fun loadRecentProductItems() {
-        recentProducts.addAll(recentProductRepository.getRecentProducts().map { it.toUIModel() })
+        recentProducts.addAll(recentProductRepository.getRecentProducts(LOAD_RECENT_PRODUCT_COUNT).map { it.toUIModel() })
         view.setRecentProductItemsView(recentProducts)
     }
 
@@ -48,7 +48,7 @@ class ProductListPresenter(
 
     override fun updateRecentProductItems() {
         recentProducts.clear()
-        recentProducts.addAll(recentProductRepository.getRecentProducts().map { it.toUIModel() })
+        recentProducts.addAll(recentProductRepository.getRecentProducts(LOAD_RECENT_PRODUCT_COUNT).map { it.toUIModel() })
         view.updateRecentProductItemsView(0, recentProducts.size)
     }
 
@@ -89,6 +89,7 @@ class ProductListPresenter(
     companion object {
         private const val LOAD_PRODUCT_START_POSITION = 0
         private const val LOCAL_DATE_PATTERN = "yyyy-MM-dd"
+        private const val LOAD_RECENT_PRODUCT_COUNT = 10
         private const val LOAD_PRODUCT_COUNT = 20
     }
 }

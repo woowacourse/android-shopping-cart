@@ -25,9 +25,9 @@ class RecentProductDao(context: Context) {
         db.execSQL(sql)
     }
 
-    fun getAll(): List<RecentProductEntity> {
+    fun getAll(limit: Int): List<RecentProductEntity> {
         val result = mutableListOf<RecentProductEntity>()
-        val cursor = getCursor()
+        val cursor = getCursor(limit)
         with(cursor) {
             while (moveToNext()) {
                 val recentProductId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
@@ -41,7 +41,7 @@ class RecentProductDao(context: Context) {
         return result.toList()
     }
 
-    private fun getCursor(): Cursor {
+    private fun getCursor(limit: Int): Cursor {
         return db.query(
             RecentProductContract.RecentProduct.TABLE_NAME,
             null,
@@ -50,7 +50,7 @@ class RecentProductDao(context: Context) {
             null,
             null,
             RecentProductContract.RecentProduct.CREATE_DATE + " DESC",
-            "20"
+            limit.toString()
         )
     }
 }
