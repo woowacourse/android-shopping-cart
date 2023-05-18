@@ -18,6 +18,7 @@ class ShoppingItemViewHolder(
     }
 
     companion object {
+        const val PRODUCT_ITEM_TYPE = 0
 
         fun from(parent: ViewGroup): ShoppingItemViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)

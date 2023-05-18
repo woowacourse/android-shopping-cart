@@ -3,7 +3,10 @@ package woowacourse.shopping.shopping
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.shopping.ReadMoreViewHolder.Companion.READ_MORE_ITEM_TYPE
+import woowacourse.shopping.shopping.ShoppingItemViewHolder.Companion.PRODUCT_ITEM_TYPE
 import woowacourse.shopping.shopping.recentview.RecentViewedLayoutViewHolder
+import woowacourse.shopping.shopping.recentview.RecentViewedLayoutViewHolder.Companion.RECENT_VIEWED_ITEM_TYPE
 
 class ShoppingRecyclerAdapter(
     products: List<ProductUiModel>,
@@ -71,8 +74,5 @@ class ShoppingRecyclerAdapter(
         private const val VIEW_TYPE_ERROR = "해당 타입의 뷰홀더는 생성할 수 없습니다."
         private const val RECENT_VIEWED_ITEM_SIZE = 10
         private const val INITIAL_POSITION = 0
-        const val PRODUCT_ITEM_TYPE = 0
-        const val RECENT_VIEWED_ITEM_TYPE = 1
-        const val READ_MORE_ITEM_TYPE = 2
     }
 }

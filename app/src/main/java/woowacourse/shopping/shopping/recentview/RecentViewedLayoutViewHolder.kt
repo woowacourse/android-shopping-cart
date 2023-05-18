@@ -21,6 +21,7 @@ class RecentViewedLayoutViewHolder(
     companion object {
         private const val INITIAL_POSITION = 0
         private const val RECENT_VIEWED_SIZE = 10
+        const val RECENT_VIEWED_ITEM_TYPE = 1
 
         fun from(parent: ViewGroup): RecentViewedLayoutViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
