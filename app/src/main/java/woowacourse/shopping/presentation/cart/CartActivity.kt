@@ -63,6 +63,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setToolBar()
         initLeftClick()
         initRightClick()
+        initCheckBoxClick()
     }
 
     override fun setPage(count: Int) {
@@ -122,6 +123,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         } else {
             binding.buttonLeftPage.setImageResource(R.drawable.icon_left_page_false)
         }
+    }
+
+    private fun initCheckBoxClick() {
+        binding.checkBoxSelectAll.setOnClickListener {
+            if (binding.checkBoxSelectAll.isChecked) {
+                presenter.selectAllProduct()
+            } else {
+                presenter.unselectAllProduct()
+            }
+        }
+    }
+
+    override fun setCheckBoxChecked(isChecked: Boolean) {
+        binding.checkBoxSelectAll.isChecked = isChecked
     }
 
     companion object {

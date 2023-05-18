@@ -24,6 +24,27 @@ class CartDbAdapter(db: CartDbHelper) : CartRepository {
         }
     }
 
+    override fun getCartEntity(productId: Int): CartEntity {
+        val selection = "${CartDbContract.PRODUCT_ID} = ?"
+        val selectionArgs = arrayOf(productId.toString())
+        val cursor = writableDb.query(
+            CartDbContract.TABLE_NAME,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null,
+        )
+
+        return if (cursor.moveToFirst()) {
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartDbContract.PRODUCT_COUNT))
+            CartEntity(productId, count)
+        } else {
+            CartEntity(productId, 0)
+        }
+    }
+
     private fun getCartProductCount(productId: Int): Int {
         val query =
             "SELECT ${CartDbContract.PRODUCT_COUNT} FROM ${CartDbContract.TABLE_NAME} WHERE ${CartDbContract.PRODUCT_ID} = $productId"
@@ -69,7 +90,7 @@ class CartDbAdapter(db: CartDbHelper) : CartRepository {
         }
     }
 
-    override fun getCartProducts(): List<CartEntity> {
+    override fun getCartEntities(): List<CartEntity> {
         val cartEntities = mutableListOf<CartEntity>()
 
         val cursor = writableDb.query(

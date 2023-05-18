@@ -29,7 +29,7 @@ class CartPresenter(
     }
 
     private fun loadCartProducts(): List<CartProduct> {
-        val cartEntities = cartRepository.getCartProducts()
+        val cartEntities = cartRepository.getCartEntities()
         val productItems = cartEntities.map { cart ->
             val cartProduct =
                 productRepository.findProductById(cart.productId) ?: Product.defaultProduct
@@ -84,6 +84,7 @@ class CartPresenter(
     }
 
     private fun setTotal() {
+        view.setCheckBoxChecked(cartPages.isAllProductSelected())
         view.setTotalPrice(cartPages.getSelectedProductsPrice())
         view.setTotalCount(cartPages.getSelectedProductsCount())
     }
@@ -91,13 +92,25 @@ class CartPresenter(
     override fun plusPage() {
         val nextProducts = cartPages.getNextPageProducts()
         updateCart(nextProducts)
-        checkPageAble()
+        updateEvent()
     }
 
     override fun minusPage() {
         val previousProducts = cartPages.getPreviousPageProducts()
         updateCart(previousProducts)
-        checkPageAble()
+        updateEvent()
+    }
+
+    override fun selectAllProduct() {
+        cartPages.selectPageProducts()
+        updateCart(cartPages.getCurrentProducts())
+        setTotal()
+    }
+
+    override fun unselectAllProduct() {
+        cartPages.unselectPageProducts()
+        updateCart(cartPages.getCurrentProducts())
+        setTotal()
     }
 
     private fun updateEvent() {

@@ -33,10 +33,7 @@ class CartPages(
         return getCurrentProducts()
     }
 
-    private fun getCurrentProducts() = cartProducts.getProductsInRange(
-        (pageNumber.value - FIRST_PAGE) * PRODUCT_CART_SIZE,
-        PRODUCT_CART_SIZE,
-    )
+    fun getCurrentProducts() = cartProducts.getProductsInRange(getStartIndex(), PRODUCT_CART_SIZE)
 
     fun isNextPageAble(): Boolean {
         val lastPage = (cartProducts.size - FIRST_PAGE) / PRODUCT_CART_SIZE + FIRST_PAGE
@@ -57,9 +54,22 @@ class CartPages(
         cartProducts.changeSelectedProduct(product)
     }
 
+    fun selectPageProducts() {
+        cartProducts.selectProductsRange(getStartIndex(), PRODUCT_CART_SIZE)
+    }
+
+    fun unselectPageProducts() {
+        cartProducts.unselectProductsRange(getStartIndex(), PRODUCT_CART_SIZE)
+    }
+
+    fun isAllProductSelected(): Boolean =
+        cartProducts.isProductSelectedByRange(getStartIndex(), PRODUCT_CART_SIZE)
+
+    private fun getStartIndex() = (pageNumber.value - FIRST_PAGE) * PRODUCT_CART_SIZE
+
     fun getSelectedProductsPrice() = cartProducts.getSelectedProductsPrice()
 
-    fun getSelectedProductsCount() = cartProducts.getSelectedProductsCount()
+    fun getSelectedProductsCount() = cartProducts.getSelectedProductsTotalCount()
 
     companion object {
         private const val INITIAL_PAGE = 0

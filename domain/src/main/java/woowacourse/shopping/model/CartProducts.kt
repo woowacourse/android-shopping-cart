@@ -5,6 +5,12 @@ class CartProducts(products: List<CartProduct> = listOf()) {
     val items get() = _items.toList()
 
     val size get(): Int = _items.size
+    fun isProductSelectedByRange(startIndex: Int, productSize: Int): Boolean {
+        if (startIndex + productSize > size) {
+            return (startIndex until size).all { _items[it].isSelected }
+        }
+        return (startIndex until startIndex + productSize).all { _items[it].isSelected }
+    }
 
     fun getProductsInRange(startIndex: Int, productSize: Int): CartProducts {
         if (startIndex + productSize > size) {
@@ -54,7 +60,6 @@ class CartProducts(products: List<CartProduct> = listOf()) {
 
     fun changeSelectedProduct(product: Product) {
         val targetIndex = _items.indexOfLast { it.product == product }
-        println("나 왜불림")
         val targetProduct = _items[targetIndex]
         _items[targetIndex] = if (targetProduct.isSelected) {
             targetProduct.unselect()
@@ -63,11 +68,27 @@ class CartProducts(products: List<CartProduct> = listOf()) {
         }
     }
 
+    fun selectProductsRange(startIndex: Int, productSize: Int) {
+        if (startIndex + productSize > size) {
+            (startIndex until size).forEach { _items[it] = _items[it].select() }
+            return
+        }
+        (startIndex until startIndex + productSize).forEach { _items[it] = _items[it].select() }
+    }
+
+    fun unselectProductsRange(startIndex: Int, productSize: Int) {
+        if (startIndex + productSize > size) {
+            (startIndex until size).forEach { _items[it] = _items[it].unselect() }
+            return
+        }
+        (startIndex until startIndex + productSize).forEach { _items[it] = _items[it].unselect() }
+    }
+
     fun getSelectedProductsPrice(): Int {
         return _items.filter { it.isSelected }.sumOf { it.getTotalPrice() }
     }
 
-    fun getSelectedProductsCount(): Int {
+    fun getSelectedProductsTotalCount(): Int {
         return _items.filter { it.isSelected }.sumOf { it.count }
     }
 
