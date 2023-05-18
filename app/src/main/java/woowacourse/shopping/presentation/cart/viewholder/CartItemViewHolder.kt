@@ -7,6 +7,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.presentation.cart.CartListener
 import woowacourse.shopping.presentation.model.CartProductModel
+import woowacourse.shopping.presentation.model.CheckableCartProductModel
 
 class CartItemViewHolder(
     parent: ViewGroup,
@@ -26,7 +27,9 @@ class CartItemViewHolder(
     }
 
     fun bind(cartProductModel: CartProductModel) {
-        binding.checkBoxCart.isChecked = cartProductModel.isSelected
+        val checkableCart =
+            cartProductModel as? CheckableCartProductModel ?: throw TypeCastException()
+        binding.checkBoxCart.isChecked = checkableCart.isChecked
         binding.cartProductModel = cartProductModel
     }
 }

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 class CartDbAdapter(db: CartDbHelper) : CartRepository {
 
     private val writableDb: SQLiteDatabase = db.writableDatabase
-    override fun addCartProduct(productId: Int, count: Int) {
+    override fun insertCartProduct(productId: Int, count: Int) {
         val existingRecordCount = getCartProductCount(productId)
 
         if (existingRecordCount == 0) {
@@ -62,9 +62,14 @@ class CartDbAdapter(db: CartDbHelper) : CartRepository {
         return count
     }
 
-    private fun updateCartProductCount(productId: Int, updatedCount: Int) {
+    override fun updateCartProductCount(productId: Int, count: Int) {
         val values = ContentValues().apply {
-            put(CartDbContract.PRODUCT_COUNT, updatedCount)
+            put(CartDbContract.PRODUCT_COUNT, count)
+        }
+
+        if (count <= 0) {
+            deleteCartProduct(productId)
+            return
         }
 
         val whereClause = "${CartDbContract.PRODUCT_ID} = $productId"
@@ -77,16 +82,6 @@ class CartDbAdapter(db: CartDbHelper) : CartRepository {
             "${CartDbContract.PRODUCT_ID}=?",
             arrayOf(productId.toString()),
         )
-    }
-
-    override fun subProductCount(productId: Int, count: Int) {
-        val currentCount = getCartProductCount(productId)
-        val updatedCount = currentCount - count
-        if (updatedCount >= 1) {
-            updateCartProductCount(productId, updatedCount)
-        } else {
-            deleteCartProduct(productId)
-        }
     }
 
     override fun getCartEntities(): List<CartEntity> {

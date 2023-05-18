@@ -7,8 +7,8 @@ interface CartContract {
     interface Presenter {
         fun loadCart()
         fun deleteProduct(productModel: ProductModel)
-        fun subProductCount(productModel: ProductModel)
-        fun addProductCount(productModel: ProductModel)
+        fun subProductCartCount(cartProductModel: CartProductModel)
+        fun addProductCartCount(cartProductModel: CartProductModel)
         fun changeProductSelected(productModel: ProductModel)
         fun selectAllProduct()
         fun unselectAllProduct()

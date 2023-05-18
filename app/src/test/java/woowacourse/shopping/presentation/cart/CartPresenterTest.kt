@@ -14,6 +14,7 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.presentation.model.CartProductModel
+import woowacourse.shopping.presentation.model.CheckableCartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
 
 class CartPresenterTest {
@@ -54,7 +55,7 @@ class CartPresenterTest {
         assertThat(actualPage).isEqualTo(1)
         assertThat(cartProducts).isEqualTo(
             List(5) {
-                CartProductModel(
+                CheckableCartProductModel(
                     ProductModel(1, "test.com", "햄버거", 10000),
                     1,
                     true,
@@ -85,7 +86,13 @@ class CartPresenterTest {
 
         assertThat(actual).isEqualTo(2)
         assertThat(cartProducts).isEqualTo(
-            List(3) { CartProductModel(ProductModel(1, "test.com", "햄버거", 10000), 1, true) },
+            List(3) {
+                CheckableCartProductModel(
+                    ProductModel(1, "test.com", "햄버거", 10000),
+                    1,
+                    true,
+                )
+            },
         )
     }
 
@@ -112,7 +119,13 @@ class CartPresenterTest {
 
         assertThat(actual).isEqualTo(1)
         assertThat(cartProducts).isEqualTo(
-            List(5) { CartProductModel(ProductModel(1, "test.com", "햄버거", 10000), 1, true) },
+            List(5) {
+                CheckableCartProductModel(
+                    ProductModel(1, "test.com", "햄버거", 10000),
+                    1,
+                    true,
+                )
+            },
         )
     }
 

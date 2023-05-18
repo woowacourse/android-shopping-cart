@@ -60,16 +60,20 @@ class CartPresenter(
         updateEvent()
     }
 
-    override fun addProductCount(productModel: ProductModel) {
-        cartRepository.addCartProduct(productModel.id)
-        val addCountProducts = cartPages.getAddCountProducts(productModel.toDomain())
+    override fun addProductCartCount(cartProductModel: CartProductModel) {
+        val nextCount = cartProductModel.count + CART_UNIT
+        cartRepository.updateCartProductCount(cartProductModel.productModel.id, nextCount)
+        val addCountProducts =
+            cartPages.getAddCountProducts(cartProductModel.productModel.toDomain())
         updateCart(addCountProducts)
         updateEvent()
     }
 
-    override fun subProductCount(productModel: ProductModel) {
-        cartRepository.subProductCount(productModel.id)
-        val subCountProducts = cartPages.getSubCountProducts(productModel.toDomain())
+    override fun subProductCartCount(cartProductModel: CartProductModel) {
+        val nextCount = cartProductModel.count - CART_UNIT
+        cartRepository.updateCartProductCount(cartProductModel.productModel.id, nextCount)
+        val subCountProducts =
+            cartPages.getSubCountProducts(cartProductModel.productModel.toDomain())
         if (subCountProducts.size == 0) {
             minusPage()
             return
@@ -133,5 +137,9 @@ class CartPresenter(
 
     private fun checkLeftPageAble() {
         view.setLeftPageEnable(cartPages.isPreviousPageAble())
+    }
+
+    companion object {
+        private const val CART_UNIT = 1
     }
 }

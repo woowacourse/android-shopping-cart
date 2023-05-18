@@ -13,6 +13,7 @@ import woowacourse.shopping.data.product.MockProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.productlist.ProductListActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -32,12 +33,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private val cartAdapter: CartAdapter by lazy {
         val cartListener = object : CartListener {
-            override fun onAddClick(productModel: ProductModel) {
-                presenter.addProductCount(productModel)
+            override fun onAddClick(cartProductModel: CartProductModel) {
+                presenter.addProductCartCount(cartProductModel)
             }
 
-            override fun onRemoveClick(productModel: ProductModel) {
-                presenter.subProductCount(productModel)
+            override fun onRemoveClick(cartProductModel: CartProductModel) {
+                presenter.subProductCartCount(cartProductModel)
             }
 
             override fun onCloseClick(productModel: ProductModel) {
@@ -79,6 +80,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
+                startActivity(ProductListActivity.getIntent(this))
                 finish()
             }
             else -> return super.onOptionsItemSelected(item)
