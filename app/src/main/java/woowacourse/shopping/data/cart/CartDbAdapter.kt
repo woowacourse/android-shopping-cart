@@ -7,19 +7,19 @@ import android.database.sqlite.SQLiteDatabase
 class CartDbAdapter(db: CartDbHelper) : CartRepository {
 
     private val writableDb: SQLiteDatabase = db.writableDatabase
-    override fun addCartProduct(productId: Int) {
+    override fun addCartProduct(productId: Int, count: Int) {
         val existingRecordCount = getCartProductCount(productId)
 
         if (existingRecordCount == 0) {
             val values = ContentValues().apply {
                 put(CartDbContract.PRODUCT_ID, productId)
                 put(CartDbContract.TIMESTAMP, System.currentTimeMillis())
-                put(CartDbContract.PRODUCT_COUNT, PRODUCT_INIT_COUNT)
+                put(CartDbContract.PRODUCT_COUNT, count)
             }
 
             writableDb.insert(CartDbContract.TABLE_NAME, null, values)
         } else {
-            val updatedCount = existingRecordCount + PRODUCT_INIT_COUNT
+            val updatedCount = existingRecordCount + count
             updateCartProductCount(productId, updatedCount)
         }
     }
@@ -79,13 +79,12 @@ class CartDbAdapter(db: CartDbHelper) : CartRepository {
         )
     }
 
-    override fun subProductCount(productId: Int) {
+    override fun subProductCount(productId: Int, count: Int) {
         val currentCount = getCartProductCount(productId)
-
-        if (currentCount >= 2) {
-            val updatedCount = currentCount - 1
+        val updatedCount = currentCount - count
+        if (updatedCount >= 1) {
             updateCartProductCount(productId, updatedCount)
-        } else if (currentCount == 1) {
+        } else {
             deleteCartProduct(productId)
         }
     }
@@ -123,8 +122,4 @@ class CartDbAdapter(db: CartDbHelper) : CartRepository {
             getInt(getColumnIndexOrThrow(CartDbContract.PRODUCT_ID)),
             getInt(getColumnIndexOrThrow(CartDbContract.PRODUCT_COUNT)),
         )
-
-    companion object {
-        private const val PRODUCT_INIT_COUNT = 1
-    }
 }
