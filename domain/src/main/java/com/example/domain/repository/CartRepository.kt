@@ -5,7 +5,8 @@ import com.example.domain.model.Product
 
 interface CartRepository {
     fun getAll(): List<CartProduct>
-    fun getAllSize(): Int
+    fun getAllCartProductCategorySize(): Int
+    fun getAllCountSize(): Int
     fun addProduct(product: Product)
     fun deleteProduct(cartProduct: CartProduct)
     fun deleteAllCheckedCartProduct()

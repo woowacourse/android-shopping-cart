@@ -25,7 +25,9 @@ class MainPresenter(
         val productUiModels = makeProductUiModels(firstProducts)
         products.clear()
         products.addAll(productUiModels)
+
         view.setProducts(products.toList())
+        updateCartCountBadge()
     }
 
     private fun makeProductUiModels(products: List<Product>): List<ProductUiModel> {
@@ -49,7 +51,9 @@ class MainPresenter(
         val nextProductUiModels = makeProductUiModels(nextProducts)
 
         products.addAll(nextProductUiModels)
+
         view.setProducts(products.toList())
+        updateCartCountBadge()
     }
 
     override fun loadRecent() {
@@ -60,6 +64,10 @@ class MainPresenter(
             addAll(recentProductUiModels)
         }
         view.updateRecent(recentProductUiModels)
+    }
+
+    override fun loadCartCountSize() {
+        updateCartCountBadge()
     }
 
     override fun showProductDetail(productId: Long) {
@@ -82,12 +90,15 @@ class MainPresenter(
         val product = products.find { it.id == productId } ?: return
         product.count = count
         cartRepository.changeCartProductCount(product.toDomain(), count)
+
         view.setProducts(products.toList())
+        updateCartCountBadge()
     }
 
     override fun resetProducts() {
         productRepository.resetCache()
         view.setProducts(listOf())
+        updateCartCountBadge()
     }
 
     private fun addRecentProduct(recentProduct: RecentProductUiModel) {
@@ -103,5 +114,15 @@ class MainPresenter(
                 LocalDateTime.now()
             )
         )
+    }
+
+    private fun updateCartCountBadge() {
+        val allCount = cartRepository.getAllCountSize()
+        if (allCount > 0) {
+            view.showCartCountBadge()
+        } else {
+            view.hideCartCountBadge()
+        }
+        view.updateCartCount(allCount)
     }
 }

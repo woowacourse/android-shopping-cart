@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -34,6 +36,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var recentAdapter: RecentAdapter
     private lateinit var recentWrapperAdapter: RecentWrapperAdapter
     private lateinit var loadAdapter: LoadAdapter
+
+    private var cartCountBadge: TextView? = null
 
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
@@ -126,8 +130,24 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         recentAdapter.setItems(recent)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun showCartCountBadge() {
+        cartCountBadge?.visibility = View.VISIBLE
+    }
+
+    override fun hideCartCountBadge() {
+        cartCountBadge?.visibility = View.GONE
+    }
+
+    override fun updateCartCount(count: Int) {
+        cartCountBadge?.text = "$count"
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.app_bar_menu, menu)
+
+        cartCountBadge =
+            menu.findItem(R.id.cart_count_badge).actionView?.findViewById(R.id.badge)
+        presenter.loadCartCountSize()
         return true
     }
 

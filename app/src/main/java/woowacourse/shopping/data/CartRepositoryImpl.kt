@@ -12,8 +12,12 @@ class CartRepositoryImpl(
         return cartDao.selectAll()
     }
 
-    override fun getAllSize(): Int {
+    override fun getAllCartProductCategorySize(): Int {
         return cartDao.selectAll().size
+    }
+
+    override fun getAllCountSize(): Int {
+        return cartDao.selectAll().sumOf { it.count }
     }
 
     override fun addProduct(product: Product) {

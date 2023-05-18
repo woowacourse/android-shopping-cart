@@ -13,11 +13,15 @@ interface MainContract {
 
         fun setProducts(products: List<ProductUiModel>)
         fun updateRecent(recent: List<RecentProductUiModel>)
+        fun showCartCountBadge()
+        fun hideCartCountBadge()
+        fun updateCartCount(count: Int)
     }
 
     interface Presenter {
         fun loadProducts()
         fun loadRecent()
+        fun loadCartCountSize()
         fun moveToCart()
         fun showProductDetail(productId: Long)
         fun showRecentProductDetail(productId: Long)
