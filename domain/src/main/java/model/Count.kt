@@ -4,7 +4,7 @@ package model
 value class Count(val value: Int = 1) {
 
     init {
-        require(value >= MINIMUM_COUNT) {
+        require(value > MINIMUM_COUNT) {
             MINIMUM_COUNT_ERROR
         }
     }

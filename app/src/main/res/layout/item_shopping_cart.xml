@@ -19,7 +19,6 @@
 
         <CheckBox
             android:id="@+id/check_box_selecting"
-
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginStart="19dp"

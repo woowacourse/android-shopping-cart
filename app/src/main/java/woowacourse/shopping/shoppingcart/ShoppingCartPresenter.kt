@@ -75,17 +75,28 @@ class ShoppingCartPresenter(
 
     override fun minusShoppingCartProductCount(product: ShoppingCartProductUiModel) {
         val indexOfProduct = showingProducts.indexOfFirst { it.id == product.id }
-        val shoppingCartProduct = product.toDomainModel().minusCount()
-        shoppingCartProducts.removeAt(indexOfProduct)
-        shoppingCartProducts.add(indexOfProduct, shoppingCartProduct)
+        // TODO: 구조 완전 이상함
+        runCatching {
+            val shoppingCartProduct = product.toDomainModel().minusCount()
 
-        repository.insertToShoppingCart(
-            id = shoppingCartProduct.product.id,
-            count = shoppingCartProduct.count.value
-        )
-        view.refreshShoppingCartProductView(
-            products = showingProducts
-        )
+            if (shoppingCartProduct.count.value == 0) {
+                repository.deleteFromShoppingCart(shoppingCartProduct.product.id)
+                shoppingCartProducts.removeAt(indexOfProduct)
+            } else {
+                shoppingCartProducts.removeAt(indexOfProduct)
+                shoppingCartProducts.add(indexOfProduct, shoppingCartProduct)
+            }
+
+            repository.insertToShoppingCart(
+                id = shoppingCartProduct.product.id,
+                count = shoppingCartProduct.count.value
+            )
+            view.refreshShoppingCartProductView(
+                products = showingProducts
+            )
+        }.onFailure {
+            return
+        }
     }
 
     override fun calcTotalPrice() {
