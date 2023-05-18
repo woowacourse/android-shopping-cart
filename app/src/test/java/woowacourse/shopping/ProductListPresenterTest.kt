@@ -13,7 +13,6 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
-import woowacourse.shopping.model.toUiModel
 import woowacourse.shopping.view.productlist.ProductListContract
 import woowacourse.shopping.view.productlist.ProductListPresenter
 import woowacourse.shopping.view.productlist.ProductListViewItem

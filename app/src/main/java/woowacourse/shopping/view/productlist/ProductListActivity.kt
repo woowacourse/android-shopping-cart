@@ -2,7 +2,6 @@ package woowacourse.shopping.view.productlist
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -87,7 +86,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
                 override fun onProductUpdateCount(id: Int, count: Int) {
                     presenter.updateCartProductCount(id, count)
                 }
-
             },
         )
     }
@@ -106,7 +104,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     override fun showCartCount(count: Int) {
-        if(count == 0) {
+        if (count == 0) {
             cartCountInAppBar.visibility = View.GONE
             return
         }

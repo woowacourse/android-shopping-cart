@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.cart
 
-import woowacourse.shopping.model.CartPageStatus
+import woowacourse.shopping.domain.CartPageStatus
 import woowacourse.shopping.model.CartProductModel
 
 sealed interface CartViewItem {

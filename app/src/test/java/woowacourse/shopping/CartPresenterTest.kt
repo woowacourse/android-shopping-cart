@@ -8,12 +8,12 @@ import io.mockk.slot
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.domain.CartPageStatus
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.model.CartPageStatus
 import woowacourse.shopping.model.toUiModel
 import woowacourse.shopping.view.cart.CartContract
 import woowacourse.shopping.view.cart.CartPresenter

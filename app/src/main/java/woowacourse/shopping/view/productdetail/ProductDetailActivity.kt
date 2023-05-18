@@ -3,7 +3,6 @@ package woowacourse.shopping.view.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -17,7 +16,6 @@ import woowacourse.shopping.data.RecentViewedDbRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.databinding.DialogCountBinding
 import woowacourse.shopping.model.ProductModel
-import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.util.getParcelableCompat
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.ID

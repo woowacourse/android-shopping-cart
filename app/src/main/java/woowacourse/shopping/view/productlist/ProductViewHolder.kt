@@ -5,11 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentViewedBinding
 import woowacourse.shopping.databinding.ItemShowMoreBinding
-import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.view.productlist.recentviewed.RecentViewedAdapter
 
 sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {

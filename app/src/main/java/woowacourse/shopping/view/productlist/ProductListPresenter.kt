@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.productlist
 
 import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.ProductListPagination
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
@@ -58,7 +59,6 @@ class ProductListPresenter(
     override fun fetchCartCount() {
         view.showCartCount(cartRepository.findAll().size)
     }
-
 
     override fun updateRecentViewed(id: Int) {
         if (id == -1) return
