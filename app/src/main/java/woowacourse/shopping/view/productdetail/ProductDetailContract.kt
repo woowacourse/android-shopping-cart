@@ -12,6 +12,6 @@ interface ProductDetailContract {
     interface Presenter {
         val product: ProductUIModel
         fun saveRecentProduct()
-        fun saveCartProduct()
+        fun showDialog(dialog: CountSelectDialog)
     }
 }

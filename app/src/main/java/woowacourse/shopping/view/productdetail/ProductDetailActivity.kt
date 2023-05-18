@@ -41,7 +41,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         presenter =
             ProductDetailPresenter(
-                view = this,
                 product = product,
                 cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
                 recentProductsRepository = RecentProductRepositoryImpl(RecentProductDao(this))
@@ -58,7 +57,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setAddToCartClick() {
         binding.btnAddToCart.setOnClickListener {
-            presenter.saveCartProduct()
+            val dialog = CountSelectDialog(this, CartProductRepositoryImpl(CartProductDao(this)))
+            presenter.showDialog(dialog)
         }
     }
 
