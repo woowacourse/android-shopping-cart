@@ -1,6 +1,8 @@
 package woowacourse.shopping.presentation.mapper
 
+import woowacourse.shopping.CartProductInfo
 import woowacourse.shopping.Product
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.presentation.model.ProductModel
 
 fun Product.toPresentation(): ProductModel {
@@ -9,5 +11,12 @@ fun Product.toPresentation(): ProductModel {
         imageUrl = imageUrl,
         name = name,
         price = price.value,
+    )
+}
+
+fun CartProductInfo.toPresentation(): CartProductInfoModel {
+    return CartProductInfoModel(
+        productModel = product.toPresentation(),
+        count = count,
     )
 }

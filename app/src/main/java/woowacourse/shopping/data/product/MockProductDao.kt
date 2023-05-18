@@ -2,9 +2,8 @@ package woowacourse.shopping.data.product
 
 import woowacourse.shopping.Price
 import woowacourse.shopping.Product
-import woowacourse.shopping.repository.ProductRepository
 
-object MockProductDao : ProductRepository {
+object MockProductDao : ProductRemoteDataSource {
 
     override val products: List<Product> = getProducts(100)
 
@@ -19,7 +18,8 @@ object MockProductDao : ProductRepository {
         }
     }
 
-    override fun findProductById(id: Int): Product? = products.find { it.id == id }
+    override fun findProductById(id: Int): Product =
+        products.find { it.id == id } ?: Product.defaultProduct
 
     override fun getProductsWithRange(startIndex: Int, size: Int): List<Product> {
         if (startIndex >= products.size) return listOf()

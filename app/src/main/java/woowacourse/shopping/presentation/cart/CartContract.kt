@@ -1,11 +1,11 @@
 package woowacourse.shopping.presentation.cart
 
-import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 
 interface CartContract {
     interface Presenter {
         fun updateCart()
-        fun deleteProduct(productModel: ProductModel)
+        fun deleteProduct(cartProductInfoModel: CartProductInfoModel)
         fun plusPage()
         fun minusPage()
         fun updatePlusButtonState()
@@ -13,7 +13,7 @@ interface CartContract {
     }
 
     interface View {
-        fun setCartItems(productModels: List<ProductModel>)
+        fun setCartItems(productModels: List<CartProductInfoModel>)
         fun setPage(count: Int)
         fun setUpPlusPageButtonState(isEnable: Boolean)
         fun setUpMinusPageButtonState(isEnable: Boolean)

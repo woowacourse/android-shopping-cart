@@ -12,6 +12,7 @@ class CartDbHelper(
         db?.execSQL(
             "CREATE TABLE ${CartDbContract.TABLE_NAME}(" +
                 "${CartDbContract.PRODUCT_ID} int," +
+                "${CartDbContract.COUNT} int," +
                 "${CartDbContract.TIMESTAMP} int" +
                 ");",
         )
