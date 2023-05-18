@@ -38,7 +38,8 @@ class ProductDatabase(context: Context) : ProductRepository {
         }
     }
 
-    override fun insert(product: Product) {
+    override fun insert(product: Product): Int {
         db.execSQL(ProductConstant.getInsertQuery(product))
+        return product.id
     }
 }
