@@ -12,7 +12,8 @@ class ProductCountView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
-    private val binding = LayoutProductCountViewBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding =
+        LayoutProductCountViewBinding.inflate(LayoutInflater.from(context), this, true)
 
     private val defaultClickListener = object : CountView.OnCountStateChangeListener {
         override fun onCountChanged(countView: CountView?, count: Int) {
@@ -53,6 +54,11 @@ class ProductCountView @JvmOverloads constructor(
             binding.fabProductCount.visibility = View.GONE
             binding.countViewProductCount.visibility = View.VISIBLE
         }
+    }
+
+    fun setCount(count: Int) {
+        binding.countViewProductCount.updateCount(count)
+        updateCountViewVisibility(count)
     }
 
     companion object {

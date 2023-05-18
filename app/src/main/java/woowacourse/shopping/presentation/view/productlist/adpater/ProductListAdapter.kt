@@ -7,17 +7,18 @@ import woowacourse.shopping.presentation.view.productlist.viewholder.ProductList
 
 class ProductListAdapter(
     private val products: List<ProductModel>,
-    private val onButtonClick: (ProductModel) -> Unit
+    private val onCountClick: (Long, Int) -> Unit,
+    private val onItemClick: (ProductModel) -> Unit
 ) : RecyclerView.Adapter<ProductListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
         return ProductListViewHolder(parent) {
-            onButtonClick(products[it])
+            onItemClick(products[it])
         }
     }
 
     override fun onBindViewHolder(holder: ProductListViewHolder, position: Int) {
-        holder.bind(products[position])
+        holder.bind(products[position], onCountClick)
     }
 
     override fun getItemCount(): Int = products.size

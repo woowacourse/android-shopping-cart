@@ -2,11 +2,11 @@ package woowacourse.shopping.presentation.view.custom
 
 class CountPresenter(private val view: CountContract.View) : CountContract.Presenter {
     private var count = MIN_COUNT
-    var minCountValue: Int = MIN_COUNT
+    private var minCountValue: Int = MIN_COUNT
         set(value) {
             field = value.coerceAtLeast(MIN_COUNT)
         }
-    var maxCountValue: Int = MAX_COUNT
+    private var maxCountValue: Int = MAX_COUNT
         set(value) {
             field = value.coerceAtMost(MAX_COUNT)
         }

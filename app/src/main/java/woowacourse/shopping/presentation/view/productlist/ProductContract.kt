@@ -16,11 +16,13 @@ interface ProductContract {
         fun initRecentProductItems()
         fun loadProductItems()
         fun loadRecentProductItems()
+        fun loadCartItems()
         fun updateRecentProductItems()
         fun saveRecentProduct(productId: Long)
         fun loadMoreData()
         fun actionOptionItem(itemId: Int)
         fun getRecentProductsLastScroll(): Int
         fun updateRecentProductsLastScroll(lastScroll: Int)
+        fun updateProductCount(productId: Long, count: Int)
     }
 }

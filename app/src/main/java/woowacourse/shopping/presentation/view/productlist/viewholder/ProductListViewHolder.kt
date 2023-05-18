@@ -10,7 +10,7 @@ import woowacourse.shopping.presentation.view.custom.CountView
 
 class ProductListViewHolder(
     parent: ViewGroup,
-    onClick: (Int) -> Unit
+    onItemClick: (Int) -> Unit
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from((parent.context))
         .inflate(R.layout.item_product_list, parent, false)
@@ -19,16 +19,18 @@ class ProductListViewHolder(
 
     init {
         binding.clProductItem.setOnClickListener {
-            onClick(bindingAdapterPosition)
-        }
-        binding.productCountView.countStateChangeListener = object : CountView.OnCountStateChangeListener {
-            override fun onCountChanged(countView: CountView?, count: Int) {
-                // count 변동 시 이벤트 처리
-            }
+            onItemClick(bindingAdapterPosition)
         }
     }
 
-    fun bind(product: ProductModel) {
+    fun bind(product: ProductModel, onCountClick: (Long, Int) -> Unit) {
         binding.product = product
+        binding.productCountView.setCount(product.count)
+        binding.productCountView.countStateChangeListener =
+            object : CountView.OnCountStateChangeListener {
+                override fun onCountChanged(countView: CountView?, count: Int) {
+                    onCountClick(product.id, count)
+                }
+            }
     }
 }

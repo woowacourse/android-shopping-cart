@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.model.ProductModel
@@ -27,6 +28,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private val presenter: ProductContract.Presenter by lazy {
         ProductListPresenter(
             this,
+            cartRepository = CartRepositoryImpl(this),
             recentProductRepository = RecentProductRepositoryImpl(this)
         )
     }
@@ -35,6 +37,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             presenter.updateRecentProductItems()
         }
+
+//    private val cartRepositoryResultLauncher =
 
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductListAdapter: RecentProductListAdapter
@@ -59,6 +63,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         addAdapter(moreProductListAdapter)
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        presenter.loadCartItems()
+        productListAdapter.notifyDataSetChanged()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
@@ -67,6 +77,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         presenter.initRecentProductItems()
         presenter.loadProductItems()
         presenter.loadRecentProductItems()
+        presenter.loadCartItems()
         setMoreProductListAdapter()
         setConcatAdapter()
     }
@@ -97,7 +108,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun setProductItemsView(products: List<ProductModel>) {
-        productListAdapter = ProductListAdapter(products, ::onProductClickEvent)
+        productListAdapter = ProductListAdapter(products, presenter::updateProductCount, ::onProductClickEvent)
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {

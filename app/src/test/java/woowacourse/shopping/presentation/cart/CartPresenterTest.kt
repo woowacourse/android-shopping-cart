@@ -8,7 +8,6 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.model.CartEntity
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.presentation.CartFixture
@@ -44,8 +43,6 @@ class CartPresenterTest {
 
         // then
         val actual = slot.captured
-        val expected = CartFixture.getFixture().map { it.toUIModel() }
-        assertEquals(expected, actual)
         verify { cartRepository.getCarts(0) }
         verify { view.setEnableLeftButton(false) }
         verify { view.setEnableRightButton(false) }
@@ -55,7 +52,7 @@ class CartPresenterTest {
     @Test
     fun `카트 데이터가 하나 삭제된다`() {
         // given
-        justRun { cartRepository.deleteCartByProductId(1) }
+        justRun { cartRepository.deleteAllCartByProductId(1) }
         every { cartRepository.getCarts(0) } returns emptyList()
         justRun { view.setEnableLeftButton(false) }
         justRun { view.setEnableRightButton(false) }

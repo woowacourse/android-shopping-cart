@@ -12,7 +12,9 @@ class CartPresenter(
         get() = (currentPage - 1) * DISPLAY_CART_COUNT_CONDITION
 
     override fun loadCartItems() {
-        var newCarts = cartRepository.getCarts(startPosition).map { it.toUIModel() }
+        var newCarts = cartRepository.getCarts(startPosition).map {
+            it.toUIModel().apply { product.count = it.count }
+        }
         view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 
@@ -22,7 +24,7 @@ class CartPresenter(
     }
 
     override fun deleteCartItem(itemId: Long) {
-        cartRepository.deleteCartByProductId(itemId)
+        cartRepository.deleteAllCartByProductId(itemId)
         loadCartItems()
     }
 
@@ -32,6 +34,18 @@ class CartPresenter(
 
     override fun calculateNextPage() {
         view.setPageCountView(++currentPage)
+    }
+
+    override fun updateProductCount(cartId: Long, count: Int) {
+        actionToZeroCount(cartId, count)
+        cartRepository.updateCartByCartId(cartId, count)
+    }
+
+    private fun actionToZeroCount(cartId: Long, count: Int) {
+        if (count == 0) {
+            cartRepository.deleteCartByCartId(cartId)
+            loadCartItems()
+        }
     }
 
     companion object {

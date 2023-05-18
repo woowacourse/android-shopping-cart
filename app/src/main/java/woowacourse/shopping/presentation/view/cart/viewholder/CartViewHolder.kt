@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartListBinding
 import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.view.custom.CountView
 
 class CartViewHolder(
     parent: ViewGroup,
@@ -22,7 +23,13 @@ class CartViewHolder(
         }
     }
 
-    fun bind(cart: CartModel) {
+    fun bind(cart: CartModel, onCountClick: (Long, Int) -> Unit) {
         binding.cart = cart
+        binding.countViewCartListItem.countStateChangeListener = object : CountView.OnCountStateChangeListener {
+            override fun onCountChanged(countView: CountView?, count: Int) {
+                onCountClick(cart.id, count)
+            }
+        }
+        binding.countViewCartListItem.updateCount(cart.product.count)
     }
 }

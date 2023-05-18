@@ -12,6 +12,7 @@ class CartDao(context: Context) {
     fun insertProduct(productId: Long) {
         val value = ContentValues().apply {
             put(CartContract.Cart.PRODUCT_ID, productId)
+            put(CartContract.Cart.COUNT, DEFAULT_CART_COUNT)
         }
         db.insert(CartContract.Cart.TABLE_NAME, null, value)
     }
@@ -24,15 +25,39 @@ class CartDao(context: Context) {
         )
     }
 
-    fun getItems(startPosition: Int): List<CartEntity> {
+    fun deleteProduct(productId: Long) {
+        db.delete(
+            CartContract.Cart.TABLE_NAME,
+            "${CartContract.Cart.PRODUCT_ID} = ?",
+            arrayOf(productId.toString())
+        )
+    }
+
+    fun deleteCart(cartId: Long) {
+        db.delete(
+            CartContract.Cart.TABLE_NAME,
+            "${BaseColumns._ID} = ?",
+            arrayOf(cartId.toString())
+        )
+    }
+
+    fun getAllItems(): List<CartEntity> {
+        return getItems(getCursorAll())
+    }
+
+    fun getItemsFromStartPositionToTen(startPosition: Int): List<CartEntity> {
+        return getItems(getCursorFromStartPositionToTen(startPosition))
+    }
+
+    private fun getItems(cursor: Cursor): List<CartEntity> {
         val result = mutableListOf<CartEntity>()
-        val cursor = getCursor(startPosition)
         with(cursor) {
             while (moveToNext()) {
                 val cartId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                 val productId =
                     getLong(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_ID))
-                result.add(CartEntity(cartId, productId))
+                val count = getInt(getColumnIndexOrThrow(CartContract.Cart.COUNT))
+                result.add(CartEntity(cartId, productId, count))
             }
         }
         cursor.close()
@@ -40,7 +65,7 @@ class CartDao(context: Context) {
         return result.toList()
     }
 
-    private fun getCursor(startPosition: Int): Cursor {
+    private fun getCursorFromStartPositionToTen(startPosition: Int): Cursor {
         return db.query(
             CartContract.Cart.TABLE_NAME,
             null,
@@ -53,7 +78,90 @@ class CartDao(context: Context) {
         )
     }
 
+    private fun getCursorAll(): Cursor =
+        db.query(
+            CartContract.Cart.TABLE_NAME,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+        )
+
+    fun updateCartByProductId(productId: Long, count: Int) {
+        selectCart(getCursorByProductId(productId)) ?: insertProduct(productId)
+
+        val value = ContentValues().apply {
+            put(CartContract.Cart.PRODUCT_ID, productId)
+            put(CartContract.Cart.COUNT, count)
+        }
+
+        db.update(
+            CartContract.Cart.TABLE_NAME,
+            value,
+            "${CartContract.Cart.PRODUCT_ID} = ?",
+            arrayOf(productId.toString())
+        )
+    }
+
+    fun updateCartByCartId(cartId: Long, count: Int) {
+        selectCart(getCursorByCartId(cartId))?.let {
+            val value = ContentValues().apply {
+                put(CartContract.Cart.PRODUCT_ID, it.productId)
+                put(CartContract.Cart.COUNT, count)
+            }
+
+            db.update(
+                CartContract.Cart.TABLE_NAME,
+                value,
+                "${BaseColumns._ID} = ?",
+                arrayOf(it.id.toString())
+            )
+        }
+    }
+
+    private fun selectCart(cursor: Cursor): CartEntity? {
+        var cart: CartEntity? = null
+
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                val productId = getLong(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_ID))
+                val count = getInt(getColumnIndexOrThrow(CartContract.Cart.COUNT))
+                cart = CartEntity(id, productId, count)
+            }
+        }
+
+        cursor.close()
+
+        return cart
+    }
+
+    private fun getCursorByCartId(selectCartId: Long): Cursor =
+        db.query(
+            CartContract.Cart.TABLE_NAME,
+            null,
+            "${BaseColumns._ID} = ?",
+            arrayOf(selectCartId.toString()),
+            null,
+            null,
+            null
+        )
+
+    private fun getCursorByProductId(selectProductId: Long): Cursor =
+        db.query(
+            CartContract.Cart.TABLE_NAME,
+            null,
+            "${CartContract.Cart.PRODUCT_ID} = ?",
+            arrayOf(selectProductId.toString()),
+            null,
+            null,
+            null
+        )
+
     companion object {
+        private const val DEFAULT_CART_COUNT = 0
         private const val GET_CART_ITEM_COUNT = 4
     }
 }

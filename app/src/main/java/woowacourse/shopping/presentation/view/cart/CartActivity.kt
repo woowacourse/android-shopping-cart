@@ -46,7 +46,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItemsView(carts: List<CartModel>) {
-        cartAdapter = CartAdapter(carts, presenter::deleteCartItem)
+        cartAdapter = CartAdapter(carts, presenter::updateProductCount, presenter::deleteCartItem)
         binding.rvCart.adapter = cartAdapter
     }
 

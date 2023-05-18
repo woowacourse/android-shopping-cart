@@ -15,5 +15,6 @@ interface CartContract {
         fun deleteCartItem(itemId: Long)
         fun calculatePreviousPage()
         fun calculateNextPage()
+        fun updateProductCount(cartId: Long, count: Int)
     }
 }

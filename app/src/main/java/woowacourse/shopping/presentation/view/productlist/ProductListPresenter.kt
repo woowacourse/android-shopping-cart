@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.view.productlist
 
 import woowacourse.shopping.R
 import woowacourse.shopping.data.mapper.toUIModel
+import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
@@ -13,6 +14,7 @@ import java.time.format.DateTimeFormatter
 class ProductListPresenter(
     private val view: ProductContract.View,
     private val productRepository: ProductRepository = ProductRepositoryImpl(),
+    private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()
@@ -35,6 +37,13 @@ class ProductListPresenter(
     override fun loadRecentProductItems() {
         recentProducts.addAll(recentProductRepository.getRecentProducts().map { it.toUIModel() })
         view.setRecentProductItemsView(recentProducts)
+    }
+
+    override fun loadCartItems() {
+        val carts = cartRepository.getAllCarts()
+        products.forEach { product ->
+            product.count = carts.find { it.productId == product.id }?.count ?: 0
+        }
     }
 
     override fun updateRecentProductItems() {
@@ -65,6 +74,16 @@ class ProductListPresenter(
 
     override fun updateRecentProductsLastScroll(lastScroll: Int) {
         this.lastScroll = lastScroll
+    }
+
+    override fun updateProductCount(productId: Long, count: Int) {
+        val product = products.find { it.id == productId } ?: return
+        if (count == 0) {
+            cartRepository.deleteCartByProductId(productId)
+            return
+        }
+        product.count = count
+        cartRepository.updateCartByProductId(productId, count)
     }
 
     companion object {
