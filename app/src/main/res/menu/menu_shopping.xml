@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/basket"
-        android:icon="@drawable/ic_cart"
         android:title="@string/basket"
+        app:actionLayout="@layout/layout_basket_badge"
         app:showAsAction="always" />
 </menu>

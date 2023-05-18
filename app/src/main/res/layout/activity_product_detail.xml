@@ -87,7 +87,7 @@
             android:id="@+id/basket_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/woowa_button"
+            android:background="@color/woowa_emerald"
             android:gravity="center"
             android:onClick="@{() -> productDetailPresenter.addBasketProduct()}"
             android:paddingVertical="12dp"

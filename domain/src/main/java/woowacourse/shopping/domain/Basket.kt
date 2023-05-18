@@ -6,7 +6,7 @@ data class Basket(
     val basketProducts: List<BasketProduct> = emptyList(),
     val loadUnit: Int ,
 ) {
-    val productTotalCount: Int =
+    val productsCountInBasket: Int =
         basketProducts.sumOf { product -> product.selectedCount.value }
 
     fun add(newItem: Product): Basket = copy(basketProducts = basketProducts.map { item ->

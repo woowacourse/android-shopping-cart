@@ -46,6 +46,7 @@ class ShoppingPresenter(
 
     override fun fetchBasket() {
         basket = basketRepository.getProductByPage(currentPage)
+        view.updateBasketProductCount(basket.productsCountInBasket)
     }
 
     override fun getMoreProducts() {
@@ -97,7 +98,7 @@ class ShoppingPresenter(
     }
 
     private fun updateBasketProducts() {
-        view.updateBasketProductCount(basket.productTotalCount)
+        view.updateBasketProductCount(basket.productsCountInBasket)
         view.updateProducts(basket.getItemsByUnit().map { it.toUi() })
     }
 
