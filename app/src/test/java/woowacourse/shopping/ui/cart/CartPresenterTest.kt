@@ -64,7 +64,6 @@ class CartPresenterTest {
         // then
         verify(exactly = 1) { view.setCarts(any(), PageUIModel(true, true, 1)) }
         verify(exactly = 1) { view.setBottom(any(), any()) }
-        verify(exactly = 1) { view.setAllItemCheck(any()) }
     }
 
     @Test
@@ -81,7 +80,6 @@ class CartPresenterTest {
         // then
         verify(exactly = 1) { view.setCarts(any(), PageUIModel(true, true, 2)) }
         verify(exactly = 1) { view.setBottom(any(), any()) }
-        verify(exactly = 1) { view.setAllItemCheck(any()) }
     }
 
     @Test
@@ -96,7 +94,6 @@ class CartPresenterTest {
         // then
         verify(exactly = 1) { view.setCarts(any(), PageUIModel(true, true, 0)) }
         verify(exactly = 1) { view.setBottom(any(), any()) }
-        verify(exactly = 1) { view.setAllItemCheck(any()) }
     }
 
     @Test
@@ -112,7 +109,6 @@ class CartPresenterTest {
         // then
         verify(exactly = 1) { view.setCarts(any(), any()) }
         verify(exactly = 1) { view.setBottom(any(), any()) }
-        verify(exactly = 1) { view.setAllItemCheck(any()) }
         verify(exactly = 10) { cartRepository.updateChecked(any(), true) }
     }
 
@@ -127,7 +123,6 @@ class CartPresenterTest {
         // then
         verify(exactly = 1) { view.setCarts(any(), any()) }
         verify(exactly = 1) { view.setBottom(any(), any()) }
-        verify(exactly = 1) { view.setAllItemCheck(any()) }
         verify(exactly = 1) { cartRepository.remove(1) }
     }
 
@@ -167,7 +162,6 @@ class CartPresenterTest {
         // then
         verify(exactly = 1) { cartRepository.updateCount(1, 0) }
         verify(exactly = 1) { view.setBottom(any(), any()) }
-        verify(exactly = 1) { view.setAllItemCheck(any()) }
     }
 
     @Test
