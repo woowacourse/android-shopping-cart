@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="42dp"
+        android:background="@drawable/bg_round_square_white"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/minus_tv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingVertical="8dp"
+            android:text="-"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/count_number_tv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingVertical="8dp"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/plus_tv"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:paddingVertical="8dp"
+            android:text="+"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</layout>
