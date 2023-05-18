@@ -15,6 +15,8 @@ interface CartContract {
         fun loadCart()
         fun plusPageNumber()
         fun minusPageNumber()
+        fun plusCountNumber(cartProductState: CartProductState, count: Int)
+        fun minusCountNumber(cartProductState: CartProductState, count: Int)
         fun deleteCartProduct(cartProductState: CartProductState)
     }
 }

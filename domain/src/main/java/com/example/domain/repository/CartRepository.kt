@@ -7,7 +7,7 @@ interface CartRepository {
     fun getAll(): List<CartProduct>
     fun addProduct(product: Product)
     fun deleteCartProduct(cartProduct: CartProduct)
-    fun updateCartProductCount(product: Product, count: Int)
+    fun updateCartProductCount(cartProduct: CartProduct, count: Int)
     fun updateCartProductChecked(product: Product, checked: Boolean)
 
 //    fun get(fromIndex: Int, ToIndex: Int): List<CartProduct>

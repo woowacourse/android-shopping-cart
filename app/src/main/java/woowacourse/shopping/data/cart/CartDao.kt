@@ -68,6 +68,19 @@ class CartDao(context: Context) {
         db.insert(CartContract.TABLE_NAME, null, values)
     }
 
+    fun addColumn(cartProduct: CartProduct) {
+        val values = ContentValues().apply {
+            put(CartContract.TABLE_COLUMN_PRODUCT_ID, cartProduct.productId)
+            put(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, cartProduct.productImageUrl)
+            put(CartContract.TABLE_COLUMN_PRODUCT_NAME, cartProduct.productName)
+            put(CartContract.TABLE_COLUMN_PRODUCT_PRICE, cartProduct.productPrice)
+            put(CartContract.TABLE_COLUMN_COUNT, 1) // 담았을 때 기준 기본 1
+            put(CartContract.TABLE_COLUMN_CHECKED, CHECKED_FALSE)
+        }
+
+        db.insert(CartContract.TABLE_NAME, null, values)
+    }
+
     fun deleteColumn(cartProduct: CartProduct) {
         db.delete(
             CartContract.TABLE_NAME,
@@ -75,15 +88,18 @@ class CartDao(context: Context) {
         )
     }
 
-    fun updateCartProductCount(product: Product, count: Int) {
+    fun updateCartProductCount(cartProduct: CartProduct, count: Int) {
         val findCartProduct =
-            getAll().find { it.productId == product.id } ?: return addColumn(product)
+            getAll().find { it.productId == cartProduct.productId } ?: return addColumn(cartProduct)
 
         if (count <= 0) return deleteColumn(findCartProduct)
 
-        val updateSql = "UPDATE ${CartContract.TABLE_NAME} " +
-            "SET ${CartContract.TABLE_COLUMN_COUNT}=$count " +
-            "WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+        val updateSql =
+            """
+                UPDATE ${CartContract.TABLE_NAME}
+                SET ${CartContract.TABLE_COLUMN_COUNT} = $count
+                WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID} = ${cartProduct.productId};
+            """.trimIndent()
 
         db.execSQL(updateSql)
     }

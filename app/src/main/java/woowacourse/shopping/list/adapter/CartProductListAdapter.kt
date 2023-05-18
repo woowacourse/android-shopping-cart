@@ -9,13 +9,17 @@ import woowacourse.shopping.model.CartProductState
 
 class CartProductListAdapter(
     private var cartProductStates: List<CartProductState> = listOf(),
-    private val onXClick: (CartProductState) -> Unit
+    private val onCartProductDeleteClick: (CartProductState) -> Unit,
+    private val onCountMinusClick: (CartProductState) -> Unit,
+    private val onCountPlusClick: (CartProductState) -> Unit
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartProductBinding.inflate(inflater, parent, false)
-        return CartProductViewHolder(binding)
+        return CartProductViewHolder(
+            binding, onCartProductDeleteClick, onCountMinusClick, onCountPlusClick
+        )
     }
 
     override fun getItemCount(): Int {
@@ -23,7 +27,7 @@ class CartProductListAdapter(
     }
 
     override fun onBindViewHolder(holder: CartProductViewHolder, position: Int) {
-        holder.bind(cartProductStates[position], onXClick)
+        holder.bind(cartProductStates[position])
     }
 
     fun setItems(cartProducts: List<CartProductState>) {

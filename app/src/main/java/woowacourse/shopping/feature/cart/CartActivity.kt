@@ -21,9 +21,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         val cartRepo: CartRepository = CartRepositoryImpl(CartDao(this))
         CartPresenter(this, cartRepo)
     }
-
     private val adapter: CartProductListAdapter by lazy {
-        CartProductListAdapter(onXClick = { presenter.deleteCartProduct(it) })
+        CartProductListAdapter(
+            onCartProductDeleteClick = { presenter.deleteCartProduct(it) },
+            onCountMinusClick = { presenter.minusCountNumber(it, it.count) },
+            onCountPlusClick = { presenter.plusCountNumber(it, it.count) }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

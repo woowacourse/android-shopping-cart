@@ -56,6 +56,14 @@ class CartPresenter(
         loadCart()
     }
 
+    override fun plusCountNumber(cartProductState: CartProductState, count: Int) {
+        cartRepository.updateCartProductCount(cartProductState.toDomain(), cartProductState.count)
+    }
+
+    override fun minusCountNumber(cartProductState: CartProductState, count: Int) {
+        cartRepository.updateCartProductCount(cartProductState.toDomain(), cartProductState.count)
+    }
+
     override fun deleteCartProduct(cartProductState: CartProductState) {
         cartRepository.deleteCartProduct(cartProductState.toDomain())
         cartProducts = cartRepository.getAll()

@@ -20,8 +20,8 @@ class CartRepositoryImpl(
         cartDao.deleteColumn(cartProduct)
     }
 
-    override fun updateCartProductCount(product: Product, count: Int) {
-        cartDao.updateCartProductCount(product, count)
+    override fun updateCartProductCount(cartProduct: CartProduct, count: Int) {
+        cartDao.updateCartProductCount(cartProduct, count)
     }
 
     override fun updateCartProductChecked(product: Product, checked: Boolean) {

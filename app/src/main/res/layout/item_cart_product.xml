@@ -56,14 +56,24 @@
 
             <TextView
                 android:id="@+id/cart_product_price_tv"
+                formatMoneyWon="@{cartProduct.productPrice}"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/product_cart_item_text_size"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/counter_view"
                 app:layout_constraintEnd_toEndOf="@id/item_layout"
-                tools:text="0원"
-                formatMoneyWon="@{cartProduct.productPrice}"/>
+                app:layout_constraintTop_toBottomOf="@+id/cart_clear_image_view"
+                tools:text="0원" />
 
+            <woowacourse.shopping.view.CounterView
+                android:id="@+id/counter_view"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/cart_product_price_tv"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
