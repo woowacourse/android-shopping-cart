@@ -26,6 +26,9 @@ class CartPresenter(
 
     private fun setBottom() {
         view.setBottom(cartRepository.getTotalPrice(), cartRepository.getTotalSelectedCount())
+    }
+
+    private fun setAllItemCheck() {
         view.setAllItemCheck(currentPage.all { it.checked })
     }
 
@@ -59,6 +62,7 @@ class CartPresenter(
     override fun updateItemCheck(productId: Int, checked: Boolean) {
         cartRepository.updateChecked(productId, checked)
         setBottom()
+        setAllItemCheck()
     }
 
     companion object {

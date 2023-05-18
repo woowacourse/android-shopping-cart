@@ -20,7 +20,6 @@ class CartProductViewHolder private constructor(
         binding.cvProductCounter.setOnClickListener {
             cartListener.onItemUpdate(data.product.id, it)
         }
-        binding.cbProductCheck.isChecked = data.product.checked
         binding.cbProductCheck.setOnCheckedChangeListener { _, isChecked ->
             cartListener.onItemCheckChanged(data.product.id, isChecked)
         }

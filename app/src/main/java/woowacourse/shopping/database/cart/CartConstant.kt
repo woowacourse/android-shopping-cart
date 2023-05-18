@@ -34,7 +34,7 @@ object CartConstant : BaseColumns {
     }
 
     fun getInsertQuery(cartProduct: CartProduct): String {
-        return "INSERT OR REPLACE INTO $TABLE_NAME (" +
+        return "INSERT OR IGNORE INTO $TABLE_NAME (" +
             "$TABLE_COLUMN_ID," +
             "$TABLE_COLUMN_NAME," +
             "$TABLE_COLUMN_COUNT," +
