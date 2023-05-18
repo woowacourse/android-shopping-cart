@@ -9,25 +9,36 @@
         android:layout_marginHorizontal="18dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/item_card_background"
-        android:padding="18dp">
+        android:paddingHorizontal="18dp"
+        android:paddingBottom="18dp">
+
+        <CheckBox
+            android:id="@+id/checkbox_cart"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintBottom_toTopOf="@id/iv_cart"
+            app:layout_constraintEnd_toStartOf="@+id/tv_cart_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_cart_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="13dp"
+            android:layout_marginStart="11dp"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/iv_cart"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/checkbox_cart"
+            app:layout_constraintStart_toEndOf="@id/checkbox_cart"
+            app:layout_constraintTop_toTopOf="@id/checkbox_cart"
             tools:text="Product Name" />
 
         <ImageView
             android:id="@+id/iv_cart"
             android:layout_width="0dp"
             android:layout_height="60dp"
+            android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="1.7"
@@ -41,9 +52,49 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_cart"
+            app:layout_constraintBottom_toTopOf="@id/btn_cart_plus_count"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="10,000원" />
+
+        <Button
+            android:id="@+id/btn_cart_minus_count"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@android:color/transparent"
+            android:includeFontPadding="false"
+            android:text="@string/text_minus"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="@id/btn_cart_plus_count"
+            app:layout_constraintEnd_toStartOf="@id/tv_cart_count"
+            app:layout_constraintTop_toTopOf="@id/btn_cart_plus_count" />
+
+        <Button
+            android:id="@+id/btn_cart_plus_count"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@android:color/transparent"
+            android:includeFontPadding="false"
+            android:text="@string/text_plus"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_cart"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="@id/tv_cart_price" />
+
+        <TextView
+            android:id="@+id/tv_cart_count"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_cart_plus_count"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toStartOf="@id/btn_cart_plus_count"
+            app:layout_constraintTop_toTopOf="@id/btn_cart_plus_count"
+            tools:text="3" />
 
         <ImageButton
             android:id="@+id/btn_cart_close"
@@ -51,7 +102,8 @@
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:src="@drawable/icon_close_grey"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/tv_cart_name"
+            app:layout_constraintEnd_toEndOf="@id/tv_cart_price"
             app:layout_constraintTop_toTopOf="@id/tv_cart_name" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

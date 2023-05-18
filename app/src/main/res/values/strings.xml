@@ -14,4 +14,6 @@
     <string name="app_bar_title_product_list">Shopping</string>
     <string name="app_bar_title_cart">Cart</string>
     <string name="button_load_more">더보기</string>
+    <string name="text_minus">-</string>
+    <string name="text_plus">+</string>
 </resources>
