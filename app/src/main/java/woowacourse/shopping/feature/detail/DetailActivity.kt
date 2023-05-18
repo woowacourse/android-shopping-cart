@@ -45,14 +45,12 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
     private fun createSelectCountDialog(binding: DialogSelectCountBinding) =
         AlertDialog.Builder(this).apply {
             setView(binding.root)
-            binding.countTv.text = presenter.count.toString()
-            binding.plusBtn.setOnClickListener {
+            binding.countView.count = presenter.count
+            binding.countView.plusClickListener = {
                 presenter.increaseCount()
-                binding.countTv.text = presenter.count.toString()
             }
-            binding.minusBtn.setOnClickListener {
+            binding.countView.minusClickListener = {
                 presenter.decreaseCount()
-                binding.countTv.text = presenter.count.toString()
             }
         }.create()
 

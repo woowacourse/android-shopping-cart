@@ -10,4 +10,6 @@
     <string name="load_more">더보기</string>
     <string name="cart">Cart</string>
     <string name="put_cart">담기</string>
+    <string name="minus_button_description">minus button</string>
+    <string name="plus_button_description">plus button</string>
 </resources>

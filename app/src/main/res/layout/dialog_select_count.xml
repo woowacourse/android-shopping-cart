@@ -55,37 +55,12 @@
             app:layout_constraintTop_toBottomOf="@id/product_title"
             tools:text="10,000원" />
 
-        <LinearLayout
-            android:id="@+id/count_layout"
+        <woowacourse.shopping.feature.common.CountView
+            android:id="@+id/count_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="end|center_vertical"
             app:layout_constraintTop_toBottomOf="@id/product_price"
-            app:layout_constraintEnd_toStartOf="@id/end_guideline"
-            app:layout_constraintStart_toEndOf="@id/start_guideline">
-
-            <ImageButton
-                android:id="@+id/minus_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_minus" />
-
-            <TextView
-                android:id="@+id/count_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@color/black"
-                android:layout_marginHorizontal="16dp"
-                tools:text="1" />
-
-            <ImageButton
-                android:id="@+id/plus_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_plus" />
-        </LinearLayout>
-
+            app:layout_constraintEnd_toStartOf="@id/end_guideline" />
 
         <Button
             android:id="@+id/put_btn"
@@ -97,7 +72,7 @@
             android:layout_marginHorizontal="12dp"
             android:backgroundTint="@color/mint"
             android:onClick="@{()->presenter.addCart()}"
-            app:layout_constraintTop_toBottomOf="@id/count_layout" />
+            app:layout_constraintTop_toBottomOf="@id/count_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
