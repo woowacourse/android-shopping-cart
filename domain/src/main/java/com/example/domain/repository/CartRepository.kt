@@ -11,6 +11,6 @@ interface CartRepository {
     fun deleteAllCheckedCartProduct()
     fun changeCartProductCount(product: Product, count: Int)
     fun changeCartProductCheckedState(product: Product, checked: Boolean)
-    fun changeAllCheckedState(checked: Boolean)
+    fun changeCurrentPageAllCheckedState(cartIds: List<Long>, checked: Boolean)
     fun getCartProductsFromPage(pageSize: Int, page: Int): List<CartProduct>
 }

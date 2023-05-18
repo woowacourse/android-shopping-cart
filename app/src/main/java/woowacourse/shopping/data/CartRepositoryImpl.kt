@@ -36,8 +36,8 @@ class CartRepositoryImpl(
         cartDao.updateCartProductChecked(product, checked)
     }
 
-    override fun changeAllCheckedState(checked: Boolean) {
-        cartDao.updateAllChecked(checked)
+    override fun changeCurrentPageAllCheckedState(cartIds: List<Long>, checked: Boolean) {
+        cartDao.updateAllChecked(cartIds, checked)
     }
 
     override fun getCartProductsFromPage(pageSize: Int, page: Int): List<CartProduct> {

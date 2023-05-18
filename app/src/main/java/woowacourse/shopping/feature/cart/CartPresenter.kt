@@ -67,9 +67,10 @@ class CartPresenter(
         changePageState(page.currentPageCartProducts)
     }
 
-    override fun handleAllSelectedCheckedChange(checked: Boolean) {
-        page = page.toDomain().setAllChecked(checked).toPresentation()
-        cartRepository.changeAllCheckedState(checked)
+    override fun handleCurrentPageAllCheckedChange(checked: Boolean) {
+        page = page.toDomain().setCurrentPageAllChecked(checked).toPresentation()
+        val currentIds = page.currentPageCartProducts.map { it.cartId }
+        cartRepository.changeCurrentPageAllCheckedState(currentIds,checked)
         changePageState(page.currentPageCartProducts)
     }
 
@@ -94,10 +95,10 @@ class CartPresenter(
         view.setPreviousButtonState(page.hasPreviousPage)
         view.setNextButtonState(page.hasNextPage)
         view.setPageCount(page.currentPage)
-        changePurchaseNavigation()
+        changePurchaseNavigation(cartProductUiModels)
     }
 
-    private fun changePurchaseNavigation() {
+    private fun changePurchaseNavigation(cartProductUiModels: List<CartProductUiModel>) {
         if (page.checkedCount > 0) {
             view.setOrderButtonState(true, page.checkedCount)
         } else {
@@ -105,6 +106,6 @@ class CartPresenter(
         }
 
         view.updateMoney(convertToMoneyFormat(page.totalCheckedMoney))
-        view.setAllCheckedButtonState(page.isAllChecked)
+        view.setAllCheckedButtonState(cartProductUiModels.all { it.checked })
     }
 }

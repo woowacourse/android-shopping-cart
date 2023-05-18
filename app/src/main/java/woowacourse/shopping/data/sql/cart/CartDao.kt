@@ -72,8 +72,10 @@ class CartDao(
 
     fun updateCartProductCount(product: Product, newCount: Int) {
         val findCartProduct =
-            selectAll().find { it.product.id == product.id } ?:
-                return insertProduct(product, newCount)
+            selectAll().find { it.product.id == product.id } ?: return insertProduct(
+                product,
+                newCount
+            )
 
         if (newCount <= 0) return deleteCartProduct(findCartProduct)
 
@@ -94,11 +96,18 @@ class CartDao(
         writableDatabase.execSQL(updateSql)
     }
 
-    fun updateAllChecked(checked: Boolean) {
+    fun updateAllChecked(cartIds: List<Long>, checked: Boolean) {
         val checkedState = if (checked) 1 else 0
 
         val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
-                "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=${checkedState}"
+                "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=${checkedState} " +
+                "WHERE ${CartTableContract.TABLE_COLUMN_CART_ID} IN ${
+                    cartIds.joinToString(
+                        ", ",
+                        "(",
+                        ")"
+                    )
+                }"
         writableDatabase.execSQL(updateSql)
     }
 

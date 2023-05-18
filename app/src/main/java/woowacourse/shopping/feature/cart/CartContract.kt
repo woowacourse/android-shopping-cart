@@ -21,7 +21,7 @@ interface CartContract {
         fun handleDeleteCartProductClick(cartId: Long)
         fun handleCartProductCartCountChange(cartId: Long, count: Int)
         fun handlePurchaseSelectedCheckedChange(cartId: Long, checked: Boolean)
-        fun handleAllSelectedCheckedChange(checked: Boolean)
+        fun handleCurrentPageAllCheckedChange(checked: Boolean)
         fun processOrderClick()
         fun loadPreviousPage()
         fun loadNextPage()

@@ -39,7 +39,11 @@ class CartProducts(
         return CartProducts(newList)
     }
 
-    fun changeAllChecked(checked: Boolean): CartProducts {
-        return CartProducts(all.map { it.copy(checked = checked) })
+    fun changeAllChecked(cartIds: List<Long>, checked: Boolean): CartProducts {
+        val newList = all.map {
+            if (it.cartId in cartIds) it.copy(checked = checked)
+            else it
+        }
+        return CartProducts(newList)
     }
 }

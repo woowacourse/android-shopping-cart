@@ -51,7 +51,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initClickListener() {
         binding.allCheckView.setOnCheckedChangeListener { _, isChecked ->
-            presenter.handleAllSelectedCheckedChange(isChecked)
+            presenter.handleCurrentPageAllCheckedChange(isChecked)
         }
         binding.orderConfirmView.setOnClickListener {
             presenter.processOrderClick()
@@ -78,7 +78,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.allCheckView.setOnCheckedChangeListener { _, isChecked -> }
         binding.allCheckView.isChecked = isAllChecked
         binding.allCheckView.setOnCheckedChangeListener { _, isChecked ->
-            presenter.handleAllSelectedCheckedChange(isChecked)
+            presenter.handleCurrentPageAllCheckedChange(isChecked)
         }
     }
 

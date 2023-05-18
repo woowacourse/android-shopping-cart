@@ -76,8 +76,9 @@ data class Pagination(
         return copy(cartProducts = newCartProducts)
     }
 
-    fun setAllChecked(newChecked: Boolean): Pagination {
-        return copy(cartProducts = cartProducts.changeAllChecked(newChecked))
+    fun setCurrentPageAllChecked(newChecked: Boolean): Pagination {
+        val currentPageCartIds = currentPageCartProducts.map { it.cartId }
+        return copy(cartProducts = cartProducts.changeAllChecked(currentPageCartIds,newChecked))
     }
 
     fun changeChecked(cartId: Long, checked: Boolean): Pagination {
