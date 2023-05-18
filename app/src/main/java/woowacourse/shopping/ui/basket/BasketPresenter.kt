@@ -63,10 +63,10 @@ class BasketPresenter(
         currentProducts: List<UiBasketProduct>
     ) {
         basketRepository.remove(product.toDomain())
-        fetchBasketProducts(getStartId(product, currentProducts), true)
+        fetchBasketProducts(getStartIdExceptRemovedProduct(product, currentProducts), true)
     }
 
-    private fun getStartId(
+    private fun getStartIdExceptRemovedProduct(
         product: UiBasketProduct,
         currentProducts: List<UiBasketProduct>
     ): Int = currentProducts.toMutableList().run {
