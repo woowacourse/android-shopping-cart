@@ -151,6 +151,36 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         return products.sortedBy { it.id }
     }
 
+    @SuppressLint("Range")
+    override fun getAll(): List<DataBasketProduct> {
+        val products = mutableListOf<DataBasketProduct>()
+        database.writableDatabase.use { db ->
+            val cursor =
+                db.rawQuery(GET_ALL, arrayOf())
+            while (cursor.moveToNext()) {
+                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
+                val productId: Int =
+                    cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val name: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
+                val price: DataPrice =
+                    DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
+                val imageUrl: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
+                products.add(
+                    DataBasketProduct(
+                        id,
+                        count,
+                        DataProduct(productId, name, price, imageUrl)
+                    )
+                )
+            }
+            cursor.close()
+        }
+        return products.sortedBy { it.id }
+    }
+
     override fun add(basketProduct: DataBasketProduct) {
         val whereClause = "${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?"
         val whereArgs = arrayOf(basketProduct.product.id.toString())
@@ -224,6 +254,12 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             UPDATE ${BasketContract.TABLE_NAME}
             SET ${BasketContract.BASKET_COUNT} = ${BasketContract.BASKET_COUNT} + ?
             WHERE ${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?
+        """.trimIndent()
+
+        private val GET_ALL = """
+            SELECT ${BasketContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
+            FROM ${BasketContract.TABLE_NAME}
+            INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
         """.trimIndent()
     }
 }
