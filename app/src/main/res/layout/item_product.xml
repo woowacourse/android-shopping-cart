@@ -65,14 +65,14 @@
             android:padding="10dp"
             android:background="@drawable/round_button_background"
             android:layout_margin="8dp"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="@+id/image_product_list_poster"
-            app:layout_constraintBottom_toBottomOf="@+id/image_product_list_poster"
-            />
+            app:layout_constraintBottom_toBottomOf="@+id/image_product_list_poster" />
 
         <woowacourse.shopping.presentation.common.CounterView
+            android:id="@+id/counter_product_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginBottom="11dp"
             app:layout_constraintEnd_toEndOf="@+id/image_product_list_poster"
             app:layout_constraintStart_toStartOf="@+id/image_product_list_poster"
