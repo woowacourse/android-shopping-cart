@@ -7,4 +7,6 @@
     <string name="load_more">더보기</string>
     <string name="page_count_button"><![CDATA[<]]></string>
     <string name="page_up_button"><![CDATA[>]]></string>
+    <string name="product_counter_plus">+</string>
+    <string name="product_count_minus">-</string>
 </resources>
