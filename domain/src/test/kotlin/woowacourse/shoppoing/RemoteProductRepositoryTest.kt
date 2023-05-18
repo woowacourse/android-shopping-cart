@@ -1,20 +1,28 @@
 package woowacourse.shoppoing
 
+import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONArray
+import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.repositoryImpl.RemoteProductRepository
 
 class RemoteProductRepositoryTest {
-    @Test
-    fun `상품 목록을 가져온다`() {
+    private lateinit var mockWebServer: MockWebServer
+    private lateinit var remoteProductRepository: RemoteProductRepository
+
+    @Before
+    fun setUp() {
         // given
-        val mockWebServer = startMockWebServer()
-        val remoteProductRepository = RemoteProductRepository(
+        mockWebServer = startMockWebServer()
+        remoteProductRepository = RemoteProductRepository(
             mockWebServer.url("").toString()
         )
+    }
 
+    @Test
+    fun `상품 목록을 가져온다`() {
         // when
         val products = remoteProductRepository.getAll()
 
@@ -32,12 +40,6 @@ class RemoteProductRepositoryTest {
 
     @Test
     fun `다음 상품들을 가져온다_1`() {
-        // given
-        val mockWebServer = startMockWebServer()
-        val remoteProductRepository = RemoteProductRepository(
-            mockWebServer.url("").toString()
-        )
-
         // when
         val products = remoteProductRepository.getNext(10)
 
@@ -53,12 +55,6 @@ class RemoteProductRepositoryTest {
 
     @Test
     fun `다음 상품들을 가져온다_2`() {
-        // given
-        val mockWebServer = startMockWebServer()
-        val remoteProductRepository = RemoteProductRepository(
-            mockWebServer.url("").toString()
-        )
-
         // when
         remoteProductRepository.getNext(10)
         val products = remoteProductRepository.getNext(10)
@@ -76,12 +72,6 @@ class RemoteProductRepositoryTest {
 
     @Test
     fun `ID로 상품을 가져온다`() {
-        // given
-        val mockWebServer = startMockWebServer()
-        val remoteProductRepository = RemoteProductRepository(
-            mockWebServer.url("").toString()
-        )
-
         // when
         val product = remoteProductRepository.findById(1)
 
@@ -94,11 +84,6 @@ class RemoteProductRepositoryTest {
 
     @Test
     fun `상품을 등록할 수 있다`() {
-        // given
-        val mockWebServer = startMockWebServer()
-        val remoteProductRepository = RemoteProductRepository(
-            mockWebServer.url("").toString()
-        )
         val product = Product(
             id = 999,
             name = "치킨",
