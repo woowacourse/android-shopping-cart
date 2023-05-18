@@ -27,6 +27,7 @@ class CartListAdapter(
 
     fun setCartItemSelection(productId: Long, isSelected: Boolean) {
         val position = cartItems.indexOfFirst { it.productId == productId }
+        if (position == -1) return
         cartItems[position] = cartItems[position].copy(selected = isSelected)
         if(hasStableIds()) notifyItemChanged(position)
     }
