@@ -3,14 +3,14 @@ package woowacourse.shopping.presentation.mapper
 import woowacourse.shopping.model.CartProduct
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.presentation.model.CartProductModel
+import woowacourse.shopping.presentation.model.CheckableCartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
 
-fun CartProduct.toPresentation(): CartProductModel {
-    return CartProductModel(
+fun CartProduct.toPresentation(): CheckableCartProductModel {
+    return CheckableCartProductModel(
         productModel = product.toPresentation(),
         count = count,
-        isSelected = isSelected,
+        isChecked = isChecked,
     )
 }
 

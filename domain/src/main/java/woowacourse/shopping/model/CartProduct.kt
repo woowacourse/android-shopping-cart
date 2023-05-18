@@ -3,30 +3,30 @@ package woowacourse.shopping.model
 data class CartProduct(
     val product: Product,
     val count: Int,
-    val isSelected: Boolean,
+    val isChecked: Boolean,
 ) {
     fun getTotalPrice() = count * product.price.value
     fun plusCount(count: Int) = CartProduct(
         product = product,
         count = this.count + count,
-        isSelected = isSelected,
+        isChecked = isChecked,
     )
 
     fun subCount(count: Int) = CartProduct(
         product = product,
         count = this.count - count,
-        isSelected = isSelected,
+        isChecked = isChecked,
     )
 
     fun select() = CartProduct(
         product = product,
         count = this.count,
-        isSelected = true,
+        isChecked = true,
     )
 
     fun unselect() = CartProduct(
         product = product,
         count = this.count,
-        isSelected = false,
+        isChecked = false,
     )
 }

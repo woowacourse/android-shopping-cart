@@ -7,9 +7,9 @@ class CartProducts(products: List<CartProduct> = listOf()) {
     val size get(): Int = _items.size
     fun isProductSelectedByRange(startIndex: Int, productSize: Int): Boolean {
         if (startIndex + productSize > size) {
-            return (startIndex until size).all { _items[it].isSelected }
+            return (startIndex until size).all { _items[it].isChecked }
         }
-        return (startIndex until startIndex + productSize).all { _items[it].isSelected }
+        return (startIndex until startIndex + productSize).all { _items[it].isChecked }
     }
 
     fun getProductsInRange(startIndex: Int, productSize: Int): CartProducts {
@@ -61,7 +61,7 @@ class CartProducts(products: List<CartProduct> = listOf()) {
     fun changeSelectedProduct(product: Product) {
         val targetIndex = _items.indexOfLast { it.product == product }
         val targetProduct = _items[targetIndex]
-        _items[targetIndex] = if (targetProduct.isSelected) {
+        _items[targetIndex] = if (targetProduct.isChecked) {
             targetProduct.unselect()
         } else {
             targetProduct.select()
@@ -85,11 +85,11 @@ class CartProducts(products: List<CartProduct> = listOf()) {
     }
 
     fun getSelectedProductsPrice(): Int {
-        return _items.filter { it.isSelected }.sumOf { it.getTotalPrice() }
+        return _items.filter { it.isChecked }.sumOf { it.getTotalPrice() }
     }
 
     fun getSelectedProductsTotalCount(): Int {
-        return _items.filter { it.isSelected }.sumOf { it.count }
+        return _items.filter { it.isChecked }.sumOf { it.count }
     }
 
     companion object {
