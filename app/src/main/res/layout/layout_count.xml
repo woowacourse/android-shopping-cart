@@ -6,7 +6,8 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_count_view">
 
         <ImageButton
             android:id="@+id/minus_btn"

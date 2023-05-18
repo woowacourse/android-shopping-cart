@@ -10,7 +10,7 @@ import woowacourse.shopping.model.ProductUiModel
 
 class MainProductAdapter(
     items: List<ProductUiModel>,
-    val onClick: (product: ProductUiModel) -> Unit
+    private val mainProductClickListener: MainProductClickListener
 ) : RecyclerView.Adapter<MainProductViewHolder>() {
     private val _items = items.toMutableList()
 
@@ -22,13 +22,13 @@ class MainProductAdapter(
             parent,
             false
         )
-        return MainProductViewHolder(binding)
+        return MainProductViewHolder(binding, mainProductClickListener)
     }
 
     override fun getItemCount(): Int = _items.size
 
     override fun onBindViewHolder(holder: MainProductViewHolder, position: Int) {
-        holder.bind(_items[position], onClick)
+        holder.bind(_items[position])
     }
 
     override fun getItemViewType(position: Int): Int {

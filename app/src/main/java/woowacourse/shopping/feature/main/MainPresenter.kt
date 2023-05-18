@@ -57,6 +57,14 @@ class MainPresenter(
         productRepository.clearCache()
     }
 
+    override fun increaseCartProduct(product: ProductUiModel, previousCount: Int) {
+        cartRepository.addProduct(product.toDomain(), previousCount + 1)
+    }
+
+    override fun decreaseCartProduct(product: ProductUiModel, previousCount: Int) {
+        cartRepository.addProduct(product.toDomain(), previousCount - 1)
+    }
+
     private fun addRecentProduct(recentProduct: RecentProduct) {
         recentProductRepository.addRecentProduct(recentProduct.copy(dateTime = LocalDateTime.now()))
     }

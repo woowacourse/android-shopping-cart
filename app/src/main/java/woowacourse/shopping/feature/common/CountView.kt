@@ -3,13 +3,13 @@ package woowacourse.shopping.feature.common
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.LinearLayout
 import woowacourse.shopping.databinding.LayoutCountBinding
 
 class CountView @JvmOverloads constructor(
     context: Context,
     attributesSet: AttributeSet? = null
-) : ConstraintLayout(context, attributesSet) {
+) : LinearLayout(context, attributesSet) {
     private val binding: LayoutCountBinding =
         LayoutCountBinding.inflate(LayoutInflater.from(context), this, true)
 

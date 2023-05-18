@@ -19,5 +19,7 @@ interface MainContract {
         fun loadMoreProduct()
         fun loadRecent()
         fun refresh()
+        fun increaseCartProduct(product: ProductUiModel, previousCount: Int)
+        fun decreaseCartProduct(product: ProductUiModel, previousCount: Int)
     }
 }

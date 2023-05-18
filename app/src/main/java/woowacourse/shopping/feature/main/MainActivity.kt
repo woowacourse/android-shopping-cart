@@ -18,6 +18,7 @@ import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity
 import woowacourse.shopping.feature.main.load.LoadAdapter
 import woowacourse.shopping.feature.main.product.MainProductAdapter
+import woowacourse.shopping.feature.main.product.MainProductClickListener
 import woowacourse.shopping.feature.main.recent.RecentAdapter
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
 import woowacourse.shopping.model.ProductUiModel
@@ -57,9 +58,22 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initAdapters() {
-        mainProductAdapter = MainProductAdapter(listOf()) { product ->
-            presenter.moveToDetail(product)
-        }
+        mainProductAdapter = MainProductAdapter(
+            listOf(),
+            object : MainProductClickListener {
+                override fun onPlusClick(product: ProductUiModel, previousCount: Int) {
+                    presenter.increaseCartProduct(product, previousCount)
+                }
+
+                override fun onMinusClick(product: ProductUiModel, previousCount: Int) {
+                    presenter.decreaseCartProduct(product, previousCount)
+                }
+
+                override fun onProductClick(product: ProductUiModel) {
+                    presenter.moveToDetail(product)
+                }
+            }
+        )
         recentAdapter = RecentAdapter(listOf()) { recentProduct ->
             presenter.moveToDetail(recentProduct.productUiModel)
         }
