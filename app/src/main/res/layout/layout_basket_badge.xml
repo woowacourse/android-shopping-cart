@@ -19,11 +19,12 @@
 
     <TextView
         android:id="@+id/basket_count_badge"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/shape_cart_count_badge"
         android:gravity="center"
         android:includeFontPadding="false"
+        android:maxLines="1"
         android:padding="2dp"
         android:textColor="@color/white"
         android:textSize="14sp"
@@ -33,6 +34,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/basket_image_view"
         app:layout_constraintTop_toTopOf="@+id/basket_image_view"
-        tools:text="99+" />
+        tools:text="99" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
