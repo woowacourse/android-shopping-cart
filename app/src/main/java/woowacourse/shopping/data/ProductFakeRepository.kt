@@ -29,7 +29,7 @@ object ProductFakeRepository : ProductRepository {
         return subList
     }
 
-    override fun insert(product: Product) {
+    override fun insert(product: Product): Int {
         TODO("Not yet implemented")
     }
 

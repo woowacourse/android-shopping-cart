@@ -64,6 +64,7 @@ class RemoteProductRepositoryTest {
         val products = remoteProductRepository.getNext(10)
 
         // then
+        println(products)
         assertThat(products).hasSize(10)
         for (i in 0..9) {
             assertThat(products[i].id).isEqualTo(i + 11)

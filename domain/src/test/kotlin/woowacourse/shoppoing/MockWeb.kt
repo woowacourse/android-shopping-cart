@@ -55,6 +55,17 @@ fun startMockWebServer(): MockWebServer {
                 }]
     """.trimIndent()
 
+    val fakeProducts = List(100) {
+        """
+                {
+                    "id": ${it + 1},
+                    "name": "치킨",
+                    "price": 10000,
+                    "imageUrl": "http://example.com/chicken.jpg"
+                }
+    """
+    }
+
     val postResponse = """
                 [{
                     "id": 999
@@ -72,6 +83,22 @@ fun startMockWebServer(): MockWebServer {
 
     val dispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
+            request.path?.let { string ->
+                val parameters = kotlin.runCatching { extractQueryParameters(string) }.getOrNull()
+                    ?: return@let
+                val offset = parameters["offset"]?.toIntOrNull()
+                val count = parameters["count"]?.toIntOrNull()
+                if (offset != null && count != null) {
+                    return MockResponse()
+                        .setHeader("Content-Type", "application/json")
+                        .setResponseCode(200)
+                        .setBody(
+                            fakeProducts.subList(offset, offset + count)
+                                .joinToString(",", prefix = "[", postfix = "]")
+                                .trimIndent()
+                        )
+                }
+            }
             return when (request.method) {
                 "POST" -> {
                     when (request.path) {
@@ -126,4 +153,18 @@ fun startMockWebServer(): MockWebServer {
 
     mockWebServer.dispatcher = dispatcher
     return mockWebServer
+}
+
+private fun extractQueryParameters(queryString: String): Map<String, String> {
+    val parameters = mutableMapOf<String, String>()
+
+    val query = queryString.substringAfter("?")
+    val pairs = query.split("&")
+
+    for (pair in pairs) {
+        val (key, value) = pair.split("=")
+        parameters[key] = value
+    }
+
+    return parameters
 }
