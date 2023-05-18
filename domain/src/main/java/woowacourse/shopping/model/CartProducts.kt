@@ -21,10 +21,6 @@ data class CartProducts(private val cartProducts: List<CartProduct>) {
         }
     }
 
-    fun forEach(action: (CartProduct) -> Unit) {
-        cartProducts.forEach(action)
-    }
-
     fun hasNextPage(index: Int, size: Int): Boolean {
         return index * size + size < cartProducts.size
     }

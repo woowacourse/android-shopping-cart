@@ -75,7 +75,7 @@ class CartDatabase(context: Context) : CartRepository {
     }
 
     override fun getTotalSelectedCount(): Int {
-        return cartProducts.all().count { it.checked }
+        return cartProducts.all().filter { it.checked }.sumOf { it.count }
     }
 
     override fun getTotalPrice(): Int {

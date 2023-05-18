@@ -47,7 +47,7 @@ class ShoppingPresenter(
     }
 
     override fun updateToolbar() {
-        view.updateToolbar(cartProductsData.size)
+        view.updateToolbar(cartRepository.getTotalSelectedCount())
     }
 
     override fun navigateToItemDetail(productId: Int) {
