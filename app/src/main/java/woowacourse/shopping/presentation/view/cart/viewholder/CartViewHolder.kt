@@ -9,7 +9,8 @@ import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartViewHolder(
     parent: ViewGroup,
-    onCloseClick: (Int) -> Unit
+    onCloseClick: (Int) -> Unit,
+    onCheckedChangeListener: (Boolean) -> Unit
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context)
         .inflate(R.layout.item_cart_list, parent, false)
@@ -19,6 +20,9 @@ class CartViewHolder(
     init {
         binding.btIvCartListClose.setOnClickListener {
             onCloseClick(absoluteAdapterPosition)
+        }
+        binding.checkboxCartList.setOnCheckedChangeListener { _, isChecked ->
+            onCheckedChangeListener(isChecked)
         }
     }
 

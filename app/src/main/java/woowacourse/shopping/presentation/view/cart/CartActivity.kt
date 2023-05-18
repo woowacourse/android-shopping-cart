@@ -47,7 +47,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItemsView(carts: List<CartProductModel>) {
-        cartAdapter = CartAdapter(carts, ::deleteCartItem)
+        cartAdapter = CartAdapter(
+            carts, ::deleteCartItem, ::changeCartSelectedStatus
+        )
         binding.rvCart.adapter = cartAdapter
     }
 
@@ -57,6 +59,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun deleteCartItem(itemId: Long) {
         presenter.deleteCartItem(itemId)
+    }
+
+    private fun changeCartSelectedStatus(isSelected: Boolean) {
     }
 
     override fun setEnableLeftButton(isEnabled: Boolean) {

@@ -7,12 +7,17 @@ import woowacourse.shopping.presentation.view.cart.viewholder.CartViewHolder
 
 class CartAdapter(
     items: List<CartProductModel>,
-    private val onCloseClick: (Long) -> Unit
+    private val onCloseClick: (Long) -> Unit,
+    private val onCheckedChangeListener: (Boolean) -> Unit
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val items = items.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        return CartViewHolder(parent) { onCloseClick(items[it].product.id) }
+        return CartViewHolder(
+            parent,
+            onCloseClick = { onCloseClick(items[it].product.id) },
+            onCheckedChangeListener = onCheckedChangeListener
+        )
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {

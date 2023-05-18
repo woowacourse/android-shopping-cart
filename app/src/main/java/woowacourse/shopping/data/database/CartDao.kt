@@ -24,7 +24,6 @@ class CartDao(context: Context) {
         db.replace(CartContract.Cart.TABLE_NAME, null, value)
     }
 
-
     fun deleteAllProduct(productId: Long) {
         db.delete(
             CartContract.Cart.TABLE_NAME,

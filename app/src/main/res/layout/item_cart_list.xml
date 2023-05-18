@@ -98,9 +98,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="84,400원" />
 
-            <include
+            <woowacourse.shopping.presentation.view.common.ProductCounterView
                 android:id="@+id/layout_order_count"
-                layout="@layout/layout_order_count"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="13dp"
@@ -108,8 +107,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="H,126:42"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintWidth_percent="0.38"
-                bind:cartItem="@{cartItem}" />
+                app:layout_constraintWidth_percent="0.38"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

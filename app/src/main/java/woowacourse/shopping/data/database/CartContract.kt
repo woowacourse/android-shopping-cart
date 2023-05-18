@@ -4,17 +4,17 @@ import android.provider.BaseColumns
 
 object CartContract {
     const val CREATE_SQL = "CREATE TABLE IF NOT EXISTS ${Cart.TABLE_NAME} (" +
-            "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-            "${Cart.PRODUCT_ID} INTEGER," +
-            "${Cart.PRODUCT_COUNT} INTEGER default 0," +
-            "${Cart.IS_SELECTED} TEXT default 'n')"
+        "${BaseColumns._ID} INTEGER PRIMARY KEY," +
+        "${Cart.PRODUCT_ID} INTEGER," +
+        "${Cart.PRODUCT_COUNT} INTEGER default 0," +
+        "${Cart.IS_SELECTED} TEXT default 'n')"
 
     const val DROP_SQL = "DROP TABLE IF EXISTS ${Cart.TABLE_NAME}"
 
     fun getCartSql(startPosition: Int, CartItemCount: Int): String {
         return "SELECT * " +
-                "FROM ${Cart.TABLE_NAME} " +
-                "LIMIT $startPosition, $CartItemCount"
+            "FROM ${Cart.TABLE_NAME} " +
+            "LIMIT $startPosition, $CartItemCount"
     }
 
     object Cart : BaseColumns {
