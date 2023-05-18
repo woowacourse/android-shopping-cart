@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.respository.recentproduct
 
-import woowacourse.shopping.data.database.RecentProductDao
+import woowacourse.shopping.data.local.database.RecentProductDao
 import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.presentation.model.RecentProductModel
 
