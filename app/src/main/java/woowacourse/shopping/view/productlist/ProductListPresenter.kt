@@ -15,9 +15,14 @@ class ProductListPresenter(
     private val productListPagination = ProductListPagination(PAGINATION_SIZE, productRepository)
     private val products = productListPagination.nextItems()
         .map { it.toUiModel(cartRepository.find(it.id)?.count ?: 0) }.toMutableList()
+    private val viewedProducts = recentViewedRepository.findAll().reversed().toMutableList()
 
     private val productsListItems = mutableListOf<ProductListViewItem>()
     override fun fetchProducts() {
+        // 최근 본 항목
+        val viewedProductsItem =
+            ProductListViewItem.RecentViewedItem(viewedProducts.map { convertIdToProductModel(it) })
+        productsListItems.add(viewedProductsItem)
         // 상품 리스트
         productsListItems.addAll(products.map { ProductListViewItem.ProductItem(it) })
         // 더보기
@@ -26,13 +31,12 @@ class ProductListPresenter(
     }
 
     override fun showProductDetail(product: ProductModel) {
-        val viewedProducts = recentViewedRepository.findAll()
-        val lastViewedProduct = productRepository.find(viewedProducts.last()).toUiModel()
+        val lastViewedProduct = convertIdToProductModel(viewedProducts[0])
         view.onClickProductDetail(product, lastViewedProduct)
     }
 
     override fun showMoreProducts() {
-        val mark = products.size
+        val mark = if (isExistRecentViewed()) products.size + 1 else products.size
         val nextProducts = productListPagination.nextItems().map { it.toUiModel() }
         products.addAll(nextProducts)
         // RecyclerView Items 수정
@@ -58,10 +62,16 @@ class ProductListPresenter(
 
     override fun updateRecentViewed(id: Int) {
         if (id == -1) return
+        if (viewedProducts.contains(id)) viewedProducts.remove(id)
+        viewedProducts.add(0, id)
+        if (isExistRecentViewed()) productsListItems.removeAt(0)
+        productsListItems.add(0, ProductListViewItem.RecentViewedItem(viewedProducts.map { convertIdToProductModel(it) }))
         view.notifyRecentViewedChanged()
     }
 
     private fun convertIdToProductModel(id: Int) = productRepository.find(id).toUiModel()
+
+    private fun isExistRecentViewed(): Boolean = productsListItems[0] is ProductListViewItem.RecentViewedItem
 
     companion object {
         private const val PAGINATION_SIZE = 20
