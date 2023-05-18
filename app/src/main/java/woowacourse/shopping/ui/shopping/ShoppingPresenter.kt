@@ -5,6 +5,7 @@ import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.model.UiRecentProduct
 import kotlin.concurrent.thread
 
 class ShoppingPresenter(
@@ -14,6 +15,8 @@ class ShoppingPresenter(
 ) : ShoppingContract.Presenter {
     private var hasNext: Boolean = false
     private var lastId: Int = -1
+    private var totalProducts: List<UiProduct> = listOf()
+    private var recentProducts: List<UiRecentProduct> = listOf()
 
     override fun fetchProducts() {
         var products = productRepository
@@ -23,16 +26,17 @@ class ShoppingPresenter(
         hasNext = checkHasNext(products)
         lastId -= if (hasNext) 1 else 0
         if (hasNext) products = products.dropLast(1)
-        view.updateProducts(products)
+        totalProducts += products
+        view.updateProducts(totalProducts)
     }
 
     private fun checkHasNext(products: List<UiProduct>): Boolean =
         products.size == TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE
 
     override fun fetchRecentProducts() {
-        view.updateRecentProducts(
-            recentProductRepository.getPartially(RECENT_PRODUCT_SIZE).map { it.toUi() }
-        )
+        recentProducts = recentProductRepository.getPartially(RECENT_PRODUCT_SIZE)
+            .map { it.toUi() }
+        view.updateRecentProducts(recentProducts)
     }
 
     override fun inquiryProductDetail(product: UiProduct) {

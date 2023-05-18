@@ -68,7 +68,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun updateProducts(products: List<UiProduct>) {
-        productAdapter.submitList(productAdapter.currentList + products)
+        productAdapter.submitList(products)
     }
 
     override fun updateRecentProducts(recentProducts: List<UiRecentProduct>) {
