@@ -9,6 +9,7 @@ import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_CART_PRODUCT_COUNT
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_CART_PRODUCT_IS_CHECKED
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_IMAGE_URL
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_NAME
@@ -23,7 +24,16 @@ class CartDatabase(
         val cartProducts = mutableListOf<CartProduct>()
         getCartCursor().use {
             while (it.moveToNext()) {
-                Log.d("cart", getCartProduct(it).toString())
+                cartProducts.add(getCartProduct(it))
+            }
+        }
+        return cartProducts
+    }
+
+    override fun getCheckCart(): List<CartProduct> {
+        val cartProducts = mutableListOf<CartProduct>()
+        getCartCheckCursor().use {
+            while (it.moveToNext()) {
                 cartProducts.add(getCartProduct(it))
             }
         }
@@ -41,8 +51,10 @@ class CartDatabase(
             cursor.getString(cursor.getColumnIndex(TABLE_COLUMN_PRODUCT_IMAGE_URL))
         val cartProductCount =
             cursor.getInt(cursor.getColumnIndex(TABLE_COLUMN_CART_PRODUCT_COUNT))
+        val cartIsChecked =
+            cursor.getInt(cursor.getColumnIndex(TABLE_COLUMN_CART_PRODUCT_IS_CHECKED))
         val product = Product(productId, productTitle, productPrice, productImgUrl)
-        return CartProduct(product, cartProductCount)
+        return CartProduct(product, cartProductCount, cartIsChecked != 0)
     }
 
     override fun insert(product: CartProduct) {
@@ -52,6 +64,7 @@ class CartDatabase(
             put(TABLE_COLUMN_PRODUCT_PRICE, product.product.price)
             put(TABLE_COLUMN_PRODUCT_IMAGE_URL, product.product.imageUrl)
             put(TABLE_COLUMN_CART_PRODUCT_COUNT, product.count)
+            put(TABLE_COLUMN_CART_PRODUCT_IS_CHECKED, true)
             put(TABLE_COLUMN_PRODUCT_SAVE_TIME, System.currentTimeMillis())
         }
         shoppingDb.insertWithOnConflict(
@@ -74,8 +87,42 @@ class CartDatabase(
         shoppingDb.execSQL(query)
     }
 
+    override fun updateCount(id: Long, count: Int) {
+        val query =
+            "UPDATE $TABLE_NAME SET $TABLE_COLUMN_CART_PRODUCT_COUNT = $count WHERE  $TABLE_COLUMN_PRODUCT_ID = $id"
+        shoppingDb.execSQL(query)
+    }
+
+    override fun updateCheckChanged(id: Long, check: Boolean) {
+        val query =
+            "UPDATE $TABLE_NAME SET $TABLE_COLUMN_CART_PRODUCT_IS_CHECKED = $check WHERE  $TABLE_COLUMN_PRODUCT_ID = $id"
+        shoppingDb.execSQL(query)
+    }
+
+    override fun getFindById(id: Long): CartProduct {
+        val cartProducts = mutableListOf<CartProduct>()
+        findByIdCursor(id).use {
+            while (it.moveToNext()) {
+                Log.d("cart", getCartProduct(it).toString())
+                cartProducts.add(getCartProduct(it))
+            }
+        }
+        return cartProducts[0]
+    }
+
+    private fun findByIdCursor(id: Long): Cursor {
+        val query =
+            "SELECT * FROM $TABLE_NAME WHERE $TABLE_COLUMN_PRODUCT_ID = $id"
+        return shoppingDb.rawQuery(query, null)
+    }
+
     private fun getCartCursor(): Cursor {
         val query = "SELECT * FROM $TABLE_NAME ORDER BY $TABLE_COLUMN_PRODUCT_SAVE_TIME"
+        return shoppingDb.rawQuery(query, null)
+    }
+
+    private fun getCartCheckCursor(): Cursor {
+        val query = "SELECT * FROM $TABLE_NAME WHERE $TABLE_COLUMN_CART_PRODUCT_IS_CHECKED = 1"
         return shoppingDb.rawQuery(query, null)
     }
 }
