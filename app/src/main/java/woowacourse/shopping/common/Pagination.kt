@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.common
 
 interface Pagination<T> {
     var mark: Int

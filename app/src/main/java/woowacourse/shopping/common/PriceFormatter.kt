@@ -1,4 +1,4 @@
-package woowacourse.shopping.util
+package woowacourse.shopping.common
 
 import java.text.DecimalFormat
 

@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.productlist
 
-import woowacourse.shopping.Pagination
+import woowacourse.shopping.common.Pagination
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
 

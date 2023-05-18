@@ -1,8 +1,10 @@
 package woowacourse.shopping.view.cart
 
+import android.util.Log
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
@@ -13,9 +15,10 @@ class CartPresenter(
     private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
 
     private val currentCartProducts =
-        convertIdToProductModel(cartPagination.nextItems()).toMutableList()
+        convertIdToModel(cartPagination.nextItems()).toMutableList()
 
     override fun fetchProducts() {
+        Log.d("test", "tesg")
         view.showProducts(
             currentCartProducts,
             cartPagination.isUndoItemsEnabled,
@@ -46,13 +49,21 @@ class CartPresenter(
     private fun updateCartItems(getItems: List<CartProduct>) {
         if (getItems.isNotEmpty()) {
             currentCartProducts.clear()
-            currentCartProducts.addAll(convertIdToProductModel(getItems))
+            currentCartProducts.addAll(convertIdToModel(getItems))
             fetchProducts()
         }
     }
 
-    private fun convertIdToProductModel(cartProducts: List<CartProduct>) =
-        cartProducts.map { productRepository.find(it.id) }.map { it.toUiModel() }
+    // private fun convertIdToProductModel(cartProducts: List<CartProduct>) =
+    //  cartProducts.map { productRepository.find(it.id) }.map { it.toUiModel() }
+
+    private fun convertIdToModel(cartProducts: List<CartProduct>): List<CartProductModel> {
+        return cartProducts.map { cartProduct ->
+            val product = productRepository.find(cartProduct.id)
+            val productModel = product.toUiModel()
+            CartProductModel(cartProduct.id, productModel, cartProduct.count, cartProduct.check)
+        }
+    }
 
     override fun handleNextStep(itemId: Int) {
         when (itemId) {

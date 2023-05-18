@@ -9,4 +9,5 @@
     <string name="basic_page">1</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
+    <string name="count">%d</string>
 </resources>

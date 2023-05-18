@@ -3,12 +3,13 @@ package woowacourse.shopping.view.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.ProductModel
+import woowacourse.shopping.model.CartProductModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -39,11 +40,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun showProducts(
-        cartProducts: List<ProductModel>,
+        cartProducts: List<CartProductModel>,
         isExistUndo: Boolean,
         isExistNext: Boolean,
         count: String,
     ) {
+        Log.d("test", "showProduct 진입")
         adpater = CartAdapter(
             cartProducts,
             object : CartAdapter.OnItemClick {

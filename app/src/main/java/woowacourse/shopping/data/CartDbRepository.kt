@@ -15,13 +15,13 @@ class CartDbRepository(context: Context) : CartRepository {
         return dbHelper.selectWhereId(id)
     }
 
-    override fun add(id: Int, count: Int) {
+    override fun add(id: Int, count: Int, check: Boolean) {
         val cardProduct = find(id)
         if (cardProduct != null) {
             dbHelper.update(id, count + cardProduct.count)
             return
         }
-        dbHelper.insert(id, count)
+        dbHelper.insert(id, count, check)
     }
 
     override fun remove(id: Int) {

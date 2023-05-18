@@ -1,11 +1,11 @@
 package woowacourse.shopping.view.cart
 
-import woowacourse.shopping.model.ProductModel
+import woowacourse.shopping.model.CartProductModel
 
 interface CartContract {
     interface View {
         fun showProducts(
-            cartProducts: List<ProductModel>,
+            cartProducts: List<CartProductModel>,
             isExistUndo: Boolean,
             isExistNext: Boolean,
             count: String,

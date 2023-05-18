@@ -22,7 +22,7 @@ class ProductDetailPresenter(
     }
 
     override fun putInCart(product: ProductModel) {
-        cartRepository.add(product.id, 1)
+        cartRepository.add(product.id, 1, true)
         view.startCartActivity()
     }
 

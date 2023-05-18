@@ -1,3 +1,7 @@
 package woowacourse.shopping.domain
 
-data class CartProduct(val id: Int, val count: Int)
+data class CartProduct(
+    val id: Int,
+    val count: Int,
+    val check: Boolean,
+)

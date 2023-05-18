@@ -6,12 +6,13 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import woowacourse.shopping.domain.CartProduct
 
-class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 1) {
+class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 3) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${CartContract.TABLE_NAME} (" +
                 "  ${CartContract.TABLE_COLUMN_ID} Int PRIMARY KEY not null," +
-                "  ${CartContract.TABLE_COLUMN_COUNT} Int not null" +
+                "  ${CartContract.TABLE_COLUMN_COUNT} Int not null," +
+                "  ${CartContract.TABLE_COLUMN_CHECK} Int not null" +
                 ");",
         )
     }
@@ -21,10 +22,11 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, nu
         onCreate(db)
     }
 
-    fun insert(id: Int, count: Int) {
+    fun insert(id: Int, count: Int, check: Boolean) {
         val values = ContentValues()
         values.put(CartContract.TABLE_COLUMN_ID, id)
         values.put(CartContract.TABLE_COLUMN_COUNT, count)
+        values.put(CartContract.TABLE_COLUMN_CHECK, check.compareTo(false))
         writableDatabase.insert(CartContract.TABLE_NAME, null, values)
     }
 
@@ -43,7 +45,9 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, nu
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
             val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
-            products.add(CartProduct(id, count))
+            val check = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECK))
+            val isChecked = check == 1
+            products.add(CartProduct(id, count, isChecked))
         }
         cursor.close()
         return products
@@ -56,8 +60,10 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, nu
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
             val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
+            val check = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECK))
+            val isChecked = check == 1
             cursor.close()
-            return CartProduct(id, count)
+            return CartProduct(id, count, isChecked)
         }
         return null
     }
@@ -69,7 +75,9 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, nu
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
             val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
-            products.add(CartProduct(id, count))
+            val check = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECK))
+            val isChecked = check == 1
+            products.add(CartProduct(id, count, isChecked))
         }
         cursor.close()
         return products
