@@ -1,9 +1,11 @@
 package woowacourse.shopping.shoppingcart
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.Page
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 
 class ShoppingCartRecyclerAdapter(
     products: List<ProductUiModel>,
@@ -47,22 +49,19 @@ class ShoppingCartRecyclerAdapter(
         notifyItemRemoved(position)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun toNextPage(products: List<ProductUiModel>) {
         shoppingCartProducts.addAll(products)
         currentPage = currentPage.next()
         updatePageState(currentPage.value, totalSize)
-        notifyItemRangeChanged(0, SHOPPING_CART_ITEM_SIZE)
+        notifyDataSetChanged()
     }
 
     fun toPreviousPage() {
         currentPage = currentPage.prev()
         updatePageState(currentPage.value, totalSize)
-        notifyItemRangeChanged(0, SHOPPING_CART_ITEM_SIZE)
+        notifyItemRangeChanged(0, CART_PRODUCT_TO_READ)
     }
 
     override fun getItemCount(): Int = showingProducts.size
-
-    companion object {
-        private const val SHOPPING_CART_ITEM_SIZE = 3
-    }
 }

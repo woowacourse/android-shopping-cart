@@ -7,6 +7,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 import woowacourse.shopping.util.generateShoppingCartPresenter
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
@@ -75,16 +76,15 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun hasNextPage(pageNumber: Int, totalSize: Int): Boolean {
-        return pageNumber < totalSize / COUNT_TO_READ &&
+        return pageNumber < totalSize / CART_PRODUCT_TO_READ &&
             !(
-                pageNumber + NEXT_PAGE == totalSize / COUNT_TO_READ &&
-                    totalSize % COUNT_TO_READ == 0
+                pageNumber + NEXT_PAGE == totalSize / CART_PRODUCT_TO_READ &&
+                    totalSize % CART_PRODUCT_TO_READ == 0
                 )
     }
 
     companion object {
         private const val INITIAL_PAGE_NUMBER = 0
         private const val NEXT_PAGE = 1
-        private const val COUNT_TO_READ = 3
     }
 }

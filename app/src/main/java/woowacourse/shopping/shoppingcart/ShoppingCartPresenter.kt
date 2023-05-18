@@ -2,6 +2,7 @@ package woowacourse.shopping.shoppingcart
 
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 import woowacourse.shopping.util.toUiModel
 
 class ShoppingCartPresenter(
@@ -12,9 +13,12 @@ class ShoppingCartPresenter(
     private var numberOfReadShoppingCartProduct: Int = 0
 
     private fun selectShoppingCartProducts(): List<ProductUiModel> {
-        val products = repository.selectShoppingCartProducts(numberOfReadShoppingCartProduct, 3)
+        val products = repository.selectShoppingCartProducts(
+            numberOfReadShoppingCartProduct,
+            CART_PRODUCT_TO_READ,
+        )
             .map { it.toUiModel() }
-        numberOfReadShoppingCartProduct += 3
+        numberOfReadShoppingCartProduct += CART_PRODUCT_TO_READ
 
         return products
     }

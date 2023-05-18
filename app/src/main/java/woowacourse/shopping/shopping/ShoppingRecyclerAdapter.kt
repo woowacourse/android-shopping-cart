@@ -46,8 +46,13 @@ class ShoppingRecyclerAdapter(
                 (holder as RecentViewedLayoutViewHolder).bind(recentViewedProducts)
 
             PRODUCT_ITEM_TYPE ->
+
                 (holder as ShoppingItemViewHolder).bind(
-                    productUiModel = products[position - 1],
+                    productUiModel = if (recentViewedProducts.isEmpty()) {
+                        products[position]
+                    } else {
+                        products[position - 1]
+                    },
                     onClicked = onProductClicked,
                 )
 
