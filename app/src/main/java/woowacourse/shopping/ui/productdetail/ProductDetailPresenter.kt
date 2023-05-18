@@ -17,7 +17,7 @@ class ProductDetailPresenter(
     }
 
     override fun addBasketProduct() {
-        basketRepository.add(product.toDomain())
+        basketRepository.plusProductCount(product.toDomain())
         view.navigateToBasketScreen()
     }
 }

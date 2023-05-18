@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemBasketBinding
+import woowacourse.shopping.model.UiBasketProduct
 import woowacourse.shopping.model.UiProduct
 
 class BasketViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) : ViewHolder(
@@ -18,7 +19,7 @@ class BasketViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) : ViewHold
         }
     }
 
-    fun bind(item: UiProduct) {
-        binding.product = item
+    fun bind(item: UiBasketProduct){
+        binding.basketProduct = item
     }
 }

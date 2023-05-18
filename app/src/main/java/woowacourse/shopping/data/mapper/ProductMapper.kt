@@ -9,7 +9,6 @@ fun DataProduct.toDomain(): Product =
         name = name,
         price = price.toDomain(),
         imageUrl = imageUrl,
-        selectedCount = selectedCount
     )
 
 fun Product.toData(): DataProduct =
@@ -18,5 +17,5 @@ fun Product.toData(): DataProduct =
         name = name,
         price = price.toData(),
         imageUrl = imageUrl,
-        selectedCount = selectedCount
     )
+

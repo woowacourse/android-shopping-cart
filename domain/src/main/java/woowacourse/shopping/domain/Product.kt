@@ -5,5 +5,13 @@ data class Product(
     val name: String,
     val price: Price,
     val imageUrl: String,
-    val selectedCount: Int = 0,
-)
+//    val selectedCount: ProductCount = ProductCount(0),
+) {
+//    fun plusCount(): Product =
+//        copy(selectedCount = selectedCount + 1)
+//
+//    fun minusCount(): Product =
+//        copy(selectedCount = selectedCount - 1)
+//
+//    fun isEmpty(): Boolean = selectedCount.isZero()
+}

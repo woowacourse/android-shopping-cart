@@ -41,7 +41,7 @@ internal class ProductDetailPresenterTest {
         presenter.addBasketProduct()
 
         // then
-        verify(exactly = 1) { basketRepository.add(any()) }
+        verify(exactly = 1) { basketRepository.plusProductCount(any()) }
         verify(exactly = 1) { view.navigateToBasketScreen() }
     }
 }

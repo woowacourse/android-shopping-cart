@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.databinding.ActivityBasketBinding
+import woowacourse.shopping.model.UiBasketProduct
 import woowacourse.shopping.model.UiPageNumber
-import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.ui.basket.BasketContract.Presenter
 import woowacourse.shopping.ui.basket.BasketContract.View
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
@@ -21,11 +21,11 @@ class BasketActivity : AppCompatActivity(), View {
         super.onCreate(savedInstanceState)
         binding = ActivityBasketBinding.inflate(layoutInflater).setContentView(this)
         binding.presenter = presenter
-        binding.adapter = BasketAdapter(presenter::removeBasketProduct)
+        binding.adapter = BasketAdapter(presenter::deleteBasketProduct)
     }
 
-    override fun updateBasket(products: List<UiProduct>) {
-        binding.adapter?.submitList(products)
+    override fun updateBasket(basketProducts: List<UiBasketProduct>) {
+        binding.adapter?.submitList(basketProducts)
     }
 
     override fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean) {

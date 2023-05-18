@@ -9,7 +9,6 @@ fun UiProduct.toDomain(): Product =
         name = name,
         price = price.toDomain(),
         imageUrl = imageUrl,
-        selectedCount = selectedCount
     )
 
 fun Product.toUi(): UiProduct =
@@ -18,5 +17,4 @@ fun Product.toUi(): UiProduct =
         name = name,
         price = price.toUi(),
         imageUrl = imageUrl,
-        selectedCount = selectedCount
     )

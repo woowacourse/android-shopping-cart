@@ -1,13 +1,14 @@
 package woowacourse.shopping.ui.basket
 
 import woowacourse.shopping.model.PageNumber
+import woowacourse.shopping.model.UiBasketProduct
 import woowacourse.shopping.model.UiProduct
 
 interface BasketContract {
     interface View {
         val presenter: Presenter
 
-        fun updateBasket(products: List<UiProduct>)
+        fun updateBasket(basketProducts: List<UiBasketProduct>)
         fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean)
         fun closeScreen()
         fun updatePageNumber(page: PageNumber)
@@ -15,7 +16,7 @@ interface BasketContract {
 
     abstract class Presenter(protected val view: View) {
         abstract fun fetchBasket(page: Int)
-        abstract fun removeBasketProduct(product: UiProduct)
+        abstract fun deleteBasketProduct(basketProduct: UiBasketProduct)
         abstract fun closeScreen()
     }
 }

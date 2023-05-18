@@ -4,5 +4,5 @@ typealias DataRecentProduct = RecentProduct
 
 data class RecentProduct(
     val id: Int,
-    val product: DataProduct,
+    val product: Product,
 )

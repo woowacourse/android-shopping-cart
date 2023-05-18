@@ -1,8 +1,11 @@
 package woowacourse.shopping.ui.shopping
 
+import woowacourse.shopping.domain.Basket
+import woowacourse.shopping.domain.PageNumber
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
+import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.domain.repository.DomainProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.mapper.toDomain
@@ -16,22 +19,38 @@ class ShoppingPresenter(
     view: View,
     private val productRepository: DomainProductRepository,
     private val recentProductRepository: RecentProductRepository,
+    private val basketRepository: BasketRepository,
 ) : Presenter(view) {
+    private var basket = Basket(loadUnit = TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE)
     private var products = Products()
     private var recentProducts = RecentProducts()
+    private var currentPage: PageNumber = PageNumber(sizePerPage = LOAD_PRODUCT_SIZE_AT_ONCE)
 
     override fun fetchAll() {
         fetchProducts()
         fetchRecentProducts()
+        fetchBasket()
     }
 
     override fun fetchProducts() {
-        val newProducts = productRepository
-            .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, products.lastId)
-        products = products.addAll(newProducts)
+        basket += basketRepository.getProductByPage(currentPage)
 
-        view.updateProducts(products.getItemsByUnit().map { it.toUi() })
+        view.updateProducts(basket.getItemsByUnit().map { it.toUi() })
         view.updateLoadMoreVisible()
+    }
+
+    override fun fetchRecentProducts() {
+        recentProducts = RecentProducts(recentProductRepository.getPartially(RECENT_PRODUCT_SIZE))
+        view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
+    }
+
+    override fun fetchBasket() {
+        basket = basketRepository.getProductByPage(currentPage)
+    }
+
+    override fun getMoreProducts() {
+        currentPage = ++currentPage
+        fetchProducts()
     }
 
     private fun View.updateLoadMoreVisible() {
@@ -52,11 +71,6 @@ class ShoppingPresenter(
         recentProductRepository.add(recentProduct)
     }
 
-    override fun fetchRecentProducts() {
-        recentProducts = RecentProducts(recentProductRepository.getPartially(RECENT_PRODUCT_SIZE))
-        view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
-    }
-
     override fun inquiryRecentProductDetail(recentProduct: UiRecentProduct) {
         view.showProductDetail(recentProduct.product)
         recentProductRepository.add(recentProduct.toDomain())
@@ -64,6 +78,27 @@ class ShoppingPresenter(
 
     override fun openBasket() {
         view.navigateToBasketScreen()
+    }
+
+    override fun addBasketProduct(product: UiProduct) {
+        val newProduct = product.toDomain()
+        basket += newProduct
+        basketRepository.plusProductCount(newProduct)
+
+        updateBasketProducts()
+    }
+
+    override fun removeBasketProduct(product: UiProduct) {
+        val removingProduct = product.toDomain()
+        basket -= removingProduct
+        basketRepository.minusProductCount(removingProduct)
+
+        updateBasketProducts()
+    }
+
+    private fun updateBasketProducts() {
+        view.updateBasketProductCount(basket.productTotalCount)
+        view.updateProducts(basket.getItemsByUnit().map { it.toUi() })
     }
 
     companion object {

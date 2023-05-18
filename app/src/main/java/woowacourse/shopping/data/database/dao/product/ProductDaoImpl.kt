@@ -6,12 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
 import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.model.DataPrice
-import woowacourse.shopping.data.model.DataProduct
+import woowacourse.shopping.data.model.Product
 
 class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
     @SuppressLint("Range")
-    override fun getPartially(size: Int, lastId: Int): List<DataProduct> {
-        val products = mutableListOf<DataProduct>()
+    override fun getPartially(size: Int, lastId: Int): List<Product> {
+        val products = mutableListOf<Product>()
         val db = database.writableDatabase
         val cursor =
             db.rawQuery(GET_PARTIALLY_QUERY, arrayOf(lastId.toString(), size.toString()))
@@ -23,20 +23,17 @@ class ProductDaoImpl(private val database: SQLiteOpenHelper) : ProductDao {
                 DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
             val imageUrl: String =
                 cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-            val selectedCount: Int =
-                cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_COUNT))
-            products.add(DataProduct(id, name, price, imageUrl, selectedCount))
+            products.add(Product(id, name, price, imageUrl))
         }
         cursor.close()
         return products
     }
 
-    fun add(product: DataProduct) {
+    fun add(product: Product) {
         val contentValues = ContentValues().apply {
             put(ProductContract.COLUMN_NAME, product.name)
             put(ProductContract.COLUMN_PRICE, product.price.value)
             put(ProductContract.COLUMN_IMAGE_URL, product.imageUrl)
-            put(ProductContract.COLUMN_COUNT, product.selectedCount)
         }
 
         database.writableDatabase.insert(ProductContract.TABLE_NAME, null, contentValues)

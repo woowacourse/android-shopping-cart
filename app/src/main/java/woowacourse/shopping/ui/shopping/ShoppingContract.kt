@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.shopping
 
+import woowacourse.shopping.model.BasketProduct
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
 
@@ -7,12 +8,13 @@ interface ShoppingContract {
     interface View {
         val presenter: Presenter
 
-        fun updateProducts(products: List<UiProduct>)
+        fun updateProducts(products: List<BasketProduct>)
         fun updateRecentProducts(recentProducts: List<UiRecentProduct>)
         fun showProductDetail(product: UiProduct)
         fun navigateToBasketScreen()
         fun showLoadMoreButton()
         fun hideLoadMoreButton()
+        fun updateBasketProductCount(count: Int)
     }
 
     abstract class Presenter(protected val view: View) {
@@ -22,5 +24,9 @@ interface ShoppingContract {
         abstract fun inquiryProductDetail(product: UiProduct)
         abstract fun inquiryRecentProductDetail(recentProduct: UiRecentProduct)
         abstract fun openBasket()
+        abstract fun addBasketProduct(product: UiProduct)
+        abstract fun removeBasketProduct(product: UiProduct)
+        abstract fun fetchBasket()
+        abstract fun getMoreProducts()
     }
 }

@@ -7,8 +7,9 @@ import android.provider.BaseColumns
 import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.database.contract.RecentProductContract
 import woowacourse.shopping.data.model.DataPrice
-import woowacourse.shopping.data.model.DataProduct
+import woowacourse.shopping.data.model.BasketProduct
 import woowacourse.shopping.data.model.DataRecentProduct
+import woowacourse.shopping.data.model.Product
 
 class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProductDao {
 
@@ -38,7 +39,7 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
                 DataPrice(cursor.getInt(cursor.getColumnIndex(RecentProductContract.COLUMN_PRICE)))
             val imageUrl: String =
                 cursor.getString(cursor.getColumnIndex(RecentProductContract.COLUMN_IMAGE_URL))
-            products.add(DataRecentProduct(id, DataProduct(productId, name, price, imageUrl)))
+            products.add(DataRecentProduct(id, Product(productId, name, price, imageUrl)))
         }
         cursor.close()
         return products

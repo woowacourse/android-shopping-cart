@@ -7,8 +7,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.model.Product" />
+            name="basketProduct"
+            type="woowacourse.shopping.model.BasketProduct" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +28,7 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{basketProduct.product.name}"
             android:textColor="@color/woowa_text_black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -56,7 +56,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="18dp"
             android:layout_marginBottom="18dp"
-            bind:imageUrl="@{product.imageUrl}"
+            bind:imageUrl="@{basketProduct.product.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="136:72"
@@ -68,7 +68,7 @@
             android:id="@+id/product_price_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/price_format(product.price.value)}"
+            android:text="@{@string/price_format(basketProduct.product.price.value)}"
             android:textColor="@color/woowa_text_black"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@+id/product_image_view"

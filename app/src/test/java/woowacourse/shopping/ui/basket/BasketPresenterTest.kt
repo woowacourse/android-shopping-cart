@@ -35,7 +35,7 @@ internal class BasketPresenterTest {
         presenter.fetchBasket(page)
 
         // then
-        verify(exactly = 1) { basketRepository.getPartially(any()) }
+        verify(exactly = 1) { basketRepository.getProductInBasketByPage(any()) }
         verify(exactly = 1) { view.updateBasket(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
         verify(exactly = 1) { view.updatePageNumber(any()) }
@@ -48,7 +48,7 @@ internal class BasketPresenterTest {
         presenter = BasketPresenter(view, basketRepository)
 
         val currentPage = slot<PageNumber>()
-        every { basketRepository.getPartially(capture(currentPage)) } returns mockk(relaxed = true)
+        every { basketRepository.getProductInBasketByPage(capture(currentPage)) } returns mockk(relaxed = true)
 
         // when
         presenter.fetchBasket(page - 1)
@@ -67,7 +67,7 @@ internal class BasketPresenterTest {
         presenter = BasketPresenter(view, basketRepository)
 
         val currentPage = slot<PageNumber>()
-        every { basketRepository.getPartially(capture(currentPage)) } returns mockk(relaxed = true)
+        every { basketRepository.getProductInBasketByPage(capture(currentPage)) } returns mockk(relaxed = true)
 
         // when
         presenter.fetchBasket(page + 1)
@@ -86,15 +86,15 @@ internal class BasketPresenterTest {
             Product(id, "상품 $id", UiPrice(1000), "")
         }
         val product = Product(0, "상품 0", UiPrice(1000), "")
-        every { basketRepository.remove(product.toDomain()) } answers { products.remove(product) }
+        every { basketRepository.minusProductCount(product.toDomain()) } answers { products.remove(product) }
 
 
         // when
-        presenter.removeBasketProduct(product)
+        presenter.deleteBasketProduct(product)
 
         // then
-        verify(exactly = 1) { basketRepository.remove(product.toDomain()) }
-        verify(exactly = 1) { basketRepository.getPartially(PageNumber(1)) }
+        verify(exactly = 1) { basketRepository.minusProductCount(product.toDomain()) }
+        verify(exactly = 1) { basketRepository.getProductInBasketByPage(PageNumber(1)) }
         verify(exactly = 1) { view.updateBasket(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
         verify(exactly = 1) { view.updatePageNumber(any()) }

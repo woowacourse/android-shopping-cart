@@ -7,5 +7,5 @@ data class Product(
     val name: String,
     val price: DataPrice,
     val imageUrl: String,
-    val selectedCount: Int = 0,
+//    val selectedCount: DataProductCount = DataProductCount(0),
 )

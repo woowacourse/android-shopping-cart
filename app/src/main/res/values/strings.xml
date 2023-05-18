@@ -21,5 +21,6 @@
     <string name="close_screen">화면 닫기</string>
     <string name="basket">장바구니</string>
     <string name="minus">-</string>
+    <string name="plus">+</string>
 
 </resources>

@@ -8,7 +8,7 @@ import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.database.contract.RecentProductContract
 
 const val DATABASE_NAME = "ShoppingDatabase.db"
-const val DATABASE_VERSION = 6
+const val DATABASE_VERSION = 10
 
 class ShoppingDatabase(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
