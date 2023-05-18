@@ -62,7 +62,11 @@ class MainPresenter(
     }
 
     override fun decreaseCartProduct(product: ProductUiModel, previousCount: Int) {
-        cartRepository.addProduct(product.toDomain(), previousCount - 1)
+        if (previousCount == 1) {
+            cartRepository.deleteProduct(product.toDomain())
+        } else {
+            cartRepository.addProduct(product.toDomain(), previousCount - 1)
+        }
     }
 
     private fun addRecentProduct(recentProduct: RecentProduct) {

@@ -6,6 +6,6 @@ import com.example.domain.model.Product
 interface CartRepository {
     fun getAll(): List<CartProduct>
     fun addProduct(product: Product, count: Int)
-    fun deleteProduct(cartProduct: CartProduct)
+    fun deleteProduct(product: Product)
     fun getProductsByPage(page: Int, size: Int): List<CartProduct>
 }

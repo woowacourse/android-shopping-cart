@@ -19,7 +19,7 @@ class CartPresenter(
     }
 
     override fun deleteCartProduct(cartProduct: CartProductUiModel) {
-        cartRepository.deleteProduct(cartProduct.toDomain())
+        cartRepository.deleteProduct(cartProduct.productUiModel.toDomain())
         this.page = this.page.copy(allSize = this.page.allSize - 1)
 
         var loadedItems = getCurrentPageItems()

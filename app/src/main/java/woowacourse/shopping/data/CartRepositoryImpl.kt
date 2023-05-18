@@ -16,8 +16,8 @@ class CartRepositoryImpl(
         cartDao.putProduct(product, count)
     }
 
-    override fun deleteProduct(cartProduct: CartProduct) {
-        cartDao.deleteCartProduct(cartProduct)
+    override fun deleteProduct(product: Product) {
+        cartDao.deleteCartProduct(product)
     }
 
     override fun getProductsByPage(page: Int, size: Int): List<CartProduct> {

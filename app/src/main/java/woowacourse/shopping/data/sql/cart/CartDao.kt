@@ -73,9 +73,9 @@ class CartDao(
         writableDatabase.execSQL(updateSql)
     }
 
-    fun deleteCartProduct(cartProduct: CartProduct) {
+    fun deleteCartProduct(product: Product) {
         val selection = "${CartContract.TABLE_COLUMN_PRODUCT_ID} = ?"
-        val selectionArgs = arrayOf("${cartProduct.product.id}")
+        val selectionArgs = arrayOf("${product.id}")
         writableDatabase.delete(CartContract.TABLE_NAME, selection, selectionArgs)
     }
 
