@@ -1,6 +1,8 @@
 package woowacourse.shopping.productdetail
 
+import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomainModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
@@ -28,8 +30,16 @@ class ProductDetailPresenter(
         view.showProductDetail(recentProduct)
     }
 
-    override fun addToCart() {
-        cartRepository.plusCartProduct(product.toDomainModel())
-        view.showCart()
+    override fun showCartCounter() {
+        view.openCartCounter(CartProductModel(DEFAULT_CART_PRODUCT_AMOUNT, product))
+    }
+
+    override fun addToCart(cartProduct: CartProductModel) {
+        cartRepository.addCartProduct(cartProduct.toDomainModel())
+        view.close()
+    }
+
+    companion object {
+        private const val DEFAULT_CART_PRODUCT_AMOUNT = 1
     }
 }

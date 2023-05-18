@@ -12,6 +12,16 @@ import woowacourse.shopping.domain.Shop
 import woowacourse.shopping.domain.URL
 
 class CartDao(private val db: SQLiteDatabase) : CartDataSource {
+    override fun addCartProduct(cartProduct: CartProduct) {
+        val productRow: MutableMap<String, Any> = mutableMapOf()
+        productRow[SqlProduct.PICTURE] = cartProduct.product.picture.value
+        productRow[SqlProduct.TITLE] = cartProduct.product.title
+        productRow[SqlProduct.PRICE] = cartProduct.product.price
+
+        val productId = SqlProduct.selectRowId(db, productRow)
+        insertOrUpdateCartProduct(productId, cartProduct.amount)
+    }
+
     override fun plusCartProduct(product: Product) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
         productRow[SqlProduct.PICTURE] = product.picture.value
@@ -19,7 +29,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         productRow[SqlProduct.PRICE] = product.price
 
         val productId = SqlProduct.selectRowId(db, productRow)
-        insertOrUpdateCartProduct(productId)
+        insertOrUpdateCartProduct(productId, 1)
     }
 
     override fun minusCartProduct(product: Product) {
@@ -68,9 +78,9 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         return makeCart(cursor)
     }
 
-    private fun insertOrUpdateCartProduct(productId: Int) {
+    private fun insertOrUpdateCartProduct(productId: Int, amount: Int) {
         val query =
-            "INSERT INTO ${SqlCart.name} (${SqlCart.AMOUNT}, ${SqlCart.PRODUCT_ID}) VALUES (1, $productId) " + "ON CONFLICT(${SqlCart.PRODUCT_ID}) DO UPDATE SET ${SqlCart.AMOUNT} = ${SqlCart.AMOUNT} + 1"
+            "INSERT INTO ${SqlCart.name} (${SqlCart.AMOUNT}, ${SqlCart.PRODUCT_ID}) VALUES ($amount, $productId) " + "ON CONFLICT(${SqlCart.PRODUCT_ID}) DO UPDATE SET ${SqlCart.AMOUNT} = ${SqlCart.AMOUNT} + $amount"
 
         db.execSQL(query)
     }

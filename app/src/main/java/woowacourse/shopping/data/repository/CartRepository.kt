@@ -1,10 +1,15 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.CartDataSource
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Shop
 
 class CartRepository(private val localDataSource: CartDataSource) {
+
+    fun addCartProduct(cartProduct: CartProduct) {
+        localDataSource.addCartProduct(cartProduct)
+    }
 
     fun plusCartProduct(product: Product) {
         localDataSource.plusCartProduct(product)

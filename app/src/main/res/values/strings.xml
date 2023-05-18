@@ -11,4 +11,5 @@
 
     <string name="cart_order_text">주문하기(%d)</string>
     <string name="product_detail_recent_product_text">마지막으로 본 상품</string>
+    <string name="add_cart_button_text">담기</string>
 </resources>
