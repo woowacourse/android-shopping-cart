@@ -60,11 +60,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private fun initProductListAdapter() {
         val productClickListener = object : ProductClickListener {
             override fun onAddClick(cartProductModel: CartProductModel) {
-                return presenter.addCartProductCount(cartProductModel)
+                presenter.addCartProductCount(cartProductModel)
+                presenter.loadCartCount()
             }
 
             override fun onRemoveClick(cartProductModel: CartProductModel) {
-                return presenter.subCartProductCount(cartProductModel)
+                presenter.subCartProductCount(cartProductModel)
+                presenter.loadCartCount()
             }
 
             override fun onItemClick(productModel: ProductModel) {
@@ -85,10 +87,15 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         productListAdapter.setProductItems(
             cartProductModels.map { ProductViewType.ProductItem(it) },
         )
+        presenter.loadCartCount()
     }
 
     override fun setRecentProductModels(productModels: List<ProductModel>) {
         productListAdapter.setRecentProductsItems(productModels)
+    }
+
+    override fun setCartCount(count: Int) {
+        binding.textCartCountProductList.text = count.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

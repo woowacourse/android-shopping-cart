@@ -51,8 +51,7 @@ class CartProducts(products: List<CartProduct> = listOf()) {
 
     private fun subTargetProductCount(targetIndex: Int, count: Int) {
         val targetProduct = _items[targetIndex]
-        if (targetProduct.count - count < 1) {
-            _items.removeAt(targetIndex)
+        if (targetProduct.count - count < MIN_COUNT) {
             return
         }
         _items[targetIndex] = targetProduct.subCount(count)
@@ -94,5 +93,6 @@ class CartProducts(products: List<CartProduct> = listOf()) {
 
     companion object {
         private const val NOT_FOUND = -1
+        private const val MIN_COUNT = 1
     }
 }

@@ -11,6 +11,7 @@ class CartPagesTest {
         CartProduct(
             Product(it, "test.com", "햄버거", Price(10000)),
             2,
+            true,
         )
     }
 
@@ -38,6 +39,7 @@ class CartPagesTest {
             CartProduct(
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
+                true,
             )
         }
 
@@ -61,6 +63,7 @@ class CartPagesTest {
             CartProduct(
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
+                true,
             )
         }
 
@@ -85,6 +88,7 @@ class CartPagesTest {
             CartProduct(
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
+                true,
             )
         }
 
@@ -106,10 +110,12 @@ class CartPagesTest {
             CartProduct(
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
+                true,
             )
         } + CartProduct(
             Product(5, "test.com", "햄버거", Price(10000)),
             1,
+            true,
         )
 
         assertThat(actualProducts.items).isEqualTo(expectedProducts)
@@ -130,12 +136,14 @@ class CartPagesTest {
             CartProduct(
                 Product(1, "test.com", "햄버거", Price(10000)),
                 3,
+                true,
             ),
         ) +
             listOf(2, 3, 4, 5).map {
                 CartProduct(
                     Product(it, "test.com", "햄버거", Price(10000)),
                     2,
+                    true,
                 )
             }
 

@@ -25,6 +25,11 @@ class ProductListPresenter(
         view.setProductModels(cartProductModels)
     }
 
+    override fun loadCartCount() {
+        val cartCount = cartRepository.getCartEntities().sumOf { it.count }
+        view.setCartCount(cartCount)
+    }
+
     private fun getCartProductModel(product: Product) =
         UnCheckableCartProductModel(
             product.toPresentation(),
