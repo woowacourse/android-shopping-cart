@@ -27,6 +27,7 @@ class ShoppingPresenter(
     override fun reloadProducts() {
         updateProducts()
         updateRecentProducts()
+        view.updateCartProductsCount(cartRepository.selectAllCount())
     }
 
     override fun openProduct(cartProduct: CartProductModel) {
@@ -50,10 +51,12 @@ class ShoppingPresenter(
 
     override fun minusCartProduct(cartProduct: CartProductModel) {
         cartRepository.minusCartProduct(cartProduct.product.toDomainModel())
+        view.updateCartProductsCount(cartRepository.selectAllCount())
     }
 
     override fun plusCartProduct(cartProduct: CartProductModel) {
         cartRepository.plusCartProduct(cartProduct.product.toDomainModel())
+        view.updateCartProductsCount(cartRepository.selectAllCount())
     }
 
     private fun updateProducts() {

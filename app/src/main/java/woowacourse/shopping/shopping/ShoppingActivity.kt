@@ -1,12 +1,10 @@
 package woowacourse.shopping.shopping
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
-import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
@@ -70,18 +68,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter.reloadProducts()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_shopping, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.shopping_cart_action -> presenter.openCart()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun updateProducts(cartProductModels: List<CartProductModel>) {
         productAdapter.updateProducts(cartProductModels)
     }
@@ -103,6 +89,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         startCartActivity()
     }
 
+    override fun updateCartProductsCount(countOfProduct: Int) {
+        binding.shoppingToolbarCartCountLayout.visibility = if (countOfProduct == 0) View.GONE
+        else View.VISIBLE
+        binding.shoppingToolbarCartCountText.text = countOfProduct.toString()
+    }
+
     private fun initBinding() {
         binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -110,6 +102,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initToolbar() {
         setSupportActionBar(binding.shoppingToolbar)
+        binding.shoppingToolbarCartButton.setOnClickListener {
+            presenter.openCart()
+        }
     }
 
     private fun initLoadMoreButton() {
