@@ -1,19 +1,25 @@
 package woowacourse.shopping.presentation.productlist
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.CartDbAdapter
+import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.product.MockProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.data.recentproduct.RecentProductIdDbAdapter
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.ProductViewType
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.productlist.product.ProductClickListener
 import woowacourse.shopping.presentation.productlist.product.ProductListAdapter
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
@@ -23,7 +29,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private val presenter: ProductListPresenter by lazy {
         val recentProductRepository = RecentProductIdDbAdapter(RecentProductDbHelper(this))
-        ProductListPresenter(this, MockProductRepository, recentProductRepository)
+        val cartProductRepository = CartDbAdapter(CartDbHelper(this))
+        ProductListPresenter(
+            this,
+            MockProductRepository,
+            recentProductRepository,
+            cartProductRepository,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +48,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun initRecyclerView() {
         initProductListAdapter()
-        presenter.loadProducts()
         setLayoutManager()
+        presenter.loadProducts()
     }
 
     override fun onStart() {
@@ -46,23 +58,33 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initProductListAdapter() {
+        val productClickListener = object : ProductClickListener {
+            override fun onAddClick(cartProductModel: CartProductModel) {
+                return presenter.addCartProductCount(cartProductModel)
+            }
+
+            override fun onRemoveClick(cartProductModel: CartProductModel) {
+                return presenter.subCartProductCount(cartProductModel)
+            }
+
+            override fun onItemClick(productModel: ProductModel) {
+                productClick(productModel)
+            }
+        }
+
         productListAdapter = ProductListAdapter(
-            productItems = combineProductViewItems(listOf()),
+            productItems = listOf<ProductViewType.ProductItem>() + ProductViewType.MoreItem,
             showMoreProductItem = presenter::loadProducts,
-            showProductDetail = ::productClick,
+            productClickListener = productClickListener,
         )
 
         binding.recyclerProduct.adapter = productListAdapter
     }
 
-    override fun setProductModels(productModels: List<ProductModel>) {
-        productListAdapter.setProductItems(productModels)
-    }
-
-    private fun combineProductViewItems(
-        productModels: List<ProductModel>,
-    ): List<ProductViewType> {
-        return productModels.map { ProductViewType.ProductItem(it) } + ProductViewType.MoreItem
+    override fun setProductModels(cartProductModels: List<CartProductModel>) {
+        productListAdapter.setProductItems(
+            cartProductModels.map { ProductViewType.ProductItem(it) },
+        )
     }
 
     override fun setRecentProductModels(productModels: List<ProductModel>) {
@@ -76,7 +98,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.icon_cart -> startActivity(CartActivity.getIntent(this))
+            R.id.icon_cart -> {
+                startActivity(CartActivity.getIntent(this))
+                finish()
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -98,7 +123,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
     }
 
+    override fun replaceProductModel(cartProductModel: CartProductModel) {
+        productListAdapter.replaceProductItem(ProductViewType.ProductItem(cartProductModel))
+    }
+
     companion object {
         private const val SPAN_COUNT = 2
+        fun getIntent(context: Context): Intent {
+            return Intent(context, ProductListActivity::class.java)
+        }
     }
 }

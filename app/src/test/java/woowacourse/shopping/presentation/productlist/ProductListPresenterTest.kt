@@ -8,11 +8,15 @@ import io.mockk.slot
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.data.cart.CartEntity
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.model.Price
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.model.UnCheckableCartProductModel
 
 class ProductListPresenterTest {
 
@@ -20,13 +24,16 @@ class ProductListPresenterTest {
     private lateinit var view: ProductListContract.View
     private lateinit var productRepository: ProductRepository
     private lateinit var recentProductIdRepository: RecentProductIdRepository
+    private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
         recentProductIdRepository = mockk(relaxed = true)
-        presenter = ProductListPresenter(view, productRepository, recentProductIdRepository)
+        cartRepository = mockk(relaxed = true)
+        presenter =
+            ProductListPresenter(view, productRepository, recentProductIdRepository, cartRepository)
     }
 
     @Test
@@ -46,11 +53,12 @@ class ProductListPresenterTest {
     @Test
     fun `전체 상품을 불러온다`() {
         // given 상품 목록 저장소는 10 개의 상품을 return 한다
-        val productsSlot = slot<List<ProductModel>>()
+        val productsSlot = slot<List<CartProductModel>>()
         every { view.setProductModels(capture(productsSlot)) } just runs
         every { productRepository.getProductsWithRange(any(), any()) } returns (1..10).map {
             Product(it, "test.com", "햄버거", Price(10000))
         }
+        every { cartRepository.getCartEntity(any()) } returns CartEntity(1, 1)
 
         // when 상품 목록을 load 한다
         presenter.loadProducts()
@@ -58,7 +66,10 @@ class ProductListPresenterTest {
         // then view 의 setProductsModels 인자로 ProductModel 10개를 전달한다.
         val actual = productsSlot.captured
         val expected = (1..10).map {
-            ProductModel(it, "test.com", "햄버거", 10000)
+            UnCheckableCartProductModel(
+                ProductModel(it, "test.com", "햄버거", 10000),
+                1,
+            )
         }
         assertThat(actual).isEqualTo(expected)
     }

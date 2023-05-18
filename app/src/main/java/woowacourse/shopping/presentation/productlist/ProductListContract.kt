@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.productlist
 
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
 
 interface ProductListContract {
@@ -7,11 +8,13 @@ interface ProductListContract {
         fun loadProducts()
         fun loadRecentProducts()
         fun saveRecentProductId(productId: Int)
+        fun addCartProductCount(cartProductModel: CartProductModel)
+        fun subCartProductCount(cartProductModel: CartProductModel)
     }
 
     interface View {
-        fun setProductModels(productModels: List<ProductModel>)
-
+        fun setProductModels(cartProductModels: List<CartProductModel>)
+        fun replaceProductModel(cartProductModel: CartProductModel)
         fun setRecentProductModels(productModels: List<ProductModel>)
     }
 }

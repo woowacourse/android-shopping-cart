@@ -88,14 +88,15 @@
                 <include
                     android:id="@+id/item_count_cart"
                     layout="@layout/item_count"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="20dp"
-                    app:cartListener="@{cartListener}"
+                    app:cartCounterListener="@{cartListener}"
                     app:cartProductModel="@{cartProductModel}"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/image_cart_product_poster" />
 
                 <CheckBox
                     android:id="@+id/checkBox_cart"

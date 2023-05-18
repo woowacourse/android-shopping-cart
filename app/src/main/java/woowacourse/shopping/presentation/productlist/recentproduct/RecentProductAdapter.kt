@@ -8,8 +8,7 @@ import woowacourse.shopping.presentation.model.ProductModel
 class RecentProductAdapter(
     recentProducts: List<ProductModel>,
     private val showProductDetail: (ProductModel) -> Unit,
-) :
-    RecyclerView.Adapter<RecentProductItemViewHolder>() {
+) : RecyclerView.Adapter<RecentProductItemViewHolder>() {
 
     private lateinit var layoutInflater: LayoutInflater
 

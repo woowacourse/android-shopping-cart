@@ -12,7 +12,7 @@ import woowacourse.shopping.presentation.model.ProductViewType.RecentProductMode
 class ProductListAdapter(
     productItems: List<ProductViewType>,
     private val showMoreProductItem: () -> Unit,
-    private val showProductDetail: (ProductModel) -> Unit,
+    private val productClickListener: ProductClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var inflater: LayoutInflater
@@ -26,7 +26,7 @@ class ProductListAdapter(
                 RecentProductContainerViewHolder(parent, inflater)
 
             ProductViewType.PRODUCT_VIEW_TYPE_NUMBER ->
-                ProductItemViewHolder(parent, inflater, ::onItemClick)
+                ProductItemViewHolder(parent, inflater, productClickListener)
 
             ProductViewType.MORE_ITEM_VIEW_TYPE_NUMBER ->
                 MoreItemViewHolder(parent, inflater, showMoreProductItem)
@@ -46,11 +46,14 @@ class ProductListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is RecentProductContainerViewHolder -> {
-                holder.bind(_productItems[position] as RecentProductModels, showProductDetail)
+                holder.bind(
+                    _productItems[position] as RecentProductModels,
+                    productClickListener::onItemClick,
+                )
             }
             is ProductItemViewHolder -> {
                 val productItem = _productItems[position] as ProductItem
-                holder.bind(productItem.productModel)
+                holder.bind(productItem.cartProductModel)
             }
             is MoreItemViewHolder -> {}
         }
@@ -64,14 +67,37 @@ class ProductListAdapter(
         }
     }
 
-    fun setProductItems(products: List<ProductModel>) {
+    fun setProductItems(productItems: List<ProductItem>) {
         val beforeLastIndex = _productItems.lastIndex
         _productItems.addAll(
             beforeLastIndex,
-            products.map { ProductItem(it) },
+            productItems,
         )
-        notifyItemRangeInserted(beforeLastIndex, products.size)
+        notifyItemRangeInserted(beforeLastIndex, productItems.size)
     }
+
+    fun replaceProductItem(productItem: ProductItem) {
+        val targetIndex = _productItems.indexOfFirst { productViewType ->
+            isSameProductModel(productViewType, productItem)
+        }
+        if (targetIndex != NOT_FOUNT) {
+            _productItems[targetIndex] = productItem
+            notifyItemChanged(targetIndex)
+        }
+    }
+
+    private fun isSameProductModel(
+        productViewType: ProductViewType,
+        productItem: ProductItem,
+    ): Boolean {
+        if (productViewType is ProductItem) {
+            return isSameProductModel(productViewType, productItem)
+        }
+        return false
+    }
+
+    private fun isSameProductModel(targetItem: ProductItem, productItem: ProductItem) =
+        targetItem.cartProductModel.productModel == productItem.cartProductModel.productModel
 
     fun setRecentProductsItems(productModel: List<ProductModel>) {
         if (_productItems[RECENT_PRODUCT_VIEW_POSITION] is RecentProductModels) {
@@ -83,12 +109,8 @@ class ProductListAdapter(
         }
     }
 
-    private fun onItemClick(position: Int) {
-        val productItem = _productItems[position] as ProductItem
-        showProductDetail(productItem.productModel)
-    }
-
     companion object {
         const val RECENT_PRODUCT_VIEW_POSITION = 0
+        const val NOT_FOUNT = -1
     }
 }

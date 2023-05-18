@@ -2,29 +2,41 @@ package woowacourse.shopping.presentation.productlist.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.model.CartProductModel
 
 class ProductItemViewHolder(
     parent: ViewGroup,
     inflater: LayoutInflater,
-    onItemClick: (position: Int) -> Unit,
-) : ProductBaseViewHolder(
-    inflater.inflate(R.layout.item_product, parent, false),
-    onItemClick,
-) {
+    productClickListener: ProductClickListener,
+) : RecyclerView.ViewHolder(inflater.inflate(R.layout.item_product, parent, false)) {
+
     // 사용하진 않지만 확장성을 위해 정의
-    constructor(parent: ViewGroup, onItemClick: (Int) -> Unit) :
-        this(parent, LayoutInflater.from(parent.context), onItemClick)
+    constructor(parent: ViewGroup, productClickListener: ProductClickListener) :
+        this(parent, LayoutInflater.from(parent.context), productClickListener)
 
     private val binding = ItemProductBinding.bind(itemView)
 
     init {
-        itemView.setOnClickListener { onItemClick(adapterPosition) }
+        binding.productClickListener = productClickListener
     }
 
-    override fun bind(product: ProductModel) {
-        binding.productModel = product
+    fun bind(cartProductModel: CartProductModel) {
+        binding.cartProductModel = cartProductModel
+        binding.itemCountCart.itemCount
+        checkVisible(cartProductModel.count)
+    }
+
+    private fun checkVisible(productCount: Int) {
+        if (productCount >= 1) {
+            binding.itemCountCart.root.isVisible = true
+            binding.imageCountPlusBack.isVisible = false
+            return
+        }
+        binding.itemCountCart.root.isVisible = false
+        binding.imageCountPlusBack.isVisible = true
     }
 }

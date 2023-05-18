@@ -50,7 +50,7 @@ class ProductDetailPresenterTest {
     fun `현재 상품의 Id 를 cart 상품 저장소에 저장한다`() {
         // then 상품 1을 불러온 상태
         val cartProductIdSlot = slot<Int>()
-        every { cartRepository.addCartProduct(capture(cartProductIdSlot)) } just runs
+        every { cartRepository.insertCartProduct(capture(cartProductIdSlot), 1) } just runs
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
         presenter.loadProductDetail(1)

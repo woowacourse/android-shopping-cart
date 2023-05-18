@@ -20,7 +20,7 @@ class ProductDetailPresenter(
     }
 
     override fun putProductInCart() {
-        cartRepository.addCartProduct(currentProduct.id)
+        cartRepository.insertCartProduct(currentProduct.id, 1)
         view.showCompleteMessage(currentProduct.name)
     }
 }
