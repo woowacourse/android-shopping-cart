@@ -4,6 +4,7 @@ import woowacourse.shopping.Product
 import woowacourse.shopping.Products
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
 
@@ -11,29 +12,36 @@ class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
+    private val cartRepository: CartRepository,
 ) : ProductListContract.Presenter {
 
     private val products = Products()
 
     init {
-        updateProducts()
-        updateRecentProducts()
+        updateProductItems()
+        updateRecentProductItems()
     }
 
-    override fun updateProducts() {
+    override fun updateProductItems() {
         val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
         products.addProducts(receivedProducts)
         view.loadProductModels(products.toPresentation())
     }
 
-    override fun updateRecentProducts() {
+    override fun updateRecentProductItems() {
         val recentProductModels = getRecentProductModels()
         view.loadRecentProductModels(recentProductModels)
     }
 
-    override fun saveRecentProductId(productId: Int) {
+    override fun saveRecentProduct(productId: Int) {
         recentProductRepository.deleteRecentProductId(productId)
         recentProductRepository.addRecentProductId(productId)
+    }
+
+    override fun updateCartCount() {
+        val cartProductType = cartRepository.getAllCartProductsInfo()
+        val cartCount = cartProductType.count
+        view.showCartCount(cartCount)
     }
 
     private fun getRecentProductModels(): List<ProductModel> {

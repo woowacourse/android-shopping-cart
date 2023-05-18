@@ -15,6 +15,7 @@ class ProductListAdapter(
     private val showMoreProductItem: () -> Unit,
     private val showProductDetail: (ProductModel) -> Unit,
     private val recentProductAdapter: RecentProductAdapter,
+    private val showCartCount: () -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var itemProductBinding: ItemProductBinding
@@ -46,7 +47,7 @@ class ProductListAdapter(
                     false,
                 )
 
-                ProductItemViewHolder(itemProductBinding, showProductDetail)
+                ProductItemViewHolder(itemProductBinding, showProductDetail, showCartCount)
             }
             MORE_ITEM -> {
                 val itemMoreBinding = ItemMoreBinding.inflate(

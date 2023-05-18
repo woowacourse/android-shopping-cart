@@ -1,13 +1,18 @@
 package woowacourse.shopping.presentation.productlist
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.CartDao
+import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.MockProductDao
+import woowacourse.shopping.data.product.ProductRemoteDataSource
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -17,37 +22,45 @@ import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.productlist.product.ProductListAdapter
 import woowacourse.shopping.presentation.productlist.recentproduct.RecentProductAdapter
-import woowacourse.shopping.repository.RecentProductRepository
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
-    private lateinit var binding: ActivityProductListBinding
+    private lateinit var activityBinding: ActivityProductListBinding
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
-    private lateinit var badgeCartCounter: TextView
-    private val recentProductRepository: RecentProductRepository by lazy {
-        RecentProductDao(RecentProductDbHelper(this))
-    }
-
+    private lateinit var cartMenuItem: MenuItem
+    private var cartBinding: BadgeCartBinding? = null
+    private val productRemoteDataSource: ProductRemoteDataSource by lazy { MockProductDao }
     private val presenter: ProductListPresenter by lazy {
-        ProductListPresenter(this, MockProductDao, recentProductRepository)
+        ProductListPresenter(
+            this,
+            ProductRepositoryImpl(productRemoteDataSource),
+            RecentProductDao(RecentProductDbHelper(this)),
+            CartRepositoryImpl(CartDao(CartDbHelper(this)), productRemoteDataSource),
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductListBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        activityBinding = ActivityProductListBinding.inflate(layoutInflater)
+        setContentView(activityBinding.root)
         initView()
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.updateRecentProducts()
+        updateView()
     }
 
     private fun initView() {
-        setSupportActionBar(binding.toolbarProductList.toolbar)
+        setSupportActionBar(activityBinding.toolbarProductList.toolbar)
         initRecentProductAdapter()
         initProductAdapter()
+    }
+
+    private fun updateView() {
+        presenter.updateProductItems()
+        presenter.updateRecentProductItems()
+        if (cartBinding != null) presenter.updateCartCount()
     }
 
     private fun initProductAdapter() {
@@ -55,14 +68,15 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             showMoreProductItem = ::showMoreProductItems,
             showProductDetail = ::productClick,
             recentProductAdapter = recentProductAdapter,
+            ::showCart,
         )
 
         val layoutManager = GridLayoutManager(this, SPAN_COUNT)
-        binding.recyclerProduct.layoutManager = layoutManager.apply {
+        activityBinding.recyclerProduct.layoutManager = layoutManager.apply {
             spanSizeLookup = ProductListSpanSizeLookup(productListAdapter::getItemViewType)
         }
 
-        binding.recyclerProduct.adapter = productListAdapter
+        activityBinding.recyclerProduct.adapter = productListAdapter
     }
 
     private fun initRecentProductAdapter() {
@@ -77,37 +91,47 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         recentProductAdapter.submitList(productModels)
     }
 
+    override fun showCartCount(count: Int) {
+        cartBinding?.badgeCartCounter?.text = count.toString()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        initCartCounter(menu)
+        cartBinding = BadgeCartBinding.inflate(layoutInflater, null, false)
+        initCartMenu(menu)
+        presenter.updateCartCount()
         return true
     }
 
-    private fun initCartCounter(menu: Menu) {
+    private fun initCartMenu(menu: Menu) {
         menuInflater.inflate(R.menu.menu_product_list_toolbar, menu)
-        val cartBinding: BadgeCartBinding = BadgeCartBinding.inflate(layoutInflater, null, false)
-        menu.findItem(R.id.icon_cart).actionView = cartBinding.root
-        badgeCartCounter = cartBinding.badgeCartCounter
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.icon_cart -> startActivity(CartActivity.getIntent(this))
-            else -> return super.onOptionsItemSelected(item)
+        cartMenuItem = menu.findItem(R.id.icon_cart)
+        cartBinding =
+            BadgeCartBinding.inflate(
+                LayoutInflater.from(this),
+                null,
+                false,
+            )
+        cartMenuItem.actionView = cartBinding?.root
+        cartBinding?.iconCartMenu?.setOnClickListener {
+            startActivity(CartActivity.getIntent(this))
         }
-        return true
     }
 
     private fun showMoreProductItems() {
-        presenter.updateProducts()
+        presenter.updateProductItems()
     }
 
     private fun productClick(productModel: ProductModel) {
-        presenter.saveRecentProductId(productModel.id)
+        presenter.saveRecentProduct(productModel.id)
         showProductDetail(productModel)
     }
 
     private fun showProductDetail(productModel: ProductModel) {
         startActivity(ProductDetailActivity.getIntent(this, productModel))
+    }
+
+    private fun showCart() {
+        presenter.updateCartCount()
     }
 
     companion object {
