@@ -14,14 +14,13 @@ interface BasketContract {
 
     interface Presenter {
         val view: View
-        var lastId: Int
 
-        fun fetchPreviousBasketProducts(currentProducts: List<UiBasketProduct>)
+        fun initBasketProducts()
 
-        fun fetchBasketProducts(standard: Int = lastId, includeStandard: Boolean = false)
+        fun updatePreviousPage()
+
+        fun updateNextPage()
 
         fun removeBasketProduct(product: UiBasketProduct, currentProducts: List<UiBasketProduct>)
-
-        fun updateCurrentPage(isIncrease: Boolean)
     }
 }
