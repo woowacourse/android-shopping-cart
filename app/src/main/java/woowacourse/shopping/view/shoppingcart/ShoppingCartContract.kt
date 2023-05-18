@@ -21,6 +21,5 @@ interface ShoppingCartContract {
         fun removeCartProduct(cartProductUIModel: CartProductUIModel)
         fun loadNextPage(isActivated: Boolean)
         fun loadPreviousPage(isActivated: Boolean)
-        fun updateCount(cartProductUIModel: CartProductUIModel, count: Count)
     }
 }

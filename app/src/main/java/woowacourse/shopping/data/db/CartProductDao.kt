@@ -2,6 +2,7 @@ package woowacourse.shopping.data.db
 
 import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.shopping.domain.CartProduct
@@ -52,14 +53,47 @@ class CartProductDao(context: Context) :
         writableDatabase.execSQL("DELETE FROM ${RecentProductDao.TABLE_NAME} WHERE ${RecentProductDao.KEY_ID}='${cartProduct.product.id}';")
     }
 
-    fun update(cartProduct: CartProduct, count: Count) {
-        val contextValues = ContentValues().apply {
-            put(KEY_COUNT, count.value)
-        }
-        val whereClause = "$KEY_ID=?"
-        val whereArgs = arrayOf(cartProduct.product.id.toString())
+    fun update(cartProduct: CartProduct) {
+        if(exist(cartProduct)) {
+            val existCount = getCountById(cartProduct.product.id)
 
-        writableDatabase.update(TABLE_NAME, contextValues, whereClause, whereArgs)
+            val contextValues = ContentValues().apply {
+                put(KEY_COUNT, existCount + cartProduct.count.value)
+            }
+            val whereClause = "$KEY_ID=?"
+            val whereArgs = arrayOf(cartProduct.product.id.toString())
+
+            writableDatabase.update(TABLE_NAME, contextValues, whereClause, whereArgs)
+
+        } else {
+            insert(cartProduct)
+        }
+    }
+
+    fun exist(cartProduct: CartProduct): Boolean {
+        val query = "SELECT $KEY_ID FROM $TABLE_NAME WHERE $KEY_ID = ?"
+        val selectionArgs = arrayOf(cartProduct.product.id.toString())
+
+        val cursor: Cursor = writableDatabase.rawQuery(query, selectionArgs)
+        val exists = cursor.moveToFirst()
+        cursor.close()
+
+        return exists
+    }
+
+    fun getCountById(id: Int): Int {
+        val query = "SELECT $KEY_COUNT FROM $TABLE_NAME WHERE $KEY_ID = ?"
+        val selectionArgs = arrayOf(id.toString())
+
+        val cursor: Cursor = writableDatabase.rawQuery(query, selectionArgs)
+        var count = 0
+
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_COUNT))
+        }
+
+        cursor.close()
+        return count
     }
 
     companion object {

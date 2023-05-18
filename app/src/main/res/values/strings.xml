@@ -9,4 +9,5 @@
     <string name="page_up_button"><![CDATA[>]]></string>
     <string name="product_counter_plus">+</string>
     <string name="product_count_minus">-</string>
+    <string name="add_to_cart">담기</string>
 </resources>

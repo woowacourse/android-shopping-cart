@@ -23,8 +23,8 @@ class CartProductRepositoryImpl(
         return cartProducts.subList(index.first, minOf(index.second, cartProducts.size))
     }
 
-    override fun update(cartProduct: CartProduct, count: Count) {
-        cartProductDao.update(cartProduct, count)
+    override fun update(cartProduct: CartProduct) {
+        cartProductDao.update(cartProduct)
     }
 
     override fun insert(cartProduct: CartProduct) {

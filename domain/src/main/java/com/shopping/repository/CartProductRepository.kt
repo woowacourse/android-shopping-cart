@@ -8,5 +8,5 @@ interface CartProductRepository {
     fun insert(cartProduct: CartProduct)
     fun remove(cartProduct: CartProduct)
     fun loadCartProducts(index: Pair<Int, Int>): List<CartProduct>
-    fun update(cartProduct: CartProduct, count: Count)
+    fun update(cartProduct: CartProduct)
 }

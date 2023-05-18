@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.shopping.domain.Count
 import woowacourse.shopping.databinding.ItemCounterBinding
 
 class CounterView @JvmOverloads constructor(
@@ -13,27 +14,32 @@ class CounterView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     var listener: CounterViewEventListener? = null
-    private var count: Int = INIT_COUNT
+    private var count: Count = Count(INIT_COUNT)
     private val binding: ItemCounterBinding =
         ItemCounterBinding.inflate(LayoutInflater.from(context), this, true)
 
     init {
         setOnButtonClick()
+        binding.tvCount.text = count.value.toString()
     }
 
     private fun setOnButtonClick() {
-        binding.btnMinus.setOnClickListener {
-            count++
-            listener?.addCount(this, count)
+        binding.btnPlus.setOnClickListener {
+            count = count.inc()
+            listener?.addCount(this, count.value)
         }
 
-        binding.btnPlus.setOnClickListener {
-            count--
-            listener?.decCount(this, count)
+        binding.btnMinus.setOnClickListener {
+            count = count.dec()
+            listener?.decCount(this, count.value)
         }
     }
 
+    fun updateCountView() {
+        binding.tvCount.text = count.value.toString()
+    }
+
     companion object {
-        private const val INIT_COUNT = 0
+        private const val INIT_COUNT = 1
     }
 }

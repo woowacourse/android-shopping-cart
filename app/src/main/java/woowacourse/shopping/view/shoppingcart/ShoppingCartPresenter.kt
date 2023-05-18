@@ -64,8 +64,4 @@ class ShoppingCartPresenter(
             view.deactivatePageDownCounter()
         }
     }
-
-    override fun updateCount(cartProductUIModel: CartProductUIModel, count: Count) {
-        cartProductRepository.update(cartProductUIModel.toDomain(), count)
-    }
 }
