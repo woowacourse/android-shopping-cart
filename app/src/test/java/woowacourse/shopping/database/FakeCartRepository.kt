@@ -16,11 +16,16 @@ object FakeCartRepository : CartRepository {
 
     override fun save(product: CartProduct) {
         with(product) {
-            products[this.id] = CartProduct(this.id, this.imageUrl, this.name, this.price)
+            products[this.id] = CartProduct(this.id, this.imageUrl, this.name, this.price, this.count)
         }
     }
 
     override fun deleteById(productId: Long) {
         products.remove(productId)
+    }
+
+    override fun updateCount(productId: Long, count: Int) {
+        val old: CartProduct = products[productId] ?: return
+        products[productId] = CartProduct(old.id, old.imageUrl, old.name, old.price, count)
     }
 }

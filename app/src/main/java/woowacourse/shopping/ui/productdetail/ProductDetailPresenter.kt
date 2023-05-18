@@ -16,9 +16,9 @@ class ProductDetailPresenter(
         }
     }
 
-    override fun addProductToCart(productId: Long) {
+    override fun addProductToCart(productId: Long, count: Int) {
         productRepository.findById(productId)?.run {
-            cartRepository.save(CartProduct(this.id, this.imageUrl, this.name, this.price))
+            cartRepository.save(CartProduct(this.id, this.imageUrl, this.name, this.price, count))
         } ?: view.showErrorMessage()
     }
 }

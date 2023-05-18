@@ -13,7 +13,7 @@ class ProductDBHelper(
     ProductContract.DATABASE_VERSION,
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
-        db?.execSQL(SQL_CREATE_PRODUCT_ENTRIES)
+        db?.execSQL(SQL_CREATE_CART_ENTRIES)
         db?.execSQL(SQL_CREATE_RECENTLY_VIEWED_PRODUCTS_ENTRIES)
     }
 
@@ -24,17 +24,18 @@ class ProductDBHelper(
     }
 
     companion object {
-        private const val SQL_CREATE_PRODUCT_ENTRIES =
+        private const val SQL_CREATE_CART_ENTRIES =
             """
-                CREATE TABLE ${ProductContract.CartEntry.TABLE_NAME} 
-                (${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY
+                CREATE TABLE ${ProductContract.CartEntry.TABLE_NAME} (
+                ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY,
+                ${ProductContract.CartEntry.COLUMN_NAME_COUNT} int
                 );
             """
 
         private const val SQL_CREATE_RECENTLY_VIEWED_PRODUCTS_ENTRIES =
             """
-                CREATE TABLE ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME} 
-                (${ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY
+                CREATE TABLE ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME} (
+                ${ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY
                 );
             """
     }

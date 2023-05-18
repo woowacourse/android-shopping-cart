@@ -64,7 +64,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.tvProductDetailPrice.text =
             getString(R.string.product_price).format(PRICE_FORMAT.format(product.price))
         binding.btnProductDetailAdd.setOnClickListener {
-            presenter.addProductToCart(product.id)
+            // TODO : 초기 수량은 1, 추후에 수량 결정할 버튼 추가 예정
+            presenter.addProductToCart(product.id, 1)
             moveToCartActivity()
         }
     }

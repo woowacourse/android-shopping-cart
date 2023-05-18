@@ -29,4 +29,12 @@ class CartPresenter(
         if (size == 0) size = 1
         view.setButtonClickListener((size - 1) / limit + 1)
     }
+
+    override fun minusItemCount(productId: Long, oldCount: Int) {
+        cartRepository.updateCount(productId, oldCount - 1)
+    }
+
+    override fun plusItemCount(productId: Long, oldCount: Int) {
+        cartRepository.updateCount(productId, oldCount + 1)
+    }
 }

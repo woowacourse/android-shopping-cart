@@ -24,8 +24,9 @@ class CartRepositoryImpl(
 
         while (cursor.moveToNext()) {
             val id = cursor.getLong(0)
+            val count = cursor.getInt(1)
             productRepository.findById(id)?.let {
-                products.add(CartProduct(it.id, it.imageUrl, it.name, it.price))
+                products.add(CartProduct(it.id, it.imageUrl, it.name, it.price, count))
             }
         }
 
@@ -42,8 +43,9 @@ class CartRepositoryImpl(
 
         while (cursor.moveToNext()) {
             val id = cursor.getLong(0)
+            val count = cursor.getInt(1)
             productRepository.findById(id)?.let {
-                products.add(CartProduct(it.id, it.imageUrl, it.name, it.price))
+                products.add(CartProduct(it.id, it.imageUrl, it.name, it.price, count))
             }
         }
 
@@ -64,6 +66,7 @@ class CartRepositoryImpl(
 
         val value = ContentValues().apply {
             put(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID, product.id)
+            put(ProductContract.CartEntry.COLUMN_NAME_COUNT, product.count)
         }
 
         db.insert(ProductContract.CartEntry.TABLE_NAME, null, value)
@@ -74,5 +77,15 @@ class CartRepositoryImpl(
         val selection = "${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = ?"
         val selectionArgs = arrayOf(productId.toString())
         db.delete(ProductContract.CartEntry.TABLE_NAME, selection, selectionArgs)
+    }
+
+    override fun updateCount(productId: Long, count: Int) {
+        db.execSQL(
+            """
+                UPDATE ${ProductContract.CartEntry.TABLE_NAME}
+                SET ${ProductContract.CartEntry.COLUMN_NAME_COUNT} = $count
+                WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = $productId;
+                """,
+        )
     }
 }

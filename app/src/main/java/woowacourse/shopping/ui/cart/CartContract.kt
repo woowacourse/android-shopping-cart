@@ -8,6 +8,8 @@ interface CartContract {
         fun loadCartItems(limit: Int, page: Int)
         fun deleteCartItem(productId: Long)
         fun setPageButtons(limit: Int)
+        fun minusItemCount(productId: Long, oldCount: Int)
+        fun plusItemCount(productId: Long, oldCount: Int)
     }
 
     interface View {
