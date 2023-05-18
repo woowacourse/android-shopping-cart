@@ -10,6 +10,7 @@ import org.junit.Test
 import woowacourse.shopping.presentation.cart.CartContract
 import woowacourse.shopping.presentation.cart.CartPresenter
 import woowacourse.shopping.presentation.mapper.toPresentation
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
@@ -25,15 +26,15 @@ class CartPresenterTest {
         view = mockk(relaxed = true)
         cartRepository = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
-        presenter = CartPresenter(view, cartRepository, productRepository)
+        presenter = CartPresenter(view, cartRepository)
     }
 
     @Test
     fun 상품을_삭제한다() {
         // given
-        val productModel = ProductModel(1, "", "", 100)
+        val cartProductInfoModel = CartProductInfoModel(ProductModel(1, "", "", 1000), 1)
         // when
-        presenter.deleteProduct(productModel)
+        presenter.deleteProduct(cartProductInfoModel)
         // then
         verify { cartRepository.deleteCartProductId(1) }
     }
@@ -61,21 +62,26 @@ class CartPresenterTest {
     fun 카트_목록을_업데이트한다() {
         // given
         val product = Product(1, "", "", Price(1000))
-        val productModels = List(5) { product.toPresentation() }
-        every { cartRepository.getCartProductIds(5, 0) } returns listOf(1, 1, 1, 1, 1)
-        every { productRepository.findProductById(1) } returns product
+        val cartProductInfoList = makeCartProductInfoList(product)
+        every { cartRepository.getCartProductsInfo(5, 0) } returns cartProductInfoList
+        val cartProductInfoModels = cartProductInfoList.items.map { it.toPresentation() }
         // when
         presenter.updateCart()
         // then
-        verify { view.setCartItems(productModels) }
+        verify { view.setCartItems(cartProductInfoModels) }
+    }
+
+    private fun makeCartProductInfoList(product: Product): CartProductInfoList {
+        return CartProductInfoList(
+            List(5) { CartProductInfo(product, 1) },
+        )
     }
 
     @Test
     fun 다음_페이지에_상품이_있으면_오른쪽페이지_버튼상태를_true로_한다() {
         // given
         val product = Product(1, "", "", Price(1000))
-        every { cartRepository.getCartProductIds(5, 5) } returns listOf(1, 1, 1, 1, 1)
-        every { productRepository.findProductById(1) } returns product
+        every { cartRepository.getCartProductsInfo(5, 5) } returns makeCartProductInfoList(product)
         // when
         presenter.updatePlusButtonState()
         // then
@@ -85,7 +91,7 @@ class CartPresenterTest {
     @Test
     fun 다음_페이지에_상품이_없으면_오른쪽페이지_버튼상태를_false로_한다() {
         // given
-        every { cartRepository.getCartProductIds(5, 5) } returns listOf()
+        every { cartRepository.getCartProductsInfo(5, 5) } returns CartProductInfoList(listOf())
         // when
         presenter.updatePlusButtonState()
         // then

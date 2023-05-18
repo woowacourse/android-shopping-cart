@@ -1,25 +1,25 @@
 package woowacourse.shopping.presentation.cart
 
+import woowacourse.shopping.CartProductInfoList
 import woowacourse.shopping.Products
 import woowacourse.shopping.presentation.mapper.toPresentation
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.repository.ProductRepository
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    productRepository: ProductRepository,
 ) : CartContract.Presenter {
 
-    private val paging = CartOffsetPaging(cartRepository, productRepository)
+    private val paging = CartOffsetPaging(cartRepository)
 
     init {
         setView()
     }
 
-    override fun deleteProduct(productModel: ProductModel) {
-        cartRepository.deleteCartProductId(productModel.id)
+    override fun deleteProduct(cartProductInfoModel: CartProductInfoModel) {
+        cartRepository.deleteCartProductId(cartProductInfoModel.productModel.id)
     }
 
     override fun plusPage() {
@@ -31,8 +31,9 @@ class CartPresenter(
     }
 
     override fun updateCart() {
-        val cartProducts = Products(paging.getPageItems(paging.currentPage))
-        view.setCartItems(cartProducts.toPresentation())
+        val cartProductsInfo = CartProductInfoList(paging.getPageItems(paging.currentPage))
+        val cartProductInfoModels = cartProductsInfo.items.map { it.toPresentation() }
+        view.setCartItems(cartProductInfoModels)
     }
 
     override fun updatePlusButtonState() {

@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.MockProductDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.util.getParcelableExtraCompat
@@ -65,7 +67,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         intent.getParcelableExtraCompat<ProductModel>(PRODUCT_KEY_VALUE)?.let {
             presenter = ProductDetailPresenter(
                 this,
-                CartDao(CartDbHelper(this)),
+                CartRepositoryImpl(CartDao(CartDbHelper(this)), MockProductDao),
                 it,
             )
         } ?: noIntentExceptionHandler(getString(R.string.product_model_null_error_message))

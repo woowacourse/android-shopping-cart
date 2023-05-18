@@ -10,7 +10,7 @@ class ProductDetailPresenter(
 ) : ProductDetailContract.Presenter {
 
     override fun putProductInCart() {
-        cartRepository.addCartProductId(productModel.id)
+        cartRepository.putProductInCart(productModel.id)
         view.showCompleteMessage(productModel.name)
     }
 }
