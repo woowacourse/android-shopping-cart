@@ -6,10 +6,13 @@ import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductViewHolder(
     private val binding: ItemProductListBinding,
-    onItemViewClick: (Int) -> Unit
+    onItemViewClick: (Int) -> Unit,
+    onPlusAmountButtonViewClick: (Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener { onItemViewClick(bindingAdapterPosition) }
+        binding.newCartProductAmountPlusButton.setOnClickListener { onPlusAmountButtonViewClick(bindingAdapterPosition) }
+        binding.cartProductAmountPlusButton.setOnClickListener { onPlusAmountButtonViewClick(bindingAdapterPosition) }
     }
 
     fun bind(product: ShoppingProductModel) {

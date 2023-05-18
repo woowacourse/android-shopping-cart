@@ -1,13 +1,16 @@
 package woowacourse.shopping.shopping
 
 import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
 import woowacourse.shopping.common.model.mapper.ShoppingProductMapper.toView
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import java.time.LocalDateTime
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
@@ -71,5 +74,49 @@ class ShoppingPresenter(
     private fun updateCartAmount() {
         val totalAmount = cartRepository.getTotalAmount()
         view.updateCartAmount(totalAmount)
+    }
+
+    override fun increaseCartProductAmount(shoppingProductModel: ShoppingProductModel) {
+        var cartProduct = getCartProduct(shoppingProductModel.product)
+        cartProduct = cartProduct.increaseAmount()
+        if (cartProduct.amount > 1) {
+            updateCartProduct(cartProduct)
+        } else {
+            addToCart(cartProduct)
+        }
+        updateShoppingProduct(shoppingProductModel, cartProduct)
+        updateCartAmount()
+    }
+
+    private fun getCartProduct(productModel: ProductModel): CartProduct {
+        var cartProduct: CartProduct? = cartRepository.getCartProductByProduct(productModel.toDomain())
+        if (cartProduct == null) {
+            cartProduct = CartProduct(
+                time = LocalDateTime.now(),
+                amount = 0,
+                isChecked = true,
+                product = productModel.toDomain()
+            )
+        }
+        return cartProduct
+    }
+
+    private fun updateCartProduct(cartProduct: CartProduct) {
+        cartRepository.modifyCartProduct(cartProduct)
+    }
+
+    private fun addToCart(cartProduct: CartProduct) {
+        cartRepository.addCartProduct(cartProduct)
+    }
+
+    private fun updateShoppingProduct(
+        shoppingProductModel: ShoppingProductModel,
+        cartProduct: CartProduct
+    ) {
+        val newShoppingProductModel = ShoppingProductModel(
+            shoppingProductModel.product,
+            cartProduct.amount
+        )
+        view.updateShoppingProduct(shoppingProductModel, newShoppingProductModel)
     }
 }

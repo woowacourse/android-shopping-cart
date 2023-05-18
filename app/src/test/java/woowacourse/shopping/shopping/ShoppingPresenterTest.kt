@@ -136,4 +136,18 @@ class ShoppingPresenterTest {
             view.addProducts(any())
         }
     }
+
+    @Test
+    fun 카트_상품_개수를_증가시키면_상품과_카트의_총_상품_개수가_업데이트된다() {
+        // given
+
+        // when
+        presenter.increaseCartProductAmount(mockk(relaxed = true))
+
+        // then
+        verify {
+            view.updateShoppingProduct(any(), any())
+            view.updateCartAmount(any())
+        }
+    }
 }

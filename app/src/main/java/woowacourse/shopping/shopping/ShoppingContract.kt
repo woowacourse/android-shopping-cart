@@ -15,6 +15,8 @@ interface ShoppingContract {
         fun openCart()
 
         fun loadMoreProduct()
+
+        fun increaseCartProductAmount(shoppingProductModel: ShoppingProductModel)
     }
 
     interface View {
@@ -27,5 +29,7 @@ interface ShoppingContract {
         fun showCart()
 
         fun updateCartAmount(amount: Int)
+
+        fun updateShoppingProduct(prev: ShoppingProductModel, new: ShoppingProductModel)
     }
 }

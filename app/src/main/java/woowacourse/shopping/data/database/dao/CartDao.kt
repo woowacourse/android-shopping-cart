@@ -22,6 +22,7 @@ class CartDao(private val db: SQLiteDatabase) {
         val row = ContentValues()
         row.put(SqlCart.TIME, cartProduct.time.toString())
         row.put(SqlCart.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
+        row.put(SqlCart.AMOUNT, cartProduct.amount)
         db.insert(SqlCart.name, null, row)
     }
 
@@ -89,5 +90,53 @@ class CartDao(private val db: SQLiteDatabase) {
             it.moveToNext()
             it.getInt(0)
         }
+    }
+
+    fun selectCartProductByProduct(product: Product): CartProduct? {
+        val productRow: MutableMap<String, Any> = mutableMapOf()
+        productRow[SqlProduct.PICTURE] = product.picture.value
+        productRow[SqlProduct.TITLE] = product.title
+        productRow[SqlProduct.PRICE] = product.price
+
+        val productId = SqlProduct.selectRowId(db, productRow)
+        return selectByProductId(productId)
+    }
+
+    private fun selectByProductId(productId: Int): CartProduct? {
+        val cursor = db.rawQuery(
+            """
+                |SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}
+                |WHERE ${SqlCart.PRODUCT_ID} = $productId
+            """.trimMargin(),
+            null
+        )
+
+        var cartProduct: CartProduct? = null
+        return cursor.use {
+            while (cursor.moveToNext()) {
+                cartProduct = createCartProduct(it)
+            }
+            cartProduct
+        }
+    }
+
+    fun updateCartProduct(cartProduct: CartProduct) {
+        val productRow: MutableMap<String, Any> = mutableMapOf()
+        productRow[SqlProduct.PICTURE] = cartProduct.product.picture.value
+        productRow[SqlProduct.TITLE] = cartProduct.product.title
+        productRow[SqlProduct.PRICE] = cartProduct.product.price
+
+        val productId = SqlProduct.selectRowId(db, productRow)
+        val row = ContentValues()
+        row.put(SqlCart.TIME, cartProduct.time.toString())
+        row.put(SqlCart.PRODUCT_ID, productId)
+        row.put(SqlCart.AMOUNT, cartProduct.amount)
+
+        db.update(
+            SqlCart.name,
+            row,
+            "${SqlCart.PRODUCT_ID} = ?",
+            arrayOf(productId.toString())
+        )
     }
 }

@@ -3,6 +3,7 @@ package woowacourse.shopping.data.cart
 import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import java.time.LocalDateTime
 
@@ -31,5 +32,13 @@ class CartRepositoryImpl(
 
     override fun getTotalAmount(): Int {
         return cartDao.getTotalAmount()
+    }
+
+    override fun getCartProductByProduct(product: Product): CartProduct? {
+        return cartDao.selectCartProductByProduct(product)
+    }
+
+    override fun modifyCartProduct(cartProduct: CartProduct) {
+        cartDao.updateCartProduct(cartProduct)
     }
 }

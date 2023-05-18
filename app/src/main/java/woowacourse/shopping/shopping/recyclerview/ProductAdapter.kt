@@ -7,17 +7,20 @@ import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductAdapter(
-    private var products: List<ShoppingProductModel>,
     private val onProductItemClick: (ShoppingProductModel) -> Unit,
+    private val onPlusAmountButtonClick: (ShoppingProductModel) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
+    private val products = mutableListOf<ShoppingProductModel>()
     private val onProductItemViewClick: (Int) -> Unit = { onProductItemClick(products[it]) }
+    private val onPlusAmountButtonViewClick: (Int) -> Unit = { onPlusAmountButtonClick(products[it]) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder(
             ItemProductListBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ),
-            onProductItemViewClick
+            onProductItemViewClick,
+            onPlusAmountButtonViewClick
         )
     }
 
@@ -27,13 +30,19 @@ class ProductAdapter(
         holder.bind(products[position])
     }
 
+    override fun getItemViewType(position: Int): Int = VIEW_TYPE
+
     fun addProducts(products: List<ShoppingProductModel>) {
         val lastPosition = itemCount
         this.products += products
         notifyItemRangeInserted(lastPosition, products.size)
     }
 
-    override fun getItemViewType(position: Int): Int = VIEW_TYPE
+    fun updateProduct(prev: ShoppingProductModel, new: ShoppingProductModel) {
+        val index = products.indexOf(prev)
+        products[index] = new
+        notifyItemChanged(index)
+    }
 
     companion object {
         const val VIEW_TYPE = 0

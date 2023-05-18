@@ -58,6 +58,7 @@
             tools:text="10,000원" />
 
         <Button
+            android:id="@+id/new_cart_product_amount_plus_button"
             isVisible="@{shoppingProduct.amount == 0}"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -81,7 +82,7 @@
             app:layout_constraintStart_toStartOf="@id/product_list_picture">
 
             <Button
-                android:id="@+id/cart_product_amount_plus_button"
+                android:id="@+id/cart_product_amount_minus_button"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -105,12 +106,12 @@
                 android:textSize="22sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toEndOf="@id/cart_product_amount_plus_button"
+                app:layout_constraintStart_toEndOf="@id/cart_product_amount_minus_button"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="1" />
 
             <Button
-                android:id="@+id/cart_product_amount_minus_button"
+                android:id="@+id/cart_product_amount_plus_button"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

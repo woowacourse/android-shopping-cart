@@ -2,7 +2,6 @@ package woowacourse.shopping.shopping
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -37,7 +36,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private var shoppingCartAmount: TextView? = null
 
     private val productAdapter: ProductAdapter by lazy {
-        ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it.product) })
+        ProductAdapter(
+            onProductItemClick = { presenter.openProduct(it.product) },
+            onPlusAmountButtonClick = { presenter.increaseCartProductAmount(it) }
+        )
     }
 
     private val recentProductAdapter: RecentProductAdapter by lazy {
@@ -102,12 +104,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onResume() {
         super.onResume()
         presenter.updateRecentProducts()
-        Log.d("test-onresume", findViewById<TextView>(R.id.tv_shopping_cart_amount).text.toString())
-    }
-
-    override fun onPause() {
-        Log.d("test-onpause", findViewById<TextView>(R.id.tv_shopping_cart_amount).text.toString())
-        super.onPause()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -149,6 +145,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun updateCartAmount(amount: Int) {
         shoppingCartAmount?.text = amount.toString()
+    }
+
+    override fun updateShoppingProduct(prev: ShoppingProductModel, new: ShoppingProductModel) {
+        productAdapter.updateProduct(prev, new)
     }
 
     private fun startCartActivity() {
