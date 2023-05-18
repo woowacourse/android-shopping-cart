@@ -31,7 +31,7 @@ class RecentProductListAdapter(
             items.add(0, it)
         }
         this.recentProductStates = items.toList()
-        notifyDataSetChanged()
+        notifyItemRangeInserted(recentProductStates.size, newItems.size)
     }
 
     fun setItems(items: List<RecentProductState>) {

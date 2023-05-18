@@ -20,7 +20,6 @@ import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 import woowacourse.shopping.feature.product.recent.RecentProductListAdapter
 import woowacourse.shopping.feature.product.recent.RecentProductListWrapperAdapter
 import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.RecentProductState
 import woowacourse.shopping.model.mapper.toUi
 import woowacourse.shopping.util.SpanSizeLookUpManager
 import woowacourse.shopping.util.extension.showToast
@@ -84,10 +83,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun addProductItems(products: List<ProductState>) {
         productListAdapter.addItems(products)
-    }
-
-    override fun addRecentProductItems(recentProducts: List<RecentProductState>) {
-        recentProductListAdapter.addItems(recentProducts)
     }
 
     override fun setProducts(products: List<Product>) {

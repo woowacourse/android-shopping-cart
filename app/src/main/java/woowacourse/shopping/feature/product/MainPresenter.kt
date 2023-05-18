@@ -19,7 +19,6 @@ class MainPresenter(
     private val loadItemCountUnit = 20
 
     private val products: List<Product> = productRepository.getAll()
-    private val recentProducts: List<RecentProduct> = recentProductRepository.getAll()
 
     private var loadItemFromIndex = 0
     private val loadItemToIndex: Int
@@ -40,11 +39,11 @@ class MainPresenter(
     override fun addRecentProduct(product: Product) {
         val nowDateTime: LocalDateTime = LocalDateTime.now()
         storeRecentProduct(product.toRecentProduct(nowDateTime))
-        view.addRecentProductItems(listOf(product.toRecentProduct(nowDateTime).toUi()))
+        view.setRecentProducts(recentProductRepository.getAll())
     }
 
     override fun loadRecentProducts() {
-        view.setRecentProducts(recentProducts)
+        view.setRecentProducts(recentProductRepository.getAll())
     }
 
     override fun showProductDetail(productState: ProductState) {
