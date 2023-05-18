@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data class="CounterBinding">
+
+        <import type="kotlin.jvm.functions.Function1" />
+
+        <import type="kotlin.Unit" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.Product" />
+
+        <variable
+            name="onPutInBasket"
+            type="Function1&lt;Integer, Unit>" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_woowa_round_4_white_rect"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="14dp">
+
+        <TextView
+            android:id="@+id/product_name_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="[든든] 동원 참치" />
+
+        <TextView
+            android:id="@+id/product_price_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="@{@string/price_format(product.price.value)}"
+            android:textColor="@color/woowa_text_black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/product_name_text_view"
+            app:layout_constraintTop_toBottomOf="@+id/product_name_text_view"
+            tools:text="99,800원" />
+
+        <woowacourse.shopping.widget.ProductCounterView
+            android:id="@+id/counter_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="@+id/put_in_button"
+            app:layout_constraintHeight_percent="0.4"
+            app:layout_constraintTop_toTopOf="@+id/product_price_text_view"
+            app:layout_constraintWidth_percent="0.4" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/put_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:backgroundTint="@color/woowa_emerald"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:onClick="@{() -> onPutInBasket.invoke(counterView.getCount())}"
+            android:text="@string/put_in"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/counter_view" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
