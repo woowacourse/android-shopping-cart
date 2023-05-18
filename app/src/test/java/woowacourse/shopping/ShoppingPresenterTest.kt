@@ -4,14 +4,12 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.verify
 import model.Product
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shopping.ShoppingContract
 import woowacourse.shopping.shopping.ShoppingPresenter
 import woowacourse.shopping.util.toUiModel
@@ -37,27 +35,29 @@ class ShoppingPresenterTest {
     @Test
     fun `저장소로부터 상품 목록을 받아와서 뷰를 초기화한다`() {
         // given
-        val slot = slot<List<ProductUiModel>>()
+        val products = products.map { it.toUiModel() }
         every {
             view.setUpShoppingView(
-                products = capture(slot),
+                products = products,
                 any(),
                 any(),
             )
         } just Runs
-        every { repository.selectRecentViewedProducts() } returns products
-        every { repository.selectProducts(any(), any()) } returns products
+        every { repository.selectRecentViewedProducts() } returns this.products
+        every { repository.selectProducts(any(), any()) } returns this.products
 
         // when
         presenter.loadProducts()
 
         // then
-        val actual = slot.captured
-        val expected = products.map { it.toUiModel() }
-        assertEquals(expected, actual)
+        val expected = listOf(
+            ProductUiModel(name = "아메리카노"),
+            ProductUiModel(name = "카페라떼"),
+        )
+        assertEquals(expected, products)
         verify {
             view.setUpShoppingView(
-                products = actual,
+                products = products,
                 any(),
                 any(),
             )
@@ -67,27 +67,29 @@ class ShoppingPresenterTest {
     @Test
     fun `저장소로부터 최근 본 상품을 받아와서 뷰를 초기화한다`() {
         // given
-        val slot = slot<List<ProductUiModel>>()
+        val recentViewedProducts = products.map { it.toUiModel() }
         every {
             view.setUpShoppingView(
                 any(),
-                recentViewedProducts = capture(slot),
+                recentViewedProducts = recentViewedProducts,
                 any(),
             )
         } just Runs
-        every { repository.selectRecentViewedProducts() } returns products
+        every { repository.selectRecentViewedProducts() } returns this.products
 
         // when
         presenter.loadProducts()
 
         // then
-        val actual = slot.captured
-        val expected = products.map { it.toUiModel() }
-        assertEquals(expected, actual)
+        val expected = listOf(
+            ProductUiModel(name = "아메리카노"),
+            ProductUiModel(name = "카페라떼"),
+        )
+        assertEquals(expected, recentViewedProducts)
         verify {
             view.setUpShoppingView(
                 any(),
-                recentViewedProducts = actual,
+                recentViewedProducts = recentViewedProducts,
                 any(),
             )
         }

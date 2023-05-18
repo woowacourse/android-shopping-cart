@@ -41,7 +41,10 @@ class ShoppingCartPresenterTest {
         presenter.loadShoppingCartProducts()
 
         // then
-        val expected = products.map { it.toUiModel() }
+        val expected = listOf(
+            ProductUiModel(name = "아메리카노"),
+            ProductUiModel(name = "밀크티"),
+        )
 
         verify { view.setUpShoppingCartView(expected, any(), any()) }
     }
