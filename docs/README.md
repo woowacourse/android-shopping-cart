@@ -74,6 +74,7 @@
                 - [ ] cartRepository.modifyCartProduct(cartProduct)
             - [ ] view.showCart()
     - [ ] Cart
+        - Cart 
         - [ ] updateCartProductChecked(cartProductModel)
             - [ ] updateCartProduct(cartProduct)
         - [ ] decreaseCartProductAmount()
@@ -90,7 +91,6 @@
 - [x] SQLite
     - [x] Cart
         - [x] amount(Int)
-        - [x] is_checked(Int : 0 or 1)
 - [x] Domain
     - [x] CartProduct
         - [x] Amount

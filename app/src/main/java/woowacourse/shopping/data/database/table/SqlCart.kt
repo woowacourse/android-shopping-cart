@@ -7,14 +7,12 @@ object SqlCart : SqlTable {
     const val TIME = "time"
     const val PRODUCT_ID = "product_id"
     const val AMOUNT = "amount"
-    const val IS_CHECKED = "is_checked"
 
     override val name: String = "Cart"
     override val scheme: List<SqlColumn> = listOf(
         SqlColumn(TIME, SqlType.TEXT, "PRIMARY KEY"),
         SqlColumn(PRODUCT_ID, SqlType.INTEGER),
         SqlColumn(AMOUNT, SqlType.INTEGER),
-        SqlColumn(IS_CHECKED, SqlType.INTEGER)
     )
 
     override val constraint: String =
