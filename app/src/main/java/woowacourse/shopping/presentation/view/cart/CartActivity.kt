@@ -8,7 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.local.database.CartDao
+import woowacourse.shopping.data.local.sharedpreference.SharedPreference
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
+import woowacourse.shopping.data.respository.cart.CartTotalPriceRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
@@ -19,7 +21,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var cartAdapter: CartAdapter
 
     private val presenter: CartContract.Presenter by lazy {
-        CartPresenter(this, CartRepositoryImpl(CartDao(this)))
+        CartPresenter(
+            this,
+            CartRepositoryImpl(CartDao(this)),
+            CartTotalPriceRepositoryImpl(SharedPreference(this))
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

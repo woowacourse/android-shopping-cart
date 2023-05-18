@@ -1,12 +1,14 @@
 package woowacourse.shopping.presentation.view.cart
 
 import woowacourse.shopping.data.respository.cart.CartRepository
+import woowacourse.shopping.data.respository.cart.CartTotalPriceRepository
 import woowacourse.shopping.domain.CartPage
 import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
+    private val cartTotalPriceRepository: CartTotalPriceRepository,
     private var cartPage: CartPage = CartPage()
 ) : CartContract.Presenter {
     override fun loadCartItems() {
