@@ -3,6 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="price"
+            type="int" />
+
+        <variable
+            name="count"
+            type="int" />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <CheckBox
-                android:id="@+id/checkBox2"
+                android:id="@+id/allCheckBox"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="23dp"
@@ -59,14 +71,15 @@
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
+                app:layout_constraintTop_toBottomOf="@+id/allCheckBox" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="@{@string/product_price(price)}"
                 android:textColor="@color/white"
                 android:textSize="18sp"
-                android:layout_marginEnd="12dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -79,6 +92,7 @@
             android:layout_height="78dp"
             android:background="#04C09E"
             android:gravity="center"
+            android:text="@{@string/order_button_message(count)}"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"

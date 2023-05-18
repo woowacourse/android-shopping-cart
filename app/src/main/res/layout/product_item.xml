@@ -20,8 +20,10 @@
             android:layout_height="154dp"
             app:imgResId="@{product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@color/black" />
 
         <TextView
             android:id="@+id/productName"
@@ -47,6 +49,27 @@
             android:text="@{@string/product_price(product.price)}"
             app:layout_constraintTop_toBottomOf="@+id/productName"
             tools:text="10000원" />
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/add_cart_button"
+            app:layout_constraintBottom_toBottomOf="@+id/loadMoreButton"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
+        <include
+            layout="@layout/order_count"
+            android:layout_width="0dp"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginBottom="11dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/loadMoreButton"
+            app:layout_constraintEnd_toEndOf="@+id/loadMoreButton"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

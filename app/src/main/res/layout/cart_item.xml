@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="product"
-            type="woowacourse.shopping.model.ProductUIModel" />
+            type="woowacourse.shopping.model.CartProductUIModel" />
     </data>
 
 
@@ -17,25 +16,38 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/layout_border_radius">
 
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/product_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/product_title"
+            tools:checked="@{product.isChecked()}" />
+
         <TextView
             android:id="@+id/product_title"
             android:layout_width="266dp"
             android:layout_height="40dp"
-            android:layout_marginStart="13dp"
+            android:layout_marginStart="11dp"
             android:layout_marginTop="10dp"
-            android:text="@{product.name}"
             android:gravity="center_vertical"
+            android:text="@{product.product.name}"
             android:textAppearance="@style/cart_item_title"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/checkBox"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="PET보틀-정사각(370ml)" />
 
         <ImageView
-            imgResId="@{product.imageUrl}"
+            imgResId="@{product.product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
+            android:layout_marginStart="13dp"
             android:layout_marginTop="13dp"
-            app:layout_constraintStart_toStartOf="@+id/product_title"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/product_title"
             tools:ignore="ContentDescription"
             tools:src="@color/black" />
@@ -52,16 +64,26 @@
             tools:ignore="ContentDescription" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
             android:layout_marginEnd="13dp"
-            android:layout_marginBottom="18dp"
-            android:text="@{@string/product_price(product.price)}"
+            android:text="@{@string/product_price(product.count * product.product.price)}"
             android:textColor="@color/price_text_color"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/remove_button"
             tools:text="99000원" />
+
+        <include
+            android:id="@+id/order_count_layout"
+            app:count = "@{product.count}"
+            layout="@layout/order_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

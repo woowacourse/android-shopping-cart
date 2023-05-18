@@ -85,7 +85,7 @@
             android:layout_height="50dp"
             android:background="#04C09E"
             android:gravity="center"
-            android:text="@string/insert_cart_texgt"
+            android:text="@string/insert_cart_text"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
