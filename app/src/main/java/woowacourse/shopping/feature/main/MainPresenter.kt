@@ -53,7 +53,6 @@ class MainPresenter(
         products.addAll(nextProductUiModels)
 
         view.setProducts(products.toList())
-        updateCartCountBadge()
     }
 
     override fun loadRecent() {
@@ -98,7 +97,6 @@ class MainPresenter(
     override fun resetProducts() {
         productRepository.resetCache()
         view.setProducts(listOf())
-        updateCartCountBadge()
     }
 
     private fun addRecentProduct(recentProduct: RecentProductUiModel) {
