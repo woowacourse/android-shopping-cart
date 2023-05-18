@@ -7,7 +7,11 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.model.ShoppingCartProductUiModel" />
+            type="woowacourse.shopping.model.CartProductUiModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.shoppingcart.CartProductCountPickerListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,6 +58,7 @@
 
         <ImageView
             android:id="@+id/image_product"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="13dp"
@@ -76,40 +81,13 @@
             app:layout_constraintTop_toBottomOf="@id/image_remove_product"
             tools:text="99,800원" />
 
-        <ImageView
-            android:id="@+id/image_minus"
-            android:layout_width="13dp"
-            android:layout_height="19dp"
-            android:layout_marginTop="15dp"
-            android:contentDescription="@string/image_to_minus_product_count"
-            android:src="@drawable/image_minus"
+        <woowacourse.shopping.common.CountPickerView
+            android:id="@+id/count_picker"
+            android:layout_width="130dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="@+id/text_product_price"
             app:layout_constraintTop_toBottomOf="@id/text_product_price" />
-
-        <TextView
-            android:id="@+id/text_product_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:text="@{String.valueOf(product.count)}"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/image_minus"
-            app:layout_constraintStart_toEndOf="@+id/image_plus"
-            app:layout_constraintTop_toBottomOf="@id/text_product_price"
-            tools:text="1" />
-
-        <ImageView
-            android:id="@+id/image_plus"
-            android:layout_width="13dp"
-            android:layout_height="19dp"
-            android:layout_marginStart="51dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="29dp"
-            android:contentDescription="@string/image_to_plus_product_count"
-            android:src="@drawable/image_plus"
-            app:layout_constraintStart_toEndOf="@id/image_product"
-            app:layout_constraintTop_toBottomOf="@+id/text_product_price" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

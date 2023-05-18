@@ -1,7 +1,7 @@
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class ShoppingCartTest {
+class CartTest {
 
     @Test
     fun `장바구니 상품의 개수를 증가시키면 개수가 하나 늘어난 장바구니 상품이 반환된다`() {

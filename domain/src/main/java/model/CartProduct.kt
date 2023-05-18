@@ -1,31 +1,31 @@
 package model
 
-data class ShoppingCartProduct(
+data class CartProduct(
     val product: Product,
     val count: Count = Count(),
     val price: Price = product.price * count.value,
     val selected: Boolean = true,
 ) {
 
-    fun plusCount(): ShoppingCartProduct {
+    fun plusCount(): CartProduct {
 
-        return ShoppingCartProduct(
+        return CartProduct(
             product = product,
             count = count.plus()
         )
     }
 
-    fun minusCount(): ShoppingCartProduct {
+    fun minusCount(): CartProduct {
 
-        return ShoppingCartProduct(
+        return CartProduct(
             product = product,
             count = count.minus()
         )
     }
 
-    fun setSelectedState(selected: Boolean): ShoppingCartProduct {
+    fun setSelectedState(selected: Boolean): CartProduct {
 
-        return ShoppingCartProduct(
+        return CartProduct(
             product = product,
             count = count,
             selected = selected

@@ -11,13 +11,13 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.ShoppingDBAdapter
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.model.ShoppingCartProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 
-class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
+class CartActivity : AppCompatActivity(), CartContract.View {
 
-    private lateinit var shoppingCartRecyclerAdapter: ShoppingCartRecyclerAdapter
-    private val presenter: ShoppingCartContract.Presenter by lazy {
-        ShoppingCartPresenter(
+    private lateinit var cartRecyclerAdapter: CartRecyclerAdapter
+    private val presenter: CartContract.Presenter by lazy {
+        CartPresenter(
             view = this,
             repository = ShoppingDBAdapter(
                 shoppingDao = ShoppingDao(this)
@@ -30,11 +30,11 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
 
-        setUpShoppingCartToolbar()
+        setUpCartToolbar()
         presenter.loadShoppingCartProducts()
     }
 
-    private fun setUpShoppingCartToolbar() {
+    private fun setUpCartToolbar() {
         setSupportActionBar(binding.toolbarShoppingCart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
@@ -49,20 +49,20 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setUpShoppingCartView(
-        products: List<ShoppingCartProductUiModel>,
+    override fun setUpCartView(
+        products: List<CartProductUiModel>,
         currentPage: Int,
     ) {
-        shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
+        cartRecyclerAdapter = CartRecyclerAdapter(
             shoppingCartProducts = products,
-            shoppingCartProductCountPicker = getShoppingCartProductCountPickerImpl(),
+            cartProductCountPickerListener = getCartProductCountPicker(),
             onProductSelectingChanged = presenter::changeProductSelectedState,
             onShoppingCartProductRemoved = presenter::removeShoppingCartProduct,
             onTotalPriceChanged = presenter::calcTotalPrice,
         )
 
         with(binding) {
-            recyclerViewCart.adapter = shoppingCartRecyclerAdapter
+            recyclerViewCart.adapter = cartRecyclerAdapter
             buttonNextPage.setOnClickListener {
                 presenter.moveToNextPage()
             }
@@ -76,13 +76,13 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         }
     }
 
-    private fun getShoppingCartProductCountPickerImpl() = object : ShoppingCartProductCountPicker {
+    private fun getCartProductCountPicker() = object : CartProductCountPickerListener {
 
-        override fun onPlus(product: ShoppingCartProductUiModel) {
+        override fun onPlus(product: CartProductUiModel) {
             presenter.plusShoppingCartProductCount(product)
         }
 
-        override fun onMinus(product: ShoppingCartProductUiModel) {
+        override fun onMinus(product: CartProductUiModel) {
             presenter.minusShoppingCartProductCount(product)
         }
     }
@@ -91,8 +91,8 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         binding.textTotalPrice.text = price.toString()
     }
 
-    override fun refreshShoppingCartProductView(products: List<ShoppingCartProductUiModel>) {
-        shoppingCartRecyclerAdapter.refreshItems(products = products)
+    override fun refreshCartProductView(products: List<CartProductUiModel>) {
+        cartRecyclerAdapter.refreshItems(products)
     }
 
     override fun setUpTextPageNumber(pageNumber: Int) {
@@ -106,7 +106,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     companion object {
         fun getIntent(context: Context): Intent {
 
-            return Intent(context, ShoppingCartActivity::class.java)
+            return Intent(context, CartActivity::class.java)
         }
     }
 }

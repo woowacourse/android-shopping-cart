@@ -1,6 +1,6 @@
 package woowacourse.shopping.model
 
-data class ShoppingCartProductUiModel(
+data class CartProductUiModel(
     val id: Int,
     val name: String,
     val imageUrl: String,
