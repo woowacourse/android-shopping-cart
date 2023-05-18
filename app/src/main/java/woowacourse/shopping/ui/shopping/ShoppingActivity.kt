@@ -95,6 +95,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     ) {
         adapter.submitList(products, recentProducts, cartProducts)
         binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
     }
 
     override fun addMoreProducts(products: List<ProductUIModel>) {

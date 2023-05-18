@@ -42,13 +42,10 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
     ) {
         carts.addAll(cartProducts)
         productItems.clear()
-        if (recentProducts.isNotEmpty()) {
-            productItems.add(ProductsItemType.RecentProducts(recentProducts))
-        }
-        productItems.addAll(
-            products.map { ProductsItemType.Product(it, getCount(it.id)) }
-        )
+        addRecentProducts(recentProducts)
+        productItems.addAll(products.map { ProductsItemType.Product(it, getCount(it.id)) })
         productItems.add(ProductsItemType.ReadMore)
+
         notifyItemChanged(0)
     }
 
@@ -67,12 +64,21 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
     ) {
         carts.clear()
         carts.addAll(cartProducts)
-        productItems[0] = ProductsItemType.RecentProducts(recentProducts)
-        if (recentProducts.isEmpty()) { productItems.removeAt(0) }
+        addRecentProducts(recentProducts)
         productItems.filterIsInstance<ProductsItemType.Product>()
             .forEach { it.count = getCount(it.product.id) }
 
         notifyItemRangeChanged(0, productItems.size - 1)
+    }
+
+    private fun addRecentProducts(recentProducts: List<RecentProductUIModel>) {
+        if (productItems.size > 0 && productItems[0] is ProductsItemType.RecentProducts) {
+            productItems.removeAt(0)
+        }
+
+        if (recentProducts.isNotEmpty()) {
+            productItems.add(0, ProductsItemType.RecentProducts(recentProducts))
+        }
     }
 
     private fun getCount(productId: Int): Int {

@@ -12,10 +12,6 @@ import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.NavigationViewHolder
 class CartAdapter(private val cartListener: CartListener) : RecyclerView.Adapter<CartItemViewHolder>() {
     private val cartItems = mutableListOf<CartItemType>()
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
         return when (viewType) {
             CartItemType.TYPE_ITEM -> CartViewHolder.from(parent, cartListener)
@@ -34,13 +30,6 @@ class CartAdapter(private val cartListener: CartListener) : RecyclerView.Adapter
 
     override fun getItemViewType(position: Int): Int {
         return cartItems[position].viewType
-    }
-
-    override fun getItemId(position: Int): Long {
-        return when (val item = cartItems[position]) {
-            is CartItemType.Cart -> item.product.id.toLong()
-            is CartItemType.Navigation -> -1
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

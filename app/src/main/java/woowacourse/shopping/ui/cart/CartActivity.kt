@@ -44,6 +44,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.setUpCarts()
         binding.cartBottom.onAllCheckClick = presenter::setProductsCheck
         binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
     }
 
     private fun initToolbar() {
