@@ -20,7 +20,7 @@ class ProductDetailPresenter(
     }
 
     override fun addCart(productId: Long) {
-        cartRepository.addCart(productId)
+        cartRepository.addCart(productId, 1)
         view.addCartSuccessView()
     }
 }

@@ -6,7 +6,7 @@ import woowacourse.shopping.presentation.model.CartProductModel
 
 object CartProductFixture {
     fun getFixture(): List<CartProductModel> {
-        return listOf(CartProductEntity(1, 1), CartProductEntity(2, 3)).map {
+        return listOf(CartProductEntity(1, 1, false), CartProductEntity(2, 3, false)).map {
             it.toUIModel()
         }
     }

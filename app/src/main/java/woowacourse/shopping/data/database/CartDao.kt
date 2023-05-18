@@ -8,12 +8,22 @@ import woowacourse.shopping.data.model.CartProductEntity
 class CartDao(context: Context) {
     private val db = CartHelper(context).writableDatabase
 
-    fun insertProduct(productId: Long) {
+    fun insertProduct(productId: Long, productCount: Int) {
         val value = ContentValues().apply {
             put(CartContract.Cart.PRODUCT_ID, productId)
+            put(CartContract.Cart.PRODUCT_COUNT, productCount)
         }
-        db.insert(CartContract.Cart.TABLE_NAME, null, value)
+        db.replace(CartContract.Cart.TABLE_NAME, null, value)
     }
+
+    fun updateCartSelected(productId: Long, isSelected: String) {
+        val value = ContentValues().apply {
+            put(CartContract.Cart.PRODUCT_ID, productId)
+            put(CartContract.Cart.IS_SELECTED, isSelected)
+        }
+        db.replace(CartContract.Cart.TABLE_NAME, null, value)
+    }
+
 
     fun deleteAllProduct(productId: Long) {
         db.delete(
@@ -28,11 +38,16 @@ class CartDao(context: Context) {
         val cursor = getCursor(startPosition, cartItemCount)
         with(cursor) {
             while (moveToNext()) {
-                val productId =
-                    getLong(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_ID))
-                val productCount =
-                    getInt(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_COUNT))
-                result.add(CartProductEntity(productId, productCount))
+                val productId = getLong(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_ID))
+                val productCount = getInt(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_COUNT))
+                val isSelected = getString(getColumnIndexOrThrow(CartContract.Cart.IS_SELECTED))
+                result.add(
+                    CartProductEntity(
+                        productId,
+                        productCount,
+                        isSelected == "y"
+                    )
+                ) // TODO 데이터 어느 레이어에서 가공할까?
             }
         }
         cursor.close()

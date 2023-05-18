@@ -53,18 +53,20 @@ class ProductDetailPresenterTest {
     @Test
     fun `상품을 장바구니에 저장한다`() {
         // given
-        val slot = slot<Long>()
-        justRun { cartRepository.addCart(capture(slot)) }
+        val slotProductId = slot<Long>()
+        val slotItemCount = slot<Int>()
+        justRun { cartRepository.addCart(capture(slotProductId), capture(slotItemCount)) }
         justRun { view.addCartSuccessView() }
 
         // when
         presenter.addCart(1)
 
         // then
-        val actual = slot.captured
+        val actualProductId = slotProductId.captured
+        val actualProductCount = slotItemCount.captured
         val expected = 1L
-        assertEquals(expected, actual)
-        verify { cartRepository.addCart(actual) }
+        assertEquals(expected, actualProductId)
+        verify { cartRepository.addCart(actualProductId, actualProductCount) }
         verify { view.addCartSuccessView() }
     }
 }
