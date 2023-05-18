@@ -9,12 +9,14 @@ class ProductViewHolder(
     onItemViewClick: (CartProductModel) -> Unit,
     onMinusClick: (CartProductModel) -> Unit,
     onPlusClick: (CartProductModel) -> Unit,
+    onCartAddClick: (CartProductModel) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener {
-            onItemViewClick(
-                binding.cartProduct ?: return@setOnClickListener
-            )
+            onItemViewClick(binding.cartProduct ?: return@setOnClickListener)
+        }
+        binding.productListCartAddButton.setOnClickListener {
+            onCartAddClick(binding.cartProduct ?: return@setOnClickListener)
         }
         binding.onMinusClick = onMinusClick
         binding.onPlusClick = onPlusClick

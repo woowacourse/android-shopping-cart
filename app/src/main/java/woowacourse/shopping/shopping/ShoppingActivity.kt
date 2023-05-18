@@ -35,7 +35,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             emptyList(),
             onProductItemClick = { presenter.openProduct(it) },
             onMinusClick = { presenter.minusCartProduct(it) },
-            onPlusClick = { presenter.plusCartProduct(it) }
+            onPlusClick = { presenter.plusCartProduct(it) },
+            onCartAddClick = { presenter.plusCartProduct(it) }
         )
     }
 
@@ -115,6 +116,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initProductList() {
         binding.shoppingProductList.layoutManager = makeLayoutManager()
+        binding.shoppingProductList.itemAnimator = null
         binding.shoppingProductList.adapter = concatAdapter
     }
 

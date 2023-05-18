@@ -27,7 +27,6 @@ class ShoppingPresenter(
     override fun reloadProducts() {
         updateProducts()
         updateRecentProducts()
-        view.updateCartProductsCount(cartRepository.selectAllCount())
     }
 
     override fun openProduct(cartProduct: CartProductModel) {
@@ -51,25 +50,26 @@ class ShoppingPresenter(
 
     override fun minusCartProduct(cartProduct: CartProductModel) {
         cartRepository.minusCartProduct(cartProduct.product.toDomainModel())
-        view.updateCartProductsCount(cartRepository.selectAllCount())
+        updateProducts()
     }
 
     override fun plusCartProduct(cartProduct: CartProductModel) {
         cartRepository.plusCartProduct(cartProduct.product.toDomainModel())
-        view.updateCartProductsCount(cartRepository.selectAllCount())
+        updateProducts()
     }
 
     private fun updateProducts() {
         val loadedProducts = shoppingRepository.selectByRange(0, productLoadSize)
         view.updateProducts(loadedProducts.products.map { it.toViewModel() })
+        view.updateCartProductsCount(cartRepository.selectAllCount())
     }
 
     private fun updateRecentProducts() {
         val recentProducts = recentProductRepository.selectAll()
-        val recentProductsDesc =
+        val sortedRecentProducts =
             recentProducts.getRecentProducts(recentProductSize).value.sortedByDescending(
                 RecentProduct::ordinal
             )
-        view.updateRecentProducts(recentProductsDesc.map { it.toViewModel() })
+        view.updateRecentProducts(sortedRecentProducts.map { it.toViewModel() })
     }
 }
