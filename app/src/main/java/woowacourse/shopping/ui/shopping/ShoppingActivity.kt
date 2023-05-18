@@ -81,8 +81,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun updateMoreButtonState(isVisible: Boolean) {
-        moreButtonAdapter.hasNext = isVisible
-        moreButtonAdapter.notifyDataSetChanged()
+        moreButtonAdapter.updateItemCount(isVisible)
     }
 
     private fun initAdapter() {
