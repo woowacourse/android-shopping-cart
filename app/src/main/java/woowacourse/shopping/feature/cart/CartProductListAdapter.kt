@@ -1,10 +1,9 @@
-package woowacourse.shopping.list.adapter
+package woowacourse.shopping.feature.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.list.viewholder.CartProductViewHolder
 import woowacourse.shopping.model.CartProductState
 
 class CartProductListAdapter(

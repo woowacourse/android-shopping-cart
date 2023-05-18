@@ -1,4 +1,4 @@
-package woowacourse.shopping.list
+package woowacourse.shopping.common
 
 enum class ViewType {
     PRODUCT,

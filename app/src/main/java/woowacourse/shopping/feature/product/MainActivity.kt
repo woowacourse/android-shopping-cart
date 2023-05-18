@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main
+package woowacourse.shopping.feature.product
 
 import android.os.Bundle
 import android.view.Menu
@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.domain.Product
 import com.example.domain.RecentProduct
 import woowacourse.shopping.R
+import woowacourse.shopping.common.adapter.LoadMoreAdapter
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDao
@@ -16,10 +17,8 @@ import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
-import woowacourse.shopping.list.adapter.LoadMoreAdapter
-import woowacourse.shopping.list.adapter.ProductListAdapter
-import woowacourse.shopping.list.adapter.RecentProductListAdapter
-import woowacourse.shopping.list.adapter.RecentProductListWrapperAdapter
+import woowacourse.shopping.feature.product.recent.RecentProductListAdapter
+import woowacourse.shopping.feature.product.recent.RecentProductListWrapperAdapter
 import woowacourse.shopping.model.ProductState
 import woowacourse.shopping.model.RecentProductState
 import woowacourse.shopping.model.mapper.toUi

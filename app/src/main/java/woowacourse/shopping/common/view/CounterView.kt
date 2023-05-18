@@ -1,4 +1,4 @@
-package woowacourse.shopping.view
+package woowacourse.shopping.common.view
 
 import android.content.Context
 import android.util.AttributeSet

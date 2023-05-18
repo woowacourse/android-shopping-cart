@@ -67,7 +67,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cart_clear_image_view"
                 tools:text="0원" />
 
-            <woowacourse.shopping.view.CounterView
+            <woowacourse.shopping.common.view.CounterView
                 android:id="@+id/counter_view"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package woowacourse.shopping.list.viewholder
+package woowacourse.shopping.common.viewholder
 
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView

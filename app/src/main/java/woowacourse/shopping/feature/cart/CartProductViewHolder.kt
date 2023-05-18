@@ -1,4 +1,4 @@
-package woowacourse.shopping.list.viewholder
+package woowacourse.shopping.feature.cart
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding

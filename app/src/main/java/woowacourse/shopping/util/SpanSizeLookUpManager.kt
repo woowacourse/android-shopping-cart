@@ -2,7 +2,7 @@ package woowacourse.shopping.util
 
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
-import woowacourse.shopping.list.ViewType
+import woowacourse.shopping.common.ViewType
 
 class SpanSizeLookUpManager(
     private val adapter: ConcatAdapter,

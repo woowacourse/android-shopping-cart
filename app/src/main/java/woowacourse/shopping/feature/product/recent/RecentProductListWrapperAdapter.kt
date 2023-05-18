@@ -1,11 +1,10 @@
-package woowacourse.shopping.list.adapter
+package woowacourse.shopping.feature.product.recent
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.common.ViewType
 import woowacourse.shopping.databinding.ItemRecentProductListBinding
-import woowacourse.shopping.list.ViewType
-import woowacourse.shopping.list.viewholder.RecentProductWrapperViewHolder
 
 class RecentProductListWrapperAdapter(
     private val recentProductListAdapter: RecentProductListAdapter,

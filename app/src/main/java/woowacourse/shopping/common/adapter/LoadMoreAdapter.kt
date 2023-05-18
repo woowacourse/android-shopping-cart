@@ -1,11 +1,11 @@
-package woowacourse.shopping.list.adapter
+package woowacourse.shopping.common.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.common.ViewType
+import woowacourse.shopping.common.viewholder.LoadMoreViewHolder
 import woowacourse.shopping.databinding.ItemMoreBinding
-import woowacourse.shopping.list.ViewType
-import woowacourse.shopping.list.viewholder.LoadMoreViewHolder
 
 class LoadMoreAdapter(
     private val onClick: () -> Unit

@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main
+package woowacourse.shopping.feature.product
 
 import com.example.domain.Product
 import com.example.domain.RecentProduct
