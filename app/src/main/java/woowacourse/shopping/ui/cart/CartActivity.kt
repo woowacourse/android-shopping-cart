@@ -36,7 +36,7 @@ class CartActivity : AppCompatActivity() {
         initCartList()
         initOrderUI()
         loadLastPageIfFromCartItemAdd()
-        restoreCurrentPageIfSavedInstanceStateIsNotNull(savedInstanceState)
+        restoreStateIfSavedInstanceStateIsNotNull(savedInstanceState)
     }
 
     private fun loadLastPageIfFromCartItemAdd() {
@@ -45,9 +45,14 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    private fun restoreCurrentPageIfSavedInstanceStateIsNotNull(savedInstanceState: Bundle?) {
+    private fun restoreStateIfSavedInstanceStateIsNotNull(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             presenter.restoreCurrentPage(savedInstanceState.getInt(CURRENT_PAGE))
+            val selectedCartItems = savedInstanceState.getString(SELECTED_CART_ITEMS)
+                ?.split(" ")
+                ?.map { it.toLong() }
+                ?.toSet()
+            if (selectedCartItems != null) presenter.restoreSelectedCartItems(selectedCartItems)
         }
     }
 
@@ -123,6 +128,7 @@ class CartActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(CURRENT_PAGE, presenter.currentPage)
+        outState.putString(SELECTED_CART_ITEMS, presenter.selectedCartItems.joinToString(" "))
         super.onSaveInstanceState(outState)
     }
 
@@ -148,6 +154,7 @@ class CartActivity : AppCompatActivity() {
 
     companion object {
         private const val CURRENT_PAGE = "CURRENT_PAGE"
+        private const val SELECTED_CART_ITEMS = "SELECTED_CART_ITEMS"
         private const val JUST_ADDED_CART_ITEM = "JUST_ADDED_CART_ITEM"
 
         fun startActivity(context: Context, justAddedCartItem: Boolean = false) {

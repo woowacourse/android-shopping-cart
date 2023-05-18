@@ -15,20 +15,23 @@ class CartPresenter(
         refreshPageUIState()
         refreshAllCartItemsSelected()
     }
-    private var selectedCartItems: Set<Long> by Delegates.observable(setOf()) { _, _, _ ->
+    private var _selectedCartItems: Set<Long> by Delegates.observable(setOf()) { _, _, _ ->
         refreshAllCartItemsSelected()
         refreshOrderUIState()
     }
 
     val currentPage: Int
         get() = _currentPage
+
+    val selectedCartItems: Set<Long>
+        get() = _selectedCartItems.toSet()
     private val maxPage
         get() = (cartItemRepository.countAll() - 1) / PAGE_SIZE + 1
 
     private fun showCartItemsOfCurrentPage() {
         val cartItems = getCartItemsOnCurrentPage()
         val cartItemUIStates =
-            cartItems.map { CartItemUIState.create(it, it.product.id in selectedCartItems) }
+            cartItems.map { CartItemUIState.create(it, it.product.id in _selectedCartItems) }
         view.setCartItems(cartItemUIStates)
     }
 
@@ -62,14 +65,14 @@ class CartPresenter(
     private fun refreshAllCartItemsSelected() {
         val cartItemsOnCurrentPage = getCartItemsOnCurrentPage()
         view.setAllCartItemsSelected(
-            cartItemsOnCurrentPage.count { it.product.id in selectedCartItems } >= cartItemsOnCurrentPage.size
+            cartItemsOnCurrentPage.count { it.product.id in _selectedCartItems } >= cartItemsOnCurrentPage.size
                     && cartItemsOnCurrentPage.isNotEmpty()
         )
     }
 
     private fun refreshOrderUIState() {
         val cartItems = cartItemRepository.findAll()
-        val selectedCartItems = cartItems.filter { it.product.id in selectedCartItems }
+        val selectedCartItems = cartItems.filter { it.product.id in _selectedCartItems }
         val orderPrice = selectedCartItems.sumOf { it.product.price * it.count }
         view.setOrderPrice(orderPrice)
         view.setOrderCount(selectedCartItems.size)
@@ -77,6 +80,10 @@ class CartPresenter(
 
     fun restoreCurrentPage(currentPage: Int) {
         this._currentPage = currentPage
+    }
+
+    fun restoreSelectedCartItems(selectedCartItems: Set<Long>) {
+        this._selectedCartItems = selectedCartItems
     }
 
     fun onLoadCartItemsNextPage() {
@@ -93,32 +100,32 @@ class CartPresenter(
 
     fun onDeleteCartItem(productId: Long) {
         cartItemRepository.deleteByProductId(productId)
-        selectedCartItems = selectedCartItems - productId
+        _selectedCartItems = _selectedCartItems - productId
         showCartItemsOfCurrentPage()
         refreshPageUIState()
     }
 
     fun onChangeCartItemSelection(productId: Long, isSelected: Boolean) {
-        selectedCartItems = if (isSelected) {
-            selectedCartItems + productId
+        _selectedCartItems = if (isSelected) {
+            _selectedCartItems + productId
         } else {
-            selectedCartItems - productId
+            _selectedCartItems - productId
         }
         view.setCartItemSelected(productId, isSelected)
     }
 
     fun onChangeCartItemsOnCurrentPageSelection(isSelected: Boolean) {
         if (isSelected) {
-            selectedCartItems =
-                selectedCartItems + getCartItemsOnCurrentPage().map { it.product.id }
+            _selectedCartItems =
+                _selectedCartItems + getCartItemsOnCurrentPage().map { it.product.id }
             showCartItemsOfCurrentPage()
             return
         }
         val selectedProductsIdOnCurrentPage = getCartItemsOnCurrentPage()
-            .filter { it.product.id in selectedCartItems }
+            .filter { it.product.id in _selectedCartItems }
             .map { it.product.id }
         if (selectedProductsIdOnCurrentPage.size >= getCartItemsOnCurrentPage().size) {
-            selectedCartItems = selectedCartItems - selectedProductsIdOnCurrentPage.toSet()
+            _selectedCartItems = _selectedCartItems - selectedProductsIdOnCurrentPage.toSet()
             showCartItemsOfCurrentPage()
         }
     }
