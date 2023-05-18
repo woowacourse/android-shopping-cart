@@ -36,7 +36,9 @@ class CounterDialog : DialogFragment(), CounterDialogContract.View {
         val count =
             savedInstanceState?.getInt(COUNT_RESTORE_KEY)
 
-        setInit(product, count)
+        setInitPresenter(product, count)
+        binding.presenter = presenter
+        binding.product = product
 
         binding.counterView.countStateChangeListener =
             object : CounterView.OnCountStateChangeListener {
@@ -46,7 +48,7 @@ class CounterDialog : DialogFragment(), CounterDialogContract.View {
             }
     }
 
-    private fun setInit(product: ProductUiModel, count: Int?) {
+    private fun setInitPresenter(product: ProductUiModel, count: Int?) {
         presenter = CounterDialogPresenter(
             this,
             CartRepositoryImpl(CartDao(requireContext())),
@@ -54,8 +56,6 @@ class CounterDialog : DialogFragment(), CounterDialogContract.View {
             count
         )
         presenter.initPresenter()
-        binding.presenter = presenter
-        binding.product = product
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
