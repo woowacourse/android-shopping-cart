@@ -22,9 +22,9 @@ class ProductListPresenterTest {
     private lateinit var recentlyViewedProductRepository: RecentlyViewedProductRepository
     private lateinit var productRepository: ProductRepository
     private lateinit var sut: ProductListPresenter
-    private val fakeProduct = Product(1L, "www.naver.com", "네이버", 20_000)
+    private val dummyProduct = Product(1L, "www.naver.com", "네이버", 20_000)
     private val fakeRecentlyViewedProduct =
-        RecentlyViewedProduct(fakeProduct, LocalDateTime.MAX).apply { id = 1 }
+        RecentlyViewedProduct(dummyProduct, LocalDateTime.MAX).apply { id = 1 }
 
     @BeforeEach
     fun setUp() {
@@ -43,14 +43,16 @@ class ProductListPresenterTest {
 
     @Test
     fun `현재 페이지를 회복하면 현재 페이지가 변하고 그에 맞는 상품들과 페이지 관련 UI를 보여준다`() {
-        every { productRepository.findAll(any(), any()) } returns listOf(fakeProduct)
-        every { productRepository.countAll() } returns 1
-        every { view.addProducts(listOf(fakeProduct).map(ProductUIState::from)) } just runs
+        val dummyProducts = List(21) { dummyProduct }
+        every { productRepository.findAll(any(), any()) } returns dummyProducts
+        every { productRepository.countAll() } returns dummyProducts.size
+        every { view.addProducts(dummyProducts.map(ProductUIState::from)) } just runs
         every { view.setCanLoadMore(false) } just runs
 
-        sut.restoreCurrentPage(1)
+        sut.restoreCurrentPage(2)
 
-        verify { view.addProducts(listOf(fakeProduct).map(ProductUIState::from)) }
+        assertThat(sut.getCurrentPage()).isEqualTo(2)
+        verify { view.addProducts(dummyProducts.map(ProductUIState::from)) }
         verify { view.setCanLoadMore(false) }
     }
 
@@ -76,15 +78,15 @@ class ProductListPresenterTest {
 
     @Test
     fun `다음 페이지를 로드하면 현재 페이지가 1 증가하고 그에 맞는 상품들과 페이지 관련 UI를 보여준다`() {
-        every { productRepository.findAll(any(), any()) } returns listOf(fakeProduct)
+        every { productRepository.findAll(any(), any()) } returns listOf(dummyProduct)
         every { productRepository.countAll() } returns 1
-        every { view.addProducts(listOf(fakeProduct).map(ProductUIState::from)) } just runs
+        every { view.addProducts(listOf(dummyProduct).map(ProductUIState::from)) } just runs
         every { view.setCanLoadMore(false) } just runs
 
         sut.onLoadProductsNextPage()
 
         assertThat(sut.getCurrentPage()).isEqualTo(1)
-        verify { view.addProducts(listOf(fakeProduct).map(ProductUIState::from)) }
+        verify { view.addProducts(listOf(dummyProduct).map(ProductUIState::from)) }
         verify { view.setCanLoadMore(false) }
     }
 }
