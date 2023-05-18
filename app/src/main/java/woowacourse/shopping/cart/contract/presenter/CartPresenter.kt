@@ -18,13 +18,15 @@ class CartPresenter(
         }
 
     override fun setUpCarts() {
-        val lastItemOffset = offset + STEP
+        val isNotLastPage = offset + STEP < repository.getAll().size
+        val isNotFirstPage = 0 < offset
+        val pageNumber = offset / STEP + 1
         view.setCarts(
             repository.getSubList(offset, STEP).map { CartItem(it.toUIModel()) },
             CartUIModel(
-                lastItemOffset < repository.getAll().size,
-                0 < offset,
-                offset / STEP + 1,
+                isNotLastPage,
+                isNotFirstPage,
+                pageNumber,
             ),
         )
     }
