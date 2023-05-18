@@ -23,6 +23,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             ProductRepositoryImpl(
                 productDataSource = ProductDao(this),
                 recentlyViewedDataSource = RecentlyViewedDao(this),
+                shoppingCartDataSource = ShoppingCartDao(this),
             ),
             ShoppingCartRepositoryImpl(
                 shoppingCartDataSource = ShoppingCartDao(this),

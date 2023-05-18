@@ -1,18 +1,19 @@
 package woowacourse.shopping.presentation.model
 
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType
 
 sealed interface HomeData {
     val viewType: HomeViewType
 }
 
-data class ProductItem(val product: Product) : HomeData {
+data class ProductItem(val productInCart: ProductInCart) : HomeData {
     override val viewType: HomeViewType = HomeViewType.PRODUCT
-    val id: Long get() = product.id
-    val itemImage: String get() = product.itemImage
-    val name: String get() = product.name
-    val price: Int get() = product.price
+    val id: Long get() = productInCart.product.id
+    val itemImage: String get() = productInCart.product.itemImage
+    val name: String get() = productInCart.product.name
+    val price: Int get() = productInCart.product.price
+    val quantity: Int get() = productInCart.quantity
 }
 
 data class RecentlyViewedItem(val recentlyViewedProducts: List<RecentlyViewedProduct>) : HomeData {

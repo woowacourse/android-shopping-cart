@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.home
 
+import woowacourse.shopping.domain.model.Operator
 import woowacourse.shopping.presentation.model.HomeData
 import woowacourse.shopping.presentation.model.RecentlyViewedProduct
 
@@ -12,11 +13,14 @@ interface HomeContract {
         fun appendProductItems(startPosition: Int, size: Int)
         fun appendShowMoreItem(position: Int)
         fun removeShowMoreItem(position: Int)
+        fun showUnexpectedError()
+        fun updateProductQuantity(position: Int)
     }
 
     interface Presenter {
         fun setHome()
         fun fetchProducts()
         fun fetchRecentlyViewed()
+        fun updateProductQuantity(position: Int, operator: Operator)
     }
 }

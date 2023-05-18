@@ -32,6 +32,27 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/avatars" />
 
+        <ImageButton
+            android:id="@+id/buttonItemProductInsertProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@null"
+            android:src="@drawable/icon_plus"
+            app:layout_constraintBottom_toBottomOf="@id/imageItemProductProduct"
+            app:layout_constraintEnd_toEndOf="@id/imageItemProductProduct" />
+
+        <woowacourse.shopping.presentation.ui.custom.QuantityCounter
+            android:id="@+id/customItemProductCounter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintBottom_toBottomOf="@id/imageItemProductProduct"
+            app:layout_constraintEnd_toEndOf="@id/imageItemProductProduct"
+            app:layout_constraintStart_toStartOf="@id/imageItemProductProduct"
+            app:layout_constraintWidth_percent="0.7" />
+
         <TextView
             android:id="@+id/textItemProductName"
             style="@style/woowaPro16"

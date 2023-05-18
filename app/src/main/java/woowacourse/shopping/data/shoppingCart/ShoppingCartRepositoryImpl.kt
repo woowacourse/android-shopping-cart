@@ -4,6 +4,7 @@ import woowacourse.shopping.data.product.ProductDataSource
 import woowacourse.shopping.data.product.ProductMapper.toDomainModel
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.util.WoowaResult
 
 class ShoppingCartRepositoryImpl(
     private val shoppingCartDataSource: ShoppingCartDataSource,
@@ -20,7 +21,7 @@ class ShoppingCartRepositoryImpl(
         }
     }
 
-    override fun addProductInCart(productInCart: ProductInCart): Long {
+    override fun insertProductInCart(productInCart: ProductInCart): Long {
         return shoppingCartDataSource.addProductInShoppingCart(
             productInCart.product.id,
             productInCart.quantity,
@@ -33,5 +34,13 @@ class ShoppingCartRepositoryImpl(
 
     override fun getShoppingCartSize(): Int {
         return shoppingCartDataSource.getShoppingCartSize()
+    }
+
+    override fun getProductInCartCount(): Int {
+        return shoppingCartDataSource.getTotalCount()
+    }
+
+    override fun updateProductCount(productId: Long, count: Int): WoowaResult<Int> {
+        return shoppingCartDataSource.updateProductCount(productId, count)
     }
 }

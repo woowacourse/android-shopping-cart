@@ -28,6 +28,6 @@ class ProductDetailPresenter(
     }
 
     override fun addProductInCart() {
-        shoppingCartRepository.addProductInCart(ProductInCart(selectedProduct, 1))
+        shoppingCartRepository.insertProductInCart(ProductInCart(selectedProduct, 1))
     }
 }

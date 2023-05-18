@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.domain.model.Operator
 import woowacourse.shopping.presentation.model.HomeData
 import woowacourse.shopping.presentation.model.ProductItem
 import woowacourse.shopping.presentation.model.RecentlyViewedItem
@@ -19,6 +20,7 @@ class HomeAdapter(
     private val recentlyViewedAdapter: RecentlyViewedProductAdapter,
     private val productClickListener: ProductClickListener,
     private val clickShowMore: () -> Unit,
+    private val quantityChangeListener: (position: Int, op: Operator) -> Unit,
 ) : ListAdapter<HomeData, RecyclerView.ViewHolder>(HomeComparator()) {
 
     override fun getItemViewType(position: Int): Int {
@@ -35,6 +37,7 @@ class HomeAdapter(
                 ProductViewHolder(
                     ProductViewHolder.getView(parent),
                     productClickListener,
+                    quantityChangeListener,
                 )
             }
             RECENTLY_VIEWED.ordinal -> {
