@@ -2,29 +2,29 @@
 
 - [ ] MVP
     - Presenter
-    - [ ] Shopping
+    - [x] Shopping
         - CartRepository
         - [x] setUpCartAmount()
             - [x] updateCartAmount()
         - [x] private updateCartAmount()
             - [x] cartRepository.getTotalAmount()
             - [x] view.updateCartAmount(amount)
-        - [ ] decreaseCartProductAmount(productModel)
-            - [ ] getCartProduct(productModel)
-            - [ ] cartProduct.decreaseAmount()
-            - [ ] if(amount > 0)
-                - [ ] updateCartProduct(cartProduct, productModel)
-            - [ ] if(amount <= 0)
-                - [ ] removeFromCart(cartProduct, productModel)
-            - [ ] updateShoppingProduct
-            - [ ] updateCartAmount()
+        - [x] decreaseCartProductAmount(productModel)
+            - [x] getCartProduct(productModel)
+            - [x] cartProduct.decreaseAmount()
+            - [x] if(amount > 0)
+                - [x] updateCartProduct(cartProduct)
+            - [x] if(amount <= 0)
+                - [x] removeFromCart(cartProduct)
+            - [x] updateShoppingProduct(shoppingProductModel, cartProduct)
+            - [x] updateCartAmount()
         - [x] private getCartProduct(productModel) : CartProduct
             - [x] cartRepository.getCartProductByProduct(product)
             - [x] if(cartProduct == null) CartProduct(...)
-        - [x] private updateCartProduct(cartProduct, productModel)
+        - [x] private updateCartProduct(cartProduct)
             - [x] cartRepository.modifyCartProduct(cartProduct)
-        - [ ] private removeFromCart(cartProduct, productModel)
-            - [ ] cartRepository.deleteCartProductByTime(time: LocalDateTime)
+        - [x] private removeFromCart(cartProduct)
+            - [x] cartRepository.deleteCartProduct(cartProduct)
         - [x] increaseCartProductAmount(productModel)
             - [x] getCartProduct(productModel)
             - [x] cartProduct.increaseAmount()
@@ -32,9 +32,9 @@
                 - [x] updateCartProduct(cartProduct, productModel)
             - [x] if(amount <= 1)
                 - [x] addToCart(cartProduct, productModel)
-            - [x] updateShoppingProduct
+            - [x] updateShoppingProduct(shoppingProductModel, cartProduct)
             - [x] updateCartAmount()
-        - [x] private addToCart(cartProduct, productModel)
+        - [x] private addToCart(cartProduct)
             - [x] cartRepository.addCartProduct(cartProduct)
         - [x] private updateShoppingProduct(cartProduct, productModel)
             - [x] view.updateShoppingProduct(shoppingProductModel)

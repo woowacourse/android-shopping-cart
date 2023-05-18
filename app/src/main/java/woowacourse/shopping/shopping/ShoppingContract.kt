@@ -16,6 +16,8 @@ interface ShoppingContract {
 
         fun loadMoreProduct()
 
+        fun decreaseCartProductAmount(shoppingProductModel: ShoppingProductModel)
+
         fun increaseCartProductAmount(shoppingProductModel: ShoppingProductModel)
     }
 

@@ -1,6 +1,7 @@
 package woowacourse.shopping.cart
 
 import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.repository.CartRepository
@@ -17,7 +18,7 @@ class CartPresenter(
     }
 
     override fun removeCartProduct(cartProductModel: CartProductModel) {
-        cartRepository.deleteCartProductByTime(cartProductModel.time)
+        cartRepository.deleteCartProduct(cartProductModel.toDomain())
         view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
     }

@@ -8,10 +8,12 @@ import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductAdapter(
     private val onProductItemClick: (ShoppingProductModel) -> Unit,
-    private val onPlusAmountButtonClick: (ShoppingProductModel) -> Unit,
+    private val onMinusAmountButtonClick: (ShoppingProductModel) -> Unit,
+    private val onPlusAmountButtonClick: (ShoppingProductModel) -> Unit
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private val products = mutableListOf<ShoppingProductModel>()
     private val onProductItemViewClick: (Int) -> Unit = { onProductItemClick(products[it]) }
+    private val onMinusAmountButtonViewClick: (Int) -> Unit = { onMinusAmountButtonClick(products[it]) }
     private val onPlusAmountButtonViewClick: (Int) -> Unit = { onPlusAmountButtonClick(products[it]) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -20,6 +22,7 @@ class ProductAdapter(
                 LayoutInflater.from(parent.context), parent, false
             ),
             onProductItemViewClick,
+            onMinusAmountButtonViewClick,
             onPlusAmountButtonViewClick
         )
     }

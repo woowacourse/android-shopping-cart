@@ -5,7 +5,6 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
-import java.time.LocalDateTime
 
 class CartRepositoryImpl(
     private val cartDao: CartDao
@@ -26,8 +25,8 @@ class CartRepositoryImpl(
         return cartDao.selectPage(page, sizePerPage)
     }
 
-    override fun deleteCartProductByTime(time: LocalDateTime) {
-        cartDao.deleteCartProductByTime(time)
+    override fun deleteCartProduct(cartProduct: CartProduct) {
+        cartDao.deleteCartProduct(cartProduct)
     }
 
     override fun getTotalAmount(): Int {

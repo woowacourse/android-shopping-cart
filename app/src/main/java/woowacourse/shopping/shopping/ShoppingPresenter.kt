@@ -76,6 +76,22 @@ class ShoppingPresenter(
         view.updateCartAmount(totalAmount)
     }
 
+    override fun decreaseCartProductAmount(shoppingProductModel: ShoppingProductModel) {
+        var cartProduct = getCartProduct(shoppingProductModel.product)
+        cartProduct = cartProduct.decreaseAmount()
+        if (cartProduct.amount > 0) {
+            updateCartProduct(cartProduct)
+        } else {
+            removeFromCart(cartProduct)
+        }
+        updateShoppingProduct(shoppingProductModel, cartProduct)
+        updateCartAmount()
+    }
+
+    private fun removeFromCart(cartProduct: CartProduct) {
+        cartRepository.deleteCartProduct(cartProduct)
+    }
+
     override fun increaseCartProductAmount(shoppingProductModel: ShoppingProductModel) {
         var cartProduct = getCartProduct(shoppingProductModel.product)
         cartProduct = cartProduct.increaseAmount()

@@ -14,14 +14,11 @@ import java.time.LocalDateTime
 
 class CartDao(private val db: SQLiteDatabase) {
     fun insertCartProduct(cartProduct: CartProduct) {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = cartProduct.product.picture.value
-        productRow[SqlProduct.TITLE] = cartProduct.product.title
-        productRow[SqlProduct.PRICE] = cartProduct.product.price
+        val productId = getProductId(cartProduct.product)
 
         val row = ContentValues()
         row.put(SqlCart.TIME, cartProduct.time.toString())
-        row.put(SqlCart.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
+        row.put(SqlCart.PRODUCT_ID, productId)
         row.put(SqlCart.AMOUNT, cartProduct.amount)
         db.insert(SqlCart.name, null, row)
     }
@@ -77,8 +74,10 @@ class CartDao(private val db: SQLiteDatabase) {
         return createCart(cursor)
     }
 
-    fun deleteCartProductByTime(time: LocalDateTime) {
-        db.delete(SqlCart.name, "${SqlCart.TIME} = ?", arrayOf(time.toString()))
+    fun deleteCartProduct(cartProduct: CartProduct) {
+        val productId = getProductId(cartProduct.product)
+
+        db.delete(SqlCart.name, "${SqlCart.PRODUCT_ID} = ?", arrayOf(productId.toString()))
     }
 
     fun getTotalAmount(): Int {
@@ -93,12 +92,7 @@ class CartDao(private val db: SQLiteDatabase) {
     }
 
     fun selectCartProductByProduct(product: Product): CartProduct? {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = product.picture.value
-        productRow[SqlProduct.TITLE] = product.title
-        productRow[SqlProduct.PRICE] = product.price
-
-        val productId = SqlProduct.selectRowId(db, productRow)
+        val productId = getProductId(product)
         return selectByProductId(productId)
     }
 
@@ -121,12 +115,8 @@ class CartDao(private val db: SQLiteDatabase) {
     }
 
     fun updateCartProduct(cartProduct: CartProduct) {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = cartProduct.product.picture.value
-        productRow[SqlProduct.TITLE] = cartProduct.product.title
-        productRow[SqlProduct.PRICE] = cartProduct.product.price
+        val productId = getProductId(cartProduct.product)
 
-        val productId = SqlProduct.selectRowId(db, productRow)
         val row = ContentValues()
         row.put(SqlCart.TIME, cartProduct.time.toString())
         row.put(SqlCart.PRODUCT_ID, productId)
@@ -138,5 +128,14 @@ class CartDao(private val db: SQLiteDatabase) {
             "${SqlCart.PRODUCT_ID} = ?",
             arrayOf(productId.toString())
         )
+    }
+
+    private fun getProductId(product: Product): Int {
+        val productRow: MutableMap<String, Any> = mutableMapOf()
+        productRow[SqlProduct.PICTURE] = product.picture.value
+        productRow[SqlProduct.TITLE] = product.title
+        productRow[SqlProduct.PRICE] = product.price
+
+        return SqlProduct.selectRowId(db, productRow)
     }
 }

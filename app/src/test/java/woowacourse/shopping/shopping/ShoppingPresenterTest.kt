@@ -138,7 +138,7 @@ class ShoppingPresenterTest {
     }
 
     @Test
-    fun 카트_상품_개수를_증가시키면_상품과_카트의_총_상품_개수가_업데이트된다() {
+    fun 카트에_담긴_상품_개수를_증가시키면_카트에_상품이_추가되고_상품과_카트의_총_상품_개수가_업데이트된다() {
         // given
 
         // when
@@ -146,6 +146,22 @@ class ShoppingPresenterTest {
 
         // then
         verify {
+            cartRepository.addCartProduct(any())
+            view.updateShoppingProduct(any(), any())
+            view.updateCartAmount(any())
+        }
+    }
+
+    @Test
+    fun 카트에_담긴_상품_개수를_감소시키면_카트에서_상품이_삭제되고_상품과_카트의_총_상품_개수가_업데이트된다() {
+        // given
+
+        // when
+        presenter.decreaseCartProductAmount(mockk(relaxed = true))
+
+        // then
+        verify {
+            cartRepository.deleteCartProduct(any())
             view.updateShoppingProduct(any(), any())
             view.updateCartAmount(any())
         }

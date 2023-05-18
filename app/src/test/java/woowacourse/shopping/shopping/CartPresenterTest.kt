@@ -51,7 +51,7 @@ class CartPresenterTest {
     fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
         // given
         justRun {
-            cartRepository.deleteCartProductByTime(any())
+            cartRepository.deleteCartProduct(any())
             view.updateCart(any(), any(), any())
         }
 
@@ -60,7 +60,7 @@ class CartPresenterTest {
 
         // then
         verify {
-            cartRepository.deleteCartProductByTime(any())
+            cartRepository.deleteCartProduct(any())
             view.updateCart(any(), any(), any())
         }
     }

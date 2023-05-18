@@ -38,6 +38,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
             onProductItemClick = { presenter.openProduct(it.product) },
+            onMinusAmountButtonClick = { presenter.decreaseCartProductAmount(it) },
             onPlusAmountButtonClick = { presenter.increaseCartProductAmount(it) }
         )
     }
