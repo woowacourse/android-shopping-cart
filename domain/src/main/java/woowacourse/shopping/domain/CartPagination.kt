@@ -38,4 +38,12 @@ class CartPagination(private val rangeSize: Int, private val cartRepository: Car
     override fun prevItemExist(): Boolean {
         return cartRepository.isExistByMark(mark - rangeSize - 1)
     }
+
+    fun currentLastItem(): CartProduct? {
+        val item = cartRepository.findRange(mark - 1, 1)
+        if (item.isNotEmpty()) {
+            return item[0]
+        }
+        return null
+    }
 }

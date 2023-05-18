@@ -3,8 +3,9 @@ package woowacourse.shopping.view.cart
 interface CartContract {
     interface View {
         fun showProducts(items: List<CartViewItem>)
-        fun notifyRemoveItem(position: Int)
-        fun showOtherPage()
+        fun showChangedItems()
+
+        fun showChangedItem(position: Int)
     }
 
     interface Presenter {
@@ -12,5 +13,6 @@ interface CartContract {
         fun removeProduct(id: Int)
         fun fetchNextPage()
         fun fetchPrevPage()
+        fun updateCartProductCount(id: Int, count: Int)
     }
 }

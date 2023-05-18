@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="woowacourse.shopping.util.PriceFormatter" />
 
         <variable
             name="cartProduct"
@@ -12,6 +13,7 @@
         <variable
             name="onItemClick"
             type="woowacourse.shopping.view.cart.CartAdapter.OnItemClick" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -65,6 +67,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:text="@{String.format(@string/korean_won, PriceFormatter.INSTANCE.format(cartProduct.totalPrice))}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/layout_add_btns"
             tools:text="99,800원" />
@@ -94,7 +97,7 @@
                 android:layout_height="42dp"
                 android:background="@color/white"
                 android:gravity="center"
-                android:text="1"
+                android:text="@{Integer.toString(cartProduct.count)}"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"

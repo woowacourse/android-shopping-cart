@@ -49,16 +49,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 override fun onPrevClick() {
                     presenter.fetchPrevPage()
                 }
+
+                override fun onUpdateCount(id: Int, count: Int) {
+                    presenter.updateCartProductCount(id, count)
+                }
             }
         )
     }
 
-    override fun showOtherPage() {
+    override fun showChangedItems() {
         binding.recyclerCart.adapter?.notifyDataSetChanged()
     }
 
-    override fun notifyRemoveItem(position: Int) {
-        binding.recyclerCart.adapter?.notifyItemRemoved(position)
+    override fun showChangedItem(position: Int) {
+        binding.recyclerCart.adapter?.notifyItemChanged(position)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

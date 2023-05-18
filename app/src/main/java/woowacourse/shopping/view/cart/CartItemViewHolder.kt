@@ -13,7 +13,7 @@ import woowacourse.shopping.util.PriceFormatter
 sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class CartProductViewHolder(
         private val binding: ItemCartBinding,
-        onItemClick: CartAdapter.OnItemClick
+        private val onItemClick: CartAdapter.OnItemClick
     ) :
         CartItemViewHolder(binding.root) {
         init {
@@ -27,6 +27,12 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 PriceFormatter.format(item.product.totalPrice)
             )
             Glide.with(binding.root.context).load(item.product.imageUrl).into(binding.imgProduct)
+            binding.btnMinus.setOnClickListener {
+                onItemClick.onUpdateCount(item.product.id, item.product.count - 1)
+            }
+            binding.btnPlus.setOnClickListener {
+                onItemClick.onUpdateCount(item.product.id, item.product.count + 1)
+            }
         }
     }
 

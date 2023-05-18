@@ -12,6 +12,7 @@ class CartAdapter(
         fun onRemoveClick(id: Int)
         fun onNextClick()
         fun onPrevClick()
+        fun onUpdateCount(id: Int, count: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
