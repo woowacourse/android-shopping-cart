@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -36,6 +38,12 @@ android {
     dataBinding {
         enable = true
     }
+    tasks.withType(Test::class) {
+        useJUnitPlatform()
+        testLogging {
+            events.addAll(arrayOf(TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED))
+        }
+    }
 }
 
 dependencies {
@@ -45,7 +53,10 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation(project(mapOf("path" to ":domain")))
     implementation("com.github.bumptech.glide:glide:4.15.1")
-    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.junit.jupiter", "junit-jupiter", "5.8.2")
+    testImplementation("org.assertj", "assertj-core", "3.22.0")
+    testImplementation("io.mockk:mockk-android:1.13.5")
+    testImplementation("io.mockk:mockk-agent:1.13.5")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
