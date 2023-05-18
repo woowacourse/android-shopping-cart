@@ -1,16 +1,16 @@
 package woowacourse.shopping.productcatalogue
 
-import woowacourse.shopping.datas.ProductRepository
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.RecentProductUIModel
 
 interface ProductCatalogueContract {
     interface View {
-        fun showProductDetailPage(productUIModel: ProductUIModel)
         fun notifyDataChanged()
+        fun setRecentProductList(recentProducts: List<RecentProductUIModel>)
+        fun updateProductList(recentProducts: List<RecentProductUIModel>)
     }
 
     interface Presenter {
-        fun productOnClick(): (ProductUIModel) -> Unit
-        fun readMoreOnClick(): (ProductRepository, Int, Int) -> Unit
+        fun getRecentProduct()
+        fun readMoreOnClick(unitSize: Int, page: Int)
     }
 }

@@ -6,7 +6,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import woowacourse.shopping.BundleKeys
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
@@ -15,15 +14,11 @@ import woowacourse.shopping.datas.RecentProductDBHelper
 import woowacourse.shopping.datas.RecentProductDBRepository
 import woowacourse.shopping.datas.RecentRepository
 import woowacourse.shopping.productcatalogue.list.MainProductCatalogueAdapter
-import woowacourse.shopping.productdetail.ProductDetailActivity
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.RecentProductUIModel
 
 class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.View {
     private lateinit var binding: ActivityProductCatalogueBinding
     private lateinit var presenter: ProductCatalogueContract.Presenter
-    private val recentDataRepository: RecentRepository by lazy {
-        RecentProductDBRepository(RecentProductDBHelper(this).writableDatabase)
-    }
     private val adapter: MainProductCatalogueAdapter by lazy {
         MainProductCatalogueAdapter(
             recentDataRepository,
@@ -32,21 +27,20 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
         )
     }
 
-    override fun showProductDetailPage(productUIModel: ProductUIModel) {
-        val intent = ProductDetailActivity.intent(this)
-        intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
-        startActivity(intent)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_catalogue)
 
         setSupportActionBar(binding.tbProductCatalogue)
 
-        presenter = ProductCataloguePresenter(this)
+        val recentDataRepository: RecentRepository =
+            RecentProductDBRepository(RecentProductDBHelper(this).writableDatabase)
+        presenter = ProductCataloguePresenter(this, ProductDataRepository, recentDataRepository)
+
+        presenter.getRecentProduct()
 
         binding.rvProductCatalogue.adapter = adapter
+
         val gridLayoutManager = GridLayoutManager(binding.root.context, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -59,6 +53,18 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
         binding.rvProductCatalogue.layoutManager = gridLayoutManager
 
         notifyDataChanged()
+    }
+
+    private fun readMore(unitSize: Int, page: Int) {
+        presenter.readMoreOnClick(unitSize, page)
+    }
+
+    override fun setRecentProductList(recentProducts: List<RecentProductUIModel>) {
+        adapter.updateRecentProducts(recentProducts)
+    }
+
+    override fun updateProductList(recentProducts: List<RecentProductUIModel>) {
+        adapter.initRecentAdapterData(recentProducts)
     }
 
     override fun notifyDataChanged() {
@@ -81,6 +87,7 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
     }
 
     override fun onResume() {
+        presenter.getRecentProduct()
         adapter.recentAdapter.notifyDataSetChanged()
         adapter.setRecentProductsVisibility(binding.clProductCatalogue)
         super.onResume()
