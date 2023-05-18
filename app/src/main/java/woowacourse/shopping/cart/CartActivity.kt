@@ -51,6 +51,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartCheckedPriceText.text = getString(R.string.product_price, price)
     }
 
+    override fun updateOrderText(countOfCartProducts: Int) {
+        binding.cartOrderButton.text = getString(R.string.cart_order_text, countOfCartProducts)
+    }
+
     private fun initBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)

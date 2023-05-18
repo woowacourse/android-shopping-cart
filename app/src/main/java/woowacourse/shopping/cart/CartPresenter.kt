@@ -60,6 +60,7 @@ class CartPresenter(
         updateCart()
         updateNavigator()
         updateTotalPrice()
+        updateOrderText()
     }
 
     private fun updateCart() {
@@ -81,6 +82,10 @@ class CartPresenter(
 
     private fun updateTotalPrice() {
         view.updateTotalPrice(cart.calculateCheckedProductsPrice())
+    }
+
+    private fun updateOrderText() {
+        view.updateOrderText(cart.calculateCheckedProductsCount())
     }
 
     private fun getPagedCart(): Cart {

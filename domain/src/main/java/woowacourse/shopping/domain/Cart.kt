@@ -15,6 +15,10 @@ data class Cart(val products: List<CheckableCartProduct>) {
         )
     }
 
+    fun calculateCheckedProductsCount(): Int {
+        return products.filter { it.checked }.size
+    }
+
     fun calculateCheckedProductsPrice(): Int {
         return products.filter { it.checked }.sumOf { it.product.product.price * it.product.amount }
     }
