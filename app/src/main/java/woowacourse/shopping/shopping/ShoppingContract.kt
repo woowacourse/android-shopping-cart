@@ -6,6 +6,8 @@ import woowacourse.shopping.common.model.ShoppingProductModel
 
 interface ShoppingContract {
     interface Presenter {
+        fun updateCartChange()
+
         fun updateRecentProducts()
 
         fun setUpCartAmount()
@@ -22,6 +24,8 @@ interface ShoppingContract {
     }
 
     interface View {
+        fun updateProducts(productModels: List<ShoppingProductModel>)
+
         fun addProducts(productModels: List<ShoppingProductModel>)
 
         fun updateRecentProducts(recentProductModels: List<RecentProductModel>)

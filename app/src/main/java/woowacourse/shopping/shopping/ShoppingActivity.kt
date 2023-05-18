@@ -1,11 +1,13 @@
 package woowacourse.shopping.shopping
 
+import android.app.Activity
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
@@ -90,6 +92,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         }
     }
 
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            presenter.updateCartChange()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingBinding.inflate(layoutInflater)
@@ -127,6 +137,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun updateProducts(productModels: List<ShoppingProductModel>) {
+        productAdapter.updateProducts(productModels)
+    }
+
     override fun addProducts(productModels: List<ShoppingProductModel>) {
         productAdapter.addProducts(productModels)
     }
@@ -154,7 +168,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun startCartActivity() {
         val intent = CartActivity.createIntent(this)
-        startActivity(intent)
+        activityResultLauncher.launch(intent)
     }
 
     private fun initProductList() {

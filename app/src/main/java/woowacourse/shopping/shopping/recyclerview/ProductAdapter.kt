@@ -47,6 +47,12 @@ class ProductAdapter(
         notifyItemChanged(index)
     }
 
+    fun updateProducts(products: List<ShoppingProductModel>) {
+        this.products.clear()
+        this.products += products
+        notifyDataSetChanged()
+    }
+
     companion object {
         const val VIEW_TYPE = 0
     }

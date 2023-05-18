@@ -166,4 +166,18 @@ class ShoppingPresenterTest {
             view.updateCartAmount(any())
         }
     }
+
+    @Test
+    fun 카트_변경_업데이트를_하면_상품_정보가_업데이트_되고_총_카트_상품_개수가_업데이트_된다() {
+        // given
+
+        // when
+        presenter.updateCartChange()
+
+        // then
+        verify {
+            view.updateProducts(any())
+            view.updateCartAmount(any())
+        }
+    }
 }

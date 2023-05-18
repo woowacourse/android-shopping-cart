@@ -26,6 +26,12 @@ class ShoppingPresenter(
         loadMoreProduct()
     }
 
+    override fun updateCartChange() {
+        val products = productRepository.getProducts(0, productSize)
+        view.updateProducts(products.value.map { it.toView() })
+        updateCartAmount()
+    }
+
     override fun updateRecentProducts() {
         val recentProducts = recentProductRepository.getAll()
         view.updateRecentProducts(recentProducts.getRecentProducts(recentProductSize).value.map { it.toView() })

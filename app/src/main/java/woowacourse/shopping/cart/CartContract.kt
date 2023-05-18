@@ -15,5 +15,7 @@ interface CartContract {
         fun updateCart(cartProducts: List<CartProductModel>, currentPage: Int, isLastPage: Boolean)
 
         fun updateNavigationVisibility(visibility: Boolean)
+
+        fun setResultForChange()
     }
 }

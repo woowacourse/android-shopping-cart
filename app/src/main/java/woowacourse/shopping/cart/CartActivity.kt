@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -43,6 +44,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun updateNavigationVisibility(visibility: Boolean) {
         cartAdapter.updateNavigationVisible(visibility)
+    }
+
+    override fun setResultForChange() {
+        setResult(Activity.RESULT_OK)
     }
 
     private fun initPresenter() {
