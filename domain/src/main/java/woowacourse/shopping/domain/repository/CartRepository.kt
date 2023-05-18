@@ -14,4 +14,6 @@ interface CartRepository {
     fun getPage(page: Int, sizePerPage: Int): Cart
 
     fun deleteCartProductByTime(time: LocalDateTime)
+
+    fun getTotalAmount(): Int
 }

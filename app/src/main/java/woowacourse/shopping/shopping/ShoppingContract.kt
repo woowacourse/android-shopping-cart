@@ -8,6 +8,8 @@ interface ShoppingContract {
     interface Presenter {
         fun updateRecentProducts()
 
+        fun setUpCartAmount()
+
         fun openProduct(productModel: ProductModel)
 
         fun openCart()
@@ -23,5 +25,7 @@ interface ShoppingContract {
         fun showProductDetail(productModel: ProductModel)
 
         fun showCart()
+
+        fun updateCartAmount(amount: Int)
     }
 }

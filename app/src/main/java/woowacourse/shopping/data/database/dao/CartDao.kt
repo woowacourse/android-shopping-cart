@@ -79,4 +79,15 @@ class CartDao(private val db: SQLiteDatabase) {
     fun deleteCartProductByTime(time: LocalDateTime) {
         db.delete(SqlCart.name, "${SqlCart.TIME} = ?", arrayOf(time.toString()))
     }
+
+    fun getTotalAmount(): Int {
+        val cursor = db.rawQuery(
+            "SELECT SUM(${SqlCart.AMOUNT}) FROM ${SqlCart.name}",
+            null
+        )
+        return cursor.use {
+            it.moveToNext()
+            it.getInt(0)
+        }
+    }
 }

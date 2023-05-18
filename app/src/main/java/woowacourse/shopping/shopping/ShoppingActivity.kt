@@ -2,9 +2,11 @@ package woowacourse.shopping.shopping
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,7 +17,9 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.common.utils.convertDpToPixel
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
+import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.data.database.dao.ProductDao
 import woowacourse.shopping.data.database.dao.RecentProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
@@ -30,6 +34,7 @@ import woowacourse.shopping.shopping.recyclerview.RecentProductWrapperAdapter
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
+    private var shoppingCartAmount: TextView? = null
 
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(emptyList(), onProductItemClick = { presenter.openProduct(it.product) })
@@ -97,10 +102,24 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onResume() {
         super.onResume()
         presenter.updateRecentProducts()
+        Log.d("test-onresume", findViewById<TextView>(R.id.tv_shopping_cart_amount).text.toString())
+    }
+
+    override fun onPause() {
+        Log.d("test-onpause", findViewById<TextView>(R.id.tv_shopping_cart_amount).text.toString())
+        super.onPause()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.toolbar_shopping, menu)
+        val shoppingCartAction = menu?.findItem(R.id.shopping_cart_action)
+        shoppingCartAction?.actionView?.setOnClickListener {
+            onOptionsItemSelected(shoppingCartAction)
+        }
+
+        shoppingCartAmount = shoppingCartAction?.actionView?.findViewById(R.id.tv_shopping_cart_amount)
+        presenter.setUpCartAmount()
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -128,6 +147,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         startCartActivity()
     }
 
+    override fun updateCartAmount(amount: Int) {
+        shoppingCartAmount?.text = amount.toString()
+    }
+
     private fun startCartActivity() {
         val intent = CartActivity.createIntent(this)
         startActivity(intent)
@@ -145,6 +168,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             this,
             productRepository = ProductRepositoryImpl(ProductDao(db)),
             recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(db)),
+            cartRepository = CartRepositoryImpl(CartDao(db)),
             recentProductSize = 10,
             productLoadSize = 20
         )

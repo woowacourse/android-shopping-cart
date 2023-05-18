@@ -28,4 +28,8 @@ class CartRepositoryImpl(
     override fun deleteCartProductByTime(time: LocalDateTime) {
         cartDao.deleteCartProductByTime(time)
     }
+
+    override fun getTotalAmount(): Int {
+        return cartDao.getTotalAmount()
+    }
 }

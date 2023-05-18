@@ -4,9 +4,9 @@
     - Presenter
     - [ ] Shopping
         - CartRepository
-        - [ ] init { }
-            - [ ] cartRepository.getAllCount()
-            - [ ] view.updateCartAmount(amount)
+        - [x] setUpCartAmount()
+            - [x] cartRepository.getTotalAmount()
+            - [x] view.updateCartAmount(amount)
         - [ ] decreaseCartProductAmount(productModel)
             - [ ] getCartProduct(productModel)
             - [ ] cartProduct.decreaseAmount()

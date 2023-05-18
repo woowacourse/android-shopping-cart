@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.RecentProducts
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
@@ -18,12 +19,14 @@ class ShoppingPresenterTest {
     private lateinit var view: ShoppingContract.View
     private lateinit var productRepository: ProductRepository
     private lateinit var recentProductRepository: RecentProductRepository
+    private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
         recentProductRepository = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
 
         every {
             productRepository.getProducts(any(), any())
@@ -45,10 +48,15 @@ class ShoppingPresenterTest {
             recentProductRepository.modifyRecentProduct(any())
         } just runs
 
+        every {
+            cartRepository.getTotalAmount()
+        } returns 0
+
         presenter = ShoppingPresenter(
             view,
             productRepository = productRepository,
             recentProductRepository = recentProductRepository,
+            cartRepository = cartRepository,
             recentProductSize = 0,
             productLoadSize = 0
         )
@@ -67,6 +75,19 @@ class ShoppingPresenterTest {
         verify {
             productRepository.getProducts(any(), any())
             view.addProducts(any())
+        }
+    }
+
+    @Test
+    fun 카트_상품_개수를_세팅한다() {
+        // given
+
+        // when
+        presenter.setUpCartAmount()
+
+        // then
+        verify {
+            view.updateCartAmount(any())
         }
     }
 
