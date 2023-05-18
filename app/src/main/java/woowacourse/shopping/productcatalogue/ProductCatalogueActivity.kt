@@ -6,6 +6,8 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import woowacourse.shopping.BundleKeys
+import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
@@ -14,16 +16,20 @@ import woowacourse.shopping.datas.RecentProductDBHelper
 import woowacourse.shopping.datas.RecentProductDBRepository
 import woowacourse.shopping.datas.RecentRepository
 import woowacourse.shopping.productcatalogue.list.MainProductCatalogueAdapter
+import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
-class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.View {
+class ProductCatalogueActivity :
+    AppCompatActivity(),
+    ProductCatalogueContract.View,
+    ProductClickListener {
     private lateinit var binding: ActivityProductCatalogueBinding
     private lateinit var presenter: ProductCatalogueContract.Presenter
     private val adapter: MainProductCatalogueAdapter by lazy {
         MainProductCatalogueAdapter(
-            recentDataRepository,
-            presenter.productOnClick(),
-            presenter.readMoreOnClick(),
+            this,
+            ::readMore,
         )
     }
 
@@ -91,5 +97,11 @@ class ProductCatalogueActivity : AppCompatActivity(), ProductCatalogueContract.V
         adapter.recentAdapter.notifyDataSetChanged()
         adapter.setRecentProductsVisibility(binding.clProductCatalogue)
         super.onResume()
+    }
+
+    override fun onProductClick(productUIModel: ProductUIModel) {
+        val intent = ProductDetailActivity.intent(this)
+        intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
+        startActivity(intent)
     }
 }

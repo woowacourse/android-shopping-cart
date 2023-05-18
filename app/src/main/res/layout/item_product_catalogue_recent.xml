@@ -8,11 +8,16 @@
         <variable
             name="recentProduct"
             type="woowacourse.shopping.uimodel.RecentProductUIModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ProductClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="98dp"
         android:layout_height="130dp"
+        android:onClick="@{()->listener.onProductClick(recentProduct.product)}"
         android:paddingHorizontal="5dp">
 
         <ImageView

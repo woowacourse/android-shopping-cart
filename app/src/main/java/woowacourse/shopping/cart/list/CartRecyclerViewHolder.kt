@@ -1,8 +1,7 @@
 package woowacourse.shopping.cart.list
 
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
+import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.databinding.ItemProductInCartBinding
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.CartUIModel
@@ -10,10 +9,13 @@ import woowacourse.shopping.uimodel.CartUIModel
 class CartRecyclerViewHolder(
     private val binding: ItemProductInCartBinding,
     cartProducts: CartUIModel,
+    onClickProduct: ProductClickListener,
     onClickRemove: (CartProductUIModel, Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
+        binding.listener = onClickProduct
+
         binding.ivCancel.setOnClickListener {
             onClickRemove(cartProducts.products[adapterPosition], adapterPosition)
         }

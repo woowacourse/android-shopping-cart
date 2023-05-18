@@ -8,20 +8,16 @@ import woowacourse.shopping.databinding.ItemProductCatalogueBinding
 import woowacourse.shopping.databinding.ItemProductReadMoreBinding
 import woowacourse.shopping.databinding.RecentProductCatalogueBinding
 import woowacourse.shopping.datas.ProductDataRepository
-import woowacourse.shopping.datas.ProductRepository
-import woowacourse.shopping.datas.RecentRepository
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.productcatalogue.list.ProductViewType.MAIN_PRODUCTS
 import woowacourse.shopping.productcatalogue.list.ProductViewType.READ_MORE
 import woowacourse.shopping.productcatalogue.list.ProductViewType.RECENT_PRODUCTS
 import woowacourse.shopping.productcatalogue.recent.RecentProductCatalogueAdapter
 import woowacourse.shopping.productcatalogue.recent.RecentProductCatalogueViewHolder
-import woowacourse.shopping.uimodel.ProductUIModel
 
 class MainProductCatalogueAdapter(
-    private var recentProducts: RecentRepository,
-    private val productOnClick: (ProductUIModel) -> Unit,
-    private val readMoreOnClick: (ProductRepository, Int, Int) -> Unit,
+    private val productOnClick: ProductClickListener,
+    private val readMoreOnClick: (Int, Int) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val recentAdapter by lazy { RecentProductCatalogueAdapter(productOnClick, recentProducts) }
