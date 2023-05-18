@@ -11,6 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.contract.CartContract
@@ -32,6 +33,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0,
         )
         setToolbar()
+        presenter.setUpCarts()
+
+        binding.allCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            presenter.onAllCheckboxClick(isChecked)
+        }
     }
 
     private fun setToolbar() {
@@ -47,7 +53,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return true
     }
 
-    override fun setCarts(products: List<CartItem>, cartUIModel: CartUIModel) {
+    override fun setCarts(products: List<CartProductUIModel>, cartUIModel: CartUIModel) {
         binding.cartRecyclerview.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
             this,
         )
@@ -56,7 +62,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             products.map { it },
             presenter::navigateToItemDetail,
             presenter::removeItem,
+            presenter::onChangeCartCount,
+            presenter::onCheckChanged,
         )
+
         binding.cartRecyclerview.adapter = ConcatAdapter(
             cartAdapter,
             CartNavigationAdapter(cartUIModel, presenter::pageUp, presenter::pageDown),
@@ -65,6 +74,29 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun navigateToItemDetail(product: ProductUIModel) {
         startActivity(ProductDetailActivity.from(this, product))
+    }
+
+    override fun setCartItemsPrice(price: Int) {
+        binding.executePendingBindings()
+        binding.price = price
+    }
+
+    override fun updateCheckboxItem(id: Long, checked: Boolean) {
+        binding.cartRecyclerview.adapter?.let {
+            if (it is ConcatAdapter) {
+                val cartAdapter = it.adapters.filterIsInstance<CartAdapter>().firstOrNull()
+                cartAdapter?.updateItem(id, checked)
+            }
+        }
+    }
+
+    override fun setAllCheckbox(isChecked: Boolean) {
+        binding.allCheckBox.isChecked = isChecked
+    }
+
+    override fun setAllOrderCount(count: Int) {
+        binding.executePendingBindings()
+        binding.count = count
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

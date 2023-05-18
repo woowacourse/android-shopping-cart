@@ -1,25 +1,36 @@
 package woowacourse.shopping.ui.cart.contract
 
+import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.ui.cart.CartItem
 
 interface CartContract {
 
     interface View {
-        fun setCarts(products: List<CartItem>, cartUIModel: CartUIModel)
+        fun setCarts(products: List<CartProductUIModel>, cartUIModel: CartUIModel)
         fun navigateToItemDetail(product: ProductUIModel)
+        fun setCartItemsPrice(price: Int)
+        fun updateCheckboxItem(id: Long, checked: Boolean)
+        fun setAllCheckbox(isChecked: Boolean)
+        fun setAllOrderCount(count: Int)
     }
 
     interface Presenter {
         fun setUpCarts()
         fun pageUp()
         fun pageDown()
-        fun removeItem(id: Int)
+        fun removeItem(id: Long)
         fun navigateToItemDetail(product: ProductUIModel)
 
         fun saveOffsetState(outState: MutableMap<String, Int>)
 
         fun restoreOffsetState(state: Map<String, Int>)
+
+        fun onChangeCartCount(id: Long, count: Int)
+        fun onCheckChanged(id: Long, isChecked: Boolean)
+        fun setCartItemsPrice()
+        fun onAllCheckboxClick(isChecked: Boolean)
+        fun setAllCheckbox()
+        fun setAllOrderCount()
     }
 }

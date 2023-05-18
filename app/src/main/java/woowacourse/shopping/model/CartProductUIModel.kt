@@ -1,7 +1,10 @@
 package woowacourse.shopping.model
 
-data class CartProductUIModel(
-    val productUIModel: ProductUIModel,
-    val count: Int
-)
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableInt
 
+data class CartProductUIModel(
+    val product: ProductUIModel,
+    val count: ObservableInt = ObservableInt(1),
+    val isChecked: ObservableBoolean = ObservableBoolean(true),
+)

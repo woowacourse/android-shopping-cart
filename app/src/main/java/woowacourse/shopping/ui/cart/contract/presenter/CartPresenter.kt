@@ -2,10 +2,10 @@ package woowacourse.shopping.ui.cart.contract.presenter
 
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.model.CartItemsUIModel
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.CartActivity.Companion.KEY_OFFSET
-import woowacourse.shopping.ui.cart.CartItem
 import woowacourse.shopping.ui.cart.contract.CartContract
 
 class Offset(offset: Int, private val repository: CartRepository) {
@@ -28,39 +28,44 @@ class CartPresenter(
     private val repository: CartRepository,
     offset: Int = 0,
 ) : CartContract.Presenter {
-    private var offset = Offset(offset, repository)
+    private var cartOffset = Offset(offset, repository)
+    private var cartItems: CartItemsUIModel =
+        CartItemsUIModel(repository.getCheckCart().map { it.toUIModel() })
 
     init {
-        setUpCarts()
+        setAllOrderCount()
+        setAllCheckbox()
     }
 
     override fun setUpCarts() {
+        setCartItemsPrice()
         view.setCarts(
-            repository.getSubList(offset.getOffset(), STEP).map { CartItem(it.toUIModel()) },
+            repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() },
             CartUIModel(
-                offset.getOffset() + STEP < repository.getAll().size,
-                0 < offset.getOffset(),
-                offset.getOffset() / STEP + 1,
+                cartOffset.getOffset() + STEP < repository.getAll().size,
+                0 < cartOffset.getOffset(),
+                cartOffset.getOffset() / STEP + 1,
             ),
         )
     }
 
     override fun pageUp() {
-        offset = offset.plus(STEP)
+        cartOffset = cartOffset.plus(STEP)
         setUpCarts()
     }
 
     override fun pageDown() {
-        offset = offset.minus(STEP)
+        cartOffset = cartOffset.minus(STEP)
         setUpCarts()
     }
 
-    override fun removeItem(id: Int) {
+    override fun removeItem(id: Long) {
         repository.remove(id)
-        if (offset.getOffset() == repository.getAll().size) {
-            offset = offset.minus(STEP)
+        if (cartOffset.getOffset() == repository.getAll().size) {
+            cartOffset = cartOffset.minus(STEP)
         }
         setUpCarts()
+        updateCartItems()
     }
 
     override fun navigateToItemDetail(product: ProductUIModel) {
@@ -68,12 +73,52 @@ class CartPresenter(
     }
 
     override fun saveOffsetState(outState: MutableMap<String, Int>) {
-        outState[KEY_OFFSET] = offset.getOffset()
+        outState[KEY_OFFSET] = cartOffset.getOffset()
     }
 
     override fun restoreOffsetState(state: Map<String, Int>) {
         val savedOffset = state[KEY_OFFSET] ?: 0
-        offset = Offset(savedOffset, repository)
+        cartOffset = Offset(savedOffset, repository)
+    }
+
+    override fun onChangeCartCount(id: Long, count: Int) {
+        repository.updateCount(id, count)
+        updateCartItems()
+    }
+
+    override fun onCheckChanged(id: Long, isChecked: Boolean) {
+        repository.updateCheckChanged(id, isChecked)
+        updateCartItems()
+    }
+
+    override fun setCartItemsPrice() {
+        view.setCartItemsPrice(cartItems.caculatePrice())
+    }
+
+    override fun onAllCheckboxClick(isChecked: Boolean) {
+        repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
+            .forEach { product ->
+                repository.updateCheckChanged(product.product.id, isChecked)
+                view.updateCheckboxItem(product.product.id, isChecked)
+            }
+        updateCartItems()
+    }
+
+    override fun setAllCheckbox() {
+        val cartItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
+        val isChecked = cartItems.filter { it.isChecked.get() }.size == cartItems.size
+
+        view.setAllCheckbox(isChecked)
+    }
+
+    override fun setAllOrderCount() {
+        view.setAllOrderCount(cartItems.products.size)
+    }
+
+    private fun updateCartItems() {
+        cartItems = cartItems.updateCartItems(repository.getCheckCart().map { it.toUIModel() })
+        setAllOrderCount()
+        setCartItemsPrice()
     }
 
     companion object {
