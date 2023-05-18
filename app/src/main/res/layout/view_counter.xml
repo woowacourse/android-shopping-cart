@@ -51,7 +51,7 @@
             android:id="@+id/counter_plus_button"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/shape_counter_minus"
+            android:background="@drawable/shape_counter_plus"
             android:gravity="center"
             android:text="@string/plus"
             android:textColor="@color/woowa_dark_gray"

@@ -50,7 +50,6 @@ class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener
 
     override fun navigateToBasketScreen() {
         startActivity(BasketActivity.getIntent(this))
-        finish()
     }
 
     override fun navigateToProductDetail(recentProduct: UiRecentProduct) {
