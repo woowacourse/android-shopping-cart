@@ -12,8 +12,9 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository
 ) :
     ProductDetailContract.Presenter {
+    private val product = productRepository.getDataById(productId).toUIModel()
+
     override fun loadProductInfo() {
-        val product = productRepository.getDataById(productId).toUIModel()
         if (product.id == UNABLE_PRODUCT_ID) {
             view.handleErrorView()
             view.exitProductDetailView()
@@ -22,10 +23,14 @@ class ProductDetailPresenter(
         view.setProductInfoView(product)
     }
 
-    override fun addCart() {
-        cartRepository.addCart(productId)
+    override fun addCart(count: Int) {
+        cartRepository.addCart(product.id, count)
         view.addCartSuccessView()
         view.exitProductDetailView()
+    }
+
+    override fun showCount() {
+        view.showCountView(product)
     }
 
     companion object {

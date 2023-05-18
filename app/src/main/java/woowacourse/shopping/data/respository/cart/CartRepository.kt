@@ -10,5 +10,5 @@ interface CartRepository {
     fun deleteAllCartByProductId(productId: Long)
     fun deleteCartByCartId(cartId: Long)
     fun deleteCartByProductId(productId: Long)
-    fun addCart(productId: Long)
+    fun addCart(productId: Long, count: Int)
 }

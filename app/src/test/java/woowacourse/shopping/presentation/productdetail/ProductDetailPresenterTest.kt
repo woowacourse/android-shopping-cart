@@ -28,6 +28,7 @@ class ProductDetailPresenterTest {
 
         cartRepository = mockk()
         productRepository = mockk()
+        every { productRepository.getDataById(0L) } returns ProductFixture.getData()
 
         presenter = ProductDetailPresenter(view, 0L, productRepository, cartRepository)
     }
@@ -35,7 +36,6 @@ class ProductDetailPresenterTest {
     @Test
     fun `id를 통해 데이터를 받아와 상품 정보를 보여준다`() {
         // given
-        every { productRepository.getDataById(0L) } returns ProductFixture.getData()
         val slot = slot<ProductModel>()
         justRun { view.setProductInfoView(capture(slot)) }
 
@@ -52,21 +52,25 @@ class ProductDetailPresenterTest {
     }
 
     @Test
-    fun `상품을 장바구니에 저장한다`() {
+    fun `상품을 장바구니에 1개 저장한다`() {
         // given
-        val slot = slot<Long>()
-        justRun { cartRepository.addCart(capture(slot)) }
+        val slotId = slot<Long>()
+        val slotCount = slot<Int>()
+        justRun { cartRepository.addCart(capture(slotId), capture(slotCount)) }
         justRun { view.addCartSuccessView() }
         justRun { view.exitProductDetailView() }
 
         // when
-        presenter.addCart()
+        presenter.addCart(1)
 
         // then
-        val actual = slot.captured
-        val expected = 0L
-        assertEquals(expected, actual)
-        verify { cartRepository.addCart(actual) }
+        val actualId = slotId.captured
+        val actualCount = slotCount.captured
+        val expectedId = 0L
+        val expectedCount = 1
+        assertEquals(expectedId, actualId)
+        assertEquals(expectedCount, actualCount)
+        verify { cartRepository.addCart(actualId, actualCount) }
         verify { view.addCartSuccessView() }
         verify { view.exitProductDetailView() }
     }

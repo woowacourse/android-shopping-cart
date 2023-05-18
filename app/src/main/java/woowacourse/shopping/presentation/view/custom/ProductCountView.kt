@@ -56,6 +56,14 @@ class ProductCountView @JvmOverloads constructor(
         }
     }
 
+    fun setMinCount(minCount: Int) {
+        binding.countViewProductCount.setMinCount(minCount)
+    }
+
+    fun setMaxCount(maxCount: Int) {
+        binding.countViewProductCount.setMaxCount(maxCount)
+    }
+
     fun setCount(count: Int) {
         binding.countViewProductCount.updateCount(count)
         updateCountViewVisibility(count)

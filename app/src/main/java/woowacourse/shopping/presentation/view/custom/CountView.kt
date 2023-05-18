@@ -42,6 +42,14 @@ class CountView @JvmOverloads constructor(
         presenter.updateCount(count)
     }
 
+    fun setMinCount(minCount: Int) {
+        presenter.minCountValue = minCount
+    }
+
+    fun setMaxCount(maxCount: Int) {
+        presenter.maxCountValue = maxCount
+    }
+
     override fun getCount(): Int = presenter.getCount()
     interface OnCountStateChangeListener {
         fun onCountChanged(countView: CountView?, count: Int)

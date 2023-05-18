@@ -11,6 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.view.productdetail.dialog.CartInsertionDialog
 import woowacourse.shopping.presentation.view.util.showToast
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
@@ -56,7 +57,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setAddCart() {
         binding.btProductDetailAddToCart.setOnClickListener {
-            presenter.addCart()
+            presenter.showCount()
+        }
+    }
+
+    override fun showCountView(productModel: ProductModel) {
+        CartInsertionDialog(this, productModel) { count ->
+            presenter.addCart(count)
         }
     }
 

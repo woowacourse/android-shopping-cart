@@ -8,13 +8,21 @@ import woowacourse.shopping.data.model.CartEntity
 
 class CartDao(context: Context) {
     private val db = CartHelper(context).writableDatabase
+    fun insertProduct(productId: Long, count: Int) {
+        if (checkToCartHasProduct(productId, count)) return
 
-    fun insertProduct(productId: Long) {
         val value = ContentValues().apply {
             put(CartContract.Cart.PRODUCT_ID, productId)
-            put(CartContract.Cart.COUNT, DEFAULT_CART_COUNT)
+            put(CartContract.Cart.COUNT, count)
         }
         db.insert(CartContract.Cart.TABLE_NAME, null, value)
+    }
+    private fun checkToCartHasProduct(productId: Long, count: Int): Boolean {
+        selectCart(getCursorByProductId(productId))?.let {
+            updateCartByProductId(productId, count + it.count)
+            return true
+        }
+        return false
     }
 
     fun deleteAllProduct(productId: Long) {
@@ -90,7 +98,7 @@ class CartDao(context: Context) {
         )
 
     fun updateCartByProductId(productId: Long, count: Int) {
-        selectCart(getCursorByProductId(productId)) ?: insertProduct(productId)
+        selectCart(getCursorByProductId(productId)) ?: insertProduct(productId, count)
 
         val value = ContentValues().apply {
             put(CartContract.Cart.PRODUCT_ID, productId)
@@ -161,7 +169,6 @@ class CartDao(context: Context) {
         )
 
     companion object {
-        private const val DEFAULT_CART_COUNT = 0
         private const val GET_CART_ITEM_COUNT = 4
     }
 }

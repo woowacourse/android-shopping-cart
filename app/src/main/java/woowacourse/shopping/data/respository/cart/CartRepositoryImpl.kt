@@ -34,7 +34,7 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         cartDao.deleteProduct(productId)
     }
 
-    override fun addCart(productId: Long) {
-        cartDao.insertProduct(productId)
+    override fun addCart(productId: Long, count: Int) {
+        cartDao.insertProduct(productId, count)
     }
 }
