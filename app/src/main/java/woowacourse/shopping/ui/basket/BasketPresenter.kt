@@ -14,10 +14,9 @@ class BasketPresenter(
     private var currentPage: Int = 1
 
     override fun fetchPreviousBasketProducts(currentProducts: List<UiBasketProduct>) {
-        var basketProducts = basketRepository.getPartially(
+        var basketProducts = basketRepository.getPreviousPartially(
             size = BASKET_PAGING_SIZE,
             standard = currentProducts.minOfOrNull { it.id } ?: -1,
-            isNext = false,
             includeStandard = false
         ).map { it.toUi() }
         hasNext = true
@@ -26,10 +25,9 @@ class BasketPresenter(
     }
 
     override fun fetchBasketProducts(standard: Int, includeStandard: Boolean) {
-        var basketProducts = basketRepository.getPartially(
+        var basketProducts = basketRepository.getNextPartially(
             size = TOTAL_LOAD_BASKET_SIZE_AT_ONCE,
             standard = standard,
-            isNext = true,
             includeStandard = includeStandard
         ).map { it.toUi() }
         hasNext = checkHasNext(basketProducts)

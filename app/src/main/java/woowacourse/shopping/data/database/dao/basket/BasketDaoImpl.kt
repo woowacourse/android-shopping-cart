@@ -64,6 +64,35 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     }
 
     @SuppressLint("Range")
+    override fun getPreviousPartiallyIncludeStartId(
+        size: Int,
+        standard: Int
+    ): List<DataBasketProduct> {
+        val products = mutableListOf<DataBasketProduct>()
+        database.writableDatabase.use { db ->
+            val cursor =
+                db.rawQuery(
+                    GET_PREVIOUS_PARTIALLY_INCLUDE_START_ID_QUERY,
+                    arrayOf(standard.toString(), size.toString())
+                )
+            while (cursor.moveToNext()) {
+                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val productId: Int =
+                    cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val name: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
+                val price: DataPrice =
+                    DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
+                val imageUrl: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
+                products.add(DataBasketProduct(id, DataProduct(productId, name, price, imageUrl)))
+            }
+            cursor.close()
+        }
+        return products.sortedBy { it.id }
+    }
+
+    @SuppressLint("Range")
     override fun getPreviousPartiallyNotIncludeStartId(
         size: Int,
         standard: Int
@@ -127,6 +156,14 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
             WHERE ${BasketContract.TABLE_NAME}.${BaseColumns._ID} > ?
             ORDER BY ${BasketContract.TABLE_NAME}.${BaseColumns._ID} LIMIT ?        
+        """.trimIndent()
+
+        private val GET_PREVIOUS_PARTIALLY_INCLUDE_START_ID_QUERY = """
+            SELECT ${BasketContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
+            FROM ${BasketContract.TABLE_NAME}
+            INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
+            WHERE ${BasketContract.TABLE_NAME}.${BaseColumns._ID} <= ?
+            ORDER BY ${BasketContract.TABLE_NAME}.${BaseColumns._ID} DESC LIMIT ?        
         """.trimIndent()
 
         private val GET_PREVIOUS_PARTIALLY_NOT_INCLUDE_START_ID_QUERY = """

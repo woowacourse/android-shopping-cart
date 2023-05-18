@@ -9,13 +9,20 @@ import woowacourse.shopping.domain.repository.BasketRepository
 
 class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.Local) :
     BasketRepository {
-    override fun getPartially(
+    override fun getPreviousPartially(
         size: Int,
         standard: Int,
-        isNext: Boolean,
         includeStandard: Boolean
     ): List<BasketProduct> =
-        localBasketDataSource.getPartially(size, standard, isNext, includeStandard)
+        localBasketDataSource.getPreviousPartially(size, standard, includeStandard)
+            .map { it.toDomain() }
+
+    override fun getNextPartially(
+        size: Int,
+        standard: Int,
+        includeStandard: Boolean
+    ): List<BasketProduct> =
+        localBasketDataSource.getNextPartially(size, standard, includeStandard)
             .map { it.toDomain() }
 
     override fun add(basketProduct: Product) {

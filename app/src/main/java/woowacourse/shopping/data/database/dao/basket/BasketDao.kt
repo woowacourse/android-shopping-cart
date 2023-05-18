@@ -8,6 +8,8 @@ interface BasketDao {
 
     fun getPartiallyNotIncludeStartId(size: Int, standard: Int): List<DataBasketProduct>
 
+    fun getPreviousPartiallyIncludeStartId(size: Int, standard: Int): List<DataBasketProduct>
+
     fun getPreviousPartiallyNotIncludeStartId(size: Int, standard: Int): List<DataBasketProduct>
 
     fun add(basketProduct: DataProduct)
