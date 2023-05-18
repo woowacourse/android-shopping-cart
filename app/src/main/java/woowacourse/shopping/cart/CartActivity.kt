@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.common.model.CheckableCartProductModel
 import woowacourse.shopping.common.model.PageNavigatorModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
@@ -44,6 +45,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun updateNavigator(pageNavigatorModel: PageNavigatorModel) {
         binding.pageNavigator = pageNavigatorModel
+    }
+
+    override fun updateTotalPrice(price: Int) {
+        binding.cartCheckedPriceText.text = getString(R.string.product_price, price)
     }
 
     private fun initBinding() {

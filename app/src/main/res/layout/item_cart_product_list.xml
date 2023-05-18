@@ -27,6 +27,7 @@
         android:paddingVertical="10dp">
 
         <CheckBox
+            android:checked="@{checkableCartProduct.checked}"
             android:id="@+id/cart_product_list_check"
             android:layout_width="18dp"
             android:layout_height="18dp"

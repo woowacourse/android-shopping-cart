@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginTop="16dp"
-                    android:text="@string/product_detail_price"
+                    android:text="@string/product_detail_price_text"
                     android:textColor="#333333"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"

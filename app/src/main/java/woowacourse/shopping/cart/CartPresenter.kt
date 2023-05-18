@@ -9,8 +9,8 @@ import woowacourse.shopping.common.model.mapper.CheckableCartProductMapper.toVie
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CheckableCartProduct
-import kotlin.math.min
 
 class CartPresenter(
     private val view: CartContract.View,
@@ -40,23 +40,35 @@ class CartPresenter(
 
     override fun minusCartProduct(cartProduct: CartProductModel) {
         cartRepository.minusCartProduct(cartProduct.product.toDomainModel())
+        updateCartPage()
     }
 
     override fun plusCartProduct(cartProduct: CartProductModel) {
         cartRepository.plusCartProduct(cartProduct.product.toDomainModel())
+        updateCartPage()
     }
 
     override fun checkCartProduct(
         checkableCartProduct: CheckableCartProductModel,
         isChecked: Boolean
     ) {
-        cart.checkProduct(checkableCartProduct.toDomainModel(), isChecked)
+        cart = cart.checkProduct(checkableCartProduct.toDomainModel(), isChecked)
+        updateCartPage()
     }
 
     private fun updateCartPage() {
+        updateCart()
+        updateNavigator()
+        updateTotalPrice()
+    }
+
+    private fun updateCart() {
+        cart = getPagedCart()
+        view.updateCart(cart.products.map { it.toViewModel() })
+    }
+
+    private fun updateNavigator() {
         val maxPage = calculateMaxPage()
-        val pagedCart = getPagedCart()
-        view.updateCart(pagedCart.products.map { it.toViewModel() })
         view.updateNavigator(
             PageNavigatorModel(
                 isPagingAvailable(maxPage),
@@ -67,22 +79,21 @@ class CartPresenter(
         )
     }
 
+    private fun updateTotalPrice() {
+        view.updateTotalPrice(cart.calculateCheckedProductsPrice())
+    }
+
     private fun getPagedCart(): Cart {
-        return if (currentPage * countPerPage >= cart.products.size) {
-            Cart(
-                cartRepository.selectPage(
-                    currentPage, countPerPage
-                ).products.map { CheckableCartProduct(DEFAULT_CHECK, it) }
-            ).also {
-                cart += it
-            }
-        } else {
-            Cart(
-                cart.products.subList(
-                    currentPage * countPerPage,
-                    min(cart.products.size, currentPage * countPerPage + (countPerPage))
-                )
-            )
+        return Cart(
+            cartRepository.selectPage(
+                currentPage, countPerPage
+            ).products.map { CheckableCartProduct(findChecked(it), it) }
+        )
+    }
+
+    private fun findChecked(carProduct: CartProduct): Boolean {
+        return cart.products.find { it.product.product == carProduct.product }.let {
+            it?.checked ?: DEFAULT_CHECK
         }
     }
 

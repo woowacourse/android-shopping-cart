@@ -17,5 +17,6 @@ interface CartContract {
     interface View {
         fun updateCart(checkableCartProducts: List<CheckableCartProductModel>)
         fun updateNavigator(pageNavigatorModel: PageNavigatorModel)
+        fun updateTotalPrice(price: Int)
     }
 }
