@@ -25,11 +25,11 @@ class CartListAdapter(
         holder.bind(cartItems[position])
     }
 
-    fun setCartItemSelection(productId: Long, isSelected: Boolean) {
-        val position = cartItems.indexOfFirst { it.productId == productId }
-        if (position == -1) return
-        cartItems[position] = cartItems[position].copy(selected = isSelected)
-        if(hasStableIds()) notifyItemChanged(position)
+    fun setCartItemSelected(productId: Long, isSelected: Boolean) {
+        val index = cartItems.indexOfFirst { it.productId == productId }
+        if (index == -1) return
+        cartItems[index] = cartItems[index].copy(isSelected = isSelected)
+        if (hasStableIds()) notifyItemChanged(index)
     }
 
     class CartListViewHolder private constructor(
@@ -39,7 +39,7 @@ class CartListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cartItem: CartItemUIState) {
-            binding.cbCartItemSelected.isChecked = cartItem.selected
+            binding.cbCartItemSelected.isChecked = cartItem.isSelected
             binding.tvCartName.text = cartItem.name
             binding.tvCartPrice.text = itemView.context.getString(R.string.product_price).format(
                 PRICE_FORMAT.format(cartItem.price),
@@ -47,6 +47,7 @@ class CartListAdapter(
             Glide.with(itemView)
                 .load(cartItem.imageUrl)
                 .into(binding.ivCart)
+            binding.cbCartItemSelected.isChecked = cartItem.isSelected
             binding.cbCartItemSelected.setOnCheckedChangeListener { _, isChecked ->
                 onCheckButtonClick(cartItem.productId, isChecked)
             }
