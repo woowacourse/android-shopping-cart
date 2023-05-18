@@ -10,7 +10,7 @@ import woowacourse.shopping.model.RecentProductUiModel
 
 class RecentAdapter(
     items: List<RecentProductUiModel>,
-    val onClick: (recentProduct: RecentProductUiModel) -> Unit
+    private val onClick: (recentProduct: RecentProductUiModel) -> Unit
 ) : RecyclerView.Adapter<RecentViewHolder>() {
 
     private val _items = items.toMutableList()
