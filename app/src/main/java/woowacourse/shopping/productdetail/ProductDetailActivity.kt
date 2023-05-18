@@ -66,7 +66,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun onDestroy() {
         super.onDestroy()
         setResult(ACTIVITY_RESULT_CODE)
-        finish()
     }
 
     companion object {
