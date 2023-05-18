@@ -11,22 +11,22 @@ package woowacourse.shopping.data.server
 //class MockProductWebServer {
 //    private val mockWebServer = MockWebServer()
 //    private val baseUrl: String
-//    private val products = """
-//                [
-//                    {
-//                        "id": 1,
-//                        "name": "치킨",
-//                        "price": 10000,
-//                        "imageUrl": "http://example.com/chicken.jpg"
-//                    },
-//                    {
-//                        "id": 2,
-//                        "name": "피자",
-//                        "price": 20000,
-//                        "imageUrl": "http://example.com/pizza.jpg"
-//                    }
-//                ]
-//            """.trimIndent()
+    private val products = """
+                [
+                    {
+                        "id": 1,
+                        "name": "치킨",
+                        "price": 10000,
+                        "imageUrl": "http://example.com/chicken.jpg"
+                    },
+                    {
+                        "id": 2,
+                        "name": "피자",
+                        "price": 20000,
+                        "imageUrl": "http://example.com/pizza.jpg"
+                    }
+                ]
+            """.trimIndent()
 //
 //    private val product = """
 //                {

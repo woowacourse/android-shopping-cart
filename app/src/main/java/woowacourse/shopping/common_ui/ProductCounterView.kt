@@ -43,9 +43,9 @@ class ProductCounterView @JvmOverloads constructor(
 
     init {
         binding.counterStartButton.setOnClickListener {
-            binding.counterView.count = 1
-            countStateChangeListener.onCountChanged(binding.counterView, 1)
-            updateViewState(1)
+            binding.counterView.count = START_BUTTON_INIT_VALUE
+            countStateChangeListener.onCountChanged(binding.counterView, START_BUTTON_INIT_VALUE)
+            updateViewState(START_BUTTON_INIT_VALUE)
         }
         binding.counterView.visibility = View.GONE
     }
@@ -65,26 +65,7 @@ class ProductCounterView @JvmOverloads constructor(
         updateViewState(count)
     }
 
-    fun setMinCountValue(minValue: Int) {
-        binding.counterView.minCountValue = minValue
-    }
-
-    fun setMaxCountValue(maxValue: Int) {
-        binding.counterView.maxCountValue = maxValue
-    }
-
-
     companion object {
-        @JvmStatic
-        @BindingAdapter("counterViewMinValue")
-        fun setProductCounterViewMinValue(productCounterView: ProductCounterView, value: Int) {
-            productCounterView.setMinCountValue(value)
-        }
-
-        @JvmStatic
-        @BindingAdapter("counterViewMaxValue")
-        fun setProductCounterViewMaxValue(productCounterView: ProductCounterView, value: Int) {
-            productCounterView.setMaxCountValue(value)
-        }
+        private const val START_BUTTON_INIT_VALUE = 1
     }
 }
