@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.presentation.model.ProductUiModel
+import woowacourse.shopping.presentation.model.ProductItem
 import woowacourse.shopping.presentation.ui.home.adapter.ProductClickListener
 
 class ProductViewHolder(
@@ -16,7 +16,7 @@ class ProductViewHolder(
         binding.listener = productClickListener
     }
 
-    fun bind(data: ProductUiModel) {
+    fun bind(data: ProductItem) {
         binding.product = data
     }
 

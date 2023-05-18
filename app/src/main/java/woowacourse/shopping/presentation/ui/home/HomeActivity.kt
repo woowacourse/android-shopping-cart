@@ -7,19 +7,24 @@ import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.databinding.ActivityHomeBinding
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.model.HomeMapper.toProductUiModel
-import woowacourse.shopping.presentation.model.HomeMapper.toRecentlyViewedProduct
+import woowacourse.shopping.presentation.model.HomeData
+import woowacourse.shopping.presentation.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.adapter.ProductClickListener
+import woowacourse.shopping.presentation.ui.home.adapter.RecentlyViewedProductAdapter
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
 
 class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListener {
     private lateinit var binding: ActivityHomeBinding
     override val presenter: HomeContract.Presenter by lazy { initPresenter() }
-    private val homeAdapter: HomeAdapter by lazy { HomeAdapter(this, ::clickShowMore) }
+    private val homeAdapter: HomeAdapter by lazy {
+        HomeAdapter(recentlyViewedProductAdapter, this, ::clickShowMore)
+    }
+    private val recentlyViewedProductAdapter: RecentlyViewedProductAdapter by lazy {
+        RecentlyViewedProductAdapter(this)
+    }
 
     private fun initPresenter(): HomePresenter {
         return HomePresenter(
@@ -39,12 +44,13 @@ class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListene
         initLayoutManager()
         // 목 데이터 추가 함수 : initProducts(this)
         clickShoppingCart()
-        presenter.getProducts()
+        presenter.setHome()
+        presenter.fetchProducts()
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.getRecentlyViewed()
+        presenter.fetchRecentlyViewed()
     }
 
     private fun initAdapter() {
@@ -57,13 +63,28 @@ class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListene
         binding.listHomeProducts.layoutManager = gridLayoutManager
     }
 
-    override fun setProducts(products: List<Product>, isLastProduct: Boolean) {
-        homeAdapter.initProducts(products.map { it.toProductUiModel() })
-        if (!isLastProduct) homeAdapter.initShowMoreItem()
+    override fun setHomeData(homeData: List<HomeData>) {
+        homeAdapter.submitList(homeData)
     }
 
-    override fun setRecentlyViewed(products: List<Product>) {
-        homeAdapter.initRecentlyViewedProducts(products.map { it.toRecentlyViewedProduct() })
+    override fun initRecentlyViewed() {
+        homeAdapter.notifyItemInserted(0)
+    }
+
+    override fun updateRecentlyViewedProducts(products: List<RecentlyViewedProduct>) {
+        recentlyViewedProductAdapter.submitList(products)
+    }
+
+    override fun appendProductItems(startPosition: Int, size: Int) {
+        homeAdapter.notifyItemRangeInserted(startPosition, size)
+    }
+
+    override fun appendShowMoreItem(position: Int) {
+        homeAdapter.notifyItemInserted(position)
+    }
+
+    override fun removeShowMoreItem(position: Int) {
+        homeAdapter.notifyItemRemoved(position)
     }
 
     private fun clickShoppingCart() {
@@ -72,11 +93,11 @@ class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListene
         }
     }
 
-    private fun clickShowMore() {
-        presenter.getProducts()
-    }
-
     override fun clickProduct(productId: Long) {
         startActivity(ProductDetailActivity.getIntent(this, productId))
+    }
+
+    private fun clickShowMore() {
+        presenter.fetchProducts()
     }
 }

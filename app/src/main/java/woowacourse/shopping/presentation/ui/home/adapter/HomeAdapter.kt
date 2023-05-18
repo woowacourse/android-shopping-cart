@@ -1,11 +1,12 @@
 package woowacourse.shopping.presentation.ui.home.adapter
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.presentation.model.HomeData
-import woowacourse.shopping.presentation.model.ProductUiModel
-import woowacourse.shopping.presentation.model.RecentlyViewed
-import woowacourse.shopping.presentation.model.RecentlyViewedProduct
+import woowacourse.shopping.presentation.model.ProductItem
+import woowacourse.shopping.presentation.model.RecentlyViewedItem
 import woowacourse.shopping.presentation.model.ShowMoreItem
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.PRODUCT
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.RECENTLY_VIEWED
@@ -15,18 +16,13 @@ import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.RecentlyView
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ShowMoreViewHolder
 
 class HomeAdapter(
+    private val recentlyViewedAdapter: RecentlyViewedProductAdapter,
     private val productClickListener: ProductClickListener,
     private val clickShowMore: () -> Unit,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private val items = mutableListOf<HomeData>()
-    private val recentlyViewedAdapter = RecentlyViewedProductAdapter(productClickListener)
-
-    override fun getItemCount(): Int {
-        return items.size
-    }
+) : ListAdapter<HomeData, RecyclerView.ViewHolder>(HomeComparator()) {
 
     override fun getItemViewType(position: Int): Int {
-        return when (items[position].viewType) {
+        return when (getItem(position).viewType) {
             PRODUCT -> PRODUCT.ordinal
             RECENTLY_VIEWED -> RECENTLY_VIEWED.ordinal
             SHOW_MORE -> SHOW_MORE.ordinal
@@ -48,7 +44,7 @@ class HomeAdapter(
                 )
             }
             SHOW_MORE.ordinal -> {
-                ShowMoreViewHolder(ShowMoreViewHolder.getView(parent)) { showMoreProducts() }
+                ShowMoreViewHolder(ShowMoreViewHolder.getView(parent)) { clickShowMore() }
             }
             else -> throw IllegalArgumentException("HomeAdapter의 아이템 viewType이 이상합니다.")
         }
@@ -56,26 +52,26 @@ class HomeAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(items[position] as ProductUiModel)
+            is ProductViewHolder -> holder.bind(getItem(position) as ProductItem)
             is RecentlyViewedViewHolder -> Unit
             is ShowMoreViewHolder -> Unit
         }
     }
 
-    fun initProducts(products: List<ProductUiModel>) {
+    /*fun initProducts(products: List<ProductItem>) {
         val preSize = items.size
         items.addAll(products)
         notifyItemRangeInserted(preSize, items.size - 1)
     }
 
     fun initRecentlyViewedProducts(products: List<RecentlyViewedProduct>) {
-        if (items.isNotEmpty() and (items[0] is RecentlyViewed)) {
+        if (items.isNotEmpty() and (items[0] is RecentlyViewedItem)) {
             items.removeFirst()
             notifyItemRemoved(0)
         }
-        items.add(0, RecentlyViewed(recentlyViewedProducts = products))
+        items.add(0, RecentlyViewedItem(recentlyViewedProducts = products))
         notifyItemInserted(0)
-        recentlyViewedAdapter.submitList((items.first() as RecentlyViewed).recentlyViewedProducts)
+        recentlyViewedAdapter.submitList((items.first() as RecentlyViewedItem).recentlyViewedProducts)
     }
 
     fun initShowMoreItem() {
@@ -93,6 +89,28 @@ class HomeAdapter(
         if (lastItem.viewType == SHOW_MORE) {
             items.removeLast()
             notifyItemRemoved(itemCount)
+        }
+    }*/
+
+    class HomeComparator() : DiffUtil.ItemCallback<HomeData>() {
+        override fun areItemsTheSame(oldItem: HomeData, newItem: HomeData): Boolean {
+            return oldItem.viewType == newItem.viewType
+        }
+
+        override fun areContentsTheSame(oldItem: HomeData, newItem: HomeData): Boolean {
+            val oldData = when (oldItem) {
+                is ProductItem -> oldItem
+                is RecentlyViewedItem -> oldItem
+                is ShowMoreItem -> oldItem
+            }
+
+            val newData = when (newItem) {
+                is ProductItem -> newItem
+                is RecentlyViewedItem -> newItem
+                is ShowMoreItem -> newItem
+            }
+
+            return oldData == newData
         }
     }
 }
