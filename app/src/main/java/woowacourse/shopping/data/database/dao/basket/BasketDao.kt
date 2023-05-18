@@ -13,6 +13,8 @@ interface BasketDao {
 
     fun getAll(): List<DataBasketProduct>
 
+    fun getByProductId(productId: Int): DataBasketProduct
+
     fun add(basketProduct: DataBasketProduct)
 
     fun remove(basketProduct: DataBasketProduct)

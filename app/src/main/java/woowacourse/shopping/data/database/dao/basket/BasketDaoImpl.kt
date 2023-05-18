@@ -178,7 +178,36 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             }
             cursor.close()
         }
-        return products.sortedBy { it.id }
+        return products
+    }
+
+    @SuppressLint("Range")
+    override fun getByProductId(productId: Int): DataBasketProduct {
+        val products = mutableListOf<DataBasketProduct>()
+        database.writableDatabase.use { db ->
+            val cursor = db.rawQuery(GET_ITEM_BY_PRODUCT_ID, arrayOf(productId.toString()))
+            while (cursor.moveToNext()) {
+                val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
+                val productId: Int =
+                    cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val name: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
+                val price: DataPrice =
+                    DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
+                val imageUrl: String =
+                    cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
+                products.add(
+                    DataBasketProduct(
+                        id,
+                        count,
+                        DataProduct(productId, name, price, imageUrl)
+                    )
+                )
+            }
+            cursor.close()
+        }
+        return products.first()
     }
 
     override fun add(basketProduct: DataBasketProduct) {
@@ -192,7 +221,12 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
 
         database.writableDatabase.use { db ->
             val count =
-                DatabaseUtils.queryNumEntries(db, BasketContract.TABLE_NAME, whereClause, whereArgs)
+                DatabaseUtils.queryNumEntries(
+                    db,
+                    BasketContract.TABLE_NAME,
+                    whereClause,
+                    whereArgs
+                )
             if (count > 0) {
                 db.execSQL(
                     UPDATE_BASKET_COUNT,
@@ -260,6 +294,13 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             SELECT ${BasketContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
             FROM ${BasketContract.TABLE_NAME}
             INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
+        """.trimIndent()
+
+        private val GET_ITEM_BY_PRODUCT_ID = """
+            SELECT ${BasketContract.TABLE_NAME}.*, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_NAME}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_PRICE}, ${ProductContract.TABLE_NAME}.${ProductContract.COLUMN_IMAGE_URL}
+            FROM ${BasketContract.TABLE_NAME}
+            INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
+            WHERE ${ProductContract.TABLE_NAME}.${BaseColumns._ID} = ?
         """.trimIndent()
     }
 }
