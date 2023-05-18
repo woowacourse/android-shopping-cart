@@ -28,7 +28,7 @@
         tools:maxWidth="314dp">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tv_product_title"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
@@ -40,7 +40,7 @@
             tools:text="[든든] 동원 스위트콘" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/tv_product_price"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_marginTop="36dp"
@@ -63,12 +63,13 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@color/blue_green_04c09e"
             android:onClick="@{() -> addToCartListener.invoke()}"
             android:text="@string/cart_dialog_btn"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

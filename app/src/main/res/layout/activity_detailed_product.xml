@@ -52,11 +52,9 @@
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            tools:layout_editor_absoluteX="17dp"
             tools:text="TITLE" />
 
         <View
-            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="14dp"

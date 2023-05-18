@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="product"
@@ -38,6 +39,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="33dp"
             android:text="@{product.name}"
+            android:textColor="@color/gray_333333"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -47,9 +49,10 @@
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="18dp"
             android:layout_marginTop="39dp"
+            android:layout_marginEnd="18dp"
             android:text="@{@string/product_price(product.price)}"
+            android:textColor="@color/gray_333333"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

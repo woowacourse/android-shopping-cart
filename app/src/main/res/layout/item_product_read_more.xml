@@ -17,7 +17,7 @@
         android:onClick="@{() -> listener.onReadMoreClick()}">
 
         <TextView
-            android:id="@+id/rv_read_more"
+            android:id="@+id/tv_read_more"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
