@@ -10,7 +10,7 @@ import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
 class ProductsViewHolder private constructor(
     private val binding: ItemProductBinding,
     private val listener: ProductsListener
-) : ItemViewHolder(binding.root) {
+) : ShoppingViewHolder(binding.root) {
     init {
         binding.listener = listener
     }

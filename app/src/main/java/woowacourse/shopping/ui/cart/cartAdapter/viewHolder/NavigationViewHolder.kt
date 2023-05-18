@@ -9,7 +9,7 @@ import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 class NavigationViewHolder private constructor(
     private val binding: ItemCartNavigationBinding,
     cartListener: CartListener
-) : CartItemViewHolder(binding.root) {
+) : CartViewHolder(binding.root) {
     init {
         binding.listener = cartListener
     }

@@ -10,7 +10,7 @@ class ReadMoreViewHolder private constructor(
     binding: ItemProductReadMoreBinding,
     listener: ProductsListener
 ) :
-    ItemViewHolder(binding.root) {
+    ShoppingViewHolder(binding.root) {
 
     init {
         binding.listener = listener

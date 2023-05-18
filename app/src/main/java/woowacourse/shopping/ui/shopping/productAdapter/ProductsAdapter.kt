@@ -5,16 +5,16 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.model.RecentProductUIModel
-import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ItemViewHolder
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ProductsViewHolder
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ReadMoreViewHolder
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.RecentViewHolder
+import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ShoppingViewHolder
 
-class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Adapter<ItemViewHolder>() {
+class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Adapter<ShoppingViewHolder>() {
     private val productItems: MutableList<ProductsItemType> = mutableListOf()
     private val carts: MutableList<CartProductUIModel> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingViewHolder {
         return when (viewType) {
             ProductsItemType.TYPE_HEADER -> RecentViewHolder.from(parent, listener)
             ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(parent, listener)
@@ -23,7 +23,7 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
         }
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ShoppingViewHolder, position: Int) {
         holder.bind(productItems[position])
     }
 

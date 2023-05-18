@@ -11,7 +11,7 @@ import woowacourse.shopping.ui.shopping.recentProductAdapter.RecentProductsAdapt
 class RecentViewHolder(
     binding: ItemProductRecentBinding,
     listener: ProductsListener
-) : ItemViewHolder(binding.root) {
+) : ShoppingViewHolder(binding.root) {
     private val adapter = RecentProductsAdapter(mutableListOf(), listener::onClickItem)
 
     init {
