@@ -27,6 +27,8 @@ class CartPresenter(
     override fun goToPreviousPage() {
         currentPage--
         updateCartPage()
+
+        if (currentPage == 0) view.updateNavigationVisibility(determineNavigationVisibility())
     }
 
     override fun goToNextPage() {
@@ -50,6 +52,6 @@ class CartPresenter(
 
     private fun determineNavigationVisibility(): Boolean {
         val cartCount = cartRepository.getAllCount()
-        return cartCount > sizePerPage
+        return cartCount > sizePerPage || currentPage != 0
     }
 }
