@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.repository
 
 import com.shopping.domain.CartProduct
+import com.shopping.domain.Count
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.data.db.CartProductDao
 
@@ -20,6 +21,10 @@ class CartProductRepositoryImpl(
         }
 
         return cartProducts.subList(index.first, minOf(index.second, cartProducts.size))
+    }
+
+    override fun update(cartProduct: CartProduct, count: Count) {
+        cartProductDao.update(cartProduct, count)
     }
 
     override fun insert(cartProduct: CartProduct) {

@@ -1,10 +1,9 @@
 package woowacourse.shopping.view.shoppingcart
 
-import com.shopping.domain.CartProduct
+import com.shopping.domain.Count
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
-import woowacourse.shopping.model.uimodel.ProductUIModel
 import woowacourse.shopping.model.uimodel.mapper.toDomain
 
 class ShoppingCartPresenter(
@@ -21,8 +20,8 @@ class ShoppingCartPresenter(
     override fun loadCartProducts(): List<CartProductUIModel> =
         paging.loadPageProducts()
 
-    override fun removeCartProduct(productUIModel: ProductUIModel) {
-        cartProductRepository.remove(CartProduct(productUIModel.toDomain()))
+    override fun removeCartProduct(cartProductUIModel: CartProductUIModel) {
+        cartProductRepository.remove(cartProductUIModel.toDomain())
 
         if (paging.isLastIndexOfCurrentPage()) {
             paging.subPage()
@@ -64,5 +63,9 @@ class ShoppingCartPresenter(
         } else {
             view.deactivatePageDownCounter()
         }
+    }
+
+    override fun updateCount(cartProductUIModel: CartProductUIModel, count: Count) {
+        cartProductRepository.update(cartProductUIModel.toDomain(), count)
     }
 }

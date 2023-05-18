@@ -10,7 +10,7 @@ import woowacourse.shopping.model.uimodel.ProductUIModel
 
 class ShoppingCartViewHolder(
     parent: ViewGroup,
-    private val onClickRemove: (ProductUIModel) -> Unit
+    private val onClickRemove: (CartProductUIModel) -> Unit
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_cart_product, parent, false)
 ) {
@@ -19,7 +19,7 @@ class ShoppingCartViewHolder(
 
     init {
         binding.ivCancel.setOnClickListener {
-            onClickRemove(cartProduct.productUIModel)
+            onClickRemove(cartProduct)
         }
     }
 

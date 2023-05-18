@@ -61,7 +61,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         }
     }
 
-    private fun setOnClickRemove(): (ProductUIModel) -> Unit = { product ->
+    private fun setOnClickRemove(): (CartProductUIModel) -> Unit = { product ->
         presenter.removeCartProduct(product)
     }
 

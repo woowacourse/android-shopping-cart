@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.productdetail
 
 import com.shopping.domain.CartProduct
+import com.shopping.domain.Count
 import com.shopping.domain.RecentProduct
 import com.shopping.repository.CartProductRepository
 import com.shopping.repository.RecentProductsRepository
@@ -20,7 +21,7 @@ class ProductDetailPresenter(
     }
 
     override fun saveCartProduct() {
-        cartProductRepository.insert(CartProduct(product.toDomain()))
+        cartProductRepository.insert(CartProduct(product.toDomain(), Count(1)))
         view.showCartPage()
     }
 }

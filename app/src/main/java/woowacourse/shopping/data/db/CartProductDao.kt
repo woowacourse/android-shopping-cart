@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.shopping.domain.CartProduct
+import com.shopping.domain.Count
 import com.shopping.domain.Product
 
 class CartProductDao(context: Context) :
@@ -27,7 +28,8 @@ class CartProductDao(context: Context) :
                         name = it.getString(it.getColumnIndexOrThrow(KEY_NAME)),
                         url = it.getString(it.getColumnIndexOrThrow(KEY_IMAGE)),
                         price = it.getInt(it.getColumnIndexOrThrow(KEY_PRICE)),
-                    )
+                    ),
+                    count = Count(it.getInt(it.getColumnIndexOrThrow(KEY_COUNT)))
                 )
                 cartProducts.add(cartProduct)
             }
@@ -40,17 +42,24 @@ class CartProductDao(context: Context) :
             put(KEY_ID, cartProduct.product.id)
             put(KEY_NAME, cartProduct.product.name)
             put(KEY_IMAGE, cartProduct.product.url)
-            put(
-                KEY_PRICE,
-                cartProduct.product
-                    .price
-            )
+            put(KEY_PRICE, cartProduct.product.price)
+            put(KEY_COUNT, cartProduct.count.value)
         }
         writableDatabase.insert(TABLE_NAME, null, record)
     }
 
     fun remove(cartProduct: CartProduct) {
         writableDatabase.execSQL("DELETE FROM ${RecentProductDao.TABLE_NAME} WHERE ${RecentProductDao.KEY_ID}='${cartProduct.product.id}';")
+    }
+
+    fun update(cartProduct: CartProduct, count: Count) {
+        val contextValues = ContentValues().apply {
+            put(KEY_COUNT, count.value)
+        }
+        val whereClause = "$KEY_ID=?"
+        val whereArgs = arrayOf(cartProduct.product.id.toString())
+
+        writableDatabase.update(TABLE_NAME, contextValues, whereClause, whereArgs)
     }
 
     companion object {
@@ -61,12 +70,14 @@ class CartProductDao(context: Context) :
         const val KEY_NAME = "name"
         const val KEY_IMAGE = "image"
         const val KEY_PRICE = "price"
+        const val KEY_COUNT = "count"
 
         private const val CREATE_TABLE_QUERY = "CREATE TABLE $TABLE_NAME (" +
             "$KEY_ID int," +
             "$KEY_NAME text," +
             "$KEY_IMAGE text," +
-            "$KEY_PRICE text" +
+            "$KEY_PRICE text," +
+            "$KEY_COUNT text" +
             ");"
         private const val DROP_TABLE_QUERY = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
