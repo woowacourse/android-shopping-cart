@@ -15,23 +15,24 @@ import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Shop
 import woowacourse.shopping.domain.URL
 
-class CartPresenterTest {
+class ShopPresenterTest {
     private lateinit var presenter: CartPresenter
     private lateinit var view: CartContract.View
-    private lateinit var cart: Cart
+    private lateinit var shop: Shop
     private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUp() {
         view = mockk()
-        cart = makeCartMock(0, 1, 2, 3, 4, 5, 6)
+        shop = makeCartMock(0, 1, 2, 3, 4, 5, 6)
         cartRepository = mockk()
 
         every {
             cartRepository.selectAll()
-        } returns cart
+        } returns shop
 
         every {
             cartRepository.selectPage(0, 5)
@@ -47,7 +48,7 @@ class CartPresenterTest {
         } just runs
 
         presenter = CartPresenter(
-            view, cartRepository, 0, 5
+            view, Cart(emptyList()), cartRepository, 0, 5
         )
     }
 
@@ -88,7 +89,7 @@ class CartPresenterTest {
         }
     }
 
-    private fun makeCartMock(vararg cartOrdinals: Int): Cart = Cart(
+    private fun makeCartMock(vararg cartOrdinals: Int): Shop = Shop(
         cartOrdinals.map {
             CartProduct(
                 it,

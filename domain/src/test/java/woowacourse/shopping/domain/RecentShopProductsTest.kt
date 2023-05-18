@@ -3,7 +3,7 @@ package woowacourse.shopping.domain
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class RecentCartProductsTest {
+class RecentShopProductsTest {
     @Test
     fun 최근_본_상품_9개를_요청하면_상품_9개를_반환하다() {
         // given

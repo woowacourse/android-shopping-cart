@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Shop
 
 class CartRepository(private val localDataSource: CartDataSource) {
 
@@ -22,11 +22,11 @@ class CartRepository(private val localDataSource: CartDataSource) {
         return localDataSource.selectAllCount()
     }
 
-    fun selectAll(): Cart {
+    fun selectAll(): Shop {
         return localDataSource.selectAll()
     }
 
-    fun selectPage(page: Int, countPerPage: Int): Cart {
+    fun selectPage(page: Int, countPerPage: Int): Shop {
         return localDataSource.selectPage(page, countPerPage)
     }
 }

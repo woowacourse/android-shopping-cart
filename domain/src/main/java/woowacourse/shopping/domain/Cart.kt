@@ -1,11 +1,16 @@
 package woowacourse.shopping.domain
 
-data class Cart(val products: List<CartProduct>) {
-    fun add(cartProduct: CartProduct): Cart {
-        return Cart(products + cartProduct)
+data class Cart(val products: List<CheckableCartProduct>) {
+
+    operator fun plus(cart: Cart): Cart {
+        return Cart(products + cart.products)
     }
 
-    fun remove(cartProduct: CartProduct): Cart {
-        return Cart(products - cartProduct)
+    fun checkProduct(checkableCartProduct: CheckableCartProduct, isChecked: Boolean): Cart {
+        return Cart(
+            products.toMutableList().apply {
+                this[indexOf(checkableCartProduct)] = checkableCartProduct.copy(checked = isChecked)
+            }
+        )
     }
 }

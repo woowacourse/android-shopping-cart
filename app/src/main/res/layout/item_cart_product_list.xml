@@ -14,8 +14,8 @@
             type="kotlin.jvm.functions.Function1" />
 
         <variable
-            name="cartProduct"
-            type="woowacourse.shopping.common.model.CartProductModel" />
+            name="checkableCartProduct"
+            type="woowacourse.shopping.common.model.CheckableCartProductModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +43,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:text="@{cartProduct.product.title}"
+            android:text="@{checkableCartProduct.cartProduct.product.title}"
             android:textColor="#333333"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -68,7 +68,7 @@
             android:layout_height="72dp"
             android:layout_marginBottom="8dp"
             android:scaleType="centerCrop"
-            android:urlSrc="@{cartProduct.product.picture}"
+            android:urlSrc="@{checkableCartProduct.cartProduct.product.picture}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -78,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@{@string/product_price(cartProduct.product.price)}"
+            android:text="@{@string/product_price(checkableCartProduct.cartProduct.product.price)}"
             android:textColor="#333333"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/cart_product_list_counter"
@@ -87,9 +87,9 @@
 
         <woowacourse.shopping.common.view.Counter
             android:id="@+id/cart_product_list_counter"
-            count="@{cartProduct.amount}"
-            onMinusClick="@{() -> onMinusClick.invoke(cartProduct)}"
-            onPlusClick="@{() -> onPlusClick.invoke(cartProduct)}"
+            count="@{checkableCartProduct.cartProduct.amount}"
+            onMinusClick="@{() -> onMinusClick.invoke(checkableCartProduct.cartProduct)}"
+            onPlusClick="@{() -> onPlusClick.invoke(checkableCartProduct.cartProduct)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

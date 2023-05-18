@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.CheckableCartProductModel
 import woowacourse.shopping.common.model.PageNavigatorModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.datasource.dao.CartDao
@@ -38,8 +38,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateCart(cartProducts: List<CartProductModel>) {
-        cartAdapter.updateCartProducts(cartProducts)
+    override fun updateCart(checkableCartProducts: List<CheckableCartProductModel>) {
+        cartAdapter.updateCartProducts(checkableCartProducts)
     }
 
     override fun updateNavigator(pageNavigatorModel: PageNavigatorModel) {
@@ -63,6 +63,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             presenter.minusCartProduct(it)
         }, {
             presenter.plusCartProduct(it)
+        }, { checkableCartProduct, isChecked ->
+            presenter.checkCartProduct(checkableCartProduct, isChecked)
         })
 
         binding.cartProductList.adapter = cartAdapter

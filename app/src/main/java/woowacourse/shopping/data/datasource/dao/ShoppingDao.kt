@@ -7,13 +7,13 @@ import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.ShoppingDataSource
 import woowacourse.shopping.data.mock.ProductMock
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Shop
 import woowacourse.shopping.domain.URL
 
 class ShoppingDao(private val db: SQLiteDatabase) : ShoppingDataSource {
-    override fun selectByRange(start: Int, range: Int): Cart {
+    override fun selectByRange(start: Int, range: Int): Shop {
         val cursor = db.rawQuery(
             "SELECT ${SqlProduct.name}.*, COALESCE(${SqlCart.AMOUNT}, 0) as ${SqlCart.AMOUNT} FROM ${SqlProduct.name} left join ${SqlCart.name} on ${SqlProduct.ID} = ${SqlCart.PRODUCT_ID} LIMIT $start, $range",
             null
@@ -46,7 +46,7 @@ class ShoppingDao(private val db: SQLiteDatabase) : ShoppingDataSource {
         }
     }
 
-    private fun makeCart(cursor: Cursor) = Cart(
+    private fun makeCart(cursor: Cursor) = Shop(
         cursor.use {
             val cart = mutableListOf<CartProduct>()
             while (it.moveToNext()) cart.add(

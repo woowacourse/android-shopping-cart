@@ -6,9 +6,9 @@ import woowacourse.shopping.data.database.selectRowId
 import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.CartDataSource
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Shop
 import woowacourse.shopping.domain.URL
 
 class CartDao(private val db: SQLiteDatabase) : CartDataSource {
@@ -52,7 +52,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         }
     }
 
-    override fun selectAll(): Cart {
+    override fun selectAll(): Shop {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
             null
@@ -60,7 +60,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         return makeCart(cursor)
     }
 
-    override fun selectPage(page: Int, countPerPage: Int): Cart {
+    override fun selectPage(page: Int, countPerPage: Int): Shop {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * countPerPage}, $countPerPage",
             null
@@ -84,7 +84,7 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         db.execSQL("DELETE FROM ${SqlCart.name} WHERE ${SqlCart.PRODUCT_ID} = $productId")
     }
 
-    private fun makeCart(cursor: Cursor) = Cart(
+    private fun makeCart(cursor: Cursor) = Shop(
         cursor.use {
             val cart = mutableListOf<CartProduct>()
 

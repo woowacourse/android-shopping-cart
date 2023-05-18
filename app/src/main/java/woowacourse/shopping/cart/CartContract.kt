@@ -1,6 +1,7 @@
 package woowacourse.shopping.cart
 
 import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.CheckableCartProductModel
 import woowacourse.shopping.common.model.PageNavigatorModel
 
 interface CartContract {
@@ -10,10 +11,11 @@ interface CartContract {
         fun loadNextPage()
         fun minusCartProduct(cartProduct: CartProductModel)
         fun plusCartProduct(cartProduct: CartProductModel)
+        fun checkCartProduct(checkableCartProduct: CheckableCartProductModel, isChecked: Boolean)
     }
 
     interface View {
-        fun updateCart(cartProducts: List<CartProductModel>)
+        fun updateCart(checkableCartProducts: List<CheckableCartProductModel>)
         fun updateNavigator(pageNavigatorModel: PageNavigatorModel)
     }
 }
