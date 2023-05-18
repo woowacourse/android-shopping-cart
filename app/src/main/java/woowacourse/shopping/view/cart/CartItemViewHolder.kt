@@ -33,6 +33,9 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.btnPlus.setOnClickListener {
                 onItemClick.onUpdateCount(item.product.id, item.product.count + 1)
             }
+            binding.checkboxSelect.setOnClickListener {
+                onItemClick.onSelectProduct(item.product)
+            }
         }
     }
 

@@ -47,6 +47,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <CheckBox
+                    android:id="@+id/checkbox_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="0dp"
@@ -61,10 +62,10 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/text_total_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
-                android:text="@string/korean_won"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -80,7 +81,6 @@
                 android:layout_height="0dp"
                 android:background="@drawable/back_rectangle"
                 android:paddingHorizontal="14dp"
-                android:text="@string/order_count"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"

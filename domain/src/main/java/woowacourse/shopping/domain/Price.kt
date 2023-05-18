@@ -6,6 +6,13 @@ value class Price(val price: Int) {
         require(price >= 0) { PRICE_RANGE_ERROR }
     }
 
+    operator fun plus(operand: Price): Price = Price(price + operand.price)
+
+    operator fun minus(operand: Price): Price = Price(price - operand.price)
+
+    operator fun times(count: Int): Price = Price(price * count)
+
+
     companion object {
         private const val PRICE_RANGE_ERROR = "가격은 0 이상의 숫자이어야합니다."
     }

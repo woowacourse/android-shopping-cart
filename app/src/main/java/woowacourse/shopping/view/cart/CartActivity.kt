@@ -5,9 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.model.CartProductModel
+import woowacourse.shopping.util.PriceFormatter
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -20,6 +23,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setUpActionBar()
         setUpPresenter()
         presenter.fetchProducts()
+        binding.checkboxTotal.setOnClickListener {
+            presenter.selectAll(binding.checkboxTotal.isChecked)
+        }
     }
 
     private fun setUpBinding() {
@@ -53,6 +59,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 override fun onUpdateCount(id: Int, count: Int) {
                     presenter.updateCartProductCount(id, count)
                 }
+
+                override fun onSelectProduct(product: CartProductModel) {
+                    presenter.selectProduct(product)
+                }
             }
         )
     }
@@ -63,6 +73,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun showChangedItem(position: Int) {
         binding.recyclerCart.adapter?.notifyItemChanged(position)
+    }
+
+    override fun showTotalResult(isSelectAll: Boolean, totalPrice: Int, totalCount: Int) {
+        binding.checkboxTotal.isChecked = isSelectAll
+        binding.textTotalPrice.text = getString(R.string.korean_won, PriceFormatter.format(totalPrice))
+        binding.btnOrder.text = getString(R.string.order_count, totalCount)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
