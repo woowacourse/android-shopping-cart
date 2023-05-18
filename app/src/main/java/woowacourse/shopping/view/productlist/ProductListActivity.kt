@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,9 +26,20 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var presenter: ProductListContract.Presenter
     private lateinit var cartCountInAppBar: TextView
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (it.resultCode == RESULT_VIEWED) {
-            val id = it.data?.getIntExtra(ID, -1)
-            presenter.updateRecentViewed(id ?: -1)
+        val id = it.data?.getIntExtra(ID, -1)
+        when (it.resultCode) {
+            RESULT_VIEWED -> {
+                presenter.updateRecentViewed(id ?: -1)
+            }
+            RESULT_ADDED -> {
+                presenter.updateRecentViewed(id ?: -1)
+                presenter.fetchCartCount()
+                presenter.fetchProductCount(id ?: -1)
+            }
+            RESULT_VISIT_CART -> {
+                presenter.fetchCartCount()
+                presenter.fetchProductCounts()
+            }
         }
     }
 
@@ -98,6 +110,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.gridProducts.adapter?.notifyItemChanged(0)
     }
 
+    override fun notifyDataChanged(position: Int) {
+        binding.gridProducts.adapter?.notifyItemChanged(position)
+    }
+
     override fun onClickProductDetail(product: ProductModel, lastViewedProduct: ProductModel) {
         val intent = ProductDetailActivity.newIntent(binding.root.context, product, lastViewedProduct)
         resultLauncher.launch(intent)
@@ -123,7 +139,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             val imageButton = itemActionView.findViewById<ImageButton>(R.id.btn_cart)
             imageButton?.setOnClickListener {
                 val intent = Intent(this, CartActivity::class.java)
-                startActivity(intent)
+                resultLauncher.launch(intent)
             }
         }
         return true
@@ -138,10 +154,18 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun showToastAddInCart() {
+        Toast.makeText(this, ADD_IN_CART_MESSAGE, Toast.LENGTH_LONG).show()
+    }
+
     companion object {
+        private const val ADD_IN_CART_MESSAGE = "상품이 담겼습니다. 장바구니를 확인해주세요."
         private const val HEADER_FOOTER_SPAN = 2
         private const val PRODUCT_ITEM_SPAN = 1
         const val RESULT_VIEWED = 200
+        const val RESULT_ADDED = 300
+        const val RESULT_VISIT_CART = 400
         const val ID = "id"
     }
 }

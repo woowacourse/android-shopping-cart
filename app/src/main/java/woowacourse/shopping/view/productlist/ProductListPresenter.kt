@@ -50,28 +50,61 @@ class ProductListPresenter(
 
     override fun addToCartProducts(id: Int, count: Int) {
         cartRepository.add(id, count)
+        fetchProductCount(id)
     }
 
     override fun updateCartProductCount(id: Int, count: Int) {
         cartRepository.update(id, count)
+        fetchProductCount(id)
     }
 
     override fun fetchCartCount() {
         view.showCartCount(cartRepository.findAll().size)
     }
 
+    override fun fetchProductCounts() {
+        val cartProducts = cartRepository.findAll()
+        // 0보다 큰데 cart에 없는 경우 || cart에 있지만 count가 다른 경우
+        products.filter { (it.count > 0 && (cartProducts.find { cartProduct -> it.id == cartProduct.id } == null)
+                || cartProducts.find { cartProduct -> it.id == cartProduct.id && it.count != cartProduct.count } != null) }
+            .forEach { product ->
+                fetchProductCount(product.id)
+            }
+        products.filter { it.count == 0 && cartProducts.find { cartProduct -> it.id == cartProduct.id } != null }
+            .forEach { product ->
+                fetchProductCount(product.id)
+            }
+    }
+
+
+    override fun fetchProductCount(id: Int) {
+        if (id == -1) return
+        val model = convertIdToProductModel(id)
+        products[products.indexOfFirst { it.id == id }] = model
+        val index =
+            productsListItems.indexOfFirst { it is ProductListViewItem.ProductItem && it.product.id == id }
+        productsListItems[index] = ProductListViewItem.ProductItem(model)
+        view.notifyDataChanged(index)
+    }
+
+
     override fun updateRecentViewed(id: Int) {
         if (id == -1) return
         if (viewedProducts.contains(id)) viewedProducts.remove(id)
         viewedProducts.add(0, id)
         if (isExistRecentViewed()) productsListItems.removeAt(0)
-        productsListItems.add(0, ProductListViewItem.RecentViewedItem(viewedProducts.map { convertIdToProductModel(it) }))
+        productsListItems.add(
+            0,
+            ProductListViewItem.RecentViewedItem(viewedProducts.map { convertIdToProductModel(it) })
+        )
         view.notifyRecentViewedChanged()
     }
 
-    private fun convertIdToProductModel(id: Int) = productRepository.find(id).toUiModel()
+    private fun convertIdToProductModel(id: Int) =
+        productRepository.find(id).toUiModel(cartRepository.find(id)?.count ?: 0)
 
-    private fun isExistRecentViewed(): Boolean = productsListItems[0] is ProductListViewItem.RecentViewedItem
+    private fun isExistRecentViewed(): Boolean =
+        productsListItems[0] is ProductListViewItem.RecentViewedItem
 
     companion object {
         private const val PAGINATION_SIZE = 20

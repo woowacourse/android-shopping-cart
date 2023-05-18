@@ -11,6 +11,7 @@ import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.util.PriceFormatter
+import woowacourse.shopping.view.productlist.ProductListActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -84,6 +85,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
+                setResult(ProductListActivity.RESULT_VISIT_CART, intent)
                 finish()
             }
         }

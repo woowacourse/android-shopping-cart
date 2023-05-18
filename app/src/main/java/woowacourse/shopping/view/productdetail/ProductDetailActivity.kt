@@ -19,6 +19,7 @@ import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.getParcelableCompat
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.ID
+import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_ADDED
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_VIEWED
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
@@ -37,9 +38,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             forceQuit()
             return
         }
+        intent.putExtra(ID, product.id)
         setUpInitView(product, lastViewedProduct)
         setUpDialog(product)
-        setUpResult(product.id)
         presenter.updateRecentViewedProducts(product.id)
     }
 
@@ -88,15 +89,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         dialogBinding.textCount.text = count.toString()
     }
 
-    private fun setUpResult(id: Int) {
-        intent.putExtra(ID, id)
-        setResult(RESULT_VIEWED, intent)
+    private fun setUpResult(isAdd: Boolean) {
+        if (isAdd) {
+            setResult(RESULT_ADDED, intent)
+        } else {
+            setResult(RESULT_VIEWED, intent)
+        }
     }
 
-    override fun startCartActivity() {
-        val nextIntent = CartActivity.newIntent(this)
+    override fun finishActivity(isAdd: Boolean) {
+        setUpResult(isAdd)
         finish()
-        startActivity(nextIntent)
     }
 
     private fun startLastViewedDetailActivity(lastViewedProduct: ProductModel) {
@@ -114,7 +117,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.close -> {
-                finish()
+                finishActivity(false)
             }
         }
         return super.onOptionsItemSelected(item)

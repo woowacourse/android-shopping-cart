@@ -12,7 +12,7 @@ class ProductDetailPresenter(
     private var count = 1
     override fun putInCart(product: ProductModel) {
         cartRepository.add(product.id, count)
-        view.startCartActivity()
+        view.finishActivity(true)
     }
 
     override fun updateRecentViewedProducts(id: Int) {
