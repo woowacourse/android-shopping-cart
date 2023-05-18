@@ -26,6 +26,7 @@ class ProductListAdapter(
 
     fun addItems(newProducts: List<ProductUIState>) {
         products.addAll(newProducts)
+        notifyDataSetChanged()
     }
 
     class ProductListViewHolder private constructor(

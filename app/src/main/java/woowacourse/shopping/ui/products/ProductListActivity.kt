@@ -103,7 +103,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun addProducts(products: List<ProductUIState>) {
         val adapter = binding.recyclerViewMainProduct.adapter as ProductListAdapter
         adapter.addItems(products)
-        adapter.notifyDataSetChanged()
     }
 
     override fun setCanLoadMore(canLoadMore: Boolean) {
