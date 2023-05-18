@@ -38,7 +38,13 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
             presenter.updateRecentProductItems()
         }
 
-//    private val cartRepositoryResultLauncher =
+    private val cartResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                presenter.loadCartItems()
+                productListAdapter.notifyDataSetChanged()
+            }
+        }
 
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductListAdapter: RecentProductListAdapter
@@ -61,12 +67,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         }
         addAdapter(productListAdapter)
         addAdapter(moreProductListAdapter)
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        presenter.loadCartItems()
-        productListAdapter.notifyDataSetChanged()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -156,7 +156,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun moveToCartView() {
-        startActivity(CartActivity.createIntent(this))
+        cartResultLauncher.launch(CartActivity.createIntent(this))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
