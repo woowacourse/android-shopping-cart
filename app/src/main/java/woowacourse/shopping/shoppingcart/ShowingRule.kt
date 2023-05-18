@@ -1,12 +1,12 @@
 package woowacourse.shopping.shoppingcart
 
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.Page
-import woowacourse.shopping.model.ProductUiModel
 
 interface ShowingRule {
 
     fun of(
-        products: List<ProductUiModel>,
+        products: List<CartProductUiModel>,
         page: Page,
-    ): List<ProductUiModel>
+    ): List<CartProductUiModel>
 }

@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 import woowacourse.shopping.util.generateShoppingCartPresenter
 
@@ -42,7 +42,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     override fun setUpShoppingCartView(
-        products: List<ProductUiModel>,
+        products: List<CartProductUiModel>,
         onRemoved: (id: Int) -> Unit,
         totalSize: Int,
     ) {
@@ -65,7 +65,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         }
     }
 
-    override fun showMoreShoppingCartProducts(products: List<ProductUiModel>) {
+    override fun showMoreShoppingCartProducts(products: List<CartProductUiModel>) {
         shoppingCartRecyclerAdapter.toNextPage(products = products)
     }
 

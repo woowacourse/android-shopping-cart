@@ -4,18 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingCartBinding
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 
 class ShoppingCartItemViewHolder(
     private val binding: ItemShoppingCartBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
-        productUiModel: ProductUiModel,
+        cartProductUiModel: CartProductUiModel,
         onRemoveClicked: (Int) -> Unit,
     ) {
         with(binding) {
-            product = productUiModel
+            cartProduct = cartProductUiModel
             imageRemoveProduct.setOnClickListener { onRemoveClicked(adapterPosition) }
         }
     }

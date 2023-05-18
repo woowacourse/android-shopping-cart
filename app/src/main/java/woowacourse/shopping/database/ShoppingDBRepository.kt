@@ -3,6 +3,7 @@ package woowacourse.shopping.database
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import model.CartProduct
 import model.Name
 import model.Price
 import model.Product
@@ -50,8 +51,8 @@ class ShoppingDBRepository(
         return products
     }
 
-    override fun selectShoppingCartProducts(from: Int, count: Int): List<Product> {
-        val shoppingCartProducts = mutableListOf<Product>()
+    override fun selectShoppingCartProducts(from: Int, count: Int): List<CartProduct> {
+        val shoppingCartProducts = mutableListOf<CartProduct>()
         val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
             count,
             from,
@@ -80,9 +81,12 @@ class ShoppingDBRepository(
         return count
     }
 
-    private fun Cursor.getShoppingCartProductById(): Product {
+    private fun Cursor.getShoppingCartProductById(): CartProduct {
         val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
-        return selectProductById(id)
+        val product = selectProductById(id)
+        val count = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_COUNT))
+        val isSelected = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.IS_SELECTED)) != 0
+        return CartProduct(product, count, isSelected)
     }
 
     private fun Cursor.getProduct(): Product {
@@ -107,9 +111,11 @@ class ShoppingDBRepository(
         return product
     }
 
-    override fun insertToShoppingCart(id: Int) {
+    override fun insertToShoppingCart(id: Int, count: Int, isSelected: Boolean) {
         val values = ContentValues().apply {
             put(ShoppingCartDBContract.CART_PRODUCT_ID, id)
+            put(ShoppingCartDBContract.CART_PRODUCT_COUNT, count)
+            put(ShoppingCartDBContract.IS_SELECTED, isSelected)
         }
 
         shoppingDB.insert(ShoppingCartDBContract.TABLE_NAME, null, values)

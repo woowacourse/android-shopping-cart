@@ -3,21 +3,21 @@ package woowacourse.shopping.shoppingcart
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.Page
-import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 
 class ShoppingCartRecyclerAdapter(
-    products: List<ProductUiModel>,
+    products: List<CartProductUiModel>,
     private val onRemoved: (id: Int) -> Unit,
     private val showingRule: ShowingRule,
     private val updatePageState: (pageNumber: Int, totalSize: Int) -> Unit,
     private var totalSize: Int,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
-    private val shoppingCartProducts: MutableList<ProductUiModel> = products.toMutableList()
+    private val shoppingCartProducts: MutableList<CartProductUiModel> = products.toMutableList()
     private var currentPage = Page()
-    private val showingProducts: List<ProductUiModel>
+    private val showingProducts: List<CartProductUiModel>
         get() = showingRule.of(
             products = shoppingCartProducts,
             page = currentPage,
@@ -33,13 +33,13 @@ class ShoppingCartRecyclerAdapter(
 
     override fun onBindViewHolder(holder: ShoppingCartItemViewHolder, position: Int) {
         holder.bind(
-            productUiModel = showingProducts[position],
+            cartProductUiModel = showingProducts[position],
             onRemoveClicked = ::removeItem,
         )
     }
 
     private fun removeItem(position: Int) {
-        onRemoved(shoppingCartProducts[position].id)
+        onRemoved(shoppingCartProducts[position].product.id)
         shoppingCartProducts.removeAt(position)
         if (showingProducts.isEmpty()) {
             currentPage = currentPage.prev()
@@ -50,7 +50,7 @@ class ShoppingCartRecyclerAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun toNextPage(products: List<ProductUiModel>) {
+    fun toNextPage(products: List<CartProductUiModel>) {
         shoppingCartProducts.addAll(products)
         currentPage = currentPage.next()
         updatePageState(currentPage.value, totalSize)
