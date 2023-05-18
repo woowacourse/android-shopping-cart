@@ -10,6 +10,10 @@ interface CartContract {
     }
 
     interface Presenter {
-        fun setOnClickRemove(): (CartProductUIModel, Int) -> Unit
+        fun removeProduct(cartProductUIModel: CartProductUIModel, position: Int)
+        fun getCartProducts()
+        fun goNextPage()
+        fun goPreviousPage()
+        fun setPageNumber()
     }
 }

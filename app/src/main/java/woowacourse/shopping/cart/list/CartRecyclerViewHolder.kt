@@ -1,5 +1,7 @@
 package woowacourse.shopping.cart.list
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.databinding.ItemProductInCartBinding
@@ -22,13 +24,13 @@ class CartRecyclerViewHolder(
     }
 
     fun bind(cartProductUIModel: CartProductUIModel) {
-        Glide.with(binding.root.context)
-            .load(cartProductUIModel.product.imageUrl)
-            .into(binding.ivProductImage)
-        binding.tvProductName.text = cartProductUIModel.product.name
-        binding.tvPrice.text = binding.root.context.getString(
-            R.string.item_product_in_cart_price,
-            cartProductUIModel.product.price
-        )
+        binding.cartProduct = cartProductUIModel
+    }
+
+    companion object {
+        fun getView(parent: ViewGroup): ItemProductInCartBinding {
+            val inflater = LayoutInflater.from(parent.context)
+            return ItemProductInCartBinding.inflate(inflater, parent, false)
+        }
     }
 }
