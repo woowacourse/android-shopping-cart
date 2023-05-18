@@ -10,6 +10,7 @@ interface CartContract {
         fun onLoadCartItemsPreviousPage()
         fun onLoadCartItemsLastPage()
         fun onDeleteCartItem(productId: Long)
+        fun onChangeCartItemSelection(productId: Long, isSelected: Boolean)
     }
 
     interface View {
@@ -17,5 +18,8 @@ interface CartContract {
         fun setStateThatCanRequestPreviousPage(canRequest: Boolean)
         fun setStateThatCanRequestNextPage(canRequest: Boolean)
         fun setPage(page: Int)
+        fun setCartItemSelected(productId: Long, isSelected: Boolean)
+        fun setOrderPrice(price: Int)
+        fun setOrderCount(count: Int)
     }
 }

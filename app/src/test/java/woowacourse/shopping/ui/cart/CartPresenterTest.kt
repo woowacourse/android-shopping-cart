@@ -24,8 +24,8 @@ class CartPresenterTest {
 
     @BeforeEach
     fun setUp() {
-        view = mockk()
-        cartItemRepository = mockk()
+        view = mockk(relaxed = true)
+        cartItemRepository = mockk(relaxed = true)
         sut = CartPresenter(view, cartItemRepository)
     }
 
@@ -138,5 +138,21 @@ class CartPresenterTest {
         verify { view.setStateThatCanRequestPreviousPage(any()) }
         verify { view.setStateThatCanRequestNextPage(any()) }
         verify { view.setPage(1) }
+    }
+
+    @Test
+    fun `특정 장바구니 아이템을 선택하면 그에 맞는 아이템의 선택 상태와 주문 관련 UI를 보여준다`() {
+        val productId = 1L
+        every { view.setCartItemSelected(productId, true) } just runs
+        val dummyCartItems = listOf(dummyCartItem)
+        every { cartItemRepository.findAll() } returns dummyCartItems
+        every { view.setOrderPrice(dummyCartItem.product.price) } just runs
+        every { view.setOrderCount(1) } just runs
+
+        sut.onChangeCartItemSelection(productId, true)
+
+        verify { view.setCartItemSelected(productId, true) }
+        verify { view.setOrderPrice(dummyCartItem.product.price) }
+        verify { view.setOrderCount(1) }
     }
 }

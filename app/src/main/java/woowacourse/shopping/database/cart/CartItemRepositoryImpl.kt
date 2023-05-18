@@ -39,6 +39,29 @@ class CartItemRepositoryImpl(
         cursor.close()
     }
 
+    override fun findAll(): List<CartItem> {
+        val cartItems = mutableListOf<CartItem>()
+
+        val cursor = db.rawQuery("SELECT * FROM ${CartItemEntry.TABLE_NAME}", null)
+        while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+            val productId =
+                cursor.getLong(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_PRODUCT_ID))
+            val addedTime =
+                cursor.getString(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_ADDED_TIME))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_COUNT))
+            val cartItem = CartItem(
+                productRepository.findById(productId)
+                    ?: throw IllegalArgumentException("참조 무결성 제약조건 위반"),
+                LocalDateTime.parse(addedTime),
+                count
+            ).apply { this.id = id }
+            cartItems.add(cartItem)
+        }
+        cursor.close()
+        return cartItems
+    }
+
     override fun findAllOrderByAddedTime(limit: Int, offset: Int): List<CartItem> {
         val cartItems = mutableListOf<CartItem>()
 

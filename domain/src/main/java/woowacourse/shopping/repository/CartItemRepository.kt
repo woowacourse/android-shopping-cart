@@ -6,6 +6,8 @@ interface CartItemRepository {
 
     fun save(cartItem: CartItem)
 
+    fun findAll(): List<CartItem>
+
     fun findAllOrderByAddedTime(limit: Int, offset: Int): List<CartItem>
 
     fun countAll(): Int

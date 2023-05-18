@@ -79,7 +79,7 @@
             android:id="@+id/btn_product_detail_add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/button_background"
+            android:backgroundTint="@color/turquoise"
             android:text="@string/add_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

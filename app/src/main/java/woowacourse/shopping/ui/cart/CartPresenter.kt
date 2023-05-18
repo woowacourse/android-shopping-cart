@@ -12,6 +12,8 @@ class CartPresenter(
     private val maxPage
         get() = (cartItemRepository.countAll() - 1) / PAGE_SIZE + 1
 
+    private val cartItemSelectionStates = CartItemSelectionStates()
+
     override fun getCurrentPage(): Int {
         return currentPage
     }
@@ -20,6 +22,7 @@ class CartPresenter(
         this.currentPage = currentPage
         showCartItemsOfCurrentPage()
         refreshPageUIState()
+        refreshOrderUIState()
     }
 
     override fun onLoadCartItemsNextPage() {
@@ -42,8 +45,10 @@ class CartPresenter(
 
     override fun onDeleteCartItem(productId: Long) {
         cartItemRepository.deleteByProductId(productId)
+        cartItemSelectionStates[productId] = false
         showCartItemsOfCurrentPage()
         refreshPageUIState()
+        refreshOrderUIState()
     }
 
     private fun showCartItemsOfCurrentPage() {
@@ -73,6 +78,21 @@ class CartPresenter(
         } else {
             view.setStateThatCanRequestNextPage(true)
         }
+    }
+
+    override fun onChangeCartItemSelection(productId: Long, isSelected: Boolean) {
+        cartItemSelectionStates[productId] = isSelected
+        view.setCartItemSelected(productId, isSelected)
+        refreshOrderUIState()
+    }
+
+    private fun refreshOrderUIState() {
+        val cartItems = cartItemRepository.findAll()
+        val selectedCartItems = cartItems.filter { cartItemSelectionStates[it.product.id] }
+        val orderPrice =
+            if (selectedCartItems.isNotEmpty()) selectedCartItems.sumOf { it.product.price * it.count } else 0
+        view.setOrderPrice(orderPrice)
+        view.setOrderCount(selectedCartItems.size)
     }
 
     companion object {

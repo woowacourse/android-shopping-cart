@@ -7,19 +7,24 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartItemRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
 import woowacourse.shopping.ui.cart.uistate.CartItemUIState
+import woowacourse.shopping.utils.PRICE_FORMAT
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private val binding: ActivityCartBinding by lazy {
         ActivityCartBinding.inflate(layoutInflater)
     }
     private val presenter: CartContract.Presenter by lazy {
-        CartPresenter(this, CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl))
+        CartPresenter(
+            this,
+            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +34,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         initCartList()
         initPageUI()
+        initOrderUI()
         loadLastPageIfFromCartItemAdd()
         restoreCurrentPageIfSavedInstanceStateIsNotNull(savedInstanceState)
     }
@@ -81,9 +87,16 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
+    private fun initOrderUI() {
+        binding.tvOrderPrice.text = getString(R.string.product_price).format(PRICE_FORMAT.format(0))
+        binding.tvOrder.text = getString(R.string.order_with_count).format(0)
+    }
+
     override fun setCartItems(cartItems: List<CartItemUIState>) {
-        binding.recyclerViewCart.adapter = CartListAdapter(cartItems) {
-            presenter.onDeleteCartItem(it)
+        binding.recyclerViewCart.adapter = CartListAdapter(
+            cartItems.toMutableList(),
+            { presenter.onDeleteCartItem(it) }) { productId, isSelected ->
+            presenter.onChangeCartItemSelection(productId, isSelected)
         }
     }
 
@@ -102,6 +115,22 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(CURRENT_PAGE, presenter.getCurrentPage())
         super.onSaveInstanceState(outState)
+    }
+
+    override fun setCartItemSelected(productId: Long, isSelected: Boolean) {
+        (binding.recyclerViewCart.adapter as CartListAdapter).setCartItemSelection(
+            productId,
+            isSelected
+        )
+    }
+
+    override fun setOrderPrice(price: Int) {
+        binding.tvOrderPrice.text =
+            getString(R.string.product_price).format(PRICE_FORMAT.format(price))
+    }
+
+    override fun setOrderCount(count: Int) {
+        binding.tvOrder.text = getString(R.string.order_with_count).format(count)
     }
 
     companion object {
