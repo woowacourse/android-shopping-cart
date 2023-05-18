@@ -2,11 +2,10 @@ package woowacourse.shopping.ui.cart
 
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.Assert
+import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.FakeCartRepository
-import woowacourse.shopping.database.FakeProductRepository
 
 class CartPresenterTest {
     private lateinit var presenter: CartContract.Presenter
@@ -15,8 +14,7 @@ class CartPresenterTest {
     @Before
     fun setUp() {
         view = mockk()
-        presenter =
-            CartPresenter(view, FakeCartRepository)
+        presenter = CartPresenter(view, FakeCartRepository)
     }
 
     @Test
@@ -24,8 +22,8 @@ class CartPresenterTest {
         every { view.setCartItems(any()) } answers { }
 
         presenter.deleteCartItem(2)
-        val product = FakeProductRepository.findById(2)
 
-        Assert.assertEquals(false, FakeCartRepository.findAll().contains(product))
+        val actual = FakeCartRepository.findAll().map { it.id }.contains(2)
+        assertFalse(actual)
     }
 }

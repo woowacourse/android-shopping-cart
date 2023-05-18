@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productdetail
 
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
@@ -17,7 +18,7 @@ class ProductDetailPresenter(
 
     override fun addProductToCart(productId: Long) {
         productRepository.findById(productId)?.run {
-            cartRepository.save(this)
+            cartRepository.save(CartProduct(this.id, this.imageUrl, this.name, this.price))
         } ?: view.showErrorMessage()
     }
 }

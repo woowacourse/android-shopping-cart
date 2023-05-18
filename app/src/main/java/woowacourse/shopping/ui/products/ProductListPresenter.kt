@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.products
 
+import woowacourse.shopping.domain.RecentlyViewedProduct
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.ui.products.uistate.ProductUIState
@@ -24,7 +25,9 @@ class ProductListPresenter(
 
     override fun addRecentlyViewedProduct(productId: Long) {
         productRepository.findById(productId)?.run {
-            recentlyViewedProductRepository.save(this)
+            recentlyViewedProductRepository.save(
+                RecentlyViewedProduct(this.id, this.imageUrl, this.name, this.price),
+            )
         }
     }
 

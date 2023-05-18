@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.productdetail
 
 import io.mockk.mockk
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.FakeCartRepository
@@ -21,8 +21,8 @@ class ProductDetailPresenterTest {
     @Test
     fun 장바구니에_상품을_담으면_장바구니_목록에_해당_상품이_추가된다() {
         presenter.addProductToCart(2)
-        val product = FakeProductRepository.findById(2)
 
-        assertEquals(true, FakeCartRepository.findAll().contains(product))
+        val actual = FakeCartRepository.findAll().map { it.id }.contains(2)
+        assertTrue(actual)
     }
 }

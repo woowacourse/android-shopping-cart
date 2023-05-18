@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.cart.uistate
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartProduct
 
 data class CartUIState(
     val imageUrl: String,
@@ -9,7 +9,7 @@ data class CartUIState(
     val id: Long,
 ) {
     companion object {
-        fun from(product: Product): CartUIState =
+        fun from(product: CartProduct): CartUIState =
             CartUIState(product.imageUrl, product.name, product.price, product.id)
     }
 }

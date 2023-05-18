@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import woowacourse.shopping.database.ProductContract
 import woowacourse.shopping.database.ProductDBHelper
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 
@@ -15,8 +15,8 @@ class CartRepositoryImpl(
 ) : CartRepository {
     private val db = ProductDBHelper(context).writableDatabase
 
-    override fun findAll(): List<Product> {
-        val products = mutableListOf<Product>()
+    override fun findAll(): List<CartProduct> {
+        val products = mutableListOf<CartProduct>()
         val cursor: Cursor = db.rawQuery(
             "SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME}",
             null,
@@ -24,15 +24,17 @@ class CartRepositoryImpl(
 
         while (cursor.moveToNext()) {
             val id = cursor.getLong(0)
-            productRepository.findById(id)?.let { products.add(it) }
+            productRepository.findById(id)?.let {
+                products.add(CartProduct(it.id, it.imageUrl, it.name, it.price))
+            }
         }
 
         cursor.close()
         return products
     }
 
-    override fun findAll(limit: Int, offset: Int): List<Product> {
-        val products = mutableListOf<Product>()
+    override fun findAll(limit: Int, offset: Int): List<CartProduct> {
+        val products = mutableListOf<CartProduct>()
         val cursor: Cursor = db.rawQuery(
             """SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME} LIMIT $limit OFFSET $offset""",
             null,
@@ -40,14 +42,16 @@ class CartRepositoryImpl(
 
         while (cursor.moveToNext()) {
             val id = cursor.getLong(0)
-            productRepository.findById(id)?.let { products.add(it) }
+            productRepository.findById(id)?.let {
+                products.add(CartProduct(it.id, it.imageUrl, it.name, it.price))
+            }
         }
 
         cursor.close()
         return products
     }
 
-    override fun save(product: Product) {
+    override fun save(product: CartProduct) {
         val cursor =
             db.rawQuery(
                 "SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME} WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = ${product.id}",
