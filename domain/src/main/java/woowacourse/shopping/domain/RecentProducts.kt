@@ -14,6 +14,8 @@ class RecentProducts(
         return RecentProducts(newItems.take(maxCount), maxCount)
     }
 
+    fun getLatest(): RecentProduct? = items.firstOrNull()
+
     operator fun plus(newItem: RecentProduct): RecentProducts = add(newItem)
 
     fun getItems(): List<RecentProduct> = items.map { it }.toList()

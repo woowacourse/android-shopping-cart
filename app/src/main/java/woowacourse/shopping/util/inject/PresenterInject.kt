@@ -2,6 +2,7 @@ package woowacourse.shopping.util.inject
 
 import android.content.Context
 import woowacourse.shopping.model.UiProduct
+import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.basket.BasketContract
 import woowacourse.shopping.ui.basket.BasketPresenter
 import woowacourse.shopping.ui.productdetail.ProductDetailContract
@@ -25,11 +26,13 @@ fun injectShoppingPresenter(
 fun injectProductDetailPresenter(
     view: ProductDetailContract.View,
     context: Context,
-    product: UiProduct,
+    detailProduct: UiProduct,
+    recentProduct: UiRecentProduct?,
 ): ProductDetailContract.Presenter = ProductDetailPresenter(
     view = view,
     basketRepository = inject(inject(injectBasketDao(createShoppingDatabase(context)))),
-    product = product
+    product = detailProduct,
+    recentProduct = recentProduct,
 )
 
 fun injectBasketPresenter(

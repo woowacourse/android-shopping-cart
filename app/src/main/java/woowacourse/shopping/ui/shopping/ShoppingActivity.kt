@@ -1,10 +1,17 @@
 package woowacourse.shopping.ui.shopping
 
+import android.content.Context
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
+import woowacourse.shopping.data.database.ShoppingDatabase
+import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
+import woowacourse.shopping.data.model.DataPrice
+import woowacourse.shopping.data.model.DataProduct
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductCount
 import woowacourse.shopping.model.UiBasketProduct
@@ -65,8 +72,8 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         recentProductWrapperAdapter.submitList(recentProducts)
     }
 
-    override fun showProductDetail(product: UiProduct) {
-        startActivity(ProductDetailActivity.getIntent(this, product))
+    override fun showProductDetail(product: UiProduct, recentProduct: UiRecentProduct?) {
+        startActivity(ProductDetailActivity.getIntent(this, product, recentProduct))
     }
 
     override fun navigateToBasketScreen() {
@@ -83,7 +90,9 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
 
     override fun updateBasketProductCount(count: ProductCount) {
         val basketBadgeView = binding.shoppingToolBar.menu.findItem(R.id.basket).actionView
-        basketBadgeView?.findViewById<TextView>(R.id.basket_count_badge)?.text = count.toText()
+        val countBadge = basketBadgeView?.findViewById<TextView>(R.id.basket_count_badge)
+        if (count.value == 0) countBadge?.visibility = GONE else countBadge?.visibility = VISIBLE
+        countBadge?.text = count.toText()
     }
 
     override fun onProductClick(product: UiProduct) {
@@ -100,5 +109,20 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
 
     override fun onClickMinus(product: UiProduct) {
         presenter.removeBasketProduct(product)
+    }
+
+    companion object {
+        fun insertDummies(context: Context, size: Int) {
+            (0 until size).forEach { id ->
+                ProductDaoImpl(ShoppingDatabase(context)).add(
+                    DataProduct(
+                        id,
+                        "name $id",
+                        DataPrice(1000),
+                        "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000001939]_20210225094313315.jpg"
+                    )
+                )
+            }
+        }
     }
 }

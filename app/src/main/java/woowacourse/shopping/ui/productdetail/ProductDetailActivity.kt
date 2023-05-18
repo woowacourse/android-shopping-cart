@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar.OnMenuItemClickListener
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.UiProduct
+import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter
 import woowacourse.shopping.ui.productdetail.ProductDetailContract.View
@@ -20,7 +21,12 @@ import woowacourse.shopping.util.inject.injectProductDetailPresenter
 class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     override val presenter: Presenter by lazy {
-        injectProductDetailPresenter(this, this, intent.getParcelableExtraCompat(PRODUCT_KEY)!!)
+        injectProductDetailPresenter(
+            view = this,
+            context = this,
+            detailProduct = intent.getParcelableExtraCompat(DETAIL_PRODUCT_KEY)!!,
+            recentProduct = intent.getParcelableExtraCompat(LAST_VIEWED_PRODUCT_KEY),
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,24 +36,25 @@ class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener
     }
 
     private fun initView() {
-        binding.productDetailPresenter = presenter
+        binding.presenter = presenter
         binding.productDetailToolBar.setOnMenuItemClickListener(this)
     }
 
-    override fun showProductImage(imageUrl: String) {
-        binding.productImageView.showImage(imageUrl)
+    override fun showProductDetail(product: UiProduct) {
+        binding.detailProduct = product
     }
 
-    override fun showProductName(name: String) {
-        binding.productNameTextView.text = name
-    }
-
-    override fun showProductPrice(amount: Int) {
-        binding.productPriceTextView.text = getString(R.string.price_format, amount)
+    override fun showLastViewedProductDetail(product: UiProduct?) {
+        binding.lastViewedProduct = product
     }
 
     override fun navigateToBasketScreen() {
         startActivity(BasketActivity.getIntent(this))
+        finish()
+    }
+
+    override fun navigateToProductDetail(recentProduct: UiRecentProduct) {
+        startActivity(getIntent(this, recentProduct.product, null))
         finish()
     }
 
@@ -59,8 +66,12 @@ class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener
     }
 
     companion object {
-        private const val PRODUCT_KEY = "product_key"
-        fun getIntent(context: Context, product: UiProduct): Intent =
-            Intent(context, ProductDetailActivity::class.java).putExtra(PRODUCT_KEY, product)
+        private const val DETAIL_PRODUCT_KEY = "detail_product_key"
+        private const val LAST_VIEWED_PRODUCT_KEY = "last_viewed_product_key"
+
+        fun getIntent(context: Context, detail: UiProduct, recent: UiRecentProduct?): Intent =
+            Intent(context, ProductDetailActivity::class.java)
+                .putExtra(DETAIL_PRODUCT_KEY, detail)
+                .putExtra(LAST_VIEWED_PRODUCT_KEY, recent)
     }
 }

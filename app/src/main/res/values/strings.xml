@@ -22,5 +22,6 @@
     <string name="basket">장바구니</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
+    <string name="last_viewed_product">마지막으로 본 상품</string>
 
 </resources>
