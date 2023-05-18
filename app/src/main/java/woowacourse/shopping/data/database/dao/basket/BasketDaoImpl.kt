@@ -2,11 +2,13 @@ package woowacourse.shopping.data.database.dao.basket
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.database.DatabaseUtils
 import android.provider.BaseColumns
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.contract.BasketContract
 import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.model.DataBasketProduct
+import woowacourse.shopping.data.model.DataCount
 import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.DataProduct
 
@@ -22,6 +24,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
                 val name: String =
@@ -30,7 +33,13 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                     DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
                 val imageUrl: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-                products.add(DataBasketProduct(id, DataProduct(productId, name, price, imageUrl)))
+                products.add(
+                    DataBasketProduct(
+                        id,
+                        count,
+                        DataProduct(productId, name, price, imageUrl)
+                    )
+                )
             }
             cursor.close()
         }
@@ -48,6 +57,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
                 val name: String =
@@ -56,7 +66,13 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                     DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
                 val imageUrl: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-                products.add(DataBasketProduct(id, DataProduct(productId, name, price, imageUrl)))
+                products.add(
+                    DataBasketProduct(
+                        id,
+                        count,
+                        DataProduct(productId, name, price, imageUrl)
+                    )
+                )
             }
             cursor.close()
         }
@@ -77,6 +93,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
                 val name: String =
@@ -85,7 +102,13 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                     DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
                 val imageUrl: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-                products.add(DataBasketProduct(id, DataProduct(productId, name, price, imageUrl)))
+                products.add(
+                    DataBasketProduct(
+                        id,
+                        count,
+                        DataProduct(productId, name, price, imageUrl)
+                    )
+                )
             }
             cursor.close()
         }
@@ -106,6 +129,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
                 val name: String =
@@ -114,20 +138,42 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                     DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
                 val imageUrl: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-                products.add(DataBasketProduct(id, DataProduct(productId, name, price, imageUrl)))
+                products.add(
+                    DataBasketProduct(
+                        id,
+                        count,
+                        DataProduct(productId, name, price, imageUrl)
+                    )
+                )
             }
             cursor.close()
         }
         return products.sortedBy { it.id }
     }
 
-    override fun add(basketProduct: DataProduct) {
+    override fun add(basketProduct: DataBasketProduct) {
+        val whereClause = "${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?"
+        val whereArgs = arrayOf(basketProduct.product.id.toString())
+
         val contentValues = ContentValues().apply {
-            put("${ProductContract.TABLE_NAME}${BaseColumns._ID}", basketProduct.id)
+            put("${ProductContract.TABLE_NAME}${BaseColumns._ID}", basketProduct.product.id)
+            put(BasketContract.BASKET_COUNT, basketProduct.count.value)
         }
 
         database.writableDatabase.use { db ->
-            db.insert(BasketContract.TABLE_NAME, null, contentValues)
+            val count =
+                DatabaseUtils.queryNumEntries(db, BasketContract.TABLE_NAME, whereClause, whereArgs)
+            if (count > 0) {
+                db.execSQL(
+                    UPDATE_BASKET_COUNT,
+                    arrayOf(
+                        basketProduct.count.value.toString(),
+                        basketProduct.product.id.toString()
+                    )
+                )
+            } else {
+                db.insert(BasketContract.TABLE_NAME, null, contentValues)
+            }
         }
     }
 
@@ -172,6 +218,12 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             INNER JOIN ${ProductContract.TABLE_NAME} ON ${BasketContract.TABLE_NAME}.${ProductContract.TABLE_NAME}${BaseColumns._ID} = ${ProductContract.TABLE_NAME}.${BaseColumns._ID}
             WHERE ${BasketContract.TABLE_NAME}.${BaseColumns._ID} < ?
             ORDER BY ${BasketContract.TABLE_NAME}.${BaseColumns._ID} DESC LIMIT ?        
+        """.trimIndent()
+
+        private val UPDATE_BASKET_COUNT = """
+            UPDATE ${BasketContract.TABLE_NAME}
+            SET ${BasketContract.BASKET_COUNT} = ${BasketContract.BASKET_COUNT} + ?
+            WHERE ${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?
         """.trimIndent()
     }
 }

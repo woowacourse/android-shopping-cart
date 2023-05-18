@@ -3,7 +3,6 @@ package woowacourse.shopping.data.datasource.basket.local
 import woowacourse.shopping.data.database.dao.basket.BasketDao
 import woowacourse.shopping.data.datasource.basket.BasketDataSource
 import woowacourse.shopping.data.model.DataBasketProduct
-import woowacourse.shopping.data.model.DataProduct
 
 class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local {
     override fun getPreviousPartially(
@@ -22,7 +21,7 @@ class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local
         if (includeStandard) dao.getPartiallyIncludeStartId(size, standard)
         else dao.getPartiallyNotIncludeStartId(size, standard)
 
-    override fun add(basketProduct: DataProduct) {
+    override fun add(basketProduct: DataBasketProduct) {
         dao.add(basketProduct)
     }
 

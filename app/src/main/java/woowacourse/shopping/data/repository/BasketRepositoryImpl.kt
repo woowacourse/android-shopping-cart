@@ -4,7 +4,6 @@ import woowacourse.shopping.data.datasource.basket.BasketDataSource
 import woowacourse.shopping.data.mapper.toData
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.BasketProduct
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.BasketRepository
 
 class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.Local) :
@@ -25,7 +24,7 @@ class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.L
         localBasketDataSource.getNextPartially(size, standard, includeStandard)
             .map { it.toDomain() }
 
-    override fun add(basketProduct: Product) {
+    override fun add(basketProduct: BasketProduct) {
         localBasketDataSource.add(basketProduct.toData())
     }
 

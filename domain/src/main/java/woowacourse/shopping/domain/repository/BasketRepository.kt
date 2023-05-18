@@ -1,7 +1,6 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.BasketProduct
-import woowacourse.shopping.domain.Product
 
 interface BasketRepository {
 
@@ -17,6 +16,6 @@ interface BasketRepository {
         includeStandard: Boolean
     ): List<BasketProduct>
 
-    fun add(product: Product)
+    fun add(basketProduct: BasketProduct)
     fun remove(basketProduct: BasketProduct)
 }

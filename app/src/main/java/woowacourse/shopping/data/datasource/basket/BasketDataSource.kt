@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.datasource.basket
 
 import woowacourse.shopping.data.model.DataBasketProduct
-import woowacourse.shopping.data.model.DataProduct
 
 interface BasketDataSource {
     interface Local {
@@ -17,7 +16,7 @@ interface BasketDataSource {
             includeStandard: Boolean
         ): List<DataBasketProduct>
 
-        fun add(basketProduct: DataProduct)
+        fun add(basketProduct: DataBasketProduct)
         fun remove(basketProduct: DataBasketProduct)
     }
 

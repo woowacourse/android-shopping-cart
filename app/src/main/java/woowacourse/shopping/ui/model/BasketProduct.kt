@@ -8,5 +8,6 @@ typealias UiBasketProduct = BasketProduct
 @Parcelize
 data class BasketProduct(
     val id: Int,
+    val count: UiCount,
     val product: UiProduct
 ) : Parcelable
