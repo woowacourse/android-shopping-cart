@@ -28,7 +28,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         if (!initExtraData()) return
         initPresenter()
-        initBindingData()
+        presenter.initProductData()
         initButtonCloseClickListener()
     }
 
@@ -38,9 +38,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return true
     }
 
-    private fun initBindingData() {
+    override fun initBindingData(product: UiProduct) {
         binding.product = product
-        binding.productDetailPresenter = presenter
+        binding.addMarketClickListener = presenter::addBasketProduct
     }
 
     private fun initPresenter() {

@@ -10,8 +10,8 @@
             type="woowacourse.shopping.ui.model.Product" />
 
         <variable
-            name="productDetailPresenter"
-            type="woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter" />
+            name="addMarketClickListener"
+            type="kotlin.jvm.functions.Function0" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -109,7 +109,7 @@
             android:paddingVertical="12dp"
             android:gravity="center"
             android:textSize="20sp"
-            android:onClick="@{() -> productDetailPresenter.addBasketProduct()}"
+            android:onClick="@{() -> addMarketClickListener.invoke()}"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:background="@color/woowa_button"

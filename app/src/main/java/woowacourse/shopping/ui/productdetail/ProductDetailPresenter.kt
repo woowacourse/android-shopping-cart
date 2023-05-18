@@ -11,6 +11,10 @@ class ProductDetailPresenter(
     private val product: UiProduct
 ) : ProductDetailContract.Presenter {
 
+    override fun initProductData() {
+        view.initBindingData(product)
+    }
+
     override fun addBasketProduct(): Thread =
         thread {
             basketRepository.add(product.toDomain())
