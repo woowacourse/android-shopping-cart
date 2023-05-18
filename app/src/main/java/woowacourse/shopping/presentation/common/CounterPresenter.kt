@@ -3,9 +3,14 @@ package woowacourse.shopping.presentation.common
 import woowacourse.shopping.Counter
 
 class CounterPresenter(private val view: CounterContract.View) : CounterContract.Presenter {
-    private var counter: Counter = Counter()
+    override var counter: Counter = Counter()
 
     init {
+        view.setCounterText(counter.value)
+    }
+
+    override fun updateCount(count: Int) {
+        counter = counter.set(count)
         view.setCounterText(counter.value)
     }
 
@@ -17,6 +22,14 @@ class CounterPresenter(private val view: CounterContract.View) : CounterContract
     override fun minusCount() {
         counter -= DECREMENT_VALUE
         view.setCounterText(counter.value)
+    }
+
+    override fun checkCounterVisibility() {
+        if (counter.value == 0) {
+            view.setCounterVisibility(false)
+        } else {
+            view.setCounterVisibility(true)
+        }
     }
 
     companion object {

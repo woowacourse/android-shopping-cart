@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.common
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import woowacourse.shopping.databinding.CustomCounterBinding
 
@@ -16,17 +17,18 @@ class CounterView @JvmOverloads constructor(
         this,
         true,
     )
-    private val presenter = CounterPresenter(this)
+    val presenter = CounterPresenter(this)
     val plusButton = binding.textCounterPlus
     val minusButton = binding.textCounterMinus
-    val countText = binding.textCounterNumber
-
-    init {
-        binding.textCounterMinus.setOnClickListener { presenter.minusCount() }
-        binding.textCounterPlus.setOnClickListener { presenter.plusCount() }
-    }
-
     override fun setCounterText(number: Int) {
         binding.textCounterNumber.text = number.toString()
+    }
+
+    override fun setCounterVisibility(visible: Boolean) {
+        if (visible) {
+            this.visibility = View.VISIBLE
+        } else {
+            this.visibility = View.GONE
+        }
     }
 }
