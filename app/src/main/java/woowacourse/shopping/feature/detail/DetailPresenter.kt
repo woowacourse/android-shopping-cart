@@ -17,7 +17,7 @@ class DetailPresenter(
     override var recentProduct: RecentProductUiModel? = recentProductUiModel
         private set
 
-    private val isRecentProduct: Boolean
+    override val isRecentProduct: Boolean
 
     init {
         isRecentProduct = recentProduct?.let {

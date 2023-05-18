@@ -13,7 +13,7 @@ class CartProducts(
         get() = list.filter { it.checked }.sumOf { it.count * it.product.price.value }
 
     init {
-        require(list.all { it.count > 0 }) { }
+        require(list.all { it.count >= 1 }) { }
     }
 
     fun changeCount(cartId: Long, count: Int): CartProducts {

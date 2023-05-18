@@ -1,6 +1,6 @@
 package woowacourse.shopping.model
 
-data class PageNationUiModel(
+data class PaginationUiModel(
     val cartProducts: List<CartProductUiModel>,
     val currentPageCartProducts: List<CartProductUiModel>,
     val currentPage: Int,

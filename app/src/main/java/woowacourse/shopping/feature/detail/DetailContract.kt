@@ -17,6 +17,7 @@ interface DetailContract {
     interface Presenter {
         val product: ProductUiModel
         val recentProduct: RecentProductUiModel?
+        val isRecentProduct: Boolean
         fun initScreen()
         fun updateProductCount(count: Int)
         fun navigateRecentProductDetail()

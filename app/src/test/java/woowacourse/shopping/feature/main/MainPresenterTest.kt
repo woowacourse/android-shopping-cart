@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.main
 import com.example.domain.cache.ProductLocalCache
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.RecentProduct
+import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
 import io.mockk.*
@@ -17,14 +18,16 @@ internal class MainPresenterTest {
     private lateinit var view: MainContract.View
     private lateinit var presenter: MainContract.Presenter
     private lateinit var productRepository: ProductRepository
+    private lateinit var cartRepository: CartRepository
     private lateinit var recentProductRepository: RecentProductRepository
 
     @Before
     fun init() {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
         recentProductRepository = mockk()
-        presenter = MainPresenter(view, productRepository, recentProductRepository)
+        presenter = MainPresenter(view, productRepository, cartRepository, recentProductRepository)
         ProductLocalCache.clear()
     }
 
@@ -76,7 +79,7 @@ internal class MainPresenterTest {
 
         // then
         val actual = slot.captured.map { it.toDomain() }
-        val expected = mockProducts.subList(20, 40)
+        val expected = mockProducts.subList(0, 40)
 
         assert(actual == expected)
         verify { view.setProducts(any()) }

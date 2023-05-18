@@ -1,7 +1,7 @@
 package woowacourse.shopping.feature.cart
 
 import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.model.PageNationUiModel
+import woowacourse.shopping.model.PaginationUiModel
 
 interface CartContract {
     interface View {
@@ -16,7 +16,7 @@ interface CartContract {
     }
 
     interface Presenter {
-        val page: PageNationUiModel
+        val page: PaginationUiModel
         fun loadInitCartProduct()
         fun handleDeleteCartProductClick(cartId: Long)
         fun handleCartProductCartCountChange(cartId: Long, count: Int)

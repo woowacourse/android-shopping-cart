@@ -1,24 +1,23 @@
 package woowacourse.shopping.feature.cart
 
 import com.example.domain.model.CartProducts
-import com.example.domain.model.PageNation
+import com.example.domain.model.Pagination
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toPresentation
 import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.model.PageNationUiModel
+import woowacourse.shopping.model.PaginationUiModel
 import woowacourse.shopping.util.convertToMoneyFormat
-import java.text.DecimalFormat
 
 class CartPresenter(
     val view: CartContract.View,
     private val cartRepository: CartRepository,
 ) : CartContract.Presenter {
-    override lateinit var page: PageNationUiModel
+    override lateinit var page: PaginationUiModel
         private set
 
     override fun loadInitCartProduct() {
-        page = PageNation(CartProducts(cartRepository.getAll()), 1).toPresentation()
+        page = Pagination(CartProducts(cartRepository.getAll()), 1).toPresentation()
 
         changePageState(page.currentPageCartProducts)
     }
@@ -82,7 +81,7 @@ class CartPresenter(
     }
 
     override fun setPage(restorePage: Int) {
-        page = PageNation(CartProducts(cartRepository.getAll()), restorePage).toPresentation()
+        page = Pagination(CartProducts(cartRepository.getAll()), restorePage).toPresentation()
         changePageState(page.currentPageCartProducts)
     }
 

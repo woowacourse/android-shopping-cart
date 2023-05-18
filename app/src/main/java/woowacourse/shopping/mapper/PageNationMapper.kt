@@ -1,15 +1,15 @@
 package woowacourse.shopping.mapper
 
 import com.example.domain.model.CartProducts
-import com.example.domain.model.PageNation
-import woowacourse.shopping.model.PageNationUiModel
+import com.example.domain.model.Pagination
+import woowacourse.shopping.model.PaginationUiModel
 
-fun PageNationUiModel.toDomain(): PageNation {
-    return PageNation(CartProducts(cartProducts.map { it.toDomain() }), currentPage)
+fun PaginationUiModel.toDomain(): Pagination {
+    return Pagination(CartProducts(cartProducts.map { it.toDomain() }), currentPage)
 }
 
-fun PageNation.toPresentation(): PageNationUiModel {
-    return PageNationUiModel(
+fun Pagination.toPresentation(): PaginationUiModel {
+    return PaginationUiModel(
         allList.map { it.toPresentation() },
         currentPageCartProducts.map { it.toPresentation() },
         currentPage,

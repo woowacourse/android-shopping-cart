@@ -26,12 +26,11 @@ internal class CartPresenterTest {
         view = mockk(relaxed = true)
         cartRepository = mockk(relaxed = true)
         every { cartRepository.getAll() } returns mockCartProducts
-        every { cartRepository.getInitPageProducts(any()) } returns mockCartProducts.take(5)
         presenter = CartPresenter(view, cartRepository)
     }
 
     @Test
-    fun `처음 5개를 가져와 화면에 띄운다`() {
+    fun `처음에 첫 페이지를 불러온다`() {
         // given
         val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
@@ -42,7 +41,14 @@ internal class CartPresenterTest {
         // then
         val expected = mockCartProducts.take(5)
         val actual =
-            cartProductSlot.captured.map { CartProduct(it.cartId, it.productUiModel.toDomain()) }
+            cartProductSlot.captured.map {
+                CartProduct(
+                    it.cartId,
+                    it.productUiModel.toDomain(),
+                    it.productUiModel.count,
+                    it.checked
+                )
+            }
         assert(expected == actual)
     }
 
@@ -67,46 +73,71 @@ internal class CartPresenterTest {
     @Test
     fun `이전 페이지를 불러온다`() {
         // given
-        val slot = slot<Long>()
-        every { cartRepository.getPreviousProducts(any(), capture(slot)) } answers {
-            mockCartProducts.filter { it.cartId < slot.captured }.take(5)
-        }
         val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
         presenter.loadInitCartProduct()
+        presenter.loadNextPage() //  2 페이지로 이동
 
         // when
-        presenter.loadPreviousPage()
+        presenter.loadPreviousPage() // 1페이지로 이동
 
         // then
         val actual = cartProductSlot.captured.map { it.toDomain() }
-        val expected = mockCartProducts.take(5)
+        val expected = mockCartProducts.take(5) // 1페이지 데이터들
         assert(actual == expected)
     }
 
     @Test
     fun `다음 페이지를 불러온다`() {
         // given
-        val slot = slot<Long>()
-        every { cartRepository.getNextProducts(any(), capture(slot)) } answers {
-            mockCartProducts.filter { it.cartId > slot.captured }.take(5)
-        }
         val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
-        presenter.loadInitCartProduct()
+        presenter.loadInitCartProduct() // 현재 1페이지
 
         // when
-        presenter.loadNextPage()
+        presenter.loadNextPage() // 2페이지로 이동
 
         // then
         val actual = cartProductSlot.captured.map { it.toDomain() }
-        val expected = mockCartProducts.subList(5, 10)
+        val expected = mockCartProducts.subList(5, 10) // 2페이지 데이터들
         assert(actual == expected)
+    }
+
+    @Test
+    fun `장바구니에서 카트 상품을 제거한다`() {
+        // given
+        presenter.loadInitCartProduct()
+        val slot = slot<CartProduct>()
+        every { cartRepository.deleteProduct(capture(slot)) } just Runs
+
+        // when
+        presenter.handleDeleteCartProductClick(4L)
+
+        // then
+        verify { cartRepository.deleteProduct(mockCartProducts[4]) }
+        assert(mockCartProducts[4] == slot.captured)
+    }
+
+    @Test
+    fun `장바구니에 화면에서 상품의 수량을 조정한다`() {
+        // given
+        presenter.loadInitCartProduct()
+        val slot = slot<Product>()
+        val countSlot = slot<Int>()
+        every { cartRepository.changeCartProductCount(capture(slot), capture(countSlot)) } just Runs
+
+        // when
+        presenter.handleCartProductCartCountChange(0L, 3)
+
+        // then
+        verify { cartRepository.changeCartProductCount(any(), any()) }
+        assert(productsDatasource[0] == slot.captured)
+        assert(3 == countSlot.captured)
     }
 
     private val mockCartProducts = List(15) {
         CartProduct(
-            it.toLong(), productsDatasource[it]
+            it.toLong(), productsDatasource[it], it + 1, true
         )
     }
 

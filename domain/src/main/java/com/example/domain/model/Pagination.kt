@@ -1,6 +1,6 @@
 package com.example.domain.model
 
-data class PageNation(
+data class Pagination(
     private val cartProducts: CartProducts,
     val currentPage: Int
 ) {
@@ -40,7 +40,7 @@ data class PageNation(
         return currentPage > 1
     }
 
-    fun previousPage(): PageNation {
+    fun previousPage(): Pagination {
         if (hasPreviousPage().not()) return this
         return copy(currentPage = currentPage - 1)
     }
@@ -49,38 +49,38 @@ data class PageNation(
         return currentPage < pageCount
     }
 
-    fun nextPage(): PageNation {
+    fun nextPage(): Pagination {
         if (hasNextPage().not()) return this
         return copy(currentPage = currentPage + 1)
     }
 
-    fun changeCountState(cartId: Long, count: Int): PageNation {
+    fun changeCountState(cartId: Long, count: Int): Pagination {
         val newCartProducts = cartProducts.changeCount(cartId, count)
         if (newCartProducts === cartProducts) return this
         return copy(cartProducts = newCartProducts)
     }
 
-    fun remove(cartId: Long): PageNation {
+    fun remove(cartId: Long): Pagination {
         val newCartProducts = cartProducts.remove(cartId)
         val newSize = newCartProducts.size
         val newPageTotalCount = calculateTotalPageCount(newSize)
-        if (currentPage > newPageTotalCount) return PageNation(newCartProducts, currentPage - 1)
+        if (currentPage > newPageTotalCount) return Pagination(newCartProducts, currentPage - 1)
         return copy(cartProducts = newCartProducts)
     }
 
-    fun removeAllChecked(): PageNation {
+    fun removeAllChecked(): Pagination {
         val newCartProducts = cartProducts.removeAllChecked()
         val newSize = newCartProducts.size
         val newPageTotalCount = calculateTotalPageCount(newSize)
-        if (currentPage > newPageTotalCount) return PageNation(newCartProducts, 1)
+        if (currentPage > newPageTotalCount) return Pagination(newCartProducts, 1)
         return copy(cartProducts = newCartProducts)
     }
 
-    fun setAllChecked(newChecked: Boolean): PageNation {
+    fun setAllChecked(newChecked: Boolean): Pagination {
         return copy(cartProducts = cartProducts.changeAllChecked(newChecked))
     }
 
-    fun changeChecked(cartId: Long, checked: Boolean): PageNation {
+    fun changeChecked(cartId: Long, checked: Boolean): Pagination {
         return copy(cartProducts = cartProducts.changeChecked(cartId, checked))
     }
 
