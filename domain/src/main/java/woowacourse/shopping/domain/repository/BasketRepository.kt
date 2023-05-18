@@ -16,6 +16,11 @@ interface BasketRepository {
         includeStandard: Boolean
     ): List<BasketProduct>
 
+    fun getAll(): List<BasketProduct>
+
+    fun getByProductId(productId: Int): BasketProduct
+
     fun add(basketProduct: BasketProduct)
+
     fun remove(basketProduct: BasketProduct)
 }

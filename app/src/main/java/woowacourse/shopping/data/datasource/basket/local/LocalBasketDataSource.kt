@@ -21,6 +21,12 @@ class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local
         if (includeStandard) dao.getPartiallyIncludeStartId(size, standard)
         else dao.getPartiallyNotIncludeStartId(size, standard)
 
+    override fun getAll(): List<DataBasketProduct> =
+        dao.getAll()
+
+    override fun getByProductId(productId: Int): DataBasketProduct =
+        dao.getByProductId(productId)
+
     override fun add(basketProduct: DataBasketProduct) {
         dao.add(basketProduct)
     }

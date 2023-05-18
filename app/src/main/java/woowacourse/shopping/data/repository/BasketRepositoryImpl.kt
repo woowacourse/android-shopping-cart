@@ -24,6 +24,12 @@ class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.L
         localBasketDataSource.getNextPartially(size, standard, includeStandard)
             .map { it.toDomain() }
 
+    override fun getAll(): List<BasketProduct> =
+        localBasketDataSource.getAll().map { it.toDomain() }
+
+    override fun getByProductId(productId: Int): BasketProduct =
+        localBasketDataSource.getByProductId(productId).toDomain()
+
     override fun add(basketProduct: BasketProduct) {
         localBasketDataSource.add(basketProduct.toData())
     }
