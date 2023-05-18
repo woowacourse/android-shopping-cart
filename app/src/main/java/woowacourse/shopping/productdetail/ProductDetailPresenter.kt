@@ -1,21 +1,19 @@
 package woowacourse.shopping.productdetail
 
+import model.CartProduct
 import model.Count
-import model.ShoppingCartProduct
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toDomainModel
-import woowacourse.shopping.util.toUiModel
 
 class ProductDetailPresenter(
+    product: ProductUiModel,
     private val view: ProductDetailContract.View,
-    private val product: ProductUiModel,
-    private val repository: ShoppingRepository,
+    private val latestViewedProduct: ProductUiModel?,
+    private val repository: ShoppingRepository
 ) : ProductDetailContract.Presenter {
 
-    private val latestViewedProduct: ProductUiModel? = repository.selectLatestViewedProduct()
-        ?.toUiModel()
-    private var shoppingCartProduct: ShoppingCartProduct = ShoppingCartProduct(
+    private var cartProduct: CartProduct = CartProduct(
         product = product.toDomainModel(),
         count = Count()
     )
@@ -25,17 +23,15 @@ class ProductDetailPresenter(
             product = product,
             navigateToLatestViewedProductView = ::loadLatestViewedProduct,
         )
-        latestViewedProduct?.let {
-            view.setUpLatestViewedProductView(it)
-        }
+        view.setUpLatestViewedProductView(latestViewedProduct)
     }
 
-    override fun addToShoppingCart() {
+    override fun addToCart() {
         repository.insertToShoppingCart(
-            id = shoppingCartProduct.product.id,
-            count = shoppingCartProduct.count.value
+            id = cartProduct.product.id,
+            count = cartProduct.count.value
         )
-        view.navigateToShoppingCartView()
+        view.navigateToCartView()
     }
 
     override fun loadLatestViewedProduct() {
@@ -44,27 +40,19 @@ class ProductDetailPresenter(
         }
     }
 
-    override fun plusShoppingCartProductCount(currentCount: Int) {
-        val count = currentCount.toDomainModel().plus()
+    override fun plusCartProductCount() {
+        cartProduct = cartProduct.plusCount()
 
-        shoppingCartProduct = ShoppingCartProduct(
-            product = product.toDomainModel(),
-            count = count
-        )
-        view.setUpDialogProductCountView(count.value)
-        view.setUpDialogTotalPriceView(shoppingCartProduct.price.value)
+        view.setUpDialogProductCountView(count = cartProduct.count.value)
+        view.setUpDialogTotalPriceView(totalPrice = cartProduct.price.value)
     }
 
-    override fun minusShoppingCartProductCount(currentCount: Int) {
-        val count = currentCount.toDomainModel().minus()
-
-        shoppingCartProduct = ShoppingCartProduct(
-            product = product.toDomainModel(),
-            count = count
-        )
-        view.setUpDialogProductCountView(count.value)
-        view.setUpDialogTotalPriceView(shoppingCartProduct.price.value)
+    override fun minusCartProductCount() {
+        runCatching {
+            cartProduct = cartProduct.minusCount()
+        }.onSuccess {
+            view.setUpDialogProductCountView(count = cartProduct.count.value)
+            view.setUpDialogTotalPriceView(totalPrice = cartProduct.price.value)
+        }
     }
-
-    private fun Int.toDomainModel() = Count(this)
 }

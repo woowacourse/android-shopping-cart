@@ -11,25 +11,25 @@ interface ProductDetailContract {
             navigateToLatestViewedProductView: () -> Unit,
         )
 
-        fun setUpLatestViewedProductView(product: ProductUiModel)
+        fun setUpLatestViewedProductView(product: ProductUiModel?)
 
         fun setUpDialogProductCountView(count: Int)
 
         fun setUpDialogTotalPriceView(totalPrice: Int)
 
-        fun navigateToShoppingCartView()
+        fun navigateToCartView()
 
         fun navigateToProductDetailView(product: ProductUiModel)
     }
 
     interface Presenter {
 
-        fun addToShoppingCart()
+        fun addToCart()
 
         fun loadLatestViewedProduct()
 
-        fun plusShoppingCartProductCount(currentCount: Int)
+        fun plusCartProductCount()
 
-        fun minusShoppingCartProductCount(currentCount: Int)
+        fun minusCartProductCount()
     }
 }

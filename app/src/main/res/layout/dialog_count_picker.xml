@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.ProductUiModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="314dp"
         android:layout_height="150dp"
@@ -15,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
             android:layout_marginTop="10dp"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -25,48 +33,21 @@
             android:id="@+id/text_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{String.valueOf(product.price)}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/text_product_name"
             app:layout_constraintTop_toBottomOf="@id/text_product_name"
             tools:text="99000원" />
 
-        <LinearLayout
-            android:id="@+id/layout_select_product_count"
-            android:layout_width="126dp"
-            android:layout_height="42dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal"
+        <woowacourse.shopping.common.CountPickerView
+            android:id="@+id/count_picker"
+            android:layout_width="130dp"
+            android:layout_height="41dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toTopOf="@id/button_add_to_cart"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <Button
-                android:id="@+id/button_minus_product_count"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/left_corner_round_button"
-                android:text="@string/minus_description" />
-
-            <TextView
-                android:id="@+id/text_product_count"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:gravity="center"
-                android:text="@string/initial_count" />
-
-            <Button
-                android:id="@+id/button_plus_product_count"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/right_corner_round_button"
-                android:text="@string/plus_description" />
-
-        </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/button_add_to_cart"

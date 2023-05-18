@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/layout_select_product_count"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_minus_product_count"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/left_corner_round_button"
+            android:text="@string/minus_description" />
+
+        <TextView
+            android:id="@+id/text_product_count"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@string/initial_count" />
+
+        <Button
+            android:id="@+id/button_plus_product_count"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/right_corner_round_button"
+            android:text="@string/plus_description" />
+
+    </LinearLayout>
+
+</layout>

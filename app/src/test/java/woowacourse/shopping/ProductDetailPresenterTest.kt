@@ -1,13 +1,11 @@
 package woowacourse.shopping
 
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.productdetail.ProductDetailContract
-import woowacourse.shopping.productdetail.ProductDetailPresenter
 import woowacourse.shopping.util.toUiModel
 
 class ProductDetailPresenterTest {
@@ -38,13 +36,13 @@ class ProductDetailPresenterTest {
     @Test
     fun `프레젠터가 생성될 때 마지막으로 본 상품이 존재한다면 마지막으로 본 상품에 대한 뷰를 초기화한다`() {
         // given
-        every { repository.selectLatestViewedProduct() } returns Product(name = "아메리카노")
+        val latestViewedProduct = Product(name = "아메리카노")
 
         // when
         ProductDetailPresenter(
             view = view,
-            product = Product().toUiModel(),
-            repository = repository
+            repository = repository,
+            latestViewedProduct = latestViewedProduct.toUiModel()
         )
 
         // then
@@ -61,12 +59,12 @@ class ProductDetailPresenterTest {
         )
 
         // when
-        presenter.addToShoppingCart()
+        presenter.addToCart()
 
         // then
         val expected = Product().toUiModel()
         verify { repository.insertToShoppingCart(expected.id) }
-        verify { view.navigateToShoppingCartView() }
+        verify { view.navigateToCartView() }
     }
 
     @Test
@@ -78,7 +76,7 @@ class ProductDetailPresenterTest {
         )
 
         // when
-        presenter.plusShoppingCartProductCount(currentCount = 1)
+        presenter.plusCartProductCount()
 
         // then
         val expected = 2
@@ -92,9 +90,11 @@ class ProductDetailPresenterTest {
             product = Product().toUiModel(),
             repository = repository
         )
+        presenter.plusCartProductCount()
+        presenter.plusCartProductCount()
 
         // when
-        presenter.minusShoppingCartProductCount(currentCount = 3)
+        presenter.minusCartProductCount()
 
         // then
         val expected = 2
@@ -111,10 +111,11 @@ class ProductDetailPresenterTest {
         )
 
         // when
-        presenter.plusShoppingCartProductCount(currentCount = 1)
+        presenter.plusCartProductCount()
 
         // then
-        val expected = 2 * product.price
+        val expectedCount = 2
+        val expected = expectedCount * product.price
         verify { view.setUpDialogTotalPriceView(expected) }
     }
 
@@ -126,12 +127,17 @@ class ProductDetailPresenterTest {
             product = product,
             repository = repository
         )
+        presenter.plusCartProductCount()
+        presenter.plusCartProductCount()
+        presenter.plusCartProductCount()
+        presenter.plusCartProductCount()
 
         // when
-        presenter.minusShoppingCartProductCount(currentCount = 3)
+        presenter.minusCartProductCount()
 
         // then
-        val expected = 2 * product.price
-        verify { view.setUpDialogTotalPriceView(expected) }
+        val expectedCount = 3
+        val expectedPrice = expectedCount * product.price
+        verify { view.setUpDialogTotalPriceView(expectedPrice) }
     }
 }

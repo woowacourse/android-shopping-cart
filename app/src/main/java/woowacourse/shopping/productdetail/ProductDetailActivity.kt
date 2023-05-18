@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.common.CountPickerListener
 import woowacourse.shopping.database.ShoppingDBAdapter
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -36,13 +38,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             presenter = ProductDetailPresenter(
                 view = this,
                 product = it,
+                latestViewedProduct = intent.getSerializableCompat(LATEST_VIEWED_PRODUCT_KEY),
                 repository = ShoppingDBAdapter(
                     shoppingDao = ShoppingDao(this)
                 )
             )
         } ?: return handleMissingSerializableData()
-
-        binding.presenter = presenter
     }
 
     private fun setUpProductDetailToolbar() {
@@ -74,8 +75,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         setUpProductCountPickerDialog(product)
         with(binding) {
-            textProductName.text = product.name
-            textProductPrice.text = product.price.toString()
+            binding.product = product
             layoutLatestViewedProduct.setOnClickListener {
                 navigateToLatestViewedProductView()
             }
@@ -87,30 +87,36 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         }
     }
 
-    override fun setUpLatestViewedProductView(product: ProductUiModel) {
-        binding.textLatestViewProductName.text = product.name
-        binding.textLatestViewedProductPrice.text = product.price.toString()
+    override fun setUpLatestViewedProductView(product: ProductUiModel?) {
+        product?.let {
+            binding.latestViewedProduct = product
+        } ?: run {
+            binding.layoutLatestViewedProduct.isVisible = false
+        }
     }
 
     private fun setUpProductCountPickerDialog(product: ProductUiModel) {
-        val productCountPickerListenerImpl = object : ProductCountPickerListener {
-            override fun onPlus(count: Int) {
-                presenter.plusShoppingCartProductCount(count)
+        val countPickerListenerImpl = object : CountPickerListener {
+
+            override fun onPlus() {
+                presenter.plusCartProductCount()
             }
 
-            override fun onMinus(count: Int) {
-                presenter.minusShoppingCartProductCount(count)
+            override fun onMinus() {
+                presenter.minusCartProductCount()
             }
+        }
+        val addingCartListenerImpl = object : AddingCartListener {
 
-            override fun onCompleted() {
-                finish()
-                presenter.addToShoppingCart()
+            override fun onAdded() {
+                presenter.addToCart()
             }
         }
 
         dialog = ProductCountPickerDialog.newInstance(
             product = product,
-            listener = productCountPickerListenerImpl
+            countPickerListener = countPickerListenerImpl,
+            addingCartListener = addingCartListenerImpl
         )
     }
 
@@ -122,7 +128,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         dialog.setTextTotalPrice(totalPrice)
     }
 
-    override fun navigateToShoppingCartView() {
+    override fun navigateToCartView() {
         startActivity(
             ShoppingCartActivity.getIntent(this)
         )
@@ -130,18 +136,30 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun navigateToProductDetailView(product: ProductUiModel) {
-        startActivity(
-            getIntent(this, product)
-        )
+        val intent = getIntent(
+            context = this,
+            product = product,
+            latestViewedProduct = null
+        ).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        }
+
+        startActivity(intent)
     }
 
     companion object {
         private const val PRODUCT_KEY = "product"
+        private const val LATEST_VIEWED_PRODUCT_KEY = "latest_viewed_product"
 
-        fun getIntent(context: Context, product: ProductUiModel): Intent {
+        fun getIntent(
+            context: Context,
+            product: ProductUiModel,
+            latestViewedProduct: ProductUiModel?,
+        ): Intent {
 
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_KEY, product)
+                putExtra(LATEST_VIEWED_PRODUCT_KEY, latestViewedProduct)
             }
         }
     }

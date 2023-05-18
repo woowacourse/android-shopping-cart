@@ -7,15 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import woowacourse.shopping.databinding.DialogAddToShoppingCartBinding
+import woowacourse.shopping.common.CountPickerListener
+import woowacourse.shopping.databinding.DialogCountPickerBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.getSerializableCompat
 
 class ProductCountPickerDialog : DialogFragment() {
 
-    private var product: ProductUiModel? = null
-    private var listener: ProductCountPickerListener? = null
-    private var _binding: DialogAddToShoppingCartBinding? = null
+    private var addingCartListener: AddingCartListener? = null
+
+    private var _binding: DialogCountPickerBinding? = null
     private val binding
         get() = _binding!!
 
@@ -24,12 +25,15 @@ class ProductCountPickerDialog : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        arguments?.let {
-            product = it.getSerializableCompat(KEY_PRODUCT)
-            listener = it.getSerializableCompat(KEY_LISTENER)
-        }
-        _binding = DialogAddToShoppingCartBinding.inflate(layoutInflater, container, false)
+        _binding = DialogCountPickerBinding.inflate(layoutInflater, container, false)
 
+        arguments?.let {
+            it.getSerializableCompat<CountPickerListener>(KEY_COUNT_PICKER_LISTENER)?.let { listener ->
+                binding.countPicker.setListener(listener)
+            }
+            addingCartListener = it.getSerializableCompat(KEY_ADDING_CART_LISTENER)
+            binding.product = it.getSerializableCompat(KEY_PRODUCT)
+        }
         dialog?.window
             ?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
@@ -40,19 +44,9 @@ class ProductCountPickerDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            product?.apply {
-                textProductName.text = name
-                textProductPrice.text = price.toString()
-            }
-            listener?.apply {
-                buttonMinusProductCount.setOnClickListener {
-                    onMinus(textProductCount.text.toString().toInt())
-                }
-                buttonPlusProductCount.setOnClickListener {
-                    onPlus(textProductCount.text.toString().toInt())
-                }
+            addingCartListener?.apply {
                 buttonAddToCart.setOnClickListener {
-                    onCompleted()
+                    onAdded()
                     dismiss()
                 }
             }
@@ -60,7 +54,7 @@ class ProductCountPickerDialog : DialogFragment() {
     }
 
     fun setTextProductCount(count: Int) {
-        binding.textProductCount.text = count.toString()
+        binding.countPicker.setTextCount(count)
     }
 
     fun setTextTotalPrice(price: Int) {
@@ -74,17 +68,20 @@ class ProductCountPickerDialog : DialogFragment() {
 
     companion object {
         const val TAG = "COUNT_PICKER_DIALOG"
-        private const val KEY_LISTENER = "COUNT_PICKER_DIALOG"
+        private const val KEY_COUNT_PICKER_LISTENER = "COUNT_PICKER"
+        private const val KEY_ADDING_CART_LISTENER = "ADDING_CART"
         private const val KEY_PRODUCT = "PRODUCT"
 
         fun newInstance(
             product: ProductUiModel,
-            listener: ProductCountPickerListener,
+            addingCartListener: AddingCartListener,
+            countPickerListener: CountPickerListener,
         ): ProductCountPickerDialog {
 
             return ProductCountPickerDialog().apply {
                 arguments = Bundle().apply {
-                    putSerializable(KEY_LISTENER, listener)
+                    putSerializable(KEY_COUNT_PICKER_LISTENER, countPickerListener)
+                    putSerializable(KEY_ADDING_CART_LISTENER, addingCartListener)
                     putSerializable(KEY_PRODUCT, product)
                 }
             }

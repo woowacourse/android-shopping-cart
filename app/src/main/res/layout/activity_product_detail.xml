@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="presenter"
-            type="woowacourse.shopping.productdetail.ProductDetailContract.Presenter" />
+            name="product"
+            type="woowacourse.shopping.model.ProductUiModel" />
+
+        <variable
+            name="latestViewedProduct"
+            type="woowacourse.shopping.model.ProductUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,6 +44,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +81,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="29dp"
             android:layout_marginEnd="18dp"
+            android:text="@{String.valueOf(product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -120,6 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="33dp"
+                android:text="@{latestViewedProduct.name}"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@+id/text_latest_viewed_product"
@@ -131,6 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="18dp"
+                android:text="@{String.valueOf(latestViewedProduct.price)}"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@+id/text_latest_view_product_name"
