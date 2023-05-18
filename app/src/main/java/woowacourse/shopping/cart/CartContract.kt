@@ -5,11 +5,11 @@ import woowacourse.shopping.common.model.PageNavigatorModel
 
 interface CartContract {
     interface Presenter {
-        fun removeCartProduct(cartProduct: CartProductModel)
-
+        fun deleteCartProduct(cartProduct: CartProductModel)
         fun loadPreviousPage()
-
         fun loadNextPage()
+        fun minusCartProduct(cartProduct: CartProductModel)
+        fun plusCartProduct(cartProduct: CartProductModel)
     }
 
     interface View {

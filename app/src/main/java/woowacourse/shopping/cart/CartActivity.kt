@@ -57,9 +57,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartAdapter() {
-        cartAdapter = CartAdapter(emptyList()) {
-            presenter.removeCartProduct(it)
-        }
+        cartAdapter = CartAdapter(emptyList(), {
+            presenter.deleteCartProduct(it)
+        }, {
+            presenter.minusCartProduct(it)
+        }, {
+            presenter.plusCartProduct(it)
+        })
 
         binding.cartProductList.adapter = cartAdapter
     }

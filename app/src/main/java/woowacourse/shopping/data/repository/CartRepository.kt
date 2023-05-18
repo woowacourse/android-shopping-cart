@@ -6,8 +6,16 @@ import woowacourse.shopping.domain.Product
 
 class CartRepository(private val localDataSource: CartDataSource) {
 
-    fun insertCartProduct(product: Product) {
-        localDataSource.insertCartProduct(product)
+    fun plusCartProduct(product: Product) {
+        localDataSource.plusCartProduct(product)
+    }
+
+    fun minusCartProduct(product: Product) {
+        localDataSource.minusCartProduct(product)
+    }
+
+    fun deleteCartProduct(product: Product) {
+        localDataSource.deleteCartProduct(product)
     }
 
     fun selectAllCount(): Int {
@@ -20,9 +28,5 @@ class CartRepository(private val localDataSource: CartDataSource) {
 
     fun selectPage(page: Int, countPerPage: Int): Cart {
         return localDataSource.selectPage(page, countPerPage)
-    }
-
-    fun deleteCartProductByProduct(product: Product) {
-        return localDataSource.deleteCartProductByOrdinal(product)
     }
 }

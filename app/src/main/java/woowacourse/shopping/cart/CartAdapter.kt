@@ -8,7 +8,9 @@ import woowacourse.shopping.databinding.ItemCartProductListBinding
 
 class CartAdapter(
     private var cartProducts: List<CartProductModel>,
-    private val onCartItemRemoveButtonClick: (CartProductModel) -> Unit
+    private val onCartItemRemoveButtonClick: (CartProductModel) -> Unit,
+    private val onMinusClick: (CartProductModel) -> Unit,
+    private val onPlusClick: (CartProductModel) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -16,7 +18,9 @@ class CartAdapter(
             ItemCartProductListBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ),
-            onCartItemRemoveButtonClick
+            onCartItemRemoveButtonClick,
+            onMinusClick,
+            onPlusClick
         )
     }
 

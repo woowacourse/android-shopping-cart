@@ -69,16 +69,16 @@ class CartPresenterTest {
     fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
         // given
         every {
-            cartRepository.deleteCartProductByProduct(any())
+            cartRepository.minusCartProduct(any())
         } just runs
 
         // when
         val cartProductModel = makeCartProduct(0).toViewModel()
-        presenter.removeCartProduct(cartProductModel)
+        presenter.deleteCartProduct(cartProductModel)
 
         // then
         verify {
-            cartRepository.deleteCartProductByProduct(cartProductModel.product.toDomainModel())
+            cartRepository.minusCartProduct(cartProductModel.product.toDomainModel())
         }
 
         verify {

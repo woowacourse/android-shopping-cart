@@ -49,11 +49,11 @@ class ShoppingPresenter(
     }
 
     override fun minusCartProduct(cartProduct: CartProductModel) {
-        cartRepository.deleteCartProductByProduct(cartProduct.product.toDomainModel())
+        cartRepository.minusCartProduct(cartProduct.product.toDomainModel())
     }
 
     override fun plusCartProduct(cartProduct: CartProductModel) {
-        cartRepository.insertCartProduct(cartProduct.product.toDomainModel())
+        cartRepository.plusCartProduct(cartProduct.product.toDomainModel())
     }
 
     private fun updateProducts() {

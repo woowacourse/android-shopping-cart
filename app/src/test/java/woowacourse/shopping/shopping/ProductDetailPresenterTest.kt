@@ -65,7 +65,7 @@ class ProductDetailPresenterTest {
         } returns addedCart
 
         every {
-            cartRepository.insertCartProduct(any())
+            cartRepository.plusCartProduct(any())
             view.showCart()
         } just runs
 
@@ -75,7 +75,7 @@ class ProductDetailPresenterTest {
         // then
         verify {
             cartRepository.selectAll()
-            cartRepository.insertCartProduct(cartProduct.product)
+            cartRepository.plusCartProduct(cartProduct.product)
             view.showCart()
         }
     }

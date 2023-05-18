@@ -14,7 +14,7 @@ class ProductDetailPresenter(
     }
 
     override fun addToCart() {
-        cartRepository.insertCartProduct(product)
+        cartRepository.plusCartProduct(product)
         view.showCart()
     }
 }

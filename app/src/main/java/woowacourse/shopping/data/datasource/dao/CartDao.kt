@@ -12,14 +12,34 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 
 class CartDao(private val db: SQLiteDatabase) : CartDataSource {
-    override fun insertCartProduct(product: Product) {
+    override fun plusCartProduct(product: Product) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
         productRow[SqlProduct.PICTURE] = product.picture.value
         productRow[SqlProduct.TITLE] = product.title
         productRow[SqlProduct.PRICE] = product.price
-        val productId = SqlProduct.selectRowId(db, productRow)
 
+        val productId = SqlProduct.selectRowId(db, productRow)
         insertOrUpdateCartProduct(productId)
+    }
+
+    override fun minusCartProduct(product: Product) {
+        val productRow: MutableMap<String, Any> = mutableMapOf()
+        productRow[SqlProduct.PICTURE] = product.picture.value
+        productRow[SqlProduct.TITLE] = product.title
+        productRow[SqlProduct.PRICE] = product.price
+
+        val productId = SqlProduct.selectRowId(db, productRow)
+        updateOrDeleteCartProduct(productId)
+    }
+
+    override fun deleteCartProduct(product: Product) {
+        val productRow: MutableMap<String, Any> = mutableMapOf()
+        productRow[SqlProduct.PICTURE] = product.picture.value
+        productRow[SqlProduct.TITLE] = product.title
+        productRow[SqlProduct.PRICE] = product.price
+
+        val productId = SqlProduct.selectRowId(db, productRow)
+        deleteCartProduct(productId)
     }
 
     override fun selectAllCount(): Int {
@@ -48,15 +68,6 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
         return makeCart(cursor)
     }
 
-    override fun deleteCartProductByOrdinal(product: Product) {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = product.picture.value
-        productRow[SqlProduct.TITLE] = product.title
-        productRow[SqlProduct.PRICE] = product.price
-        val productId = SqlProduct.selectRowId(db, productRow)
-        updateOrDeleteCartProduct(productId)
-    }
-
     private fun insertOrUpdateCartProduct(productId: Int) {
         val query =
             "INSERT INTO ${SqlCart.name} (${SqlCart.AMOUNT}, ${SqlCart.PRODUCT_ID}) VALUES (1, $productId) " + "ON CONFLICT(${SqlCart.PRODUCT_ID}) DO UPDATE SET ${SqlCart.AMOUNT} = ${SqlCart.AMOUNT} + 1"
@@ -67,6 +78,10 @@ class CartDao(private val db: SQLiteDatabase) : CartDataSource {
     private fun updateOrDeleteCartProduct(productId: Int) {
         db.execSQL("UPDATE ${SqlCart.name} SET ${SqlCart.AMOUNT} = CASE WHEN ${SqlCart.AMOUNT} > 1 THEN ${SqlCart.AMOUNT} - 1 ELSE 0 END WHERE ${SqlCart.PRODUCT_ID} = $productId")
         db.execSQL("DELETE FROM ${SqlCart.name} WHERE ${SqlCart.PRODUCT_ID} = $productId AND ${SqlCart.AMOUNT} = 0")
+    }
+
+    private fun deleteCartProduct(productId: Int) {
+        db.execSQL("DELETE FROM ${SqlCart.name} WHERE ${SqlCart.PRODUCT_ID} = $productId")
     }
 
     private fun makeCart(cursor: Cursor) = Cart(

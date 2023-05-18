@@ -6,7 +6,9 @@ import woowacourse.shopping.databinding.ItemCartProductListBinding
 
 class CartViewHolder(
     private val binding: ItemCartProductListBinding,
-    onCartItemRemoveButtonViewClick: (CartProductModel) -> Unit
+    onCartItemRemoveButtonViewClick: (CartProductModel) -> Unit,
+    onMinusClick: (CartProductModel) -> Unit,
+    onPlusClick: (CartProductModel) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.cartProductListRemoveButton.setOnClickListener {
@@ -14,6 +16,8 @@ class CartViewHolder(
                 binding.cartProduct ?: return@setOnClickListener
             )
         }
+        binding.onMinusClick = onMinusClick
+        binding.onPlusClick = onPlusClick
     }
 
     fun bind(cartOrdinal: CartProductModel) {

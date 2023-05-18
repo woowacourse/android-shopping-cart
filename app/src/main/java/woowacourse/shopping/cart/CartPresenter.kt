@@ -17,8 +17,8 @@ class CartPresenter(
         updateCartPage()
     }
 
-    override fun removeCartProduct(cartProduct: CartProductModel) {
-        cartRepository.deleteCartProductByProduct(cartProduct.product.toDomainModel())
+    override fun deleteCartProduct(cartProduct: CartProductModel) {
+        cartRepository.deleteCartProduct(cartProduct.product.toDomainModel())
         updateCartPage()
     }
 
@@ -44,6 +44,14 @@ class CartPresenter(
                 currentPage
             )
         )
+    }
+
+    override fun minusCartProduct(cartProduct: CartProductModel) {
+        cartRepository.minusCartProduct(cartProduct.product.toDomainModel())
+    }
+
+    override fun plusCartProduct(cartProduct: CartProductModel) {
+        cartRepository.plusCartProduct(cartProduct.product.toDomainModel())
     }
 
     private fun isLastPage(currentPage: Int, maxPage: Int) = currentPage == maxPage
