@@ -19,6 +19,8 @@ class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local
         }
     }
 
+    override fun getProductInBasketSize(): Int = dao.getProductInBasketSize()
+
     override fun minusProductCount(product: Product) {
         val productCount = dao.count(product)
         when {

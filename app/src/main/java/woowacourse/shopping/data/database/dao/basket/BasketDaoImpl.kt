@@ -39,7 +39,6 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             basketProducts.add(BasketProduct(basketId, product, ProductCount(count)))
         }
         cursor.close()
-
         return DataBasket(basketProducts = basketProducts.safeSubList(page.start, page.end))
     }
 
@@ -79,6 +78,16 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         }
 
         database.writableDatabase.insert(BasketContract.TABLE_NAME, null, contentValues)
+    }
+
+    override fun getProductInBasketSize(): Int {
+        val db = database.writableDatabase
+        val cursor = db.rawQuery(GET_PRODUCT_IN_BASKET_SIZE, null)
+        cursor.moveToNext()
+
+        val productInBasketSize = cursor.getInt(0)
+        cursor.close()
+        return productInBasketSize
     }
 
     override fun deleteByProductId(id: Int) {
@@ -148,6 +157,13 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
 
         private val GET_ALL_BASKET_PRODUCT_IN_BASKET_QUERY = """
             SELECT * FROM ${ProductContract.TABLE_NAME} as product
+            LEFT JOIN ${BasketContract.TABLE_NAME} as basket
+            ON basket.${BasketContract.PRODUCT_ID} = product.${BaseColumns._ID}
+            WHERE ${BasketContract.COLUMN_COUNT} > 0
+        """.trimIndent()
+
+        private val GET_PRODUCT_IN_BASKET_SIZE = """
+            SELECT SUM(${BasketContract.COLUMN_COUNT}) FROM ${ProductContract.TABLE_NAME} as product
             LEFT JOIN ${BasketContract.TABLE_NAME} as basket
             ON basket.${BasketContract.PRODUCT_ID} = product.${BaseColumns._ID}
             WHERE ${BasketContract.COLUMN_COUNT} > 0

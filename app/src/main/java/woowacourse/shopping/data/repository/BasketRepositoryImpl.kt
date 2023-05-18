@@ -27,4 +27,7 @@ class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.L
     override fun deleteByProductId(productId: Int) {
         localBasketDataSource.deleteByProductId(productId)
     }
+
+    override fun getProductInBasketSize(): Int =
+        localBasketDataSource.getProductInBasketSize()
 }

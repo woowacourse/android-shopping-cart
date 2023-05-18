@@ -12,11 +12,9 @@ data class PageNumber(
 
     fun hasPrevious(): Boolean = value > MIN_PAGE
 
-    operator fun inc(): PageNumber =
-        copy(value = value + 1)
+    fun next(): PageNumber = copy(value = value + 1)
 
-    operator fun dec(): PageNumber =
-        copy(value = (value - 1).coerceAtLeast(MIN_PAGE))
+    fun prev(): PageNumber = copy(value = (value - 1).coerceAtLeast(MIN_PAGE))
 
     companion object {
         private const val DEFAULT_PAGE = 1

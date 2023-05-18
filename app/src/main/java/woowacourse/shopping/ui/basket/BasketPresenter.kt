@@ -22,8 +22,8 @@ class BasketPresenter(
         val currentBasket = basketRepository.getProductInBasketByPage(currentPage)
         basket = currentBasket
 
-        view.updateBasket(basket.getItemsByUnit().map { it.toUi() })
-        view.updateNavigatorEnabled(currentPage.hasPrevious(), basket.canLoadMore())
+        view.updateBasket(basket.takeItemsUpTo(currentPage).map { it.toUi() })
+        view.updateNavigatorEnabled(currentPage.hasPrevious(), basket.canLoadMore(currentPage))
         view.updatePageNumber(currentPage.toUi())
     }
 

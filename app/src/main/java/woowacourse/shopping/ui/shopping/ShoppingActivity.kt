@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.model.ProductCount
 import woowacourse.shopping.model.UiBasketProduct
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
@@ -80,9 +81,9 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         loadMoreAdapter.hideButton()
     }
 
-    override fun updateBasketProductCount(count: Int) {
+    override fun updateBasketProductCount(count: ProductCount) {
         val basketBadgeView = binding.shoppingToolBar.menu.findItem(R.id.basket).actionView
-        basketBadgeView?.findViewById<TextView>(R.id.basket_count_badge)?.text = count.toString()
+        basketBadgeView?.findViewById<TextView>(R.id.basket_count_badge)?.text = count.toText()
     }
 
     override fun onProductClick(product: UiProduct) {

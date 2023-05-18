@@ -12,4 +12,5 @@ interface BasketDao {
     fun contains(product: Product): Boolean
     fun count(product: Product): Int
     fun updateCount(product: Product, count: Int)
+    fun getProductInBasketSize(): Int
 }
