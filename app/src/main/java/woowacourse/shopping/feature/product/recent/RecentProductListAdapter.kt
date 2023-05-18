@@ -1,10 +1,8 @@
 package woowacourse.shopping.feature.product.recent
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.ViewType
-import woowacourse.shopping.databinding.ItemRecentBinding
 import woowacourse.shopping.model.RecentProductState
 
 class RecentProductListAdapter(
@@ -12,9 +10,7 @@ class RecentProductListAdapter(
 ) : RecyclerView.Adapter<RecentProductItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductItemViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemRecentBinding.inflate(inflater, parent, false)
-        return RecentProductItemViewHolder(binding)
+        return RecentProductItemViewHolder.createInstance(parent)
     }
 
     override fun onBindViewHolder(holder: RecentProductItemViewHolder, position: Int) {
@@ -27,9 +23,7 @@ class RecentProductListAdapter(
 
     fun addItems(newItems: List<RecentProductState>) {
         val items = this.recentProductStates.toMutableList()
-        newItems.forEach {
-            items.add(0, it)
-        }
+        newItems.forEach { items.add(0, it) }
         this.recentProductStates = items.toList()
         notifyItemRangeInserted(recentProductStates.size, newItems.size)
     }
