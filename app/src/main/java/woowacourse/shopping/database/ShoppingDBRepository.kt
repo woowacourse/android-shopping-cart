@@ -81,6 +81,23 @@ class ShoppingDBRepository(
         return count
     }
 
+    override fun getSelectedShoppingCartProducts(): List<CartProduct> {
+        val shoppingCartProducts = mutableListOf<CartProduct>()
+        val cursor = shoppingDB.rawQuery(
+            "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} where ${ShoppingCartDBContract.IS_SELECTED} = 1",
+            null,
+        ).apply {
+            if (moveToFirst()) {
+                do {
+                    shoppingCartProducts.add(getShoppingCartProductById())
+                } while (moveToNext())
+            }
+        }
+        cursor.close()
+
+        return shoppingCartProducts.toList()
+    }
+
     private fun Cursor.getShoppingCartProductById(): CartProduct {
         val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
         val product = selectProductById(id)
@@ -124,6 +141,30 @@ class ShoppingDBRepository(
     override fun deleteFromShoppingCart(id: Int) {
         shoppingDB.delete(
             ShoppingCartDBContract.TABLE_NAME,
+            "${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
+            arrayOf(id.toString()),
+        )
+    }
+
+    override fun updateShoppingCartCount(id: Int, count: Int) {
+        val values = ContentValues()
+        values.put(ShoppingCartDBContract.CART_PRODUCT_COUNT, count)
+
+        shoppingDB.update(
+            ShoppingCartDBContract.TABLE_NAME,
+            values,
+            "${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
+            arrayOf(id.toString()),
+        )
+    }
+
+    override fun updateShoppingCartSelection(id: Int, isSelected: Boolean) {
+        val values = ContentValues()
+        values.put(ShoppingCartDBContract.IS_SELECTED, isSelected)
+
+        shoppingDB.update(
+            ShoppingCartDBContract.TABLE_NAME,
+            values,
             "${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
             arrayOf(id.toString()),
         )

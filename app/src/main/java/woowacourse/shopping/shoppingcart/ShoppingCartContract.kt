@@ -8,11 +8,14 @@ interface ShoppingCartContract {
 
         fun setUpShoppingCartView(
             products: List<CartProductUiModel>,
-            onRemoved: (id: Int) -> Unit,
             totalSize: Int,
         )
 
         fun showMoreShoppingCartProducts(products: List<CartProductUiModel>)
+
+        fun updateTotalInfo(price: Int, count: Int)
+
+        fun checkAllBtnOrNot()
     }
 
     interface Presenter {
@@ -22,5 +25,11 @@ interface ShoppingCartContract {
         fun removeShoppingCartProduct(id: Int)
 
         fun readMoreShoppingCartProducts()
+
+        fun changeShoppingCartProductCount(id: Int, count: Int)
+
+        fun changeShoppingCartProductSelection(id: Int, isSelected: Boolean)
+
+        fun checkAllBox(products: List<CartProductUiModel>, isSelected: Boolean)
     }
 }

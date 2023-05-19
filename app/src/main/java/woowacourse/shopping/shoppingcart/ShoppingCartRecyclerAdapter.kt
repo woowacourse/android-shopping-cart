@@ -13,9 +13,11 @@ class ShoppingCartRecyclerAdapter(
     private val showingRule: ShowingRule,
     private val updatePageState: (pageNumber: Int, totalSize: Int) -> Unit,
     private var totalSize: Int,
+    private val onClickCheckBox: (id: Int, isSelected: Boolean) -> Unit,
+    private val checkUpAll: (products: List<CartProductUiModel>, isSelected: Boolean) -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
-    private val shoppingCartProducts: MutableList<CartProductUiModel> = products.toMutableList()
+    private var shoppingCartProducts: MutableList<CartProductUiModel> = products.toMutableList()
     private var currentPage = Page()
     private val showingProducts: List<CartProductUiModel>
         get() = showingRule.of(
@@ -23,18 +25,22 @@ class ShoppingCartRecyclerAdapter(
             page = currentPage,
         )
 
+    val isNotAllSelected: Boolean
+        get() = showingProducts.any { !it.isSelected }
+
     init {
         updatePageState(currentPage.value, totalSize)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartItemViewHolder {
-        return ShoppingCartItemViewHolder.from(parent)
+        return ShoppingCartItemViewHolder.from(parent, onClickCheckBox)
     }
 
     override fun onBindViewHolder(holder: ShoppingCartItemViewHolder, position: Int) {
         holder.bind(
             cartProductUiModel = showingProducts[position],
             onRemoveClicked = ::removeItem,
+            products = showingProducts,
         )
     }
 
@@ -51,7 +57,7 @@ class ShoppingCartRecyclerAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun toNextPage(products: List<CartProductUiModel>) {
-        shoppingCartProducts.addAll(products)
+        shoppingCartProducts = products.toMutableList()
         currentPage = currentPage.next()
         updatePageState(currentPage.value, totalSize)
         notifyDataSetChanged()
@@ -60,6 +66,12 @@ class ShoppingCartRecyclerAdapter(
     fun toPreviousPage() {
         currentPage = currentPage.prev()
         updatePageState(currentPage.value, totalSize)
+        notifyItemRangeChanged(0, CART_PRODUCT_TO_READ)
+    }
+
+    fun checkAllBtn(isSelected: Boolean) {
+        checkUpAll(showingProducts, isSelected)
+        showingProducts.forEach { it.isSelected = isSelected }
         notifyItemRangeChanged(0, CART_PRODUCT_TO_READ)
     }
 

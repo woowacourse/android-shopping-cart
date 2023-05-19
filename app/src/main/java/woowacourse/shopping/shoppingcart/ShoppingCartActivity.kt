@@ -9,6 +9,7 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 import woowacourse.shopping.util.generateShoppingCartPresenter
+import java.text.DecimalFormat
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
@@ -43,24 +44,30 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun setUpShoppingCartView(
         products: List<CartProductUiModel>,
-        onRemoved: (id: Int) -> Unit,
         totalSize: Int,
     ) {
         shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
             products = products,
-            onRemoved = onRemoved,
+            onRemoved = presenter::removeShoppingCartProduct,
             showingRule = ShowingShoppingCartProducts(),
             updatePageState = ::setUpPageState,
             totalSize = totalSize,
+            onClickCheckBox = presenter::changeShoppingCartProductSelection,
+            checkUpAll = presenter::checkAllBox,
         )
 
         with(binding) {
             recyclerViewCart.adapter = shoppingCartRecyclerAdapter
             buttonNextPage.setOnClickListener {
                 presenter.readMoreShoppingCartProducts()
+                checkAllBtnOrNot()
             }
             buttonPreviousPage.setOnClickListener {
                 shoppingCartRecyclerAdapter.toPreviousPage()
+                checkAllBtnOrNot()
+            }
+            checkboxTotal.setOnClickListener {
+                shoppingCartRecyclerAdapter.checkAllBtn(checkboxTotal.isChecked)
             }
         }
     }
@@ -81,6 +88,16 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
                 pageNumber + NEXT_PAGE == totalSize / CART_PRODUCT_TO_READ &&
                     totalSize % CART_PRODUCT_TO_READ == 0
                 )
+    }
+
+    override fun updateTotalInfo(price: Int, count: Int) {
+        binding.textTotalPrice.text =
+            getString(R.string.price_format, DecimalFormat("#,###").format(price))
+        binding.buttonOrder.text = getString(R.string.order_button_text, count)
+    }
+
+    override fun checkAllBtnOrNot() {
+        binding.checkboxTotal.isChecked = !shoppingCartRecyclerAdapter.isNotAllSelected
     }
 
     companion object {
