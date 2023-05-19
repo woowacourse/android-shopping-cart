@@ -79,6 +79,14 @@ class CartDao(
         writableDatabase.delete(CartContract.TABLE_NAME, selection, selectionArgs)
     }
 
+    fun updateSelection(product: Product, isSelected: Int) {
+        val updateSql = "UPDATE ${CartContract.TABLE_NAME} " +
+            "SET ${CartContract.TABLE_COLUMN_PRODUCT_IS_SELECTED}=$isSelected " +
+            "WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+
+        writableDatabase.execSQL(updateSql)
+    }
+
     companion object {
         private const val DB_NAME = "cart_db"
         private const val VERSION = 3

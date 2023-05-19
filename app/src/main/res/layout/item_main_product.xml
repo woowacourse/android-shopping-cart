@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{@string/price_format(product.toPriceFormat())}"
+            android:text="@{@string/price_format(product.price)}"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/product_title"
             tools:text="상품가격" />

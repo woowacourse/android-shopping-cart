@@ -37,7 +37,7 @@ internal class CartPresenterTest {
         val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
 
-        presenter.loadInitCartProduct()
+        presenter.setup()
 
         val expected = mockCartProducts.take(5)
         val actual = cartProductSlot.captured.map {

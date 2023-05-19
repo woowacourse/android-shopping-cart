@@ -83,7 +83,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="end"
-            android:text="@{@string/price_format(presenter.product.toPriceFormat())}"
+            android:text="@{@string/price_format(presenter.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"

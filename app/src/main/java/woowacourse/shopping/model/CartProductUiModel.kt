@@ -8,4 +8,6 @@ data class CartProductUiModel(
     val productUiModel: ProductUiModel,
     val count: Int,
     val isSelected: Boolean
-) : Parcelable
+) : Parcelable {
+    fun totalPrice(): Int = count * productUiModel.price
+}

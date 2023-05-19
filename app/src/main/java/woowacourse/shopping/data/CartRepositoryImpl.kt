@@ -20,6 +20,11 @@ class CartRepositoryImpl(
         cartDao.deleteCartProduct(product)
     }
 
+    override fun updateSelection(product: Product, isSelected: Boolean) {
+        if (isSelected) cartDao.updateSelection(product, 1)
+        else cartDao.updateSelection(product, 0)
+    }
+
     override fun getProductsByPage(page: Int, size: Int): List<CartProduct> {
         val allProducts = getAll()
         val startIndex = (page - 1) * size
