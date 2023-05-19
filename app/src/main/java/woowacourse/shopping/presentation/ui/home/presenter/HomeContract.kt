@@ -2,8 +2,8 @@ package woowacourse.shopping.presentation.ui.home.presenter
 
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.BaseView
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView
-import woowacourse.shopping.presentation.ui.home.uiModel.Operator
 import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 
 interface HomeContract {

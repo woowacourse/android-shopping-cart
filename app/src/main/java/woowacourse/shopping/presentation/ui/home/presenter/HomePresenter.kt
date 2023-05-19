@@ -5,10 +5,10 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.ShowMoreProducts
-import woowacourse.shopping.presentation.ui.home.uiModel.Operator
 import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 
 class HomePresenter(

@@ -11,13 +11,13 @@ import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.BindingActivity
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.MINUS
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.PLUS
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView
 import woowacourse.shopping.presentation.ui.home.presenter.HomeContract
 import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
-import woowacourse.shopping.presentation.ui.home.uiModel.Operator.MINUS
-import woowacourse.shopping.presentation.ui.home.uiModel.Operator.PLUS
 import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
