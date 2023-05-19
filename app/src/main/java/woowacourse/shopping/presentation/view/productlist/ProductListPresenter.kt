@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.view.productlist
 
-import woowacourse.shopping.R
 import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
@@ -48,6 +47,9 @@ class ProductListPresenter(
         products.forEach { product ->
             product.count = carts.find { it.productId == product.id }?.count ?: 0
         }
+        val allCount = carts.sumOf { it.count }
+        view.updateToolbarCartCountView(allCount)
+        updateVisibilityCartCount(allCount)
     }
 
     override fun updateRecentProductItems() {
@@ -72,10 +74,8 @@ class ProductListPresenter(
         view.updateMoreProductsView(startPosition, newProducts.size)
     }
 
-    override fun actionOptionItem(itemId: Int) {
-        when (itemId) {
-            R.id.action_cart -> view.moveToCartView()
-        }
+    override fun actionOptionItem() {
+        view.moveToCartView()
     }
 
     override fun getLastRecentProductItem(lastRecentIndex: Int): RecentProductModel {
@@ -89,7 +89,12 @@ class ProductListPresenter(
         this.lastScroll = lastScroll
     }
 
-    override fun updateProductCount(productId: Long, count: Int) {
+    override fun updateCount(productId: Long, count: Int) {
+        updateProductCount(productId, count)
+        updateCartCount()
+    }
+
+    private fun updateProductCount(productId: Long, count: Int) {
         val product = products.find { it.id == productId } ?: return
         if (count == 0) {
             cartRepository.deleteCartByProductId(productId)
@@ -97,6 +102,21 @@ class ProductListPresenter(
         }
         product.count = count
         cartRepository.updateCartByProductId(productId, count)
+    }
+
+    private fun updateCartCount() {
+        val carts = cartRepository.getAllCarts()
+        val allCount = carts.sumOf { it.count }
+        view.updateToolbarCartCountView(allCount)
+        updateVisibilityCartCount(allCount)
+    }
+
+    private fun updateVisibilityCartCount(count: Int) {
+        if (count == 0) {
+            view.setGoneToolbarCartCountView()
+            return
+        }
+        view.setVisibleToolbarCartCountView()
     }
 
     companion object {

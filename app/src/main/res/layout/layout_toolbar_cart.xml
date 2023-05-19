@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/view_toolbar_cart"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:paddingEnd="10dp">
+
+        <ImageView
+            android:id="@+id/iv_toolbar_cart"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_cart"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_toolbar_cart_count"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:background="@drawable/drawable_circle"
+            android:backgroundTint="@color/main_color"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_toolbar_cart"
+            app:layout_constraintStart_toEndOf="@id/iv_toolbar_cart"
+            app:layout_constraintTop_toTopOf="@id/iv_toolbar_cart"
+            tools:text="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

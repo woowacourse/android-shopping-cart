@@ -2,7 +2,7 @@ package woowacourse.shopping.presentation.view.productlist
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -12,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.databinding.LayoutToolbarCartBinding
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.RecentProductModel
 import woowacourse.shopping.presentation.view.cart.CartActivity
@@ -24,6 +25,7 @@ import woowacourse.shopping.presentation.view.productlist.adpater.ViewType
 
 class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private lateinit var binding: ActivityProductListBinding
+    private lateinit var toolbarCartBinding: LayoutToolbarCartBinding
 
     private val presenter: ProductContract.Presenter by lazy {
         ProductListPresenter(
@@ -74,7 +76,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
-
+        toolbarCartBinding = LayoutToolbarCartBinding.inflate(layoutInflater)
         initLayoutManager()
         presenter.initRecentProductItems()
         presenter.loadProductItems()
@@ -84,16 +86,33 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         setConcatAdapter()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_product_list_toolbar, menu)
 
-        return super.onCreateOptionsMenu(menu)
+        menu.findItem(R.id.action_cart)?.run {
+            actionView = toolbarCartBinding.root
+            setToolbarCart()
+        }
+
+        return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        presenter.actionOptionItem(item.itemId)
+    private fun setToolbarCart() {
+        toolbarCartBinding.viewToolbarCart.setOnClickListener {
+            presenter.actionOptionItem()
+        }
+    }
 
-        return super.onOptionsItemSelected(item)
+    override fun setVisibleToolbarCartCountView() {
+        toolbarCartBinding.tvToolbarCartCount.visibility = View.VISIBLE
+    }
+
+    override fun setGoneToolbarCartCountView() {
+        toolbarCartBinding.tvToolbarCartCount.visibility = View.GONE
+    }
+
+    override fun updateToolbarCartCountView(count: Int) {
+        toolbarCartBinding.tvToolbarCartCount.text = count.toString()
     }
 
     private fun initLayoutManager() {
@@ -111,7 +130,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     override fun setProductItemsView(products: List<ProductModel>) {
         productListAdapter =
-            ProductListAdapter(products, presenter::updateProductCount, ::onProductClickEvent)
+            ProductListAdapter(products, presenter::updateCount, ::onProductClickEvent)
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {

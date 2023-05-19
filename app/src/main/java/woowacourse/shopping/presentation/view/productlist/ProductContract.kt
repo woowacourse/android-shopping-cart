@@ -7,8 +7,11 @@ interface ProductContract {
     interface View {
         fun setProductItemsView(products: List<ProductModel>)
         fun setRecentProductItemsView(recentProducts: List<RecentProductModel>)
+        fun setVisibleToolbarCartCountView()
+        fun setGoneToolbarCartCountView()
         fun updateRecentProductItemsView(preSize: Int, diffSize: Int)
         fun updateMoreProductsView(preSize: Int, diffSize: Int)
+        fun updateToolbarCartCountView(count: Int)
         fun moveToCartView()
     }
 
@@ -20,10 +23,10 @@ interface ProductContract {
         fun updateRecentProductItems()
         fun saveRecentProduct(productId: Long)
         fun loadMoreData()
-        fun actionOptionItem(itemId: Int)
+        fun actionOptionItem()
         fun getLastRecentProductItem(lastRecentIndex: Int): RecentProductModel
         fun getRecentProductsLastScroll(): Int
         fun updateRecentProductsLastScroll(lastScroll: Int)
-        fun updateProductCount(productId: Long, count: Int)
+        fun updateCount(productId: Long, count: Int)
     }
 }
