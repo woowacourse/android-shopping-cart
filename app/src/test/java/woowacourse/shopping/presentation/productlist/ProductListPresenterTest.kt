@@ -8,7 +8,6 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.R
 import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.data.model.RecentProductEntity
@@ -125,7 +124,7 @@ class ProductListPresenterTest {
         justRun { view.moveToCartView() }
 
         // when
-        presenter.actionOptionItem(R.id.action_cart)
+        presenter.actionOptionItem()
 
         // then
         verify { view.moveToCartView() }
