@@ -83,7 +83,7 @@ class HomeActivity :
         }
     }
 
-    private fun setUpClickListener() = object : SetClickListener {
+    private fun setUpClickListener() = object : HomeSetClickListener {
         override fun setClickEventOnProduct(product: Product) {
             setEventOnProduct(product.id)
         }

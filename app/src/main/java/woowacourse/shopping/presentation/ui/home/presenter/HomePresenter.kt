@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.home.presenter
 
-import android.util.Log
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
@@ -55,7 +54,7 @@ class HomePresenter(
             Operator.PLUS -> quantity.add()
             Operator.MINUS -> quantity.subtract()
         }
-        Log.d("123123", "123123")
+
         shoppingCartRepository.addProductInCart(ProductInCart(productInCart, quantity.amount))
 
         val shoppingCart = shoppingCartRepository.getShoppingCart().map { it.toUiState() }
@@ -70,9 +69,8 @@ class HomePresenter(
     private fun List<Product>.toRecentProductsByView(): RecentlyViewedProducts =
         RecentlyViewedProducts(this)
 
-    private fun ProductInCart.toUiState(): ProductInCartUiState =
-        ProductInCartUiState(
-            product = this.product,
-            quantity = this.quantity,
-        )
+    private fun ProductInCart.toUiState(): ProductInCartUiState = ProductInCartUiState(
+        product = this.product,
+        quantity = this.quantity,
+    )
 }

@@ -5,13 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.presentation.ui.home.SetClickListener
+import woowacourse.shopping.presentation.ui.home.HomeSetClickListener
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    clickProduct: SetClickListener,
+    clickProduct: HomeSetClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {

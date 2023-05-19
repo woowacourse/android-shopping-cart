@@ -4,13 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentlyViewedBinding
-import woowacourse.shopping.presentation.ui.home.SetClickListener
+import woowacourse.shopping.presentation.ui.home.HomeSetClickListener
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
 import woowacourse.shopping.presentation.ui.home.adapter.RecentlyViewedProductAdapter
 
 class RecentlyViewedViewHolder(
     private val binding: ItemRecentlyViewedBinding,
-    private val onClick: SetClickListener,
+    private val onClick: HomeSetClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     private val recentlyViewedProductAdapter by lazy { RecentlyViewedProductAdapter(onClick::setClickEventOnProduct) }
 

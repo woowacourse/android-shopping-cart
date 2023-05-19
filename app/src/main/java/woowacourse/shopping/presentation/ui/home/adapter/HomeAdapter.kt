@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.ui.home.SetClickListener
+import woowacourse.shopping.presentation.ui.home.HomeSetClickListener
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.ShowMoreProducts
@@ -19,7 +19,7 @@ import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 class HomeAdapter(
     productInCart: List<ProductInCartUiState>,
     viewItems: List<ProductsByView>,
-    private val onClick: SetClickListener,
+    private val onClick: HomeSetClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var layoutInflater: LayoutInflater
     private val _viewItems: MutableList<ProductsByView> = viewItems.toMutableList()

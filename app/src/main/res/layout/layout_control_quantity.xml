@@ -14,7 +14,7 @@
 
         <variable
             name="setQuantityClickListener"
-            type="woowacourse.shopping.presentation.ui.home.SetClickListener" />
+            type="woowacourse.shopping.presentation.ui.home.HomeSetClickListener" />
 
 
     </data>

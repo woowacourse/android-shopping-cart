@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="shoppingCart"
+            type="woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.domain.model.ProductInCart" />
 
@@ -29,12 +33,11 @@
                 style="@style/Woowa_pro_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:text="@{product.product.name}"
+                android:text="@{shoppingCart.product.name}"
                 android:textColor="@color/woowa_dealer_black_400"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@+id/cb_cartProduct"
+                app:layout_constraintStart_toEndOf="@+id/cb_cartProduct"
+                app:layout_constraintTop_toTopOf="@+id/cb_cartProduct"
                 tools:text="제네시스" />
 
             <ImageView
@@ -51,24 +54,44 @@
                 android:id="@+id/iv_cartProduct_photo"
                 android:layout_width="140dp"
                 android:layout_height="72dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="16dp"
-                app:glideSrc="@{product.product.itemImage}"
+                app:glideSrc="@{shoppingCart.product.itemImage}"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/tv_cartProduct_name"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_cartProduct_name"
                 app:srcCompat="@drawable/logo_rect" />
+
+
+            <CheckBox
+                android:id="@+id/cb_cartProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/layout_quantity"
+                layout="@layout/layout_control_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="13dp"
+                app:productInCart="@{shoppingCart}"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_cartProduct_photo"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <TextView
                 android:id="@+id/tv_cartProduct_price"
                 style="@style/Woowa_air_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="13dp"
-                android:text="@{String.valueOf(product.product.price)}"
+                android:text="@{@string/price_format(shoppingCart.product.price)}"
                 android:textColor="@color/woowa_dealer_black_400"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_cartProduct_photo"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/layout_quantity"
+                app:layout_constraintEnd_toEndOf="@+id/layout_quantity"
                 tools:text="40000000원" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
