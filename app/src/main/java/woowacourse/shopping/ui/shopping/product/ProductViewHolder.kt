@@ -23,6 +23,7 @@ class ProductViewHolder(
         binding.root.setThrottleFirstOnClickListener { onItemClick(bindingAdapterPosition) }
         binding.counterProduct.minusClickListener = minusClickListener
         binding.counterProduct.plusClickListener = plusClickListener
+        binding.plusClickListener = plusClickListener
     }
 
     fun bind(product: UiProduct) {

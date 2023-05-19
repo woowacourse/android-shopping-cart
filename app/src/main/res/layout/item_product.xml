@@ -12,6 +12,10 @@
             type="woowacourse.shopping.ui.model.Product" />
 
         <variable
+            name="plusClickListener"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
             name="hasBasketProduct"
             type="Boolean" />
     </data>
@@ -81,6 +85,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@android:color/transparent"
+            android:onClick="@{()->plusClickListener.invoke(product)}"
             android:visibility="@{hasBasketProduct?View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_product"
             app:layout_constraintEnd_toEndOf="@+id/iv_product"
