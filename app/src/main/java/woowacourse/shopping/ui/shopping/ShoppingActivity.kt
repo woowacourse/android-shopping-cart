@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
+import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
 import woowacourse.shopping.data.database.dao.recentproduct.RecentProductDaoImpl
+import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
 import woowacourse.shopping.data.datasource.product.local.LocalProductDataSource
 import woowacourse.shopping.data.datasource.recentproduct.local.LocalRecentProductDataSource
+import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
@@ -63,6 +66,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             ),
             RecentProductRepositoryImpl(
                 LocalRecentProductDataSource(RecentProductDaoImpl(shoppingDatabase))
+            ),
+            BasketRepositoryImpl(
+                LocalBasketDataSource(BasketDaoImpl(shoppingDatabase))
             )
         )
     }
