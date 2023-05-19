@@ -1,26 +1,52 @@
 package woowacourse.shopping.data.repository.remote
 
+import android.util.Log
 import com.example.domain.cache.ProductCache
 import com.example.domain.cache.ProductLocalCache
 import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
+import com.example.domain.repository.ProductRepository.Companion.LOAD_SIZE
 import woowacourse.shopping.data.service.MockProductRemoteService
 
 class MockRemoteProductRepositoryImpl(
     private val service: MockProductRemoteService,
     override val cache: ProductCache = ProductLocalCache
 ) : ProductRepository {
-    override fun getFirstProducts(): List<Product> {
+    override fun getFirstProducts(
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: () -> Unit
+    ) {
         if (cache.productList.isEmpty()) {
-            val products = service.request(0)
-            cache.addProducts(products)
-            return products
+            Thread {
+                service.request(
+                    lastProductId = 0,
+                    onSuccess = {
+                        cache.addProducts(it)
+                        onSuccess(it)
+                    },
+                    onFailure = onFailure
+                )
+            }.start()
+        } else {
+            onSuccess(cache.productList)
         }
-        return cache.productList
     }
 
-    override fun getNextProducts(lastProductId: Long): List<Product> {
-        return service.request(lastProductId)
+    override fun getNextProducts(
+        lastProductId: Long,
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        Thread {
+            service.request(
+                lastProductId = lastProductId,
+                onSuccess = {
+                    cache.addProducts(it)
+                    onSuccess(it)
+                },
+                onFailure = onFailure
+            )
+        }.start()
     }
 
     override fun resetCache() {

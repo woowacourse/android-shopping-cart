@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.main
 
+import android.util.Log
 import com.example.domain.model.Product
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.CartRepository
@@ -10,6 +11,7 @@ import woowacourse.shopping.mapper.toPresentation
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentProductUiModel
 import java.time.LocalDateTime
+import java.util.logging.Handler
 
 class MainPresenter(
     private val view: MainContract.View,
@@ -21,13 +23,17 @@ class MainPresenter(
     private val recentProducts: MutableList<RecentProductUiModel> = mutableListOf()
 
     override fun loadProducts() {
-        val firstProducts = productRepository.getFirstProducts()
-        val productUiModels = makeProductUiModels(firstProducts)
-        products.clear()
-        products.addAll(productUiModels)
+        productRepository.getFirstProducts(
+            onSuccess = {
+                val productUiModels = makeProductUiModels(it)
+                products.clear()
+                products.addAll(productUiModels)
 
-        view.setProducts(products.toList())
-        updateCartCountBadge()
+                view.setProducts(products.toList())
+                updateCartCountBadge()
+            },
+            onFailure = {}
+        )
     }
 
     private fun makeProductUiModels(products: List<Product>): List<ProductUiModel> {
@@ -47,12 +53,16 @@ class MainPresenter(
 
     override fun loadMoreProduct() {
         val lastProductId: Long = products.lastOrNull()?.id ?: 0
-        val nextProducts = productRepository.getNextProducts(lastProductId)
-        val nextProductUiModels = makeProductUiModels(nextProducts)
+        val nextProducts = productRepository.getNextProducts(
+            lastProductId,
+            onSuccess = {
+                val nextProductUiModels = makeProductUiModels(it)
+                products.addAll(nextProductUiModels)
 
-        products.addAll(nextProductUiModels)
-
-        view.setProducts(products.toList())
+                view.setProducts(products.toList())
+            },
+            onFailure = {}
+        )
     }
 
     override fun loadRecent() {

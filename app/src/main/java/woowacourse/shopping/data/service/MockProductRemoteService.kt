@@ -5,25 +5,24 @@ import com.example.domain.datasource.secondJsonProducts
 import com.example.domain.datasource.thirdJsonProducts
 import com.example.domain.model.Price
 import com.example.domain.model.Product
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.json.JSONArray
+import java.io.IOException
 
 class MockProductRemoteService {
-    private val mockWebServer: MockWebServer = MockWebServer()
-    private val baseUrl: String
+    private var _mockWebServer: MockWebServer? = null
+    private val mockWebServer: MockWebServer
+        get() = _mockWebServer!!
+
+    private val dispatcher: okhttp3.mockwebserver.Dispatcher
 
     init {
-        mockWebServer.url("/") // 포트번호 랜덤
-        baseUrl =
-            String.format("http://localhost:%s", mockWebServer.port)
-
         // 디스패쳐 모드로 응답을 결정
-        val dispatcher = object : Dispatcher() {
+        dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
                 return when (request.path) {
                     "/products?lastProductId=0" -> {
@@ -50,28 +49,46 @@ class MockProductRemoteService {
                 }
             }
         }
-
-        mockWebServer.dispatcher = dispatcher
     }
 
 
-    fun request(lastProductId: Long): List<Product> {
-        val okHttpClient = OkHttpClient()
-        val url = "$baseUrl/products?lastProductId=$lastProductId"
-        val request = Request.Builder().url(url).build()
+    fun request(
+        lastProductId: Long,
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        synchronized(true) {
+            if (_mockWebServer == null) {
+                _mockWebServer = MockWebServer()
+                _mockWebServer?.url("/")
+                _mockWebServer?.dispatcher = dispatcher
+            }
 
-        val response = okHttpClient.newCall(request).execute()
-        if (!response.isSuccessful) {
-            response.close()
-            throw RuntimeException("Request failed with HTTP error code: ${response.code}")
+
+            val baseUrl = String.format("http://localhost:%s", mockWebServer.port)
+            val okHttpClient = OkHttpClient()
+            val url = "$baseUrl/products?lastProductId=$lastProductId"
+            val request = Request.Builder().url(url).build()
+
+            okHttpClient.newCall(request).enqueue(
+                object : Callback {
+                    override fun onFailure(call: Call, e: IOException) {
+                        onFailure()
+                    }
+
+                    override fun onResponse(call: Call, response: Response) {
+                        val responseBody = response.body?.string()
+                        response.close()
+
+                        val result = responseBody?.let {
+                            parseJsonToProductList(it)
+                        } ?: emptyList()
+
+                        onSuccess(result)
+                    }
+                }
+            )
         }
-
-        val responseBody = response.body?.string()
-        response.close()
-
-        responseBody?.let {
-            return parseJsonToProductList(it)
-        } ?: return emptyList()
     }
 
     private fun parseJsonToProductList(responseString: String): List<Product> {

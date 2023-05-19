@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +16,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
 import woowacourse.shopping.data.repository.local.ProductMockRepositoryImpl
 import woowacourse.shopping.data.repository.local.RecentProductRepositoryImpl
+import woowacourse.shopping.data.repository.remote.MockRemoteProductRepositoryImpl
+import woowacourse.shopping.data.service.MockProductRemoteService
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
@@ -67,22 +70,22 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        initPresenter()
         initAdapters()
         initLayoutManager()
         binding.productRecyclerView.adapter = concatAdapter
 
-        presenter.loadProducts()
-        presenter.loadRecent()
+        initPresenter()
     }
 
     private fun initPresenter() {
         presenter = MainPresenter(
             this,
-            ProductMockRepositoryImpl(),
+            MockRemoteProductRepositoryImpl(MockProductRemoteService()),
             CartRepositoryImpl(CartDao(this)),
             RecentProductRepositoryImpl(RecentDao(this))
         )
+        presenter.loadProducts()
+        presenter.loadRecent()
     }
 
     override fun onRestart() {
@@ -123,23 +126,23 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun setProducts(products: List<ProductUiModel>) {
-        mainProductAdapter.setItems(products)
+        runOnUiThread { mainProductAdapter.setItems(products) }
     }
 
     override fun updateRecent(recent: List<RecentProductUiModel>) {
-        recentAdapter.setItems(recent)
+        runOnUiThread { recentAdapter.setItems(recent) }
     }
 
     override fun showCartCountBadge() {
-        cartCountBadge?.visibility = View.VISIBLE
+        runOnUiThread { cartCountBadge?.visibility = View.VISIBLE }
     }
 
     override fun hideCartCountBadge() {
-        cartCountBadge?.visibility = View.GONE
+        runOnUiThread { cartCountBadge?.visibility = View.GONE }
     }
 
     override fun updateCartCount(count: Int) {
-        cartCountBadge?.text = "$count"
+        runOnUiThread { cartCountBadge?.text = "$count" }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -147,6 +150,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
         cartCountBadge =
             menu.findItem(R.id.cart_count_badge).actionView?.findViewById(R.id.badge)
+
         presenter.loadCartCountSize()
         return true
     }

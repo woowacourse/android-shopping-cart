@@ -5,35 +5,47 @@ import com.example.domain.cache.ProductLocalCache
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
+import com.example.domain.repository.ProductRepository.Companion.LOAD_SIZE
 
 class ProductMockRepositoryImpl(
     private val dataSource: List<Product> = productsDatasource,
     override val cache: ProductCache = ProductLocalCache
 ) : ProductRepository {
 
-    override fun getFirstProducts(): List<Product> {
+    override fun getFirstProducts(
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: () -> Unit
+    ) {
         if (cache.productList.isEmpty()) {
-            val products = dataSource.take(LOAD_SIZE)
-            cache.addProducts(products)
-            return products
+            kotlin.runCatching { dataSource.take(LOAD_SIZE) }.onSuccess {
+                cache.addProducts(it)
+                onSuccess(it)
+            }.onFailure {
+                onFailure()
+            }
+        } else {
+            onSuccess(cache.productList)
         }
-        return cache.productList
     }
 
-    override fun getNextProducts(lastProductId: Long): List<Product> {
+    override fun getNextProducts(
+        lastProductId: Long,
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: () -> Unit
+    ) {
         val cacheData = cache.productList.filter { it.id > lastProductId }
-        if (cacheData.isNotEmpty()) return cacheData.take(LOAD_SIZE)
+        if (cacheData.isNotEmpty()) return onSuccess(cacheData.take(LOAD_SIZE))
 
-        val newProducts = dataSource.filter { it.id > lastProductId }.take(LOAD_SIZE)
-        cache.addProducts(newProducts)
-        return newProducts
+        kotlin.runCatching { dataSource.filter { it.id > lastProductId }.take(LOAD_SIZE) }
+            .onSuccess {
+                cache.addProducts(it)
+                onSuccess(it)
+            }.onFailure {
+                onFailure()
+            }
     }
 
     override fun resetCache() {
         cache.clear()
-    }
-
-    companion object {
-        private const val LOAD_SIZE = 20
     }
 }
