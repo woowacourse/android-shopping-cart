@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.repository
 
 import com.shopping.domain.CartProduct
-import com.shopping.domain.Count
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.data.db.CartProductDao
 

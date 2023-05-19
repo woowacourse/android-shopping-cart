@@ -2,7 +2,7 @@ package com.shopping.domain
 
 data class Count(val value: Int) {
     init {
-        require(value >= MINIMUM_COUNT ){ COUNT_VALUE_ERROR }
+        require(value >= MINIMUM_COUNT) { COUNT_VALUE_ERROR }
     }
 
     fun inc() = Count(value + 1)

@@ -51,9 +51,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun setProductDetailView() {
         binding.product = presenter.product
+        binding.loLatestRecent.visibility = GONE
+
         val depth = intent.getSerializableCompat<Int>(BundleKeys.KEY_DEPTH)
             ?: throw IllegalStateException(NON_FOUND_KEY_ERROR)
-        binding.loLatestRecent.visibility = GONE
         if (presenter.isRecentProductExist() && depth == DEPTH_PARENT) {
             val recentProduct = presenter.setRecentProductView(product)
             binding.recentProduct = recentProduct
@@ -81,7 +82,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         }
     }
 
-    private fun showDetailProduct(recentProductUIModel: RecentProductUIModel) {
+    override fun showDetailProduct(recentProductUIModel: RecentProductUIModel) {
         intent.putExtra(BundleKeys.KEY_PRODUCT, recentProductUIModel.productUIModel)
         intent.putExtra(BundleKeys.KEY_DEPTH, DEPTH_CHILD)
         startActivity(intent)

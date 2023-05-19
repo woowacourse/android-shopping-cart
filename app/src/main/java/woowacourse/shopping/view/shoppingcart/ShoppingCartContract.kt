@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.shoppingcart
 
-import com.shopping.domain.Count
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
 

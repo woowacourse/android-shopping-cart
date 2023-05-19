@@ -54,7 +54,7 @@ class CartProductDao(context: Context) :
     }
 
     fun update(cartProduct: CartProduct) {
-        if(exist(cartProduct)) {
+        if (exist(cartProduct)) {
             val existCount = getCountById(cartProduct.product.id)
 
             val contextValues = ContentValues().apply {
@@ -64,7 +64,6 @@ class CartProductDao(context: Context) :
             val whereArgs = arrayOf(cartProduct.product.id.toString())
 
             writableDatabase.update(TABLE_NAME, contextValues, whereClause, whereArgs)
-
         } else {
             insert(cartProduct)
         }
