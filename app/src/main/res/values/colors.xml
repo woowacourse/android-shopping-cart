@@ -11,4 +11,6 @@
     <color name="product_detail_text_color">#333333</color>
     <color name="page_text_color">#555555</color>
     <color name="load_text_color">#333333</color>
+    <color name="custom_count_text_color">#555555</color>
+    <color name="button_color">#04C09E</color>
 </resources>

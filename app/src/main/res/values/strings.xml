@@ -8,4 +8,7 @@
     <string name="add_cart_text">장바구니 담기</string>
     <string name="product_price_text">금액</string>
     <string name="product_image_description">재품 이미지</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="dialog_add_cart_text">담기</string>
 </resources>

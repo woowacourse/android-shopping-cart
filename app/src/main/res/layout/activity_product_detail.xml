@@ -30,9 +30,9 @@
             android:id="@+id/detail_product_image"
             android:layout_width="match_parent"
             android:layout_height="360dp"
+            android:contentDescription="@string/product_image_description"
             app:imgResId="@{product.imageUrl}"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            android:contentDescription="@string/product_image_description" />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <TextView
             android:id="@+id/detail_product_name"
@@ -84,7 +84,7 @@
             android:id="@+id/cart_button"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#04C09E"
+            android:background="@color/button_color"
             android:gravity="center"
             android:text="@string/add_cart_text"
             android:textColor="@color/white"
