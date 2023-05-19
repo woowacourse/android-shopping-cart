@@ -10,6 +10,16 @@ class ShoppingCartRepositoryImpl(
     private val shoppingCartDataSource: ShoppingCartDataSource,
     private val productDataSource: ProductDataSource,
 ) : ShoppingCartRepository {
+
+    override fun getAll(): List<ProductInCart> {
+        val entities = shoppingCartDataSource.getAllEntities()
+        return entities.mapNotNull { entity ->
+            val product = productDataSource.getProductEntity(entity.productId)?.toDomainModel()
+                ?: return@mapNotNull null
+            ProductInCart(product, entity.quantity)
+        }
+    }
+
     override fun getShoppingCart(unit: Int, pageNumber: Int): List<ProductInCart> {
         val productInCartEntities =
             shoppingCartDataSource.getProductsInShoppingCart(unit, pageNumber)

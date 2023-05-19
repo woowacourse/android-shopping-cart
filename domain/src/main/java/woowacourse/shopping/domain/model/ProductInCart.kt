@@ -3,6 +3,7 @@ package woowacourse.shopping.domain.model
 data class ProductInCart(
     val product: Product,
     val quantity: Int,
+    val isChecked: Boolean = true,
 ) {
     init {
         require(quantity >= 0) { "수량은 음수일 수 없습니다. 현재 수량: $quantity" }
