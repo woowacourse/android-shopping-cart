@@ -30,6 +30,10 @@ class CartProductRepositoryImpl(
         cartProductDao.insert(cartProduct)
     }
 
+    override fun add(cartProduct: CartProduct) {
+        cartProductDao.add(cartProduct)
+    }
+
     override fun remove(cartProduct: CartProduct) {
         cartProductDao.remove(cartProduct)
     }

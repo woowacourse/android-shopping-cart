@@ -8,4 +8,5 @@ interface CartProductRepository {
     fun remove(cartProduct: CartProduct)
     fun loadCartProducts(index: Pair<Int, Int>): List<CartProduct>
     fun update(cartProduct: CartProduct)
+    fun add(cartProduct: CartProduct)
 }

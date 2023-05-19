@@ -53,7 +53,7 @@ class CartProductDao(context: Context) :
         writableDatabase.execSQL("DELETE FROM ${RecentProductDao.TABLE_NAME} WHERE ${RecentProductDao.KEY_ID}='${cartProduct.product.id}';")
     }
 
-    fun update(cartProduct: CartProduct) {
+    fun add(cartProduct: CartProduct) {
         if (exist(cartProduct)) {
             val existCount = getCountById(cartProduct.product.id)
 
@@ -67,6 +67,16 @@ class CartProductDao(context: Context) :
         } else {
             insert(cartProduct)
         }
+    }
+
+    fun update(cartProduct: CartProduct) {
+        val contextValues = ContentValues().apply {
+            put(KEY_COUNT, cartProduct.count.value)
+        }
+        val whereClause = "$KEY_ID=?"
+        val whereArgs = arrayOf(cartProduct.product.id.toString())
+
+        writableDatabase.update(TABLE_NAME, contextValues, whereClause, whereArgs)
     }
 
     fun exist(cartProduct: CartProduct): Boolean {
