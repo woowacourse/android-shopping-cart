@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.cart
 
-import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -19,8 +18,8 @@ class CartPresenterTest {
 
     @Before
     fun setUp() {
-        cartView = mockk()
-        productDetailView = mockk()
+        cartView = mockk(relaxed = true)
+        productDetailView = mockk(relaxed = true)
         cartPresenter = CartPresenter(cartView, FakeCartRepository)
         productDetailPresenter =
             ProductDetailPresenter(productDetailView, FakeProductRepository, FakeCartRepository)
@@ -28,8 +27,6 @@ class CartPresenterTest {
 
     @Test
     fun 장바구니에_담은_상품을_삭제하면_장바구니_목록에_해당_상품이_삭제된다() {
-        every { cartView.setCartItems(any()) } answers { }
-
         cartPresenter.deleteCartItem(2)
 
         val actual = FakeCartRepository.findAll().map { it.id }.contains(2)

@@ -13,7 +13,7 @@ class ProductDetailPresenterTest {
 
     @Before
     fun setUp() {
-        view = mockk()
+        view = mockk(relaxed = true)
         presenter =
             ProductDetailPresenter(view, FakeProductRepository, FakeCartRepository)
     }
