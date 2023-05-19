@@ -55,17 +55,22 @@ class CartDao(context: Context) {
         return list
     }
 
-    fun addColumn(product: Product) {
-        val values = ContentValues().apply {
-            put(CartContract.TABLE_COLUMN_PRODUCT_ID, product.id)
-            put(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
-            put(CartContract.TABLE_COLUMN_PRODUCT_NAME, product.name)
-            put(CartContract.TABLE_COLUMN_PRODUCT_PRICE, product.price)
-            put(CartContract.TABLE_COLUMN_COUNT, 1) // 담았을 때 기준 기본 1
-            put(CartContract.TABLE_COLUMN_CHECKED, CHECKED_FALSE)
-        }
+    fun addColumn(product: Product, count: Int) {
+        val findCartProduct: CartProduct? = getAll().find { it.productId == product.id }
 
-        db.insert(CartContract.TABLE_NAME, null, values)
+        if (findCartProduct == null) {
+            val values = ContentValues().apply {
+                put(CartContract.TABLE_COLUMN_PRODUCT_ID, product.id)
+                put(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
+                put(CartContract.TABLE_COLUMN_PRODUCT_NAME, product.name)
+                put(CartContract.TABLE_COLUMN_PRODUCT_PRICE, product.price)
+                put(CartContract.TABLE_COLUMN_COUNT, count) // 담았을 때 기준 기본 1
+                put(CartContract.TABLE_COLUMN_CHECKED, CHECKED_FALSE)
+            }
+            db.insert(CartContract.TABLE_NAME, null, values)
+            return
+        }
+        updateCartProductCount(findCartProduct, count + findCartProduct.count)
     }
 
     fun addColumn(cartProduct: CartProduct) {

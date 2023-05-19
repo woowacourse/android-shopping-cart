@@ -17,7 +17,7 @@ interface ProductDetailContract {
         val product: ProductState?
 
         fun loadProduct()
-        fun addCartProduct()
+        fun addCartProduct(count: Int)
         fun plusCount()
         fun minusCount()
     }

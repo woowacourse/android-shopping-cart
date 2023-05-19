@@ -1,6 +1,6 @@
 package woowacourse.shopping.feature.product.detail
 
-import woowacourse.shopping.data.cart.CartDao
+import com.example.domain.repository.CartRepository
 import woowacourse.shopping.model.CartProductState.Companion.MAX_COUNT_VALUE
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.model.ProductState
@@ -9,7 +9,7 @@ import woowacourse.shopping.model.mapper.toDomain
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
     override val product: ProductState?,
-    private val cartDao: CartDao
+    private val cartRepository: CartRepository
 ) : ProductDetailContract.Presenter {
 
     private var count = MIN_COUNT_VALUE
@@ -21,11 +21,11 @@ class ProductDetailPresenter(
         view.setViewContent(product)
     }
 
-    override fun addCartProduct() {
+    override fun addCartProduct(count: Int) {
         if (!isValidProduct()) return
         product!!
 
-        cartDao.addColumn(product.toDomain())
+        cartRepository.addProduct(product.toDomain(), count)
         view.showCart()
         view.closeProductDetail()
     }
