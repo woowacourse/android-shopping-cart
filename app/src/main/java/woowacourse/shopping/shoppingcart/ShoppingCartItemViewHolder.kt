@@ -24,12 +24,12 @@ class ShoppingCartItemViewHolder(
             imageRemoveProduct.setOnClickListener { onRemoveClicked(adapterPosition) }
             countView.count = cartProduct.count
             countView.plusClickListener = {
+                products[adapterPosition].count += CALCULATE_AMOUNT
                 countClickListener.onPlusClick(cartProduct.product.id)
-                products[adapterPosition].count += 1
             }
             countView.minusClickListener = {
+                products[adapterPosition].count -= CALCULATE_AMOUNT
                 countClickListener.onMinusClick(cartProduct.product.id)
-                products[adapterPosition].count -= 1
             }
             checkboxSelected.setOnClickListener {
                 products[adapterPosition].isSelected = checkboxSelected.isChecked
@@ -39,6 +39,8 @@ class ShoppingCartItemViewHolder(
     }
 
     companion object {
+        private const val CALCULATE_AMOUNT = 1
+
         fun from(
             parent: ViewGroup,
             onCheckBoxClicked: (Int, Boolean) -> Unit,

@@ -11,14 +11,14 @@ class ShoppingCartPresenter(
     private val repository: ShoppingRepository,
 ) : ShoppingCartContract.Presenter {
 
-    private var numberOfReadShoppingCartProduct: Int = 1
+    private var readPageNumber: Int = 1
 
     private fun loadRangeOfShoppingCartProducts(): List<CartProductUiModel> {
         val cartProducts = repository.selectShoppingCartProducts(
             0,
-            numberOfReadShoppingCartProduct * CART_PRODUCT_TO_READ,
+            readPageNumber * CART_PRODUCT_TO_READ,
         ).map { it.toUiModel() }
-        numberOfReadShoppingCartProduct++
+        readPageNumber++
 
         return cartProducts
     }
@@ -44,8 +44,8 @@ class ShoppingCartPresenter(
 
     override fun changeShoppingCartProductCount(id: Int, isAdd: Boolean) {
         val product = repository.selectShoppingCartProductById(id)
-        val addAmount = if (isAdd) 1 else -1
-        repository.updateShoppingCartCount(id, product.count + addAmount)
+        val calculateAmount = if (isAdd) PLUS_AMOUNT else MINUS_AMOUNT
+        repository.updateShoppingCartCount(id, product.count + calculateAmount)
         updateOrderInfo()
     }
 
@@ -63,9 +63,14 @@ class ShoppingCartPresenter(
     }
 
     private fun updateOrderInfo() {
-        var totalPrice = Price(0)
+        var totalPrice = Price()
         val selectedProducts = repository.getSelectedShoppingCartProducts()
         selectedProducts.forEach { totalPrice += (it.product.price * it.count) }
         view.updateTotalInfo(totalPrice.value, selectedProducts.size)
+    }
+
+    companion object {
+        private const val PLUS_AMOUNT = 1
+        private const val MINUS_AMOUNT = -1
     }
 }
