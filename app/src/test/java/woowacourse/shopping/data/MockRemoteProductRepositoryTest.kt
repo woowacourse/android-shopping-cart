@@ -2,11 +2,13 @@ package woowacourse.shopping.data
 
 import com.example.domain.cache.ProductLocalCache
 import com.example.domain.datasource.productsDatasource
+import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.data.repository.remote.MockRemoteProductRepositoryImpl
 import woowacourse.shopping.data.service.MockProductRemoteService
+import java.lang.Thread.sleep
 
 internal class MockRemoteProductRepositoryTest {
     private lateinit var mockRemoteProductRepository: ProductRepository
@@ -22,25 +24,60 @@ internal class MockRemoteProductRepositoryTest {
 
     @Test
     fun `처음 20개의 상품을 불러온다`() {
-        val products = mockRemoteProductRepository.getFirstProducts()
+        // given
+        var actual: List<Product> = listOf()
 
+        // when
+        mockRemoteProductRepository.getFirstProducts(
+            onSuccess = {
+                actual = it
+            },
+            onFailure = {}
+        )
+        sleep(1000)
+
+        // then
         val expected = productsDatasource.subList(0, 20)
-        assert(products == expected)
+        assert(actual == expected)
     }
 
     @Test
     fun `20번 아이디 상품까지 받은 상태에서 추가적으로 더 불러온다`() {
-        val nextProducts = mockRemoteProductRepository.getNextProducts(20L)
+        // given
+        var actual: List<Product> = listOf()
 
+        // when
+        mockRemoteProductRepository.getNextProducts(
+            20L,
+            onSuccess = {
+                actual = it
+            },
+            onFailure = {}
+        )
+        sleep(1000)
+
+        // then
         val expected = productsDatasource.subList(20, 40)
-        assert(nextProducts == expected)
+        assert(actual == expected)
     }
 
     @Test
     fun `40번 아이디 상품까지 받은 상태에서 추가적으로 더 불러온다`() {
-        val nextProducts = mockRemoteProductRepository.getNextProducts(40L)
+        // given
+        var actual: List<Product> = listOf()
 
+        // when
+        mockRemoteProductRepository.getNextProducts(
+            40L,
+            onSuccess = {
+                actual = it
+            },
+            onFailure = {}
+        )
+        sleep(1000)
+
+        // then
         val expected = productsDatasource.subList(40, 41)
-        assert(nextProducts == expected)
+        assert(actual == expected)
     }
 }
