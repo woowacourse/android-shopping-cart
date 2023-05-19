@@ -1,5 +1,6 @@
 package woowacourse.shopping.repositoryImpl
 
+import java.lang.Thread.sleep
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -52,15 +53,21 @@ class RemoteProductRepository(baseUrl: String) : ProductRepository {
     }
 
     private fun executeRequest(request: Request): String? {
-        val response = client.newCall(request).execute()
-        if (!response.isSuccessful) {
-            response.close()
-            throw RuntimeException("Request failed with HTTP error code: ${response.code}")
-        }
+        var responseBody: String? = null
+        client.newCall(request).enqueue(
+            object : okhttp3.Callback {
+                override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
+                    throw RuntimeException("Request failed", e)
+                }
 
-        val responseBody = response.body?.string()
-        response.close()
+                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
+                    responseBody = response.body?.string()
+                    response.close()
+                }
+            }
+        )
 
+        while (responseBody == null) { sleep(1) }
         return responseBody
     }
 

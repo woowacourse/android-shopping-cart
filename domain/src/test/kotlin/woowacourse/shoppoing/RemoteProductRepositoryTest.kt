@@ -1,23 +1,23 @@
 package woowacourse.shoppoing
 
-import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONArray
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.repositoryImpl.MockWeb
 import woowacourse.shopping.repositoryImpl.RemoteProductRepository
 
 class RemoteProductRepositoryTest {
-    private lateinit var mockWebServer: MockWebServer
+    private lateinit var mockWebServer: MockWeb
     private lateinit var remoteProductRepository: RemoteProductRepository
 
     @Before
     fun setUp() {
         // given
-        mockWebServer = startMockWebServer()
+        mockWebServer = MockWeb()
         remoteProductRepository = RemoteProductRepository(
-            mockWebServer.url("").toString()
+            mockWebServer.url
         )
     }
 
@@ -27,15 +27,15 @@ class RemoteProductRepositoryTest {
         val products = remoteProductRepository.getAll()
 
         // then
-        assertThat(products).hasSize(2)
-        assertThat(products[0].id).isEqualTo(1)
-        assertThat(products[0].name).isEqualTo("치킨")
-        assertThat(products[0].price).isEqualTo(10000)
-        assertThat(products[0].imageUrl).isEqualTo("http://example.com/chicken.jpg")
-        assertThat(products[1].id).isEqualTo(2)
-        assertThat(products[1].name).isEqualTo("피자")
-        assertThat(products[1].price).isEqualTo(20000)
-        assertThat(products[1].imageUrl).isEqualTo("http://example.com/pizza.jpg")
+        assertThat(products).hasSize(100)
+        for (i in 0..99) {
+            assertThat(products[i].id).isEqualTo(i)
+            assertThat(products[i].name).isEqualTo("치킨$i")
+            assertThat(products[i].price).isEqualTo(10000)
+            assertThat(products[i].imageUrl).isEqualTo(
+                "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+            )
+        }
     }
 
     @Test
@@ -46,10 +46,12 @@ class RemoteProductRepositoryTest {
         // then
         assertThat(products).hasSize(10)
         for (i in 0..9) {
-            assertThat(products[i].id).isEqualTo(i + 1)
-            assertThat(products[i].name).isEqualTo("치킨")
+            assertThat(products[i].id).isEqualTo(i)
+            assertThat(products[i].name).isEqualTo("치킨$i")
             assertThat(products[i].price).isEqualTo(10000)
-            assertThat(products[i].imageUrl).isEqualTo("http://example.com/chicken.jpg")
+            assertThat(products[i].imageUrl).isEqualTo(
+                "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+            )
         }
     }
 
@@ -63,10 +65,30 @@ class RemoteProductRepositoryTest {
         println(products)
         assertThat(products).hasSize(10)
         for (i in 0..9) {
-            assertThat(products[i].id).isEqualTo(i + 11)
-            assertThat(products[i].name).isEqualTo("치킨")
+            assertThat(products[i].id).isEqualTo(i + 10)
+            assertThat(products[i].name).isEqualTo("치킨${i + 10}")
             assertThat(products[i].price).isEqualTo(10000)
-            assertThat(products[i].imageUrl).isEqualTo("http://example.com/chicken.jpg")
+            assertThat(products[i].imageUrl).isEqualTo(
+                "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+            )
+        }
+    }
+
+    @Test
+    fun `다음 상품드을 가져온다_3`() {
+        // when
+        val products = remoteProductRepository.getNext(20)
+
+        // then
+        println(products)
+        assertThat(products).hasSize(20)
+        for (i in 0..9) {
+            assertThat(products[i].id).isEqualTo(i)
+            assertThat(products[i].name).isEqualTo("치킨$i")
+            assertThat(products[i].price).isEqualTo(10000)
+            assertThat(products[i].imageUrl).isEqualTo(
+                "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+            )
         }
     }
 
@@ -76,10 +98,13 @@ class RemoteProductRepositoryTest {
         val product = remoteProductRepository.findById(1)
 
         // then
+        println(product)
         assertThat(product.id).isEqualTo(1)
-        assertThat(product.name).isEqualTo("치킨")
+        assertThat(product.name).isEqualTo("치킨1")
         assertThat(product.price).isEqualTo(10000)
-        assertThat(product.imageUrl).isEqualTo("http://example.com/chicken.jpg")
+        assertThat(product.imageUrl).isEqualTo(
+            "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+        )
     }
 
     @Test

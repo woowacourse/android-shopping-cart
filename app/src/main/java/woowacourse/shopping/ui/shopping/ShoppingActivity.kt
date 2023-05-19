@@ -15,6 +15,8 @@ import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.model.RecentProductUIModel
+import woowacourse.shopping.repositoryImpl.MockWeb
+import woowacourse.shopping.repositoryImpl.RemoteProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detailedProduct.DetailedProductActivity
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapter
@@ -55,9 +57,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         ProductFakeRepository.getAll().forEach {
             ProductDatabase(this).insert(it)
         }
+        var url: String? = null
+        val thread = Thread { url = MockWeb().url }
+        thread.start()
+        thread.join()
         presenter = ShoppingPresenter(
             this,
-            ProductDatabase(this),
+            RemoteProductRepository(url ?: ""),
             RecentProductDatabase(this),
             CartDatabase(this)
         )
