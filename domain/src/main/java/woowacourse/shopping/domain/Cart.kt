@@ -10,6 +10,7 @@ data class Cart(val products: List<CheckableCartProduct>) {
         return Cart(
             products.toMutableList().apply {
                 val index = indexOfFirst { it.product == checkableCartProduct.product }
+                if (index < 0) return@apply
                 this[index] = checkableCartProduct.copy(checked = isChecked)
             }
         )

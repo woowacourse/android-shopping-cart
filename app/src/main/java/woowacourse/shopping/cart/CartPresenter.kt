@@ -11,6 +11,7 @@ import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CheckableCartProduct
+import kotlin.math.min
 
 class CartPresenter(
     private val view: CartContract.View,
@@ -19,6 +20,8 @@ class CartPresenter(
     private var currentPage: Int = 0,
     private val countPerPage: Int
 ) : CartContract.Presenter {
+    private var pagedCart: Cart = Cart(emptyList())
+
     init {
         updateCartPage()
     }
@@ -57,7 +60,7 @@ class CartPresenter(
     }
 
     override fun checkWholeCartProduct(isChecked: Boolean) {
-        cart.products.forEach {
+        pagedCart.products.forEach {
             checkCartProduct(it.toViewModel(), isChecked)
         }
     }
@@ -71,8 +74,8 @@ class CartPresenter(
     }
 
     private fun updateCart() {
-        cart = getPagedCart()
-        view.updateCart(cart.products.map { it.toViewModel() })
+        pagedCart = getPagedCart()
+        view.updateCart(pagedCart.products.map { it.toViewModel() })
     }
 
     private fun updateNavigator() {
@@ -96,15 +99,26 @@ class CartPresenter(
     }
 
     private fun updateTotalCheck() {
-        view.updateTotalCheck(cart.isTotalChecked())
+        view.updateTotalCheck(pagedCart.isTotalChecked())
     }
 
     private fun getPagedCart(): Cart {
-        return Cart(
-            cartRepository.selectPage(
-                currentPage, countPerPage
-            ).products.map { CheckableCartProduct(findChecked(it), it) }
-        )
+        return if (currentPage * countPerPage >= cart.products.size) {
+            val loadedCart = Cart(
+                cartRepository.selectPage(
+                    currentPage, countPerPage
+                ).products.map { CheckableCartProduct(findChecked(it), it) }
+            )
+            cart += loadedCart
+            loadedCart
+        } else {
+            Cart(
+                cart.products.subList(
+                    currentPage * countPerPage,
+                    min(cart.products.size, currentPage * countPerPage + countPerPage)
+                )
+            )
+        }
     }
 
     private fun findChecked(carProduct: CartProduct): Boolean {
