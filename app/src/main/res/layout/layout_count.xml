@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/button_minus"
+            android:text="@string/minus_button_text"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/text_product_count"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textSize="22sp"
+            tools:text="1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/button_plus"
+            android:text="@string/plus_button_text"
+            android:textSize="22sp" />
+
+    </LinearLayout>
+</layout>

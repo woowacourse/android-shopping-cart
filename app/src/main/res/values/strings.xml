@@ -9,4 +9,8 @@
     <string name="read_more">더보기</string>
     <string name="previous_page"><![CDATA[<]]></string>
     <string name="next_page"><![CDATA[>]]></string>
+    <string name="minus_button_text">-</string>
+    <string name="plus_button_text">+</string>
+    <string name="total_checkout_description">전체</string>
+    <string name="order_button_text">주문하기(%d)</string>
 </resources>
