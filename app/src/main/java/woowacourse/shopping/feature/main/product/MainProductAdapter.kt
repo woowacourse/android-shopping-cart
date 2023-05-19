@@ -9,11 +9,11 @@ class MainProductAdapter(
     private val listener: ProductClickListener
 ) : ListAdapter<ProductUiModel, MainProductViewHolder>(ProductDiffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainProductViewHolder {
-        return MainProductViewHolder.create(parent)
+        return MainProductViewHolder.create(parent, listener)
     }
 
     override fun onBindViewHolder(holder: MainProductViewHolder, position: Int) {
-        holder.bind(getItem(position), listener)
+        holder.bind(getItem(position))
     }
 
     override fun getItemViewType(position: Int): Int {

@@ -13,11 +13,11 @@ class CartProductAdapter(private val cartProductClickListener: CartProductClickL
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
-        return CartProductViewHolder.create(parent)
+        return CartProductViewHolder.create(parent, cartProductClickListener)
     }
 
     override fun onBindViewHolder(holder: CartProductViewHolder, position: Int) {
-        holder.bind(getItem(position), cartProductClickListener)
+        holder.bind(getItem(position))
     }
 
     fun setItems(newItems: List<CartProductUiModel>) {

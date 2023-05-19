@@ -87,5 +87,16 @@ class CounterView @JvmOverloads constructor(
         fun setCounterViewMaxValue(counterView: CounterView, value: Int) {
             counterView.maxCountValue = value
         }
+
+//        @JvmStatic
+//        @BindingAdapter("onChangeCounter")
+//        fun setChangeCountListenerById(counterView: CounterView, onChangeCount:(id:Long, count:Int)->Unit) {
+//            counterView.countStateChangeListener = object : OnCountStateChangeListener{
+//                override fun onCountChanged(counterNavigationView: CounterView?, count: Int) {
+//                    onChangeCount
+//                }
+//            }
+//        }
+
     }
 }
