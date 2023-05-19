@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.main
 
 import com.example.domain.cache.ProductLocalCache
 import com.example.domain.datasource.productsDatasource
+import com.example.domain.model.Product
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
@@ -34,7 +35,12 @@ internal class MainPresenterTest {
     @Test
     fun `처음에 상품 목록을 제대로 불러와서 상품을 화면에 띄운다`() {
         // given
-        every { productRepository.getFirstProducts() } returns mockProducts.take(20)
+        val successSlot = slot<(List<Product>) -> Unit>()
+        every {
+            productRepository.getFirstProducts(onSuccess = capture(successSlot), any())
+        } answers {
+            successSlot.captured.invoke(mockProducts.take(20)) // 기억한 람다를 실행시킨다. 이때 데이터 20개를 넘겨줌
+        }
         val slot = slot<List<ProductUiModel>>()
         every { view.setProducts(capture(slot)) } just Runs
 
@@ -63,14 +69,27 @@ internal class MainPresenterTest {
     @Test
     fun `상품 목록을 이어서 더 불러와서 화면에 추가로 띄운다`() {
         // given
-        every { productRepository.getFirstProducts() } returns mockProducts.take(20)
+        val successSlot = slot<(List<Product>) -> Unit>()
+        every {
+            productRepository.getFirstProducts(onSuccess = capture(successSlot), any())
+        } answers {
+            successSlot.captured.invoke(mockProducts.take(20)) // 기억한 람다를 실행시킨다. 이때 데이터 20개를 넘겨줌
+        }
         every { view.setProducts(any()) } just Runs
         presenter.loadProducts()
 
         val lastProductId = 20L
-        every { productRepository.getNextProducts(lastProductId) } returns mockProducts.subList(
-            20, 40
-        )
+        val nextSuccessSlot = slot<(List<Product>) -> Unit>()
+        every {
+            productRepository.getNextProducts(
+                lastProductId,
+                capture(nextSuccessSlot),
+                any()
+            )
+        } answers {
+            nextSuccessSlot.captured.invoke(mockProducts.subList(20, 40))
+        }
+
         val slot = slot<List<ProductUiModel>>()
         every { view.setProducts(capture(slot)) } just Runs
 
