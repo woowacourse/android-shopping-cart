@@ -3,6 +3,7 @@ package woowacourse.shopping.data.shoppingCart
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.util.Log
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_QUANTITY
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_NAME
@@ -11,7 +12,7 @@ import woowacourse.shopping.data.WoowaShoppingDbHelper
 class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
     private val shoppingDb by lazy { WoowaShoppingDbHelper(context).readableDatabase }
 
-    override fun getProductsInShoppingCart(unit: Int, pageNumber: Int): List<ProductInCartEntity> {
+    override fun getShoppingCartByPage(unit: Int, pageNumber: Int): List<ProductInCartEntity> {
         val offset = unit * (pageNumber - 1)
         val query = "SELECT * FROM $TABLE_NAME LIMIT $unit OFFSET $offset"
         val cursor = shoppingDb.rawQuery(query, null)
@@ -19,6 +20,17 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
         while (cursor.moveToNext()) {
             itemContainer.add(readProductInCart(cursor))
         }
+        return itemContainer
+    }
+
+    override fun getShoppingCart(): List<ProductInCartEntity> {
+        val query = "SELECT * FROM $TABLE_NAME"
+        val cursor = shoppingDb.rawQuery(query, null)
+        val itemContainer = mutableListOf<ProductInCartEntity>()
+        while (cursor.moveToNext()) {
+            itemContainer.add(readProductInCart(cursor))
+        }
+        Log.d("1243", itemContainer.toString())
         return itemContainer
     }
 
@@ -30,11 +42,51 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
         return true
     }
 
+//    override fun addProductInShoppingCart2(productId: Long, productQuantity: Int): Long {
+//        val data = ContentValues()
+//        data.put(TABLE_COLUMN_PRODUCT_ID, productId)
+//        data.put(TABLE_COLUMN_QUANTITY, productQuantity)
+//        Log.d("1243", data.toString())
+//        return shoppingDb.insert(TABLE_NAME, null, data)
+//    }
+
     override fun addProductInShoppingCart(productId: Long, productQuantity: Int): Long {
-        val data = ContentValues()
-        data.put(TABLE_COLUMN_PRODUCT_ID, productId)
-        data.put(TABLE_COLUMN_QUANTITY, productQuantity)
-        return shoppingDb.insert(TABLE_NAME, null, data)
+        val existingQuantity = getQuantityFromShoppingCart(productId)
+        val updatedQuantity = existingQuantity + productQuantity
+
+        val contentValues = ContentValues().apply {
+            put(TABLE_COLUMN_QUANTITY, updatedQuantity)
+        }
+
+        val whereClause = "$TABLE_COLUMN_PRODUCT_ID = ?"
+        val whereArgs = arrayOf(productId.toString())
+        val rowsAffected = shoppingDb.update(TABLE_NAME, contentValues, whereClause, whereArgs)
+
+        if (rowsAffected == 0) {
+            contentValues.apply {
+                put(TABLE_COLUMN_PRODUCT_ID, productId)
+            }
+            return shoppingDb.insert(TABLE_NAME, null, contentValues)
+        }
+        Log.d("1243", rowsAffected.toString())
+        return rowsAffected.toLong()
+    }
+
+    private fun getQuantityFromShoppingCart(productId: Long): Int {
+        val whereClause = "$TABLE_COLUMN_PRODUCT_ID = ?"
+        val whereArgs = arrayOf(productId.toString())
+
+        val query = "SELECT $TABLE_COLUMN_QUANTITY FROM $TABLE_NAME WHERE $whereClause"
+        val cursor = shoppingDb.rawQuery(query, whereArgs)
+
+        var quantity = 0
+        if (cursor.moveToFirst()) {
+            val quantityIndex = cursor.getColumnIndex(TABLE_COLUMN_QUANTITY)
+            quantity = cursor.getInt(quantityIndex)
+        }
+
+        cursor.close()
+        return quantity
     }
 
     override fun getShoppingCartSize(): Int {

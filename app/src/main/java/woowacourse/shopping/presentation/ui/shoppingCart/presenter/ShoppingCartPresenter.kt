@@ -12,7 +12,7 @@ class ShoppingCartPresenter(
     private var pageNumber = PageNumber()
 
     override fun getShoppingCart(page: Int) {
-        val shoppingCart = shoppingCartRepository.getShoppingCart(SHOPPING_CART_ITEM_COUNT, page)
+        val shoppingCart = shoppingCartRepository.getShoppingCartByPage(SHOPPING_CART_ITEM_COUNT, page)
         view.setShoppingCart(shoppingCart)
     }
 
@@ -22,7 +22,7 @@ class ShoppingCartPresenter(
 
     private fun getPage() {
         val shoppingCart =
-            shoppingCartRepository.getShoppingCart(SHOPPING_CART_ITEM_COUNT, pageNumber.value)
+            shoppingCartRepository.getShoppingCartByPage(SHOPPING_CART_ITEM_COUNT, pageNumber.value)
         view.setShoppingCart(shoppingCart)
     }
 

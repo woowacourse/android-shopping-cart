@@ -2,7 +2,6 @@ package woowacourse.shopping.data.shoppingCart
 
 import woowacourse.shopping.data.product.ProductDataSource
 import woowacourse.shopping.data.product.ProductMapper.toDomainModel
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
@@ -10,18 +9,21 @@ class ShoppingCartRepositoryImpl(
     private val shoppingCartDataSource: ShoppingCartDataSource,
     private val productDataSource: ProductDataSource,
 ) : ShoppingCartRepository {
-    override fun getShoppingCart(unit: Int, pageNumber: Int): List<ProductInCart> {
-        val productInCartEntities =
-            shoppingCartDataSource.getProductsInShoppingCart(unit, pageNumber)
 
-        val productsInCart = mutableListOf<ProductInCart>()
-        productInCartEntities.forEach {
-            val product: Product =
-                (productDataSource.getProductEntity(it.productId) ?: return@forEach).toDomainModel()
-            productsInCart.add(ProductInCart(product, it.quantity))
+    override fun getShoppingCart(): List<ProductInCart> {
+        return shoppingCartDataSource.getShoppingCart().mapNotNull { entity ->
+            entity.toProductInCart()
         }
+    }
 
-        return productsInCart
+    override fun getShoppingCartByPage(unit: Int, pageNumber: Int): List<ProductInCart> {
+        return shoppingCartDataSource.getShoppingCartByPage(unit, pageNumber)
+            .mapNotNull { entity -> entity.toProductInCart() }
+    }
+
+    private fun ProductInCartEntity.toProductInCart(): ProductInCart? {
+        val product = productDataSource.getProductEntity(productId)?.toDomainModel()
+        return product?.let { ProductInCart(it, quantity) }
     }
 
     override fun addProductInCart(productInCart: ProductInCart): Long {
