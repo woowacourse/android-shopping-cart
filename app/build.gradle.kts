@@ -60,4 +60,7 @@ dependencies {
 
     // concatAdapter
     implementation("androidx.recyclerview:recyclerview:1.3.0")
+
+    // core-testing
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 }
