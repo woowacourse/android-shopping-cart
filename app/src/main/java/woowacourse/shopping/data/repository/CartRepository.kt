@@ -30,8 +30,4 @@ class CartRepository(private val localDataSource: CartDataSource) {
     fun selectAll(): Shop {
         return localDataSource.selectAll()
     }
-
-    fun selectPage(page: Int, countPerPage: Int): Shop {
-        return localDataSource.selectPage(page, countPerPage)
-    }
 }
