@@ -19,4 +19,8 @@
     <string name="tv_next"><![CDATA[>]]></string>
     <string name="default_page">1</string>
 
+    <!-- layout_counter -->
+    <string name="btn_plus">+</string>
+    <string name="btn_minus">-</string>
+
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape>
+            <solid android:color="@color/woowa_previous_disable" />
+            <corners android:topLeftRadius="4dp" android:bottomLeftRadius="4dp" />
+        </shape>
+    </item>
+
+    <item android:state_enabled="true">
+        <shape>
+            <solid android:color="@color/woowa_previous_enable" />
+            <corners android:topLeftRadius="4dp" android:bottomLeftRadius="4dp" />
+        </shape>
+    </item>
+</selector>

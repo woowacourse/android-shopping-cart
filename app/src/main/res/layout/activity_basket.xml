@@ -57,7 +57,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:background="@drawable/shape_previous"
+                android:background="@drawable/shape_colored_previous"
                 android:layout_height="42dp"
                 android:text="@string/tv_previous" />
 
@@ -85,7 +85,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tv_current_page"
-                android:background="@drawable/shape_next"
+                android:background="@drawable/shape_colored_next"
                 android:layout_height="42dp"
                 android:text="@string/tv_next" />
         </androidx.constraintlayout.widget.ConstraintLayout>
