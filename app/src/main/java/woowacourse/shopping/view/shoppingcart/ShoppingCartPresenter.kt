@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
+import com.shopping.domain.Count
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
@@ -48,6 +49,10 @@ class ShoppingCartPresenter(
         setButtonViews()
         view.updateCartProduct(loadCartProducts())
         view.updatePageCounter(paging.getPageCount())
+    }
+
+    override fun updateCartProductCount(cartProductUIModel: CartProductUIModel) {
+        cartProductRepository.update(cartProductUIModel.toDomain())
     }
 
     private fun setButtonViews() {

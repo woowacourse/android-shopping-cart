@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
+import com.shopping.domain.Count
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
 
@@ -20,5 +21,6 @@ interface ShoppingCartContract {
         fun removeCartProduct(cartProductUIModel: CartProductUIModel)
         fun loadNextPage(isActivated: Boolean)
         fun loadPreviousPage(isActivated: Boolean)
+        fun updateCartProductCount(cartProductUIModel: CartProductUIModel)
     }
 }

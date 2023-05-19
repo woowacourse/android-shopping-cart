@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.shopping.domain.Count
 import woowacourse.shopping.R
 import woowacourse.shopping.data.db.CartProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
@@ -43,7 +44,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun setAdapter() {
-        adapter = ShoppingCartAdapter(emptyList(), setOnClickRemove())
+        adapter = ShoppingCartAdapter(emptyList(), setOnClickRemove(), setOnClickCountButton())
     }
 
     private fun setViewSettings() {
@@ -62,6 +63,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private fun setOnClickRemove(): (CartProductUIModel) -> Unit = { product ->
         presenter.removeCartProduct(product)
+    }
+
+    private fun setOnClickCountButton(): (CartProductUIModel) -> Unit = { product ->
+        presenter.updateCartProductCount(product)
     }
 
     override fun updateCartProduct(cartProducts: List<CartProductUIModel>) {
