@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.shopping
 
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.ui.model.UiRecentProduct
 
@@ -17,6 +18,10 @@ interface ShoppingContract {
 
     interface Presenter {
         val view: View
+
+        fun addBasketProduct(product: Product)
+
+        fun removeBasketProduct(product: Product)
 
         fun fetchProducts()
 

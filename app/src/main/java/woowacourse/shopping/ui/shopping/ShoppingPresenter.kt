@@ -1,6 +1,9 @@
 package woowacourse.shopping.ui.shopping
 
 import woowacourse.shopping.domain.Basket
+import woowacourse.shopping.domain.BasketProduct
+import woowacourse.shopping.domain.Count
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
@@ -21,6 +24,14 @@ class ShoppingPresenter(
     private var totalProducts: List<UiProduct> = listOf()
     private var recentProducts: List<UiRecentProduct> = listOf()
     private val basket: Basket = Basket(basketRepository.getAll())
+
+    override fun addBasketProduct(product: Product) {
+        basket.add(BasketProduct(count = Count(1), product = product))
+    }
+
+    override fun removeBasketProduct(product: Product) {
+        basket.delete(BasketProduct(count = Count(1), product = product))
+    }
 
     override fun fetchProducts() {
         var products = productRepository
