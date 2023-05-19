@@ -1,11 +1,12 @@
-package com.example.domain.remote
+package woowacourse.shopping.data
 
 import com.example.domain.cache.ProductLocalCache
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.repository.ProductRepository
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.data.repository.remote.MockRemoteProductRepositoryImpl
+import woowacourse.shopping.data.service.MockProductRemoteService
 
 internal class MockRemoteProductRepositoryTest {
     private lateinit var mockRemoteProductRepository: ProductRepository
@@ -17,11 +18,6 @@ internal class MockRemoteProductRepositoryTest {
         mockRemoteProductRepository =
             MockRemoteProductRepositoryImpl(mockProductRemoteService, ProductLocalCache)
         ProductLocalCache.clear()
-    }
-
-    @After
-    fun after() {
-//        mockProductRemoteService.
     }
 
     @Test

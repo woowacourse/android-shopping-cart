@@ -12,9 +12,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.ProductMockRepositoryImpl
-import woowacourse.shopping.data.RecentProductRepositoryImpl
+import woowacourse.shopping.data.repository.local.CartRepositoryImpl
+import woowacourse.shopping.data.repository.local.ProductMockRepositoryImpl
+import woowacourse.shopping.data.repository.local.RecentProductRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
