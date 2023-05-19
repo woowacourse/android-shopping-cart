@@ -13,4 +13,5 @@
     <string name="all_select_check_box_text">전체</string>
     <string name="recent_product_text">마지막으로 본 상품</string>
     <string name="load_more_end">더이상 불러올 상품이 없습니다</string>
+    <string name="success_add_cart">장바구니에 담았습니다</string>
 </resources>

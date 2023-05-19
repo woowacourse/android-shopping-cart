@@ -47,7 +47,10 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
 
         onBackPressedDispatcher.addCallback(this, callback)
 
-        supportFragmentManager.setFragmentResultListener(CounterDialog.CHANGE_COUNTER_APPLY_KEY,this) { _, bundle ->
+        supportFragmentManager.setFragmentResultListener(
+            CounterDialog.CHANGE_COUNTER_APPLY_KEY,
+            this
+        ) { _, bundle ->
             val changeCount = bundle.getInt(CounterDialog.COUNT_KEY, -1)
             if (changeCount < 0) return@setFragmentResultListener
             presenter.updateProductCount(changeCount)
@@ -76,15 +79,15 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
 
     override fun showRecentProductDetailScreen(recentProductUiModel: RecentProductUiModel) {
         startActivity(
-            getIntent(this, recentProductUiModel.productUiModel, recentProductUiModel)
+            getIntent(
+                this,
+                recentProductUiModel.productUiModel,
+                recentProductUiModel
+            ).apply { addFlags(FLAG_ACTIVITY_CLEAR_TOP) }
         )
     }
 
     override fun exitDetailScreen() = finish()
-
-    override fun navigateMainScreen() {
-        startActivity(MainActivity.getIntent(this).apply { addFlags(FLAG_ACTIVITY_CLEAR_TOP) })
-    }
 
     override fun showSelectCartProductCountScreen(product: ProductUiModel) {
         val counterDialog = CounterDialog.newInstance(product)

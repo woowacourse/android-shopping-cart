@@ -10,7 +10,6 @@ interface DetailContract {
         fun setRecentScreen(title: String, money: String)
         fun showRecentProductDetailScreen(recentProductUiModel: RecentProductUiModel)
         fun exitDetailScreen()
-        fun navigateMainScreen()
         fun showSelectCartProductCountScreen(product: ProductUiModel)
     }
 

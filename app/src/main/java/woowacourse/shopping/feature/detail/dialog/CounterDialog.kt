@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import woowacourse.shopping.R
 import woowacourse.shopping.common_ui.CounterView
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
@@ -72,6 +74,7 @@ class CounterDialog : DialogFragment(), CounterDialogContract.View {
             CHANGE_COUNTER_APPLY_KEY,
             bundleOf(COUNT_KEY to changeApplyCount)
         )
+        Toast.makeText(requireContext(), getString(R.string.success_add_cart), Toast.LENGTH_SHORT).show()
     }
 
     override fun exit() {

@@ -58,7 +58,6 @@ class DetailPresenter(
     }
 
     override fun exit() {
-        if (isRecentProduct) return view.navigateMainScreen()
         view.exitDetailScreen()
     }
 }
