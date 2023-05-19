@@ -27,8 +27,9 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginStart="16dp"
-            android:checked="@{product.checked}"
             android:layout_marginTop="21dp"
+            android:checked="@{product.checked}"
+            android:onCheckedChanged="@{(_, isChecked) -> listener.onItemCheckChanged(product.id, isChecked)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -89,7 +90,8 @@
             android:layout_marginBottom="18dp"
             app:count="@{product.count}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:minCount="@{1}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

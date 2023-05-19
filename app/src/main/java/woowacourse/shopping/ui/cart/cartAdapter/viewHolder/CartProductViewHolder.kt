@@ -16,12 +16,8 @@ class CartProductViewHolder private constructor(
     override fun bind(data: CartItemType) {
         if (data !is CartItemType.Cart) return
         binding.product = data.product
-        binding.cvProductCounter.minCount = 1
         binding.cvProductCounter.setOnClickListener {
             cartListener.onItemUpdate(data.product.id, it)
-        }
-        binding.cbProductCheck.setOnCheckedChangeListener { _, isChecked ->
-            cartListener.onItemCheckChanged(data.product.id, isChecked)
         }
     }
 

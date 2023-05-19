@@ -2,5 +2,7 @@
 <resources>
     <declare-styleable name="ProductCounter">
         <attr name="count" format="integer" />
+        <attr name="minCount" format="integer" />
+        <attr name="maxCount" format="integer" />
     </declare-styleable>
 </resources>
