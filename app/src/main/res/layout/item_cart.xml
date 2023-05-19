@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="item"
+            type="woowacourse.shopping.ui.cart.uistate.CartUIState" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="11dp"
+            android:text="@{item.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -88,6 +95,7 @@
             android:layout_width="0dp"
             android:layout_height="45dp"
             android:gravity="center"
+            android:text="@{String.valueOf(item.count)}"
             android:textColor="@color/grey_555"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_cart_plus_count"

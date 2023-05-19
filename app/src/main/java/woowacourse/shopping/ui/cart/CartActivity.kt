@@ -61,7 +61,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.setPageButtons(PAGE_SIZE)
     }
 
-    override fun setButtonClickListener(maxOffset: Int) {
+    override fun setPageButtonClickListener(maxOffset: Int) {
         updateButtonsEnabledState(maxOffset)
 
         binding.btnPageDown.setOnClickListener {
@@ -81,9 +81,16 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItems(cartItems: List<CartUIState>) {
-        binding.recyclerViewCart.adapter = CartListAdapter(cartItems) {
-            presenter.deleteCartItem(cartItems[it].id)
-        }
+        binding.recyclerViewCart.adapter = CartListAdapter(
+            cartItems.toMutableList(),
+            presenter::deleteCartItem,
+            presenter::plusItemCount,
+            presenter::minusItemCount,
+        )
+    }
+
+    override fun updateCartItems(cartItems: List<CartUIState>) {
+        (binding.recyclerViewCart.adapter as CartListAdapter).updateItems(cartItems)
     }
 
     private fun updatePage() {

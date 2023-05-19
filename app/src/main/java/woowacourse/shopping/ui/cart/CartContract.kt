@@ -14,6 +14,7 @@ interface CartContract {
 
     interface View {
         fun setCartItems(cartItems: List<CartUIState>)
-        fun setButtonClickListener(maxOffset: Int)
+        fun setPageButtonClickListener(maxOffset: Int)
+        fun updateCartItems(cartItems: List<CartUIState>)
     }
 }
