@@ -18,12 +18,23 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/shape_woowa_light_gray_line_1_rect">
 
+        <CheckBox
+            android:id="@+id/order_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:checked="true"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/product_name_text_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="14dp"
-            android:layout_marginTop="18dp"
             android:layout_marginEnd="10dp"
             android:ellipsize="end"
             android:includeFontPadding="false"
@@ -32,9 +43,10 @@
             android:textColor="@color/woowa_text_black"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/order_check_box"
             app:layout_constraintEnd_toStartOf="@+id/close_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/order_check_box"
+            app:layout_constraintTop_toTopOf="@+id/order_check_box"
             tools:text="[든든] 동원 스위트콘" />
 
         <ImageView
@@ -60,7 +72,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="136:72"
-            app:layout_constraintStart_toStartOf="@id/product_name_text_view"
+            app:layout_constraintStart_toStartOf="@+id/order_check_box"
             app:layout_constraintTop_toBottomOf="@+id/product_name_text_view"
             tools:srcCompat="@tools:sample/avatars" />
 
@@ -68,12 +80,25 @@
             android:id="@+id/product_price_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:includeFontPadding="false"
             android:text="@{@string/price_format(basketProduct.product.price.value)}"
             android:textColor="@color/woowa_text_black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
+            app:layout_constraintBottom_toTopOf="@+id/counter_view"
             app:layout_constraintEnd_toEndOf="@id/close_button"
             tools:text="99,800원" />
+
+        <woowacourse.shopping.widget.ProductCounterView
+            android:id="@+id/counter_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            bind:count="@{basketProduct.selectedCount.value}"
+            app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
+            app:layout_constraintEnd_toEndOf="@+id/product_price_text_view"
+            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintWidth_percent="0.35"
+            app:max_count="99"
+            app:min_count="1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

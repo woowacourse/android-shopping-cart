@@ -24,5 +24,7 @@
     <string name="plus">+</string>
     <string name="last_viewed_product">마지막으로 본 상품</string>
     <string name="put_in">담기</string>
+    <string name="order_format">주문하기(%d)</string>
+    <string name="all_select">전체</string>
 
 </resources>

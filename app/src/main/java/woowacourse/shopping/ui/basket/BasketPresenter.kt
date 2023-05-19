@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.basket
 import woowacourse.shopping.domain.Basket
 import woowacourse.shopping.domain.PageNumber
 import woowacourse.shopping.domain.repository.BasketRepository
-import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUi
 import woowacourse.shopping.model.UiBasketProduct
 import woowacourse.shopping.ui.basket.BasketContract.Presenter
@@ -28,7 +27,7 @@ class BasketPresenter(
     }
 
     override fun deleteBasketProduct(basketProduct: UiBasketProduct) {
-        basketRepository.minusProductCount(basketProduct.product.toDomain())
+        basketRepository.deleteByProductId(basketProduct.product.id)
         fetchBasket(currentPage.value)
     }
 
