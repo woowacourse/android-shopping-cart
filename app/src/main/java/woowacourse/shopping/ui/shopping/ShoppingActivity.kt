@@ -93,7 +93,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initAdapter() {
         recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
         recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
-        productAdapter = ProductAdapter(presenter::inquiryProductDetail)
+        productAdapter = ProductAdapter(
+            presenter::inquiryProductDetail,
+            presenter::removeBasketProduct,
+            presenter::addBasketProduct
+        )
         moreButtonAdapter = MoreButtonAdapter(presenter::fetchProducts)
         concatAdapter =
             ConcatAdapter(

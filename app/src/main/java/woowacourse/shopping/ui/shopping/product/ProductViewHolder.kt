@@ -8,7 +8,12 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.util.setThrottleFirstOnClickListener
 
-class ProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :
+class ProductViewHolder(
+    parent: ViewGroup,
+    onItemClick: (Int) -> Unit,
+    minusClickListener: (UiProduct) -> Unit,
+    plusClickListener: (UiProduct) -> Unit
+) :
     RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_product, parent, false)
     ) {
@@ -16,9 +21,12 @@ class ProductViewHolder(parent: ViewGroup, onItemClick: (Int) -> Unit) :
 
     init {
         binding.root.setThrottleFirstOnClickListener { onItemClick(bindingAdapterPosition) }
+        binding.counterProduct.minusClickListener = minusClickListener
+        binding.counterProduct.plusClickListener = plusClickListener
     }
 
     fun bind(product: UiProduct) {
         binding.product = product
+        binding.counterProduct.product = product
     }
 }
