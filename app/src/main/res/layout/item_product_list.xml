@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="cartItem"
             type="woowacourse.shopping.presentation.model.CartProductModel" />
@@ -74,6 +76,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/drawable_oval"
+            android:visibility="@{cartItem.getCount() > 0 ? View.GONE : View.VISIBLE}"
             android:gravity="center"
             android:text="@string/item_cart_list_plus"
             android:textSize="22sp"
@@ -83,12 +86,14 @@
             app:layout_constraintWidth_percent="0.31" />
 
         <woowacourse.shopping.presentation.view.common.ProductCounterView
-            android:id="@+id/layout_product_list_order_count"
+            app:count="1"
+            app:min_count="0"
+            android:id="@+id/count_view_product_list_order_count"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="11dp"
-            android:visibility="gone"
+            android:visibility="@{cartItem.getCount() > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_thumbnail"
             app:layout_constraintDimensionRatio="H,126:42"
             app:layout_constraintEnd_toEndOf="parent"

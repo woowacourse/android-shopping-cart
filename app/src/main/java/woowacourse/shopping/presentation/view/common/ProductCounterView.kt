@@ -35,15 +35,15 @@ class ProductCounterView(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     fun setOnPlusClickListener(onPlusClick: (ProductCounterView) -> Unit) {
         binding.counterPlusButton.setOnClickListener {
-            onPlusClick(this)
             plusCount()
+            onPlusClick(this)
         }
     }
 
     fun setOnMinusClickListener(onMinusClick: (ProductCounterView) -> Unit) {
         binding.counterMinusButton.setOnClickListener {
-            onMinusClick(this)
             minusCount()
+            onMinusClick(this)
         }
     }
 
@@ -60,9 +60,4 @@ class ProductCounterView(context: Context, attrs: AttributeSet) : ConstraintLayo
         private const val DEFAULT_MIN_COUNT = 1
         private const val DEFAULT_MAX_COUNT = 99
     }
-
-//    interface OnClickListener {
-//        fun onClickPlus(product: UiProduct)
-//        fun onClickMinus(product: UiProduct)
-//    }
 }

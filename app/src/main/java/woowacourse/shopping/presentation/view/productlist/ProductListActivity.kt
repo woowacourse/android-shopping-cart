@@ -8,7 +8,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.local.database.CartDao
 import woowacourse.shopping.data.local.database.RecentProductDao
+import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.model.ProductModel
@@ -26,7 +28,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private val presenter: ProductContract.Presenter by lazy {
         ProductListPresenter(
             this,
-            recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this))
+            recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this)),
+            cartRepository = CartRepositoryImpl(CartDao(this))
         )
     }
 
@@ -96,7 +99,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun setProductItemsView(products: List<ProductModel>) {
-        productListAdapter = ProductListAdapter(products, ::onProductClickEvent)
+        productListAdapter =
+            ProductListAdapter(products, ::onProductClickEvent, ::onCountChangedEvent)
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
@@ -124,6 +128,10 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         presenter.saveRecentProduct(product.id)
         presenter.updateRecentProductItems()
         moveToActivity(product.id)
+    }
+
+    private fun onCountChangedEvent(id: Long, Count: Int) {
+        presenter.updateCartProduct(id, Count)
     }
 
     private fun moveToActivity(productId: Long) {

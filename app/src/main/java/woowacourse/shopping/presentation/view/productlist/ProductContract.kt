@@ -18,5 +18,6 @@ interface ProductContract {
         fun updateRecentProductItems()
         fun saveRecentProduct(productId: Long)
         fun loadMoreData(startPosition: Int)
+        fun updateCartProduct(productId: Long, count: Int)
     }
 }

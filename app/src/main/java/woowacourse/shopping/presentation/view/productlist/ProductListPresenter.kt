@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.view.productlist
 
+import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
@@ -11,7 +12,8 @@ import java.time.format.DateTimeFormatter
 class ProductListPresenter(
     private val view: ProductContract.View,
     private val productRepository: ProductRepository = ProductRepositoryImpl(),
-    private val recentProductRepository: RecentProductRepository
+    private val recentProductRepository: RecentProductRepository,
+    private val cartRepository: CartRepository
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()
     private val recentProducts = mutableListOf<RecentProductModel>()
@@ -45,6 +47,10 @@ class ProductListPresenter(
         val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT)
         products.addAll(newProducts)
         view.updateMoreProductsView(newProducts)
+    }
+
+    override fun updateCartProduct(productId: Long, count: Int) {
+        cartRepository.addCart(productId, count)
     }
 
     companion object {
