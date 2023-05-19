@@ -70,11 +70,11 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         return DataBasket(basketProducts = basketProducts.safeSubList(page.start, page.end))
     }
 
-    override fun insert(product: Product) {
+    override fun insert(product: Product, count: Int) {
         val contentValues = ContentValues().apply {
             put(BasketContract.PRODUCT_ID, product.id)
             put(BasketContract.COLUMN_CREATED, System.currentTimeMillis())
-            put(BasketContract.COLUMN_COUNT, 1)
+            put(BasketContract.COLUMN_COUNT, count)
         }
 
         database.writableDatabase.insert(BasketContract.TABLE_NAME, null, contentValues)
@@ -88,6 +88,16 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         val productInBasketSize = cursor.getInt(0)
         cursor.close()
         return productInBasketSize
+    }
+
+    override fun getTotalPrice(): Int {
+        val db = database.writableDatabase
+        val cursor = db.rawQuery(GET_TOTAL_PRICE, null)
+        cursor.moveToNext()
+
+        val totalPrice = cursor.getInt(0)
+        cursor.close()
+        return totalPrice
     }
 
     override fun deleteByProductId(id: Int) {
@@ -110,6 +120,14 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             "${BasketContract.PRODUCT_ID} = ?",
             arrayOf(product.id.toString())
         )
+    }
+
+    @SuppressLint("Range")
+    override fun addProductCount(product: Product, count: Int) {
+        when (val originCount = count(product)) {
+            0 -> insert(product, count)
+            else -> updateCount(product, originCount + count)
+        }
     }
 
     override fun contains(product: Product): Boolean {
@@ -167,6 +185,13 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             LEFT JOIN ${BasketContract.TABLE_NAME} as basket
             ON basket.${BasketContract.PRODUCT_ID} = product.${BaseColumns._ID}
             WHERE ${BasketContract.COLUMN_COUNT} > 0
+        """.trimIndent()
+
+        private val GET_TOTAL_PRICE = """
+            SELECT SUM(${ProductContract.COLUMN_PRICE} * ${BasketContract.COLUMN_COUNT}) FROM ${ProductContract.TABLE_NAME} as product
+            LEFT JOIN ${BasketContract.TABLE_NAME} as basket
+            ON basket.${BasketContract.PRODUCT_ID} = product.${BaseColumns._ID}
+            WHERE ${BasketContract.COLUMN_COUNT} > 0 AND ${BasketContract.COLUMN_CHECKED} = 1
         """.trimIndent()
     }
 }

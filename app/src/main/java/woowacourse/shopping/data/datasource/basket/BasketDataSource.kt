@@ -12,6 +12,8 @@ interface BasketDataSource {
         fun minusProductCount(product: Product)
         fun deleteByProductId(productId: Int)
         fun getProductInBasketSize(): Int
+        fun update(basket: DataBasket)
+        fun getTotalPrice(): Int
     }
 
     interface Remote

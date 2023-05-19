@@ -50,7 +50,7 @@ class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener
 
     override fun showProductCounter(product: UiProduct) {
         ProductCounterDialog(this, product) { count ->
-            presenter.addBasketProductCount(count)
+            presenter.navigateToHome(count)
         }.show()
     }
 

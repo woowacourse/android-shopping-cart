@@ -13,4 +13,6 @@ interface BasketRepository {
     fun minusProductCount(product: Product)
     fun deleteByProductId(productId: Int)
     fun getProductInBasketSize(): Int
+    fun update(basket: Basket)
+    fun getTotalPrice(): Int
 }

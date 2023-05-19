@@ -12,11 +12,14 @@ interface BasketContract {
         fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean)
         fun closeScreen()
         fun updatePageNumber(page: PageNumber)
+        fun updateTotalPrice(price: Int)
     }
 
     abstract class Presenter(protected val view: View) {
         abstract fun fetchBasket(page: Int)
         abstract fun deleteBasketProduct(basketProduct: UiBasketProduct)
         abstract fun closeScreen()
+        abstract fun decreaseProductCount(product: UiProduct)
+        abstract fun increaseProductCount(product: UiProduct)
     }
 }

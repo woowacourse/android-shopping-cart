@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.model.UiBasketProduct
 import woowacourse.shopping.model.UiPageNumber
@@ -35,6 +36,10 @@ class BasketActivity : AppCompatActivity(), View {
 
     override fun updatePageNumber(page: UiPageNumber) {
         binding.pageNumberTextView.text = page.toText()
+    }
+
+    override fun updateTotalPrice(price: Int) {
+        binding.totalPriceTextView.text = getString(R.string.price_format, price)
     }
 
     override fun closeScreen() {

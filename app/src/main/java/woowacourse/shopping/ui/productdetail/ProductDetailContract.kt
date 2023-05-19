@@ -17,6 +17,6 @@ interface ProductDetailContract {
     abstract class Presenter(protected val view: View) {
         abstract fun inquiryProductCounter()
         abstract fun inquiryLastViewedProduct()
-        abstract fun addBasketProductCount(count: Int)
+        abstract fun navigateToHome(count: Int)
     }
 }

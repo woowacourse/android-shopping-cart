@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.productdetail
 
 import woowacourse.shopping.domain.repository.BasketRepository
-import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter
@@ -27,8 +26,7 @@ class ProductDetailPresenter(
         recentProduct?.let { view.navigateToProductDetail(it) }
     }
 
-    override fun addBasketProductCount(count: Int) {
-        basketRepository.addProductCount(product.toDomain(), count)
+    override fun navigateToHome(count: Int) {
         view.navigateToHome(product, count)
     }
 }
