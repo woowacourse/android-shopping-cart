@@ -81,6 +81,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             presenter.checkCartProduct(checkableCartProduct, isChecked)
         })
 
+        binding.cartProductList.itemAnimator = null
         binding.cartProductList.adapter = cartAdapter
     }
 

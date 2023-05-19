@@ -2,6 +2,7 @@ package woowacourse.shopping.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.CheckableCartProductModel
@@ -20,10 +21,7 @@ class CartAdapter(
             ItemCartProductListBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ),
-            onCartItemRemoveButtonClick,
-            onMinusClick,
-            onPlusClick,
-            onCheck
+            onCartItemRemoveButtonClick, onMinusClick, onPlusClick, onCheck
         )
     }
 
@@ -35,8 +33,14 @@ class CartAdapter(
 
     override fun getItemViewType(position: Int): Int = checkableCartProducts.size
 
-    fun updateCartProducts(checkableCartProducts: List<CheckableCartProductModel>) {
-        this.checkableCartProducts = checkableCartProducts
-        notifyDataSetChanged()
+    fun updateCartProducts(newCheckableCartProducts: List<CheckableCartProductModel>) {
+        val result = DiffUtil.calculateDiff(
+            CartDiffUtilCallback(
+                checkableCartProducts, newCheckableCartProducts
+            )
+        )
+
+        checkableCartProducts = newCheckableCartProducts
+        result.dispatchUpdatesTo(this@CartAdapter)
     }
 }

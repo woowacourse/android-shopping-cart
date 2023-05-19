@@ -74,7 +74,13 @@ class CartPresenter(
     }
 
     private fun updateCart() {
-        pagedCart = getPagedCart()
+        cart = loadCart()
+        pagedCart = Cart(
+            cart.products.subList(
+                currentPage * countPerPage,
+                min(cart.products.size, currentPage * countPerPage + countPerPage)
+            )
+        )
         view.updateCart(pagedCart.products.map { it.toViewModel() })
     }
 
@@ -102,23 +108,14 @@ class CartPresenter(
         view.updateTotalCheck(pagedCart.isTotalChecked())
     }
 
-    private fun getPagedCart(): Cart {
-        return if (currentPage * countPerPage >= cart.products.size) {
-            val loadedCart = Cart(
-                cartRepository.selectPage(
-                    currentPage, countPerPage
-                ).products.map { CheckableCartProduct(findChecked(it), it) }
-            )
-            cart += loadedCart
-            loadedCart
-        } else {
-            Cart(
-                cart.products.subList(
-                    currentPage * countPerPage,
-                    min(cart.products.size, currentPage * countPerPage + countPerPage)
+    private fun loadCart(): Cart {
+        return Cart(
+            cartRepository.selectAll().products.map {
+                CheckableCartProduct(
+                    findChecked(it), it
                 )
-            )
-        }
+            }
+        )
     }
 
     private fun findChecked(carProduct: CartProduct): Boolean {
