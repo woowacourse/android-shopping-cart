@@ -5,21 +5,25 @@
 
     <data>
 
+        <import type="kotlin.Unit" />
+
+        <import type="woowacourse.shopping.common.model.CartProductModel" />
+
         <variable
             name="onMinusClick"
-            type="kotlin.jvm.functions.Function1" />
+            type="kotlin.jvm.functions.Function1&lt;CartProductModel, Unit>" />
 
         <variable
             name="onPlusClick"
-            type="kotlin.jvm.functions.Function1" />
+            type="kotlin.jvm.functions.Function1&lt;CartProductModel, Unit>" />
 
         <variable
             name="onClickAddCart"
-            type="kotlin.jvm.functions.Function1" />
+            type="kotlin.jvm.functions.Function1&lt;CartProductModel, Unit>" />
 
         <variable
             name="cartProduct"
-            type="woowacourse.shopping.common.model.CartProductModel" />
+            type="CartProductModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

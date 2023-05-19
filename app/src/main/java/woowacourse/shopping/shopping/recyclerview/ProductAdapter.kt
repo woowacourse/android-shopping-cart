@@ -30,17 +30,11 @@ class ProductAdapter(
     }
 
     fun updateProducts(newCartProducts: List<CartProductModel>) {
-        val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = cartProducts.size
-
-            override fun getNewListSize(): Int = newCartProducts.size
-
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                cartProducts[oldItemPosition] == newCartProducts[newItemPosition]
-
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
-                cartProducts[oldItemPosition] == newCartProducts[newItemPosition]
-        })
+        val result = DiffUtil.calculateDiff(
+            ProductDiffUtilCallback(
+                cartProducts, newCartProducts
+            )
+        )
 
         cartProducts = newCartProducts
         result.dispatchUpdatesTo(this@ProductAdapter)

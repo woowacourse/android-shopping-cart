@@ -21,8 +21,8 @@ import woowacourse.shopping.databinding.DialogAddCartBinding
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
+    private lateinit var addCartDialogBinding: DialogAddCartBinding
     private lateinit var presenter: ProductDetailContract.Presenter
-    private var addCartDialog: AlertDialog? = null
     private val shoppingDBOpenHelper: ShoppingDBOpenHelper by lazy {
         ShoppingDBOpenHelper(this)
     }
@@ -48,26 +48,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun openCartCounter(cartProduct: CartProductModel) {
-        val addCartDialogBinding = DialogAddCartBinding.inflate(layoutInflater)
-        val onMinusClick: (CartProductModel) -> Unit = {
-            addCartDialogBinding.cartProduct = it.copy(amount = it.amount - 1)
-        }
-        val onPlusClick: (CartProductModel) -> Unit = {
-            addCartDialogBinding.cartProduct = it.copy(amount = it.amount + 1)
-        }
-        val onClickAddCart: (CartProductModel) -> Unit = {
-            presenter.addToCart(it)
-        }
+        addCartDialogBinding = DialogAddCartBinding.inflate(layoutInflater)
 
-        addCartDialogBinding.cartProduct = cartProduct
-        addCartDialogBinding.onMinusClick = onMinusClick
-        addCartDialogBinding.onPlusClick = onPlusClick
-        addCartDialogBinding.onClickAddCart = onClickAddCart
-
-        addCartDialog = AlertDialog.Builder(this).apply {
+        val dialog = AlertDialog.Builder(this).apply {
             setView(addCartDialogBinding.root)
             create()
         }.show()
+
+        addCartDialogBinding.cartProduct = cartProduct
+        addCartDialogBinding.onMinusClick = ::onAlertMinusClick
+        addCartDialogBinding.onPlusClick = ::onAlertPlusClick
+        addCartDialogBinding.onClickAddCart = {
+            dialog.dismiss()
+            presenter.addToCart(it)
+        }
     }
 
     override fun close() {
@@ -92,10 +86,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        val dialog = addCartDialog ?: return
-        if (dialog.isShowing) dialog.dismiss()
+    private fun onAlertMinusClick(cartProduct: CartProductModel) {
+        addCartDialogBinding.cartProduct = cartProduct.copy(amount = cartProduct.amount - 1)
+    }
+
+    private fun onAlertPlusClick(cartProduct: CartProductModel) {
+        addCartDialogBinding.cartProduct = cartProduct.copy(amount = cartProduct.amount + 1)
     }
 
     private fun validateExtras() {
