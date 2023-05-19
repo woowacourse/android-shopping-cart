@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -143,6 +144,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun updateCartCount(count: Int) {
         runOnUiThread { cartCountBadge?.text = "$count" }
+    }
+
+    override fun hideLoadMore() {
+        runOnUiThread {
+            Toast.makeText(this, getString(R.string.load_more_end), Toast.LENGTH_SHORT).show()
+            loadAdapter.hide()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

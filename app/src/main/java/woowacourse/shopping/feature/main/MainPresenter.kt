@@ -32,7 +32,9 @@ class MainPresenter(
                 view.setProducts(products.toList())
                 updateCartCountBadge()
             },
-            onFailure = {}
+            onFailure = {
+                view.hideLoadMore()
+            }
         )
     }
 
@@ -61,7 +63,9 @@ class MainPresenter(
 
                 view.setProducts(products.toList())
             },
-            onFailure = {}
+            onFailure = {
+                view.hideLoadMore()
+            }
         )
     }
 

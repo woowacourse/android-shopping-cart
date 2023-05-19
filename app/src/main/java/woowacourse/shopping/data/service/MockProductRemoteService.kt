@@ -77,6 +77,7 @@ class MockProductRemoteService {
                     }
 
                     override fun onResponse(call: Call, response: Response) {
+                        if (response.code >= 400) return onFailure()
                         val responseBody = response.body?.string()
                         response.close()
 

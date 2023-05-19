@@ -10,12 +10,12 @@ interface MainContract {
             productUiModel: ProductUiModel,
             recentProductUiModel: RecentProductUiModel?
         )
-
         fun setProducts(products: List<ProductUiModel>)
         fun updateRecent(recent: List<RecentProductUiModel>)
         fun showCartCountBadge()
         fun hideCartCountBadge()
         fun updateCartCount(count: Int)
+        fun hideLoadMore()
     }
 
     interface Presenter {
