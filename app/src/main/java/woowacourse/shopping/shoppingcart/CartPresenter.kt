@@ -1,5 +1,7 @@
 package woowacourse.shopping.shoppingcart
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import model.Cart
 import model.CartPage
 import model.CartPagination
@@ -12,17 +14,35 @@ import woowacourse.shopping.util.toUiModel
 class CartPresenter(
     private val view: CartContract.View,
     private val repository: ShoppingRepository,
-    override val cartPage: CartPagination = CartPage(
-        cart = Cart()
-    ),
 ) : CartContract.Presenter {
 
+    private val cartPage: CartPagination = CartPage(
+        cart = Cart()
+    )
     private val cart: Cart
         get() = cartPage.cart
 
+    private val _showingProducts: MutableLiveData<List<CartProductUiModel>> = MutableLiveData(
+        cartPage.showingProducts.map { it.toUiModel() }
+    )
+    val showingProducts: LiveData<List<CartProductUiModel>>
+        get() = _showingProducts
+
+    private val _totalPrice: MutableLiveData<Int> = MutableLiveData(
+        cartPage.totalPrice
+    )
+    val totalPrice: LiveData<Int>
+        get() = _totalPrice
+
+    private val _currentPage: MutableLiveData<Int> = MutableLiveData(
+        cartPage.currentPage.value
+    )
+    val currentPage: LiveData<Int>
+        get() = _currentPage
+
     private fun selectCartProducts(): List<CartProduct> {
         val products = repository.selectShoppingCartProducts(
-            from = cart.products.size,
+            from = cartPage.cart.products.size,
             count = CartPage.ITEM_COUNT_ON_EACH_PAGE
         )
 
@@ -32,19 +52,12 @@ class CartPresenter(
     override fun loadShoppingCartProducts() {
         val products = selectCartProducts()
         cart.addAll(products)
-
-        view.setUpCartView(
-            products = cart.products.map { it.toUiModel() },
-            currentPage = cartPage.currentPage.value
-        )
+        updatePage(cartPage)
     }
 
     override fun removeShoppingCartProduct(product: CartProductUiModel) {
         repository.deleteFromShoppingCart(product.id)
-        cartPage.cart.remove(product.toDomainModel())
-        view.refreshCartProductView(
-            products = cartPage.showingProducts.map { it.toUiModel() }
-        )
+        cart.remove(product.toDomainModel())
     }
 
     override fun plusShoppingCartProductCount(product: CartProductUiModel) {
@@ -56,13 +69,11 @@ class CartPresenter(
                 .count
                 .value
         )
-        view.refreshCartProductView(
-            products = cartPage.showingProducts.map { it.toUiModel() }
-        )
     }
 
     override fun minusShoppingCartProductCount(product: CartProductUiModel) {
         cart.minusProductCount(product.toDomainModel())
+        _showingProducts.value = cartPage.showingProducts.map { it.toUiModel() }
 
         repository.insertToShoppingCart(
             id = product.id,
@@ -70,13 +81,6 @@ class CartPresenter(
                 .count
                 .value
         )
-        view.refreshCartProductView(
-            products = cartPage.showingProducts.map { it.toUiModel() }
-        )
-    }
-
-    override fun calcTotalPrice() {
-        view.setUpTextTotalPriceView(cartPage.totalPrice)
     }
 
     override fun changeProductSelectedState(
@@ -87,21 +91,17 @@ class CartPresenter(
             product = product.toDomainModel(),
             isSelected = isSelected
         )
-        view.refreshCartProductView(
-            products = cartPage.showingProducts.map { it.toUiModel() }
-        )
+        updatePage(cartPage)
     }
 
     override fun changeProductsSelectedState(checked: Boolean) {
         cart.changeSelectedStateAll(checked)
-        view.refreshCartProductView(
-            products = cartPage.showingProducts.map { it.toUiModel() }
-        )
+        updatePage(cartPage)
     }
 
     override fun moveToNextPage() {
         cartPage.moveToNextPage(
-            callBack = ::changePage,
+            callBack = ::updatePage,
             onReachedEndPage = ::onReachedEndPage
         )
     }
@@ -116,13 +116,12 @@ class CartPresenter(
     }
 
     override fun moveToPrevPage() {
-        cartPage.moveToPreviousPage(callBack = ::changePage)
+        cartPage.moveToPreviousPage(callBack = ::updatePage)
     }
 
-    private fun changePage(cartPage: CartPagination) {
-        view.refreshCartProductView(
-            products = cartPage.showingProducts.map { it.toUiModel() }
-        )
-        view.setUpTextPageNumber(cartPage.currentPage.value)
+    private fun updatePage(cartPage: CartPagination) {
+        _showingProducts.value = cartPage.showingProducts.map { it.toUiModel() }
+        _totalPrice.value = cartPage.totalPrice
+        _currentPage.value = cartPage.currentPage.value
     }
 }

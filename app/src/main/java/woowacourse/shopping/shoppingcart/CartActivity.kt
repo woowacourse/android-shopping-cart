@@ -16,7 +16,7 @@ import woowacourse.shopping.model.CartProductUiModel
 class CartActivity : AppCompatActivity(), CartContract.View {
 
     private lateinit var cartRecyclerAdapter: CartRecyclerAdapter
-    private val presenter: CartContract.Presenter by lazy {
+    private val presenter: CartPresenter by lazy {
         CartPresenter(
             view = this,
             repository = ShoppingDBAdapter(
@@ -29,9 +29,23 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
+        startObserving()
 
-        setUpCartToolbar()
         presenter.loadShoppingCartProducts()
+        setUpCartView()
+        setUpCartToolbar()
+    }
+
+    private fun startObserving() {
+        presenter.showingProducts.observe(this) {
+            refreshCartProductView(it)
+        }
+        presenter.totalPrice.observe(this) {
+            setUpTextTotalPriceView(it)
+        }
+        presenter.currentPage.observe(this) {
+            setUpTextPageNumber(it)
+        }
     }
 
     private fun setUpCartToolbar() {
@@ -49,16 +63,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun setUpCartView(
-        products: List<CartProductUiModel>,
-        currentPage: Int,
-    ) {
+    private fun setUpCartView() {
         cartRecyclerAdapter = CartRecyclerAdapter(
-            shoppingCartProducts = products,
+            shoppingCartProducts = presenter.showingProducts.value ?: listOf(),
             cartProductCountPickerListener = getCartProductCountPicker(),
             onProductSelectingChanged = presenter::changeProductSelectedState,
             onShoppingCartProductRemoved = presenter::removeShoppingCartProduct,
-            onTotalPriceChanged = presenter::calcTotalPrice,
         )
 
         with(binding) {
@@ -72,7 +82,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             checkBoxTotalProducts.setOnCheckedChangeListener { _, isChecked ->
                 presenter.changeProductsSelectedState(isChecked)
             }
-            textPageNumber.text = currentPage.toString()
         }
     }
 
@@ -87,15 +96,15 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setUpTextTotalPriceView(price: Int) {
+    private fun setUpTextTotalPriceView(price: Int) {
         binding.textTotalPrice.text = price.toString()
     }
 
-    override fun refreshCartProductView(products: List<CartProductUiModel>) {
+    private fun refreshCartProductView(products: List<CartProductUiModel>) {
         cartRecyclerAdapter.refreshItems(products)
     }
 
-    override fun setUpTextPageNumber(pageNumber: Int) {
+    private fun setUpTextPageNumber(pageNumber: Int) {
         binding.textPageNumber.text = pageNumber.toString()
     }
 
