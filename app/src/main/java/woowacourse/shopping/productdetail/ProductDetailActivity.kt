@@ -8,7 +8,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.common.CountPickerListener
 import woowacourse.shopping.database.ShoppingDBAdapter
@@ -16,7 +15,7 @@ import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.model.ProductUiModel
-import woowacourse.shopping.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.shoppingcart.CartActivity
 import woowacourse.shopping.util.handleMissingSerializableData
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
@@ -69,10 +68,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         product: ProductUiModel,
         navigateToLatestViewedProductView: () -> Unit,
     ) {
-        Glide.with(this)
-            .load(product.imageUrl)
-            .into(binding.imageProductDetail)
-
         setUpProductCountPickerDialog(product)
         with(binding) {
             binding.product = product
@@ -120,17 +115,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         )
     }
 
-    override fun setUpDialogProductCountView(count: Int) {
-        dialog.setTextProductCount(count)
-    }
-
     override fun setUpDialogTotalPriceView(totalPrice: Int) {
         dialog.setTextTotalPrice(totalPrice)
     }
 
     override fun navigateToCartView() {
         startActivity(
-            ShoppingCartActivity.getIntent(this)
+            CartActivity.getIntent(this)
         )
         finish()
     }

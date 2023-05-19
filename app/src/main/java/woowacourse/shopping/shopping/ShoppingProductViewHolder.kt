@@ -2,9 +2,8 @@ package woowacourse.shopping.shopping
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
+import woowacourse.shopping.common.CountPickerListener
 import woowacourse.shopping.databinding.ItemShoppingProductBinding
 import woowacourse.shopping.model.ProductUiModel
 
@@ -14,59 +13,33 @@ class ShoppingProductViewHolder private constructor(
     binding
 ) {
 
-    private lateinit var product: ShoppingRecyclerItem.ShoppingProduct
+    private lateinit var getlistener: (product: ProductUiModel) -> CountPickerListener
 
     fun setOnClicked(
-        onProductImageClicked: (ProductUiModel) -> Unit,
-        productCountPickerListener: ShoppingProductCountPicker,
+        onProductImageClicked: (product: ProductUiModel) -> Unit,
+        onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
+        getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
     ) {
         with(binding) {
             imageProduct.setOnClickListener {
-                onProductImageClicked(product.value)
+                onProductImageClicked(product ?: return@setOnClickListener)
             }
             imageAddToCart.setOnClickListener {
                 it.isVisible = false
-                layoutSelectProductCount.isVisible = true
-                productCountPickerListener.onAdded(product.value)
+                countPicker.isVisible = true
+                onAddToCartButtonClicked(product ?: return@setOnClickListener)
             }
-            buttonPlusProductCount.setOnClickListener {
-                textProductCount.plusCount()
-                productCountPickerListener.onPlus(product.value)
-            }
-            buttonMinusProductCount.setOnClickListener {
-                textProductCount.minusCount()
-                productCountPickerListener.onMinus(product.value)
-            }
+            getlistener = getCountPickerListener
         }
     }
 
-    override fun bind(itemData: ShoppingRecyclerItem.ShoppingProduct) {
-        product = itemData
-
-        with(binding) {
-            Glide.with(binding.root.context)
-                .load(product.value.imageUrl)
-                .into(binding.imageProduct)
-
-            textProductName.text = product.value.name
-        }
-    }
-
-    private fun TextView.plusCount() {
-        val count = (text.toString().toInt() + 1).toString()
-
-        text = count
-    }
-
-    private fun TextView.minusCount() {
-        val count = text.toString().toInt() - 1
-
-        if (count == 0) {
-            binding.layoutSelectProductCount.isVisible = false
-            binding.imageAddToCart.isVisible = true
-            return
-        }
-        text = count.toString()
+    override fun bind(
+        itemData: ShoppingRecyclerItem.ShoppingProduct,
+    ) {
+        binding.product = itemData.value
+        binding.countPicker.setListener(
+            listener = getlistener(itemData.value)
+        )
     }
 
     companion object {

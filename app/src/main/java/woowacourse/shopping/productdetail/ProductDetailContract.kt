@@ -13,8 +13,6 @@ interface ProductDetailContract {
 
         fun setUpLatestViewedProductView(product: ProductUiModel?)
 
-        fun setUpDialogProductCountView(count: Int)
-
         fun setUpDialogTotalPriceView(totalPrice: Int)
 
         fun navigateToCartView()

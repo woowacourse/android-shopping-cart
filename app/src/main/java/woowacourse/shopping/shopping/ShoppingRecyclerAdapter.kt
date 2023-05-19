@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.common.CountPickerListener
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
 import woowacourse.shopping.shopping.ShoppingRecyclerItem.ReadMoreDescription
@@ -46,7 +47,8 @@ class ShoppingRecyclerAdapter(
                 .apply {
                     setOnClicked(
                         onProductImageClicked = onProductClicked,
-                        productCountPickerListener = productCountPickerListener
+                        onAddToCartButtonClicked = productCountPickerListener::onAdded,
+                        getCountPickerListener = ::getCountPickerListenerImpl
                     )
                 }
 
@@ -77,6 +79,17 @@ class ShoppingRecyclerAdapter(
     }
 
     override fun getItemCount(): Int = products.size + 1
+
+    private fun getCountPickerListenerImpl(product: ProductUiModel) = object : CountPickerListener {
+
+        override fun onPlus() {
+            productCountPickerListener.onPlus(product)
+        }
+
+        override fun onMinus() {
+            productCountPickerListener.onMinus(product)
+        }
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshRecentViewedItems(products: List<RecentViewedProductUiModel>) {

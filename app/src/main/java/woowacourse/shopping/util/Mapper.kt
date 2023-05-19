@@ -1,14 +1,14 @@
 package woowacourse.shopping.util
 
+import model.CartProduct
 import model.Count
 import model.Name
 import model.Price
 import model.Product
 import model.RecentViewedProduct
-import model.ShoppingCartProduct
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
-import woowacourse.shopping.model.ShoppingCartProductUiModel
 
 fun ProductUiModel.toDomainModel() = Product(
     id = id,
@@ -30,7 +30,7 @@ fun RecentViewedProduct.toUiModel() = RecentViewedProductUiModel(
     imageUrl = imageUrl
 )
 
-fun ShoppingCartProduct.toUiModel() = ShoppingCartProductUiModel(
+fun CartProduct.toUiModel() = CartProductUiModel(
     id = product.id,
     name = product.name.value,
     imageUrl = product.imageUrl,
@@ -39,12 +39,16 @@ fun ShoppingCartProduct.toUiModel() = ShoppingCartProductUiModel(
     selected = selected
 )
 
-fun ShoppingCartProductUiModel.toDomainModel() = ShoppingCartProduct(
+fun CartProductUiModel.toDomainModel() = CartProduct(
     product = Product(
         id = id,
         name = Name(name),
         imageUrl = imageUrl,
-        price = Price(price / count)
+        price = if (count == 0) {
+            Price(0)
+        } else {
+            Price(price / count)
+        }
     ),
     count = Count(count),
     selected = selected

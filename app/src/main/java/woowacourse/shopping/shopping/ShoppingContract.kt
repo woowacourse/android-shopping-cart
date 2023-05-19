@@ -10,18 +10,23 @@ interface ShoppingContract {
 
         fun setUpShoppingView(
             products: List<ProductUiModel>,
-            recentViewedProducts: List<RecentViewedProductUiModel>
+            recentViewedProducts: List<RecentViewedProductUiModel>,
         )
 
         fun refreshRecentViewedProductsView(
-            products: List<RecentViewedProductUiModel>
+            products: List<RecentViewedProductUiModel>,
         )
 
         fun refreshShoppingProductsView(
-            toAdd: List<ProductUiModel>
+            toAdd: List<ProductUiModel>,
         )
 
         fun refreshProductCount(count: Int)
+
+        fun navigateToProductDetailView(
+            product: ProductUiModel,
+            latestViewedProduct: ProductUiModel?,
+        )
     }
 
     interface Presenter {
@@ -29,6 +34,10 @@ interface ShoppingContract {
         val recentViewedProducts: RecentViewedProducts
 
         fun loadProducts()
+
+        fun loadCartProductsCount()
+
+        fun loadProductDetail(product: ProductUiModel)
 
         fun addToRecentViewedProduct(id: Int)
 

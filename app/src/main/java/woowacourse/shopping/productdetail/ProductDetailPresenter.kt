@@ -10,7 +10,7 @@ class ProductDetailPresenter(
     product: ProductUiModel,
     private val view: ProductDetailContract.View,
     private val latestViewedProduct: ProductUiModel?,
-    private val repository: ShoppingRepository
+    private val repository: ShoppingRepository,
 ) : ProductDetailContract.Presenter {
 
     private var cartProduct: CartProduct = CartProduct(
@@ -42,17 +42,11 @@ class ProductDetailPresenter(
 
     override fun plusCartProductCount() {
         cartProduct = cartProduct.plusCount()
-
-        view.setUpDialogProductCountView(count = cartProduct.count.value)
         view.setUpDialogTotalPriceView(totalPrice = cartProduct.price.value)
     }
 
     override fun minusCartProductCount() {
-        runCatching {
-            cartProduct = cartProduct.minusCount()
-        }.onSuccess {
-            view.setUpDialogProductCountView(count = cartProduct.count.value)
-            view.setUpDialogTotalPriceView(totalPrice = cartProduct.price.value)
-        }
+        cartProduct = cartProduct.minusCount()
+        view.setUpDialogTotalPriceView(totalPrice = cartProduct.price.value)
     }
 }

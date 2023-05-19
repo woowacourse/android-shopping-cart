@@ -34,11 +34,13 @@ class CartItemViewHolder private constructor(
         product: CartProductUiModel,
         getCountPickerListener: (product: CartProductUiModel) -> CountPickerListener,
     ) {
-        binding.product = product
-        binding.countPicker.setListener(
-            listener = getCountPickerListener(binding.product ?: return)
-        )
-        binding.countPicker.setTextCount(product.count)
+        with(binding) {
+            this.product = product
+            countPicker.setListener(
+                listener = getCountPickerListener(binding.product ?: return)
+            )
+            countPicker.setTextCount(product.count)
+        }
     }
 
     companion object {

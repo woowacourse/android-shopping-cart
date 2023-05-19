@@ -28,9 +28,10 @@ class ProductCountPickerDialog : DialogFragment() {
         _binding = DialogCountPickerBinding.inflate(layoutInflater, container, false)
 
         arguments?.let {
-            it.getSerializableCompat<CountPickerListener>(KEY_COUNT_PICKER_LISTENER)?.let { listener ->
-                binding.countPicker.setListener(listener)
-            }
+            it.getSerializableCompat<CountPickerListener>(KEY_COUNT_PICKER_LISTENER)
+                ?.let { listener ->
+                    binding.countPicker.setListener(listener)
+                }
             addingCartListener = it.getSerializableCompat(KEY_ADDING_CART_LISTENER)
             binding.product = it.getSerializableCompat(KEY_PRODUCT)
         }
@@ -51,10 +52,6 @@ class ProductCountPickerDialog : DialogFragment() {
                 }
             }
         }
-    }
-
-    fun setTextProductCount(count: Int) {
-        binding.countPicker.setTextCount(count)
     }
 
     fun setTextTotalPrice(price: Int) {

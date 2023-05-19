@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.CountPickerBinding
@@ -29,12 +30,14 @@ class CountPickerView @JvmOverloads constructor(
     private fun plusCount() {
         binding.buttonPlusProductCount.setOnClickListener {
             listener?.onPlus()
+            binding.textProductCount.plusCount()
         }
     }
 
     private fun minusCount() {
         binding.buttonMinusProductCount.setOnClickListener {
             listener?.onMinus()
+            binding.textProductCount.minusCount()
         }
     }
 
@@ -44,5 +47,18 @@ class CountPickerView @JvmOverloads constructor(
 
     fun setListener(listener: CountPickerListener) {
         this.listener = listener
+    }
+
+    private fun TextView.plusCount() {
+        val count = text.toString().toInt() + 1
+
+        text = count.toString()
+    }
+
+    private fun TextView.minusCount() {
+        val count = text.toString().toInt() - 1
+        if (count != 0) {
+            text = count.toString()
+        }
     }
 }

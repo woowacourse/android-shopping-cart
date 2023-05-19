@@ -27,8 +27,19 @@ class ShoppingPresenter(
             products = products,
             recentViewedProducts = recentViewedProducts,
         )
+        loadCartProductsCount()
+    }
+
+    override fun loadCartProductsCount() {
         view.refreshProductCount(
             count = repository.getCountOfShoppingCartProducts()
+        )
+    }
+
+    override fun loadProductDetail(product: ProductUiModel) {
+        view.navigateToProductDetailView(
+            product = product,
+            latestViewedProduct = repository.selectLatestViewedProduct()?.toUiModel()
         )
     }
 
@@ -36,6 +47,14 @@ class ShoppingPresenter(
         val products = selectProducts()
 
         view.refreshShoppingProductsView(products)
+    }
+
+    override fun addProductToShoppingCart(product: ProductUiModel) {
+        repository.insertToShoppingCart(id = product.id)
+
+        view.refreshProductCount(
+            count = repository.getCountOfShoppingCartProducts()
+        )
     }
 
     override fun plusShoppingCartProductCount(product: ProductUiModel) {
@@ -50,26 +69,19 @@ class ShoppingPresenter(
 
     override fun minusShoppingCartProductCount(product: ProductUiModel) {
         val shoppingCartProduct = repository.selectShoppingCartProductById(product.id)
-            .minusCount()
 
-        if (shoppingCartProduct.count.value == 0) {
-            repository.deleteFromShoppingCart(shoppingCartProduct.product.id)
-
-            return view.refreshProductCount(
+        if (shoppingCartProduct.count.value == 1) {
+            repository.deleteFromShoppingCart(product.id)
+            view.refreshProductCount(
                 count = repository.getCountOfShoppingCartProducts()
             )
         }
+
         repository.insertToShoppingCart(
             id = product.id,
-            count = shoppingCartProduct.count.value
-        )
-    }
-
-    override fun addProductToShoppingCart(product: ProductUiModel) {
-        repository.insertToShoppingCart(id = product.id)
-
-        view.refreshProductCount(
-            count = repository.getCountOfShoppingCartProducts()
+            count = shoppingCartProduct.minusCount()
+                .count
+                .value
         )
     }
 

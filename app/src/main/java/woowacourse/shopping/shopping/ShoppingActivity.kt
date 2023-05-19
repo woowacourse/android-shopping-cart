@@ -14,7 +14,7 @@ import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
-import woowacourse.shopping.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.shoppingcart.CartActivity
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
@@ -27,6 +27,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 shoppingDao = ShoppingDao(this)
             )
         )
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        presenter.loadCartProductsCount()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +53,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         when (item.itemId) {
             R.id.shopping_cart -> {
                 startActivity(
-                    ShoppingCartActivity.getIntent(this)
+                    CartActivity.getIntent(this)
                 )
             }
         }
@@ -62,7 +68,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
-            onProductClicked = ::navigateToProductDetailView,
+            onProductClicked = presenter::loadProductDetail,
             onReadMoreButtonClicked = presenter::readMoreShoppingProducts,
             productCountPickerListener = getProductCountPickerListenerImpl()
         )
@@ -109,9 +115,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         binding.textShoppingCartProductsCount.text = count.toString()
     }
 
-    private fun navigateToProductDetailView(product: ProductUiModel) {
+    override fun navigateToProductDetailView(
+        product: ProductUiModel,
+        latestViewedProduct: ProductUiModel?,
+    ) {
         presenter.addToRecentViewedProduct(product.id)
-        val intent = ProductDetailActivity.getIntent(this, product)
+        val intent = ProductDetailActivity.getIntent(
+            context = this,
+            product = product,
+            latestViewedProduct = latestViewedProduct
+        )
 
         startActivity(intent)
     }

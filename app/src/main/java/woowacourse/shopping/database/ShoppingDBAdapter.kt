@@ -3,12 +3,12 @@ package woowacourse.shopping.database
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import model.CartProduct
 import model.Count
 import model.Name
 import model.Price
 import model.Product
 import model.RecentViewedProduct
-import model.ShoppingCartProduct
 import woowacourse.shopping.database.product.MockProduct
 import woowacourse.shopping.database.product.ProductDBContract
 import woowacourse.shopping.database.product.RecentViewedDBContract
@@ -21,13 +21,6 @@ class ShoppingDBAdapter(
 ) : ShoppingRepository {
 
     private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
-    private val recentViewedCursor = shoppingDB.query(
-        RecentViewedDBContract.TABLE_NAME,
-        arrayOf(
-            RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID
-        ),
-        null, null, null, null, null
-    )
 
     private fun addProduct(product: ProductUiModel) {
         val values = ContentValues().apply {
@@ -62,8 +55,8 @@ class ShoppingDBAdapter(
     override fun selectShoppingCartProducts(
         from: Int,
         count: Int,
-    ): List<ShoppingCartProduct> {
-        val shoppingCartProducts = mutableListOf<ShoppingCartProduct>()
+    ): List<CartProduct> {
+        val cartProducts = mutableListOf<CartProduct>()
         val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
             count, from
         )
@@ -72,16 +65,16 @@ class ShoppingDBAdapter(
         cursor?.apply {
             if (moveToFirst()) {
                 do {
-                    shoppingCartProducts.add(cursor.getShoppingCartProduct())
+                    cartProducts.add(cursor.getShoppingCartProduct())
                 } while (moveToNext())
             }
         }
         cursor?.close()
 
-        return shoppingCartProducts.toList()
+        return cartProducts.toList()
     }
 
-    override fun selectShoppingCartProductById(id: Int): ShoppingCartProduct {
+    override fun selectShoppingCartProductById(id: Int): CartProduct {
         val cursor = shoppingDB.rawQuery(
             "select * from ${ShoppingCartDBContract.TABLE_NAME} where ${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
             arrayOf(id.toString())
@@ -95,10 +88,10 @@ class ShoppingDBAdapter(
         return shoppingCartProduct
     }
 
-    private fun Cursor.getShoppingCartProduct(): ShoppingCartProduct {
+    private fun Cursor.getShoppingCartProduct(): CartProduct {
         val id = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.CART_PRODUCT_ID))
         val count = getInt(getColumnIndexOrThrow(ShoppingCartDBContract.COUNT))
-        return ShoppingCartProduct(
+        return CartProduct(
             product = selectProductById(id),
             count = Count(count)
         )
@@ -143,13 +136,9 @@ class ShoppingDBAdapter(
         val selection = "id = ?"
         val selectionArgs = arrayOf(id.toString())
         val cursor = shoppingDB.query(
-            ShoppingCartDBContract.TABLE_NAME,
-            arrayOf("id"),
-            selection,
-            selectionArgs,
-            null,
-            null,
-            null
+            ShoppingCartDBContract.TABLE_NAME, arrayOf("id"),
+            selection, selectionArgs,
+            null, null, null
         )
 
         if (cursor.moveToFirst()) {
@@ -189,11 +178,22 @@ class ShoppingDBAdapter(
         val values = ContentValues().apply {
             put(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID, id)
         }
-
+        shoppingDB.delete(
+            RecentViewedDBContract.TABLE_NAME,
+            "${RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID} = ?",
+            arrayOf(id.toString())
+        )
         shoppingDB.insert(RecentViewedDBContract.TABLE_NAME, null, values)
     }
 
     override fun selectRecentViewedProducts(): List<RecentViewedProduct> {
+        val recentViewedCursor = shoppingDB.query(
+            RecentViewedDBContract.TABLE_NAME,
+            arrayOf(
+                RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID
+            ),
+            null, null, null, null, null
+        )
         val recentViewedProducts = mutableListOf<RecentViewedProduct>()
 
         with(recentViewedCursor) {
@@ -205,6 +205,7 @@ class ShoppingDBAdapter(
                 recentViewedProducts.add(product)
             }
         }
+        recentViewedCursor.close()
 
         return recentViewedProducts.toList().reversed()
     }
@@ -235,11 +236,11 @@ class ShoppingDBAdapter(
     override fun selectLatestViewedProduct(): Product? {
         val products = selectRecentViewedProducts()
 
-        if (products.size < 2) {
+        if (products.isEmpty()) {
             return null
         }
         return selectProductById(
-            id = products[1].id
+            id = products.first().id
         )
     }
 

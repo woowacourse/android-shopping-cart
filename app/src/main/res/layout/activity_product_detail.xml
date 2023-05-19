@@ -31,6 +31,7 @@
 
         <ImageView
             android:id="@+id/image_product_detail"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="360dp"
             android:contentDescription="@string/image_of_product"
