@@ -10,14 +10,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_radius_8dp"
-        android:backgroundTint="@color/woowa_dealer_blue_200">
+        android:background="@drawable/rectangle_radius_8dp">
 
         <TextView
             android:id="@+id/buttonCounterDecrease"
             style="@style/woowaPro24"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@drawable/selector_blue200_gray500"
             android:gravity="center"
             android:text="-"
             android:textColor="@color/white"
@@ -34,6 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@color/woowa_dealer_blue_200"
             android:gravity="center"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -50,6 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:background="@drawable/selector_blue200_gray500"
             android:gravity="center"
             android:text="+"
             android:textColor="@color/white"

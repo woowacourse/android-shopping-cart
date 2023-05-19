@@ -9,6 +9,8 @@ import woowacourse.shopping.databinding.CustomCounterQuantityBinding
 class QuantityCounter(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
     private var layoutInflater: LayoutInflater? = null
     private lateinit var binding: CustomCounterQuantityBinding
+    private var minValue: Int? = null
+    private var maxValue: Int? = null
 
     init {
         initView()
@@ -35,5 +37,15 @@ class QuantityCounter(context: Context, attrs: AttributeSet) : ConstraintLayout(
 
     fun setQuantityText(quantity: Int) {
         binding.textCounterQuantity.text = quantity.toString()
+        binding.buttonCounterDecrease.isEnabled = quantity != minValue
+        binding.buttoncounterIncrease.isEnabled = quantity != maxValue
+    }
+
+    fun setMinValue(min: Int) {
+        minValue = min
+    }
+
+    fun setMaxValue(max: Int) {
+        maxValue = max
     }
 }
