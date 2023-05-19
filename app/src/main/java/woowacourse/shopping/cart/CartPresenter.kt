@@ -53,9 +53,9 @@ class CartPresenter(
 
     override fun checkCartProduct(
         checkableCartProduct: CheckableCartProductModel,
-        isChecked: Boolean
+        toCheck: Boolean
     ) {
-        cart = cart.selectProduct(checkableCartProduct.toDomainModel(), isChecked)
+        cart = cart.selectProduct(checkableCartProduct.toDomainModel(), toCheck)
         updateCartPage()
     }
 

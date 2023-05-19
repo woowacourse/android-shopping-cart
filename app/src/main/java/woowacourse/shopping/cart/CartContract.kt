@@ -11,7 +11,7 @@ interface CartContract {
         fun loadNextPage()
         fun minusCartProduct(cartProduct: CartProductModel)
         fun plusCartProduct(cartProduct: CartProductModel)
-        fun checkCartProduct(checkableCartProduct: CheckableCartProductModel, isChecked: Boolean)
+        fun checkCartProduct(checkableCartProduct: CheckableCartProductModel, toCheck: Boolean)
         fun checkWholeCartProduct(isChecked: Boolean)
     }
 
