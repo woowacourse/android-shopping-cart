@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="korean_won">%s원</string>
+    <string name="korean_won2">%,d원</string>
     <string name="shoppingcart">장바구니</string>
     <string name="price">금액</string>
     <string name="put_in_cart">장바구니 담기</string>

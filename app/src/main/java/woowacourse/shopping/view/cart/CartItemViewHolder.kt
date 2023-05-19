@@ -24,7 +24,7 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.cartProduct = item.product
             binding.textPrice.text = binding.root.context.getString(
                 R.string.korean_won,
-                PriceFormatter.format(item.product.totalPrice)
+                PriceFormatter.format(item.product.price * item.product.count)
             )
             Glide.with(binding.root.context).load(item.product.imageUrl).into(binding.imgProduct)
             binding.btnMinus.setOnClickListener {

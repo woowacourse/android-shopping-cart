@@ -7,7 +7,7 @@
 
         <variable
             name="presenter"
-            type="woowacourse.shopping.view.cart.CartPresenter" />
+            type="woowacourse.shopping.view.cart.CartContract.Presenter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,6 +50,8 @@
                     android:id="@+id/checkbox_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="@{presenter.isCheckedAll()}"
+                    android:onCheckedChanged="@{(view, checked) -> presenter.selectAll(checked)}"
                     android:minWidth="0dp"
                     android:minHeight="0dp" />
 
@@ -72,6 +74,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_order"
                 app:layout_constraintTop_toTopOf="parent"
+                android:text="@{@string/korean_won2(presenter.cartSystemResult.totalPrice)}"
                 tools:text="10,000원" />
 
 
@@ -84,6 +87,7 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                android:text="@{@string/order_count(presenter.cartSystemResult.totalCount)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

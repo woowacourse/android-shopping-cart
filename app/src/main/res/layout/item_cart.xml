@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:text="@{String.format(@string/korean_won, PriceFormatter.INSTANCE.format(cartProduct.totalPrice))}"
+            android:text="@{String.format(@string/korean_won, PriceFormatter.INSTANCE.format(cartProduct.price * cartProduct.count))}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/layout_add_btns"
             tools:text="99,800원" />

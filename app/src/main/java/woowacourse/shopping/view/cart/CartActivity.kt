@@ -23,6 +23,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setContentView(binding.root)
         setUpActionBar()
         setUpPresenter()
+        binding.presenter = presenter
+        binding.lifecycleOwner = this
         presenter.fetchProducts()
         binding.checkboxTotal.setOnClickListener {
             presenter.selectAll(binding.checkboxTotal.isChecked)
@@ -74,12 +76,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun showChangedItem(position: Int) {
         binding.recyclerCart.adapter?.notifyItemChanged(position)
-    }
-
-    override fun showTotalResult(isSelectAll: Boolean, totalPrice: Int, totalCount: Int) {
-        binding.checkboxTotal.isChecked = isSelectAll
-        binding.textTotalPrice.text = getString(R.string.korean_won, PriceFormatter.format(totalPrice))
-        binding.btnOrder.text = getString(R.string.order_count, totalCount)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
