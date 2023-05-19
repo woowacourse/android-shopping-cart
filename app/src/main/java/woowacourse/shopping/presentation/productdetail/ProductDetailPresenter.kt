@@ -19,8 +19,12 @@ class ProductDetailPresenter(
         view.showProductDetail(currentProduct.toPresentation())
     }
 
-    override fun putProductInCart() {
-        cartRepository.insertCartProduct(currentProduct.id, 1)
-        view.showCompleteMessage(currentProduct.name)
+    override fun loadRecentProduct(productId: Int) {
+        val recentProduct = productRepository.findProductById(productId) ?: Product.defaultProduct
+        view.showRecentProduct(recentProduct.toPresentation())
+    }
+
+    override fun putProductInCart(count: Int) {
+        cartRepository.insertCartProduct(currentProduct.id, count)
     }
 }

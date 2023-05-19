@@ -120,7 +120,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun showProductDetail(productId: Int) {
-        startActivity(ProductDetailActivity.getIntent(this, productId))
+        val recentProductId = productListAdapter.getRecentFirstProduct()
+        startActivity(
+            ProductDetailActivity.getIntent(this, productId, recentProductId),
+        )
     }
 
     private fun setLayoutManager() {

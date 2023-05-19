@@ -5,11 +5,12 @@ import woowacourse.shopping.presentation.model.ProductModel
 interface ProductDetailContract {
     interface Presenter {
         fun loadProductDetail(productId: Int)
-        fun putProductInCart()
+        fun loadRecentProduct(productId: Int)
+        fun putProductInCart(count: Int)
     }
 
     interface View {
         fun showProductDetail(productModel: ProductModel)
-        fun showCompleteMessage(productName: String)
+        fun showRecentProduct(productModel: ProductModel)
     }
 }

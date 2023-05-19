@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="woowacourse.shopping.presentation.model.ProductModel" />
-
         <variable
             name="cartProductModel"
             type="woowacourse.shopping.presentation.model.CartProductModel" />
@@ -23,15 +21,13 @@
         android:background="@color/white">
 
 
-        <TextView
-            android:id="@+id/text_cart_count_add"
+        <ImageView
+            android:id="@+id/image_cart_count_add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:onClickListener="@{_ -> cartCounterListener.onAddClick(cartProductModel)}"
             android:src="@drawable/add_24"
-            android:text="@string/plus"
-            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/text_cart_count"
             app:layout_constraintTop_toTopOf="parent" />
@@ -49,14 +45,12 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="0" />
 
-        <TextView
-            android:id="@+id/text_cart_count_remove"
+        <ImageView
+            android:id="@+id/image_cart_count_remove"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:onClickListener="@{_ -> cartCounterListener.onRemoveClick(cartProductModel)}"
-            android:text="@string/minus"
-            android:textSize="30sp"
+            android:src="@drawable/remove_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/text_cart_count"
             app:layout_constraintStart_toStartOf="parent"

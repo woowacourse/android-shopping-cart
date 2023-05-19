@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="productModel"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:id="@+id/text_recent_prompt_product_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recent_saw_product_prompt"
+            android:textColor="@color/teal_700"
+            android:textSize="12sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_recent_product_title_product_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{productModel.name}"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@id/text_recent_prompt_product_detail"
+            tools:text="[든든] 동원 스위트콘" />
+
+        <TextView
+            android:id="@+id/text_recent_product_price_product_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/price_format(productModel.price)}"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_recent_prompt_product_detail"
+            tools:text="99,800원" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

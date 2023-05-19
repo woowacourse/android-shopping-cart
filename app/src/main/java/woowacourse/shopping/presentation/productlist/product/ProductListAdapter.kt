@@ -109,6 +109,15 @@ class ProductListAdapter(
         }
     }
 
+    fun getRecentFirstProduct(): Int? {
+        if (_productItems[RECENT_PRODUCT_VIEW_POSITION] is RecentProductModels) {
+            val recentProductModels =
+                _productItems[RECENT_PRODUCT_VIEW_POSITION] as RecentProductModels
+            return recentProductModels.recentProducts[0].id
+        }
+        return null
+    }
+
     companion object {
         const val RECENT_PRODUCT_VIEW_POSITION = 0
         const val NOT_FOUNT = -1
