@@ -50,6 +50,7 @@ class CartDao(
     }
 
     fun insertProduct(product: Product, count: Int = 1) {
+        if (count <= 0) return
         val values = ContentValues().apply {
             put(CartTableContract.TABLE_COLUMN_PRODUCT_ID, product.id)
             put(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT, count) // 일단 1로 고정
