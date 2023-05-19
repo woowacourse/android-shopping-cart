@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.product.detail
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -28,29 +27,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val cartRepository: CartRepository = CartRepositoryImpl(CartDao(this))
         ProductDetailPresenter(this, product, cartRepository)
     }
-    private val selectCountDialogBinding: DialogSelectCountBinding by lazy {
-        DialogSelectCountBinding.inflate(LayoutInflater.from(this), null, false)
-    }
-    private val selectCountDialog: Dialog by lazy {
-        selectCountDialogBinding.product = presenter.product
-        AlertDialog.Builder(this).apply {
-            setView(selectCountDialogBinding.root)
-            selectCountDialogBinding.counterView.count = MIN_COUNT_VALUE
-            selectCountDialogBinding.counterView.plusClickListener = { presenter.plusCount() }
-            selectCountDialogBinding.counterView.minusClickListener = { presenter.minusCount() }
-            selectCountDialogBinding.addToCartBtn.setOnClickListener {
-                presenter.addCartProduct(selectCountDialogBinding.counterView.count)
-            }
-        }.create()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         presenter.loadProduct()
-        binding.addCartProductTv.setOnClickListener { showSelectCountDialog() }
+        binding.addCartProductTv.setOnClickListener { presenter.selectCount() }
     }
 
     override fun onDestroy() {
@@ -66,7 +49,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.product = product
     }
 
-    override fun setCount(count: Int) {
+    override fun setCount(selectCountDialogBinding: DialogSelectCountBinding, count: Int) {
         selectCountDialogBinding.counterView.count = count
     }
 
@@ -75,11 +58,28 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun showSelectCountDialog() {
-        selectCountDialog.show()
+        val selectCountDialogBinding: DialogSelectCountBinding =
+            DialogSelectCountBinding.inflate(LayoutInflater.from(this))
+        selectCountDialogBinding.product = presenter.product
+        val dialog = createSelectCountDialog(selectCountDialogBinding)
+        dialog.dismiss()
+        dialog.show()
     }
 
     override fun closeProductDetail() {
         finish()
+    }
+
+    private fun createSelectCountDialog(selectCountDialogBinding: DialogSelectCountBinding): AlertDialog {
+        return AlertDialog.Builder(this).apply {
+            setView(selectCountDialogBinding.root)
+            selectCountDialogBinding.counterView.count = MIN_COUNT_VALUE
+            selectCountDialogBinding.counterView.plusClickListener = { presenter.plusCount(selectCountDialogBinding) }
+            selectCountDialogBinding.counterView.minusClickListener = { presenter.minusCount(selectCountDialogBinding) }
+            selectCountDialogBinding.addToCartBtn.setOnClickListener {
+                presenter.addCartProduct(selectCountDialogBinding.counterView.count)
+            }
+        }.create()
     }
 
     companion object {

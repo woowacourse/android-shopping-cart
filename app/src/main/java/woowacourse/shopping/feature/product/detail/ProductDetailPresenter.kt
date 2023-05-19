@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.product.detail
 
 import com.example.domain.repository.CartRepository
+import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.model.CartProductState.Companion.MAX_COUNT_VALUE
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.model.ProductState
@@ -21,6 +22,10 @@ class ProductDetailPresenter(
         view.setViewContent(product)
     }
 
+    override fun selectCount() {
+        view.showSelectCountDialog()
+    }
+
     override fun addCartProduct(count: Int) {
         if (!isValidProduct()) return
         product!!
@@ -30,16 +35,16 @@ class ProductDetailPresenter(
         view.closeProductDetail()
     }
 
-    override fun minusCount() {
+    override fun minusCount(selectCountDialogBinding: DialogSelectCountBinding) {
         count--
         if (count < MIN_COUNT_VALUE) count++
-        view.setCount(count)
+        view.setCount(selectCountDialogBinding, count)
     }
 
-    override fun plusCount() {
+    override fun plusCount(selectCountDialogBinding: DialogSelectCountBinding) {
         count++
         if (MAX_COUNT_VALUE < count) count--
-        view.setCount(count)
+        view.setCount(selectCountDialogBinding, count)
     }
 
     private fun isValidProduct(): Boolean {

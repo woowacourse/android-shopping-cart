@@ -1,12 +1,13 @@
 package woowacourse.shopping.feature.product.detail
 
+import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.model.ProductState
 
 interface ProductDetailContract {
 
     interface View {
         fun setViewContent(product: ProductState)
-        fun setCount(count: Int)
+        fun setCount(selectCountDialogBinding: DialogSelectCountBinding, count: Int)
         fun showCart()
         fun showAccessError()
         fun showSelectCountDialog()
@@ -17,8 +18,9 @@ interface ProductDetailContract {
         val product: ProductState?
 
         fun loadProduct()
+        fun selectCount()
         fun addCartProduct(count: Int)
-        fun plusCount()
-        fun minusCount()
+        fun plusCount(selectCountDialogBinding: DialogSelectCountBinding)
+        fun minusCount(selectCountDialogBinding: DialogSelectCountBinding)
     }
 }
