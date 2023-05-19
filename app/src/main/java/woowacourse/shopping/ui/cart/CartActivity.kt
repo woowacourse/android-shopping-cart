@@ -28,6 +28,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         initBinding()
         initToolbar()
         initPresenter(savedInstanceState)
+        initObserve()
     }
 
     private fun initBinding() {
@@ -45,6 +46,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartBottom.onAllCheckClick = presenter::setProductsCheck
         binding.rvProducts.adapter = adapter
         binding.rvProducts.itemAnimator = null
+    }
+
+    private fun initObserve() {
+        presenter.checkedCount.observe(this) { binding.cartBottom.totalCount = it }
+        presenter.totalPrice.observe(this) { binding.cartBottom.price = it }
     }
 
     private fun initToolbar() {
@@ -71,11 +77,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setCarts(products: List<CartProductUIModel>, pageUIModel: PageUIModel) {
         adapter.submitList(products, pageUIModel)
-    }
-
-    override fun setBottom(totalPrice: Int, totalCount: Int) {
-        binding.cartBottom.totalCount = totalCount
-        binding.cartBottom.price = totalPrice
     }
 
     override fun setAllItemCheck(all: Boolean) {

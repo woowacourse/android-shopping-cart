@@ -4,6 +4,8 @@ import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.utils.NonNullLiveData
+import woowacourse.shopping.utils.NonNullMutableLiveData
 
 class CartPresenter(
     private val view: CartContract.View,
@@ -11,6 +13,12 @@ class CartPresenter(
     private val productRepository: ProductRepository,
     private var index: Int = 0
 ) : CartContract.Presenter {
+    private val _totalPrice: NonNullMutableLiveData<Int> = NonNullMutableLiveData(0)
+    override val totalPrice: NonNullLiveData<Int> get() = _totalPrice
+
+    private val _checkedCount: NonNullMutableLiveData<Int> = NonNullMutableLiveData(0)
+    override val checkedCount: NonNullLiveData<Int> get() = _checkedCount
+
     private val currentPage get() = cartRepository.getPage(index, STEP).toUIModel()
 
     private val pageUIModel get() = PageUIModel(
@@ -19,13 +27,18 @@ class CartPresenter(
         index + 1
     )
 
-    override fun setUpCarts() {
-        view.setCarts(currentPage, pageUIModel)
+    init {
         setBottom()
     }
 
+    override fun setUpCarts() {
+        view.setCarts(currentPage, pageUIModel)
+        setAllItemCheck()
+    }
+
     private fun setBottom() {
-        view.setBottom(cartRepository.getTotalPrice(), cartRepository.getTotalSelectedCount())
+        _totalPrice.value = cartRepository.getTotalPrice()
+        _checkedCount.value = cartRepository.getTotalSelectedCount()
     }
 
     private fun setAllItemCheck() {
