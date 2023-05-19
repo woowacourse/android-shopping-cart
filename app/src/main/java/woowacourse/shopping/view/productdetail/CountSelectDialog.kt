@@ -34,12 +34,7 @@ class CountSelectDialog(
         setDialogSize(dialog.window)
 
         binding.counterView.listener = object : CounterViewEventListener {
-            override fun addCount(counterView: CounterView, count: Int) {
-                binding.counterView.updateCountView()
-                productCount = Count(count)
-            }
-
-            override fun decCount(counterView: CounterView, count: Int) {
+            override fun updateCount(counterView: CounterView, count: Int) {
                 binding.counterView.updateCountView()
                 productCount = Count(count)
             }
@@ -66,7 +61,7 @@ class CountSelectDialog(
     }
 
     private fun saveCartProduct(product: ProductUIModel) {
-        cartProductRepository.update(CartProduct(product.toDomain(), productCount))
+        cartProductRepository.add(CartProduct(product.toDomain(), productCount))
     }
 
     private fun showCartPage() {

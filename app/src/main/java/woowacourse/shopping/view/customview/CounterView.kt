@@ -23,15 +23,19 @@ class CounterView @JvmOverloads constructor(
         binding.tvCount.text = count.value.toString()
     }
 
+    fun initCount(initCount: Int) {
+        count = Count(initCount)
+    }
+
     private fun setOnButtonClick() {
         binding.btnPlus.setOnClickListener {
             count = count.inc()
-            listener?.addCount(this, count.value)
+            listener?.updateCount(this, count.value)
         }
 
         binding.btnMinus.setOnClickListener {
             count = count.dec()
-            listener?.decCount(this, count.value)
+            listener?.updateCount(this, count.value)
         }
     }
 

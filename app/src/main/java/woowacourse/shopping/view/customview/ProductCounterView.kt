@@ -16,11 +16,7 @@ class ProductCounterView @JvmOverloads constructor(
         ProductCounterBinding.inflate(LayoutInflater.from(context), this, true)
 
     var listener = object : CounterViewEventListener {
-        override fun addCount(counterView: CounterView, count: Int) {
-            setViewVisibility(count)
-        }
-
-        override fun decCount(counterView: CounterView, count: Int) {
+        override fun updateCount(counterView: CounterView, count: Int) {
             setViewVisibility(count)
         }
     }
