@@ -26,7 +26,7 @@ interface ShoppingCartContract {
 
         fun readMoreShoppingCartProducts()
 
-        fun changeShoppingCartProductCount(id: Int, count: Int)
+        fun changeShoppingCartProductCount(id: Int, isAdd: Boolean)
 
         fun changeShoppingCartProductSelection(id: Int, isSelected: Boolean)
 

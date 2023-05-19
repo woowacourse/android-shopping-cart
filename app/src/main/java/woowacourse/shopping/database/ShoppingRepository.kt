@@ -15,6 +15,8 @@ interface ShoppingRepository {
 
     fun selectProductById(id: Int): Product
 
+    fun selectShoppingCartProductById(id: Int): CartProduct
+
     fun insertToShoppingCart(id: Int, count: Int, isSelected: Boolean)
 
     fun deleteFromShoppingCart(id: Int)

@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.common.ProductCountClickListener
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.util.CART_PRODUCT_TO_READ
@@ -54,6 +55,15 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             totalSize = totalSize,
             onClickCheckBox = presenter::changeShoppingCartProductSelection,
             checkUpAll = presenter::checkAllBox,
+            countClickListener = object : ProductCountClickListener {
+                override fun onPlusClick(id: Int) {
+                    presenter.changeShoppingCartProductCount(id, true)
+                }
+
+                override fun onMinusClick(id: Int) {
+                    presenter.changeShoppingCartProductCount(id, false)
+                }
+            },
         )
 
         with(binding) {

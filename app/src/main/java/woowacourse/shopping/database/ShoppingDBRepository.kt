@@ -128,6 +128,20 @@ class ShoppingDBRepository(
         return product
     }
 
+    override fun selectShoppingCartProductById(id: Int): CartProduct {
+        val cursor = shoppingDB.rawQuery(
+            "select * from ${ShoppingCartDBContract.TABLE_NAME} where ${ShoppingCartDBContract.CART_PRODUCT_ID} = ?",
+            arrayOf(id.toString()),
+        ).apply {
+            moveToNext()
+        }
+
+        val product = cursor.getShoppingCartProductById()
+        cursor.close()
+
+        return product
+    }
+
     override fun insertToShoppingCart(id: Int, count: Int, isSelected: Boolean) {
         val values = ContentValues().apply {
             put(ShoppingCartDBContract.CART_PRODUCT_ID, id)

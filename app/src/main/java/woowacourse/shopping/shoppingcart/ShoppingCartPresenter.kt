@@ -42,8 +42,11 @@ class ShoppingCartPresenter(
         view.showMoreShoppingCartProducts(products)
     }
 
-    override fun changeShoppingCartProductCount(id: Int, count: Int) {
-        repository.updateShoppingCartCount(id, count)
+    override fun changeShoppingCartProductCount(id: Int, isAdd: Boolean) {
+        val product = repository.selectShoppingCartProductById(id)
+        val addAmount = if (isAdd) 1 else -1
+        repository.updateShoppingCartCount(id, product.count + addAmount)
+        updateOrderInfo()
     }
 
     override fun changeShoppingCartProductSelection(id: Int, isSelected: Boolean) {
