@@ -15,4 +15,6 @@
     <string name="button_load_more">더보기</string>
     <string name="order_with_count">주문하기(%d)</string>
     <string name="all_of_them">전체</string>
+    <string name="minus_sign">-</string>
+    <string name="plus_sign">+</string>
 </resources>

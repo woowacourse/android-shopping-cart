@@ -10,7 +10,11 @@ interface CartItemRepository {
 
     fun findAllOrderByAddedTime(limit: Int, offset: Int): List<CartItem>
 
+    fun findByProductId(productId: Long): CartItem?
+
     fun countAll(): Int
+
+    fun updateCountByProductId(productId: Long, count: Int)
 
     fun deleteByProductId(productId: Long)
 }

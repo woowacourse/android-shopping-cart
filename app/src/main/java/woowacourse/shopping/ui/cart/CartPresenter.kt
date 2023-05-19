@@ -111,7 +111,6 @@ class CartPresenter(
         } else {
             _selectedCartItems - productId
         }
-        view.setCartItemSelected(productId, isSelected)
     }
 
     fun onChangeCartItemsOnCurrentPageSelection(isSelected: Boolean) {
@@ -128,6 +127,22 @@ class CartPresenter(
             _selectedCartItems = _selectedCartItems - selectedProductsIdOnCurrentPage.toSet()
             showCartItemsOfCurrentPage()
         }
+    }
+
+    fun onPlusCountOfProduct(productId: Long) {
+        val cartItem = cartItemRepository.findByProductId(productId) ?: return
+        cartItem.plusCount()
+        cartItemRepository.updateCountByProductId(productId, cartItem.count)
+        showCartItemsOfCurrentPage()
+        refreshOrderUIState()
+    }
+
+    fun onMinusCountOfProduct(productId: Long) {
+        val cartItem = cartItemRepository.findByProductId(productId) ?: return
+        cartItem.minusCount()
+        cartItemRepository.updateCountByProductId(productId, cartItem.count)
+        showCartItemsOfCurrentPage()
+        refreshOrderUIState()
     }
 
     companion object {

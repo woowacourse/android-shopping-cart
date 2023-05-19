@@ -91,9 +91,13 @@ class CartActivity : AppCompatActivity() {
     private fun initCartList() {
         binding.recyclerViewCart.adapter = CartListAdapter(
             mutableListOf(),
-            { presenter.onDeleteCartItem(it) }) { productId, isSelected ->
-            presenter.onChangeCartItemSelection(productId, isSelected)
-        }
+            onCloseButtonClick = { presenter.onDeleteCartItem(it) },
+            onCheckButtonClick = { productId, isSelected ->
+                presenter.onChangeCartItemSelection(productId, isSelected)
+            },
+            onPlusCountClick = { presenter.onPlusCountOfProduct(it) },
+            onMinusCountClick = { presenter.onMinusCountOfProduct(it) }
+        )
         presenter.onLoadCartItemsNextPage()
     }
 
@@ -108,10 +112,14 @@ class CartActivity : AppCompatActivity() {
 
     fun setCartItems(cartItems: List<CartItemUIState>) {
         binding.recyclerViewCart.adapter = CartListAdapter(
-            cartItems.toMutableList(),
-            { presenter.onDeleteCartItem(it) }) { productId, isSelected ->
-            presenter.onChangeCartItemSelection(productId, isSelected)
-        }
+            cartItems = cartItems.toMutableList(),
+            onCloseButtonClick = { presenter.onDeleteCartItem(it) },
+            onCheckButtonClick = { productId, isSelected ->
+                presenter.onChangeCartItemSelection(productId, isSelected)
+            },
+            onPlusCountClick = { presenter.onPlusCountOfProduct(it) },
+            onMinusCountClick = { presenter.onMinusCountOfProduct(it) }
+        )
     }
 
     fun setStateThatCanRequestNextPage(canRequest: Boolean) {
@@ -130,13 +138,6 @@ class CartActivity : AppCompatActivity() {
         outState.putInt(CURRENT_PAGE, presenter.currentPage)
         outState.putString(SELECTED_CART_ITEMS, presenter.selectedCartItems.joinToString(" "))
         super.onSaveInstanceState(outState)
-    }
-
-    fun setCartItemSelected(productId: Long, isSelected: Boolean) {
-        (binding.recyclerViewCart.adapter as CartListAdapter).setCartItemSelected(
-            productId,
-            isSelected
-        )
     }
 
     fun setAllCartItemsSelected(isSelected: Boolean) {

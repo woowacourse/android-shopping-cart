@@ -91,12 +91,45 @@ class CartItemRepositoryImpl(
         return cartItems
     }
 
+    override fun findByProductId(productId: Long): CartItem? {
+        var cartItem: CartItem? = null
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${CartItemEntry.TABLE_NAME} WHERE ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} = $productId",
+            null
+        )
+        if (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+            val addedTime =
+                cursor.getString(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_ADDED_TIME))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_COUNT))
+            cartItem = CartItem(
+                productRepository.findById(productId)
+                    ?: throw IllegalArgumentException("참조 무결성 제약조건 위반"),
+                LocalDateTime.parse(addedTime),
+                count
+            ).apply { this.id = id }
+        }
+        cursor.close()
+        return cartItem
+    }
+
     override fun countAll(): Int {
         val cursor = db.rawQuery(" SELECT COUNT(*) FROM ${CartItemEntry.TABLE_NAME}", null)
         cursor.moveToNext()
         val count = cursor.getLong(0)
         cursor.close()
         return count.toInt()
+    }
+
+    override fun updateCountByProductId(productId: Long, count: Int) {
+        db.execSQL(
+            """
+            UPDATE ${CartItemEntry.TABLE_NAME} 
+            SET ${CartItemEntry.COLUMN_NAME_COUNT} = $count 
+            WHERE ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} = $productId
+            """.trimMargin()
+        )
     }
 
     override fun deleteByProductId(productId: Long) {
