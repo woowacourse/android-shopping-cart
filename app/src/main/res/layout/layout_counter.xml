@@ -47,7 +47,7 @@
             android:background="@color/white"
             android:gravity="center"
             android:paddingHorizontal="16dp"
-            android:text="@string/default_page"
+            android:text="@{String.valueOf(product.basketCount)}"
             android:textColor="@color/woowa_toolbar_gray"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"

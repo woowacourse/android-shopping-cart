@@ -23,14 +23,30 @@ class ShoppingPresenter(
     private var lastId: Int = -1
     private var totalProducts: List<UiProduct> = listOf()
     private var recentProducts: List<UiRecentProduct> = listOf()
-    private val basket: Basket = Basket(basketRepository.getAll())
+    private var basket: Basket = Basket(basketRepository.getAll())
+
+    private fun fetchBasketCount() {
+        totalProducts = totalProducts.map {
+            UiProduct(
+                it.id,
+                it.name,
+                it.price,
+                it.imageUrl,
+                basket.getCountByProductId(it.id)
+            )
+        }
+    }
 
     override fun addBasketProduct(product: Product) {
-        basket.add(BasketProduct(count = Count(1), product = product))
+        basket = basket.add(BasketProduct(count = Count(1), product = product))
+        fetchBasketCount()
+        view.updateProducts(totalProducts)
     }
 
     override fun removeBasketProduct(product: Product) {
-        basket.delete(BasketProduct(count = Count(1), product = product))
+        basket = basket.delete(BasketProduct(count = Count(1), product = product))
+        fetchBasketCount()
+        view.updateProducts(totalProducts)
     }
 
     override fun fetchProducts() {
@@ -42,6 +58,7 @@ class ShoppingPresenter(
         lastId -= if (hasNext) 1 else 0
         if (hasNext) products = products.dropLast(1)
         totalProducts += products
+        fetchBasketCount()
         view.updateProducts(totalProducts)
     }
 

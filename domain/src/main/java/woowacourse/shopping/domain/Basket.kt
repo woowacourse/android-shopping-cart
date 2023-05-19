@@ -24,4 +24,7 @@ data class Basket(val products: List<BasketProduct>) {
             }.filter { !it.count.isZero() }
         )
         else Basket((products - basketProduct).filter { !it.count.isZero() })
+
+    fun getCountByProductId(productId: Int): Int =
+        products.find { it.product.id == productId }?.count?.value ?: 0
 }
