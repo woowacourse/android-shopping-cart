@@ -24,4 +24,8 @@ class RecentProductRepositoryImpl(
     override fun modifyRecentProduct(recentProduct: RecentProduct) {
         recentProductDao.updateRecentProduct(recentProduct)
     }
+
+    override fun getLatestRecentProduct(): RecentProduct? {
+        return recentProductDao.selectLatestRecentProduct()
+    }
 }

@@ -8,7 +8,9 @@ interface ProductDetailContract {
     }
 
     interface View {
-        fun updateProductDetail(productModel: ProductModel)
+        fun setupProductDetail(productModel: ProductModel)
+
+        fun setupRecentProductDetail(recentProductModel: ProductModel?)
 
         fun showCart()
     }

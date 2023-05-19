@@ -11,4 +11,5 @@
 
     <string name="plus">+</string>
     <string name="minus">-</string>
+    <string name="latest_recent_product_header">마지막으로 본 상품</string>
 </resources>

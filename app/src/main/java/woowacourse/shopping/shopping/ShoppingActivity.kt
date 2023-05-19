@@ -150,8 +150,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         recentProductWrapperAdapter.updateRecentProduct()
     }
 
-    override fun showProductDetail(productModel: ProductModel) {
-        startProductDetailActivity(productModel)
+    override fun showProductDetail(productModel: ProductModel, recentProductModel: ProductModel?) {
+        startProductDetailActivity(productModel, recentProductModel)
     }
 
     override fun showCart() {
@@ -203,8 +203,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         }
     }
 
-    private fun startProductDetailActivity(productModel: ProductModel) {
-        val intent = ProductDetailActivity.createIntent(this, productModel)
+    private fun startProductDetailActivity(productModel: ProductModel, recentProductModel: ProductModel?) {
+        val intent = ProductDetailActivity.createIntent(this, productModel, recentProductModel)
         startActivity(intent)
     }
 

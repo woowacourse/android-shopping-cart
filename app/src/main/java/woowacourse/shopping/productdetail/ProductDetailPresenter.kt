@@ -11,13 +11,17 @@ import java.time.LocalDateTime
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
     productModel: ProductModel,
+    recentProductModel: ProductModel?,
     private val cartRepository: CartRepository
 ) : ProductDetailContract.Presenter {
     private val product: Product
+    private val recentProduct: Product?
 
     init {
         product = productModel.toDomain()
-        view.updateProductDetail(product.toView())
+        recentProduct = recentProductModel?.toDomain()
+        view.setupProductDetail(product.toView())
+        view.setupRecentProductDetail(recentProduct?.toView())
     }
 
     override fun addToCart() {

@@ -12,4 +12,6 @@ interface RecentProductRepository {
     fun getByProduct(product: Product): RecentProduct?
 
     fun modifyRecentProduct(recentProduct: RecentProduct)
+
+    fun getLatestRecentProduct(): RecentProduct?
 }

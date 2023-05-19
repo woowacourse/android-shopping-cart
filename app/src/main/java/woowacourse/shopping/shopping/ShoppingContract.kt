@@ -30,7 +30,7 @@ interface ShoppingContract {
 
         fun updateRecentProducts(recentProductModels: List<RecentProductModel>)
 
-        fun showProductDetail(productModel: ProductModel)
+        fun showProductDetail(productModel: ProductModel, recentProductModel: ProductModel?)
 
         fun showCart()
 

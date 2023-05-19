@@ -39,8 +39,8 @@
         - [x] private updateShoppingProduct(cartProduct, productModel)
             - [x] view.updateShoppingProduct(shoppingProductModel)
     - [ ] ProductDetail
-        - [ ] init { }
-            - [ ] view.updateRecentProduct(recentProductModel)
+        - [x] init { }
+            - [x] view.setupRecentProductDetail(productModel)
         - [ ] setUpCartProduct()
         - [ ] decreaseCartProductAmount()
             - [ ] if(amount > 1)

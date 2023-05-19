@@ -95,7 +95,7 @@ class ShoppingPresenterTest {
     fun 상품을_선택하면_최근_본_상품에_추가하고_상품_상세정보를_보여준다() {
         // given
         justRun {
-            view.showProductDetail(any())
+            view.showProductDetail(any(), any())
         }
 
         // when
@@ -104,7 +104,7 @@ class ShoppingPresenterTest {
         // then
         verify {
             recentProductRepository.addRecentProduct(any())
-            view.showProductDetail(any())
+            view.showProductDetail(any(), any())
         }
     }
 

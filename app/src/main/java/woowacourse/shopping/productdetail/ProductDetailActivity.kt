@@ -19,6 +19,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
     private lateinit var productModel: ProductModel
+    private var recentProductModel: ProductModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +49,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateProductDetail(productModel: ProductModel) {
+    override fun setupProductDetail(productModel: ProductModel) {
         binding.product = productModel
+    }
+
+    override fun setupRecentProductDetail(recentProductModel: ProductModel?) {
+        binding.recentProduct = recentProductModel
     }
 
     override fun showCart() {
@@ -63,6 +68,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun initExtras() {
         productModel = intent.getSerializable(EXTRA_KEY_PRODUCT) ?: return finish()
+        recentProductModel = intent.getSerializable(EXTRA_KEY_RECENT_PRODUCT)
     }
 
     private fun setUpProductDetailCartButton() {
@@ -76,15 +82,19 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(
             this,
             productModel = productModel,
+            recentProductModel = recentProductModel,
             cartRepository = CartRepositoryImpl(CartDao(db))
         )
     }
 
     companion object {
         private const val EXTRA_KEY_PRODUCT = "product"
-        fun createIntent(context: Context, productModel: ProductModel): Intent {
+        private const val EXTRA_KEY_RECENT_PRODUCT = "recent_product"
+
+        fun createIntent(context: Context, productModel: ProductModel, recentProductModel: ProductModel?): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(EXTRA_KEY_PRODUCT, productModel)
+            intent.putExtra(EXTRA_KEY_RECENT_PRODUCT, recentProductModel)
             return intent
         }
     }

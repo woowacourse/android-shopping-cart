@@ -23,14 +23,38 @@ class ProductDetailPresenterTest {
     @Test
     fun 프레젠터가_생성되면_뷰의_상품_상세정보를_갱신한다() {
         // given
-        justRun { view.updateProductDetail(any()) }
+        justRun { view.setupProductDetail(any()) }
 
         // when
-        presenter = ProductDetailPresenter(view, mockk(relaxed = true), cartRepository)
+        presenter = ProductDetailPresenter(
+            view,
+            productModel = mockk(relaxed = true),
+            recentProductModel = mockk(relaxed = true),
+            cartRepository
+        )
 
         // then
         verify {
-            view.updateProductDetail(any())
+            view.setupProductDetail(any())
+        }
+    }
+
+    @Test
+    fun 프레젠터가_생성되면_뷰의_최근_상품_상세정보를_갱신한다() {
+        // given
+        justRun { view.setupRecentProductDetail(any()) }
+
+        // when
+        presenter = ProductDetailPresenter(
+            view,
+            productModel = mockk(relaxed = true),
+            recentProductModel = mockk(relaxed = true),
+            cartRepository
+        )
+
+        // then
+        verify {
+            view.setupRecentProductDetail(any())
         }
     }
 
@@ -41,7 +65,12 @@ class ProductDetailPresenterTest {
             cartRepository.addCartProduct(any())
             view.showCart()
         }
-        presenter = ProductDetailPresenter(view, mockk(relaxed = true), cartRepository)
+        presenter = ProductDetailPresenter(
+            view,
+            productModel = mockk(relaxed = true),
+            recentProductModel = mockk(relaxed = true),
+            cartRepository
+        )
 
         // when
         presenter.addToCart()

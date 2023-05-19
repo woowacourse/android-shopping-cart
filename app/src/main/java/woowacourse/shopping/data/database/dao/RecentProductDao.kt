@@ -89,4 +89,20 @@ class RecentProductDao(private val db: SQLiteDatabase) {
             arrayOf(productId.toString())
         )
     }
+
+    fun selectLatestRecentProduct(): RecentProduct? {
+        val cursor = db.rawQuery(
+            """
+                |SELECT * FROM ${SqlRecentProduct.name}, ${SqlProduct.name} ON ${SqlRecentProduct.name}.${SqlRecentProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} 
+                |ORDER BY ${SqlRecentProduct.TIME} DESC
+                |LIMIT 1
+            """.trimMargin(),
+            null
+        )
+
+        return cursor.use {
+            if (it.moveToNext()) createRecentProduct(cursor)
+            else null
+        }
+    }
 }

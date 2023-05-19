@@ -3,6 +3,7 @@ package woowacourse.shopping.shopping
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomain
+import woowacourse.shopping.common.model.mapper.ProductMapper.toView
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toView
 import woowacourse.shopping.common.model.mapper.ShoppingProductMapper.toView
 import woowacourse.shopping.domain.CartProduct
@@ -42,8 +43,9 @@ class ShoppingPresenter(
     }
 
     override fun openProduct(productModel: ProductModel) {
+        val latestRecentProduct = recentProductRepository.getLatestRecentProduct()
         updateRecentProducts(productModel)
-        view.showProductDetail(productModel)
+        view.showProductDetail(productModel, latestRecentProduct?.product?.toView())
     }
 
     private fun updateRecentProducts(productModel: ProductModel) {
