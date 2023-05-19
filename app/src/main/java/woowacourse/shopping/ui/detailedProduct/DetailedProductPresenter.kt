@@ -29,7 +29,9 @@ class DetailedProductPresenter(
     }
 
     override fun addProductToCart(count: Int) {
-        cartRepository.insert(product.id)
+        productRepository.findById(product.id).let {
+            cartRepository.insert(it)
+        }
         cartRepository.updateCount(product.id, count)
         view.navigateToCart()
     }
@@ -49,7 +51,7 @@ class DetailedProductPresenter(
     }
 
     override fun navigateToAddToCartDialog() {
-        cartRepository.insert(product.id)
+        cartRepository.insert(product.toDomain())
         view.navigateToAddToCartDialog(product)
     }
 }

@@ -8,11 +8,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartDatabase
-import woowacourse.shopping.database.product.ProductDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.repositoryImpl.MockWeb
+import woowacourse.shopping.repositoryImpl.RemoteProductRepository
 import woowacourse.shopping.ui.cart.cartAdapter.CartAdapter
 import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 import woowacourse.shopping.ui.detailedProduct.DetailedProductActivity
@@ -36,10 +37,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initPresenter(savedInstanceState: Bundle?) {
+        var url: String? = null
+        val thread = Thread { url = MockWeb().url }
+        thread.start()
+        thread.join()
         presenter = CartPresenter(
             this,
             CartDatabase(this),
-            ProductDatabase(this),
+            RemoteProductRepository(url ?: ""),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0
         )
         presenter.setUpCarts()

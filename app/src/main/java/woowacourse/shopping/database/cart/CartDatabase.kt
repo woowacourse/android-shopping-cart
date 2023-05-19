@@ -6,6 +6,7 @@ import android.database.Cursor
 import woowacourse.shopping.database.ShoppingDBHelper
 import woowacourse.shopping.model.CartProduct
 import woowacourse.shopping.model.CartProducts
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.CartRepository
 
 class CartDatabase(context: Context) : CartRepository {
@@ -37,23 +38,16 @@ class CartDatabase(context: Context) : CartRepository {
         }
     }
 
-    private fun getProductById(id: Int): CartProduct {
-        val query = ProductConstant.getGetQuery(id)
-        db.rawQuery(query, null).use { cursor ->
-            cursor.moveToNext()
-            return ProductConstant.fromCursor(cursor).let {
-                CartProduct(
-                    id = it.id,
-                    name = it.name,
-                    count = 1,
-                    checked = true,
-                    price = it.price,
-                    imageUrl = it.imageUrl
-                )
-            }
-        }
+    private fun toCartProduct(product: Product): CartProduct {
+        return CartProduct(
+            id = product.id,
+            name = product.name,
+            count = 1,
+            checked = true,
+            price = product.price,
+            imageUrl = product.imageUrl
+        )
     }
-
     private fun getCartCursor(): Cursor {
         return db.rawQuery(CartConstant.getGetAllQuery(), null)
     }
@@ -82,9 +76,8 @@ class CartDatabase(context: Context) : CartRepository {
         return cartProducts.all().filter { it.checked }.sumOf { it.price * it.count }
     }
 
-    override fun insert(productId: Int) {
-        val product = getProductById(productId)
-        db.execSQL(CartConstant.getInsertQuery(product))
+    override fun insert(product: Product) {
+        db.execSQL(CartConstant.getInsertQuery(toCartProduct(product)))
         cartProducts = getAll()
     }
 

@@ -7,9 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductFakeRepository
 import woowacourse.shopping.database.cart.CartDatabase
-import woowacourse.shopping.database.product.ProductDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.CartProductUIModel
@@ -54,9 +52,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initPresenter() {
-        ProductFakeRepository.getAll().forEach {
-            ProductDatabase(this).insert(it)
-        }
         var url: String? = null
         val thread = Thread { url = MockWeb().url }
         thread.start()

@@ -39,7 +39,9 @@ class ShoppingPresenter(
     }
 
     override fun updateItem(productId: Int, count: Int): Int {
-        cartRepository.insert(productId)
+        productRepository.findById(productId).let {
+            cartRepository.insert(it)
+        }
         val updatedCount = cartRepository.updateCount(productId, count)
         cartProductsData = cartRepository.getAll().toUIModel()
         updateToolbar()
