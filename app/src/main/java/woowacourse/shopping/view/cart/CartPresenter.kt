@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.cart
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
@@ -12,13 +13,15 @@ class CartPresenter(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
 ) : CartContract.Presenter {
+    private val _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
+    override val totalPrice: LiveData<Int>
+        get() = _totalPrice
     private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
 
     private val currentCartProducts =
         convertIdToModel(cartPagination.nextItems()).toMutableList()
 
     override fun fetchProducts() {
-        Log.d("test", "tesg")
         view.showProducts(
             currentCartProducts,
             cartPagination.isUndoItemsEnabled,
@@ -46,6 +49,23 @@ class CartPresenter(
         updateCartItems(getItems)
     }
 
+    override fun plusCount(id: Int) {
+        cartRepository.plusCount(id)
+    }
+
+    override fun subCount(id: Int) {
+        cartRepository.subCount(id)
+    }
+
+    override fun setupTotalPrice() {
+        val cartModels = convertIdToModel(cartRepository.findCheckedItem())
+        _totalPrice.value = cartModels.sumOf { it.count * it.product.price }
+    }
+
+    override fun updateItemCheck(id: Int, checked: Boolean) {
+        cartRepository.updateCheckState(id, checked)
+    }
+
     private fun updateCartItems(getItems: List<CartProduct>) {
         if (getItems.isNotEmpty()) {
             currentCartProducts.clear()
@@ -53,9 +73,6 @@ class CartPresenter(
             fetchProducts()
         }
     }
-
-    // private fun convertIdToProductModel(cartProducts: List<CartProduct>) =
-    //  cartProducts.map { productRepository.find(it.id) }.map { it.toUiModel() }
 
     private fun convertIdToModel(cartProducts: List<CartProduct>): List<CartProductModel> {
         return cartProducts.map { cartProduct ->

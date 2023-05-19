@@ -6,4 +6,8 @@ interface CartRepository {
     fun remove(id: Int)
     fun findRange(mark: Int, rangeSize: Int): List<CartProduct>
     fun isExistByMark(mark: Int): Boolean
+    fun plusCount(id: Int)
+    fun subCount(id: Int)
+    fun findCheckedItem(): List<CartProduct>
+    fun updateCheckState(id: Int, checked: Boolean)
 }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.cart
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.CartProductModel
@@ -17,10 +16,12 @@ class CartAdapter(
         fun onRemoveClick(id: Int)
         fun onNextClick()
         fun onUndoClick()
+        fun onPlusClick(id: Int)
+        fun onMinusClick(id: Int)
+        fun onItemCheckChanged(id: Int, checked: Boolean)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
-        Log.d("test", "onCreateViewHolder 진입")
         return CartItemViewHolder.of(parent, CartViewType.values()[viewType], onItemClick)
     }
 

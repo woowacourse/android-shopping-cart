@@ -83,6 +83,52 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, nu
         return products
     }
 
+    fun plusCount(id: Int) {
+        var count = 1
+        val sql =
+            "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_ID}=$id"
+        val cursor = readableDatabase.rawQuery(sql, null)
+        while (cursor.moveToNext()) {
+            count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
+            count += 1
+            cursor.close()
+        }
+        writableDatabase.execSQL("UPDATE ${CartContract.TABLE_NAME} SET ${CartContract.TABLE_COLUMN_COUNT}=$count WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
+    }
+
+    fun subCount(id: Int) {
+        var count = 1
+        val sql =
+            "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_ID}=$id"
+        val cursor = readableDatabase.rawQuery(sql, null)
+        while (cursor.moveToNext()) {
+            count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
+            count -= 1
+            cursor.close()
+        }
+        writableDatabase.execSQL("UPDATE ${CartContract.TABLE_NAME} SET ${CartContract.TABLE_COLUMN_COUNT}=$count WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
+    }
+
+    fun selectChecked(): List<CartProduct> {
+        val products = mutableListOf<CartProduct>()
+        val sql =
+            "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_CHECK}=1"
+        val cursor = readableDatabase.rawQuery(sql, null)
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
+            val check = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECK))
+            val isChecked = check == 1
+            products.add(CartProduct(id, count, isChecked))
+        }
+        cursor.close()
+        return products
+    }
+
+    fun updateCheck(id: Int, checked: Boolean) {
+        writableDatabase.execSQL("UPDATE ${CartContract.TABLE_NAME} SET ${CartContract.TABLE_COLUMN_CHECK}=$checked WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
+    }
+
     fun getSize(mark: Int): Boolean {
         val itemsSize = selectAll().size
         return mark in 0 until itemsSize

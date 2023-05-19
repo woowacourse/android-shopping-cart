@@ -35,4 +35,20 @@ class CartDbRepository(context: Context) : CartRepository {
     override fun isExistByMark(mark: Int): Boolean {
         return dbHelper.getSize(mark)
     }
+
+    override fun plusCount(id: Int) {
+        dbHelper.plusCount(id)
+    }
+
+    override fun subCount(id: Int) {
+        dbHelper.subCount(id)
+    }
+
+    override fun findCheckedItem(): List<CartProduct> {
+        return dbHelper.selectChecked()
+    }
+
+    override fun updateCheckState(id: Int, checked: Boolean) {
+        dbHelper.updateCheck(id, checked)
+    }
 }

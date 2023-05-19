@@ -3,9 +3,10 @@ package woowacourse.shopping.view.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
+import woowacourse.shopping.common.PriceFormatter
 import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -24,6 +25,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setActionBar()
         setPresenter()
         presenter.fetchProducts()
+        observeTotalPrice()
     }
 
     private fun setBinding() {
@@ -45,7 +47,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         isExistNext: Boolean,
         count: String,
     ) {
-        Log.d("test", "showProduct 진입")
         adpater = CartAdapter(
             cartProducts,
             object : CartAdapter.OnItemClick {
@@ -59,6 +60,21 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
                 override fun onUndoClick() {
                     presenter.fetchUndoPage()
+                }
+
+                override fun onPlusClick(id: Int) {
+                    presenter.plusCount(id)
+                    presenter.setupTotalPrice()
+                }
+
+                override fun onMinusClick(id: Int) {
+                    presenter.subCount(id)
+                    presenter.setupTotalPrice()
+                }
+
+                override fun onItemCheckChanged(id: Int, checked: Boolean) {
+                    presenter.updateItemCheck(id, checked)
+                    presenter.setupTotalPrice()
                 }
             },
             isExistUndo,
@@ -74,6 +90,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun notifyRemoveItem(position: Int) {
         adpater.removeCartItems(position)
+    }
+
+    override fun observeTotalPrice() {
+        presenter.totalPrice.observe(this) {
+            binding.totalPrice.text = getString(R.string.korean_won, PriceFormatter.format(it))
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

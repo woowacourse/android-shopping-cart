@@ -5,6 +5,6 @@
     <item
         android:id="@+id/cart"
         android:icon="@drawable/cart"
-        android:title="@string/shoppingcart"
+        android:title="@string/shopping_cart"
         app:showAsAction="ifRoom"/>
 </menu>
