@@ -26,6 +26,7 @@ class HomePresenter(
 
     override fun setHome() {
         view.setHomeData(homeData)
+        fetchTotalQuantity()
     }
 
     override fun fetchRecentlyViewed() {
@@ -91,15 +92,17 @@ class HomePresenter(
     private fun updateProductItem(position: Int, product: ProductInCart) {
         val result = shoppingCartRepository.updateProductCount(product.product.id, product.quantity)
         when (result) {
-            is WoowaResult.SUCCESS -> {
-                homeData[position] = ProductItem(product)
-                view.updateProductQuantity(position)
-            }
+            is WoowaResult.SUCCESS -> update(position, product)
             is WoowaResult.FAIL -> {
                 view.showUnexpectedError()
                 println("[ERROR] " + "error message : ${result.error.errorMessage}")
             }
         }
+    }
+
+    private fun update(position: Int, productInCart: ProductInCart) {
+        homeData[position] = ProductItem(productInCart)
+        view.updateProductQuantity(position)
     }
 
     private fun deleteProductInCart(position: Int, productInCart: ProductInCart) {
@@ -109,6 +112,11 @@ class HomePresenter(
             homeData[position] = ProductItem(productInCart)
             view.updateProductQuantity(position)
         }
+    }
+
+    override fun fetchTotalQuantity() {
+        val size = shoppingCartRepository.getTotalQuantity()
+        view.updateTotalQuantity(size)
     }
 
     companion object {

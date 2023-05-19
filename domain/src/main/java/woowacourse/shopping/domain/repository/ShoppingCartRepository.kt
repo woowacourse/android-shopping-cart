@@ -9,6 +9,6 @@ interface ShoppingCartRepository {
     fun insertProductInCart(productInCart: ProductInCart): Long
     fun deleteProductInCart(id: Long): Boolean
     fun getShoppingCartSize(): Int
-    fun getProductInCartCount(): Int
+    fun getTotalQuantity(): Int
     fun updateProductCount(productId: Long, count: Int): WoowaResult<Int>
 }

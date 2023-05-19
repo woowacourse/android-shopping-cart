@@ -7,7 +7,7 @@ interface ShoppingCartDataSource {
     fun deleteProductInShoppingCart(productId: Long): Boolean
     fun addProductInShoppingCart(productId: Long, quantity: Int): Long
     fun getShoppingCartSize(): Int
-    fun getTotalCount(): Int
+    fun getTotalQuantity(): Int
     fun updateProductCount(productId: Long, updatedQuantity: Int): WoowaResult<Int>
     fun getAllEntities(): List<ProductInCartEntity>
 }

@@ -21,6 +21,7 @@
 
             <TextView
                 android:id="@+id/textHomeTitle"
+                style="@style/woowaPro24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="26dp"
@@ -28,22 +29,46 @@
                 android:layout_marginBottom="16dp"
                 android:text="@string/shopping"
                 android:textColor="@color/white"
-                android:textSize="21sp"
-                android:textStyle="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/imageHomeShoppingCart"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutHomeShoppingCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
-                android:src="@drawable/icon_shopping_cart"
-                app:layout_constraintBottom_toBottomOf="@+id/textHomeTitle"
-                app:layout_constraintDimensionRatio="1:1"
+                android:paddingVertical="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textHomeTitle" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imageHomeShoppingCart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:src="@drawable/icon_shopping_cart"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/textHomeCartSize"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textHomeCartSize"
+                    style="@style/woowaPro12"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/oval_green400"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageHomeShoppingCart"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imageHomeShoppingCart"
+                    tools:text="1" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView

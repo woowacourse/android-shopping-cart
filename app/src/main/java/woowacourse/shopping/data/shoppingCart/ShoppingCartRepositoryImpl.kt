@@ -36,8 +36,8 @@ class ShoppingCartRepositoryImpl(
         return shoppingCartDataSource.getShoppingCartSize()
     }
 
-    override fun getProductInCartCount(): Int {
-        return shoppingCartDataSource.getTotalCount()
+    override fun getTotalQuantity(): Int {
+        return shoppingCartDataSource.getTotalQuantity()
     }
 
     override fun updateProductCount(productId: Long, count: Int): WoowaResult<Int> {

@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.ui.home
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,7 +25,12 @@ class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListene
     private lateinit var binding: ActivityHomeBinding
     override val presenter: HomeContract.Presenter by lazy { initPresenter() }
     private val homeAdapter: HomeAdapter by lazy {
-        HomeAdapter(recentlyViewedProductAdapter, this, ::clickShowMore, presenter::updateProductQuantity)
+        HomeAdapter(
+            recentlyViewedProductAdapter,
+            this,
+            ::clickShowMore,
+            presenter::updateProductQuantity,
+        )
     }
     private val recentlyViewedProductAdapter: RecentlyViewedProductAdapter by lazy {
         RecentlyViewedProductAdapter(this)
@@ -97,7 +103,7 @@ class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListene
     }
 
     private fun clickShoppingCart() {
-        binding.imageHomeShoppingCart.setOnClickListener {
+        binding.layoutHomeShoppingCart.setOnClickListener {
             startActivity(ShoppingCartActivity.getIntent(this))
         }
     }
@@ -116,5 +122,12 @@ class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListene
 
     override fun updateProductQuantity(position: Int) {
         homeAdapter.notifyItemChanged(position)
+        presenter.fetchTotalQuantity()
+    }
+
+    override fun updateTotalQuantity(size: Int) {
+        if (size == 0) binding.textHomeCartSize.visibility = View.GONE
+        if (size == 1) binding.textHomeCartSize.visibility = View.VISIBLE
+        binding.textHomeCartSize.text = size.toString()
     }
 }

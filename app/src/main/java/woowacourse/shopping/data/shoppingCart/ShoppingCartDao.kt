@@ -60,7 +60,7 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
         return shoppingCartSize
     }
 
-    override fun getTotalCount(): Int {
+    override fun getTotalQuantity(): Int {
         val TOTAL_COUNT = "totalCount"
         val query = "SELECT SUM($TABLE_COLUMN_QUANTITY) AS $TOTAL_COUNT FROM $TABLE_NAME"
         val cursor = shoppingDb.rawQuery(query, null)

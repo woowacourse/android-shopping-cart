@@ -15,6 +15,7 @@ interface HomeContract {
         fun removeShowMoreItem(position: Int)
         fun showUnexpectedError()
         fun updateProductQuantity(position: Int)
+        fun updateTotalQuantity(size: Int)
     }
 
     interface Presenter {
@@ -22,5 +23,6 @@ interface HomeContract {
         fun fetchProducts()
         fun fetchRecentlyViewed()
         fun updateProductQuantity(position: Int, operator: Operator)
+        fun fetchTotalQuantity()
     }
 }
