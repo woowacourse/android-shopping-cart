@@ -26,9 +26,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.presenter = presenter
         binding.lifecycleOwner = this
         presenter.fetchProducts()
-        binding.checkboxTotal.setOnClickListener {
-            presenter.selectAll(binding.checkboxTotal.isChecked)
-        }
     }
 
     private fun setUpBinding() {

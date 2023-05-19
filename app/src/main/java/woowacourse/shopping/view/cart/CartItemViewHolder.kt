@@ -13,7 +13,7 @@ import woowacourse.shopping.util.PriceFormatter
 sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class CartProductViewHolder(
         private val binding: ItemCartBinding,
-        private val onItemClick: CartAdapter.OnItemClick
+        onItemClick: CartAdapter.OnItemClick
     ) :
         CartItemViewHolder(binding.root) {
         init {
@@ -22,20 +22,7 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(item: CartViewItem.CartProductItem) {
             binding.cartProduct = item.product
-            binding.textPrice.text = binding.root.context.getString(
-                R.string.korean_won,
-                PriceFormatter.format(item.product.price * item.product.count)
-            )
             Glide.with(binding.root.context).load(item.product.imageUrl).into(binding.imgProduct)
-            binding.btnMinus.setOnClickListener {
-                onItemClick.onUpdateCount(item.product.id, item.product.count - 1)
-            }
-            binding.btnPlus.setOnClickListener {
-                onItemClick.onUpdateCount(item.product.id, item.product.count + 1)
-            }
-            binding.checkboxSelect.setOnClickListener {
-                onItemClick.onSelectProduct(item.product)
-            }
         }
     }
 

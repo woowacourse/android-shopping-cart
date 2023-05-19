@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="woowacourse.shopping.util.PriceFormatter" />
 
         <variable
@@ -26,29 +27,29 @@
 
         <CheckBox
             android:id="@+id/checkbox_select"
-            android:checked="@{cartProduct.checked}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:checked="@{cartProduct.checked}"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            />
+            android:onCheckedChanged="@{() -> onItemClick.onSelectProduct(cartProduct)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
             android:id="@+id/text_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginBottom="2dp"
             android:text="@{cartProduct.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/checkbox_select"
             app:layout_constraintStart_toEndOf="@id/checkbox_select"
             app:layout_constraintTop_toTopOf="@id/checkbox_select"
-            app:layout_constraintBottom_toBottomOf="@id/checkbox_select"
-            android:layout_marginBottom="2dp"
-            android:layout_marginStart="3dp"
             tools:text="동원참치" />
 
         <ImageView
@@ -66,11 +67,11 @@
             android:id="@+id/text_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{@string/korean_won2(cartProduct.price * cartProduct.count)}"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:text="@{String.format(@string/korean_won, PriceFormatter.INSTANCE.format(cartProduct.price * cartProduct.count))}"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/layout_add_btns"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -78,14 +79,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            >
+            app:layout_constraintEnd_toEndOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_minus"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/back_left_rounded"
+                android:onClick="@{() -> onItemClick.onUpdateCount(cartProduct.id, cartProduct.count - 1)}"
                 android:text="@string/minus"
                 android:textColor="@color/gray"
                 android:textSize="22sp"
@@ -111,6 +112,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/back_right_rounded"
+                android:onClick="@{() -> onItemClick.onUpdateCount(cartProduct.id, cartProduct.count + 1)}"
                 android:text="@string/plus"
                 android:textColor="@color/gray"
                 android:textSize="22sp"
