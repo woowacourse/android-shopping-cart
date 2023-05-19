@@ -24,6 +24,7 @@ class ProductListViewHolder(
             onProductClick(bindingAdapterPosition)
         }
 
+        //TODO("리팩토링을 고민한다")
         binding.btProductAdd.setOnClickListener {
             it.visibility = View.GONE
             binding.countViewProductListOrderCount.visibility = View.VISIBLE
