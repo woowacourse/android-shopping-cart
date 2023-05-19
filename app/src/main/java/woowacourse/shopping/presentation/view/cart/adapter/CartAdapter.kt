@@ -12,7 +12,7 @@ class CartAdapter(
 ) : RecyclerView.Adapter<CartViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        return CartViewHolder(parent) { onCloseClick(items[it].product.id) }
+        return CartViewHolder(parent) { onCloseClick(items[it].id) }
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
