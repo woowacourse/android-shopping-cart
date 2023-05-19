@@ -14,10 +14,14 @@ interface ShoppingContract {
         fun showProductDetail(product: UiProduct)
 
         fun updateMoreButtonState(isVisible: Boolean)
+
+        fun updateTotalBasketCount(totalBasketCount: Int)
     }
 
     interface Presenter {
         val view: View
+
+        fun fetchTotalBasketCount()
 
         fun addBasketProduct(product: Product)
 

@@ -90,6 +90,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         moreButtonAdapter.updateItemCount(isVisible)
     }
 
+    override fun updateTotalBasketCount(totalBasketCount: Int) {
+        binding.totalBasketCount = totalBasketCount
+    }
+
     private fun initAdapter() {
         recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
         recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
