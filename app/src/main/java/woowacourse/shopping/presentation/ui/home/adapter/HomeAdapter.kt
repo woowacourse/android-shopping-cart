@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.ui.home.SetClickListener
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.ShowMoreProducts
@@ -13,13 +14,16 @@ import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.SHOW_MORE
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ProductViewHolder
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.RecentlyViewedViewHolder
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ShowMoreViewHolder
+import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 
 class HomeAdapter(
+    productInCart: List<ProductInCartUiState>,
     viewItems: List<ProductsByView>,
-    private val onClick: ClickListenerByViewType,
+    private val onClick: SetClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var layoutInflater: LayoutInflater
     private val _viewItems: MutableList<ProductsByView> = viewItems.toMutableList()
+    private val _productInCart: MutableList<ProductInCartUiState> = productInCart.toMutableList()
 
     override fun getItemViewType(position: Int): Int {
         return when (_viewItems[position]) {
@@ -43,7 +47,13 @@ class HomeAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(_viewItems[position] as Products)
+            is ProductViewHolder -> {
+                holder.bind(
+                    _viewItems[position] as Products,
+                    _productInCart,
+                )
+            }
+
             is RecentlyViewedViewHolder -> holder.bind(_viewItems[position] as RecentlyViewedProducts)
         }
     }
@@ -60,7 +70,7 @@ class HomeAdapter(
     private fun initShowMoreViewHolder(parent: ViewGroup) =
         ShowMoreViewHolder(
             ShowMoreViewHolder.getView(parent, layoutInflater),
-            onClick::setClickEventOnShowMore,
+            onClick::setClickEventOnShowMoreButton,
         )
 
     fun addProducts(products: List<ProductsByView>) {
@@ -69,6 +79,13 @@ class HomeAdapter(
         _viewItems.addAll(lastIndex, products)
 
         notifyItemRangeInserted(lastIndex, productsCount)
+    }
+
+    fun addCountOfProductInCart(productInCart: List<ProductInCartUiState>) {
+        _productInCart.clear()
+        _productInCart.addAll(productInCart)
+
+        notifyDataSetChanged()
     }
 
     sealed interface ProductsByView {

@@ -5,9 +5,16 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+
+        <variable
+            name="productInCart"
+            type="woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState" />
+
         <variable
             name="setQuantityClickListener"
-            type="woowacourse.shopping.presentation.ui.home.adapter.SetClickListener" />
+            type="woowacourse.shopping.presentation.ui.home.SetClickListener" />
 
 
     </data>
@@ -23,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:onClick="@{() ->setQuantityClickListener.setClickEventOnOperatorButton(false)}"
+            android:onClick="@{() ->setQuantityClickListener.setClickEventOnOperatorButton(false,productInCart.product)}"
             android:paddingHorizontal="20dp"
             android:text="@string/tv_quantity_minus"
             android:textColor="@color/woowa_dealer_gray_700"
@@ -40,8 +47,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="1"
+            android:text="@{String.valueOf(productInCart.quantity)}"
             android:textColor="@color/woowa_dealer_gray_700"
+            android:visibility="@{productInCart.deleted ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/tv_quantity_plus"
             app:layout_constraintHorizontal_bias="0.5"
@@ -55,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:onClick="@{() ->setQuantityClickListener.setClickEventOnOperatorButton(true)}"
+            android:onClick="@{() ->setQuantityClickListener.setClickEventOnOperatorButton(true,productInCart.product)}"
             android:paddingHorizontal="20dp"
             android:text="@string/tv_quantity_plus"
             android:textColor="@color/woowa_dealer_gray_700"

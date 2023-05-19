@@ -5,13 +5,20 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+
+        <variable
+            name="shoppingCart"
+            type="woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState" />
+
         <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
             name="setClickListener"
-            type="woowacourse.shopping.presentation.ui.home.adapter.SetClickListener" />
+            type="woowacourse.shopping.presentation.ui.home.SetClickListener" />
 
     </data>
 
@@ -38,6 +45,7 @@
                 android:layout_marginBottom="8dp"
                 android:backgroundTint="@color/woowa_dealer_gray_200"
                 android:src="@drawable/icon_quantity_button"
+                android:visibility="@{shoppingCart.contained ? View.INVISIBLE : View.VISIBLE}"
                 app:borderWidth="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_item_product_image"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -92,11 +100,12 @@
                 layout="@layout/layout_control_quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
+                android:visibility="@{shoppingCart.contained ? View.VISIBLE : View.INVISIBLE}"
                 app:layout_constraintBottom_toBottomOf="@+id/fab_item_product_quantity"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/fab_item_product_quantity"
+                app:productInCart="@{shoppingCart}"
                 app:setQuantityClickListener="@{setClickListener}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

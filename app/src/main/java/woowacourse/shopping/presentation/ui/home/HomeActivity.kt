@@ -6,21 +6,25 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
+import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.BindingActivity
-import woowacourse.shopping.presentation.ui.home.adapter.ClickListenerByViewType
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView
 import woowacourse.shopping.presentation.ui.home.presenter.HomeContract
 import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
+import woowacourse.shopping.presentation.ui.home.uiModel.Operator.MINUS
+import woowacourse.shopping.presentation.ui.home.uiModel.Operator.PLUS
+import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
-import woowacourse.shopping.util.initProducts
 
 class HomeActivity :
-    BindingActivity<ActivityHomeBinding>(R.layout.activity_home), HomeContract.View {
+    BindingActivity<ActivityHomeBinding>(R.layout.activity_home),
+    HomeContract.View {
     override val presenter: HomeContract.Presenter by lazy { initPresenter() }
     private lateinit var homeAdapter: HomeAdapter
 
@@ -31,13 +35,17 @@ class HomeActivity :
                 productDataSource = ProductDao(this),
                 recentlyViewedDataSource = RecentlyViewedDao(this),
             ),
+            ShoppingCartRepositoryImpl(
+                shoppingCartDataSource = ShoppingCartDao(this),
+                productDataSource = ProductDao(this),
+            ),
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 목 데이터 추가 함수 :
-        initProducts(this)
+        // initProducts(this)
 
         setClickEventOnShoppingCartButton()
     }
@@ -47,8 +55,15 @@ class HomeActivity :
         presenter.fetchAllProductsOnHome()
     }
 
-    override fun setUpProductsOnHome(products: List<ProductsByView>) {
-        homeAdapter = HomeAdapter(products, setUpClickListener())
+    override fun setUpCountOfProductInCart(productInCart: List<ProductInCartUiState>) {
+        homeAdapter.addCountOfProductInCart(productInCart)
+    }
+
+    override fun setUpProductsOnHome(
+        products: List<ProductsByView>,
+        shoppingCart: List<ProductInCartUiState>,
+    ) {
+        homeAdapter = HomeAdapter(shoppingCart, products, setUpClickListener())
         attachAdapter()
         setUpLayoutManager()
     }
@@ -68,13 +83,18 @@ class HomeActivity :
         }
     }
 
-    private fun setUpClickListener() = object : ClickListenerByViewType {
+    private fun setUpClickListener() = object : SetClickListener {
         override fun setClickEventOnProduct(product: Product) {
             setEventOnProduct(product.id)
         }
 
-        override fun setClickEventOnShowMore() {
+        override fun setClickEventOnShowMoreButton() {
             setEventOnShowMoreButton()
+        }
+
+        override fun setClickEventOnOperatorButton(operator: Boolean, productInCart: Product) {
+            val request = if (operator) PLUS else MINUS
+            presenter.addCountOfProductInCart(request, productInCart)
         }
     }
 
