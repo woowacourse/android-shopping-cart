@@ -26,6 +26,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setPresenter()
         presenter.fetchProducts()
         observeTotalPrice()
+        observeTotalCount()
     }
 
     private fun setBinding() {
@@ -75,6 +76,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 override fun onItemCheckChanged(id: Int, checked: Boolean) {
                     presenter.updateItemCheck(id, checked)
                     presenter.setupTotalPrice()
+                    presenter.setupTotalCount()
                 }
             },
             isExistUndo,
@@ -92,9 +94,15 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         adpater.removeCartItems(position)
     }
 
-    override fun observeTotalPrice() {
+    private fun observeTotalPrice() {
         presenter.totalPrice.observe(this) {
             binding.totalPrice.text = getString(R.string.korean_won, PriceFormatter.format(it))
+        }
+    }
+
+    private fun observeTotalCount() {
+        presenter.totalCount.observe(this) {
+            binding.order.text = getString(R.string.order_text, it)
         }
     }
 

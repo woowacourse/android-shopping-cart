@@ -16,6 +16,11 @@ class CartPresenter(
     private val _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
     override val totalPrice: LiveData<Int>
         get() = _totalPrice
+
+    private val _totalCount: MutableLiveData<Int> = MutableLiveData(0)
+    override val totalCount: LiveData<Int>
+        get() = _totalCount
+
     private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
 
     private val currentCartProducts =
@@ -64,6 +69,11 @@ class CartPresenter(
 
     override fun updateItemCheck(id: Int, checked: Boolean) {
         cartRepository.updateCheckState(id, checked)
+    }
+
+    override fun setupTotalCount() {
+        val cartModels = convertIdToModel(cartRepository.findCheckedItem())
+        _totalCount.value = cartModels.sumOf { it.count }
     }
 
     private fun updateCartItems(getItems: List<CartProduct>) {

@@ -14,12 +14,12 @@ interface CartContract {
 
         fun notifyRemoveItem(position: Int)
         fun showOtherPage(size: Int)
-        fun observeTotalPrice()
         fun handleBackButtonClicked()
     }
 
     interface Presenter {
         val totalPrice: LiveData<Int>
+        val totalCount: LiveData<Int>
         fun fetchProducts()
         fun removeProduct(id: Int)
         fun fetchNextPage()
@@ -29,5 +29,6 @@ interface CartContract {
         fun handleNextStep(itemId: Int)
         fun setupTotalPrice()
         fun updateItemCheck(id: Int, checked: Boolean)
+        fun setupTotalCount()
     }
 }
