@@ -37,7 +37,7 @@ class ProductDetailPresenter(
     }
 
     override fun addCart() {
-        cartRepository.insert(product.toDomain())
+        cartRepository.insert(product.toDomain(), _count)
         view.navigateToCart()
     }
 

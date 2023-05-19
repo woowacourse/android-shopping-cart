@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.domain.model.CartRepository
 import com.domain.model.Product
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_COUNT
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_IMAGE_URL
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_NAME
@@ -38,12 +39,13 @@ class CartDatabase(
         return Product(productId, productTitle, productPrice, productImgUrl)
     }
 
-    override fun insert(product: Product) {
+    override fun insert(product: Product, count: Int) {
         val values = ContentValues().apply {
             put(TABLE_COLUMN_PRODUCT_ID, product.id)
             put(TABLE_COLUMN_PRODUCT_NAME, product.name)
             put(TABLE_COLUMN_PRODUCT_PRICE, product.price)
             put(TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
+            put(TABLE_COLUMN_PRODUCT_COUNT, count)
             put(TABLE_COLUMN_PRODUCT_SAVE_TIME, System.currentTimeMillis())
         }
         shoppingDb.insertWithOnConflict(
