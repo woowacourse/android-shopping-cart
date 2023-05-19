@@ -12,7 +12,23 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository,
     private val recentRepository: RecentRepository,
 ) : ProductDetailContract.Presenter {
-    override fun setUpProduct() {
+    override val count get() = _count
+    private var _count = 1
+        set(value) {
+            val validatedValue = if (value >= 1) value else 1
+            field = validatedValue
+        }
+
+    override fun setUp() {
+        setupView()
+        setUpProduct()
+    }
+
+    private fun setupView() {
+        view.setupView()
+    }
+
+    private fun setUpProduct() {
         view.setProductDetail(product)
         recentRepository.findById(product.id)?.let {
             recentRepository.delete(it.id)
@@ -23,5 +39,17 @@ class ProductDetailPresenter(
     override fun addCart() {
         cartRepository.insert(product.toDomain())
         view.navigateToCart()
+    }
+
+    override fun onClickCart() {
+        view.showCartDialog(product)
+    }
+
+    override fun increaseCount() {
+        _count++
+    }
+
+    override fun decreaseCount() {
+        _count--
     }
 }
