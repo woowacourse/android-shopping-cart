@@ -1,8 +1,8 @@
 package woowacourse.shopping.presentation.view.productdetail
 
+import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
-import androidx.appcompat.app.AlertDialog
 import woowacourse.shopping.databinding.LayoutCartDialogViewBinding
 import woowacourse.shopping.presentation.model.ProductModel
 
@@ -10,15 +10,18 @@ class CartInsertionDialog(
     context: Context,
     product: ProductModel,
     private val onAddClick: (Int) -> Unit
-) {
+) : AlertDialog.Builder(context) {
     private val binding = LayoutCartDialogViewBinding.inflate(LayoutInflater.from(context))
-    private val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context).apply {
+    private val dialog: AlertDialog
+
+    init {
         setView(binding.root)
         initCountView()
         setProductItemView(product)
         setAddButtonView()
+
+        dialog = show()
     }
-    private val dialog: AlertDialog = dialogBuilder.show()
 
     private fun initCountView() {
         binding.countViewCartDialog.setMinCount(1)
