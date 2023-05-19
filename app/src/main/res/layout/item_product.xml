@@ -69,7 +69,7 @@
             android:visibility="@{basketProduct.shouldShowCounter ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
             app:layout_constraintEnd_toEndOf="@id/product_image_view"
-            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintHeight_percent="0.2"
             app:layout_constraintStart_toStartOf="@id/product_image_view"
             app:max_count="99"
             app:min_count="1" />

@@ -11,10 +11,10 @@ import woowacourse.shopping.ui.basket.BasketContract.Presenter
 import woowacourse.shopping.ui.basket.BasketContract.View
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
 import woowacourse.shopping.util.extension.setContentView
-import woowacourse.shopping.util.inject.injectBasketPresenter
+import woowacourse.shopping.util.inject.inject
 
 class BasketActivity : AppCompatActivity(), View {
-    override val presenter: Presenter by lazy { injectBasketPresenter(this, this) }
+    override val presenter: Presenter by lazy { inject(this, this) }
     private lateinit var binding: ActivityBasketBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

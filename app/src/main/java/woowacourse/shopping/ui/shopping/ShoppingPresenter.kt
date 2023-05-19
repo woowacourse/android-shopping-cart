@@ -74,10 +74,10 @@ class ShoppingPresenter(
         view.navigateToBasketScreen()
     }
 
-    override fun addBasketProduct(product: UiProduct) {
+    override fun addBasketProduct(product: UiProduct, count: Int) {
         val newProduct = product.toDomain()
-        basket += newProduct
-        basketRepository.plusProductCount(newProduct)
+        basket = basket.add(newProduct, count)
+        basketRepository.addProductCount(newProduct, count)
 
         updateBasketView()
     }

@@ -10,18 +10,18 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
-import woowacourse.shopping.ui.basket.BasketActivity
+import woowacourse.shopping.ui.productcounter.ProductCounterDialog
 import woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter
 import woowacourse.shopping.ui.productdetail.ProductDetailContract.View
+import woowacourse.shopping.ui.shopping.ShoppingActivity
 import woowacourse.shopping.util.extension.getParcelableExtraCompat
 import woowacourse.shopping.util.extension.setContentView
-import woowacourse.shopping.util.extension.showImage
-import woowacourse.shopping.util.inject.injectProductDetailPresenter
+import woowacourse.shopping.util.inject.inject
 
 class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     override val presenter: Presenter by lazy {
-        injectProductDetailPresenter(
+        inject(
             view = this,
             context = this,
             detailProduct = intent.getParcelableExtraCompat(DETAIL_PRODUCT_KEY)!!,
@@ -48,8 +48,15 @@ class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener
         binding.lastViewedProduct = product
     }
 
-    override fun navigateToBasketScreen() {
-        startActivity(BasketActivity.getIntent(this))
+    override fun showProductCounter(product: UiProduct) {
+        ProductCounterDialog(this, product) { count ->
+            presenter.addBasketProductCount(count)
+        }.show()
+    }
+
+    override fun navigateToHome(product: UiProduct, count: Int) {
+        startActivity(ShoppingActivity.getIntent(this, product, count))
+        finish()
     }
 
     override fun navigateToProductDetail(recentProduct: UiRecentProduct) {

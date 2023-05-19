@@ -19,12 +19,16 @@ class ProductDetailPresenter(
         view.showLastViewedProductDetail(recentProduct?.product)
     }
 
-    override fun addBasketProduct() {
-        basketRepository.plusProductCount(product.toDomain())
-        view.navigateToBasketScreen()
+    override fun inquiryProductCounter() {
+        view.showProductCounter(product)
     }
 
     override fun inquiryLastViewedProduct() {
         recentProduct?.let { view.navigateToProductDetail(it) }
+    }
+
+    override fun addBasketProductCount(count: Int) {
+        basketRepository.addProductCount(product.toDomain(), count)
+        view.navigateToHome(product, count)
     }
 }

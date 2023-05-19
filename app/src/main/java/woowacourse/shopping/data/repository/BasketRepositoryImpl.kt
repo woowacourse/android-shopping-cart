@@ -16,8 +16,8 @@ class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.L
     override fun getProductInBasketByPage(page: PageNumber): Basket =
         localBasketDataSource.getProductInBasketByPage(page.toData()).toDomain(page.sizePerPage)
 
-    override fun plusProductCount(product: Product) {
-        localBasketDataSource.plusProductCount(product.toData())
+    override fun addProductCount(product: Product, count: Int) {
+        localBasketDataSource.plusProductCount(product.toData(), count)
     }
 
     override fun minusProductCount(product: Product) {

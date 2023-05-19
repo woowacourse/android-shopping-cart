@@ -38,10 +38,10 @@ internal class ProductDetailPresenterTest {
         /* ... */
 
         // when
-        presenter.addBasketProduct()
+        presenter.inquiryProductCounter()
 
         // then
-        verify(exactly = 1) { basketRepository.plusProductCount(any()) }
-        verify(exactly = 1) { view.navigateToBasketScreen() }
+        verify(exactly = 1) { basketRepository.addProductCount(any()) }
+        verify(exactly = 1) { view.showProductCounter() }
     }
 }

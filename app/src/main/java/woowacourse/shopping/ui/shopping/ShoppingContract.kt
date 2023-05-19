@@ -25,7 +25,7 @@ interface ShoppingContract {
         abstract fun inquiryProductDetail(product: UiProduct)
         abstract fun inquiryRecentProductDetail(recentProduct: UiRecentProduct)
         abstract fun openBasket()
-        abstract fun addBasketProduct(product: UiProduct)
+        abstract fun addBasketProduct(product: UiProduct, count: Int = 1)
         abstract fun removeBasketProduct(product: UiProduct)
     }
 }

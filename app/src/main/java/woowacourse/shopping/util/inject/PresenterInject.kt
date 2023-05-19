@@ -10,7 +10,7 @@ import woowacourse.shopping.ui.productdetail.ProductDetailPresenter
 import woowacourse.shopping.ui.shopping.ShoppingContract
 import woowacourse.shopping.ui.shopping.ShoppingPresenter
 
-fun injectShoppingPresenter(
+fun inject(
     view: ShoppingContract.View,
     context: Context,
 ): ShoppingContract.Presenter {
@@ -23,22 +23,25 @@ fun injectShoppingPresenter(
     )
 }
 
-fun injectProductDetailPresenter(
+fun inject(
     view: ProductDetailContract.View,
     context: Context,
     detailProduct: UiProduct,
     recentProduct: UiRecentProduct?,
 ): ProductDetailContract.Presenter = ProductDetailPresenter(
     view = view,
-    basketRepository = inject(inject(injectBasketDao(createShoppingDatabase(context)))),
     product = detailProduct,
     recentProduct = recentProduct,
+    basketRepository = inject(inject(injectBasketDao(createShoppingDatabase(context)))),
 )
 
-fun injectBasketPresenter(
+fun inject(
     view: BasketContract.View,
     context: Context,
 ): BasketContract.Presenter {
     val database = createShoppingDatabase(context)
-    return BasketPresenter(view, inject(inject(injectBasketDao(database))))
+    return BasketPresenter(
+        view,
+        inject(inject(injectBasketDao(database)))
+    )
 }

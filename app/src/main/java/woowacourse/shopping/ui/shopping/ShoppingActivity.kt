@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.shopping
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -25,15 +26,16 @@ import woowacourse.shopping.ui.shopping.recyclerview.adapter.loadmore.LoadMoreAd
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductWrapperAdapter
+import woowacourse.shopping.util.extension.getParcelableExtraCompat
 import woowacourse.shopping.util.extension.setContentView
-import woowacourse.shopping.util.inject.injectShoppingPresenter
+import woowacourse.shopping.util.inject.inject
 import woowacourse.shopping.util.isolatedViewTypeConfig
 import woowacourse.shopping.util.listener.ProductClickListener
 import woowacourse.shopping.widget.ProductCounterView.OnClickListener
 
 class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClickListener {
     private lateinit var binding: ActivityShoppingBinding
-    override val presenter: Presenter by lazy { injectShoppingPresenter(this, this) }
+    override val presenter: Presenter by lazy { inject(this, this) }
 
     private val recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
     private val recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
@@ -44,6 +46,13 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingBinding.inflate(layoutInflater).setContentView(this)
         initView()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val product = intent?.getParcelableExtraCompat<UiProduct>(PRODUCT_KEY) ?: return
+        val count = intent.getIntExtra(COUNT_KEY, 0)
+        presenter.addBasketProduct(product, count)
     }
 
     private fun initView() {
@@ -112,6 +121,15 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     }
 
     companion object {
+        private const val PRODUCT_KEY = "product_key"
+        private const val COUNT_KEY = "count_key"
+
+        fun getIntent(context: Context, product: UiProduct, count: Int): Intent =
+            Intent(context, ShoppingActivity::class.java)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                .putExtra(PRODUCT_KEY, product)
+                .putExtra(COUNT_KEY, count)
+
         fun insertDummies(context: Context, size: Int) {
             (0 until size).forEach { id ->
                 ProductDaoImpl(ShoppingDatabase(context)).add(

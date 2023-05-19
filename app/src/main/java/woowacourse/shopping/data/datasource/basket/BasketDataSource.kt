@@ -8,7 +8,7 @@ interface BasketDataSource {
     interface Local {
         fun getProductByPage(page: DataPageNumber): DataBasket
         fun getProductInBasketByPage(page: DataPageNumber): DataBasket
-        fun plusProductCount(product: Product)
+        fun plusProductCount(product: Product, count: Int)
         fun minusProductCount(product: Product)
         fun deleteByProductId(productId: Int)
         fun getProductInBasketSize(): Int

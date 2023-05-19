@@ -163,7 +163,7 @@
                 android:layout_height="?actionBarSize"
                 android:background="@color/woowa_emerald"
                 android:gravity="center"
-                android:onClick="@{() -> presenter.addBasketProduct()}"
+                android:onClick="@{() -> presenter.inquiryProductCounter()}"
                 android:paddingVertical="12dp"
                 android:text="@string/btn_basket"
                 android:textColor="@color/white"
