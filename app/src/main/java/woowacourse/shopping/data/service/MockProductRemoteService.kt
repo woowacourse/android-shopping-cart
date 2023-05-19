@@ -18,7 +18,7 @@ class MockProductRemoteService {
     private val mockWebServer: MockWebServer
         get() = _mockWebServer!!
 
-    private val dispatcher: okhttp3.mockwebserver.Dispatcher
+    private val dispatcher: Dispatcher
 
     init {
         // 디스패쳐 모드로 응답을 결정
@@ -57,7 +57,7 @@ class MockProductRemoteService {
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit
     ) {
-        synchronized(true) {
+        synchronized(this) { // 동기화 시켜서 여러 응답에 대한 스레드가 순차적으로 실행될 수 있게 지정
             if (_mockWebServer == null) {
                 _mockWebServer = MockWebServer()
                 _mockWebServer?.url("/")
