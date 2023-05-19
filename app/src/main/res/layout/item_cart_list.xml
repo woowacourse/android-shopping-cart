@@ -26,7 +26,7 @@
             android:id="@+id/cl_cart_list_product_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/stroke_cart_list_item"
+            android:background="@drawable/stroke_round"
             app:layout_constraintTop_toBottomOf="@id/space1_cart_list">
 
             <CheckBox

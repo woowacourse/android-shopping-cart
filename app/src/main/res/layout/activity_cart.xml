@@ -97,7 +97,7 @@
                 android:id="@+id/bt_cart_order"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@color/button_color"
+                android:background="@color/main_color"
                 android:text="@string/cart_button_order_text"
                 android:textColor="@color/white"
                 android:textSize="18sp"

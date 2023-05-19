@@ -4,6 +4,7 @@ import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
+import woowacourse.shopping.presentation.model.RecentProductModel
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
@@ -14,8 +15,16 @@ class ProductDetailPresenter(
     ProductDetailContract.Presenter {
     private val product = productRepository.getDataById(productId).toUIModel()
 
+    override fun loadLastRecentProductInfo(recentProduct: RecentProductModel?) {
+        if (recentProduct == null || recentProduct.id == UNABLE_ID) {
+            view.setGoneOfLastRecentProductInfoView()
+            return
+        }
+        view.setVisibleOfLastRecentProductInfoView(recentProduct)
+    }
+
     override fun loadProductInfo() {
-        if (product.id == UNABLE_PRODUCT_ID) {
+        if (product.id == UNABLE_ID) {
             view.handleErrorView()
             view.exitProductDetailView()
             return
@@ -34,6 +43,6 @@ class ProductDetailPresenter(
     }
 
     companion object {
-        private const val UNABLE_PRODUCT_ID = -1L
+        private const val UNABLE_ID = -1L
     }
 }

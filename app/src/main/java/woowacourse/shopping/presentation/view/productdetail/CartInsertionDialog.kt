@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.view.productdetail.dialog
+package woowacourse.shopping.presentation.view.productdetail
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,7 +10,7 @@ class CartInsertionDialog(
     context: Context,
     product: ProductModel,
     private val onAddClick: (Int) -> Unit
-) : CartInsertionContract.View {
+) {
     private val binding = LayoutCartDialogViewBinding.inflate(LayoutInflater.from(context))
     private val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context).apply {
         setView(binding.root)

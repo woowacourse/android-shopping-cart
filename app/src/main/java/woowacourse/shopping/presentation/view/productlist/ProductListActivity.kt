@@ -36,6 +36,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private val recentProductResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             presenter.updateRecentProductItems()
+            presenter.loadCartItems()
+            productListAdapter.notifyDataSetChanged()
         }
 
     private val cartResultLauncher =
@@ -108,14 +110,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun setProductItemsView(products: List<ProductModel>) {
-        productListAdapter = ProductListAdapter(products, presenter::updateProductCount, ::onProductClickEvent)
+        productListAdapter =
+            ProductListAdapter(products, presenter::updateProductCount, ::onProductClickEvent)
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
-        recentProductListAdapter = RecentProductListAdapter(recentProducts) { productId ->
-            val intent = ProductDetailActivity.createIntent(this, productId)
-            startActivity(intent)
-        }
+        recentProductListAdapter = RecentProductListAdapter(recentProducts, ::onProductClickEvent)
         recentProductWrapperAdapter = RecentProductWrapperAdapter(
             presenter::getRecentProductsLastScroll,
             presenter::updateRecentProductsLastScroll,
@@ -140,10 +140,11 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         recentProductListAdapter.updateItemChanged(preSize, diffSize)
     }
 
-    private fun onProductClickEvent(product: ProductModel) {
-        presenter.saveRecentProduct(product.id)
+    private fun onProductClickEvent(productId: Long) {
+        val recentProduct = presenter.getLastRecentProductItem(0)
+        presenter.saveRecentProduct(productId)
 
-        val intent = ProductDetailActivity.createIntent(this, product.id)
+        val intent = ProductDetailActivity.createIntent(this, productId, recentProduct)
         recentProductResultLauncher.launch(intent)
     }
 

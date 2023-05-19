@@ -35,7 +35,11 @@ class ProductListPresenter(
     }
 
     override fun loadRecentProductItems() {
-        recentProducts.addAll(recentProductRepository.getRecentProducts(LOAD_RECENT_PRODUCT_COUNT).map { it.toUIModel() })
+        recentProducts.addAll(
+            recentProductRepository.getRecentProducts(LOAD_RECENT_PRODUCT_COUNT)
+                .filter { it.id != UNABLE_ID }
+                .map { it.toUIModel() }
+        )
         view.setRecentProductItemsView(recentProducts)
     }
 
@@ -48,7 +52,11 @@ class ProductListPresenter(
 
     override fun updateRecentProductItems() {
         recentProducts.clear()
-        recentProducts.addAll(recentProductRepository.getRecentProducts(LOAD_RECENT_PRODUCT_COUNT).map { it.toUIModel() })
+        recentProducts.addAll(
+            recentProductRepository.getRecentProducts(LOAD_RECENT_PRODUCT_COUNT)
+                .filter { it.id != UNABLE_ID }
+                .map { it.toUIModel() }
+        )
         view.updateRecentProductItemsView(0, recentProducts.size)
     }
 
@@ -68,6 +76,11 @@ class ProductListPresenter(
         when (itemId) {
             R.id.action_cart -> view.moveToCartView()
         }
+    }
+
+    override fun getLastRecentProductItem(lastRecentIndex: Int): RecentProductModel {
+        val lastRecentProducts = recentProductRepository.getRecentProducts(LAST_RECENT_COUNT)
+        return lastRecentProducts[lastRecentIndex].toUIModel()
     }
 
     override fun getRecentProductsLastScroll(): Int = lastScroll
@@ -91,5 +104,9 @@ class ProductListPresenter(
         private const val LOCAL_DATE_PATTERN = "yyyy-MM-dd"
         private const val LOAD_RECENT_PRODUCT_COUNT = 10
         private const val LOAD_PRODUCT_COUNT = 20
+
+        private const val LAST_RECENT_COUNT = 2
+
+        private const val UNABLE_ID = -1L
     }
 }

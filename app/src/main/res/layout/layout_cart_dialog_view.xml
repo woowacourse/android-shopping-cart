@@ -57,7 +57,7 @@
             android:id="@+id/bt_cart_dialog_add"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/button_color"
+            android:background="@color/main_color"
             android:text="@string/layout_cart_dialog_button_text"
             android:textColor="@color/white"
             android:textSize="18sp"

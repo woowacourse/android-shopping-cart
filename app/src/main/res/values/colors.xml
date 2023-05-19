@@ -14,5 +14,5 @@
     <color name="product_view_line_color">#AAAAAA</color>
     <color name="recent_product_view_line_color">#EBEBEB</color>
 
-    <color name="button_color">#04C09E</color>
+    <color name="main_color">#04C09E</color>
 </resources>

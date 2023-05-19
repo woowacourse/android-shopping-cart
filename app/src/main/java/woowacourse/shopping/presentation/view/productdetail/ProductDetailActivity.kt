@@ -5,22 +5,32 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
-import woowacourse.shopping.presentation.view.productdetail.dialog.CartInsertionDialog
+import woowacourse.shopping.presentation.model.RecentProductModel
+import woowacourse.shopping.presentation.view.util.getParcelableCompat
 import woowacourse.shopping.presentation.view.util.showToast
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
 
+    private val productId: Long by lazy {
+        intent.getLongExtra(KEY_PRODUCT_ID, -1)
+    }
+
+    private val recentProduct: RecentProductModel? by lazy {
+        intent.getParcelableCompat(KEY_RECENT_PRODUCT)
+    }
+
     private val presenter: ProductDetailContract.Presenter by lazy {
         ProductDetailPresenter(
             this,
-            productId = intent.getLongExtra(KEY_PRODUCT_ID, -1),
+            productId = productId,
             cartRepository = CartRepositoryImpl(this)
         )
     }
@@ -32,9 +42,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         supportActionBar?.title = ACTION_BAR_TITLE
 
+        presenter.loadLastRecentProductInfo(recentProduct)
         presenter.loadProductInfo()
 
         setAddCart()
+        setLastRecentProduct()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,8 +63,26 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun setVisibleOfLastRecentProductInfoView(recentProduct: RecentProductModel) {
+        binding.recentProduct = recentProduct
+
+        binding.clLastProductInfo.visibility = View.VISIBLE
+    }
+
+    override fun setGoneOfLastRecentProductInfoView() {
+        binding.clLastProductInfo.visibility = View.GONE
+    }
+
     override fun setProductInfoView(productModel: ProductModel) {
         binding.product = productModel
+    }
+
+    private fun setLastRecentProduct() {
+        binding.clLastProductInfo.setOnClickListener {
+            val intent = createIntent(this, recentProduct?.product?.id ?: -1, null)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun setAddCart() {
@@ -81,11 +111,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val KEY_PRODUCT_ID = "KEY_PRODUCT_ID"
+        private const val KEY_RECENT_PRODUCT = "KEY_RECENT_PRODUCT"
         private const val ACTION_BAR_TITLE = ""
 
-        internal fun createIntent(context: Context, id: Long): Intent {
+        internal fun createIntent(
+            context: Context,
+            id: Long,
+            recentProduct: RecentProductModel?
+        ): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(KEY_PRODUCT_ID, id)
+            recentProduct?.let { intent.putExtra(KEY_RECENT_PRODUCT, it) }
 
             return intent
         }

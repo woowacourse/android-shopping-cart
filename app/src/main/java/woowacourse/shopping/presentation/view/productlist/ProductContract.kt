@@ -21,6 +21,7 @@ interface ProductContract {
         fun saveRecentProduct(productId: Long)
         fun loadMoreData()
         fun actionOptionItem(itemId: Int)
+        fun getLastRecentProductItem(lastRecentIndex: Int): RecentProductModel
         fun getRecentProductsLastScroll(): Int
         fun updateRecentProductsLastScroll(lastScroll: Int)
         fun updateProductCount(productId: Long, count: Int)
