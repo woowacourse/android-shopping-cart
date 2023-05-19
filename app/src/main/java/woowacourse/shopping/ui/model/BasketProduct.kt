@@ -9,5 +9,6 @@ typealias UiBasketProduct = BasketProduct
 data class BasketProduct(
     val id: Int,
     val count: UiCount,
-    val product: UiProduct
+    val product: UiProduct,
+    val checked: Boolean = false
 ) : Parcelable

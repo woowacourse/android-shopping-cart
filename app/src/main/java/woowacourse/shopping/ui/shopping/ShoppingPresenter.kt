@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.shopping
 
+import woowacourse.shopping.domain.Basket
+import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.mapper.toDomain
@@ -11,12 +13,14 @@ import kotlin.concurrent.thread
 class ShoppingPresenter(
     override val view: ShoppingContract.View,
     private val productRepository: ProductRepository,
-    private val recentProductRepository: RecentProductRepository
+    private val recentProductRepository: RecentProductRepository,
+    private val basketRepository: BasketRepository
 ) : ShoppingContract.Presenter {
     private var hasNext: Boolean = false
     private var lastId: Int = -1
     private var totalProducts: List<UiProduct> = listOf()
     private var recentProducts: List<UiRecentProduct> = listOf()
+    private val basket: Basket = Basket(basketRepository.getAll())
 
     override fun fetchProducts() {
         var products = productRepository
