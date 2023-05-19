@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.feature.product.detail.ProductDetailPresenter" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.ProductState" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_margin="@dimen/margin_large"
+        android:padding="@dimen/margin_large"
+        android:background="@drawable/bg_round_square_white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/count_select_dialog_large_text_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="제품명" />
+
+        <TextView
+            android:id="@+id/product_price"
+            formatMoneyWon="@{product.price}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_name"
+            tools:text="가격" />
+
+        <woowacourse.shopping.common.view.CounterView
+            android:id="@+id/counterView"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/product_name" />
+
+        <Button
+            android:id="@+id/add_to_cart_btn"
+            android:text="담기"
+            android:textSize="@dimen/count_select_dialog_large_text_size"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/teal_200"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/counterView"
+            tools:layout_editor_absoluteX="18dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

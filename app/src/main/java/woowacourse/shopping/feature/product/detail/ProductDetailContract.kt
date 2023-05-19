@@ -6,8 +6,10 @@ interface ProductDetailContract {
 
     interface View {
         fun setViewContent(product: ProductState)
+        fun setCount(count: Int)
         fun showCart()
         fun showAccessError()
+        fun showSelectCountDialog()
         fun closeProductDetail()
     }
 
@@ -16,5 +18,7 @@ interface ProductDetailContract {
 
         fun loadProduct()
         fun addCartProduct()
+        fun plusCount()
+        fun minusCount()
     }
 }

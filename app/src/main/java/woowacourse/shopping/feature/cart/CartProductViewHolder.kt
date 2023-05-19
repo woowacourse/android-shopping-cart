@@ -34,6 +34,11 @@ class CartProductViewHolder(
             cartProductState.count = binding.counterView.count
             onCountMinusClick(cartProductState)
         }
+        /*
+            홀더 또한 뷰이기 때문에 값을 더하거나 빼는 등의 로직은 presenter와 같은 위치에 있는 것이 좋을 것 같으나
+            어떻게 하면 좋을지 잘 모르겠습니다...
+            이런 로직을 holder 밖으로 뺄 수 있는 방법이 있을까요?
+         */
     }
 
     companion object {
