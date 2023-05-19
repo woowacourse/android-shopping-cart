@@ -55,7 +55,7 @@ class CartPresenter(
         checkableCartProduct: CheckableCartProductModel,
         isChecked: Boolean
     ) {
-        cart = cart.checkProduct(checkableCartProduct.toDomainModel(), isChecked)
+        cart = cart.selectProduct(checkableCartProduct.toDomainModel(), isChecked)
         updateCartPage()
     }
 
