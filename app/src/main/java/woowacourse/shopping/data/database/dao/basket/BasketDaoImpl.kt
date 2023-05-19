@@ -24,9 +24,9 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -57,9 +57,9 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -93,9 +93,9 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -129,9 +129,9 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -159,9 +159,10 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 db.rawQuery(GET_ALL, arrayOf())
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val count: DataCount =
+                    DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -188,9 +189,9 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             val cursor = db.rawQuery(GET_ITEM_BY_PRODUCT_ID, arrayOf(productId.toString()))
             while (cursor.moveToNext()) {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-                val count: DataCount = DataCount(cursor.getColumnIndex(BasketContract.BASKET_COUNT))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
+                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
