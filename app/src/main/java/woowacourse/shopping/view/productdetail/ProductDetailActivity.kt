@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -16,11 +18,11 @@ import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.model.uimodel.ProductUIModel
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.model.uimodel.RecentProductUIModel
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override lateinit var presenter: ProductDetailContract.Presenter
-
+    private lateinit var product: ProductUIModel
     private lateinit var binding: ActivityProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,19 +38,36 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun setPresenter() {
-        val product = intent.getSerializableCompat<ProductUIModel>(BundleKeys.KEY_PRODUCT)
+        product = intent.getSerializableCompat(BundleKeys.KEY_PRODUCT)
             ?: throw IllegalStateException(NON_FOUND_KEY_ERROR)
 
         presenter =
             ProductDetailPresenter(
+                this,
                 product = product,
-                cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
                 recentProductsRepository = RecentProductRepositoryImpl(RecentProductDao(this))
             )
     }
 
     override fun setProductDetailView() {
         binding.product = presenter.product
+        val depth = intent.getSerializableCompat<Int>(BundleKeys.KEY_DEPTH)
+            ?: throw IllegalStateException(NON_FOUND_KEY_ERROR)
+        binding.loLatestRecent.visibility = GONE
+        if (presenter.isRecentProductExist() && depth == DEPTH_PARENT) {
+            val recentProduct = presenter.setRecentProductView(product)
+            binding.recentProduct = recentProduct
+            binding.loLatestRecent.setOnClickListener {
+                showDetailProduct(recentProduct)
+            }
+        }
+    }
+
+    override fun hideLatestProduct() {
+        binding.loLatestRecent.visibility = GONE
+    }
+    override fun showLatestProduct() {
+        binding.loLatestRecent.visibility = VISIBLE
     }
 
     private fun saveRecentProduct() {
@@ -62,8 +81,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         }
     }
 
-    override fun showCartPage() {
-        startActivity(ShoppingCartActivity.intent(binding.root.context))
+    private fun showDetailProduct(recentProductUIModel: RecentProductUIModel) {
+        intent.putExtra(BundleKeys.KEY_PRODUCT, recentProductUIModel.productUIModel)
+        intent.putExtra(BundleKeys.KEY_DEPTH, DEPTH_CHILD)
+        startActivity(intent)
         finish()
     }
 
@@ -84,6 +105,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val NON_FOUND_KEY_ERROR = "일치하는 키가 없습니다."
+        private const val DEPTH_PARENT = 0
+        private const val DEPTH_CHILD = 1
         fun intent(context: Context): Intent {
             return Intent(context, ProductDetailActivity::class.java)
         }

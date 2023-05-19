@@ -1,15 +1,16 @@
 package woowacourse.shopping.view.productdetail
 
+import android.view.View
 import com.shopping.domain.RecentProduct
-import com.shopping.repository.CartProductRepository
 import com.shopping.repository.RecentProductsRepository
-
 import woowacourse.shopping.model.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.RecentProductUIModel
 import woowacourse.shopping.model.uimodel.mapper.toDomain
+import woowacourse.shopping.model.uimodel.mapper.toUIModel
 
 class ProductDetailPresenter(
+    private val view: ProductDetailContract.View,
     override val product: ProductUIModel,
-    private val cartProductRepository: CartProductRepository,
     private val recentProductsRepository: RecentProductsRepository
 ) : ProductDetailContract.Presenter {
 
@@ -17,7 +18,33 @@ class ProductDetailPresenter(
         return recentProductsRepository.insert(RecentProduct(product.toDomain()))
     }
 
+    private fun getLatestRecentProduct(): RecentProduct? {
+        return recentProductsRepository.getFirst()
+    }
+
+    override fun isRecentProductExist(): Boolean {
+        return recentProductsRepository.getAll().isNotEmpty()
+    }
+
+    override fun setRecentProductView(product: ProductUIModel): RecentProductUIModel {
+        val latestRecentProduct = getLatestRecentProduct() ?: throw IllegalStateException(DATA_ERROR_MESSAGE)
+        if ((latestRecentProduct.product.id == product.id)) {
+            view.hideLatestProduct()
+        } else {
+            view.showLatestProduct()
+        }
+        return latestRecentProduct.toUIModel()
+    }
+
+    override fun isRecentProductsEmpty(): Boolean {
+        return recentProductsRepository.isEmpty()
+    }
+
     override fun showDialog(dialog: CountSelectDialog) {
         dialog.show(product)
+    }
+
+    companion object {
+        private const val DATA_ERROR_MESSAGE = "빈값입니다."
     }
 }

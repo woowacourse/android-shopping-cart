@@ -86,6 +86,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
         val intent = ProductDetailActivity.intent(this)
         intent.putExtra(BundleKeys.KEY_PRODUCT, it)
+        intent.putExtra(BundleKeys.KEY_DEPTH, DEPTH_PARENT)
         startActivity(intent)
     }
 
@@ -147,5 +148,9 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    companion object {
+        private const val DEPTH_PARENT = 0
     }
 }

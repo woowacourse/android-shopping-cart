@@ -8,4 +8,6 @@ interface RecentProductsRepository {
     fun insert(recentProduct: RecentProduct)
 
     fun remove(recentProduct: RecentProduct)
+    fun getFirst(): RecentProduct?
+    fun isEmpty(): Boolean
 }

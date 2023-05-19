@@ -10,4 +10,5 @@
     <string name="product_counter_plus">+</string>
     <string name="product_count_minus">-</string>
     <string name="add_to_cart">담기</string>
+    <string name="latest_product_description">마지막으로 본 상품</string>
 </resources>

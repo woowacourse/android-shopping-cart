@@ -4,5 +4,5 @@
     <corners
         android:bottomLeftRadius="10dp"
         android:topLeftRadius="10dp" />
-    <solid android:color="@color/activate_counter_button" />
+    <solid android:color="@color/main_color" />
 </shape>

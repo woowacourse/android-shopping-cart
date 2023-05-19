@@ -3,7 +3,6 @@ package woowacourse.shopping.view.productdetail
 import android.app.Dialog
 import android.view.Window
 import android.view.Window.FEATURE_NO_TITLE
-import android.view.WindowManager
 import android.view.WindowManager.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import com.shopping.domain.CartProduct
@@ -23,7 +22,7 @@ class CountSelectDialog(
 
     private lateinit var binding: DialogCountSelectBinding
     private val dialog = Dialog(context)
-    private lateinit var productCount: Count
+    private var productCount = Count(1)
 
     fun show(product: ProductUIModel) {
         binding = DialogCountSelectBinding.inflate(context.layoutInflater)
@@ -65,7 +64,6 @@ class CountSelectDialog(
         layoutParams.height = LayoutParams.WRAP_CONTENT
         window.attributes = layoutParams
     }
-
 
     private fun saveCartProduct(product: ProductUIModel) {
         cartProductRepository.update(CartProduct(product.toDomain(), productCount))
