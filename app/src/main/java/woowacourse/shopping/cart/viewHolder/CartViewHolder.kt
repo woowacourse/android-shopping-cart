@@ -5,23 +5,23 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.CartItem
 import woowacourse.shopping.databinding.CartItemBinding
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartProductUIModel
 
 class CartViewHolder private constructor(
     val binding: CartItemBinding,
-    val onClick: (ProductUIModel) -> Unit,
+    val onClick: (CartProductUIModel) -> Unit,
     val onRemove: (Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(cart: CartItem) {
-        binding.product = cart.product
-        binding.root.setOnClickListener { onClick(cart.product) }
-        binding.removeButton.setOnClickListener { onRemove(cart.product.id) }
+        binding.cartProduct = cart.cartProduct
+        binding.root.setOnClickListener { onClick(cart.cartProduct) }
+        binding.removeButton.setOnClickListener { onRemove(cart.cartProduct.product.id) }
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            onClick: (ProductUIModel) -> Unit,
+            onClick: (CartProductUIModel) -> Unit,
             onRemove: (Int) -> Unit,
         ): CartViewHolder {
             val binding = CartItemBinding

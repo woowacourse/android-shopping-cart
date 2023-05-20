@@ -3,11 +3,11 @@ package woowacourse.shopping.cart
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.viewHolder.CartViewHolder
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartProductUIModel
 
 class CartAdapter(
     private val cartItems: List<CartItem>,
-    private val onItemClick: (ProductUIModel) -> Unit,
+    private val onItemClick: (CartProductUIModel) -> Unit,
     private val onItemRemove: (Int) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
 

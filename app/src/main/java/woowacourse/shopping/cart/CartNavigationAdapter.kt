@@ -3,10 +3,10 @@ package woowacourse.shopping.cart
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.viewHolder.CartNavigationViewHolder
-import woowacourse.shopping.model.CartUIModel
+import woowacourse.shopping.model.CartNavigationUIModel
 
 class CartNavigationAdapter(
-    private val cartUIModel: CartUIModel,
+    private val cartNavigationUIModel: CartNavigationUIModel,
     private val onPageUp: () -> Unit,
     private val onPageDown: () -> Unit,
 ) : RecyclerView.Adapter<CartNavigationViewHolder>() {
@@ -16,7 +16,7 @@ class CartNavigationAdapter(
     }
 
     override fun onBindViewHolder(holder: CartNavigationViewHolder, position: Int) {
-        holder.bind(cartUIModel)
+        holder.bind(cartNavigationUIModel)
         return
     }
 

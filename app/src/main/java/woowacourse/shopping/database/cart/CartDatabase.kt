@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.domain.model.CartProduct
 import com.domain.model.CartRepository
 import com.domain.model.Product
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_COUNT
@@ -17,8 +18,8 @@ import woowacourse.shopping.database.cart.CartConstant.TABLE_NAME
 class CartDatabase(
     private val shoppingDb: SQLiteDatabase,
 ) : CartRepository {
-    override fun getAll(): List<Product> {
-        val cartProducts = mutableListOf<Product>()
+    override fun getAll(): List<CartProduct> {
+        val cartProducts = mutableListOf<CartProduct>()
         getCartCursor().use {
             while (it.moveToNext()) {
                 cartProducts.add(getCartProduct(it))
@@ -28,7 +29,7 @@ class CartDatabase(
     }
 
     @SuppressLint("Range")
-    private fun getCartProduct(cursor: Cursor): Product {
+    private fun getCartProduct(cursor: Cursor): CartProduct {
         val productId = cursor.getInt(cursor.getColumnIndex(TABLE_COLUMN_PRODUCT_ID))
         val productTitle =
             cursor.getString(cursor.getColumnIndex(TABLE_COLUMN_PRODUCT_NAME))
@@ -36,7 +37,9 @@ class CartDatabase(
             cursor.getInt(cursor.getColumnIndex(TABLE_COLUMN_PRODUCT_PRICE))
         val productImgUrl =
             cursor.getString(cursor.getColumnIndex(TABLE_COLUMN_PRODUCT_IMAGE_URL))
-        return Product(productId, productTitle, productPrice, productImgUrl)
+        val product = Product(productId, productTitle, productPrice, productImgUrl)
+        val count = cursor.getInt(cursor.getColumnIndex(TABLE_COLUMN_PRODUCT_COUNT))
+        return CartProduct(product, count)
     }
 
     override fun insert(product: Product, count: Int) {
@@ -56,7 +59,7 @@ class CartDatabase(
         )
     }
 
-    override fun getSubList(offset: Int, size: Int): List<Product> {
+    override fun getSubList(offset: Int, size: Int): List<CartProduct> {
         val lastIndex = getAll().lastIndex
         val endIndex = (lastIndex + 1).coerceAtMost(offset + size)
         return if (offset <= lastIndex) getAll().subList(offset, endIndex) else emptyList()

@@ -4,8 +4,8 @@ import com.domain.model.CartRepository
 import woowacourse.shopping.cart.CartItem
 import woowacourse.shopping.cart.contract.CartContract
 import woowacourse.shopping.mapper.toUIModel
-import woowacourse.shopping.model.CartUIModel
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartNavigationUIModel
+import woowacourse.shopping.model.CartProductUIModel
 
 class CartPresenter(
     val view: CartContract.View,
@@ -23,7 +23,7 @@ class CartPresenter(
         val pageNumber = offset / STEP + 1
         view.setCarts(
             repository.getSubList(offset, STEP).map { CartItem(it.toUIModel()) },
-            CartUIModel(
+            CartNavigationUIModel(
                 isNotLastPage,
                 isNotFirstPage,
                 pageNumber,
@@ -49,8 +49,8 @@ class CartPresenter(
         setUpCarts()
     }
 
-    override fun navigateToItemDetail(product: ProductUIModel) {
-        view.navigateToItemDetail(product)
+    override fun navigateToItemDetail(cartProduct: CartProductUIModel) {
+        view.navigateToItemDetail(cartProduct)
     }
 
     override fun getOffset(): Int {

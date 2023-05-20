@@ -13,8 +13,8 @@ import woowacourse.shopping.cart.contract.presenter.CartPresenter
 import woowacourse.shopping.database.cart.CartDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.CartUIModel
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartNavigationUIModel
+import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -48,7 +48,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return true
     }
 
-    override fun setCarts(products: List<CartItem>, cartUIModel: CartUIModel) {
+    override fun setCarts(products: List<CartItem>, cartNavigationUIModel: CartNavigationUIModel) {
         val cartAdapter = CartAdapter(
             products.map { it },
             presenter::navigateToItemDetail,
@@ -56,12 +56,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         )
         binding.cartRecyclerview.adapter = ConcatAdapter(
             cartAdapter,
-            CartNavigationAdapter(cartUIModel, presenter::pageUp, presenter::pageDown),
+            CartNavigationAdapter(cartNavigationUIModel, presenter::pageUp, presenter::pageDown),
         )
     }
 
-    override fun navigateToItemDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.from(this, product))
+    override fun navigateToItemDetail(cartProduct: CartProductUIModel) {
+        startActivity(ProductDetailActivity.from(this, cartProduct.product))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
