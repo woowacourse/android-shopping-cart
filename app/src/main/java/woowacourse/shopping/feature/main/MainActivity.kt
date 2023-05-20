@@ -83,13 +83,16 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             CartRepositoryImpl(CartDao(this)),
             RecentProductRepositoryImpl(RecentDao(this))
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
         presenter.loadProducts()
         presenter.loadRecent()
     }
 
     override fun onRestart() {
         super.onRestart()
-        presenter.loadProducts()
     }
 
     private fun initAdapters() {
