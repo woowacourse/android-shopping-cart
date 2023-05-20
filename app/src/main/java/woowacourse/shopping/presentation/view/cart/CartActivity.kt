@@ -21,6 +21,23 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         CartPresenter(this, CartRepositoryImpl(this))
     }
 
+    private val cartProductListener = object : CartProductListener {
+        override fun onCheckChanged(cartId: Long, checked: Boolean) {
+            presenter.updateProductChecked(cartId, checked)
+            presenter.calculateTotalPrice()
+        }
+
+        override fun onCountClick(cartId: Long, count: Int) {
+            presenter.updateProductCount(cartId, count)
+            presenter.calculateTotalPrice()
+        }
+
+        override fun onDeleteClick(cartId: Long) {
+            presenter.deleteCartItem(cartId)
+            presenter.calculateTotalPrice()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setResult(RESULT_OK)
@@ -29,8 +46,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         setSupportActionBar()
         presenter.loadCartItems()
+        presenter.calculateTotalPrice()
         setLeftButtonClick()
         setRightButtonClick()
+        setAllProduceCheckedClick()
     }
 
     private fun setSupportActionBar() {
@@ -48,7 +67,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItemsView(carts: List<CartModel>) {
-        cartAdapter = CartAdapter(carts, presenter::updateProductCount, presenter::deleteCartItem)
+        cartAdapter = CartAdapter(carts, cartProductListener)
         binding.rvCart.adapter = cartAdapter
     }
 
@@ -74,8 +93,22 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
+    private fun setAllProduceCheckedClick() {
+        binding.cbCartAll.setOnCheckedChangeListener { _, isChecked ->
+            presenter.updateCurrentPageAllProductChecked(isChecked)
+        }
+    }
+
+    override fun setAllCartChecked(isChecked: Boolean) {
+        binding.cbCartAll.isChecked = isChecked
+    }
+
     override fun setPageCountView(page: Int) {
         binding.tvCartListPageCount.text = page.toString()
+    }
+
+    override fun setTotalPriceView(totalPrice: Int) {
+        binding.totalPrice = totalPrice
     }
 
     companion object {

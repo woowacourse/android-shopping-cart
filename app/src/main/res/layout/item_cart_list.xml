@@ -8,6 +8,11 @@
         <variable
             name="cart"
             type="woowacourse.shopping.presentation.model.CartModel" />
+
+        <variable
+            name="cartProductListener"
+            type="woowacourse.shopping.presentation.view.cart.CartProductListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="13dp"
                 android:layout_marginTop="10dp"
+                android:onCheckedChanged="@{(_, isChecked) -> cartProductListener.onCheckChanged(cart.id, isChecked)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -62,6 +68,7 @@
                 android:layout_marginEnd="22dp"
                 android:background="@drawable/ic_close"
                 android:backgroundTint="@color/product_view_line_color"
+                android:onClick="@{() -> cartProductListener.onDeleteClick(cart.id)}"
                 app:layout_constraintBottom_toBottomOf="@id/tv_cart_list_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_cart_list_title" />

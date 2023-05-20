@@ -6,16 +6,20 @@ import woowacourse.shopping.data.model.CartEntity
 
 class CartRepositoryImpl(context: Context) : CartRepository {
     private val cartDao = CartDao(context)
-    override fun updateCartByProductId(productId: Long, count: Int) {
-        cartDao.updateCartByProductId(productId, count)
+    override fun updateCartByProductId(productId: Long, count: Int, checked: Int) {
+        cartDao.updateCartByProductId(productId, count, checked)
     }
 
-    override fun updateCartByCartId(cartId: Long, count: Int) {
-        cartDao.updateCartByCartId(cartId, count)
+    override fun updateCartCountByCartId(cartId: Long, count: Int) {
+        cartDao.updateCartCountByCartId(cartId, count)
+    }
+
+    override fun updateCartCheckedByCartId(cartId: Long, checked: Boolean) {
+        cartDao.updateCartCheckedByCartId(cartId, checked)
     }
 
     override fun getCarts(startPosition: Int): List<CartEntity> {
-        return cartDao.getItemsFromStartPositionToTen(startPosition)
+        return cartDao.getItemsFromStartPositionToDisplaySize(startPosition)
     }
 
     override fun getAllCarts(): List<CartEntity> {
@@ -35,6 +39,6 @@ class CartRepositoryImpl(context: Context) : CartRepository {
     }
 
     override fun addCart(productId: Long, count: Int) {
-        cartDao.insertProduct(productId, count)
+        cartDao.insertProduct(productId, count, 1)
     }
 }

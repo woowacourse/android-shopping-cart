@@ -8,18 +8,20 @@ import woowacourse.shopping.data.model.CartEntity
 
 class CartDao(context: Context) {
     private val db = CartHelper(context).writableDatabase
-    fun insertProduct(productId: Long, count: Int) {
-        if (updateToCartHasProduct(productId, count)) return
+    fun insertProduct(productId: Long, count: Int, checked: Int) {
+        if (updateToCartHasProduct(productId, count, checked)) return
 
         val value = ContentValues().apply {
             put(CartContract.Cart.PRODUCT_ID, productId)
             put(CartContract.Cart.COUNT, count)
+            put(CartContract.Cart.CHECKED, 1)
         }
         db.insert(CartContract.Cart.TABLE_NAME, null, value)
     }
-    private fun updateToCartHasProduct(productId: Long, count: Int): Boolean {
+
+    private fun updateToCartHasProduct(productId: Long, count: Int, checked: Int): Boolean {
         selectCart(getCursorByProductId(productId))?.let {
-            updateCartByProductId(productId, count + it.count)
+            updateCartByProductId(productId, count + it.count, checked)
             return true
         }
         return false
@@ -53,8 +55,8 @@ class CartDao(context: Context) {
         return getItems(getCursorAll())
     }
 
-    fun getItemsFromStartPositionToTen(startPosition: Int): List<CartEntity> {
-        return getItems(getCursorFromStartPositionToTen(startPosition))
+    fun getItemsFromStartPositionToDisplaySize(startPosition: Int): List<CartEntity> {
+        return getItems(getCursorFromStartPositionToDisplaySize(startPosition))
     }
 
     private fun getItems(cursor: Cursor): List<CartEntity> {
@@ -65,7 +67,8 @@ class CartDao(context: Context) {
                 val productId =
                     getLong(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_ID))
                 val count = getInt(getColumnIndexOrThrow(CartContract.Cart.COUNT))
-                result.add(CartEntity(cartId, productId, count))
+                val checked = getInt(getColumnIndexOrThrow(CartContract.Cart.CHECKED))
+                result.add(CartEntity(cartId, productId, count, checked))
             }
         }
         cursor.close()
@@ -73,7 +76,7 @@ class CartDao(context: Context) {
         return result.toList()
     }
 
-    private fun getCursorFromStartPositionToTen(startPosition: Int): Cursor {
+    private fun getCursorFromStartPositionToDisplaySize(startPosition: Int): Cursor {
         return db.query(
             CartContract.Cart.TABLE_NAME,
             null,
@@ -97,12 +100,13 @@ class CartDao(context: Context) {
             null,
         )
 
-    fun updateCartByProductId(productId: Long, count: Int) {
-        selectCart(getCursorByProductId(productId)) ?: insertProduct(productId, count)
+    fun updateCartByProductId(productId: Long, count: Int, checked: Int) {
+        selectCart(getCursorByProductId(productId)) ?: insertProduct(productId, count, checked)
 
         val value = ContentValues().apply {
             put(CartContract.Cart.PRODUCT_ID, productId)
             put(CartContract.Cart.COUNT, count)
+            put(CartContract.Cart.CHECKED, checked)
         }
 
         db.update(
@@ -113,11 +117,30 @@ class CartDao(context: Context) {
         )
     }
 
-    fun updateCartByCartId(cartId: Long, count: Int) {
+    fun updateCartCountByCartId(cartId: Long, count: Int) {
         selectCart(getCursorByCartId(cartId))?.let {
             val value = ContentValues().apply {
                 put(CartContract.Cart.PRODUCT_ID, it.productId)
                 put(CartContract.Cart.COUNT, count)
+                put(CartContract.Cart.CHECKED, it.checked)
+            }
+
+            db.update(
+                CartContract.Cart.TABLE_NAME,
+                value,
+                "${BaseColumns._ID} = ?",
+                arrayOf(it.id.toString())
+            )
+        }
+    }
+
+    fun updateCartCheckedByCartId(cartId: Long, checked: Boolean) {
+        val isChecked = if (checked) 1 else 0
+        selectCart(getCursorByCartId(cartId))?.let {
+            val value = ContentValues().apply {
+                put(CartContract.Cart.PRODUCT_ID, it.productId)
+                put(CartContract.Cart.COUNT, it.count)
+                put(CartContract.Cart.CHECKED, isChecked)
             }
 
             db.update(
@@ -137,7 +160,8 @@ class CartDao(context: Context) {
                 val id = getLong(getColumnIndexOrThrow(BaseColumns._ID))
                 val productId = getLong(getColumnIndexOrThrow(CartContract.Cart.PRODUCT_ID))
                 val count = getInt(getColumnIndexOrThrow(CartContract.Cart.COUNT))
-                cart = CartEntity(id, productId, count)
+                val checked = getInt(getColumnIndexOrThrow(CartContract.Cart.CHECKED))
+                cart = CartEntity(id, productId, count, checked)
             }
         }
 

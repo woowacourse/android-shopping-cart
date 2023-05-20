@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartListBinding
 import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.presentation.view.cart.CartProductListener
 import woowacourse.shopping.presentation.view.custom.CountView
 
 class CartViewHolder(
     parent: ViewGroup,
-    onCloseClick: (Int) -> Unit
+    cartProductListener: CartProductListener
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context)
         .inflate(R.layout.item_cart_list, parent, false)
@@ -18,18 +19,19 @@ class CartViewHolder(
     private val binding = ItemCartListBinding.bind(itemView)
 
     init {
-        binding.btIvCartListClose.setOnClickListener {
-            onCloseClick(absoluteAdapterPosition)
+        binding.cartProductListener = cartProductListener
+        binding.countViewCartListItem.countStateChangeListener = object : CountView.OnCountStateChangeListener {
+            override fun onCountChanged(countView: CountView?, count: Int) {
+                binding.cart?.let {
+                    cartProductListener.onCountClick(it.id, count)
+                }
+            }
         }
     }
 
-    fun bind(cart: CartModel, onCountClick: (Long, Int) -> Unit) {
+    fun bind(cart: CartModel) {
         binding.cart = cart
-        binding.countViewCartListItem.countStateChangeListener = object : CountView.OnCountStateChangeListener {
-            override fun onCountChanged(countView: CountView?, count: Int) {
-                onCountClick(cart.id, count)
-            }
-        }
+        binding.cbCartListItem.isChecked = cart.checked
         binding.countViewCartListItem.updateCount(cart.product.count)
     }
 }

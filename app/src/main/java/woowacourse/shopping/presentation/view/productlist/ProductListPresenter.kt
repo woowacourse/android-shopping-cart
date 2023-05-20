@@ -101,7 +101,7 @@ class ProductListPresenter(
             return
         }
         product.count = count
-        cartRepository.updateCartByProductId(productId, count)
+        cartRepository.updateCartByProductId(productId, count, 1)
     }
 
     private fun updateCartCount() {
