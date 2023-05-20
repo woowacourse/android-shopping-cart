@@ -96,11 +96,11 @@ class ProductListPresenter(
 
     private fun updateProductCount(productId: Long, count: Int) {
         val product = products.find { it.id == productId } ?: return
+        product.count = count
         if (count == 0) {
             cartRepository.deleteCartByProductId(productId)
             return
         }
-        product.count = count
         cartRepository.updateCartByProductId(productId, count, 1)
     }
 

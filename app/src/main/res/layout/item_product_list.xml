@@ -7,6 +7,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.presentation.model.ProductModel" />
+
+        <variable
+            name="productListener"
+            type="woowacourse.shopping.presentation.view.productlist.ProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="6dp"
-        android:layout_marginVertical="10dp">
+        android:layout_marginVertical="10dp"
+        android:onClick="@{() -> productListener.onItemClick(product.id)}">
 
         <ImageView
             android:id="@+id/iv_product_thumbnail"

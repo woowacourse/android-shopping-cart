@@ -50,6 +50,16 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
             }
         }
 
+    private val productListener = object : ProductListener {
+        override fun onCountClick(productId: Long, count: Int) {
+            presenter.updateCount(productId, count)
+        }
+
+        override fun onItemClick(productId: Long) {
+            onProductClickEvent(productId)
+        }
+    }
+
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductListAdapter: RecentProductListAdapter
     private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
@@ -129,8 +139,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun setProductItemsView(products: List<ProductModel>) {
-        productListAdapter =
-            ProductListAdapter(products, presenter::updateCount, ::onProductClickEvent)
+        productListAdapter = ProductListAdapter(productListener)
+        productListAdapter.setItems(products)
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
