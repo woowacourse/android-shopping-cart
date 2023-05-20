@@ -6,15 +6,9 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.TextView
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
-import woowacourse.shopping.data.database.ShoppingDatabase
-import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
-import woowacourse.shopping.data.model.DataPrice
-import woowacourse.shopping.data.model.DataProduct
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductCount
 import woowacourse.shopping.model.UiBasketProduct
@@ -28,10 +22,12 @@ import woowacourse.shopping.ui.shopping.recyclerview.adapter.loadmore.LoadMoreAd
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductWrapperAdapter
+import woowacourse.shopping.util.builder.add
+import woowacourse.shopping.util.extension.getItemActionView
 import woowacourse.shopping.util.extension.getParcelableExtraCompat
+import woowacourse.shopping.util.builder.isolatedViewTypeConcatAdapter
 import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.inject.inject
-import woowacourse.shopping.util.isolatedViewTypeConfig
 import woowacourse.shopping.util.listener.ProductClickListener
 import woowacourse.shopping.widget.ProductCounterView.OnClickListener
 
@@ -68,14 +64,16 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     }
 
     private fun initMenuClickListener() {
-        val basketMenuView = binding.shoppingToolBar.menu.findItem(R.id.basket).actionView
-        basketMenuView?.setOnClickListener { presenter.openBasket() }
+        val basketItemView = binding.shoppingToolBar.getItemActionView(R.id.basket)
+        basketItemView?.setOnClickListener { presenter.openBasket() }
     }
 
     private fun initRecyclerView() {
-        binding.adapter = ConcatAdapter(
-            isolatedViewTypeConfig, recentProductWrapperAdapter, productAdapter, loadMoreAdapter
-        )
+        binding.adapter = isolatedViewTypeConcatAdapter {
+            add(recentProductWrapperAdapter)
+            add(productAdapter)
+            add(loadMoreAdapter)
+        }
         presenter.fetchAll()
     }
 
@@ -87,11 +85,11 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         recentProductWrapperAdapter.submitList(recentProducts)
     }
 
-    override fun showProductDetail(product: UiProduct, recentProduct: UiRecentProduct?) {
+    override fun navigateToProductDetail(product: UiProduct, recentProduct: UiRecentProduct?) {
         startActivity(ProductDetailActivity.getIntent(this, product, recentProduct))
     }
 
-    override fun navigateToBasketScreen() {
+    override fun navigateToBasket() {
         basketActivityLauncher.launch(BasketActivity.getIntent(this))
     }
 
@@ -135,18 +133,5 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
                 .putExtra(PRODUCT_KEY, product)
                 .putExtra(COUNT_KEY, count)
-
-        fun insertDummies(context: Context, size: Int) {
-            (0 until size).forEach { id ->
-                ProductDaoImpl(ShoppingDatabase(context)).add(
-                    DataProduct(
-                        id,
-                        "name $id",
-                        DataPrice(1000),
-                        "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000001939]_20210225094313315.jpg"
-                    )
-                )
-            }
-        }
     }
 }

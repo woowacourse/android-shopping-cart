@@ -48,7 +48,7 @@ internal class ShoppingPresenterTest {
 
         // then
         verify(exactly = 1) { view.updateRecentProducts(any()) }
-        verify(exactly = 1) { view.showProductDetail(any()) }
+        verify(exactly = 1) { view.navigateToProductDetail(any()) }
         verify(exactly = 1) { recentProductRepository.add(any()) }
     }
 
@@ -73,7 +73,7 @@ internal class ShoppingPresenterTest {
         presenter.inquiryRecentProductDetail(recentProduct)
 
         // then
-        verify(exactly = 1) { view.showProductDetail(any()) }
+        verify(exactly = 1) { view.navigateToProductDetail(any()) }
         verify(exactly = 1) { recentProductRepository.add(any()) }
     }
 
@@ -86,6 +86,6 @@ internal class ShoppingPresenterTest {
         presenter.openBasket()
 
         // then
-        verify(exactly = 1) { view.navigateToBasketScreen() }
+        verify(exactly = 1) { view.navigateToBasket() }
     }
 }
