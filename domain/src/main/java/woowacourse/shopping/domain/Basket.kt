@@ -30,4 +30,7 @@ data class Basket(val products: List<BasketProduct>) {
 
     fun getTotalPrice(): Int =
         products.fold(0) { acc, basketProduct -> acc + basketProduct.getTotalPrice().value }
+
+    fun getCheckedProductsTotalPrice(): Int =
+        products.fold(0) { acc, basketProduct -> if (basketProduct.checked) acc + basketProduct.getTotalPrice().value else acc }
 }
