@@ -7,4 +7,5 @@
     <string name="left"><![CDATA[<]]></string>
     <string name="right"><![CDATA[>]]></string>
     <string name="first_page">1</string>
+    <string name="cart_total_check_box_description">전체</string>
 </resources>

@@ -3,12 +3,14 @@ package woowacourse.shopping.cart.list
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.ProductClickListener
+import woowacourse.shopping.cart.OnCheckedChangedListener
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.CartUIModel
 
 class CartRecyclerViewAdapter(
     private val onClickProduct: ProductClickListener,
-    private val onClickRemove: (CartProductUIModel, Int) -> Unit
+    private val onClickRemove: (CartProductUIModel, Int) -> Unit,
+    private val onChangedCheckBox: OnCheckedChangedListener,
 ) : RecyclerView.Adapter<CartRecyclerViewHolder>() {
     private val cartProducts = mutableListOf<CartProductUIModel>()
 
@@ -17,7 +19,8 @@ class CartRecyclerViewAdapter(
             CartRecyclerViewHolder.getView(parent),
             CartUIModel(cartProducts.take(CART_PRODUCT_UNIT_SIZE)),
             onClickProduct,
-            onClickRemove
+            onClickRemove,
+            onChangedCheckBox,
         )
     }
 

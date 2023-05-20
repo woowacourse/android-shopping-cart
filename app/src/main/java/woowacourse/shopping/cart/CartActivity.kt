@@ -17,24 +17,35 @@ import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
-class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListener {
+class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListener, OnCheckedChangedListener {
     private lateinit var binding: ActivityCartBinding
     private val adapter: CartRecyclerViewAdapter =
-        CartRecyclerViewAdapter(this, ::clickDeleteButton)
+        CartRecyclerViewAdapter(this, ::clickDeleteButton, this)
     private lateinit var presenter: CartContract.Presenter
     private val repository: CartDBRepository by lazy { CartDBRepository(CartDBHelper(this).writableDatabase) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        initBinding()
         setToolBarBackButton()
-
-        presenter = CartPresenter(this, repository)
-
+        initPresenter()
         initCartList()
         initSetOnClickListener()
+        initAdapter()
+    }
 
-        binding.rvCartList.adapter = adapter
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+    }
+
+    private fun setToolBarBackButton() {
+        setSupportActionBar(binding.tbCart)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.back_24)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun initPresenter() {
+        presenter = CartPresenter(this, repository)
     }
 
     private fun initCartList() {
@@ -45,6 +56,10 @@ class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListene
     private fun initSetOnClickListener() {
         setPagePreviousClickListener()
         setPageNextClickListener()
+    }
+
+    private fun initAdapter() {
+        binding.rvCartList.adapter = adapter
     }
 
     override fun setCartProducts(newCartProducts: List<CartProductUIModel>) {
@@ -68,7 +83,7 @@ class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListene
         }
     }
 
-    override fun setPage(page: Int) {
+    override fun showPageNumber(page: Int) {
         binding.tvCurrentPage.text = page.toString()
     }
 
@@ -77,15 +92,15 @@ class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListene
         adapter.notifyItemRemoved(position)
     }
 
-    private fun setToolBarBackButton() {
-        setSupportActionBar(binding.tbCart)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.back_24)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) finish()
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onProductClick(productUIModel: ProductUIModel) {
+        val intent = ProductDetailActivity.intent(this)
+        intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
+        startActivity(intent)
     }
 
     override fun onDestroy() {
@@ -93,13 +108,11 @@ class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListene
         repository.close()
     }
 
-    companion object {
-        fun intent(context: Context) = Intent(context, CartActivity::class.java)
+    override fun onChangedIsPicked(cartProductUIModel: CartProductUIModel, isPicked: Boolean) {
+        presenter.updateProductIsPicked(cartProductUIModel, isPicked)
     }
 
-    override fun onProductClick(productUIModel: ProductUIModel) {
-        val intent = ProductDetailActivity.intent(this)
-        intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
-        startActivity(intent)
+    companion object {
+        fun intent(context: Context) = Intent(context, CartActivity::class.java)
     }
 }

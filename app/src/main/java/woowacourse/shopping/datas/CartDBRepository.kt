@@ -8,6 +8,7 @@ import com.shopping.domain.Product
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_COUNT
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_ID
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_IMAGE
+import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_IS_CHECKED
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_NAME
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_PRICE
 import woowacourse.shopping.datas.CartDBHelper.Companion.TABLE_NAME
@@ -19,6 +20,7 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
             while (it.moveToNext()) {
                 val cartProduct =
                     CartProduct(
+                        isPicked = it.getInt(it.getColumnIndexOrThrow(KEY_IS_CHECKED)) == TRUE,
                         count = it.getInt(it.getColumnIndexOrThrow(KEY_COUNT)),
                         Product(
                             id = it.getInt(it.getColumnIndexOrThrow(KEY_ID)),
@@ -36,12 +38,13 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
     override fun getUnitData(unitSize: Int, pageNumber: Int): List<CartProduct> {
         val products = mutableListOf<CartProduct>()
         database.rawQuery(
-            "SELECT * FROM $TABLE_NAME LIMIT $unitSize OFFSET '${5 * (pageNumber - 1)}'",
+            "SELECT * FROM $TABLE_NAME LIMIT $unitSize OFFSET '${unitSize * (pageNumber - 1)}'",
             null
         ).use {
             while (it.moveToNext()) {
                 val cartProduct =
                     CartProduct(
+                        isPicked = it.getInt(it.getColumnIndexOrThrow(KEY_IS_CHECKED)) == TRUE,
                         count = it.getInt(it.getColumnIndexOrThrow(KEY_COUNT)),
                         Product(
                             id = it.getInt(it.getColumnIndexOrThrow(KEY_ID)),
@@ -58,6 +61,7 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
 
     override fun insert(cartProduct: CartProduct) {
         val record = ContentValues().apply {
+            put(KEY_IS_CHECKED, if (cartProduct.isPicked) TRUE else FALSE)
             put(KEY_COUNT, 1)
             put(KEY_ID, cartProduct.product.id)
             put(KEY_NAME, cartProduct.product.name)
@@ -65,6 +69,16 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
             put(KEY_PRICE, cartProduct.product.price.value)
         }
         database.insert(TABLE_NAME, null, record)
+    }
+
+    override fun updateProductIsPicked(productId: Int, isPicked: Boolean) {
+        val selectionStatus = if (isPicked) TRUE else FALSE
+        val contentValues = ContentValues().apply {
+            put(KEY_IS_CHECKED, selectionStatus)
+        }
+        val whereClause = "$KEY_ID = ?"
+        val whereArgs = arrayOf(productId.toString())
+        database.update(TABLE_NAME, contentValues, whereClause, whereArgs)
     }
 
     override fun remove(productId: Int) {
@@ -88,5 +102,10 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
 
     override fun close() {
         database.close()
+    }
+
+    companion object {
+        private const val TRUE = 1
+        private const val FALSE = 0
     }
 }

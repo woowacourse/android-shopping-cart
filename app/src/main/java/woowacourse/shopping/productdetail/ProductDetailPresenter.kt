@@ -21,7 +21,7 @@ class ProductDetailPresenter(
     }
 
     override fun addToCart() {
-        cartRepository.insert(CartProduct(1, product.toDomain()))
+        cartRepository.insert(CartProduct(count = 1, product = product.toDomain()))
         view.showCartPage()
     }
 }

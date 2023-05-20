@@ -5,7 +5,7 @@ import woowacourse.shopping.uimodel.CartProductUIModel
 interface CartContract {
     interface View {
         fun setCartProducts(newCartProducts: List<CartProductUIModel>)
-        fun setPage(page: Int)
+        fun showPageNumber(page: Int)
         fun removeAdapterData(cartProductUIModel: CartProductUIModel, position: Int)
     }
 
@@ -15,5 +15,7 @@ interface CartContract {
         fun goNextPage()
         fun goPreviousPage()
         fun setPageNumber()
+        fun changePage(page: Int)
+        fun updateProductIsPicked(product: CartProductUIModel, isPicked: Boolean)
     }
 }

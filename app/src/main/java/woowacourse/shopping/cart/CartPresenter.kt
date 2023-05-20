@@ -38,14 +38,18 @@ class CartPresenter(
     }
 
     override fun setPageNumber() {
-        view.setPage(pageNumber.value)
+        view.showPageNumber(pageNumber.value)
     }
 
-    private fun changePage(page: Int) {
+    override fun changePage(page: Int) {
         val size = cartRepository.getSize()
         val unitSize =
             if (size / CART_UNIT_SIZE < page) size - (CART_UNIT_SIZE * page) else CART_UNIT_SIZE
         view.setCartProducts(cartRepository.getUnitData(unitSize, page).map { it.toUIModel() })
+    }
+
+    override fun updateProductIsPicked(product: CartProductUIModel, isPicked: Boolean) {
+        cartRepository.updateProductIsPicked(product.product.id, isPicked)
     }
 
     companion object {
