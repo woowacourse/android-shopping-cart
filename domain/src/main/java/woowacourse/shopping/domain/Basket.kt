@@ -27,4 +27,7 @@ data class Basket(val products: List<BasketProduct>) {
 
     fun getCountByProductId(productId: Int): Int =
         products.find { it.product.id == productId }?.count?.value ?: 0
+
+    fun getTotalPrice(): Int =
+        products.fold(0) { acc, basketProduct -> acc + basketProduct.getTotalPrice().value }
 }

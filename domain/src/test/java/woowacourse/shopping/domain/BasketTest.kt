@@ -95,4 +95,21 @@ class BasketTest {
 
         assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun `장바구니에 있는 상품의 총액을 계산한다(500원 *3개,1000*5개 총액 6500)`() {
+        // given
+        val basketProducts = listOf<BasketProduct>(
+            BasketProduct(1, Count(3), Product(1, "새상품", Price(500), "url")),
+            BasketProduct(2, Count(5), Product(3, "새상품", Price(1000), "url"))
+        )
+        val basket = Basket(basketProducts)
+
+        // when
+        val expected = 6500
+        val actual = basket.getTotalPrice()
+
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
 }
