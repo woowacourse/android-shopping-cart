@@ -21,7 +21,11 @@ class CartProductViewHolder(
         binding.cartProduct = cartProductState
         binding.counterView.count = cartProductState.count
 
-        binding.cartClearImageView.setOnClickListener { onCartProductDeleteClick(cartProductState) }
+        binding.cartProductCheckBox.isChecked = cartProductState.checked
+        binding.cartClearImageView.setOnClickListener {
+            updateChecked(cartProductState.productId, false)
+            onCartProductDeleteClick(cartProductState)
+        }
         binding.counterView.plusClickListener = {
             binding.counterView.count++
             if (MAX_COUNT_VALUE < binding.counterView.count) binding.counterView.count--
@@ -34,11 +38,7 @@ class CartProductViewHolder(
             cartProductState.count = binding.counterView.count
             updateCount(cartProductState.productId, binding.counterView.count)
         }
-//        binding.cartProductCheckBox.setOnClickListener {
-//            binding.cartProductCheckBox.c
-//            updateChecked(cartProductState.productId, )
-//        }
-        binding.cartProductCheckBox.setOnCheckedChangeListener { compoundButton, b ->
+        binding.cartProductCheckBox.setOnClickListener {
             updateChecked(cartProductState.productId, binding.cartProductCheckBox.isChecked)
         }
 
