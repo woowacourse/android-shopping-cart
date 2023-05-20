@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.util.Log
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
@@ -63,7 +62,14 @@ class CartDatabase(
             put(TABLE_COLUMN_PRODUCT_NAME, product.product.name)
             put(TABLE_COLUMN_PRODUCT_PRICE, product.product.price)
             put(TABLE_COLUMN_PRODUCT_IMAGE_URL, product.product.imageUrl)
-            put(TABLE_COLUMN_CART_PRODUCT_COUNT, product.count)
+
+            val existingProduct = getFindById(product.product.id)
+            val count = if (existingProduct != null) {
+                existingProduct.count + product.count
+            } else {
+                product.count
+            }
+            put(TABLE_COLUMN_CART_PRODUCT_COUNT, count)
             put(TABLE_COLUMN_CART_PRODUCT_IS_CHECKED, true)
             put(TABLE_COLUMN_PRODUCT_SAVE_TIME, System.currentTimeMillis())
         }
@@ -73,6 +79,7 @@ class CartDatabase(
             values,
             SQLiteDatabase.CONFLICT_REPLACE,
         )
+        shoppingDb.close()
     }
 
     override fun getSubList(offset: Int, size: Int): List<CartProduct> {
@@ -99,15 +106,14 @@ class CartDatabase(
         shoppingDb.execSQL(query)
     }
 
-    override fun getFindById(id: Long): CartProduct {
-        val cartProducts = mutableListOf<CartProduct>()
+    override fun getFindById(id: Long): CartProduct? {
+        var cartProduct: CartProduct? = null
         findByIdCursor(id).use {
-            while (it.moveToNext()) {
-                Log.d("cart", getCartProduct(it).toString())
-                cartProducts.add(getCartProduct(it))
+            if (it.moveToFirst()) {
+                cartProduct = getCartProduct(it)
             }
         }
-        return cartProducts[0]
+        return cartProduct
     }
 
     private fun findByIdCursor(id: Long): Cursor {

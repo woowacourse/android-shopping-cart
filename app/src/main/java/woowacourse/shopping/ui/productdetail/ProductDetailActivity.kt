@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -17,12 +18,18 @@ import woowacourse.shopping.model.ProductUIModel.Companion.KEY_PRODUCT
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
 import woowacourse.shopping.ui.productdetail.contract.presenter.ProductDetailPresenter
+import woowacourse.shopping.ui.productdetail.dialog.ProductDialogInterface
+import woowacourse.shopping.ui.productdetail.dialog.ProductOrderDialog
 import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.utils.keyError
 
-class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
+class ProductDetailActivity :
+    AppCompatActivity(),
+    ProductDetailContract.View,
+    ProductDialogInterface {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
+    private lateinit var productOrderDialog: ProductOrderDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +44,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         )
 
         binding.cartButton.setOnClickListener {
-            presenter.addProductToCart()
-            navigateToCart()
+            presenter.setProductCountDialog()
         }
     }
 
@@ -59,8 +65,27 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.product = product
     }
 
+    override fun showProductCountDialog(product: ProductUIModel) {
+        productOrderDialog = ProductOrderDialog(this, this, presenter, this, product)
+        productOrderDialog.show()
+    }
+
     private fun navigateToCart() {
+        productOrderDialog.dismiss()
         startActivity(CartActivity.from(this))
+    }
+
+    override fun addToCart() {
+        presenter.addProductToCart()
+        navigateToCart()
+    }
+
+    override fun increaseCount() {
+        presenter.addProductCount()
+    }
+
+    override fun decreaseCount() {
+        presenter.subtractProductCount()
     }
 
     companion object {

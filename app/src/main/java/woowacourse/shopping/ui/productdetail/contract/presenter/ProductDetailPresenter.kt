@@ -1,5 +1,9 @@
 package woowacourse.shopping.ui.productdetail.contract.presenter
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.domain.model.CartProduct
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.RecentRepository
 import woowacourse.shopping.mapper.toDomain
@@ -12,10 +16,12 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository,
     private val recentRepository: RecentRepository,
 ) : ProductDetailContract.Presenter {
+    private val _count: MutableLiveData<Int> = MutableLiveData(1)
+    val count: LiveData<Int> get() = _count
 
     init {
         setUpProductDetail()
-        addProductToCart()
+        addProductToRecent()
     }
 
     override fun setUpProductDetail() {
@@ -23,7 +29,11 @@ class ProductDetailPresenter(
     }
 
     override fun addProductToCart() {
-        cartRepository.insert(product.toDomain())
+        count.value?.let {
+            CartProduct(product.toDomain(), it, true)
+        }?.let {
+            cartRepository.insert(it)
+        }
     }
 
     override fun addProductToRecent() {
@@ -31,5 +41,17 @@ class ProductDetailPresenter(
             recentRepository.delete(it.id)
         }
         recentRepository.insert(product.toDomain())
+    }
+
+    override fun setProductCountDialog() {
+        view.showProductCountDialog(product)
+    }
+
+    override fun addProductCount() {
+        _count.value = _count.value?.plus(1)
+    }
+
+    override fun subtractProductCount() {
+        _count.value = _count.value?.minus(1)
     }
 }

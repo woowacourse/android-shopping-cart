@@ -9,6 +9,10 @@
         <variable
             name="count"
             type="int" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.utils.CustomViewOnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +26,7 @@
             android:layout_height="42dp"
             android:paddingHorizontal="14dp"
             android:src="@drawable/remove_button"
+            android:onClick="@{() -> listener.decreaseCount() }"
             android:visibility = "@{count > 1 ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,6 +50,7 @@
             android:layout_height="42dp"
             android:paddingHorizontal="14dp"
             android:src="@drawable/add_button"
+            android:onClick="@{() -> listener.increaseCount()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

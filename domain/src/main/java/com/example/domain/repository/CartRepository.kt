@@ -12,6 +12,6 @@ interface CartRepository {
 
     fun updateCheckChanged(id: Long, check: Boolean)
 
-    fun getFindById(id: Long): CartProduct
+    fun getFindById(id: Long): CartProduct?
     fun getCheckCart(): List<CartProduct>
 }
