@@ -21,24 +21,31 @@
         android:layout_marginTop="24dp"
         android:layout_height="153dp">
 
+        <CheckBox
+            android:id="@+id/cb_basket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_name" />
+
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="0dp"
-            android:layout_marginEnd="10dp"
-            android:maxLines="1"
-            android:ellipsize="end"
             android:layout_height="wrap_content"
-            tools:text="[든든] 동원 스위트콘"
-            android:textSize="18sp"
-            android:includeFontPadding="false"
-            android:layout_marginStart="14dp"
             android:layout_marginTop="18dp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textColor="@color/woowa_text_black"
+            android:layout_marginEnd="10dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
             android:text="@{basketProduct.product.name}"
-            app:layout_constraintEnd_toStartOf="@+id/iv_close" />
+            android:textColor="@color/woowa_text_black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/iv_close"
+            app:layout_constraintStart_toEndOf="@+id/cb_basket"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="[든든] 동원 스위트콘" />
 
         <ImageView
             android:layout_gravity="end"
@@ -72,12 +79,20 @@
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/iv_close"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_product"
-            tools:text="99,800원"
-            android:textSize="16sp"
             android:text="@{@string/price_format(basketProduct.product.price.value)}"
-            android:textColor="@color/woowa_text_black" />
+            android:textColor="@color/woowa_text_black"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/counter_basket"
+            app:layout_constraintEnd_toEndOf="@id/iv_close"
+            tools:text="99,800원" />
+
+        <include
+            android:id="@+id/counter_basket"
+            layout="@layout/layout_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_product"
+            app:layout_constraintEnd_toEndOf="@+id/iv_close" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
