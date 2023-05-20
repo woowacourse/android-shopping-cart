@@ -1,6 +1,8 @@
 package woowacourse.shopping.shopping
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
@@ -212,5 +214,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         private const val SPAN_COUNT = 2
         private const val DP_GRID_TOP_OFFSET = 10
         private const val DP_GRID_EDGE_HORIZONTAL_OFFSET = 14
+
+        fun createIntent(context: Context): Intent {
+            return Intent(context, ShoppingActivity::class.java)
+        }
     }
 }

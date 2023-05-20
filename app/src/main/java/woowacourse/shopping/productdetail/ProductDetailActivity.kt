@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.common.model.ProductModel
@@ -14,6 +15,7 @@ import woowacourse.shopping.data.database.dao.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.productdetail.dialog.CartProductDialog
+import woowacourse.shopping.shopping.ShoppingActivity
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
@@ -32,6 +34,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setSupportActionBar(findViewById(R.id.product_detail_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
+        setBackButtonPressedCallback()
+
         setupProductDetailCartButton()
 
         initPresenter()
@@ -44,7 +48,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.product_detail_close_action -> finish()
+            R.id.product_detail_close_action -> goBackToShoppingActivity()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -76,6 +80,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         recentProductModel = intent.getSerializable(EXTRA_KEY_RECENT_PRODUCT)
     }
 
+    private fun setBackButtonPressedCallback() {
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    goBackToShoppingActivity()
+                }
+            }
+        )
+    }
+
     private fun setupProductDetailCartButton() {
         binding.productDetailCartButton.setOnClickListener {
             presenter.setupCartProductDialog()
@@ -92,16 +107,32 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         )
     }
 
-    private fun startProductDetailActivity(productModel: ProductModel, recentProductModel: ProductModel?) {
+    private fun startProductDetailActivity(
+        productModel: ProductModel,
+        recentProductModel: ProductModel?
+    ) {
         val intent = createIntent(this, productModel, recentProductModel)
+        intent.flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
         startActivity(intent)
+    }
+
+    private fun goBackToShoppingActivity(): Boolean {
+        finish()
+        val intent = ShoppingActivity.createIntent(this)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP + Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        return true
     }
 
     companion object {
         private const val EXTRA_KEY_PRODUCT = "product"
         private const val EXTRA_KEY_RECENT_PRODUCT = "recent_product"
 
-        fun createIntent(context: Context, productModel: ProductModel, recentProductModel: ProductModel?): Intent {
+        fun createIntent(
+            context: Context,
+            productModel: ProductModel,
+            recentProductModel: ProductModel?
+        ): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(EXTRA_KEY_PRODUCT, productModel)
             intent.putExtra(EXTRA_KEY_RECENT_PRODUCT, recentProductModel)
