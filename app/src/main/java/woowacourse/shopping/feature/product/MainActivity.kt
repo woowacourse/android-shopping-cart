@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         ProductListAdapter(
             onProductClick = { presenter.showProductDetail(it) },
             cartProductAddFab = { presenter.storeCartProduct(it) },
-            cartProductCountMinus = {},
-            cartProductCountPlus = {},
+            cartProductCountMinus = { presenter.minusCartProductCount(it) },
+            cartProductCountPlus = { presenter.plusCartProductCount(it) },
         )
     }
     private val recentProductListAdapter by lazy {

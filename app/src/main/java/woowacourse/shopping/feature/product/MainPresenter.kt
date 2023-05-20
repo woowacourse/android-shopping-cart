@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.product
 
+import com.example.domain.CartProduct
 import com.example.domain.Product
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
@@ -58,11 +59,15 @@ class MainPresenter(
     }
 
     override fun minusCartProductCount(productState: ProductState) {
-        TODO("Not yet implemented")
+        val cartProduct: CartProduct? = cartRepository.getCartProduct(productState.id)
+        val cartProductCount: Int = (cartProduct?.count ?: MIN_COUNT_VALUE) - 1
+        cartRepository.updateCartProductCount(productState.id, cartProductCount)
     }
 
     override fun plusCartProductCount(productState: ProductState) {
-        TODO("Not yet implemented")
+        val cartProduct: CartProduct? = cartRepository.getCartProduct(productState.id)
+        val cartProductCount: Int = (cartProduct?.count ?: MIN_COUNT_VALUE) + 1
+        cartRepository.updateCartProductCount(productState.id, cartProductCount)
     }
 
     private fun getAddProductsUnit(): List<ProductState> {

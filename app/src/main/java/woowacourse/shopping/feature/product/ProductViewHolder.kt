@@ -25,7 +25,7 @@ class ProductViewHolder(
         binding.product = productState
         binding.root.setOnClickListener { onProductClick(productState) }
         binding.productAddFab.setOnClickListener {
-//            cartProductAddFab()
+            cartProductAddFab(productState)
             binding.productAddFab.visibility = View.INVISIBLE
             binding.counterView.visibility = View.VISIBLE
             binding.counterView.count = MIN_COUNT_VALUE
@@ -36,13 +36,13 @@ class ProductViewHolder(
                 binding.counterView.visibility = View.INVISIBLE
             } else {
                 binding.counterView.count--
-//                cartProductCountMinus()
+                cartProductCountMinus(productState)
             }
         }
         binding.counterView.plusClickListener = {
             if (MAX_COUNT_VALUE > binding.counterView.count) {
                 binding.counterView.count++
-//                cartProductCountPlus()
+                cartProductCountPlus(productState)
             }
         }
     }

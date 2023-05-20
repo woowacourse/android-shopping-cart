@@ -11,6 +11,10 @@ class CartRepositoryImpl(
         return cartDao.getAll()
     }
 
+    override fun getCartProduct(productId: Int): CartProduct? {
+        return cartDao.getCartProduct(productId)
+    }
+
     override fun addProduct(productId: Int, count: Int) {
         cartDao.addColumn(productId, count)
     }
