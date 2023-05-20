@@ -35,43 +35,14 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
         return productItems[position].viewType
     }
 
-    fun submitList(
-        products: List<ProductUIModel>,
-        recentProducts: List<RecentProductUIModel>,
-        cartProducts: List<CartProductUIModel>
-    ) {
-        carts.addAll(cartProducts)
-        productItems.clear()
-        addRecentProducts(recentProducts)
-        productItems.addAll(products.map { ProductsItemType.Product(it, getCount(it.id)) })
-        productItems.add(ProductsItemType.ReadMore)
-
-        notifyItemChanged(0)
-    }
-
     fun addList(products: List<ProductUIModel>) {
         productItems.removeIf { it is ProductsItemType.ReadMore }
-        productItems.addAll(
-            products.map { ProductsItemType.Product(it, getCount(it.id)) }
-        )
+        productItems.addAll(products.map { ProductsItemType.Product(it, getCount(it.id)) })
         productItems.add(ProductsItemType.ReadMore)
         notifyItemChanged(0)
     }
 
-    fun updateList(
-        recentProducts: List<RecentProductUIModel>,
-        cartProducts: List<CartProductUIModel>
-    ) {
-        carts.clear()
-        carts.addAll(cartProducts)
-        addRecentProducts(recentProducts)
-        productItems.filterIsInstance<ProductsItemType.Product>()
-            .forEach { it.count = getCount(it.product.id) }
-
-        notifyItemRangeChanged(0, productItems.size - 1)
-    }
-
-    private fun addRecentProducts(recentProducts: List<RecentProductUIModel>) {
+    fun updateRecentProducts(recentProducts: List<RecentProductUIModel>) {
         if (productItems.size > 0 && productItems[0] is ProductsItemType.RecentProducts) {
             productItems.removeAt(0)
         }
@@ -79,15 +50,28 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
         if (recentProducts.isNotEmpty()) {
             productItems.add(0, ProductsItemType.RecentProducts(recentProducts))
         }
+
+        if (productItems.size > 0) {
+            notifyItemChanged(0)
+        }
     }
 
-    private fun getCount(productId: Int): Int {
-        return carts.firstOrNull { it.id == productId }?.count ?: 0
+    fun updateCartProducts(cartProducts: List<CartProductUIModel>) {
+        carts.clear()
+        carts.addAll(cartProducts)
+        productItems.filterIsInstance<ProductsItemType.Product>()
+            .forEach { it.count = getCount(it.product.id) }
+
+        notifyItemRangeChanged(0, productItems.size - 1)
     }
 
     fun updateItemCount(productId: Int, count: Int) {
         val index = productItems
             .indexOfFirst { it is ProductsItemType.Product && it.product.id == productId }
         productItems[index] = (productItems[index] as ProductsItemType.Product).copy(count = count)
+    }
+
+    private fun getCount(productId: Int): Int {
+        return carts.firstOrNull { it.id == productId }?.count ?: 0
     }
 }

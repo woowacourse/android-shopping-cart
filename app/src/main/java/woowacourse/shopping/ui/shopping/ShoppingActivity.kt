@@ -26,42 +26,24 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
+    private lateinit var mockWeb: MockWeb
+
     private val adapter: ProductsAdapter = ProductsAdapter(getAdapterListener())
     private var tvCount: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initMockWeb()
         initBinding()
         initToolbar()
         initPresenter()
         initLayoutManager()
-        presenter.setUpProducts()
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.updateProducts()
-    }
-
-    private fun initBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
-    }
-
-    private fun initToolbar() {
-        setSupportActionBar(binding.toolbar)
-    }
-
-    private fun initPresenter() {
-        var url: String? = null
-        val thread = Thread { url = MockWeb().url }
-        thread.start()
-        thread.join()
-        presenter = ShoppingPresenter(
-            this,
-            RemoteProductRepository(url ?: ""),
-            RecentProductDatabase(this),
-            CartDatabase(this)
-        )
+        presenter.fetchRecentProducts()
+        presenter.fetchCartProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -70,8 +52,36 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             view.setOnClickListener { navigateToCart() }
             view.findViewById<TextView>(R.id.tv_counter)?.let { tvCount = it }
         }
-        presenter.updateToolbar()
+        presenter.fetchTotalCount()
         return true
+    }
+
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
+        binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.toolbar)
+    }
+
+    private fun initMockWeb() {
+        val thread = Thread { mockWeb = MockWeb() }
+        thread.start()
+        thread.join()
+    }
+
+    private fun initPresenter() {
+        presenter = ShoppingPresenter(
+            this,
+            RemoteProductRepository(mockWeb.url),
+            RecentProductDatabase(this),
+            CartDatabase(this)
+        )
+        presenter.fetchRecentProducts()
+        presenter.fetchNextProducts()
+        presenter.fetchCartProducts()
     }
 
     private fun initLayoutManager() {
@@ -85,41 +95,33 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             presenter.navigateToItemDetail(productId)
         }
         override fun onReadMoreClick() {
-            presenter.addMoreProducts()
+            presenter.fetchNextProducts()
         }
         override fun onAddCartOrUpdateCount(productId: Int, count: Int) {
-            adapter.let { adapter.updateItemCount(productId, count) }
-            presenter.updateItem(productId, count)
+            adapter.updateItemCount(productId, count)
+            presenter.updateItemCount(productId, count)
+            presenter.fetchTotalCount()
         }
-    }
-
-    override fun setProducts(
-        products: List<ProductUIModel>,
-        recentProducts: List<RecentProductUIModel>,
-        cartProducts: List<CartProductUIModel>
-    ) {
-        adapter.submitList(products, recentProducts, cartProducts)
-        binding.rvProducts.adapter = adapter
-        binding.rvProducts.itemAnimator = null
     }
 
     override fun addMoreProducts(products: List<ProductUIModel>) {
         adapter.addList(products)
     }
 
-    override fun refreshProducts(
-        recentProducts: List<RecentProductUIModel>,
-        cartProducts: List<CartProductUIModel>
-    ) {
-        adapter.updateList(recentProducts, cartProducts)
+    override fun setRecentProducts(recentProductsData: List<RecentProductUIModel>) {
+        adapter.updateRecentProducts(recentProductsData)
     }
 
-    override fun updateToolbar(count: Int) {
-        tvCount?.text = count.toString()
+    override fun setCartProducts(cartProductsData: List<CartProductUIModel>) {
+        adapter.updateCartProducts(cartProductsData)
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {
         startActivity(DetailedProductActivity.getIntent(this, product))
+    }
+
+    override fun updateToolbar(totalCount: Int) {
+        tvCount?.text = totalCount.toString()
     }
 
     private fun navigateToCart() {

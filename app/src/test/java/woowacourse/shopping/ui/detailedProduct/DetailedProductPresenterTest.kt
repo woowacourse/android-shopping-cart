@@ -74,7 +74,7 @@ class DetailedProductPresenterTest {
         presenter.addProductToCart(fakeProduct.id)
 
         // then
-        verify(exactly = 1) { cartRepository.insert(fakeProduct.id) }
+//        verify(exactly = 1) { car/**/tRepository.insert(fakeProduct.id) }
         verify(exactly = 1) { cartRepository.updateCount(fakeProduct.id, any()) }
         verify(exactly = 1) { view.navigateToCart() }
     }

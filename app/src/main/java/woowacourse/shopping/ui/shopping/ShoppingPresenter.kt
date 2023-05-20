@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.shopping
 
 import woowacourse.shopping.mapper.toUIModel
-import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentRepository
@@ -12,50 +11,45 @@ class ShoppingPresenter(
     private val recentRepository: RecentRepository,
     private val cartRepository: CartRepository
 ) : ShoppingContract.Presenter {
-    private var cartProductsData: List<CartProductUIModel> = cartRepository.getAll().toUIModel()
-
     override fun setUpProducts() {
-        val recentProductsData = recentRepository.getRecent(RECENT_PRODUCT_COUNT)
-            .map { it.toUIModel() }
-        val productsData = productRepository.getNext(PRODUCT_COUNT).map { it.toUIModel() }
-        val cartProductsData = cartRepository.getAll().toUIModel()
-
-        view.setProducts(productsData, recentProductsData, cartProductsData)
+        fetchCartProducts()
+        fetchNextProducts()
+        fetchRecentProducts()
     }
 
-    override fun addMoreProducts() {
-        val productsData = productRepository.getNext(PRODUCT_COUNT).map { it.toUIModel() }
-
-        view.addMoreProducts(productsData)
+    override fun fetchNextProducts() {
+        view.addMoreProducts(
+            productRepository.getNext(PRODUCT_COUNT).map { it.toUIModel() }
+        )
     }
 
-    override fun updateProducts() {
-        val recentProductsData = recentRepository.getRecent(RECENT_PRODUCT_COUNT)
-            .map { it.toUIModel() }
-        val cartProductsData = cartRepository.getAll().toUIModel()
-
-        view.refreshProducts(recentProductsData, cartProductsData)
-        updateToolbar()
+    override fun fetchRecentProducts() {
+        view.setRecentProducts(
+            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
+        )
     }
 
-    override fun updateItem(productId: Int, count: Int): Int {
-        productRepository.findById(productId).let {
-            cartRepository.insert(it)
-        }
-        val updatedCount = cartRepository.updateCount(productId, count)
-        cartProductsData = cartRepository.getAll().toUIModel()
-        updateToolbar()
-        return updatedCount
+    override fun fetchCartProducts() {
+        view.setCartProducts(
+            cartRepository.getAll().toUIModel()
+        )
     }
 
-    override fun updateToolbar() {
+    override fun updateItemCount(productId: Int, count: Int): Int {
+        cartRepository.insert(
+            productRepository.findById(productId)
+        )
+        return cartRepository.updateCount(productId, count)
+    }
+
+    override fun fetchTotalCount() {
         view.updateToolbar(cartRepository.getTotalSelectedCount())
     }
 
     override fun navigateToItemDetail(productId: Int) {
-        productRepository.findById(productId).let {
-            view.navigateToProductDetail(it.toUIModel())
-        }
+        view.navigateToProductDetail(
+            productRepository.findById(productId).toUIModel()
+        )
     }
 
     companion object {
