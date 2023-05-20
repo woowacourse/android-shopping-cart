@@ -13,6 +13,8 @@ interface BasketContract {
         fun navigateToHome()
         fun updatePageNumber(page: PageNumber)
         fun updateTotalPrice(price: Int)
+        fun showOrderFailed()
+        fun showOrderComplete(productCount: Int)
     }
 
     abstract class Presenter(protected val view: View) {

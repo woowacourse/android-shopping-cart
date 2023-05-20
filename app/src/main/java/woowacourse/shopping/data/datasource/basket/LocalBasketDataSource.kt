@@ -25,8 +25,13 @@ class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local
     override fun getTotalPrice(): Int = dao.getTotalPrice()
 
     override fun getCheckedProductCount(): Int = dao.getCheckedProductCount()
+
     override fun getProductInRange(start: DataPageNumber, end: DataPageNumber): DataBasket {
         return dao.getProductInRange(start, end)
+    }
+
+    override fun removeCheckedProducts() {
+        dao.deleteCheckedProducts()
     }
 
     override fun minusProductCount(product: Product) {

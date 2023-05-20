@@ -100,11 +100,15 @@ class BasketPresenter(
         view.updateTotalPrice(basketRepository.getTotalPrice())
     }
 
-//    fun order() {
-//        basketRepository.removeCheckedProducts()
-//        view.showOrderCompleteScreen()
-//        view.navigateToHome()
-//    }
+    fun order() {
+        if (_totalCheckSize.value == 0) {
+            view.showOrderFailed()
+            return
+        }
+        basketRepository.removeCheckedProducts()
+        view.showOrderComplete(_totalCheckSize.value ?: 0)
+        view.navigateToHome()
+    }
 
     override fun closeScreen() {
         view.navigateToHome()

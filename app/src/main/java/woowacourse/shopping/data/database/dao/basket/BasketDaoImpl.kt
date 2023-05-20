@@ -198,6 +198,14 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         return DataBasket(basketProducts = basketProducts.safeSubList(start.start, end.end))
     }
 
+    override fun deleteCheckedProducts() {
+        database.writableDatabase.delete(
+            BasketContract.TABLE_NAME,
+            "${BasketContract.COLUMN_CHECKED} = ?",
+            arrayOf("1")
+        )
+    }
+
     override fun contains(product: Product): Boolean {
         val db = database.writableDatabase
         val cursor = db.rawQuery(

@@ -27,5 +27,6 @@
     <string name="order_format">주문하기(%d)</string>
     <string name="order">주문하기</string>
     <string name="all_select">전체</string>
-
+    <string name="order_success_message">제품 %d개를 성공적으로 주문하였습니다!</string>
+    <string name="order_failed_message">주문에 실패하였습니다!</string>
 </resources>

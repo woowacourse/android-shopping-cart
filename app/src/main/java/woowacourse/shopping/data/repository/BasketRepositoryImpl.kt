@@ -36,6 +36,10 @@ class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.L
     override fun getCheckedProductCount(): Int =
         localBasketDataSource.getCheckedProductCount()
 
+    override fun removeCheckedProducts() {
+        localBasketDataSource.removeCheckedProducts()
+    }
+
     override fun minusProductCount(product: Product) {
         localBasketDataSource.minusProductCount(product.toData())
     }

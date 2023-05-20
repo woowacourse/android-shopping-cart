@@ -17,4 +17,5 @@ interface BasketRepository {
     fun update(basket: Basket)
     fun getTotalPrice(): Int
     fun getCheckedProductCount(): Int
+    fun removeCheckedProducts()
 }

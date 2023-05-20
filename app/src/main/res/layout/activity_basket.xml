@@ -157,6 +157,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/woowa_emerald"
                 android:clickable="true"
+                android:onClick="@{() -> presenter.order()}"
                 android:enabled="@{presenter.totalCheckSize > 0}"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"

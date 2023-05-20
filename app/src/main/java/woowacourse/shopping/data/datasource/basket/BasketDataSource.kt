@@ -16,6 +16,7 @@ interface BasketDataSource {
         fun getTotalPrice(): Int
         fun getCheckedProductCount(): Int
         fun getProductInRange(start: DataPageNumber, end: DataPageNumber): DataBasket
+        fun removeCheckedProducts()
     }
 
     interface Remote
