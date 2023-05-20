@@ -24,6 +24,11 @@ class ProductDetailPresenter(
         setUpProduct()
     }
 
+    override fun setUpCountView() {
+        view.setCount(_count)
+        view.setUpCountView()
+    }
+
     private fun setupView() {
         view.setupView()
     }
@@ -47,9 +52,11 @@ class ProductDetailPresenter(
 
     override fun increaseCount() {
         _count++
+        view.setCount(_count)
     }
 
     override fun decreaseCount() {
         _count--
+        view.setCount(_count)
     }
 }

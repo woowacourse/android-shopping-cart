@@ -74,9 +74,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         dialogBinding.product = product
         dialogBinding.tvAddCart.setOnClickListener { presenter.addCart() }
         AlertDialog.Builder(this@ProductDetailActivity).setView(dialogBinding.root).show()
-        dialogBinding.customCount.count = presenter.count
+        presenter.setUpCountView()
+    }
+
+    override fun setUpCountView() {
         dialogBinding.customCount.plusClickListener = presenter::increaseCount
         dialogBinding.customCount.minusClickListener = presenter::decreaseCount
+    }
+
+    override fun setCount(count: Int) {
+        dialogBinding.customCount.count = presenter.count
     }
 
     override fun onDestroy() {

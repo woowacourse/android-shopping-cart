@@ -8,11 +8,14 @@ interface ProductDetailContract {
         fun setProductDetail(product: ProductUIModel)
         fun navigateToCart()
         fun showCartDialog(product: ProductUIModel)
+        fun setUpCountView()
+        fun setCount(count: Int)
     }
 
     interface Presenter {
         val count: Int
         fun setUp()
+        fun setUpCountView()
         fun addCart()
         fun onClickCart()
 
