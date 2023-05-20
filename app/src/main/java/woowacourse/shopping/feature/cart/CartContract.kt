@@ -9,6 +9,8 @@ interface CartContract {
         fun setCartPageNumber(number: Int)
         fun setCartPageNumberPlusEnable(isEnable: Boolean)
         fun setCartPageNumberMinusEnable(isEnable: Boolean)
+        fun showPageSelectorView()
+        fun hidePageSelectorView()
     }
 
     interface Presenter {

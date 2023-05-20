@@ -29,6 +29,9 @@ class CartPresenter(
 
         view.setCartPageNumber(pageNumber)
         view.setCartProducts(items)
+
+        view.hidePageSelectorView()
+        if (minPageNumber < maxPageNumber) view.showPageSelectorView()
     }
 
     override fun plusPageNumber() {

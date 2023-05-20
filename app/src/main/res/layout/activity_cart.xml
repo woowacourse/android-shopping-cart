@@ -21,38 +21,47 @@
 
         <LinearLayout
             android:gravity="center"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="160dp">
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/page_number_minus_tv"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@color/teal_200"
-                android:gravity="center"
-                android:text="@string/left_charactor"
-                android:textColor="@color/white"
-                android:textSize="22sp"/>
+            <LinearLayout
+                android:id="@+id/page_selector_view"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/page_number_tv"
-                android:gravity="center"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                tools:text="0" />
+                <TextView
+                    android:id="@+id/page_number_minus_tv"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@color/teal_200"
+                    android:gravity="center"
+                    android:text="@string/left_charactor"
+                    android:textColor="@color/white"
+                    android:textSize="22sp"/>
 
-            <TextView
-                android:id="@+id/page_number_plus_tv"
-                android:textSize="22sp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@color/teal_200"
-                android:text="@string/right_charactor"
-                app:layout_constraintStart_toStartOf="@id/page_number_tv"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                <TextView
+                    android:id="@+id/page_number_tv"
+                    android:gravity="center"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    tools:text="0" />
+
+                <TextView
+                    android:id="@+id/page_number_plus_tv"
+                    android:textSize="22sp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@color/teal_200"
+                    android:text="@string/right_charactor"
+                    app:layout_constraintStart_toStartOf="@id/page_number_tv"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </LinearLayout>
 
         </LinearLayout>
 

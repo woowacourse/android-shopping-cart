@@ -3,6 +3,8 @@ package woowacourse.shopping.feature.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.R
@@ -61,6 +63,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         } else {
             binding.pageNumberMinusTv.setBackgroundColor(getColor(R.color.gray))
         }
+    }
+
+    override fun showPageSelectorView() {
+        binding.pageSelectorView.visibility = VISIBLE
+    }
+
+    override fun hidePageSelectorView() {
+        binding.pageSelectorView.visibility = GONE
     }
 
     companion object {
