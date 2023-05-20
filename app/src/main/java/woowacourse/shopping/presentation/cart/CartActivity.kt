@@ -25,20 +25,28 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCartBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setBinding()
         initView()
+        setContentView(binding.root)
         managePaging()
+    }
+
+    private fun setBinding() {
+        binding = ActivityCartBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
     }
 
     private fun initView() {
         initCartAdapter()
-        presenter
         setToolBar()
+        updateView()
+        binding.presenter = presenter
     }
 
     private fun initCartAdapter() {
-        cartAdapter = CartAdapter(::deleteCartProduct)
+        cartAdapter = CartAdapter(
+            presenter = presenter,
+        )
         binding.recyclerCart.adapter = cartAdapter
     }
 
@@ -68,9 +76,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun updateView() {
-        presenter.updateCart()
-        presenter.updatePlusButtonState()
-        presenter.updateMinusButtonState()
+        presenter.loadCurrentPageProducts()
+        presenter.updateCurrentPageCartView()
+        presenter.checkPlusPageAble()
+        presenter.checkMinusPageAble()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -83,20 +92,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return true
     }
 
-    private fun deleteCartProduct(cartProductInfoModel: CartProductInfoModel) {
-        presenter.deleteProduct(cartProductInfoModel)
-        updateView()
-    }
-
     override fun setCartItems(productModels: List<CartProductInfoModel>) {
-        cartAdapter.submitList(productModels)
+        cartAdapter.setItems(productModels)
     }
 
-    override fun setPage(count: Int) {
-        binding.textCartPage.text = count.toString()
-    }
-
-    override fun setUpPlusPageButtonState(isEnable: Boolean) {
+    override fun setUpPlusPageState(isEnable: Boolean) {
         binding.buttonPlusPage.isClickable = isEnable
         if (isEnable) {
             binding.buttonPlusPage.setImageResource(R.drawable.icon_right_page_true)
@@ -105,7 +105,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setUpMinusPageButtonState(isEnable: Boolean) {
+    override fun setUpMinusPageState(isEnable: Boolean) {
         binding.buttonMinusPage.isClickable = isEnable
         if (isEnable) {
             binding.buttonMinusPage.setImageResource(R.drawable.icon_left_page_true)

@@ -18,7 +18,7 @@ class ProductItemViewHolder(
 
     private val context = binding.root.context
     private lateinit var productModel: ProductModel
-    private lateinit var counterPresenter: CounterContract.Presenter
+    private val counterPresenter: CounterContract.Presenter = binding.counterProductList.presenter
     private val productItemPresenter: ProductItemContract.Presenter by lazy {
         ProductItemPresenter(
             this,
@@ -33,17 +33,16 @@ class ProductItemViewHolder(
     fun bind(product: ProductModel) {
         productModel = product
         binding.productModel = product
-        counterPresenter = binding.counterProductList.presenter
         productItemPresenter.loadProductCount(product)
         binding.counterProductList.plusButton.setOnClickListener {
             counterPresenter.plusCount()
-            productItemPresenter.changeProductCount(product, counterPresenter.counter.value)
+            productItemPresenter.changeProductCount(product, counterPresenter.counter.value!!.value)
             showCartCount()
         }
         binding.counterProductList.minusButton.setOnClickListener {
             counterPresenter.minusCount()
             counterPresenter.checkCounterVisibility()
-            productItemPresenter.changeProductCount(product, counterPresenter.counter.value)
+            productItemPresenter.changeProductCount(product, counterPresenter.counter.value!!.value)
             showCartCount()
         }
         binding.buttonProductListAddCart.setOnClickListener {

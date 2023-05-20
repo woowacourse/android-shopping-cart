@@ -12,4 +12,6 @@
     <string name="text_more_item">더보기</string>
     <string name="counter_plus_text">+</string>
     <string name="counter_minus_text">-</string>
+    <string name="all_cart_check_box_text">전체</string>
+    <string name="order_format">주문하기(%d)</string>
 </resources>
