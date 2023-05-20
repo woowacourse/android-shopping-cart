@@ -21,5 +21,6 @@ interface CartContract {
         fun updateCount(productId: Int, count: Int)
         fun updateChecked(productId: Int, checked: Boolean)
         fun deleteCartProduct(cartProductState: CartProductState)
+        fun checkAll()
     }
 }

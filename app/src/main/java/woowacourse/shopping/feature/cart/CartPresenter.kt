@@ -73,6 +73,16 @@ class CartPresenter(
         loadCart()
     }
 
+    override fun checkAll() {
+        val cartProducts: List<CartProduct> = cartRepository.getAll()
+        val checked: Boolean = cartProducts.find { !it.checked } != null
+
+        cartProducts.forEach {
+            cartRepository.updateCartProductChecked(it.productId, checked)
+        }
+        view.setTotalCost(PaymentCalculator.totalPaymentAmount(cartRepository.getAll()).toInt())
+    }
+
     private fun getMaxPageNumber(cartsSize: Int): Int {
         if (cartsSize == 0) return 1
         return (cartsSize - 1) / maxProductsPerPage + 1

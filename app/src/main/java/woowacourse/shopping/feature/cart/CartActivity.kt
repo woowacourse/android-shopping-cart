@@ -39,6 +39,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartProductRv.adapter = adapter
         binding.pageNumberPlusTv.setOnClickListener { presenter.plusPageNumber() }
         binding.pageNumberMinusTv.setOnClickListener { presenter.minusPageNumber() }
+        binding.allCheckBox.setOnCheckedChangeListener { compoundButton, b ->
+            presenter.checkAll()
+            presenter.loadCart()
+        }
         presenter.loadCart()
     }
 
