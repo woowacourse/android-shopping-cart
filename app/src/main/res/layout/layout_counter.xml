@@ -10,6 +10,10 @@
             type="woowacourse.shopping.ui.model.Product" />
 
         <variable
+            name="count"
+            type="Integer" />
+
+        <variable
             name="minusClickListener"
             type="kotlin.jvm.functions.Function1" />
 
@@ -47,7 +51,7 @@
             android:background="@color/white"
             android:gravity="center"
             android:paddingHorizontal="16dp"
-            android:text="@{String.valueOf(product.basketCount)}"
+            android:text="@{String.valueOf(count)}"
             android:textColor="@color/woowa_toolbar_gray"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -29,6 +29,7 @@ class ProductViewHolder(
     fun bind(product: UiProduct) {
         binding.product = product
         binding.counterProduct.product = product
+        binding.counterProduct.count = product.basketCount
         binding.hasBasketProduct = product.basketCount != 0
     }
 }
