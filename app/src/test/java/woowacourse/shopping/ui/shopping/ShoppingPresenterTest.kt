@@ -83,7 +83,7 @@ internal class ShoppingPresenterTest {
         /* ... */
 
         // when
-        presenter.openBasket()
+        presenter.navigateToBasket()
 
         // then
         verify(exactly = 1) { view.navigateToBasket() }

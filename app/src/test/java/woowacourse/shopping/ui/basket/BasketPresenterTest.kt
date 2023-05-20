@@ -86,14 +86,14 @@ internal class BasketPresenterTest {
             Product(id, "상품 $id", UiPrice(1000), "")
         }
         val product = Product(0, "상품 0", UiPrice(1000), "")
-        every { basketRepository.minusProductCount(product.toDomain()) } answers { products.remove(product) }
+        every { basketRepository.decreaseCartCount(product.toDomain()) } answers { products.remove(product) }
 
 
         // when
         presenter.deleteBasketProduct(product)
 
         // then
-        verify(exactly = 1) { basketRepository.minusProductCount(product.toDomain()) }
+        verify(exactly = 1) { basketRepository.decreaseCartCount(product.toDomain()) }
         verify(exactly = 1) { basketRepository.getProductInBasketByPage(PageNumber(1)) }
         verify(exactly = 1) { view.updateBasket(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }

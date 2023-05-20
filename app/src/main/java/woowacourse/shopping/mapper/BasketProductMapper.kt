@@ -16,3 +16,6 @@ fun DomainBasketProduct.toUi(): UiBasketProduct = UiBasketProduct(
     selectedCount = selectedCount.toUi(),
     isChecked = isChecked,
 )
+
+fun List<DomainBasketProduct>.toUi(): List<UiBasketProduct> =
+    map { basketProduct -> basketProduct.toUi() }

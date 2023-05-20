@@ -10,7 +10,7 @@ class BasketTest {
         val basket = Basket(products)
         val product = Product(0, "새상품", Price(1000), "")
 
-        val actual = basket.add(product)
+        val actual = basket.increaseProductCount(product)
         val expected = Basket(products + product)
 
         assertThat(actual).isEqualTo(expected)

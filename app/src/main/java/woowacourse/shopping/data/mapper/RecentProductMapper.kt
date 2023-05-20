@@ -8,3 +8,5 @@ fun DataRecentProduct.toDomain(): RecentProduct =
 
 fun RecentProduct.toData(): DataRecentProduct =
     DataRecentProduct(id = id, product = product.toData())
+
+fun List<DataRecentProduct>.toDomain(): List<RecentProduct> = map { it.toDomain() }

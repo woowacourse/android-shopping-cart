@@ -22,8 +22,8 @@ class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.L
         return localBasketDataSource.getProductInRange(start, end).toDomain(startPage.sizePerPage)
     }
 
-    override fun addProductCount(product: Product, count: Int) {
-        localBasketDataSource.plusProductCount(product.toData(), count)
+    override fun increaseCartCount(product: Product, count: Int) {
+        localBasketDataSource.increaseCartCount(product.toData(), count)
     }
 
     override fun update(basket: Basket) {
@@ -40,8 +40,8 @@ class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.L
         localBasketDataSource.removeCheckedProducts()
     }
 
-    override fun minusProductCount(product: Product) {
-        localBasketDataSource.minusProductCount(product.toData())
+    override fun decreaseCartCount(product: Product, count: Int) {
+        localBasketDataSource.decreaseCartCount(product.toData(), count)
     }
 
     override fun deleteByProductId(productId: Int) {

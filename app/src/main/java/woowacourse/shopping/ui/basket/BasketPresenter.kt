@@ -58,14 +58,14 @@ class BasketPresenter(
     }
 
     override fun increaseProductCount(product: UiProduct) {
-        basket = basket.add(product.toDomain())
+        basket = basket.increaseProductCount(product.toDomain())
         basketRepository.update(basket.takeBasketUpToPage(currentPage))
         view.updateTotalPrice(basketRepository.getTotalPrice())
         _totalCheckSize.value = basketRepository.getCheckedProductCount()
     }
 
     override fun decreaseProductCount(product: UiProduct) {
-        basket = basket.minus(product.toDomain())
+        basket = basket.decreaseProductCount(product.toDomain())
         basketRepository.update(basket.takeBasketUpToPage(currentPage))
         view.updateTotalPrice(basketRepository.getTotalPrice())
         _totalCheckSize.value = basketRepository.getCheckedProductCount()

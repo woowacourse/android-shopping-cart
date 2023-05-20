@@ -1,10 +1,9 @@
 package woowacourse.shopping.domain
 
-class RecentProducts(
-    _items: List<RecentProduct> = emptyList(),
+data class RecentProducts(
+    private val items: List<RecentProduct> = emptyList(),
     private val maxCount: Int = 10,
 ) {
-    private val items: List<RecentProduct> = _items.take(maxCount)
 
     fun add(newItem: RecentProduct): RecentProducts {
         val newItems = items.toMutableList()
@@ -14,9 +13,11 @@ class RecentProducts(
         return RecentProducts(newItems.take(maxCount), maxCount)
     }
 
+    fun update(newItems: RecentProducts): RecentProducts = copy(items = newItems.items)
+
     fun getLatest(): RecentProduct? = items.firstOrNull()
 
     operator fun plus(newItem: RecentProduct): RecentProducts = add(newItem)
 
-    fun getItems(): List<RecentProduct> = items.map { it }.toList()
+    fun getItems(): List<RecentProduct> = items.take(maxCount).map { it.copy() }
 }

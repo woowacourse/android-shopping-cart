@@ -8,3 +8,6 @@ fun UiRecentProduct.toDomain(): RecentProduct =
 
 fun RecentProduct.toUi(): UiRecentProduct =
     UiRecentProduct(id = id, product = product.toUi())
+
+fun List<RecentProduct>.toUi(): List<UiRecentProduct> =
+    map { recentProduct -> recentProduct.toUi() }

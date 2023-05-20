@@ -36,10 +36,10 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     private val recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
     private val recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
     private val productAdapter = ProductAdapter(this, this)
-    private val loadMoreAdapter = LoadMoreAdapter(presenter::loadMore)
+    private val loadMoreAdapter = LoadMoreAdapter(presenter::loadMoreProducts)
 
     private val basketActivityLauncher = registerForActivityResult(StartActivityForResult()) {
-        presenter.refreshProduct()
+        presenter.fetchProducts()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
 
     private fun initMenuClickListener() {
         val basketItemView = binding.shoppingToolBar.findItemActionView(R.id.basket)
-        basketItemView?.setOnClickListener { presenter.openBasket() }
+        basketItemView?.setOnClickListener { presenter.navigateToBasket() }
     }
 
     private fun initRecyclerView() {
@@ -104,22 +104,22 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     }
 
     override fun onClickProductPlus(product: UiProduct) {
-        presenter.addBasketProduct(product)
+        presenter.increaseCartCount(product)
     }
 
     override fun onClickCounterPlus(product: UiProduct) {
-        presenter.addBasketProduct(product)
+        presenter.increaseCartCount(product)
     }
 
     override fun onClickCounterMinus(product: UiProduct) {
-        presenter.removeBasketProduct(product)
+        presenter.decreaseCartCount(product)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         val product = intent?.getParcelableExtraCompat<UiProduct>(PRODUCT_KEY) ?: return
         val count = intent.getIntExtra(COUNT_KEY, 0)
-        presenter.addBasketProduct(product, count)
+        presenter.increaseCartCount(product, count)
     }
 
     companion object {

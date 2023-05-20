@@ -12,7 +12,7 @@ class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local
     override fun getProductInBasketByPage(page: DataPageNumber): DataBasket =
         dao.getProductInBasketByPage(page)
 
-    override fun plusProductCount(product: Product, count: Int) {
+    override fun increaseCartCount(product: Product, count: Int) {
         dao.addProductCount(product, count)
     }
 
@@ -34,11 +34,11 @@ class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local
         dao.deleteCheckedProducts()
     }
 
-    override fun minusProductCount(product: Product) {
+    override fun decreaseCartCount(product: Product, count: Int) {
         val productCount = dao.count(product)
         when {
             !dao.contains(product) -> return
-            productCount > 1 -> dao.minusProductCount(product, 1)
+            productCount > count -> dao.minusProductCount(product, count)
             else -> deleteByProductId(product.id)
         }
     }

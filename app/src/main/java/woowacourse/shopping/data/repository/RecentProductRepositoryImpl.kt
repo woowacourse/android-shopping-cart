@@ -4,6 +4,7 @@ import woowacourse.shopping.data.datasource.recentproduct.RecentProductDataSourc
 import woowacourse.shopping.data.mapper.toData
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class RecentProductRepositoryImpl(
@@ -14,6 +15,6 @@ class RecentProductRepositoryImpl(
         localRecentProductDataSource.add(recentProduct.toData())
     }
 
-    override fun getPartially(size: Int): List<RecentProduct> =
-        localRecentProductDataSource.getPartially(size).map { it.toDomain() }
+    override fun getPartially(size: Int): RecentProducts =
+        RecentProducts(localRecentProductDataSource.getPartially(size).toDomain())
 }

@@ -9,15 +9,16 @@ data class Basket(
     val loadUnit: Int,
     val minProductSize: Int = 0,
 ) {
+    fun increaseProductCount(product: Product, count: Int = 1): Basket =
+        copy(basketProducts = basketProducts
+            .map { item -> if (item.product.id == product.id) item.plusCount(count) else item }
+            .distinctBy { it.product.id })
 
-    fun add(newItem: Product, count: Int = 1): Basket =
-        copy(basketProducts = basketProducts.map { item ->
-            if (item.product.id == newItem.id) item.plusCount(count) else item
-        }.distinctBy { it.product.id })
-
-    fun remove(product: Product): Basket = copy(basketProducts = basketProducts.map { item ->
-        if (item.product.id == product.id && item.selectedCount.value > minProductSize) item.minusCount() else item
-    }.distinctBy { it.product.id })
+    fun decreaseProductCount(product: Product, count: Int = 1): Basket =
+        copy(basketProducts = basketProducts
+            .map { item -> if (item.product.id == product.id) item.minusCount(count) else item }
+            .filter { it.selectedCount.value >= minProductSize }
+            .distinctBy { it.product.id })
 
     /* Shopping */
     fun canLoadMore(page: PageNumber): Boolean =
@@ -68,6 +69,4 @@ data class Basket(
 
     operator fun plus(items: Basket): Basket =
         copy(basketProducts = (basketProducts + items.basketProducts).distinctBy { it.product.id })
-
-    operator fun minus(item: Product): Basket = remove(item)
 }

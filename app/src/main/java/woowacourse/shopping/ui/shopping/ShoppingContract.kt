@@ -22,12 +22,11 @@ interface ShoppingContract {
         abstract fun fetchAll()
         abstract fun fetchProducts()
         abstract fun fetchRecentProducts()
+        abstract fun loadMoreProducts()
         abstract fun inquiryProductDetail(product: UiProduct)
         abstract fun inquiryRecentProductDetail(recentProduct: UiRecentProduct)
-        abstract fun openBasket()
-        abstract fun addBasketProduct(product: UiProduct, count: Int = 1)
-        abstract fun removeBasketProduct(product: UiProduct)
-        abstract fun refreshProduct()
-        abstract fun loadMore()
+        abstract fun navigateToBasket()
+        abstract fun increaseCartCount(product: UiProduct, count: Int = 1)
+        abstract fun decreaseCartCount(product: UiProduct, count: Int = 1)
     }
 }
