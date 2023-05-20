@@ -11,31 +11,35 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.model.ProductState
-import woowacourse.shopping.feature.model.mapper.toDomain
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
+    override lateinit var presenter: ProductDetailPresenter
 
     private val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
-    private val dbHandler: CartDbHandler by lazy {
-        CartDbHandler(CartDbHelper(this).writableDatabase)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val cartDb = CartDbHandler(CartDbHelper(this).writableDatabase)
+        presenter = ProductDetailPresenter(this, cartDb)
+
         if (product == null) {
             showToast(getString(R.string.error_intent_message))
             finish()
         }
 
+        setView()
+    }
+
+    private fun setView() {
         binding.product = product
 
         product?.let { product ->
             binding.navigateCartTv.setOnClickListener {
-                dbHandler.addColumn(product.toDomain())
+                presenter.addColumn(product)
                 CartActivity.startActivity(this)
             }
         }
