@@ -6,10 +6,7 @@ interface ProductDetailContract {
 
     interface View {
 
-        fun setUpProductDetailView(
-            product: ProductUiModel,
-            navigateToLatestViewedProductView: () -> Unit,
-        )
+        fun setUpProductDetailView(product: ProductUiModel)
 
         fun setUpLatestViewedProductView(product: ProductUiModel?)
 

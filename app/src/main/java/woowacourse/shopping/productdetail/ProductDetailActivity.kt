@@ -66,18 +66,15 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun setUpProductDetailView(
         product: ProductUiModel,
-        navigateToLatestViewedProductView: () -> Unit,
     ) {
         setUpProductCountPickerDialog(product)
+        binding.product = product
         with(binding) {
-            binding.product = product
             layoutLatestViewedProduct.setOnClickListener {
-                navigateToLatestViewedProductView()
+                presenter.loadLatestViewedProduct()
             }
             buttonPutToShoppingCart.setOnClickListener {
-                dialog.show(
-                    supportFragmentManager, ProductCountPickerDialog.TAG
-                )
+                dialog.show(supportFragmentManager, ProductCountPickerDialog.TAG)
             }
         }
     }

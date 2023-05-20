@@ -34,7 +34,7 @@ class ProductDetailPresenterTest {
 
         // then
         val expected = product
-        verify { view.setUpProductDetailView(expected, any()) }
+        verify { view.setUpProductDetailView(expected) }
     }
 
     @Test

@@ -19,10 +19,7 @@ class ProductDetailPresenter(
     )
 
     init {
-        view.setUpProductDetailView(
-            product = product,
-            navigateToLatestViewedProductView = ::loadLatestViewedProduct,
-        )
+        view.setUpProductDetailView(product = product)
         view.setUpLatestViewedProductView(latestViewedProduct)
     }
 
