@@ -5,6 +5,7 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartPages
 import woowacourse.shopping.model.CartProduct
 import woowacourse.shopping.model.CartProducts
+import woowacourse.shopping.model.Counter
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.presentation.mapper.toDomain
 import woowacourse.shopping.presentation.mapper.toPresentation
@@ -15,6 +16,7 @@ class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
+    private val initialPage: Counter = Counter(0),
 ) : CartContract.Presenter {
 
     private lateinit var cartPages: CartPages
@@ -25,7 +27,7 @@ class CartPresenter(
 
     private fun initCartPages() {
         val productItems = loadCartProducts()
-        cartPages = CartPages(CartProducts(productItems))
+        cartPages = CartPages(CartProducts(productItems), initialPage)
     }
 
     private fun loadCartProducts(): List<CartProduct> {

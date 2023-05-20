@@ -56,7 +56,7 @@ class ProductDetailPresenterTest {
         presenter.loadProductDetail(1)
 
         // when
-        presenter.putProductInCart()
+        presenter.putProductInCart(1)
 
         // then
         val actual = cartProductIdSlot.captured

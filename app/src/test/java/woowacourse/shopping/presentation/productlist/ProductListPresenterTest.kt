@@ -93,4 +93,20 @@ class ProductListPresenterTest {
         }
         assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun `장바구니의 전체 상품 개수를 가져온다`() {
+        // given 1개씩 10개 상품을 담고있다
+        val cartCount = slot<Int>()
+        every { view.setCartCount(capture(cartCount)) } just runs
+        every { cartRepository.getCartEntities() } returns (1..10).map { CartEntity(it, 1) }
+
+        // when cartCount 를 load 한다
+        presenter.loadCartCount()
+
+        // then view 로 10개를 전달한다.
+        val actual = cartCount.captured
+        val expected = 10
+        assertThat(actual).isEqualTo(expected)
+    }
 }
