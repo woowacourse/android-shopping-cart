@@ -16,6 +16,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartNavigationUIModel
 import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import java.text.DecimalFormat
 
 class CartActivity : AppCompatActivity(), CartContract.View {
 
@@ -32,6 +33,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0,
         )
         presenter.setUpCarts()
+        binding.checkbox.setOnCheckedChangeListener { _, checked ->
+            presenter.updateTotalChecked(checked)
+        }
         setToolbar()
     }
 
@@ -55,15 +59,31 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             presenter::removeItem,
             presenter::increaseCount,
             presenter::decreaseCount,
+            presenter::updateChecked,
         )
         binding.cartRecyclerview.adapter = ConcatAdapter(
             cartAdapter,
             CartNavigationAdapter(cartNavigationUIModel, presenter::pageUp, presenter::pageDown),
         )
+        binding.tvPrice.text = getString(R.string.product_price, "0")
+        binding.tvOrder.text = getString(R.string.zero_order_text)
     }
 
     override fun navigateToItemDetail(cartProduct: CartProductUIModel) {
         startActivity(ProductDetailActivity.from(this, cartProduct.product))
+    }
+
+    override fun updatePrice(price: Int) {
+        binding.tvPrice.text =
+            getString(R.string.product_price, DecimalFormat("#,###").format(price))
+    }
+
+    override fun updateOrderCount(count: Int) {
+        if (count == 0) {
+            binding.tvOrder.text = getString(R.string.zero_order_text)
+        } else {
+            binding.tvOrder.text = getString(R.string.order_text, count)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

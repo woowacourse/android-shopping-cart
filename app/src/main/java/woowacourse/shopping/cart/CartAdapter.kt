@@ -11,6 +11,7 @@ class CartAdapter(
     private val onItemRemove: (Int) -> Unit,
     private val onIncreaseCount: (Int, CartProductUIModel) -> Unit,
     private val onDecreaseCount: (Int, CartProductUIModel) -> Unit,
+    private val onChecked: (Boolean, CartProductUIModel) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -20,6 +21,7 @@ class CartAdapter(
             onItemRemove,
             { count, index -> onIncreaseCount(count, cartItems[index].cartProduct) },
             { count, index -> onDecreaseCount(count, cartItems[index].cartProduct) },
+            { checked, index -> onChecked(checked, cartItems[index].cartProduct) },
         )
     }
 

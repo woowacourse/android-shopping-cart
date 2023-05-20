@@ -13,6 +13,7 @@ class CartViewHolder private constructor(
     val onRemove: (Int) -> Unit,
     onIncreaseCount: (Int, Int) -> Unit,
     onDecreaseCount: (Int, Int) -> Unit,
+    onChecked: (Boolean, Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.customCountView.plusClickListener = {
@@ -21,6 +22,9 @@ class CartViewHolder private constructor(
         binding.customCountView.minusClickListener = {
             onDecreaseCount(binding.customCountView.count, bindingAdapterPosition)
         }
+        binding.checkbox.setOnCheckedChangeListener { _, checked ->
+            onChecked(checked, bindingAdapterPosition)
+        }
     }
 
     fun bind(cart: CartItem) {
@@ -28,6 +32,7 @@ class CartViewHolder private constructor(
         binding.cartProduct = cart.cartProduct
         binding.root.setOnClickListener { onItemClick(cart.cartProduct) }
         binding.removeButton.setOnClickListener { onRemove(cart.cartProduct.product.id) }
+        binding.checkbox.isChecked = cart.cartProduct.isChecked
     }
 
     companion object {
@@ -37,6 +42,7 @@ class CartViewHolder private constructor(
             onRemove: (Int) -> Unit,
             onIncreaseCount: (Int, Int) -> Unit,
             onDecreaseCount: (Int, Int) -> Unit,
+            onChecked: (Boolean, Int) -> Unit,
         ): CartViewHolder {
             val binding =
                 CartItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -46,6 +52,7 @@ class CartViewHolder private constructor(
                 onRemove,
                 onIncreaseCount,
                 onDecreaseCount,
+                onChecked,
             )
         }
     }

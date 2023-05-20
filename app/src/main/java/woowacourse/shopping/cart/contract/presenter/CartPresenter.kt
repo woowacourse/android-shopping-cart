@@ -57,15 +57,30 @@ class CartPresenter(
         return offset
     }
 
-    override fun increaseCount(cartProduct: CartProductUIModel) {
-        val count = cartProduct.count.plus(1)
-        repository.updateCount(cartProduct.product.id, count)
-        setUpCarts()
+    override fun increaseCount(count: Int, cartProduct: CartProductUIModel) {
+        repository.updateCount(cartProduct.product.id, count + 1)
     }
 
-    override fun decreaseCount(cartProduct: CartProductUIModel) {
-        val count = cartProduct.count.minus(1)
-        repository.updateCount(cartProduct.product.id, count)
+    override fun decreaseCount(count: Int, cartProduct: CartProductUIModel) {
+        repository.updateCount(cartProduct.product.id, count - 1)
+    }
+
+    override fun updateChecked(checked: Boolean, cartProduct: CartProductUIModel) {
+        var price = 0
+        repository.updateChecked(cartProduct.product.id, checked)
+        val checkedProducts = repository.getChecked()
+        checkedProducts.forEach {
+            price += it.count * it.product.price
+        }
+        view.updatePrice(price)
+        view.updateOrderCount(checkedProducts.size)
+    }
+
+    override fun updateTotalChecked(checked: Boolean) {
+        val products = repository.getSubList(offset, STEP)
+        products.forEach {
+            repository.updateChecked(it.product.id, checked)
+        }
         setUpCarts()
     }
 

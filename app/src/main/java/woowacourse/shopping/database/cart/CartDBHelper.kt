@@ -3,6 +3,7 @@ package woowacourse.shopping.database.cart
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_CHECKED
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_COUNT
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_IMAGE_URL
@@ -26,6 +27,7 @@ class CartDBHelper(
                 "$TABLE_COLUMN_PRODUCT_PRICE INTEGER," +
                 "$TABLE_COLUMN_PRODUCT_IMAGE_URL TEXT," +
                 "$TABLE_COLUMN_PRODUCT_COUNT INTEGER," +
+                "$TABLE_COLUMN_PRODUCT_CHECKED INTEGER," +
                 "$TABLE_COLUMN_PRODUCT_SAVE_TIME long not null" +
                 ");",
         )

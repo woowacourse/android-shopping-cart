@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="menu_cart_title">cart</string>
-    <string name="product_price">%d원</string>
+    <string name="product_price">%s원</string>
     <string name="exit">exit</string>
     <string name="product_list_read_more_text">더보기</string>
     <string name="recent_product_text">최근 본 상품</string>
@@ -11,4 +11,7 @@
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="dialog_add_cart_text">담기</string>
+    <string name="zero_order_text">주문하기</string>
+    <string name="order_text">주문하기(%d)</string>
+    <string name="cb_total_text">전체</string>
 </resources>
