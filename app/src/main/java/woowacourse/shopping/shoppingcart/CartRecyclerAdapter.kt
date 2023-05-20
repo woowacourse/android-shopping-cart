@@ -9,7 +9,7 @@ import woowacourse.shopping.model.CartProductUiModel
 class CartRecyclerAdapter(
     private var shoppingCartProducts: List<CartProductUiModel>,
     private val cartProductCountPickerListener: CartProductCountPickerListener,
-    private val onProductSelectingChanged: (product: CartProductUiModel, isSelected: Boolean) -> Unit,
+    private val onProductSelectingChanged: (id: Int, isSelected: Boolean) -> Unit,
     private val onShoppingCartProductRemoved: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<CartItemViewHolder>() {
 

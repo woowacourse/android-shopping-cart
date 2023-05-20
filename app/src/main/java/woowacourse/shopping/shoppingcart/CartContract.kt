@@ -1,7 +1,5 @@
 package woowacourse.shopping.shoppingcart
 
-import woowacourse.shopping.model.CartProductUiModel
-
 interface CartContract {
 
     interface View {
@@ -19,7 +17,7 @@ interface CartContract {
 
         fun minusShoppingCartProductCount(id: Int)
 
-        fun changeProductSelectedState(product: CartProductUiModel, isSelected: Boolean)
+        fun changeProductSelectedState(id: Int, isSelected: Boolean)
 
         fun changeProductsSelectedState(checked: Boolean)
 

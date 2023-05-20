@@ -7,17 +7,16 @@ import model.CartPage
 import model.CartPagination
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.util.toDomainModel
 import woowacourse.shopping.util.toUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val repository: ShoppingRepository,
-) : CartContract.Presenter {
-
     private val cartPage: CartPagination = CartPage(
         cart = Cart()
     )
+) : CartContract.Presenter {
+
     private val cart: Cart
         get() = cartPage.cart
 
@@ -60,6 +59,7 @@ class CartPresenter(
                 .count
                 .value
         )
+        updatePage(cartPage)
     }
 
     override fun minusShoppingCartProductCount(id: Int) {
@@ -72,14 +72,15 @@ class CartPresenter(
                 .count
                 .value
         )
+        updatePage(cartPage)
     }
 
     override fun changeProductSelectedState(
-        product: CartProductUiModel,
+        id: Int,
         isSelected: Boolean,
     ) {
         cart.changeSelectedState(
-            product = product.toDomainModel(),
+            id = id,
             isSelected = isSelected
         )
         updatePage(cartPage)

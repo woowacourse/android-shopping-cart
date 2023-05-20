@@ -13,7 +13,7 @@ class CartItemViewHolder private constructor(
 
     fun setOnClicked(
         onRemoveClicked: (id: Int) -> Unit,
-        onSelectingChanged: (product: CartProductUiModel, isSelected: Boolean) -> Unit,
+        onSelectingChanged: (id: Int, isSelected: Boolean) -> Unit,
     ) {
         with(binding) {
             imageRemoveProduct.setOnClickListener {
@@ -23,7 +23,7 @@ class CartItemViewHolder private constructor(
             }
             checkBoxSelecting.setOnCheckedChangeListener { _, isChecked ->
                 onSelectingChanged(
-                    product ?: return@setOnCheckedChangeListener,
+                    product?.id ?: return@setOnCheckedChangeListener,
                     isChecked
                 )
             }

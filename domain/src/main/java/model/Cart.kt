@@ -8,8 +8,8 @@ class Cart(
     val products: List<CartProduct>
         get() = _products.toList()
 
-    fun changeSelectedState(product: CartProduct, isSelected: Boolean) {
-        val index = _products.indexOf(product)
+    fun changeSelectedState(id: Int, isSelected: Boolean) {
+        val index = _products.indexOfFirst { it.product.id == id }
 
         _products[index] = _products[index].setSelectedState(isSelected)
     }
