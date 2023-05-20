@@ -1,12 +1,12 @@
 package woowacourse.shopping.ui.productdetail.contract.presenter
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.domain.model.CartProduct
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.RecentRepository
 import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
 
@@ -21,6 +21,7 @@ class ProductDetailPresenter(
 
     init {
         setUpProductDetail()
+        setLatestProduct()
         addProductToRecent()
     }
 
@@ -45,6 +46,13 @@ class ProductDetailPresenter(
 
     override fun setProductCountDialog() {
         view.showProductCountDialog(product)
+    }
+
+    override fun setLatestProduct() {
+        if (recentRepository.getRecent(1).size == 1) {
+            val latestProduct = recentRepository.getRecent(1)[0]
+            view.showLatestProduct(latestProduct.toUIModel())
+        }
     }
 
     override fun addProductCount() {

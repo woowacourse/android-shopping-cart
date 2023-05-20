@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -68,6 +67,10 @@ class ProductDetailActivity :
     override fun showProductCountDialog(product: ProductUIModel) {
         productOrderDialog = ProductOrderDialog(this, this, presenter, this, product)
         productOrderDialog.show()
+    }
+
+    override fun showLatestProduct(product: ProductUIModel) {
+        binding.latestProduct = product
     }
 
     private fun navigateToCart() {

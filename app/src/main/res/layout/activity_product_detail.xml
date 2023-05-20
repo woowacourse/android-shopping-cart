@@ -108,7 +108,6 @@
             android:layout_marginBottom="33dp"
             app:layout_constraintBottom_toTopOf="@+id/cart_button"
             android:layout_marginTop="29dp"
-            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5" />

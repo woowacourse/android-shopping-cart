@@ -6,6 +6,8 @@ interface ProductDetailContract {
     interface View {
         fun setProductDetail(product: ProductUIModel)
         fun showProductCountDialog(product: ProductUIModel)
+
+        fun showLatestProduct(product: ProductUIModel)
     }
 
     interface Presenter {
@@ -17,5 +19,7 @@ interface ProductDetailContract {
         fun subtractProductCount()
 
         fun setProductCountDialog()
+
+        fun setLatestProduct()
     }
 }
