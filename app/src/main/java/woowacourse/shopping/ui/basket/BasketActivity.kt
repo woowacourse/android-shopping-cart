@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.basket
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -38,10 +37,8 @@ class BasketActivity : AppCompatActivity(), View {
         binding.adapter?.submitList(basketProducts)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun updateAllCheckedState(basketProducts: List<UiBasketProduct>) {
         binding.adapter?.submitList(basketProducts)
-        binding.adapter?.notifyDataSetChanged()
     }
 
     override fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean) {
