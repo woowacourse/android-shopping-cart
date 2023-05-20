@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -17,68 +16,69 @@
 
         <ImageView
             android:id="@+id/product_image"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            tools:background="@drawable/ic_launcher_background"
             app:layout_constraintDimensionRatio="W,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/product_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="@dimen/product_detail_item_name_text_size"
-            android:text="@{product.name}"
-            tools:text="제품명"
-            app:layout_constraintTop_toBottomOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_image"
+            tools:text="제품명" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
-            app:layout_constraintTop_toBottomOf="@id/product_name"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_name" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
+            android:text="금액"
             android:textColor="@color/black"
             android:textSize="@dimen/product_detail_item_medium_text_size"
-            android:text="금액"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider"/>
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
+            android:text="@{@string/price_format(product.price)}"
             android:textColor="@color/black"
             android:textSize="@dimen/product_detail_item_medium_text_size"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            tools:text="가격" />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
             android:id="@+id/navigate_cart_tv"
-            android:text="장바구니 담기"
-            android:textStyle="bold"
-            android:textAlignment="center"
-            android:padding="@dimen/margin_small"
-            android:textColor="@color/white"
-            android:textSize="@dimen/product_detail_item_medium_text_size"
-            android:background="@color/teal_200"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/teal_200"
+            android:padding="@dimen/margin_small"
+            android:text="장바구니 담기"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/product_detail_item_medium_text_size"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

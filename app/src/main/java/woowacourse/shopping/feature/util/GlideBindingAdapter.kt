@@ -7,7 +7,7 @@ import woowacourse.shopping.R
 
 object GlideBindingAdapter {
 
-    @BindingAdapter("app:imageUrl")
+    @BindingAdapter("imageUrl")
     @JvmStatic
     fun loadImage(imageView: ImageView, url: String) {
         Glide.with(imageView.context)

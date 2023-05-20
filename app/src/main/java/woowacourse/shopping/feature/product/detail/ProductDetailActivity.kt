@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbHandler
 import woowacourse.shopping.data.cart.CartDbHelper
@@ -13,7 +12,6 @@ import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.model.ProductState
 import woowacourse.shopping.feature.model.mapper.toDomain
-import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
@@ -36,13 +34,6 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.product = product
 
         product?.let { product ->
-            Glide.with(this)
-                .load(product.imageUrl)
-                .error(R.drawable.ic_launcher_background)
-                .into(binding.productImage)
-
-            binding.productPrice.text = "${DecimalFormat("#,###").format(product.price)}원"
-
             binding.navigateCartTv.setOnClickListener {
                 dbHandler.addColumn(product.toDomain())
                 CartActivity.startActivity(this)

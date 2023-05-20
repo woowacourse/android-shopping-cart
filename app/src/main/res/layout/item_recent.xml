@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="product"
+            type="woowacourse.shopping.feature.list.item.ProductView.ProductItem" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_margin="@dimen/margin_large"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_large">
 
         <ImageView
             android:id="@+id/recent_image_view"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -24,10 +30,10 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.name}"
             app:layout_constraintEnd_toEndOf="@id/recent_image_view"
             app:layout_constraintStart_toStartOf="@id/recent_image_view"
-            app:layout_constraintTop_toBottomOf="@id/recent_image_view"
-            tools:text="마스터볼" />
+            app:layout_constraintTop_toBottomOf="@id/recent_image_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -7,48 +7,47 @@
             type="woowacourse.shopping.feature.list.item.ProductView.ProductItem" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/product_image"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
-            app:imageUrl="@{product.imageUrl}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:src="@drawable/ic_launcher_background"/>
+            tools:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/product_main_item_text_size"
             android:layout_marginTop="@dimen/margin_small"
-            android:text="@{product.name}"
-            app:layout_constraintTop_toBottomOf="@id/product_image"
-            app:layout_constraintStart_toStartOf="@id/product_image"
-            app:layout_constraintEnd_toEndOf="@id/product_image"
-            android:textColor="@color/black"
+            android:ellipsize="end"
             android:maxLines="1"
-            android:ellipsize="end"/>
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="@dimen/product_main_item_text_size"
+            app:layout_constraintEnd_toEndOf="@id/product_image"
+            app:layout_constraintStart_toStartOf="@id/product_image"
+            app:layout_constraintTop_toBottomOf="@id/product_image" />
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+                android:text="@{@string/price_format(product.price)}"
             android:textSize="@dimen/product_main_item_text_size"
-            android:text="@{@string/price_format(product.price)}"
-            app:layout_constraintTop_toBottomOf="@id/product_name"
-            app:layout_constraintStart_toStartOf="@id/product_image"
             app:layout_constraintEnd_toEndOf="@id/product_image"
-            tools:text="23000원"/>
+            app:layout_constraintStart_toStartOf="@id/product_image"
+            app:layout_constraintTop_toBottomOf="@id/product_name"
+            tools:text="23000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
