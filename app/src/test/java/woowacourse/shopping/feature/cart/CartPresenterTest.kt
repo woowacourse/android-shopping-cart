@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.cart
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Price
@@ -12,6 +13,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toPresentation
@@ -22,6 +24,9 @@ internal class CartPresenterTest {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var view: CartContract.View
     private lateinit var cartRepository: CartRepository
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun init() {
