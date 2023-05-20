@@ -26,7 +26,8 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
-                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
+                val count: DataCount =
+                    DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -59,7 +60,8 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
-                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
+                val count: DataCount =
+                    DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -95,7 +97,8 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
-                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
+                val count: DataCount =
+                    DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -131,7 +134,8 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
-                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
+                val count: DataCount =
+                    DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -191,7 +195,8 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 val id: Int = cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
                 val productId: Int =
                     cursor.getInt(cursor.getColumnIndex("${ProductContract.TABLE_NAME}${BaseColumns._ID}"))
-                val count: DataCount = DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
+                val count: DataCount =
+                    DataCount(cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_COUNT)))
                 val name: String =
                     cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
                 val price: DataPrice =
@@ -212,6 +217,37 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     }
 
     override fun add(basketProduct: DataBasketProduct) {
+        val whereClause = "${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?"
+        val whereArgs = arrayOf(basketProduct.product.id.toString())
+
+        val contentValues = ContentValues().apply {
+            put("${ProductContract.TABLE_NAME}${BaseColumns._ID}", basketProduct.product.id)
+            put(BasketContract.BASKET_COUNT, basketProduct.count.value)
+        }
+
+        database.writableDatabase.use { db ->
+            val count =
+                DatabaseUtils.queryNumEntries(
+                    db,
+                    BasketContract.TABLE_NAME,
+                    whereClause,
+                    whereArgs
+                )
+            if (count > 0) {
+                db.execSQL(
+                    ADD_UP_BASKET_COUNT,
+                    arrayOf(
+                        basketProduct.count.value.toString(),
+                        basketProduct.product.id.toString()
+                    )
+                )
+            } else {
+                db.insert(BasketContract.TABLE_NAME, null, contentValues)
+            }
+        }
+    }
+
+    override fun overWriteUpdate(basketProduct: DataBasketProduct) {
         val whereClause = "${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?"
         val whereArgs = arrayOf(basketProduct.product.id.toString())
 
@@ -285,9 +321,15 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             ORDER BY ${BasketContract.TABLE_NAME}.${BaseColumns._ID} DESC LIMIT ?        
         """.trimIndent()
 
-        private val UPDATE_BASKET_COUNT = """
+        private val ADD_UP_BASKET_COUNT = """
             UPDATE ${BasketContract.TABLE_NAME}
             SET ${BasketContract.BASKET_COUNT} = ${BasketContract.BASKET_COUNT} + ?
+            WHERE ${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?
+        """.trimIndent()
+
+        private val UPDATE_BASKET_COUNT = """
+            UPDATE ${BasketContract.TABLE_NAME}
+            SET ${BasketContract.BASKET_COUNT} = ?
             WHERE ${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?
         """.trimIndent()
 

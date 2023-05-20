@@ -31,6 +31,10 @@ class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local
         dao.add(basketProduct)
     }
 
+    override fun overWriteUpdate(basketProduct: DataBasketProduct) {
+        dao.overWriteUpdate(basketProduct)
+    }
+
     override fun remove(basketProduct: DataBasketProduct) {
         dao.remove(basketProduct)
     }

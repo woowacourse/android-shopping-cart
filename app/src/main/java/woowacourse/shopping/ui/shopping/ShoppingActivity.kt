@@ -57,6 +57,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         initRecentProductsData()
     }
 
+    override fun onStop() {
+        super.onStop()
+        presenter.storeBasketData()
+    }
+
     private fun initPresenter() {
         val shoppingDatabase = ShoppingDatabase(this)
         presenter = ShoppingPresenter(

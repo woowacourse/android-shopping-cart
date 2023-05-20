@@ -17,5 +17,7 @@ interface BasketDao {
 
     fun add(basketProduct: DataBasketProduct)
 
+    fun overWriteUpdate(basketProduct: DataBasketProduct)
+
     fun remove(basketProduct: DataBasketProduct)
 }
