@@ -64,9 +64,15 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun getCartListener() = object : CartListener {
-        override fun onPageNext() { presenter.moveToPageNext() }
-        override fun onPagePrev() { presenter.moveToPagePrev() }
-        override fun onItemRemove(productId: Int) { presenter.removeProduct(productId) }
+        override fun onPageNext() {
+            presenter.moveToPageNext()
+        }
+        override fun onPagePrev() {
+            presenter.moveToPagePrev()
+        }
+        override fun onItemRemove(productId: Int) {
+            presenter.removeProduct(productId)
+        }
         override fun onItemClick(product: CartProductUIModel) {
             presenter.navigateToItemDetail(product.id)
         }

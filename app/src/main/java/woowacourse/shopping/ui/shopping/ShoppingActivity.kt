@@ -81,8 +81,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun getAdapterListener() = object : ProductsListener {
-        override fun onClickItem(productId: Int) { presenter.navigateToItemDetail(productId) }
-        override fun onReadMoreClick() { presenter.addMoreProducts() }
+        override fun onClickItem(productId: Int) {
+            presenter.navigateToItemDetail(productId)
+        }
+        override fun onReadMoreClick() {
+            presenter.addMoreProducts()
+        }
         override fun onAddCartOrUpdateCount(productId: Int, count: Int) {
             adapter.let { adapter.updateItemCount(productId, count) }
             presenter.updateItem(productId, count)
