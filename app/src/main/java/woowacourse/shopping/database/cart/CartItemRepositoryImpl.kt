@@ -1,6 +1,7 @@
 package woowacourse.shopping.database.cart
 
 import android.content.ContentValues
+import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.provider.BaseColumns
 import woowacourse.shopping.database.ProductContract.CartItemEntry
@@ -29,7 +30,6 @@ class CartItemRepositoryImpl(
         }
 
         val value = ContentValues().apply {
-            put(BaseColumns._ID, cartItem.id)
             put(CartItemEntry.COLUMN_NAME_PRODUCT_ID, cartItem.product.id)
             put(CartItemEntry.COLUMN_NAME_ADDED_TIME, cartItem.addedTime.toString())
             put(CartItemEntry.COLUMN_NAME_COUNT, cartItem.count)
@@ -39,24 +39,17 @@ class CartItemRepositoryImpl(
         cursor.close()
     }
 
-    override fun findAll(): List<CartItem> {
+    override fun findAllByIds(ids: List<Long>): List<CartItem> {
         val cartItems = mutableListOf<CartItem>()
 
-        val cursor = db.rawQuery("SELECT * FROM ${CartItemEntry.TABLE_NAME}", null)
+        val cursor = db.rawQuery(
+            """SELECT * FROM ${CartItemEntry.TABLE_NAME}
+                WHERE ${BaseColumns._ID}
+                IN ${ids.joinToString(prefix = "(", postfix = ")")}""".trimIndent(),
+            null
+        )
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-            val productId =
-                cursor.getLong(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_PRODUCT_ID))
-            val addedTime =
-                cursor.getString(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_ADDED_TIME))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_COUNT))
-            val cartItem = CartItem(
-                productRepository.findById(productId)
-                    ?: throw IllegalArgumentException("참조 무결성 제약조건 위반"),
-                LocalDateTime.parse(addedTime),
-                count
-            ).apply { this.id = id }
-            cartItems.add(cartItem)
+            cartItems.add(createCartItemFrom(cursor))
         }
         cursor.close()
         return cartItems
@@ -73,45 +66,39 @@ class CartItemRepositoryImpl(
         """.trimIndent(), null
         )
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-            val productId =
-                cursor.getLong(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_PRODUCT_ID))
-            val addedTime =
-                cursor.getString(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_ADDED_TIME))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_COUNT))
-            val cartItem = CartItem(
-                productRepository.findById(productId)
-                    ?: throw IllegalArgumentException("참조 무결성 제약조건 위반"),
-                LocalDateTime.parse(addedTime),
-                count
-            ).apply { this.id = id }
-            cartItems.add(cartItem)
+            cartItems.add(createCartItemFrom(cursor))
         }
         cursor.close()
         return cartItems
     }
 
-    override fun findByProductId(productId: Long): CartItem? {
+    override fun findById(id: Long): CartItem? {
         var cartItem: CartItem? = null
 
         val cursor = db.rawQuery(
-            "SELECT * FROM ${CartItemEntry.TABLE_NAME} WHERE ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} = $productId",
+            "SELECT * FROM ${CartItemEntry.TABLE_NAME} WHERE ${BaseColumns._ID} = $id",
             null
         )
         if (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
-            val addedTime =
-                cursor.getString(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_ADDED_TIME))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_COUNT))
-            cartItem = CartItem(
-                productRepository.findById(productId)
-                    ?: throw IllegalArgumentException("참조 무결성 제약조건 위반"),
-                LocalDateTime.parse(addedTime),
-                count
-            ).apply { this.id = id }
+            cartItem = createCartItemFrom(cursor)
         }
         cursor.close()
         return cartItem
+    }
+
+    private fun createCartItemFrom(cursor: Cursor): CartItem {
+        val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
+        val productId =
+            cursor.getLong(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_PRODUCT_ID))
+        val addedTime =
+            cursor.getString(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_ADDED_TIME))
+        val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartItemEntry.COLUMN_NAME_COUNT))
+        return CartItem(
+            productRepository.findById(productId)
+                ?: throw IllegalArgumentException("참조 무결성 제약조건 위반"),
+            LocalDateTime.parse(addedTime),
+            count
+        ).apply { this.id = id }
     }
 
     override fun countAll(): Int {
@@ -122,19 +109,18 @@ class CartItemRepositoryImpl(
         return count.toInt()
     }
 
-    override fun updateCountByProductId(productId: Long, count: Int) {
+    override fun updateCountById(id: Long, count: Int) {
         db.execSQL(
             """
             UPDATE ${CartItemEntry.TABLE_NAME} 
             SET ${CartItemEntry.COLUMN_NAME_COUNT} = $count 
-            WHERE ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} = $productId
+            WHERE ${BaseColumns._ID} = $id
             """.trimMargin()
         )
     }
 
-    override fun deleteByProductId(productId: Long) {
-        val selection = "${CartItemEntry.COLUMN_NAME_PRODUCT_ID} = ?"
-        val selectionArgs = arrayOf(productId.toString())
-        db.delete(CartItemEntry.TABLE_NAME, selection, selectionArgs)
+    override fun deleteById(id: Long) {
+        val selection = "${BaseColumns._ID} = $id"
+        db.delete(CartItemEntry.TABLE_NAME, selection, null)
     }
 }

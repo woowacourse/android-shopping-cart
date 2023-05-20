@@ -14,12 +14,8 @@ class CartItem(
     var count: Int = count
         private set
 
-    fun plusCount() {
-        count++
-    }
-
-    fun minusCount() {
-        if (count > 1) count--
+    fun getOrderPrice(): Int {
+        return product.price * count
     }
 
     override fun equals(other: Any?): Boolean = if (other is CartItem) id == other.id else false

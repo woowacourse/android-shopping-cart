@@ -58,50 +58,9 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@id/tv_plus_count"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="10,000원" />
-
-        <TextView
-            android:id="@+id/tv_plus_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:paddingHorizontal="18dp"
-            android:background="#00ff0000"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            android:text="@string/plus_sign"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="+" />
-        
-        <TextView
-            android:id="@+id/tv_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@id/tv_plus_count"
-            app:layout_constraintStart_toEndOf="@id/tv_minus_count"
-            app:layout_constraintTop_toTopOf="@id/tv_plus_count"
-            app:layout_constraintBottom_toBottomOf="@id/tv_plus_count"
-            tools:text="1" />
-        
-        <TextView
-            android:id="@+id/tv_minus_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:paddingHorizontal="20dp"
-            android:layout_marginEnd="50dp"
-            android:background="#00ff0000"
-            android:textColor="@color/black"
-            android:text="@string/minus_sign"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@id/tv_plus_count"
-            app:layout_constraintTop_toTopOf="@id/tv_plus_count"
-            app:layout_constraintBottom_toBottomOf="@id/tv_plus_count"
-            tools:text="-" />
+            tools:text="10,000원" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

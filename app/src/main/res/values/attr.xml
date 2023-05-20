@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Counter">
+        <attr name="count" format="integer" />
+        <attr name="minCount" format="integer" />
+        <attr name="maxCount" format="integer" />
+    </declare-styleable>
+</resources>

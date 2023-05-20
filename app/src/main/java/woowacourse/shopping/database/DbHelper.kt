@@ -29,8 +29,8 @@ class DbHelper private constructor(
     companion object {
         private const val SQL_CART_CREATE_ENTRIES = """
             CREATE TABLE ${CartItemEntry.TABLE_NAME} (
-            ${BaseColumns._ID} INT PRIMARY KEY,
-            ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} INT UNIQUE,
+            ${BaseColumns._ID} INTEGER PRIMARY KEY,
+            ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} INT,
             ${CartItemEntry.COLUMN_NAME_ADDED_TIME} TEXT,
             ${CartItemEntry.COLUMN_NAME_COUNT} INT
             );
@@ -41,8 +41,8 @@ class DbHelper private constructor(
 
         private const val SQL_RECENTLY_VIEWED_PRODUCT_CREATE_ENTRIES = """
             CREATE TABLE ${RecentlyViewedProductEntry.TABLE_NAME} (
-            ${BaseColumns._ID} INT PRIMARY KEY,
-            ${RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} INT UNIQUE,
+            ${BaseColumns._ID} INTEGER PRIMARY KEY,
+            ${RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} INTEGER,
             ${RecentlyViewedProductEntry.COLUMN_NAME_VIEWED_TIME} TEXT
             );
         """

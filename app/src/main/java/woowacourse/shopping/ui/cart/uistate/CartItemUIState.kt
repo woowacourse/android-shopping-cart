@@ -8,7 +8,7 @@ data class CartItemUIState(
     val name: String,
     val price: Int,
     val count: Int,
-    val productId: Long,
+    val id: Long
 ) {
     companion object {
         fun create(cartItem: CartItem, isSelected: Boolean): CartItemUIState {
@@ -19,7 +19,8 @@ data class CartItemUIState(
                 product.name,
                 product.price,
                 cartItem.count,
-                product.id
+                cartItem.id
+                    ?: throw IllegalArgumentException("아이디가 부여되지 않은 장바구니 아이템은 UI 상태가 될 수 없습니다.")
             )
         }
 

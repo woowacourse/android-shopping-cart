@@ -6,15 +6,15 @@ interface CartItemRepository {
 
     fun save(cartItem: CartItem)
 
-    fun findAll(): List<CartItem>
+    fun findAllByIds(ids: List<Long>): List<CartItem>
 
     fun findAllOrderByAddedTime(limit: Int, offset: Int): List<CartItem>
 
-    fun findByProductId(productId: Long): CartItem?
+    fun findById(id: Long): CartItem?
 
     fun countAll(): Int
 
-    fun updateCountByProductId(productId: Long, count: Int)
+    fun updateCountById(id: Long, count: Int)
 
-    fun deleteByProductId(productId: Long)
+    fun deleteById(id: Long)
 }
