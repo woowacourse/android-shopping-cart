@@ -11,11 +11,6 @@ fun RecyclerView.setAdapter(adapter: ConcatAdapter) {
     this.adapter = adapter
 }
 
-@BindingAdapter("bind:onAdapted")
-fun RecyclerView.setOnAdapted(onAdapted: () -> Unit) {
-    onAdapted()
-}
-
 @BindingAdapter("bind:fixedSize")
 fun RecyclerView.setFixedSize(fixedSize: Boolean) {
     setHasFixedSize(fixedSize)
@@ -29,8 +24,4 @@ fun RecyclerView.setOnEndScroll(onEndScroll: () -> Unit) {
 @BindingAdapter("bind:layoutManager")
 fun RecyclerView.setLayoutManager(layoutManager: LayoutManager) {
     this.layoutManager = layoutManager
-}
-
-interface OnAdaptedListener {
-    fun onAdapted()
 }

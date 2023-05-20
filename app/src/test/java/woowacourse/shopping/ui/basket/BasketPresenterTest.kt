@@ -109,6 +109,6 @@ internal class BasketPresenterTest {
         presenter.closeScreen()
 
         // then
-        verify(exactly = 1) { view.closeScreen() }
+        verify(exactly = 1) { view.navigateToHome() }
     }
 }

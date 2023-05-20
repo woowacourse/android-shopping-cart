@@ -15,4 +15,5 @@ interface BasketRepository {
     fun getProductInBasketSize(): Int
     fun update(basket: Basket)
     fun getTotalPrice(): Int
+    fun getCheckedProductCount(): Int
 }

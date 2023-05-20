@@ -8,21 +8,28 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.model.UiBasketProduct
 import woowacourse.shopping.model.UiPageNumber
-import woowacourse.shopping.ui.basket.BasketContract.Presenter
 import woowacourse.shopping.ui.basket.BasketContract.View
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
 import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.inject.inject
 
 class BasketActivity : AppCompatActivity(), View {
-    override val presenter: Presenter by lazy { inject(this, this) }
+    override val presenter: BasketPresenter by lazy { inject(this, this) }
     private lateinit var binding: ActivityBasketBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBasketBinding.inflate(layoutInflater).setContentView(this)
+        binding.lifecycleOwner = this
         binding.presenter = presenter
-        binding.adapter = BasketAdapter(presenter::deleteBasketProduct)
+        binding.adapter = BasketAdapter(
+            presenter::deleteBasketProduct,
+            presenter::selectProduct,
+            presenter::unselectProduct,
+            presenter::increaseProductCount,
+            presenter::decreaseProductCount,
+        )
+        presenter.fetchBasket(1)
     }
 
     override fun updateBasket(basketProducts: List<UiBasketProduct>) {
@@ -42,7 +49,7 @@ class BasketActivity : AppCompatActivity(), View {
         binding.totalPriceTextView.text = getString(R.string.price_format, price)
     }
 
-    override fun closeScreen() {
+    override fun navigateToHome() {
         finish()
     }
 

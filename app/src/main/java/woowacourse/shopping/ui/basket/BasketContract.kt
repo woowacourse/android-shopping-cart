@@ -10,7 +10,7 @@ interface BasketContract {
 
         fun updateBasket(basketProducts: List<UiBasketProduct>)
         fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean)
-        fun closeScreen()
+        fun navigateToHome()
         fun updatePageNumber(page: PageNumber)
         fun updateTotalPrice(price: Int)
     }

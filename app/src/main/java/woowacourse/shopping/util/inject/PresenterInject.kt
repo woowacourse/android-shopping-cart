@@ -38,7 +38,7 @@ fun inject(
 fun inject(
     view: BasketContract.View,
     context: Context,
-): BasketContract.Presenter {
+): BasketPresenter {
     val database = createShoppingDatabase(context)
     return BasketPresenter(
         view,

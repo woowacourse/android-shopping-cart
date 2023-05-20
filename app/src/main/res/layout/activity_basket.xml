@@ -12,7 +12,7 @@
 
         <variable
             name="presenter"
-            type="woowacourse.shopping.ui.basket.BasketContract.Presenter" />
+            type="woowacourse.shopping.ui.basket.BasketPresenter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +39,6 @@
             android:layout_marginBottom="20dp"
             bind:adapter="@{adapter}"
             android:clipToPadding="false"
-            bind:onAdapted="@{() -> presenter.fetchBasket(1)}"
             app:fixedSize="@{true}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/navigator_layout"
@@ -63,7 +62,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:onClick="@{() -> presenter.fetchBasket(Integer.parseInt(pageNumberTextView.getText().toString()) - 1)}"
+                android:onClick="@{() -> presenter.loadPage(Integer.parseInt(pageNumberTextView.getText().toString()) - 1)}"
                 android:text="@string/tv_previous"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -95,7 +94,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:onClick="@{() -> presenter.fetchBasket(Integer.parseInt(pageNumberTextView.getText().toString()) + 1)}"
+                android:onClick="@{() -> presenter.loadPage(Integer.parseInt(pageNumberTextView.getText().toString()) + 1)}"
                 android:text="@string/tv_next"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -117,8 +116,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
+                android:checked="@{presenter.isAllChecked}"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
+                android:onCheckedChanged="@{(_, isAllCheck) -> presenter.changeAllCheckState(isAllCheck)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/select_all_title_text_view"
                 app:layout_constraintStart_toStartOf="parent"
@@ -156,19 +157,23 @@
                 android:layout_height="wrap_content"
                 android:background="@color/woowa_emerald"
                 android:clickable="true"
+                android:enabled="@{presenter.totalCheckSize > 0}"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:paddingHorizontal="18dp"
                 android:paddingVertical="30dp"
+                android:text="@{presenter.totalCheckSize > 0 ? @string/order_format(presenter.totalCheckSize) : @string/order}"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_min="120dp"
                 tools:text="주문하기(2)" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

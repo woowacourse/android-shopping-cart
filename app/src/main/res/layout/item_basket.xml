@@ -6,9 +6,33 @@
 
     <data>
 
+        <import
+            alias="ClickListener"
+            type="kotlin.jvm.functions.Function0" />
+
         <variable
             name="basketProduct"
             type="woowacourse.shopping.model.BasketProduct" />
+
+        <variable
+            name="onDelete"
+            type="ClickListener" />
+
+        <variable
+            name="onSelect"
+            type="ClickListener" />
+
+        <variable
+            name="onUnselect"
+            type="ClickListener" />
+
+        <variable
+            name="onIncrease"
+            type="ClickListener" />
+
+        <variable
+            name="onDecrease"
+            type="ClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,9 +48,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:checked="true"
+            android:checked="@{basketProduct.isChecked}"
             android:minWidth="0dp"
             android:minHeight="0dp"
+            android:onCheckedChanged="@{(_, isChecked) -> isChecked ? onSelect.invoke() : onUnselect.invoke()}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="24dp"
+            android:onClick="@{() -> onDelete.invoke()}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/product_name_text_view"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,6 +119,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             bind:count="@{basketProduct.selectedCount.value}"
+            bind:onMinusClick="@{() -> onDecrease.invoke()}"
+            bind:onPlusClick="@{() -> onIncrease.invoke()}"
             app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
             app:layout_constraintEnd_toEndOf="@+id/product_price_text_view"
             app:layout_constraintHeight_percent="0.3"

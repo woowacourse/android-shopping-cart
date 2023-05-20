@@ -8,6 +8,7 @@ import woowacourse.shopping.data.database.contract.BasketContract
 import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.model.BasketProduct
 import woowacourse.shopping.data.model.DataBasket
+import woowacourse.shopping.data.model.DataBasketProduct
 import woowacourse.shopping.data.model.DataPageNumber
 import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.Product
@@ -35,8 +36,10 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
             val count: Int =
                 cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_COUNT))
+            val isChecked: Int =
+                cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_CHECKED))
             val product = Product(productId, name, price, imageUrl)
-            basketProducts.add(BasketProduct(basketId, product, ProductCount(count)))
+            basketProducts.add(BasketProduct(basketId, product, ProductCount(count), isChecked))
         }
         cursor.close()
         return DataBasket(basketProducts = basketProducts.safeSubList(page.start, page.end))
@@ -62,8 +65,10 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
             val count: Int =
                 cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_COUNT))
+            val isChecked: Int =
+                cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_CHECKED))
             val product = Product(productId, name, price, imageUrl)
-            basketProducts.add(BasketProduct(basketId, product, ProductCount(count)))
+            basketProducts.add(BasketProduct(basketId, product, ProductCount(count), isChecked))
         }
         cursor.close()
 
@@ -108,6 +113,37 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         )
     }
 
+    override fun update(basketProduct: DataBasketProduct) {
+        val contentValues = ContentValues().apply {
+            put(BasketContract.PRODUCT_ID, basketProduct.product.id)
+            put(BasketContract.COLUMN_COUNT, basketProduct.selectedCount.value)
+            put(BasketContract.COLUMN_CHECKED, basketProduct.isChecked)
+        }
+
+        database.writableDatabase.update(
+            BasketContract.TABLE_NAME,
+            contentValues,
+            "${BasketContract.PRODUCT_ID} = ?",
+            arrayOf(basketProduct.product.id.toString())
+        )
+    }
+
+    @SuppressLint("Range")
+    override fun addProductCount(product: Product, count: Int) {
+        when (val originCount = count(product)) {
+            0 -> insert(product, count)
+            else -> updateCount(product, originCount + count)
+        }
+    }
+
+    @SuppressLint("Range")
+    override fun minusProductCount(product: Product, count: Int) {
+        when (val originCount = count(product)) {
+            0 -> return
+            else -> updateCount(product, originCount - count)
+        }
+    }
+
     override fun updateCount(product: Product, count: Int) {
         val contentValues = ContentValues().apply {
             put(BasketContract.PRODUCT_ID, product.id)
@@ -122,12 +158,14 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         )
     }
 
-    @SuppressLint("Range")
-    override fun addProductCount(product: Product, count: Int) {
-        when (val originCount = count(product)) {
-            0 -> insert(product, count)
-            else -> updateCount(product, originCount + count)
-        }
+    override fun getCheckedProductCount(): Int {
+        val db = database.writableDatabase
+        val cursor = db.rawQuery(GET_CHECKED_PRODUCT_COUNT, null)
+        cursor.moveToNext()
+
+        val checkedProductCount = cursor.getInt(0)
+        cursor.close()
+        return checkedProductCount
     }
 
     override fun contains(product: Product): Boolean {
@@ -189,6 +227,13 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
 
         private val GET_TOTAL_PRICE = """
             SELECT SUM(${ProductContract.COLUMN_PRICE} * ${BasketContract.COLUMN_COUNT}) FROM ${ProductContract.TABLE_NAME} as product
+            LEFT JOIN ${BasketContract.TABLE_NAME} as basket
+            ON basket.${BasketContract.PRODUCT_ID} = product.${BaseColumns._ID}
+            WHERE ${BasketContract.COLUMN_COUNT} > 0 AND ${BasketContract.COLUMN_CHECKED} = 1
+        """.trimIndent()
+
+        private val GET_CHECKED_PRODUCT_COUNT = """
+            SELECT COUNT(*) FROM ${ProductContract.TABLE_NAME} as product
             LEFT JOIN ${BasketContract.TABLE_NAME} as basket
             ON basket.${BasketContract.PRODUCT_ID} = product.${BaseColumns._ID}
             WHERE ${BasketContract.COLUMN_COUNT} > 0 AND ${BasketContract.COLUMN_CHECKED} = 1
