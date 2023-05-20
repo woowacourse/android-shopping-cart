@@ -18,8 +18,9 @@ import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.contract.ShoppingContract
 import woowacourse.shopping.ui.shopping.contract.presenter.ShoppingPresenter
+import woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener
 
-class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
+class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
@@ -90,7 +91,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun setProducts(data: List<ProductsItemType>) {
         binding.productRecyclerview.adapter = ProductsAdapter(
             data,
-            presenter::navigateToItemDetail,
+            this,
             presenter::fetchMoreProducts,
         )
     }
@@ -109,5 +110,17 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun navigateToCart() {
         startActivity(CartActivity.from(this))
+    }
+
+    override fun onClick(id: Long) {
+        presenter.navigateToItemDetail(id)
+    }
+
+    override fun increaseCount(id: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun decreaseCount(id: Long) {
+        TODO("Not yet implemented")
     }
 }

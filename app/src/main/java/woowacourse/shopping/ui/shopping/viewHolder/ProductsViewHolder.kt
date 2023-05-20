@@ -8,14 +8,12 @@ import woowacourse.shopping.ui.shopping.ProductsItemType
 
 class ProductsViewHolder private constructor(
     private val binding: ProductItemBinding,
-    val onClickItem: (Int) -> Unit
+    onClickListener: ProductsOnClickListener,
 ) :
     ItemViewHolder(binding.root) {
 
     init {
-        binding.root.setOnClickListener {
-            onClickItem(adapterPosition)
-        }
+        binding.listener = onClickListener
     }
 
     fun bind(productItemType: ProductsItemType) {
@@ -24,10 +22,13 @@ class ProductsViewHolder private constructor(
     }
 
     companion object {
-        fun from(parent: ViewGroup, onClickItem: (Int) -> Unit): ProductsViewHolder {
+        fun from(
+            parent: ViewGroup,
+            onClickListener: ProductsOnClickListener,
+        ): ProductsViewHolder {
             val binding = ProductItemBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
-            return ProductsViewHolder(binding, onClickItem)
+            return ProductsViewHolder(binding, onClickListener)
         }
     }
 }

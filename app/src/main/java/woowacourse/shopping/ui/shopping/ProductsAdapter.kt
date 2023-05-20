@@ -2,26 +2,24 @@ package woowacourse.shopping.ui.shopping
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.shopping.viewHolder.ItemViewHolder
+import woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener
 import woowacourse.shopping.ui.shopping.viewHolder.ProductsViewHolder
 import woowacourse.shopping.ui.shopping.viewHolder.ReadMoreViewHolder
 import woowacourse.shopping.ui.shopping.viewHolder.RecentProductsViewHolder
 
 class ProductsAdapter(
     productItemTypes: List<ProductsItemType>,
-    private val onClickItem: (data: ProductUIModel) -> Unit,
+    private val onClickListener: ProductsOnClickListener,
     private val onReadMoreClick: () -> Unit,
 ) : RecyclerView.Adapter<ItemViewHolder>() {
     private var productItemTypes: MutableList<ProductsItemType> = productItemTypes.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return when (viewType) {
-            ProductsItemType.TYPE_HEADER -> RecentProductsViewHolder.from(parent, onClickItem)
+            ProductsItemType.TYPE_HEADER -> RecentProductsViewHolder.from(parent, onClickListener)
             ProductsItemType.TYPE_FOOTER -> ReadMoreViewHolder.from(parent) { onReadMoreClick() }
-            ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(parent) {
-                onClickItem((productItemTypes[it] as ProductItem).product)
-            }
+            ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(parent, onClickListener)
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }

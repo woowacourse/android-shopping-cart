@@ -2,19 +2,17 @@ package woowacourse.shopping.ui.recentProduct
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.recentProduct.viewHolder.RecentProductViewHolder
 import woowacourse.shopping.ui.shopping.ProductsItemType
+import woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener
 
 class RecentProductsAdapter(
     private var recentProducts: List<RecentProductItem>,
-    private val onClickItem: (data: ProductUIModel) -> Unit
+    private val onClickListener: ProductsOnClickListener,
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
-        return RecentProductViewHolder.from(parent) {
-            onClickItem(recentProducts[it].product)
-        }
+        return RecentProductViewHolder.from(parent, onClickListener)
     }
 
     override fun getItemCount(): Int = recentProducts.size

@@ -4,7 +4,6 @@ import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentRepository
 import woowacourse.shopping.mapper.toUIModel
-import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.shopping.ProductItem
 import woowacourse.shopping.ui.shopping.ProductReadMore
 import woowacourse.shopping.ui.shopping.ProductsItemType
@@ -41,8 +40,9 @@ class ShoppingPresenter(
         view.addProducts(productsData.plus(ProductReadMore))
     }
 
-    override fun navigateToItemDetail(data: ProductUIModel) {
-        view.navigateToProductDetail(data)
+    override fun navigateToItemDetail(id: Long) {
+        val product = repository.findById(id)
+        view.navigateToProductDetail(product.toUIModel())
     }
 
     companion object {

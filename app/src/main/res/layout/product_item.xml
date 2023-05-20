@@ -7,11 +7,16 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> listener.onClick(product.id)}"
         android:layout_marginTop="20dp">
 
         <ImageView
