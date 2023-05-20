@@ -67,7 +67,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 startLastViewedDetailActivity(lastViewedProduct)
             }
         }
-        productDetailBinding.presenter = presenter
         Glide.with(productDetailBinding.root.context).load(product.imageUrl).into(productDetailBinding.imgProduct)
         productDetailBinding.btnPutInCart.setOnClickListener {
             dialog.show()
@@ -81,12 +80,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun setUpDialogBinding(product: ProductModel) {
+        dialogBinding.lifecycleOwner = this
         dialogBinding.presenter = presenter
         dialogBinding.product = product
-    }
-
-    override fun updateCount(count: Int) {
-        dialogBinding.textCount.text = count.toString()
     }
 
     private fun setUpResult(isAdd: Boolean) {

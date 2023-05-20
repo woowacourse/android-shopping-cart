@@ -72,32 +72,32 @@ class ProductListPresenterTest {
         val itemsExpected = listOf<ProductListViewItem>(
             ProductListViewItem.RecentViewedItem(
                 listOf(
-                    ProductModel(2, "헛개차", "", 10000),
-                    ProductModel(1, "현미밥", "", 10000),
-                    ProductModel(0, "락토핏", "", 10000)
+                    ProductModel(2, "헛개차", "", 10000, 0),
+                    ProductModel(1, "현미밥", "", 10000, 0),
+                    ProductModel(0, "락토핏", "", 10000, 0)
                 )
             )
         ) + listOf<ProductListViewItem>(
-            ProductListViewItem.ProductItem(ProductModel(0, "락토핏", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(1, "현미밥", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(2, "헛개차", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(3, "키", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(4, "닭가슴살", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(5, "enffl", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(6, "뽀또", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(7, "둘리", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(8, "안녕", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(9, "9", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(10, "10", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(11, "11", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(12, "12", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(13, "13", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(14, "14", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(15, "15", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(16, "16", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(17, "17", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(18, "18", "", 10000)),
-            ProductListViewItem.ProductItem(ProductModel(19, "19", "", 10000)),
+            ProductListViewItem.ProductItem(ProductModel(0, "락토핏", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(1, "현미밥", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(2, "헛개차", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(3, "키", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(4, "닭가슴살", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(5, "enffl", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(6, "뽀또", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(7, "둘리", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(8, "안녕", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(9, "9", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(10, "10", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(11, "11", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(12, "12", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(13, "13", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(14, "14", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(15, "15", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(16, "16", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(17, "17", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(18, "18", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(19, "19", "", 10000, 0)),
         ) + ProductListViewItem.ShowMoreItem()
         assertEquals(itemsExpected.subList(0, 21), items.captured.subList(0, 21))
         assertEquals(itemsExpected[itemsExpected.lastIndex].javaClass, items.captured[items.captured.lastIndex].javaClass)

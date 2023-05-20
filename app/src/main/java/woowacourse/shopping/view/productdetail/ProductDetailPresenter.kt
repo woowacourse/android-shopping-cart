@@ -1,5 +1,7 @@
 package woowacourse.shopping.view.productdetail
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
@@ -9,9 +11,12 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository,
     private val recentViewedRepository: RecentViewedRepository,
 ) : ProductDetailContract.Presenter {
-    private var count = 1
+    private val _count: MutableLiveData<Int> = MutableLiveData<Int>(1)
+    override val count: LiveData<Int>
+        get() = _count
+
     override fun putInCart(product: ProductModel) {
-        cartRepository.add(product.id, count)
+        if (_count.value != null) cartRepository.add(product.id, _count.value ?: 0)
         view.finishActivity(true)
     }
 
@@ -20,13 +25,11 @@ class ProductDetailPresenter(
     }
 
     override fun plusCount() {
-        if (count < COUNT_MAX) count++
-        view.updateCount(count)
+        if (_count.value in COUNT_MIN until COUNT_MAX) _count.value = _count.value?.plus(1)
     }
 
     override fun minusCount() {
-        if (count > COUNT_MIN) count--
-        view.updateCount(count)
+        if (_count.value in COUNT_MIN + 1..COUNT_MAX) _count.value = _count.value?.minus(1)
     }
 
     companion object {

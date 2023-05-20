@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.*
@@ -62,10 +63,11 @@ class CartPresenter(
             cartItems.add(CartViewItem.CartProductItem(it))
         }
         cartItems.add(CartViewItem.PaginationItem(cartPagination.status))
+        _isCheckedAll.value = getIsCheckedAll()
     }
 
     private fun getIsCheckedAll() =
-        cartSystem.selectedProducts.containsAll(convertItemsToCartProduct(cartItems))
+        cartSystem.selectedProducts.containsAll(convertItemsToCartProducts(cartItems))
 
     private fun getNextCartProductModel(): CartProductModel? {
         val product = cartPagination.currentLastItem() ?: return null
@@ -75,21 +77,31 @@ class CartPresenter(
         )
     }
 
-    override fun selectAll(isChecked: Boolean) {
+    override fun selectAll() {
+        val isChecked = _isCheckedAll.value?.not() ?: true
+
         cartItems.filterIsInstance<CartViewItem.CartProductItem>().forEachIndexed { index, it ->
             it.product.isChecked = isChecked
             view.showChangedItem(index)
         }
 
         val products = if (isChecked) { // 전체 선택
-            convertItemsToCartProduct(cartItems) - cartSystem.selectedProducts.toSet()
+            convertItemsToCartProducts(cartItems) - cartSystem.selectedProducts.toSet()
         } else { // 전체 해제
-            convertItemsToCartProduct(cartItems).intersect(cartSystem.selectedProducts.toSet())
+            convertItemsToCartProducts(cartItems).intersect(cartSystem.selectedProducts.toSet())
         }
+        Log.d("PRODUCTS", products.toString())
+        var result: CartSystemResult? = _cartSystemResult.value
         products.forEach {
-            _cartSystemResult.value = cartSystem.selectProduct(it)
+            result = cartSystem.selectProduct(it)
         }
+        _cartSystemResult.value = result
         _isCheckedAll.value = isChecked
+    }
+
+    override fun selectProduct(product: CartProductModel) {
+        _cartSystemResult.value = cartSystem.selectProduct(product.toDomain())
+        _isCheckedAll.value = getIsCheckedAll()
     }
 
     override fun fetchNextPage() {
@@ -98,6 +110,7 @@ class CartPresenter(
             changeListItems(items)
             view.showChangedItems()
         }
+        _isCheckedAll.value = getIsCheckedAll()
     }
 
     override fun fetchPrevPage() {
@@ -106,6 +119,7 @@ class CartPresenter(
             changeListItems(items)
             view.showChangedItems()
         }
+        _isCheckedAll.value = getIsCheckedAll()
     }
 
     private fun changeListItems(items: List<CartProduct>) {
@@ -116,8 +130,9 @@ class CartPresenter(
     }
 
     override fun updateCartProductCount(id: Int, count: Int) {
+        if (count !in COUNT_MIN..COUNT_MAX) return
         cartRepository.update(id, count)
-        val cartProducts = convertItemsToCartProduct(cartItems)
+        val cartProducts = convertItemsToCartProducts(cartItems)
         cartProducts.find { it.id == id }?.let {
             val index = cartProducts.indexOf(it)
             (cartItems[index] as CartViewItem.CartProductItem).product.count = count
@@ -126,20 +141,18 @@ class CartPresenter(
         }
     }
 
-    override fun selectProduct(product: CartProductModel) {
-        _cartSystemResult.value = cartSystem.selectProduct(product.toDomain())
-        _isCheckedAll.value = getIsCheckedAll()
-    }
 
     private fun convertCartProductToModels(cartProducts: List<CartProduct>) =
         cartProducts.map {
             it.toUiModel(cartSystem.isSelectedProduct(it), productRepository.find(it.id))
         }.toMutableList()
 
-    private fun convertItemsToCartProduct(items: List<CartViewItem>): List<CartProduct> =
+    private fun convertItemsToCartProducts(items: List<CartViewItem>): List<CartProduct> =
         items.filterIsInstance<CartViewItem.CartProductItem>().map { it.product.toDomain() }
 
     companion object {
         private const val PAGINATION_SIZE = 5
+        private const val COUNT_MIN = 1
+        private const val COUNT_MAX = 100
     }
 }

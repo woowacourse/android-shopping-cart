@@ -19,17 +19,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setUpPresenter()
         setUpBinding()
         setContentView(binding.root)
         setUpActionBar()
-        setUpPresenter()
-        binding.presenter = presenter
-        binding.lifecycleOwner = this
         presenter.fetchProducts()
     }
 
     private fun setUpBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)
+        binding.lifecycleOwner = this
+        binding.presenter = presenter
     }
 
     private fun setUpActionBar() {
@@ -86,7 +86,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     companion object {
-        private const val TITLE = "Cart"
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

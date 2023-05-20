@@ -9,7 +9,6 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductModel" />
-        <import type="woowacourse.shopping.util.PriceFormatter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -41,7 +40,7 @@
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_product_name_selected"
-            android:text="@{String.format(@string/korean_won, PriceFormatter.INSTANCE.format(product.price))}"
+            android:text="@{@string/korean_won2(product.price)}"
             tools:text="99,900원" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -62,7 +61,7 @@
             android:layout_width="42dp"
             android:layout_height="0dp"
             android:gravity="center"
-            android:text="1"
+            android:text="@{presenter.count.toString()}"
             android:textColor="@color/gray"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="@id/btn_plus"

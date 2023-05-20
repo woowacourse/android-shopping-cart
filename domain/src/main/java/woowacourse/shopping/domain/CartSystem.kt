@@ -13,7 +13,7 @@ class CartSystem(
     }
 
     fun selectProduct(product: CartProduct): CartSystemResult {
-        if (_selectedProducts.find { it.cartProduct.id  == product.id } == null){
+        if (_selectedProducts.find { it.cartProduct.id == product.id } == null) {
             val price = productRepository.find(product.id).price
             _selectedProducts.add(CartSystemProduct(product, price))
             totalPrice += price * product.count
@@ -24,7 +24,8 @@ class CartSystem(
     }
 
     private fun deselectProduct(id: Int): CartSystemResult {
-        val product = _selectedProducts.find { it.cartProduct.id == id } ?: throw java.lang.IllegalArgumentException()
+        val product = _selectedProducts.find { it.cartProduct.id == id }
+            ?: throw java.lang.IllegalArgumentException()
         totalPrice -= product.price * product.cartProduct.count
         _selectedProducts.remove(product)
         println("Delete : $product | total: $totalPrice")
@@ -33,13 +34,14 @@ class CartSystem(
 
     fun updateProduct(id: Int, count: Int): CartSystemResult {
         val index = _selectedProducts.indexOfFirst { it.cartProduct.id == id }
-        if (index != -1) {
-            println("Before : ${_selectedProducts[index]}")
-            val diff = count - _selectedProducts[index].cartProduct.count
-            totalPrice += _selectedProducts[index].price * diff
-            _selectedProducts[index] = CartSystemProduct(CartProduct(id, count), _selectedProducts[index].price)
-            println("After : ${_selectedProducts[index]}")
-        }
+        if (index == -1) return CartSystemResult(totalPrice.price, _selectedProducts.size)
+
+        println("Before : ${_selectedProducts[index]}")
+        val diff = count - _selectedProducts[index].cartProduct.count
+        totalPrice += _selectedProducts[index].price.price * diff
+        _selectedProducts[index] = CartSystemProduct(CartProduct(id, count), _selectedProducts[index].price)
+        println("After : ${_selectedProducts[index]}")
+
         return CartSystemResult(totalPrice.price, _selectedProducts.size)
     }
 

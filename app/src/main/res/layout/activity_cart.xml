@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="@{presenter.isCheckedAll()}"
-                    android:onCheckedChanged="@{(view, checked) -> presenter.selectAll(checked)}"
+                    android:onClick="@{() -> presenter.selectAll()}"
                     android:minWidth="0dp"
                     android:minHeight="0dp" />
 

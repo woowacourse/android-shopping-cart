@@ -12,6 +12,8 @@ value class Price(val price: Int) {
 
     operator fun times(count: Int): Price = Price(price * count)
 
+    operator fun plus(operand: Int): Price = Price(price + operand)
+
 
     companion object {
         private const val PRICE_RANGE_ERROR = "가격은 0 이상의 숫자이어야합니다."

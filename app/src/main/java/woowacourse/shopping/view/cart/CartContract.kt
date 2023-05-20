@@ -23,6 +23,6 @@ interface CartContract {
         fun fetchPrevPage()
         fun updateCartProductCount(id: Int, count: Int)
         fun selectProduct(product: CartProductModel)
-        fun selectAll(isChecked: Boolean)
+        fun selectAll()
     }
 }
