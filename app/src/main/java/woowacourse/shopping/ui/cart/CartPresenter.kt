@@ -8,16 +8,21 @@ class CartPresenter(
     private val cartRepository: CartRepository,
 ) : CartContract.Presenter {
 
+    private val checkedItems = mutableSetOf<CartUIState>()
+
     override fun loadCartItems(limit: Int, page: Int) {
         val offset = (page - 1) * limit
         view.setCartItems(
-            cartRepository.findAll(limit = limit, offset = offset).map(CartUIState::from),
+            cartRepository.findAll(limit = limit, offset = offset).map(CartUIState::from)
+                .onEach { it.updateCheckedState(checkedItems.contains(it)) },
         )
     }
 
     override fun deleteCartItem(productId: Long) {
         cartRepository.deleteById(productId)
+        checkedItems.removeIf { it.id == productId }
         view.updatePage()
+        setCartItemPrice()
     }
 
     override fun setPageButtons(limit: Int) {
@@ -28,16 +33,42 @@ class CartPresenter(
 
     override fun minusItemCount(productId: Long, oldCount: Int) {
         if (oldCount > 1) {
-            cartRepository.updateCount(productId, oldCount - 1)
-            view.updatePage()
+            updateCount(productId, oldCount - 1)
         }
     }
 
     override fun plusItemCount(productId: Long, oldCount: Int) {
         if (oldCount < MAX_STOCK_QUANTITY) {
-            cartRepository.updateCount(productId, oldCount + 1)
-            view.updatePage()
+            updateCount(productId, oldCount + 1)
         }
+    }
+
+    private fun updateCount(productId: Long, count: Int) {
+        cartRepository.updateCount(productId, count)
+        checkedItems.find { it.id == productId }?.let { item ->
+            val newItem = item.copy(count = count)
+            checkedItems.remove(item)
+            checkedItems.add(newItem)
+        }
+        setCartItemPrice()
+        view.updatePage()
+    }
+
+    override fun updateCheckbox(isChecked: Boolean, item: CartUIState) {
+        if (isChecked) {
+            checkedItems.add(item)
+        } else {
+            checkedItems.remove(item)
+        }
+
+        setCartItemPrice()
+    }
+
+    private fun setCartItemPrice() {
+        val totalPrice: Int = checkedItems.fold(0) { price, cartItem ->
+            price + (cartItem.price * cartItem.count)
+        }
+        view.updateTotalPrice(totalPrice)
     }
 
     companion object {

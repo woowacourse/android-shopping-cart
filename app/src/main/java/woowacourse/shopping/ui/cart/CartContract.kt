@@ -9,11 +9,13 @@ interface CartContract {
         fun setPageButtons(limit: Int)
         fun minusItemCount(productId: Long, oldCount: Int)
         fun plusItemCount(productId: Long, oldCount: Int)
+        fun updateCheckbox(isChecked: Boolean, item: CartUIState)
     }
 
     interface View {
         fun setCartItems(cartItems: List<CartUIState>)
         fun setPageButtonClickListener(maxOffset: Int)
         fun updatePage()
+        fun updateTotalPrice(price: Int)
     }
 }

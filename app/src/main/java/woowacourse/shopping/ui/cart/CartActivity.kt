@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -26,9 +27,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setContentView(binding.root)
         setActionBar()
 
-        initCartAdapter()
-        initCartList()
-        initBottomField()
+        initView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -53,12 +52,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.toolbarCart.navigationIcon = navigationIcon
     }
 
+    private fun initView() {
+        initCartAdapter()
+        initCartList()
+        initPageControlField()
+        initCartTotalItemControlField()
+    }
+
     private fun initCartAdapter() {
         binding.rvCart.adapter = CartListAdapter(
             mutableListOf<CartUIState>(),
             presenter::deleteCartItem,
             presenter::plusItemCount,
             presenter::minusItemCount,
+            presenter::updateCheckbox,
         )
     }
 
@@ -66,9 +73,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.loadCartItems(limit = PAGE_SIZE, page = (page - 1) * PAGE_SIZE)
     }
 
-    private fun initBottomField() {
+    private fun initPageControlField() {
         binding.tvCartPage.text = "$page"
         presenter.setPageButtons(PAGE_SIZE)
+    }
+
+    private fun initCartTotalItemControlField() {
+        // TODO: 초기 가격 및 구매하기 버튼
     }
 
     override fun setPageButtonClickListener(maxOffset: Int) {
@@ -92,6 +103,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setCartItems(cartItems: List<CartUIState>) {
         (binding.rvCart.adapter as CartListAdapter).updateItems(cartItems)
+    }
+
+    override fun updateTotalPrice(price: Int) {
+        binding.tvCartTotalPrice.text = getString(R.string.product_price).format(price)
     }
 
     override fun updatePage() {

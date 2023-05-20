@@ -13,6 +13,7 @@ class CartListAdapter(
     private val onCloseButtonClick: (productId: Long) -> Unit,
     private val onPlusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
     private val onMinusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
+    private val onCheckboxClick: (Boolean, CartUIState) -> Unit,
 ) : RecyclerView.Adapter<CartListAdapter.CartListViewHolder>() {
 
     private val countChangeListener: (isPlusButton: Boolean, position: Int) -> Unit =
@@ -35,6 +36,7 @@ class CartListAdapter(
             ItemCartBinding.bind(view),
             { position: Int -> onCloseButtonClick(cartItems[position].id) },
             countChangeListener,
+            { isChecked: Boolean, position: Int -> onCheckboxClick(isChecked, cartItems[position]) },
         )
     }
 
@@ -54,6 +56,7 @@ class CartListAdapter(
         private val binding: ItemCartBinding,
         onCloseButtonClick: (Int) -> Unit,
         onCountButtonsClick: (Boolean, Int) -> Unit,
+        onCheckboxClick: (Boolean, Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.btnCartClose.setOnClickListener {
@@ -65,10 +68,15 @@ class CartListAdapter(
             binding.btnCartMinusCount.setOnClickListener {
                 onCountButtonsClick(isMinusButton, position)
             }
+            binding.cbCart.setOnCheckedChangeListener { _, isChecked ->
+                onCheckboxClick(isChecked, position)
+            }
         }
 
         fun bind(product: CartUIState) {
             binding.item = product
+
+            binding.cbCart.isChecked = product.isChecked
 
             Glide.with(itemView)
                 .load(product.imageUrl)
