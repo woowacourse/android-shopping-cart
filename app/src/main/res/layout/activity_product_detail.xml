@@ -14,6 +14,10 @@
             type="woowacourse.shopping.model.ProductUIModel" />
 
         <variable
+            name="listener"
+            type="woowacourse.shopping.ui.productdetail.ProductDetailListener" />
+
+        <variable
             name="latestProduct"
             type="woowacourse.shopping.model.ProductUIModel" />
     </data>
@@ -101,8 +105,10 @@
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <include
+            android:id="@+id/latest_product_layout"
             layout="@layout/latest_product_layout"
             app:product = "@{latestProduct}"
+            app:listener = "@{listener}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="33dp"
@@ -110,6 +116,7 @@
             android:layout_marginTop="29dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            android:visibility="@{latestProduct != null ? View.VISIBLE : View.GONE}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

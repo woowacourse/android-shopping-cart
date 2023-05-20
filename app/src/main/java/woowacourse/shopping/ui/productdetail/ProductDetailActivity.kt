@@ -3,8 +3,10 @@ package woowacourse.shopping.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -25,7 +27,8 @@ import woowacourse.shopping.utils.keyError
 class ProductDetailActivity :
     AppCompatActivity(),
     ProductDetailContract.View,
-    ProductDialogInterface {
+    ProductDialogInterface,
+    ProductDetailListener {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
     private lateinit var productOrderDialog: ProductOrderDialog
@@ -45,6 +48,8 @@ class ProductDetailActivity :
         binding.cartButton.setOnClickListener {
             presenter.setProductCountDialog()
         }
+
+        binding.listener = this
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -89,6 +94,18 @@ class ProductDetailActivity :
 
     override fun decreaseCount() {
         presenter.subtractProductCount()
+    }
+
+    override fun navigateToDetail(product: ProductUIModel) {
+        Log.d("히", "히")
+        startActivity(from(this, product))
+        presenter.addProductToRecent()
+        finish()
+    }
+
+    override fun clickLatestProduct() {
+        Log.d("클릭", "클릭")
+        presenter.clickLatestProduct()
     }
 
     companion object {

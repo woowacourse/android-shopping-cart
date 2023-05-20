@@ -19,6 +19,8 @@ class ProductDetailPresenter(
     private val _count: MutableLiveData<Int> = MutableLiveData(1)
     val count: LiveData<Int> get() = _count
 
+    private var latestProduct: ProductUIModel? = null
+
     init {
         setUpProductDetail()
         setLatestProduct()
@@ -49,10 +51,14 @@ class ProductDetailPresenter(
     }
 
     override fun setLatestProduct() {
-        if (recentRepository.getRecent(1).size == 1) {
-            val latestProduct = recentRepository.getRecent(1)[0]
-            view.showLatestProduct(latestProduct.toUIModel())
+        recentRepository.getRecent(1).firstOrNull()?.let { recent ->
+            latestProduct = recent.toUIModel()
+            view.showLatestProduct(latestProduct!!)
         }
+    }
+
+    override fun clickLatestProduct() {
+        latestProduct?.let { view.navigateToDetail(it) }
     }
 
     override fun addProductCount() {
