@@ -47,7 +47,8 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         basketAdapter = BasketAdapter(
             presenter::deleteBasketProduct,
             presenter::removeBasketProduct,
-            presenter::addBasketProduct
+            presenter::addBasketProduct,
+            presenter::updateBasketProductCheckState
         )
         binding.rvBasket.adapter = basketAdapter
         presenter.initBasketProducts()

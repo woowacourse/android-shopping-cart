@@ -10,7 +10,8 @@ class BasketViewHolder(
     private val binding: ItemBasketBinding,
     onItemClick: (UiBasketProduct) -> Unit,
     minusClickListener: (UiProduct) -> Unit,
-    plusClickListener: (UiProduct) -> Unit
+    plusClickListener: (UiProduct) -> Unit,
+    onCheckedChangeListener: (UiBasketProduct, Boolean) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
 
@@ -18,6 +19,7 @@ class BasketViewHolder(
         binding.ivCloseClickListener = onItemClick
         binding.counterBasket.plusClickListener = plusClickListener
         binding.counterBasket.minusClickListener = minusClickListener
+        binding.onCheckedChangeListener = onCheckedChangeListener
     }
 
     fun bind(item: UiBasketProduct) {

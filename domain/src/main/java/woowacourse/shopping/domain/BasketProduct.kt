@@ -4,7 +4,7 @@ data class BasketProduct(
     val id: Int = -1,
     val count: Count = Count(0),
     val product: Product,
-    val checked: Boolean = false
+    var checked: Boolean = false
 ) {
     fun getTotalPrice(): Price = product.price * count
 

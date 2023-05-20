@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.databinding.ItemBasketBinding
+import woowacourse.shopping.domain.BasketProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.model.UiBasketProduct
@@ -12,7 +13,8 @@ import woowacourse.shopping.ui.model.UiBasketProduct
 class BasketAdapter(
     private val onRemoveItemClick: (UiBasketProduct, List<UiBasketProduct>) -> Unit,
     private val minusClickListener: (Product) -> Unit,
-    private val plusClickListener: (Product) -> Unit
+    private val plusClickListener: (Product) -> Unit,
+    private val onCheckedChangeListener: (BasketProduct) -> Unit
 ) :
     ListAdapter<UiBasketProduct, BasketViewHolder>(basketDiffUtil) {
 
@@ -23,7 +25,16 @@ class BasketAdapter(
             binding,
             { onRemoveItemClick(it, currentList) },
             { minusClickListener(it.toDomain()) },
-            { plusClickListener(it.toDomain()) }
+            { plusClickListener(it.toDomain()) },
+            { basketProduct, isChecked ->
+                var processedBasketProduct = BasketProduct(
+                    id = basketProduct.id,
+                    count = basketProduct.count.toDomain(),
+                    product = basketProduct.product.toDomain(),
+                    checked = isChecked
+                )
+                onCheckedChangeListener(processedBasketProduct)
+            }
         )
     }
 

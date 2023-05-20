@@ -42,4 +42,8 @@ data class Basket(val products: List<BasketProduct>) {
             if (startId + subBasketSize > products.lastIndex) products.lastIndex + 1 else startId + subBasketSize
         return Basket(products.subList(startId, endIndex))
     }
+
+    fun updateCheck(basketProduct: BasketProduct) {
+        products.find { it.product.id == basketProduct.product.id }?.checked = basketProduct.checked
+    }
 }

@@ -17,6 +17,10 @@ class BasketPresenter(
     private var basket: Basket = Basket(basketRepository.getAll())
     private var startId: Int = 0
 
+    override fun updateBasketProductCheckState(basketProduct: BasketProduct) {
+        basket.updateCheck(basketProduct)
+    }
+
     override fun addBasketProduct(product: Product) {
         val addedProduct = BasketProduct(count = Count(1), product = product)
         basketRepository.add(addedProduct)
