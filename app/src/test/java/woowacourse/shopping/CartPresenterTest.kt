@@ -86,7 +86,8 @@ class CartPresenterTest {
             }
 
             override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
-                return cartProducts.subList(mark, mark + rangeSize)
+                return if (mark + rangeSize < cartProducts.size) cartProducts.subList(mark, mark + rangeSize)
+                else cartProducts.subList(mark, cartProducts.size)
             }
 
             override fun isExistByMark(mark: Int): Boolean {
@@ -127,8 +128,9 @@ class CartPresenterTest {
 
     @Test
     fun 이전_페이지를_띄울_수_있다() {
+        presenter.fetchNextPage()
         presenter.fetchPrevPage()
-        verify(exactly = 1) { view.showChangedItems() }
+        verify(exactly = 2) { view.showChangedItems() }
     }
 
     @Test

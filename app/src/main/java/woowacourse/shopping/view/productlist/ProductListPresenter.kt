@@ -41,7 +41,7 @@ class ProductListPresenter(
         view.onClickProductDetail(product, lastViewedProduct)
     }
 
-    override fun showMoreProducts() {
+    override fun loadMoreProducts() {
         val recentViewedItemSize =
             productsListItems.filterIsInstance<ProductListViewItem.RecentViewedItem>().size
         val productsItemSize =

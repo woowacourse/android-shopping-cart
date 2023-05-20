@@ -86,7 +86,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
                 }
 
                 override fun onShowMoreClick() {
-                    presenter.showMoreProducts()
+                    presenter.loadMoreProducts()
                 }
 
                 override fun onProductClickAddFirst(id: Int, count: Int) {
