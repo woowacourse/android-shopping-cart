@@ -82,6 +82,14 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         binding.tvCurrentPage.text = currentPage.toString()
     }
 
+    override fun updateTotalPrice(totalPrice: Int) {
+        binding.totalPrice = totalPrice
+    }
+
+    override fun updateCheckedProductsCount(checkedProductsCount: Int) {
+        binding.checkedCount = checkedProductsCount
+    }
+
     companion object {
         fun getIntent(context: Context) = Intent(context, BasketActivity::class.java)
     }

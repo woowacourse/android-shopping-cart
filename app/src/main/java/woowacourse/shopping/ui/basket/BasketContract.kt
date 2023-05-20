@@ -13,6 +13,10 @@ interface BasketContract {
         fun updateNavigatorEnabled(previous: Boolean, next: Boolean)
 
         fun updateCurrentPage(currentPage: Int)
+
+        fun updateTotalPrice(totalPrice: Int)
+
+        fun updateCheckedProductsCount(checkedProductsCount: Int)
     }
 
     interface Presenter {

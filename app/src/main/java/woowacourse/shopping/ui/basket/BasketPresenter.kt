@@ -19,6 +19,12 @@ class BasketPresenter(
 
     override fun updateBasketProductCheckState(basketProduct: BasketProduct) {
         basket.updateCheck(basketProduct)
+        updateOrderInformation()
+    }
+
+    private fun updateOrderInformation() {
+        view.updateTotalPrice(basket.getCheckedProductsTotalPrice())
+        view.updateCheckedProductsCount(basket.getCheckedProductsCount())
     }
 
     override fun addBasketProduct(product: Product) {
@@ -37,6 +43,7 @@ class BasketPresenter(
 
     override fun initBasketProducts() {
         updateBasketProductViewData()
+        updateOrderInformation()
     }
 
     override fun updatePreviousPage() {

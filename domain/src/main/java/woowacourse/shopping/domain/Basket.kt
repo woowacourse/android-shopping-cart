@@ -46,4 +46,7 @@ data class Basket(val products: List<BasketProduct>) {
     fun updateCheck(basketProduct: BasketProduct) {
         products.find { it.product.id == basketProduct.product.id }?.checked = basketProduct.checked
     }
+
+    fun getCheckedProductsCount(): Int =
+        products.filter { it.checked }.size
 }
