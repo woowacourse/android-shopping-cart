@@ -53,6 +53,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             products.map { it },
             presenter::navigateToItemDetail,
             presenter::removeItem,
+            presenter::increaseCount,
+            presenter::decreaseCount,
         )
         binding.cartRecyclerview.adapter = ConcatAdapter(
             cartAdapter,

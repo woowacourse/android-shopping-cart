@@ -57,6 +57,18 @@ class CartPresenter(
         return offset
     }
 
+    override fun increaseCount(cartProduct: CartProductUIModel) {
+        val count = cartProduct.count.plus(1)
+        repository.updateCount(cartProduct.product.id, count)
+        setUpCarts()
+    }
+
+    override fun decreaseCount(cartProduct: CartProductUIModel) {
+        val count = cartProduct.count.minus(1)
+        repository.updateCount(cartProduct.product.id, count)
+        setUpCarts()
+    }
+
     companion object {
         private const val STEP = 5
     }

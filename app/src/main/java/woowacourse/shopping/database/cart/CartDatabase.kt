@@ -71,6 +71,13 @@ class CartDatabase(
         shoppingDb.execSQL(query)
     }
 
+    override fun updateCount(id: Int, count: Int) {
+        val query =
+            "UPDATE $TABLE_NAME SET $TABLE_COLUMN_PRODUCT_COUNT = $count WHERE $TABLE_COLUMN_PRODUCT_ID = $id"
+        shoppingDb.execSQL(query)
+        println("update 실행")
+    }
+
     private fun getCartCursor(): Cursor {
         val query = "SELECT * FROM $TABLE_NAME ORDER BY $TABLE_COLUMN_PRODUCT_SAVE_TIME"
         return shoppingDb.rawQuery(query, null)

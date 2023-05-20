@@ -18,5 +18,7 @@ interface CartContract {
         fun removeItem(id: Int)
         fun navigateToItemDetail(cartProduct: CartProductUIModel)
         fun getOffset(): Int
+        fun increaseCount(cartProduct: CartProductUIModel)
+        fun decreaseCount(cartProduct: CartProductUIModel)
     }
 }
