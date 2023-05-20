@@ -26,6 +26,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setContentView(binding.root)
         setActionBar()
 
+        initCartAdapter()
         initCartList()
         initBottomField()
     }
@@ -50,6 +51,15 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             ContextCompat.getColor(this, android.R.color.white),
         )
         binding.toolbarCart.navigationIcon = navigationIcon
+    }
+
+    private fun initCartAdapter() {
+        binding.recyclerViewCart.adapter = CartListAdapter(
+            mutableListOf<CartUIState>(),
+            presenter::deleteCartItem,
+            presenter::plusItemCount,
+            presenter::minusItemCount,
+        )
     }
 
     private fun initCartList() {
@@ -81,19 +91,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItems(cartItems: List<CartUIState>) {
-        binding.recyclerViewCart.adapter = CartListAdapter(
-            cartItems.toMutableList(),
-            presenter::deleteCartItem,
-            presenter::plusItemCount,
-            presenter::minusItemCount,
-        )
-    }
-
-    override fun updateCartItems(cartItems: List<CartUIState>) {
         (binding.recyclerViewCart.adapter as CartListAdapter).updateItems(cartItems)
     }
 
-    private fun updatePage() {
+    override fun updatePage() {
         presenter.loadCartItems(PAGE_SIZE, page)
         binding.tvCartPage.text = "$page"
     }

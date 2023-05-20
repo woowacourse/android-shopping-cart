@@ -8,10 +8,6 @@ class CartPresenter(
     private val cartRepository: CartRepository,
 ) : CartContract.Presenter {
 
-    override fun loadCartItems() {
-        view.setCartItems(cartRepository.findAll().map(CartUIState::from))
-    }
-
     override fun loadCartItems(limit: Int, page: Int) {
         val offset = (page - 1) * limit
         view.setCartItems(
@@ -21,7 +17,7 @@ class CartPresenter(
 
     override fun deleteCartItem(productId: Long) {
         cartRepository.deleteById(productId)
-        view.setCartItems(cartRepository.findAll().map(CartUIState::from))
+        view.updatePage()
     }
 
     override fun setPageButtons(limit: Int) {
@@ -33,14 +29,14 @@ class CartPresenter(
     override fun minusItemCount(productId: Long, oldCount: Int) {
         if (oldCount > 1) {
             cartRepository.updateCount(productId, oldCount - 1)
-            view.updateCartItems(cartRepository.findAll().map(CartUIState::from))
+            view.updatePage()
         }
     }
 
     override fun plusItemCount(productId: Long, oldCount: Int) {
         if (oldCount < MAX_STOCK_QUANTITY) {
             cartRepository.updateCount(productId, oldCount + 1)
-            view.updateCartItems(cartRepository.findAll().map(CartUIState::from))
+            view.updatePage()
         }
     }
 

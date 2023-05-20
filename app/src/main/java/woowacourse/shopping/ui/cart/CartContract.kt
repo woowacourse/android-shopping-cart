@@ -4,7 +4,6 @@ import woowacourse.shopping.ui.cart.uistate.CartUIState
 
 interface CartContract {
     interface Presenter {
-        fun loadCartItems()
         fun loadCartItems(limit: Int, page: Int)
         fun deleteCartItem(productId: Long)
         fun setPageButtons(limit: Int)
@@ -15,6 +14,6 @@ interface CartContract {
     interface View {
         fun setCartItems(cartItems: List<CartUIState>)
         fun setPageButtonClickListener(maxOffset: Int)
-        fun updateCartItems(cartItems: List<CartUIState>)
+        fun updatePage()
     }
 }
