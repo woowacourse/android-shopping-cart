@@ -14,8 +14,11 @@
 
         <variable
             name="setQuantityClickListener"
-            type="woowacourse.shopping.presentation.ui.home.HomeSetClickListener" />
+            type="woowacourse.shopping.presentation.ui.common.QuantityControlClickListener" />
 
+        <variable
+            name="setQuantityClickListener2"
+            type="kotlin.jvm.functions.Function2" />
 
     </data>
 
@@ -30,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:onClick="@{() ->setQuantityClickListener.setClickEventOnOperatorButton(false,productInCart.product)}"
+            android:onClick="@{() -> setQuantityClickListener.setClickEventOnOperatorButton(false, productInCart.product)}"
             android:paddingHorizontal="20dp"
             android:text="@string/tv_quantity_minus"
             android:textColor="@color/woowa_dealer_gray_700"
@@ -63,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:onClick="@{() ->setQuantityClickListener.setClickEventOnOperatorButton(true,productInCart.product)}"
+            android:onClick="@{() -> setQuantityClickListener.setClickEventOnOperatorButton(true, productInCart.product)}"
             android:paddingHorizontal="20dp"
             android:text="@string/tv_quantity_plus"
             android:textColor="@color/woowa_dealer_gray_700"

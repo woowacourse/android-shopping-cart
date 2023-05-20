@@ -2,21 +2,17 @@ package woowacourse.shopping.presentation.ui.shoppingCart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.domain.model.ProductInCart
+import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener
 
 class ShoppingCartAdapter(
-    private val onClick: (productInCart: ProductInCart) -> Unit,
-    private val clickDelete: (productInCart: ProductInCart) -> Boolean,
+    private val onClick: ShoppingCartSetClickListener,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
-    private val items: MutableList<ProductInCart> = mutableListOf()
+    private val items: MutableList<ProductInCartUiState> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartViewHolder {
         return ShoppingCartViewHolder(
-            { onClick(items[it]) },
-            {
-                val result = clickDelete(items[it])
-                if (result) deleteItem(it)
-            },
+            onClick,
             ShoppingCartViewHolder.getView(parent),
         )
     }
@@ -27,14 +23,16 @@ class ShoppingCartAdapter(
         holder.bind(items[position])
     }
 
-    private fun deleteItem(position: Int) {
-        items.removeAt(position)
-        notifyItemRemoved(position)
+    fun deleteItem(productId: Long) {
+        val removed = items.removeAll { it.product.id == productId }
+        if (removed) {
+            notifyDataSetChanged()
+        }
     }
 
-    fun initProducts(productsInCart: List<ProductInCart>) {
+    fun initProducts(productInCart: List<ProductInCartUiState>) {
         items.clear()
-        items.addAll(productsInCart)
+        items.addAll(productInCart)
         notifyDataSetChanged()
     }
 }

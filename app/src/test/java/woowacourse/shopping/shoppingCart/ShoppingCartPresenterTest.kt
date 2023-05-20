@@ -39,7 +39,7 @@ class ShoppingCartPresenterTest {
     fun 장바구니를_가져와_뷰로_넘겨준다() {
         // given
         val productCart = ProductInCart(product, QUANTITY)
-        every { shoppingCartRepository.getShoppingCart(any(), PAGE_NUMBER) } returns listOf(
+        every { shoppingCartRepository.getShoppingCartByPage(any(), PAGE_NUMBER) } returns listOf(
             productCart,
         )
 

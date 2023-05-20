@@ -8,7 +8,9 @@ import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.model.ProductInCart
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator
+import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartContract
@@ -17,7 +19,7 @@ import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartP
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private lateinit var binding: ActivityShoppingCartBinding
     override val presenter: ShoppingCartContract.Presenter by lazy { initPresenter() }
-    private val shoppingCartAdapter = ShoppingCartAdapter(::clickItem, ::clickItemDelete)
+    private val shoppingCartAdapter = ShoppingCartAdapter(setUpClickListener())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +42,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         clickPreviousPage()
     }
 
-    override fun setShoppingCart(shoppingCart: List<ProductInCart>) {
+    override fun setShoppingCart(shoppingCart: List<ProductInCartUiState>) {
         shoppingCartAdapter.initProducts(shoppingCart)
     }
 
@@ -65,13 +67,29 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         binding.ivShoppingCartPreviousButton.isEnabled = previous
     }
 
-    private fun clickItem(productInCart: ProductInCart) {
+    private fun setUpClickListener() = object : ShoppingCartSetClickListener {
+        override fun setClickEventOnItem(productInCart: ProductInCartUiState) {
+            setEventOnItem(productInCart)
+        }
+
+        override fun setClickEventOnDeleteButton(productInCart: ProductInCartUiState) {
+            setEventOnDelete(productInCart)
+        }
+
+        override fun setClickEventOnOperatorButton(operator: Boolean, productInCart: Product) {
+            val request = if (operator) Operator.PLUS else Operator.MINUS
+            presenter.addCountOfProductInCart(request, productInCart)
+        }
+    }
+
+    private fun setEventOnItem(productInCart: ProductInCartUiState) {
         val intent = ProductDetailActivity.getIntent(this, productInCart.product.id)
         startActivity(intent)
     }
 
-    private fun clickItemDelete(productInCart: ProductInCart): Boolean {
-        return presenter.deleteProductInCart(productInCart.product.id)
+    private fun setEventOnDelete(productInCart: ProductInCartUiState) {
+        val result = presenter.deleteProductInCart(productInCart.product.id)
+        if (result) shoppingCartAdapter.deleteItem(productInCart.product.id)
     }
 
     private fun initPresenter(): ShoppingCartPresenter {

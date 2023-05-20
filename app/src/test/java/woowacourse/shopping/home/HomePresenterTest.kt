@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
@@ -22,12 +23,14 @@ class HomePresenterTest {
     private lateinit var presenter: HomeContract.Presenter
     private lateinit var view: HomeContract.View
     private lateinit var productRepository: ProductRepository
+    private lateinit var shoppingCartRepository: ShoppingCartRepository
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
-        presenter = HomePresenter(view, productRepository)
+        shoppingCartRepository = mockk(relaxed = true)
+        presenter = HomePresenter(view, productRepository, shoppingCartRepository)
     }
 
     @After
@@ -42,7 +45,7 @@ class HomePresenterTest {
         every { productRepository.getProducts(any(), any()) } returns products
 
         val slot = slot<List<HomeAdapter.ProductsByView>>()
-        every { view.setUpProductsOnHome(capture(slot)) } answers { nothing }
+        every { view.setUpProductsOnHome(capture(slot), shoppingCart) } answers { nothing }
 
         // when
         presenter.fetchAllProductsOnHome()
@@ -51,7 +54,7 @@ class HomePresenterTest {
         val actual = slot.captured
         verify { productRepository.getRecentlyViewedProducts(any()) }
         verify { productRepository.getProducts(any(), any()) }
-        verify { view.setUpProductsOnHome(actual) }
+        verify { view.setUpProductsOnHome(actual, shoppingCart) }
 
         assertEquals(listOf(wrappedRecentProducts) + wrappedProducts + showMoreButton, actual)
     }

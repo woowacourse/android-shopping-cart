@@ -1,10 +1,11 @@
 package woowacourse.shopping.presentation.ui.home
 
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.ui.common.QuantityControlClickListener
 
-interface HomeSetClickListener {
+interface HomeSetClickListener : QuantityControlClickListener {
 
     fun setClickEventOnProduct(product: Product)
     fun setClickEventOnShowMoreButton()
-    fun setClickEventOnOperatorButton(operator: Boolean, productInCart: Product)
+    override fun setClickEventOnOperatorButton(operator: Boolean, productInCart: Product)
 }

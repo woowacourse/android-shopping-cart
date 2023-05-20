@@ -27,13 +27,11 @@ class ProductViewHolder(
             binding.layoutQuantity.tvQuantityAmount.text = "1"
         }
 
-        val cart: ProductInCartUiState = shoppingCart.find { it.product.id == data.product.id }
+        binding.shoppingCart = shoppingCart.find { it.product.id == data.product.id }
             ?: ProductInCartUiState(
                 product = data.product,
                 quantity = 0,
             )
-
-        binding.shoppingCart = cart
     }
 
     companion object {
