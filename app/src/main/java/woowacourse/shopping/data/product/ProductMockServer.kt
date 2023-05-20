@@ -80,7 +80,7 @@ class ProductMockServer {
                     "id": $productId,
                     "name": "상품$productId",
                     "imageUrl": "https://mediahub.seoul.go.kr/uploads/2016/09/952e8925ec41cc06e6164d695d776e51.jpg",
-                    "price": 10000                    
+                    "price": ${(productId.toInt()) * 1000}            
                 }
               ]
         """.trimIndent()
@@ -90,10 +90,10 @@ class ProductMockServer {
         return List(count) {
             """
                 {
-                    "id": ${it + offset + 1},
-                    "name": "상품${it + offset + 1}",
+                    "id": ${it + 1 + offset},
+                    "name": "상품${it + 1 + offset}",
                     "imageUrl": "https://mediahub.seoul.go.kr/uploads/2016/09/952e8925ec41cc06e6164d695d776e51.jpg",
-                    "price": 10000
+                    "price": ${(it + 1) * 1000}
                 }
     """
         }.joinToString(",", prefix = "[", postfix = "]").trimIndent()
