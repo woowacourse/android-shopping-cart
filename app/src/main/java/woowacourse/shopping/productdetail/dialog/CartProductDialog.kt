@@ -34,7 +34,12 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
         return binding.root
     }
 
-    override fun setupCartProductAmount(amount: Int) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupCartProductAmountDecreaseButton()
+    }
+
+    override fun updateCartProductAmount(amount: Int) {
         binding.dialogCartProductAmount.text = amount.toString()
     }
 
@@ -48,8 +53,15 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
         presenter = CartProductDialogPresenter(
             this,
             product,
-            cartRepository = CartRepositoryImpl(CartDao(db))
+            cartRepository = CartRepositoryImpl(CartDao(db)),
+            cartProductAmount = 1
         )
+    }
+
+    private fun setupCartProductAmountDecreaseButton() {
+        binding.dialogCartProductAmountMinusButton.setOnClickListener {
+            presenter.decreaseCartProductAmount()
+        }
     }
 
     companion object {

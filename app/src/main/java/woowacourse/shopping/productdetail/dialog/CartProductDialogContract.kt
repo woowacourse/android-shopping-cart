@@ -1,9 +1,11 @@
 package woowacourse.shopping.productdetail.dialog
 
 interface CartProductDialogContract {
-    interface Presenter
+    interface Presenter {
+        fun decreaseCartProductAmount()
+    }
 
     interface View {
-        fun setupCartProductAmount(amount: Int)
+        fun updateCartProductAmount(amount: Int)
     }
 }

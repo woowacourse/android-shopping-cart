@@ -9,16 +9,24 @@ import java.time.LocalDateTime
 class CartProductDialogPresenter(
     private val view: CartProductDialogContract.View,
     productModel: ProductModel,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    cartProductAmount: Int
 ) : CartProductDialogContract.Presenter {
     private var cartProduct: CartProduct
 
     init {
-        cartProduct = CartProduct(LocalDateTime.now(), DEFAULT_CART_PRODUCT_AMOUNT, true, productModel.toDomain())
-        view.setupCartProductAmount(cartProduct.amount)
+        cartProduct = CartProduct(LocalDateTime.now(), cartProductAmount, true, productModel.toDomain())
+        view.updateCartProductAmount(cartProduct.amount)
+    }
+
+    override fun decreaseCartProductAmount() {
+        if (cartProduct.amount > MINIMUM_CART_PRODUCT_AMOUNT) {
+            cartProduct = cartProduct.decreaseAmount()
+            view.updateCartProductAmount(cartProduct.amount)
+        }
     }
 
     companion object {
-        private const val DEFAULT_CART_PRODUCT_AMOUNT = 1
+        private const val MINIMUM_CART_PRODUCT_AMOUNT = 1
     }
 }

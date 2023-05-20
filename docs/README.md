@@ -48,11 +48,11 @@
     - [ ] CartProductDialog
         - [x] init { }
             - [x] create cart product
-            - [x] view.setupCartProductAmount(amount)
-        - [ ] decreaseCartProductAmount()
-            - [ ] if(amount > 1)
-                - [ ] cartProduct.decreaseAmount()
-                - [ ] view.updateCartProduct(cartProductModel)
+            - [x] view.updateCartProductAmount(amount)
+        - [x] decreaseCartProductAmount()
+            - [x] if(amount > 1)
+                - [x] cartProduct.decreaseAmount()
+                - [x] view.updateCartProductAmount(amount)
         - [ ] increaseCartProductAmount()
             - [ ] cartProduct.increaseAmount()
             - [ ] view.updateCartProduct(cartProductModel)
