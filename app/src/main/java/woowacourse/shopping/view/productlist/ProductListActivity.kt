@@ -1,10 +1,8 @@
 package woowacourse.shopping.view.productlist
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
@@ -139,21 +137,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
             val imageButton = itemActionView.findViewById<ImageButton>(R.id.btn_cart)
             imageButton?.setOnClickListener {
-                val intent = Intent(this, CartActivity::class.java)
+                val intent = CartActivity.newIntent(this)
                 resultLauncher.launch(intent)
             }
         }
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cart -> {
-                val intent = Intent(this, CartActivity::class.java)
-                startActivity(intent)
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun showToastAddInCart() {

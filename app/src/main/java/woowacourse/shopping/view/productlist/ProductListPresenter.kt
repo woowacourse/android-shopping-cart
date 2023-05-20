@@ -98,10 +98,10 @@ class ProductListPresenter(
 
     override fun fetchProductCount(id: Int) {
         if (id == -1) return
-        val product = cartRepository.find(id) ?: return
+        val product = cartRepository.find(id)
         val item = productsListItems.filterIsInstance<ProductListViewItem.ProductItem>()
             .filter { it.product.id == id }[0]
-        item.product.count = product.count
+        item.product.count = product?.count ?: 0
         view.notifyDataChanged(productsListItems.indexOf(item))
     }
 
