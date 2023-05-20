@@ -2,7 +2,8 @@ package woowacourse.shopping.feature.main
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var recentAdapter: RecentAdapter
     private lateinit var recentWrapperAdapter: RecentWrapperAdapter
     private lateinit var loadAdapter: LoadAdapter
+    private lateinit var cartProductCountTv: TextView
 
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
@@ -117,20 +119,20 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(DetailActivity.getIntent(this, recentProduct.productUiModel))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.app_bar_menu, menu)
-        return true
+    override fun updateCartProductCount(count: Int) {
+        if (count == 0) cartProductCountTv.visibility = View.GONE
+        else cartProductCountTv.visibility = View.VISIBLE
+        cartProductCountTv.text = count.toString()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.cart_action -> {
-                presenter.moveToCart()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.app_bar_menu, menu)
+        menu?.findItem(R.id.cart_action)?.actionView?.let { view ->
+            view.setOnClickListener { presenter.moveToCart() }
+            view.findViewById<TextView>(R.id.cart_count_tv)?.let { cartProductCountTv = it }
         }
+        presenter.setCartProductCount()
+        return true
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -10,14 +10,16 @@ interface MainContract {
         fun addProducts(products: List<ProductUiModel>)
         fun updateRecent(recent: List<RecentProductUiModel>)
         fun showProductDetailScreenByRecent(recentProduct: RecentProductUiModel)
+        fun updateCartProductCount(count: Int)
     }
 
     interface Presenter {
         fun loadProducts()
+        fun loadRecent()
+        fun setCartProductCount()
+        fun loadMoreProduct()
         fun moveToCart()
         fun moveToDetail(product: ProductUiModel)
-        fun loadMoreProduct()
-        fun loadRecent()
         fun refresh()
         fun increaseCartProduct(product: ProductUiModel, previousCount: Int)
         fun decreaseCartProduct(product: ProductUiModel, previousCount: Int)

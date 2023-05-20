@@ -17,6 +17,8 @@ class MainPresenter(
     private val cartRepository: CartRepository
 ) : MainContract.Presenter {
 
+    private var totalCount: Int = 0
+
     override fun loadProducts() {
         val firstProducts = productRepository.getFirstProducts()
 
@@ -32,6 +34,22 @@ class MainPresenter(
         }
     }
 
+    override fun loadRecent() {
+        val recent = recentProductRepository.getAll().map { it.toPresentation() }
+        view.updateRecent(recent)
+    }
+
+    override fun setCartProductCount() {
+        val count = cartRepository.getAll().size
+        view.updateCartProductCount(count)
+    }
+
+    override fun loadMoreProduct() {
+        val nextProducts = productRepository.getNextProducts()
+        val nextProductItems = matchCartProductCount(nextProducts)
+        view.addProducts(nextProductItems)
+    }
+
     override fun moveToCart() {
         view.showCartScreen()
     }
@@ -42,28 +60,21 @@ class MainPresenter(
         loadRecent()
     }
 
-    override fun loadMoreProduct() {
-        val nextProducts = productRepository.getNextProducts()
-        val nextProductItems = matchCartProductCount(nextProducts)
-        view.addProducts(nextProductItems)
-    }
-
-    override fun loadRecent() {
-        val recent = recentProductRepository.getAll().map { it.toPresentation() }
-        view.updateRecent(recent)
-    }
-
     override fun refresh() {
         productRepository.clearCache()
     }
 
     override fun increaseCartProduct(product: ProductUiModel, previousCount: Int) {
         cartRepository.addProduct(product.toDomain(), previousCount + 1)
+        totalCount = cartRepository.getAll().size
+        view.updateCartProductCount(totalCount)
     }
 
     override fun decreaseCartProduct(product: ProductUiModel, previousCount: Int) {
         if (previousCount == 1) {
             cartRepository.deleteProduct(product.toDomain())
+            totalCount = cartRepository.getAll().size
+            view.updateCartProductCount(totalCount)
         } else {
             cartRepository.addProduct(product.toDomain(), previousCount - 1)
         }
