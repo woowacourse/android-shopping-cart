@@ -13,9 +13,7 @@ import kotlin.properties.Delegates
 
 class CartActivity : AppCompatActivity(), CartActivityContract.View {
     private lateinit var presenter: CartActivityContract.Presenter
-    private var _binding: ActivityCartBinding? = null
-    private val binding: ActivityCartBinding
-        get() = _binding!!
+    private lateinit var binding: ActivityCartBinding
 
     private var page: Int by Delegates.observable(1) { _, _, new ->
         presenter.setUpData(new)
@@ -26,10 +24,10 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityCartBinding.inflate(layoutInflater)
+        binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setUpView()
+
         val db = CartDbHandler(CartDbHelper(this).writableDatabase)
         presenter = CartActivityPresenter(this, db)
         presenter.setUpData(OPEN_PAGE)
@@ -76,11 +74,6 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
 
     private fun onDeleteItem(productView: CartProductItem) {
         presenter.deleteData(page, productView)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object {

@@ -16,9 +16,7 @@ import woowacourse.shopping.feature.model.mapper.toDomain
 import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity() {
-    private var _binding: ActivityProductDetailBinding? = null
-    private val binding: ActivityProductDetailBinding
-        get() = _binding!!
+    private lateinit var binding: ActivityProductDetailBinding
 
     private val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
     private val dbHandler: CartDbHandler by lazy {
@@ -27,7 +25,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityProductDetailBinding.inflate(layoutInflater)
+        binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         if (product == null) {
@@ -50,11 +48,6 @@ class ProductDetailActivity : AppCompatActivity() {
                 CartActivity.startActivity(this)
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object {

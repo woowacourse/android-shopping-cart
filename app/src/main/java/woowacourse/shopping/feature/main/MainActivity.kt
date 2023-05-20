@@ -25,16 +25,14 @@ import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 import woowacourse.shopping.feature.util.SpanSizeLookUpManager
 
 class MainActivity : AppCompatActivity(), MainContract.View {
-    private var _binding: ActivityMainBinding? = null
-    private val binding: ActivityMainBinding
-        get() = _binding!!
+    private lateinit var binding: ActivityMainBinding
 
     lateinit var productsAdapter: ProductsAdapter
     lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val productDb = ProductDbHandler(ProductDbHelper(this).writableDatabase)
@@ -109,11 +107,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             }
         }
         return true
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     companion object {
