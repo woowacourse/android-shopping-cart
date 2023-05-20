@@ -54,7 +54,7 @@ class BasketPresenter(
 
     override fun updateNextPage() {
         updateCurrentPage(true)
-        if (startId + BASKET_PAGING_SIZE < basket.products.lastIndex) startId += BASKET_PAGING_SIZE
+        if (startId + BASKET_PAGING_SIZE <= basket.products.lastIndex) startId += BASKET_PAGING_SIZE
         updateBasketProductViewData()
     }
 
