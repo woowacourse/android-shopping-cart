@@ -12,7 +12,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbAdapter
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.MockProductRepository
+import woowacourse.shopping.data.product.MockWebProductRepository
+import woowacourse.shopping.data.product.ProductMockServer
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.putincartdialog.PutInCartDialogFragment
@@ -22,8 +23,14 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
 
     private val presenter: ProductDetailContract.Presenter by lazy {
+
+        var url: String? = null
+        val thread = Thread { url = ProductMockServer().url }
+        thread.start()
+        thread.join()
+
         val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
-        ProductDetailPresenter(this, cartRepository, MockProductRepository)
+        ProductDetailPresenter(this, cartRepository, MockWebProductRepository(url ?: ""))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

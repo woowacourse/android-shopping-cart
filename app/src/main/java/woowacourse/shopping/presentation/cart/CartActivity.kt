@@ -9,7 +9,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbAdapter
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.MockProductRepository
+import woowacourse.shopping.data.product.MockWebProductRepository
+import woowacourse.shopping.data.product.ProductMockServer
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
@@ -19,8 +20,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
 
     private val presenter: CartContract.Presenter by lazy {
+        var url: String? = null
+        val thread = Thread { url = ProductMockServer().url }
+        thread.start()
+        thread.join()
         val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
-        CartPresenter(this, cartRepository, MockProductRepository)
+        CartPresenter(this, cartRepository, MockWebProductRepository(url ?: ""))
     }
 
     override fun setTotalPrice(price: Int) {
