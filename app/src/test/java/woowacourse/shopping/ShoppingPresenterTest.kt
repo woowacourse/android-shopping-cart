@@ -104,7 +104,7 @@ class ShoppingPresenterTest {
         presenter.readMoreShoppingProducts()
 
         // then
-        verify { view.refreshShoppingProductsView(products.map { it.toUiModel() }) }
+        verify { view.refreshMoreShoppingProductsView(products.map { it.toUiModel() }) }
     }
 
     @Test

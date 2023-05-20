@@ -14,11 +14,12 @@ fun ProductUiModel.toDomainModel() = Product(
     price = Price(price),
 )
 
-fun Product.toUiModel() = ProductUiModel(
+fun Product.toUiModel(count: Int = 0) = ProductUiModel(
     id = id,
     name = name.value,
     imageUrl = imageUrl,
     price = price.value,
+    count = count,
 )
 
 fun CartProductUiModel.toDomainModel() = CartProduct(

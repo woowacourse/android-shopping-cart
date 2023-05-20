@@ -2,6 +2,7 @@ package woowacourse.shopping.shopping
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.common.ProductCountClickListener
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shopping.ReadMoreViewHolder.Companion.READ_MORE_ITEM_TYPE
 import woowacourse.shopping.shopping.ShoppingItemViewHolder.Companion.PRODUCT_ITEM_TYPE
@@ -13,18 +14,19 @@ class ShoppingRecyclerAdapter(
     recentViewedProducts: List<ProductUiModel>,
     private val onProductClicked: (ProductUiModel) -> Unit,
     private val onReadMoreClicked: () -> Unit,
+    private val countClickListener: ProductCountClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val products: MutableList<ProductUiModel> =
+    private var products: MutableList<ProductUiModel> =
         products.toMutableList()
     private var recentViewedProducts: MutableList<ProductUiModel> =
         recentViewedProducts.toMutableList()
 
     override fun getItemViewType(position: Int): Int {
+        if (position + 1 == itemCount) return READ_MORE_ITEM_TYPE
         if (recentViewedProducts.isEmpty()) {
             return PRODUCT_ITEM_TYPE
         }
-        if (position + 1 == itemCount) return READ_MORE_ITEM_TYPE
         return if (position == INITIAL_POSITION) RECENT_VIEWED_ITEM_TYPE else PRODUCT_ITEM_TYPE
     }
 
@@ -32,7 +34,7 @@ class ShoppingRecyclerAdapter(
         return when (viewType) {
             RECENT_VIEWED_ITEM_TYPE -> RecentViewedLayoutViewHolder.from(parent)
 
-            PRODUCT_ITEM_TYPE -> ShoppingItemViewHolder.from(parent)
+            PRODUCT_ITEM_TYPE -> ShoppingItemViewHolder.from(parent, countClickListener)
 
             READ_MORE_ITEM_TYPE -> ReadMoreViewHolder.from(parent)
 
@@ -61,14 +63,25 @@ class ShoppingRecyclerAdapter(
         }
     }
 
-    override fun getItemCount(): Int = products.size + 2
+    override fun getItemCount(): Int {
+        return if (recentViewedProducts.isEmpty()) products.size + 1 else products.size + 2
+    }
 
     fun refreshRecentViewedItems(toReplace: List<ProductUiModel>) {
         recentViewedProducts = toReplace.toMutableList()
         notifyItemRangeChanged(0, RECENT_VIEWED_ITEM_SIZE)
     }
 
-    fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
+    fun refreshShoppingItems(toReplace: List<ProductUiModel>) {
+        products = toReplace.toMutableList()
+
+        notifyItemRangeChanged(
+            if (recentViewedProducts.isEmpty()) 0 else 1,
+            itemCount,
+        )
+    }
+
+    fun readMoreShoppingItems(toAdd: List<ProductUiModel>) {
         if (toAdd.isNotEmpty()) {
             products.addAll(toAdd)
             notifyItemInserted(products.size + 1 - toAdd.size)

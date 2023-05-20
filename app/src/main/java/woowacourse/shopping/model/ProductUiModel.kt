@@ -8,6 +8,7 @@ data class ProductUiModel(
     val name: String,
     val imageUrl: String,
     val price: Int,
+    var count: Int = 0,
 ) : Serializable {
 
     fun toPriceFormat(): String {

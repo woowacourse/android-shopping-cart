@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.common.ProductCountClickListener
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
@@ -33,7 +34,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 }
             }
         }
-    private var shoppingCartCountView: TextView? = null
+    private var shoppingCartCountBadge: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,61 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
         setSupportActionBar(binding.toolbarShopping)
         presenter.loadProducts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.updateToolbar()
+        presenter.refreshView()
+    }
+
+    override fun setUpShoppingView(
+        products: List<ProductUiModel>,
+        recentViewedProducts: List<ProductUiModel>,
+        showMoreShoppingProducts: () -> Unit,
+    ) {
+        shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
+            products = products,
+            recentViewedProducts = recentViewedProducts,
+            onProductClicked = ::navigateToProductDetailView,
+            onReadMoreClicked = showMoreShoppingProducts,
+            countClickListener = object : ProductCountClickListener {
+                override fun onPlusClick(id: Int) {
+                    presenter.changeShoppingCartProductCount(id, true)
+                }
+
+                override fun onMinusClick(id: Int) {
+                    presenter.changeShoppingCartProductCount(id, false)
+                }
+            },
+        )
+
+        with(binding) {
+            productRecyclerView.layoutManager = GridLayoutManager(root.context, 2).apply {
+                spanSizeLookup =
+                    ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
+            }
+            productRecyclerView.adapter = shoppingRecyclerAdapter
+        }
+    }
+
+    override fun refreshRecentViewedProductsView(toReplace: List<ProductUiModel>) {
+        shoppingRecyclerAdapter.refreshRecentViewedItems(toReplace)
+    }
+
+    override fun refreshMoreShoppingProductsView(toAdd: List<ProductUiModel>) {
+        shoppingRecyclerAdapter.readMoreShoppingItems(toAdd = toAdd)
+    }
+
+    override fun refreshShoppingProductsView(products: List<ProductUiModel>) {
+        shoppingRecyclerAdapter.refreshShoppingItems(products)
+    }
+
+    private fun navigateToProductDetailView(product: ProductUiModel) {
+        presenter.addToRecentViewedProduct(product.id)
+        val intent = ProductDetailActivity.getIntent(this, product)
+
+        shoppingDetailResultLauncher.launch(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,7 +107,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 navigateToShoppingCartView()
             }
             view.findViewById<TextView>(R.id.text_total_cart_size_count)
-                ?.let { shoppingCartCountView = it }
+                ?.let { shoppingCartCountBadge = it }
         }
         presenter.updateToolbar()
 
@@ -69,52 +125,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun updateToolbar(count: Int) {
         if (count < MINIMUM_SIZE) {
-            shoppingCartCountView?.visibility = View.GONE
+            shoppingCartCountBadge?.visibility = View.GONE
         } else {
-            shoppingCartCountView?.visibility = View.VISIBLE
+            shoppingCartCountBadge?.visibility = View.VISIBLE
         }
-        shoppingCartCountView?.text = count.toString()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.updateToolbar()
-    }
-
-    override fun setUpShoppingView(
-        products: List<ProductUiModel>,
-        recentViewedProducts: List<ProductUiModel>,
-        showMoreShoppingProducts: () -> Unit,
-    ) {
-        shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
-            products = products,
-            recentViewedProducts = recentViewedProducts,
-            onProductClicked = ::navigateToProductDetailView,
-            onReadMoreClicked = showMoreShoppingProducts,
-        )
-
-        with(binding) {
-            productRecyclerView.layoutManager = GridLayoutManager(root.context, 2).apply {
-                spanSizeLookup =
-                    ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
-            }
-            productRecyclerView.adapter = shoppingRecyclerAdapter
-        }
-    }
-
-    override fun refreshRecentViewedProductsView(toReplace: List<ProductUiModel>) {
-        shoppingRecyclerAdapter.refreshRecentViewedItems(toReplace)
-    }
-
-    override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {
-        shoppingRecyclerAdapter.refreshShoppingItems(toAdd = toAdd)
-    }
-
-    private fun navigateToProductDetailView(product: ProductUiModel) {
-        presenter.addToRecentViewedProduct(product.id)
-        val intent = ProductDetailActivity.getIntent(this, product)
-
-        shoppingDetailResultLauncher.launch(intent)
+        shoppingCartCountBadge?.text = count.toString()
     }
 
     companion object {
