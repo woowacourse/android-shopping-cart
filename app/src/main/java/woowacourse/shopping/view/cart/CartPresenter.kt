@@ -1,9 +1,14 @@
 package woowacourse.shopping.view.cart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.domain.*
+import woowacourse.shopping.domain.CartPageStatus
+import woowacourse.shopping.domain.CartPagination
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.CartSystem
+import woowacourse.shopping.domain.CartSystemResult
+import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.toDomain
 import woowacourse.shopping.model.toUiModel
@@ -36,9 +41,10 @@ class CartPresenter(
 
     init {
         val models = convertCartProductToModels(cartPagination.nextItems())
-        cartItems = (models.map { CartViewItem.CartProductItem(it) }
-                + CartViewItem.PaginationItem(cartPagination.status)
-                ).toMutableList()
+        cartItems = (
+            models.map { CartViewItem.CartProductItem(it) } +
+                CartViewItem.PaginationItem(cartPagination.status)
+            ).toMutableList()
     }
 
     override fun fetchProducts() {
@@ -139,7 +145,6 @@ class CartPresenter(
             _cartSystemResult.value = cartSystem.updateProduct(id, count)
         }
     }
-
 
     private fun convertCartProductToModels(cartProducts: List<CartProduct>) =
         cartProducts.map {

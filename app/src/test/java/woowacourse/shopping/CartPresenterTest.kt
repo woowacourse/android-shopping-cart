@@ -1,7 +1,12 @@
 package woowacourse.shopping
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.mockk.*
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
@@ -13,7 +18,6 @@ import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.model.CartProductModel
-import woowacourse.shopping.model.toUiModel
 import woowacourse.shopping.view.cart.CartContract
 import woowacourse.shopping.view.cart.CartPresenter
 import woowacourse.shopping.view.cart.CartViewItem

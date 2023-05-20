@@ -149,8 +149,6 @@ class ProductDetailPresenterTest {
         assertEquals(expectedCount, actualCount)
     }
 
-
-
     @Test
     fun `현재 선택한 개수가 1이라면 개수 감소를 할 수 없다`() {
         presenter = ProductDetailPresenter(1, view, cartRepository, recentViewedRepository)

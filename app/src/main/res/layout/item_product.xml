@@ -14,6 +14,7 @@
             type="woowacourse.shopping.view.productlist.ProductListAdapter.OnItemClick" />
 
         <import type="woowacourse.shopping.util.PriceFormatter" />
+
         <import type="android.view.View" />
     </data>
 
@@ -40,11 +41,11 @@
             android:id="@+id/layout_add_btns"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:visibility="@{product.count == 0 ? View.INVISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/btn_add"
             app:layout_constraintEnd_toEndOf="@id/img_product"
             app:layout_constraintStart_toStartOf="@id/img_product"
-            app:layout_constraintTop_toTopOf="@id/btn_add"
-            android:visibility="@{product.count == 0 ? View.INVISIBLE : View.VISIBLE}">
+            app:layout_constraintTop_toTopOf="@id/btn_add">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_minus"
@@ -91,10 +92,10 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/ic_add_circle"
+            android:visibility="@{product.count == 0 ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/img_product"
             app:layout_constraintCircleRadius="@dimen/cardview_compat_inset_shadow"
-            app:layout_constraintEnd_toEndOf="@id/img_product"
-            android:visibility="@{product.count == 0 ? View.VISIBLE : View.INVISIBLE}"/>
+            app:layout_constraintEnd_toEndOf="@id/img_product" />
 
         <TextView
             android:id="@+id/text_name"

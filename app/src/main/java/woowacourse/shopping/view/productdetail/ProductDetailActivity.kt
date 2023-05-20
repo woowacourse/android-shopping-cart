@@ -17,7 +17,6 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.databinding.DialogCountBinding
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.getParcelableCompat
-import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.ID
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_ADDED
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_VIEWED

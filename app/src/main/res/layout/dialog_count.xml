@@ -6,6 +6,7 @@
         <variable
             name="presenter"
             type="woowacourse.shopping.view.productdetail.ProductDetailContract.Presenter" />
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductModel" />
@@ -23,12 +24,12 @@
             android:id="@+id/text_product_name_selected"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="@{product.name}"
             tools:text="[든든] 동원 스위트콘" />
 
         <TextView
@@ -36,11 +37,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
+            android:text="@{@string/korean_won2(product.price)}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_product_name_selected"
-            android:text="@{@string/korean_won2(product.price)}"
             tools:text="99,900원" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -86,10 +87,10 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/mint"
+            android:onClick="@{() -> presenter.putInCart(product)}"
             android:text="@string/add_to_cart"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:onClick="@{() -> presenter.putInCart(product)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

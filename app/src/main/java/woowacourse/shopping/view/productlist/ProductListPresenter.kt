@@ -104,7 +104,6 @@ class ProductListPresenter(
         view.notifyDataChanged(productsListItems.indexOf(item))
     }
 
-
     override fun updateRecentViewed(id: Int) {
         if (id == -1) return
         if (isExistRecentViewed()) productsListItems.removeIf { it is ProductListViewItem.RecentViewedItem }
@@ -113,7 +112,6 @@ class ProductListPresenter(
         productsListItems.add(0, ProductListViewItem.RecentViewedItem(viewedProductModels))
         view.notifyRecentViewedChanged()
     }
-
 
     private fun convertIdToProductModel(id: Int) =
         productRepository.find(id).toUiModel(cartRepository.find(id)?.count ?: 0)
