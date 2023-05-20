@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.cart
 
 import io.mockk.every
 import io.mockk.justRun
@@ -6,8 +6,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.cart.CartContract
-import woowacourse.shopping.cart.CartPresenter
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.repository.CartRepository
 

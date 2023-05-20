@@ -14,6 +14,7 @@ import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.productdetail.dialog.CartProductDialog
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
@@ -32,7 +33,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setSupportActionBar(findViewById(R.id.product_detail_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        setUpProductDetailCartButton()
+        setupProductDetailCartButton()
 
         initPresenter()
     }
@@ -57,6 +58,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.recentProduct = recentProductModel
     }
 
+    override fun showCartProductDialog(productModel: ProductModel) {
+        val dialog = CartProductDialog.createDialog(productModel)
+        dialog.show(supportFragmentManager, "CartProductDialog")
+    }
+
     override fun showCart() {
         startCartActivity()
     }
@@ -71,9 +77,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         recentProductModel = intent.getSerializable(EXTRA_KEY_RECENT_PRODUCT)
     }
 
-    private fun setUpProductDetailCartButton() {
+    private fun setupProductDetailCartButton() {
         binding.productDetailCartButton.setOnClickListener {
-            presenter.addToCart()
+            presenter.setupCartProductDialog()
         }
     }
 

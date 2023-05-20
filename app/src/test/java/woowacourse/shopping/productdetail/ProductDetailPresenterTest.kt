@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.productdetail
 
 import io.mockk.justRun
 import io.mockk.mockk
@@ -6,8 +6,6 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.productdetail.ProductDetailContract
-import woowacourse.shopping.productdetail.ProductDetailPresenter
 
 class ProductDetailPresenterTest {
     private lateinit var presenter: ProductDetailPresenter
@@ -18,6 +16,12 @@ class ProductDetailPresenterTest {
     fun setUP() {
         view = mockk(relaxed = true)
         cartRepository = mockk(relaxed = true)
+        presenter = ProductDetailPresenter(
+            view,
+            productModel = mockk(relaxed = true),
+            recentProductModel = mockk(relaxed = true),
+            cartRepository
+        )
     }
 
     @Test
@@ -26,12 +30,6 @@ class ProductDetailPresenterTest {
         justRun { view.setupProductDetail(any()) }
 
         // when
-        presenter = ProductDetailPresenter(
-            view,
-            productModel = mockk(relaxed = true),
-            recentProductModel = mockk(relaxed = true),
-            cartRepository
-        )
 
         // then
         verify {
@@ -45,12 +43,6 @@ class ProductDetailPresenterTest {
         justRun { view.setupRecentProductDetail(any()) }
 
         // when
-        presenter = ProductDetailPresenter(
-            view,
-            productModel = mockk(relaxed = true),
-            recentProductModel = mockk(relaxed = true),
-            cartRepository
-        )
 
         // then
         verify {
@@ -65,12 +57,6 @@ class ProductDetailPresenterTest {
             cartRepository.addCartProduct(any())
             view.showCart()
         }
-        presenter = ProductDetailPresenter(
-            view,
-            productModel = mockk(relaxed = true),
-            recentProductModel = mockk(relaxed = true),
-            cartRepository
-        )
 
         // when
         presenter.addToCart()
@@ -80,5 +66,16 @@ class ProductDetailPresenterTest {
             cartRepository.addCartProduct(any())
             view.showCart()
         }
+    }
+
+    @Test
+    fun 카트_상품_다이얼로그를_셋업하면_카트_상품_다이얼로그를_보여준다() {
+        // given
+
+        // when
+        presenter.setupCartProductDialog()
+
+        // then
+        verify { view.showCartProductDialog(any()) }
     }
 }

@@ -41,23 +41,14 @@
     - [ ] ProductDetail
         - [x] init { }
             - [x] view.setupRecentProductDetail(productModel)
-        - [ ] setUpCartProduct()
-        - [ ] decreaseCartProductAmount()
-            - [ ] if(amount > 1)
-                - [ ] cartProduct.decreaseAmount()
-                - [ ] view.updateCartProduct(cartProductModel)
-        - [ ] increaseCartProductAmount()
-            - [ ] cartProduct.increaseAmount()
-            - [ ] view.updateCartProduct(cartProductModel)
+        - [x] setupCartProductDialog()
+            - [x] view.showCartProductDialog(productModel)
         - [ ] openRecentProductDetail()
             - [ ] view.showRecentProductDetail(recentProductModel)
-        - [ ] addToCart()
-            - [ ] if (cartRepository.getCartProductByProduct(product) == null)
-                - [ ] cartRepository.addCartProduct(cartProduct)
-            - [ ] else
-                - [ ] cartRepository.modifyCartProduct(cartProduct)
-    - [ ] RecentProductDetail
-        - [ ] setUpCartProduct()
+    - [ ] CartProductDialog
+        - [x] init { }
+            - [x] create cart product
+            - [x] view.setupCartProductAmount(amount)
         - [ ] decreaseCartProductAmount()
             - [ ] if(amount > 1)
                 - [ ] cartProduct.decreaseAmount()
@@ -70,7 +61,6 @@
                 - [ ] cartRepository.addCartProduct(cartProduct)
             - [ ] else
                 - [ ] cartRepository.modifyCartProduct(cartProduct)
-            - [ ] view.showCart()
     - [ ] Cart
         - Cart
         - [ ] updateCartProductChecked(cartProductModel)

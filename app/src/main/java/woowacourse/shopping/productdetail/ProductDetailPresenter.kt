@@ -24,6 +24,10 @@ class ProductDetailPresenter(
         view.setupRecentProductDetail(recentProduct?.toView())
     }
 
+    override fun setupCartProductDialog() {
+        view.showCartProductDialog(product.toView())
+    }
+
     override fun addToCart() {
         val cartProduct = CartProduct(LocalDateTime.now(), amount = 1, isChecked = true, product)
         cartRepository.addCartProduct(cartProduct)
