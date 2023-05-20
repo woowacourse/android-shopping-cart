@@ -87,16 +87,13 @@ class BasketPresenter(
         _pageCheckSize.value = basket.getCheckedSize(currentPage)
     }
 
-    fun changeAllCheckState(isAllCheck: Boolean) {
-        if (_pageCheckSize.value!! > 0 && _pageCheckSize.value != basket.takeItemsUpToPage(currentPage).size) {
-            return
-        }
-        basket = if (isAllCheck) basket.selectAll() else basket.unselectAll()
+    fun toggleAllCheckState() {
+        basket = if (isAllChecked.value == true) basket.unselectAll() else basket.selectAll()
         basketRepository.update(basket.takeBasketUpToPage(currentPage))
 
         _totalCheckSize.value = basketRepository.getCheckedProductCount()
         _pageCheckSize.value = basket.getCheckedSize(currentPage)
-        view.updateBasket(basket.takeItemsUpToPage(currentPage).map { it.toUi() })
+        view.updateAllCheckedState(basket.takeItemsUpToPage(currentPage).map { it.toUi() })
         view.updateTotalPrice(basketRepository.getTotalPrice())
     }
 

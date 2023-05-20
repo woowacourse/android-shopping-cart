@@ -119,7 +119,7 @@
                 android:checked="@{presenter.isAllChecked}"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
-                android:onCheckedChanged="@{(_, isAllCheck) -> presenter.changeAllCheckState(isAllCheck)}"
+                android:onClick="@{() -> presenter.toggleAllCheckState()}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/select_all_title_text_view"
                 app:layout_constraintStart_toStartOf="parent"
@@ -155,12 +155,13 @@
                 android:id="@+id/order_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/woowa_emerald"
+                android:background="@color/color_order_button"
                 android:clickable="true"
-                android:onClick="@{() -> presenter.order()}"
+                tools:enabled="false"
                 android:enabled="@{presenter.totalCheckSize > 0}"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
+                android:onClick="@{() -> presenter.order()}"
                 android:paddingHorizontal="18dp"
                 android:paddingVertical="30dp"
                 android:text="@{presenter.totalCheckSize > 0 ? @string/order_format(presenter.totalCheckSize) : @string/order}"
@@ -170,7 +171,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_min="120dp"
+                app:layout_constraintWidth_min="130dp"
                 tools:text="주문하기(2)" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

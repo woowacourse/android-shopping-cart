@@ -22,7 +22,6 @@ class BasketAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BasketViewHolder =
         BasketViewHolder(parent, onDelete, onSelect, onUnselect, onIncrease, onDecrease)
 
-
     override fun onBindViewHolder(holder: BasketViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
@@ -32,14 +31,12 @@ class BasketAdapter(
             override fun areItemsTheSame(
                 oldItem: UiBasketProduct,
                 newItem: UiBasketProduct,
-            ): Boolean =
-                oldItem.id == newItem.id
+            ): Boolean = oldItem.id == newItem.id
 
             override fun areContentsTheSame(
                 oldItem: UiBasketProduct,
                 newItem: UiBasketProduct,
-            ): Boolean =
-                oldItem == newItem
+            ): Boolean = oldItem == newItem
         }
     }
 }
