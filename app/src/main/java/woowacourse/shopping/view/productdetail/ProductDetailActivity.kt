@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDbRepository
@@ -28,6 +29,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         getData()
         bindView()
         showDialog()
+        setMostRecentViewedVisibility()
         presenter.updateRecentViewedProducts()
     }
 
@@ -42,12 +44,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun getData() {
         intent.getParcelableCompat<ProductModel>(PRODUCT)?.let { presenter.setProductData(it) }
+        intent.getBooleanExtra(FLAG, false).let { presenter.setFlag(it) }
     }
 
     private fun bindView() {
         binding.product = presenter.getProductData()
         binding.recentViewedProduct = presenter.getRecentViewedProductData()
         binding.presenter = presenter
+    }
+
+    private fun setMostRecentViewedVisibility() {
+        presenter.compareNowAndRecent()
+        if (presenter.getFlag()) {
+            binding.lastProductLayout.visibility = View.INVISIBLE
+        }
     }
 
     private fun showDialog() {
@@ -63,8 +73,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         finish()
     }
 
-    override fun showProductRecentViewedDetail(product: ProductModel) {
-        val intent = newIntent(this, product)
+    override fun startRecentViewedDetail(product: ProductModel) {
+        val intent = newIntent(this, product, true)
         startActivity(intent)
         finish()
     }
@@ -76,7 +86,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        presenter.handleNextStep(item.itemId)
+        presenter.navigateNextStep(item.itemId)
         return super.onOptionsItemSelected(item)
     }
 
@@ -86,10 +96,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         const val PRODUCT = "PRODUCT"
+        const val FLAG = "flag"
 
-        fun newIntent(context: Context, product: ProductModel): Intent {
+        fun newIntent(context: Context, product: ProductModel, flag: Boolean): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(PRODUCT, product)
+            intent.putExtra(FLAG, flag)
             return intent
         }
     }

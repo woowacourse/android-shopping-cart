@@ -67,7 +67,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun showProductDetail(product: ProductModel) {
-        val intent = ProductDetailActivity.newIntent(binding.root.context, product)
+        val intent = ProductDetailActivity.newIntent(this, product, false)
         startActivity(intent)
     }
 

@@ -7,18 +7,21 @@ interface ProductDetailContract {
     interface View {
         fun getData()
         fun startCartActivity()
+        fun startRecentViewedDetail(product: ProductModel)
         fun onOptionsItemSelected(item: MenuItem): Boolean
         fun handleBackButtonClicked()
-        fun showProductRecentViewedDetail(product: ProductModel)
     }
 
     interface Presenter {
-        fun putInCart(product: ProductModel)
-        fun updateRecentViewedProducts()
-        fun handleNextStep(itemId: Int)
         fun setProductData(productModel: ProductModel)
         fun getProductData(): ProductModel
+        fun setFlag(flag: Boolean)
+        fun getFlag(): Boolean
+        fun updateRecentViewedProducts()
         fun getRecentViewedProductData(): ProductModel
+        fun putInCart(product: ProductModel)
         fun navigateRecentViewedDetail()
+        fun navigateNextStep(itemId: Int)
+        fun compareNowAndRecent()
     }
 }

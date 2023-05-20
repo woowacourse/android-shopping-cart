@@ -16,6 +16,7 @@ class ProductDetailPresenter(
 
     private lateinit var productData: ProductModel
     private lateinit var recentViewedProductData: ProductModel
+    private var visibilityFlag: Boolean = false
 
     override fun setProductData(productModel: ProductModel) {
         productData = productModel
@@ -25,14 +26,28 @@ class ProductDetailPresenter(
         return productData
     }
 
+    override fun setFlag(flag: Boolean) {
+        visibilityFlag = flag
+    }
+
+    override fun getFlag(): Boolean {
+        return visibilityFlag
+    }
+
     override fun getRecentViewedProductData(): ProductModel {
         val mostRecentId = recentViewedRepository.findMostRecent()
         recentViewedProductData = convertIdToModel(mostRecentId)
         return recentViewedProductData
     }
 
-    override fun navigateRecentViewedDetail() {
-        view.showProductRecentViewedDetail(recentViewedProductData)
+    override fun updateRecentViewedProducts() {
+        recentViewedRepository.add(productData.id)
+    }
+
+    override fun compareNowAndRecent() {
+        if (recentViewedProductData.id == productData.id) {
+            visibilityFlag = true
+        }
     }
 
     override fun putInCart(product: ProductModel) {
@@ -40,16 +55,16 @@ class ProductDetailPresenter(
         view.startCartActivity()
     }
 
-    override fun updateRecentViewedProducts() {
-        recentViewedRepository.add(productData.id)
-    }
-
     private fun convertIdToModel(id: Int): ProductModel {
         val product = productRepository.find(id)
         return product.toUiModel()
     }
 
-    override fun handleNextStep(itemId: Int) {
+    override fun navigateRecentViewedDetail() {
+        view.startRecentViewedDetail(recentViewedProductData)
+    }
+
+    override fun navigateNextStep(itemId: Int) {
         when (itemId) {
             R.id.close -> {
                 view.handleBackButtonClicked()
