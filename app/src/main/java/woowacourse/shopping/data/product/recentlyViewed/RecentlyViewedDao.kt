@@ -3,6 +3,7 @@ package woowacourse.shopping.data.product.recentlyViewed
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase.CONFLICT_REPLACE
 import android.provider.BaseColumns
 import woowacourse.shopping.data.WoowaShoppingContract.RecentlyViewed.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.data.WoowaShoppingContract.RecentlyViewed.TABLE_NAME
@@ -25,7 +26,8 @@ class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
     override fun addRecentlyViewedProduct(productId: Long): Long {
         val data = ContentValues()
         data.put(TABLE_COLUMN_PRODUCT_ID, productId)
-        val id = shoppingDb.insert(TABLE_NAME, null, data)
+        val id =
+            shoppingDb.insertWithOnConflict(TABLE_NAME, null, data, CONFLICT_REPLACE)
         return id
     }
 

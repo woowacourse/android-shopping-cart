@@ -24,7 +24,7 @@ object WoowaShoppingContract : BaseColumns {
 
         const val CREATE_RECENTLY_VIEWED_TABLE = "CREATE TABLE $TABLE_NAME (" +
             "  ${BaseColumns._ID} INTEGER PRIMARY KEY," +
-            "  $TABLE_COLUMN_PRODUCT_ID INTEGER" +
+            "  $TABLE_COLUMN_PRODUCT_ID INTEGER UNIQUE" +
             ");"
         const val DELETE_RECENTLY_VIEWED_TABLE = "DROP TABLE IF EXISTS $TABLE_NAME"
     }
