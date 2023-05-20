@@ -6,13 +6,18 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.example.domain.CartProduct
 import com.example.domain.Product
+import com.example.domain.repository.ProductRepository
+import woowacourse.shopping.data.product.ProductDao
+import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 
 class CartDao(context: Context) {
 
-    private val db: SQLiteDatabase = CartDbHelper(context).writableDatabase
+    private val productRepository: ProductRepository = ProductRepositoryImpl(ProductDao(context))
+    private val cartDb: SQLiteDatabase = CartDbHelper(context).writableDatabase
 
-    private fun getCursor(): Cursor {
-        return db.query(
+    private fun getCursor(selection: String? = ""): Cursor {
+        return cartDb.query(
             CartContract.TABLE_NAME,
             arrayOf(
                 CartContract.TABLE_COLUMN_PRODUCT_ID,
@@ -22,8 +27,29 @@ class CartDao(context: Context) {
                 CartContract.TABLE_COLUMN_COUNT,
                 CartContract.TABLE_COLUMN_CHECKED
             ),
-            "", arrayOf(), null, null, ""
+            selection, arrayOf(), null, null, ""
         )
+    }
+
+    fun getCartProduct(productId: Int): CartProduct? {
+        val cursor = getCursor("${CartContract.TABLE_COLUMN_PRODUCT_ID} = $productId")
+        var cartProduct: CartProduct? = null
+
+        with(cursor) {
+            while (moveToNext()) {
+                val id = getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_ID))
+                val imageUrl =
+                    getString(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
+                val name = getString(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_NAME))
+                val price = getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_PRICE))
+                val count = getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
+                val checked =
+                    getInt(getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECKED)) == CHECKED_TRUE
+                cartProduct = CartProduct(id, imageUrl, name, price, count, checked)
+            }
+        }
+        cursor.close()
+        return cartProduct
     }
 
     fun getAll(): List<CartProduct> {
@@ -55,75 +81,61 @@ class CartDao(context: Context) {
         return list
     }
 
-    fun addColumn(product: Product, count: Int) {
-        val findCartProduct: CartProduct? = getAll().find { it.productId == product.id }
+    fun addColumn(productId: Int, count: Int = MIN_COUNT_VALUE) {
+        val findCartProduct: CartProduct? = getCartProduct(productId)
 
         if (findCartProduct == null) {
-            val values = ContentValues().apply {
-                put(CartContract.TABLE_COLUMN_PRODUCT_ID, product.id)
-                put(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
-                put(CartContract.TABLE_COLUMN_PRODUCT_NAME, product.name)
-                put(CartContract.TABLE_COLUMN_PRODUCT_PRICE, product.price)
-                put(CartContract.TABLE_COLUMN_COUNT, count) // 담았을 때 기준 기본 1
-                put(CartContract.TABLE_COLUMN_CHECKED, CHECKED_FALSE)
+            val product: Product? = productRepository.getProduct(productId)
+            product?.let {
+                val values = ContentValues().apply {
+                    put(CartContract.TABLE_COLUMN_PRODUCT_ID, it.id)
+                    put(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, it.imageUrl)
+                    put(CartContract.TABLE_COLUMN_PRODUCT_NAME, it.name)
+                    put(CartContract.TABLE_COLUMN_PRODUCT_PRICE, it.price)
+                    put(CartContract.TABLE_COLUMN_COUNT, count) // 담았을 때 기준 기본 1
+                    put(CartContract.TABLE_COLUMN_CHECKED, CHECKED_FALSE)
+                }
+                cartDb.insert(CartContract.TABLE_NAME, null, values)
             }
-            db.insert(CartContract.TABLE_NAME, null, values)
             return
         }
-        updateCartProductCount(findCartProduct, count + findCartProduct.count)
+        updateCartProductCount(findCartProduct.productId, count + findCartProduct.count)
     }
 
-    fun addColumn(cartProduct: CartProduct) {
-        val values = ContentValues().apply {
-            put(CartContract.TABLE_COLUMN_PRODUCT_ID, cartProduct.productId)
-            put(CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, cartProduct.productImageUrl)
-            put(CartContract.TABLE_COLUMN_PRODUCT_NAME, cartProduct.productName)
-            put(CartContract.TABLE_COLUMN_PRODUCT_PRICE, cartProduct.productPrice)
-            put(CartContract.TABLE_COLUMN_COUNT, 1) // 담았을 때 기준 기본 1
-            put(CartContract.TABLE_COLUMN_CHECKED, CHECKED_FALSE)
-        }
-
-        db.insert(CartContract.TABLE_NAME, null, values)
-    }
-
-    fun deleteColumn(cartProduct: CartProduct) {
-        db.delete(
+    fun deleteColumn(productId: Int) {
+        cartDb.delete(
             CartContract.TABLE_NAME,
-            CartContract.TABLE_COLUMN_PRODUCT_ID + "=" + cartProduct.productId, null
+            CartContract.TABLE_COLUMN_PRODUCT_ID + "=" + productId, null
         )
     }
 
-    fun updateCartProductCount(cartProduct: CartProduct, count: Int) {
-        val findCartProduct =
-            getAll().find { it.productId == cartProduct.productId } ?: return addColumn(cartProduct)
+    fun updateCartProductCount(productId: Int, count: Int) {
+        val findCartProduct: CartProduct = getCartProduct(productId) ?: return addColumn(productId, count)
 
-        if (count <= 0) return deleteColumn(findCartProduct)
+        if (count <= 0) return deleteColumn(findCartProduct.productId)
 
         val updateSql =
             """
                 UPDATE ${CartContract.TABLE_NAME}
                 SET ${CartContract.TABLE_COLUMN_COUNT} = $count
-                WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID} = ${cartProduct.productId};
+                WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID} = $productId;
             """.trimIndent()
 
-        db.execSQL(updateSql)
+        cartDb.execSQL(updateSql)
     }
 
-    fun updateCartProductChecked(product: Product, checked: Boolean) {
-        val findCartProduct =
-            getAll().find { it.productId == product.id } ?: return
-
+    fun updateCartProductChecked(productId: Int, checked: Boolean) {
+        val findCartProduct: CartProduct = getCartProduct(productId) ?: return addColumn(productId)
         val checkedState = if (checked) CHECKED_TRUE else CHECKED_FALSE
-
         val updateSql = "UPDATE ${CartContract.TABLE_NAME} " +
             "SET ${CartContract.TABLE_COLUMN_CHECKED}=$checkedState " +
             "WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID}=${findCartProduct.productId}"
 
-        db.execSQL(updateSql)
+        cartDb.execSQL(updateSql)
     }
 
     fun createTable() {
-        db.execSQL(
+        cartDb.execSQL(
             """
                 CREATE TABLE ${CartContract.TABLE_NAME} (
                     ${CartContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
@@ -138,7 +150,7 @@ class CartDao(context: Context) {
     }
 
     fun deleteTable() {
-        db.execSQL(
+        cartDb.execSQL(
             """
                 DROP TABLE IF EXISTS ${CartContract.TABLE_NAME};
             """.trimIndent()

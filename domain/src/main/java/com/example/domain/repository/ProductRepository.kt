@@ -6,5 +6,7 @@ interface ProductRepository {
 
     fun getAll(): List<Product>
 
+    fun getProduct(productId: Int): Product?
+
 //    fun get(fromIndex: Int, ToIndex: Int): List<Product>
 }

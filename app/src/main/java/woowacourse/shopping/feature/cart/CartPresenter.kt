@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.cart
 import com.example.domain.CartProduct
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.model.CartProductState
-import woowacourse.shopping.model.mapper.toDomain
 import woowacourse.shopping.model.mapper.toUi
 
 class CartPresenter(
@@ -57,15 +56,15 @@ class CartPresenter(
     }
 
     override fun plusCountNumber(cartProductState: CartProductState, count: Int) {
-        cartRepository.updateCartProductCount(cartProductState.toDomain(), cartProductState.count)
+        cartRepository.updateCartProductCount(cartProductState.productId, cartProductState.count)
     }
 
     override fun minusCountNumber(cartProductState: CartProductState, count: Int) {
-        cartRepository.updateCartProductCount(cartProductState.toDomain(), cartProductState.count)
+        cartRepository.updateCartProductCount(cartProductState.productId, cartProductState.count)
     }
 
     override fun deleteCartProduct(cartProductState: CartProductState) {
-        cartRepository.deleteCartProduct(cartProductState.toDomain())
+        cartRepository.deleteCartProduct(cartProductState.productId)
         cartProducts = cartRepository.getAll()
         loadCart()
     }

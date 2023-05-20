@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.cart
 
 import com.example.domain.CartProduct
-import com.example.domain.Product
 import com.example.domain.repository.CartRepository
 
 class CartRepositoryImpl(
@@ -12,19 +11,19 @@ class CartRepositoryImpl(
         return cartDao.getAll()
     }
 
-    override fun addProduct(product: Product, count: Int) {
-        cartDao.addColumn(product, count)
+    override fun addProduct(productId: Int, count: Int) {
+        cartDao.addColumn(productId, count)
     }
 
-    override fun deleteCartProduct(cartProduct: CartProduct) {
-        cartDao.deleteColumn(cartProduct)
+    override fun deleteCartProduct(productId: Int) {
+        cartDao.deleteColumn(productId)
     }
 
-    override fun updateCartProductCount(cartProduct: CartProduct, count: Int) {
-        cartDao.updateCartProductCount(cartProduct, count)
+    override fun updateCartProductCount(productId: Int, count: Int) {
+        cartDao.updateCartProductCount(productId, count)
     }
 
-    override fun updateCartProductChecked(product: Product, checked: Boolean) {
-        cartDao.updateCartProductChecked(product, checked)
+    override fun updateCartProductChecked(productId: Int, checked: Boolean) {
+        cartDao.updateCartProductChecked(productId, checked)
     }
 }

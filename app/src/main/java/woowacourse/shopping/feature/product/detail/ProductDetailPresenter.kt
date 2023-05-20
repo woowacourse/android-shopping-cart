@@ -5,7 +5,6 @@ import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.model.CartProductState.Companion.MAX_COUNT_VALUE
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.mapper.toDomain
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
@@ -30,7 +29,7 @@ class ProductDetailPresenter(
         if (!isValidProduct()) return
         product!!
 
-        cartRepository.addProduct(product.toDomain(), count)
+        cartRepository.addProduct(product.id, count)
         view.showCart()
         view.closeProductDetail()
     }

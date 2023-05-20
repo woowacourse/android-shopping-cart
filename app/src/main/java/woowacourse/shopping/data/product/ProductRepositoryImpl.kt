@@ -10,4 +10,8 @@ class ProductRepositoryImpl(
     override fun getAll(): List<Product> {
         return productDao.getAll()
     }
+
+    override fun getProduct(productId: Int): Product? {
+        return productDao.getProduct(productId)
+    }
 }
