@@ -19,7 +19,7 @@
         android:paddingBottom="18dp">
 
         <CheckBox
-            android:id="@+id/checkbox_cart"
+            android:id="@+id/cb_cart"
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:layout_constraintBottom_toTopOf="@id/iv_cart"
@@ -36,9 +36,9 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/checkbox_cart"
-            app:layout_constraintStart_toEndOf="@id/checkbox_cart"
-            app:layout_constraintTop_toTopOf="@id/checkbox_cart"
+            app:layout_constraintBottom_toBottomOf="@id/cb_cart"
+            app:layout_constraintStart_toEndOf="@id/cb_cart"
+            app:layout_constraintTop_toTopOf="@id/cb_cart"
             tools:text="Product Name" />
 
         <ImageView

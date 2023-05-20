@@ -54,7 +54,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartAdapter() {
-        binding.recyclerViewCart.adapter = CartListAdapter(
+        binding.rvCart.adapter = CartListAdapter(
             mutableListOf<CartUIState>(),
             presenter::deleteCartItem,
             presenter::plusItemCount,
@@ -91,7 +91,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItems(cartItems: List<CartUIState>) {
-        (binding.recyclerViewCart.adapter as CartListAdapter).updateItems(cartItems)
+        (binding.rvCart.adapter as CartListAdapter).updateItems(cartItems)
     }
 
     override fun updatePage() {

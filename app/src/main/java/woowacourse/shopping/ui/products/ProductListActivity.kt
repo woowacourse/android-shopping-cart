@@ -68,7 +68,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initProductList() {
-        binding.recyclerViewMainProduct.adapter = ProductListAdapter(mutableListOf()) {
+        binding.rvMainProduct.adapter = ProductListAdapter(mutableListOf()) {
             presenter.addRecentlyViewedProduct(it)
             moveToProductDetailActivity(it)
         }
@@ -93,14 +93,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
 
         binding.layoutRecentlyViewed.isVisible = true
-        binding.recyclerViewRecentlyViewed.adapter =
+        binding.rvRecentlyViewed.adapter =
             RecentlyViewedProductListAdapter(recentlyViewedProducts) {
                 moveToProductDetailActivity(recentlyViewedProducts[it].id)
             }
     }
 
     override fun addProducts(products: List<ProductUIState>) {
-        val adapter = binding.recyclerViewMainProduct.adapter as ProductListAdapter
+        val adapter = binding.rvMainProduct.adapter as ProductListAdapter
         adapter.addItems(products)
         adapter.notifyItemRangeInserted(adapter.itemCount, products.size)
     }
