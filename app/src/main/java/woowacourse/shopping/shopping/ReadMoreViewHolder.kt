@@ -8,12 +8,12 @@ class ReadMoreViewHolder private constructor(
     binding: ItemReadMoreBinding,
 ) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ReadMoreDescription, ItemReadMoreBinding>(binding) {
 
-    override fun bind(itemData: ShoppingRecyclerItem.ReadMoreDescription) {
-        binding.buttonReadMore.text = itemData.value
-    }
-
     fun setOnClicked(onClicked: () -> Unit) {
         binding.buttonReadMore.setOnClickListener { onClicked() }
+    }
+
+    override fun bind(itemData: ShoppingRecyclerItem.ReadMoreDescription) {
+        binding.buttonReadMore.text = itemData.value
     }
 
     companion object {
