@@ -3,12 +3,11 @@ package woowacourse.shopping.view.productdetail
 import android.app.Dialog
 import android.view.Window
 import android.view.WindowManager
-import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.databinding.CartDialogBinding
 import woowacourse.shopping.model.ProductModel
 
-class CartDialog(private val context: AppCompatActivity, private val cartRepository: CartDbRepository) {
+class CartDialog(private val context: ProductDetailActivity, private val cartRepository: CartDbRepository) {
     private val dialog = Dialog(context)
     private lateinit var binding: CartDialogBinding
     private lateinit var product: ProductModel
@@ -45,6 +44,7 @@ class CartDialog(private val context: AppCompatActivity, private val cartReposit
         binding.dialogPutButton.setOnClickListener {
             cartRepository.add(product.id, productCount, true)
             dialog.dismiss()
+            context.startCartActivity()
         }
     }
 
