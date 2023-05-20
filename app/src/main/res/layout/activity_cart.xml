@@ -23,13 +23,75 @@
             android:id="@+id/cart_product_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:orientation="vertical"
             android:paddingHorizontal="18dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/cart_bottom_bar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cart_toolbar"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical" />
+            app:layout_constraintTop_toBottomOf="@id/cart_toolbar" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cart_bottom_bar"
+            android:layout_width="0dp"
+            android:layout_height="78dp"
+            android:background="@color/toolbar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/cart_product_all_checkbox"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="23dp"
+                android:buttonTint="@color/primary"
+                android:checked="true"
+                app:layout_constraintBottom_toTopOf="@id/label_cart_product_all_checkbox"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <TextView
+                android:id="@+id/label_cart_product_all_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/check_all_label"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/cart_product_all_checkbox"
+                app:layout_constraintStart_toStartOf="@id/cart_product_all_checkbox"
+                app:layout_constraintTop_toBottomOf="@id/cart_product_all_checkbox" />
+
+            <TextView
+                android:id="@+id/cart_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cart_order_button"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="354,600원" />
+
+            <Button
+                android:id="@+id/cart_order_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@drawable/order_button_background"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="21dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="주문하기(1)" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

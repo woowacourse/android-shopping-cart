@@ -13,4 +13,6 @@
     <string name="minus">-</string>
     <string name="latest_recent_product_header">마지막으로 본 상품</string>
     <string name="cart_dialog_add_to_cart_button">담기</string>
+    <string name="check_all_label">전체</string>
+    <string name="order_button">주문하기(%d)</string>
 </resources>
