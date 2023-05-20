@@ -41,23 +41,23 @@ class ShoppingPresenter(
         }
     }
 
-    override fun storeBasketData() {
-        basket.products.forEach { basketRepository.overWriteUpdate(it) }
-    }
-
     override fun fetchTotalBasketCount() {
         view.updateTotalBasketCount(basket.products.fold(0) { acc, basketProduct -> acc + basketProduct.count.value })
     }
 
     override fun addBasketProduct(product: Product) {
-        basket = basket.add(BasketProduct(count = Count(1), product = product))
+        val addedProduct = BasketProduct(count = Count(1), product = product)
+        basketRepository.add(addedProduct)
+        basket = basket.add(addedProduct)
         fetchBasketCount()
         fetchTotalBasketCount()
         view.updateProducts(totalProducts)
     }
 
     override fun removeBasketProduct(product: Product) {
-        basket = basket.delete(BasketProduct(count = Count(1), product = product))
+        val removedProduct = BasketProduct(count = Count(1), product = product)
+        basketRepository.minus(removedProduct)
+        basket = basket.delete(removedProduct)
         fetchBasketCount()
         fetchTotalBasketCount()
         view.updateProducts(totalProducts)

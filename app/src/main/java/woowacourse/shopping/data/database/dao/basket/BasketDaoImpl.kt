@@ -7,6 +7,7 @@ import android.provider.BaseColumns
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.contract.BasketContract
 import woowacourse.shopping.data.database.contract.ProductContract
+import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.data.model.DataBasketProduct
 import woowacourse.shopping.data.model.DataCount
 import woowacourse.shopping.data.model.DataPrice
@@ -243,6 +244,23 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 )
             } else {
                 db.insert(BasketContract.TABLE_NAME, null, contentValues)
+            }
+        }
+    }
+
+    override fun minus(basketProduct: DataBasketProduct) {
+        val existingBasketItem = getByProductId(basketProduct.product.id)
+        if ((existingBasketItem.count.toDomain() - basketProduct.count.toDomain()).value <= 0) {
+            remove(existingBasketItem)
+        } else {
+            database.writableDatabase.use { db ->
+                db.execSQL(
+                    UPDATE_BASKET_COUNT,
+                    arrayOf(
+                        (existingBasketItem.count.toDomain() - basketProduct.count.toDomain()).value.toString(),
+                        basketProduct.product.id.toString()
+                    )
+                )
             }
         }
     }
