@@ -87,6 +87,7 @@
                 android:layout_marginVertical="24dp"
                 android:layout_marginStart="24dp"
                 android:checked="@{presenter.isAllSelected}"
+                android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />
@@ -114,12 +115,13 @@
                 android:background="@color/mint"
                 android:gravity="center"
                 android:padding="24dp"
-                android:text="@string/order"
+                android:text="@{@string/order(presenter.totalCount)}"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="주문하기(5)" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
