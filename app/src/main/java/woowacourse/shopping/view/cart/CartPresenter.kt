@@ -69,11 +69,38 @@ class CartPresenter(
 
     override fun updateItemCheck(id: Int, checked: Boolean) {
         cartRepository.updateCheckState(id, checked)
+        currentCartProducts
+            .indexOfFirst { it.id == id }
+            .let { currentCartProducts[it] = currentCartProducts[it].copy(check = checked) }
     }
 
     override fun setupTotalCount() {
         val cartModels = convertIdToModel(cartRepository.findCheckedItem())
         _totalCount.value = cartModels.sumOf { it.count }
+    }
+
+    override fun setAllCheck() {
+        currentCartProducts.forEach { cartProduct ->
+            cartRepository.updateCheckState(cartProduct.id, true)
+        }
+        updateCartItems(cartPagination.currentItems())
+    }
+
+    override fun setAllUncheck() {
+        currentCartProducts.forEach { cartProduct ->
+            cartRepository.updateCheckState(cartProduct.id, false)
+        }
+        updateCartItems(cartPagination.currentItems())
+    }
+
+    override fun setAllCheckCondition(): Boolean {
+        var count = 0
+        currentCartProducts.forEach {
+            if (it.check) count++
+        }
+        println("hih $count")
+        if (count == currentCartProducts.size) return true
+        return false
     }
 
     private fun updateCartItems(getItems: List<CartProduct>) {

@@ -27,6 +27,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.fetchProducts()
         observeTotalPrice()
         observeTotalCount()
+        onAllCheckSelected()
+        showAllCheckBox()
     }
 
     private fun setBinding() {
@@ -77,6 +79,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                     presenter.updateItemCheck(id, checked)
                     presenter.setupTotalPrice()
                     presenter.setupTotalCount()
+                    binding.allCheck.setOnCheckedChangeListener { _, _ -> }
+                    showAllCheckBox()
+                    onAllCheckSelected()
                 }
             },
             isExistUndo,
@@ -92,6 +97,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun notifyRemoveItem(position: Int) {
         adpater.removeCartItems(position)
+    }
+
+    override fun onAllCheckSelected() {
+        binding.allCheck.setOnCheckedChangeListener { _, checked ->
+            if (checked) {
+                presenter.setAllCheck()
+            } else {
+                presenter.setAllUncheck()
+            }
+        }
+    }
+
+    override fun showAllCheckBox() {
+        binding.allCheck.isChecked = presenter.setAllCheckCondition()
     }
 
     private fun observeTotalPrice() {

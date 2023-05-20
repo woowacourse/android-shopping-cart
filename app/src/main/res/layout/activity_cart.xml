@@ -58,10 +58,10 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/order"
-                android:layout_width="130dp"
+                android:layout_width="140dp"
                 android:layout_height="match_parent"
                 android:background="#04C09E"
-                android:text="주문하기"
+                tools:text="주문하기(1)"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"

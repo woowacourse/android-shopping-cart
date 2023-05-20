@@ -48,4 +48,9 @@ class CartPagination(private val rangeSize: Int, private val cartRepository: Car
         val pageNumber = mark / rangeSize
         return pageNumber.toString()
     }
+
+    // 전체 선택
+    // 1. 현재 페이지의 전체 리스트 받아오기
+    // 2. 받아온 리스트의 id를 이용해 DB의 check 값 false 바꾸기
+    // 3.
 }

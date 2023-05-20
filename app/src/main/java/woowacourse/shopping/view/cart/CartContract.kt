@@ -14,7 +14,9 @@ interface CartContract {
 
         fun notifyRemoveItem(position: Int)
         fun showOtherPage(size: Int)
+        fun onAllCheckSelected()
         fun handleBackButtonClicked()
+        fun showAllCheckBox()
     }
 
     interface Presenter {
@@ -26,9 +28,12 @@ interface CartContract {
         fun fetchUndoPage()
         fun plusCount(id: Int)
         fun subCount(id: Int)
-        fun handleNextStep(itemId: Int)
         fun setupTotalPrice()
-        fun updateItemCheck(id: Int, checked: Boolean)
         fun setupTotalCount()
+        fun updateItemCheck(id: Int, checked: Boolean)
+        fun setAllCheck()
+        fun handleNextStep(itemId: Int)
+        fun setAllCheckCondition(): Boolean
+        fun setAllUncheck()
     }
 }
