@@ -1,10 +1,11 @@
 package woowacourse.shopping
 
-import io.mockk.every
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartRepository
@@ -16,6 +17,9 @@ import woowacourse.shopping.view.productdetail.ProductDetailPresenter
 class ProductDetailPresenterTest {
     private lateinit var view: ProductDetailContract.View
     private lateinit var presenter: ProductDetailContract.Presenter
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     private val products = mutableListOf(
         CartProduct(
@@ -59,8 +63,21 @@ class ProductDetailPresenterTest {
             return mProducts
         }
 
+        override fun find(id: Int): CartProduct? {
+            return mProducts.find { it.id == id }
+        }
+
         override fun add(id: Int, count: Int) {
             mProducts.add(CartProduct(id, count))
+        }
+
+        override fun update(id: Int, count: Int) {
+            val index = mProducts.indexOfFirst { it.id == id }
+            if (index == -1) {
+                mProducts.add(CartProduct(id, count))
+                return
+            }
+            mProducts[index] = CartProduct(id, count)
         }
 
         override fun remove(id: Int) {
@@ -79,25 +96,24 @@ class ProductDetailPresenterTest {
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        presenter = ProductDetailPresenter(view, cartRepository, recentViewedRepository)
+        presenter = ProductDetailPresenter(1, view, cartRepository, recentViewedRepository)
     }
 
     @Test
     fun `장바구니 담기 버튼을 클릭하면 장바구니에 상품이 담긴다`() {
-        every { view.startCartActivity() } answers { nothing }
-
         val product = ProductModel(
             10,
             "락토핏",
             "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
             10000,
+            10
         )
         presenter.putInCart(product)
         val expectedSize = 5
         val actualSize = cartRepository.findAll().size
 
         assertEquals(expectedSize, actualSize)
-        verify { view.startCartActivity() }
+        verify { view.finishActivity(true) }
     }
 
     @Test
@@ -109,5 +125,40 @@ class ProductDetailPresenterTest {
         val actualSize = recentViewedRepository.findAll().size
 
         assertEquals(expectedSize, actualSize)
+    }
+
+    @Test
+    fun `현재 선택한 개수가 1이상 100 미만의 값이라면 개수 증가를 할 수 있다`() {
+        presenter = ProductDetailPresenter(3, view, cartRepository, recentViewedRepository)
+        presenter.plusCount()
+
+        val expectedCount = 4
+        val actualCount = presenter.count.value
+
+        assertEquals(expectedCount, actualCount)
+    }
+
+    @Test
+    fun `현재 선택한 개수가 100이라면 개수 증가를 할 수 없다`() {
+        presenter = ProductDetailPresenter(100, view, cartRepository, recentViewedRepository)
+        presenter.plusCount()
+
+        val expectedCount = 100
+        val actualCount = presenter.count.value
+
+        assertEquals(expectedCount, actualCount)
+    }
+
+
+
+    @Test
+    fun `현재 선택한 개수가 1이라면 개수 감소를 할 수 없다`() {
+        presenter = ProductDetailPresenter(1, view, cartRepository, recentViewedRepository)
+        presenter.minusCount()
+
+        val expectedCount = 1
+        val actualCount = presenter.count.value
+
+        assertEquals(expectedCount, actualCount)
     }
 }

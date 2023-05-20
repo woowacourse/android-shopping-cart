@@ -7,11 +7,12 @@ import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 
 class ProductDetailPresenter(
+    initialCount: Int,
     private val view: ProductDetailContract.View,
     private val cartRepository: CartRepository,
     private val recentViewedRepository: RecentViewedRepository,
 ) : ProductDetailContract.Presenter {
-    private val _count: MutableLiveData<Int> = MutableLiveData<Int>(1)
+    private val _count: MutableLiveData<Int> = MutableLiveData<Int>(initialCount)
     override val count: LiveData<Int>
         get() = _count
 

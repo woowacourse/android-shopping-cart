@@ -51,7 +51,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setUpPresenter() {
         presenter =
-            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
+            ProductDetailPresenter(INITIAL_COUNT, this, CartDbRepository(this), RecentViewedDbRepository(this))
     }
 
     private fun forceQuit() {
@@ -120,6 +120,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     companion object {
+        private const val INITIAL_COUNT = 1
         const val PRODUCT = "PRODUCT"
         const val LAST_VIEWED_PRODUCT = "LAST_VIEWED"
         private const val NOT_EXIST_DATA_ERROR = "데이터가 넘어오지 않았습니다."
