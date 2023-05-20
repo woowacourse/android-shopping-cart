@@ -9,29 +9,21 @@ import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.list.adapter.CartProductsAdapter
 import woowacourse.shopping.feature.list.item.CartProductItem
-import kotlin.properties.Delegates
 
 class CartActivity : AppCompatActivity(), CartActivityContract.View {
     private lateinit var binding: ActivityCartBinding
-    override lateinit var presenter: CartActivityPresenter
-
-    private var page: Int by Delegates.observable(1) { _, _, new ->
-        presenter.setUpData(new)
-        binding.pageNumberTv.text = page.toString()
-    }
-
     private lateinit var adapter: CartProductsAdapter
+    override lateinit var presenter: CartActivityPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setUpView()
 
         val db = CartDbHandler(CartDbHelper(this).writableDatabase)
         presenter = CartActivityPresenter(this, db)
-        presenter.setUpData(OPEN_PAGE)
         presenter.setUpButton()
+        presenter.setUpData()
     }
 
     override fun setUpRecyclerView(cartItems: List<CartProductItem>) {
@@ -43,23 +35,16 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
     }
 
     override fun setButtonListener(maxPage: Int) {
-        updateButtonsEnabledState(maxPage)
         binding.pageAfterTv.setOnClickListener {
-            if (page < maxPage) {
-                ++page
-            }
-            updateButtonsEnabledState(maxPage)
+            presenter.nextPage()
         }
 
         binding.pageBeforeTv.setOnClickListener {
-            if (page > 1) {
-                --page
-            }
-            updateButtonsEnabledState(maxPage)
+            presenter.previousPage()
         }
     }
 
-    private fun updateButtonsEnabledState(maxPage: Int) {
+    override fun updateButtonsEnabledState(page: Int, maxPage: Int) {
         binding.pageBeforeTv.isEnabled = page > 1
         binding.pageAfterTv.isEnabled = page < maxPage
     }
@@ -68,17 +53,15 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         adapter.setItems(cartItems)
     }
 
-    private fun setUpView() {
+    override fun setPage(page: Int) {
         binding.pageNumberTv.text = "$page"
     }
 
     private fun onDeleteItem(item: CartProductItem) {
-        presenter.deleteData(page, item)
+        presenter.deleteData(item)
     }
 
     companion object {
-        private const val OPEN_PAGE = 1
-
         fun startActivity(context: Context) {
             val intent = Intent(context, CartActivity::class.java)
             context.startActivity(intent)

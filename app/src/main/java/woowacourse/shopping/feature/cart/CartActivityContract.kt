@@ -9,11 +9,16 @@ interface CartActivityContract {
         fun setUpRecyclerView(cartItems: List<CartProductItem>)
         fun updateAdapterData(cartItems: List<CartProductItem>)
         fun setButtonListener(maxPage: Int)
+        fun setPage(page: Int)
+        fun updateButtonsEnabledState(page: Int, maxPage: Int)
     }
 
     interface Presenter {
-        fun setUpData(page: Int)
-        fun deleteData(page: Int, item: CartProductItem)
+        fun setUpData()
+        fun updateData()
+        fun deleteData(item: CartProductItem)
         fun setUpButton()
+        fun nextPage()
+        fun previousPage()
     }
 }

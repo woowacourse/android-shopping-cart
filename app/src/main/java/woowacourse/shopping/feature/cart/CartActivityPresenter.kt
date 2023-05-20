@@ -11,13 +11,23 @@ class CartActivityPresenter(
     private val db: CartDbHandler,
 ) : CartActivityContract.Presenter {
     private val cartItems: List<CartProductItem> = db.getAll().map(CartProduct::toItem)
+    private var page = 1
 
-    override fun setUpData(page: Int) {
+    override fun setUpData() {
         val items = getItems(page)
+        view.setPage(page)
         view.setUpRecyclerView(items)
+        view.updateButtonsEnabledState(page, getMaxPage())
     }
 
-    override fun deleteData(page: Int, item: CartProductItem) {
+    override fun updateData() {
+        val items = getItems(page)
+        view.setPage(page)
+        view.updateAdapterData(items)
+        view.updateButtonsEnabledState(page, getMaxPage())
+    }
+
+    override fun deleteData(item: CartProductItem) {
         db.deleteColumn(item.toDomain())
         val items = getItems(page)
         view.updateAdapterData(items)
@@ -31,16 +41,32 @@ class CartActivityPresenter(
     }
 
     override fun setUpButton() {
-        val maxPage = getMaxPageNumber()
+        val maxPage = getMaxPage()
         view.setButtonListener(maxPage)
     }
 
-    private fun getMaxPageNumber(): Int {
+    private fun getMaxPage(): Int {
         if (cartItems.isEmpty()) return 1
         return (cartItems.size - 1) / ITEM_COUNT_EACH_PAGE + 1
     }
 
+    override fun nextPage() {
+        val maxPage = getMaxPage()
+        if (page < maxPage) {
+            ++page
+        }
+        updateData()
+    }
+
+    override fun previousPage() {
+        if (page > MIN_PAGE) {
+            --page
+        }
+        updateData()
+    }
+
     companion object {
         private const val ITEM_COUNT_EACH_PAGE = 5
+        const val MIN_PAGE = 1
     }
 }
