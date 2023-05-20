@@ -17,10 +17,6 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
     private val binding: ActivityCartBinding
         get() = _binding!!
 
-    private val db: CartDbHandler by lazy {
-        CartDbHandler(CartDbHelper(this).writableDatabase)
-    }
-
     private var page: Int by Delegates.observable(1) { _, _, new ->
         presenter.setUpData(new)
         binding.pageNumberTv.text = page.toString()
@@ -34,6 +30,7 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         setContentView(binding.root)
 
         setUpView()
+        val db = CartDbHandler(CartDbHelper(this).writableDatabase)
         presenter = CartActivityPresenter(this, db)
         presenter.setUpData(OPEN_PAGE)
         presenter.setUpButton()

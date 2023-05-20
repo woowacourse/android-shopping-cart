@@ -28,12 +28,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private var _binding: ActivityMainBinding? = null
     private val binding: ActivityMainBinding
         get() = _binding!!
-    private val productDbHandler: ProductDbHandler by lazy {
-        ProductDbHandler(ProductDbHelper(this).writableDatabase)
-    }
-    private val recentProductDbHandler: RecentProductDbHandler by lazy {
-        RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
-    }
 
     lateinit var productsAdapter: ProductsAdapter
     lateinit var presenter: MainContract.Presenter
@@ -43,7 +37,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        presenter = MainPresenter(this, productDbHandler, recentProductDbHandler)
+        val productDb = ProductDbHandler(ProductDbHelper(this).writableDatabase)
+        val recentDb = RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
+        presenter = MainPresenter(this, productDb, recentDb)
 
         initAdapter()
         initListener()
