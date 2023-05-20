@@ -1,6 +1,8 @@
 package woowacourse.shopping.util.extension
 
 import android.view.View
+import android.widget.TextView
+import androidx.annotation.IdRes
 
 inline fun View.setOnSingleClickListener(
     delay: Long = 500L,
@@ -15,3 +17,6 @@ inline fun View.setOnSingleClickListener(
         }
     }
 }
+
+fun View.findTextView(@IdRes id: Int): TextView? = findViewById(id) ?: null
+

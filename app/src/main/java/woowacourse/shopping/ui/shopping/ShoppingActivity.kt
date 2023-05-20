@@ -3,9 +3,6 @@ package woowacourse.shopping.ui.shopping
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
@@ -24,7 +21,8 @@ import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.Recen
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductWrapperAdapter
 import woowacourse.shopping.util.builder.add
 import woowacourse.shopping.util.builder.isolatedViewTypeConcatAdapter
-import woowacourse.shopping.util.extension.getItemActionView
+import woowacourse.shopping.util.extension.findItemActionView
+import woowacourse.shopping.util.extension.findTextView
 import woowacourse.shopping.util.extension.getParcelableExtraCompat
 import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.inject.inject
@@ -57,7 +55,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     }
 
     private fun initMenuClickListener() {
-        val basketItemView = binding.shoppingToolBar.getItemActionView(R.id.basket)
+        val basketItemView = binding.shoppingToolBar.findItemActionView(R.id.basket)
         basketItemView?.setOnClickListener { presenter.openBasket() }
     }
 
@@ -94,10 +92,11 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     }
 
     override fun updateBasketProductCount(count: ProductCount) {
-        val basketBadgeView = binding.shoppingToolBar.menu.findItem(R.id.basket).actionView
-        val countBadge = basketBadgeView?.findViewById<TextView>(R.id.basket_count_badge)
-        if (count.value == 0) countBadge?.visibility = GONE else countBadge?.visibility = VISIBLE
-        countBadge?.text = count.toText()
+        val basketBadgeView = binding.shoppingToolBar.findItemActionView(R.id.basket) ?: return
+        val productCountTextView = basketBadgeView.findTextView(R.id.basket_count_badge) ?: return
+
+        productCountTextView.visibility = count.getVisibility()
+        productCountTextView.text = count.toText()
     }
 
     override fun onProductClick(product: UiProduct) {
@@ -119,13 +118,14 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         val product = intent?.getParcelableExtraCompat<UiProduct>(PRODUCT_KEY) ?: return
-        val count = intent.getIntExtra(COUNT_KEY, 0)
+        val count = intent.getIntExtra(COUNT_KEY, DEFAULT_PRODUCT_COUNT)
         presenter.addBasketProduct(product, count)
     }
 
     companion object {
         private const val PRODUCT_KEY = "product_key"
         private const val COUNT_KEY = "count_key"
+        private const val DEFAULT_PRODUCT_COUNT = 0
 
         fun getIntent(context: Context, product: UiProduct, count: Int): Intent =
             Intent(context, ShoppingActivity::class.java)

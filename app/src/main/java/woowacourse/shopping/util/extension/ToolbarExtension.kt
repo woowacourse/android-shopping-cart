@@ -7,4 +7,4 @@ import androidx.appcompat.widget.Toolbar
 
 fun Toolbar.findItem(@IdRes id: Int): MenuItem = menu.findItem(id)
 
-fun Toolbar.getItemActionView(@IdRes id: Int): View? = findItem(id).actionView
+fun Toolbar.findItemActionView(@IdRes id: Int): View? = findItem(id).actionView
