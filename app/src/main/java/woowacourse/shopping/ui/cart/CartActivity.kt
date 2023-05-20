@@ -79,7 +79,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartTotalItemControlField() {
-        // TODO: 초기 가격 및 구매하기 버튼
+        binding.tvCartTotalPrice.text = getString(R.string.product_price).format(0)
+        binding.btnCartPurchase.text = getString(R.string.button_purchase).format(0)
     }
 
     override fun setPageButtonClickListener(maxOffset: Int) {
@@ -107,6 +108,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun updateTotalPrice(price: Int) {
         binding.tvCartTotalPrice.text = getString(R.string.product_price).format(price)
+    }
+
+    override fun updateTotalPurchaseButton(amount: Int) {
+        binding.btnCartPurchase.text = getString(R.string.button_purchase).format(amount)
     }
 
     override fun updatePage() {

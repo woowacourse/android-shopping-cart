@@ -22,7 +22,7 @@ class CartPresenter(
         cartRepository.deleteById(productId)
         checkedItems.removeIf { it.id == productId }
         view.updatePage()
-        setCartItemPrice()
+        setTotalInfo()
     }
 
     override fun setPageButtons(limit: Int) {
@@ -50,7 +50,7 @@ class CartPresenter(
             checkedItems.remove(item)
             checkedItems.add(newItem)
         }
-        setCartItemPrice()
+        setTotalInfo()
         view.updatePage()
     }
 
@@ -61,14 +61,15 @@ class CartPresenter(
             checkedItems.remove(item)
         }
 
-        setCartItemPrice()
+        setTotalInfo()
     }
 
-    private fun setCartItemPrice() {
+    private fun setTotalInfo() {
         val totalPrice: Int = checkedItems.fold(0) { price, cartItem ->
             price + (cartItem.price * cartItem.count)
         }
         view.updateTotalPrice(totalPrice)
+        view.updateTotalPurchaseButton(checkedItems.size)
     }
 
     companion object {

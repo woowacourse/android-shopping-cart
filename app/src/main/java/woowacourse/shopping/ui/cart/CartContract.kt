@@ -17,5 +17,6 @@ interface CartContract {
         fun setPageButtonClickListener(maxOffset: Int)
         fun updatePage()
         fun updateTotalPrice(price: Int)
+        fun updateTotalPurchaseButton(amount: Int)
     }
 }
