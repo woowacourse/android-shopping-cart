@@ -1,5 +1,6 @@
 package woowacourse.shopping.shopping
 
+import model.CartProduct
 import model.RecentViewedProducts
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.model.ProductUiModel
@@ -10,7 +11,7 @@ class ShoppingPresenter(
     private val repository: ShoppingRepository,
 ) : ShoppingContract.Presenter {
 
-    override val recentViewedProducts = RecentViewedProducts(
+    private val recentViewedProducts = RecentViewedProducts(
         products = repository.selectRecentViewedProducts()
     )
     private var numberOfReadProduct: Int = 0
@@ -49,6 +50,17 @@ class ShoppingPresenter(
         view.refreshShoppingProductsView(products)
     }
 
+    private fun selectProducts(): List<ProductUiModel> {
+        val products = repository.selectProducts(
+            from = numberOfReadProduct,
+            count = COUNT_TO_READ
+        ).map { it.toUiModel() }
+
+        numberOfReadProduct += products.size
+
+        return products
+    }
+
     override fun addProductToShoppingCart(product: ProductUiModel) {
         repository.insertToShoppingCart(id = product.id)
 
@@ -69,13 +81,7 @@ class ShoppingPresenter(
 
     override fun minusShoppingCartProductCount(product: ProductUiModel) {
         val shoppingCartProduct = repository.selectShoppingCartProductById(product.id)
-
-        if (shoppingCartProduct.count.value == 1) {
-            repository.deleteFromShoppingCart(product.id)
-            view.refreshProductCount(
-                count = repository.getCountOfShoppingCartProducts()
-            )
-        }
+            .minusCount(handleZeroCount = ::removeCartProduct)
 
         repository.insertToShoppingCart(
             id = product.id,
@@ -85,24 +91,20 @@ class ShoppingPresenter(
         )
     }
 
-    private fun selectProducts(): List<ProductUiModel> {
-        val products = repository.selectProducts(
-            from = numberOfReadProduct,
-            count = COUNT_TO_READ
-        ).map { it.toUiModel() }
-
-        numberOfReadProduct += products.size
-
-        return products
+    private fun removeCartProduct(cartProduct: CartProduct) {
+        repository.deleteFromShoppingCart(cartProduct.product.id)
+        view.refreshProductCount(
+            count = repository.getCountOfShoppingCartProducts()
+        )
     }
 
     override fun addToRecentViewedProduct(id: Int) {
         val product = repository.selectRecentViewedProductById(id)
-        val removedProduct = recentViewedProducts.add(product)
 
-        removedProduct?.let {
-            repository.deleteFromRecentViewedProducts()
-        }
+        recentViewedProducts.add(
+            product = product,
+            removeOldestViewedProduct = repository::deleteFromRecentViewedProducts
+        )
         repository.insertToRecentViewedProducts(id)
         view.refreshRecentViewedProductsView(
             products = recentViewedProducts.values.map { it.toUiModel() }

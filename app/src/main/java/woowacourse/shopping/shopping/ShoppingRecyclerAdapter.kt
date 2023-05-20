@@ -26,7 +26,7 @@ class ShoppingRecyclerAdapter(
         products.toMutableList()
 
     override fun getItemViewType(position: Int): Int {
-        if (position == 0 && recentViewedProducts.isEmpty()) {
+        if (position == INITIAL_POSITION && recentViewedProducts.isEmpty()) {
             return PRODUCT.ordinal
         }
         return ShoppingRecyclerItemViewType.valueOf(
@@ -101,5 +101,9 @@ class ShoppingRecyclerAdapter(
     fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
         products.addAll(toAdd)
         notifyDataSetChanged()
+    }
+
+    companion object {
+        private const val INITIAL_POSITION = 0
     }
 }

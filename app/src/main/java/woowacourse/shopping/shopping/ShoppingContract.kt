@@ -1,6 +1,5 @@
 package woowacourse.shopping.shopping
 
-import model.RecentViewedProducts
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
 
@@ -30,8 +29,6 @@ interface ShoppingContract {
     }
 
     interface Presenter {
-
-        val recentViewedProducts: RecentViewedProducts
 
         fun loadProducts()
 
