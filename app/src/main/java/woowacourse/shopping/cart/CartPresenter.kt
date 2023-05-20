@@ -10,7 +10,8 @@ class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
     private var currentPage: Int = 0,
-    private val sizePerPage: Int
+    private val sizePerPage: Int,
+    private var cart: Cart = Cart(emptyList())
 ) : CartContract.Presenter {
     private var totalPrice: Int = 0
     private var totalAmount: Int = 0
@@ -42,12 +43,24 @@ class CartPresenter(
     }
 
     private fun updateCartPage() {
-        val cart = cartRepository.getPage(currentPage, sizePerPage)
+        val newCart = getCartInPage()
         view.updateCart(
-            cartProducts = cart.cartProducts.map { it.toView() },
+            cartProducts = newCart.cartProducts.map { it.toView() },
             currentPage = currentPage + 1,
-            isLastPage = isLastPageCart(cart)
+            isLastPage = isLastPageCart(newCart)
         )
+    }
+
+    private fun getCartInPage(): Cart {
+        val startIndex = currentPage * sizePerPage
+        val newCart = if (startIndex < cart.cartProducts.size) {
+            cart.getSubCart(startIndex, startIndex + sizePerPage)
+        } else {
+            cartRepository.getPage(currentPage, sizePerPage).apply {
+                cart = Cart(cart.cartProducts + cartProducts)
+            }
+        }
+        return newCart
     }
 
     private fun setupTotalPrice() {

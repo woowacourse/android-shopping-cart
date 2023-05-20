@@ -9,29 +9,19 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toView
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.createCartProduct
+import woowacourse.shopping.createProductModel
+import woowacourse.shopping.createRecentProduct
+import woowacourse.shopping.createShoppingProductModel
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Products
-import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.domain.URL
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
-import java.time.LocalDateTime
-
-private fun createProductModel(): ProductModel = ProductModel("", "", 1000)
-private fun createShoppingProductModel(): ShoppingProductModel =
-    ShoppingProductModel(createProductModel(), 1)
-
-private fun createProduct(): Product = Product(URL(""), "글로", 1000)
-private fun createRecentProduct(): RecentProduct =
-    RecentProduct(LocalDateTime.now(), createProduct())
-private fun createCartProduct(): CartProduct = CartProduct(LocalDateTime.now(), 0, true, createProduct())
 
 class ShoppingPresenterTest {
     private lateinit var presenter: ShoppingPresenter
