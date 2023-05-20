@@ -26,7 +26,7 @@ class ProductsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return when (viewType) {
             ProductView.TYPE_PRODUCT -> {
-                ProductViewHolder(parent)
+                ProductViewHolder(parent) { position -> onItemClick(items[position]) }
             }
             ProductView.TYPE_RECENT_PRODUCTS -> {
                 RecentProductsViewHolder(parent)
@@ -38,10 +38,10 @@ class ProductsAdapter(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         when (holder) {
             is ProductViewHolder -> {
-                holder.bind(items[position] as ProductView.ProductItem, onItemClick)
+                holder.bind(items[position] as ProductView.ProductItem)
             }
             is RecentProductsViewHolder -> {
-                holder.bind(items[position] as ProductView.RecentProductsItem, onItemClick)
+                holder.bind(items[position] as ProductView.RecentProductsItem)
             }
         }
     }

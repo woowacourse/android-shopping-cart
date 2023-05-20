@@ -15,7 +15,7 @@ class RecentProductsViewHolder(
 ) {
     private val binding = ItemRecentProductListBinding.bind(itemView)
 
-    override fun bind(productView: ProductView, onClick: (ProductView) -> Unit) {
+    override fun bind(productView: ProductView) {
         binding.recentListRv.adapter = RecentProductsAdapter(productView as ProductView.RecentProductsItem)
     }
 }

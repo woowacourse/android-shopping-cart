@@ -14,7 +14,7 @@ class RecentProductsAdapter(
     }
 
     override fun onBindViewHolder(holder: RecentProductViewHolder, position: Int) {
-        holder.bind(items.products[position]) {}
+        holder.bind(items.products[position])
     }
 
     override fun getItemCount(): Int {

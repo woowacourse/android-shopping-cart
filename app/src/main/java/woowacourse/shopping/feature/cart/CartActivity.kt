@@ -36,7 +36,7 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
 
     override fun setUpRecyclerView(cartItems: List<CartProductItem>) {
         adapter = CartProductsAdapter(
-            onDeleteItem = { listItem -> onDeleteItem(listItem) },
+            onDeleteItem = { item -> onDeleteItem(item) },
         )
         binding.cartProductRv.adapter = adapter
         adapter.setItems(cartItems)
@@ -72,8 +72,8 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         binding.pageNumberTv.text = "$page"
     }
 
-    private fun onDeleteItem(productView: CartProductItem) {
-        presenter.deleteData(page, productView)
+    private fun onDeleteItem(item: CartProductItem) {
+        presenter.deleteData(page, item)
     }
 
     companion object {

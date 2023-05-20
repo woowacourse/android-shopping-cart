@@ -15,7 +15,7 @@ class RecentProductViewHolder(
 ) {
     private val binding = ItemRecentBinding.bind(itemView)
 
-    override fun bind(productView: ProductView, onClick: (ProductView) -> Unit) {
+    override fun bind(productView: ProductView) {
         val productItem = productView as ProductView.ProductItem
 
         Glide.with(binding.root.context)

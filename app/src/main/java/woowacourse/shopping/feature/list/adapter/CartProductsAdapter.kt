@@ -11,7 +11,7 @@ class CartProductsAdapter(
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
-        return CartProductViewHolder(parent)
+        return CartProductViewHolder(parent) { position -> onDeleteItem(items[position]) }
     }
 
     override fun getItemCount(): Int {
@@ -19,7 +19,7 @@ class CartProductsAdapter(
     }
 
     override fun onBindViewHolder(holder: CartProductViewHolder, position: Int) {
-        holder.bind(items[position], onDeleteItem)
+        holder.bind(items[position])
     }
 
     fun setItems(items: List<CartProductItem>) {
