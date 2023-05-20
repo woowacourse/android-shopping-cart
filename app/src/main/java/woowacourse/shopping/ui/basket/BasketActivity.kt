@@ -16,7 +16,7 @@ import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.inject.inject
 
 class BasketActivity : AppCompatActivity(), View {
-    override val presenter: BasketPresenter by lazy { inject(this, this) }
+    private val presenter: BasketPresenter by lazy { inject(this, this) }
     private lateinit var binding: ActivityBasketBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

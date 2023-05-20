@@ -6,8 +6,6 @@ import woowacourse.shopping.model.UiProduct
 
 interface BasketContract {
     interface View {
-        val presenter: Presenter
-
         fun updateBasket(basketProducts: List<UiBasketProduct>)
         fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean)
         fun navigateToHome()

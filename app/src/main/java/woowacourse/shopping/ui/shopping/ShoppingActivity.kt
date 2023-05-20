@@ -31,7 +31,7 @@ import woowacourse.shopping.widget.ProductCounterView.OnClickListener
 
 class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClickListener {
     private lateinit var binding: ActivityShoppingBinding
-    override val presenter: Presenter by lazy { inject(this, this) }
+    private val presenter: Presenter by lazy { inject(this, this) }
 
     private val recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
     private val recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
