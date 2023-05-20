@@ -96,7 +96,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.from(this, product))
+        startActivity(ProductDetailActivity.from(this, product, true))
     }
 
     override fun addProducts(data: List<ProductsItemType>) {

@@ -41,6 +41,7 @@ class ProductDetailActivity :
         presenter = ProductDetailPresenter(
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
+            intent.getBooleanExtra("KEY_VISIBLE", true),
             CartDatabase(CartDBHelper(this).writableDatabase),
             RecentProductDatabase(this),
         )
@@ -97,21 +98,23 @@ class ProductDetailActivity :
     }
 
     override fun navigateToDetail(product: ProductUIModel) {
-        Log.d("히", "히")
-        startActivity(from(this, product))
-        presenter.addProductToRecent()
+        startActivity(from(this, product, false))
         finish()
     }
 
+    override fun setVisibleLatestProduct(visible: Boolean) {
+        binding.visible = visible
+    }
+
     override fun clickLatestProduct() {
-        Log.d("클릭", "클릭")
         presenter.clickLatestProduct()
     }
 
     companion object {
-        fun from(context: Context, product: ProductUIModel): Intent {
+        fun from(context: Context, product: ProductUIModel, isVisible: Boolean): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
+                putExtra("KEY_VISIBLE", isVisible)
             }
         }
     }

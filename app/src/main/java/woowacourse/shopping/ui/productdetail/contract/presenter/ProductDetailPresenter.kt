@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productdetail.contract.presenter
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.domain.model.CartProduct
@@ -13,6 +14,7 @@ import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
     private val product: ProductUIModel,
+    private val visible: Boolean,
     private val cartRepository: CartRepository,
     private val recentRepository: RecentRepository,
 ) : ProductDetailContract.Presenter {
@@ -23,6 +25,7 @@ class ProductDetailPresenter(
 
     init {
         setUpProductDetail()
+        isVisibleLatestProduct()
         setLatestProduct()
         addProductToRecent()
     }
@@ -37,6 +40,10 @@ class ProductDetailPresenter(
         }?.let {
             cartRepository.insert(it)
         }
+    }
+
+    override fun isVisibleLatestProduct() {
+        view.setVisibleLatestProduct(visible)
     }
 
     override fun addProductToRecent() {

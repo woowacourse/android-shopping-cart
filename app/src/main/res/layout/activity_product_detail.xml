@@ -18,6 +18,10 @@
             type="woowacourse.shopping.ui.productdetail.ProductDetailListener" />
 
         <variable
+            name="visible"
+            type="boolean" />
+
+        <variable
             name="latestProduct"
             type="woowacourse.shopping.model.ProductUIModel" />
     </data>
@@ -117,6 +121,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView5"
-            android:visibility="@{latestProduct != null ? View.VISIBLE : View.GONE}"/>
+            android:visibility="@{!visible || (latestProduct != null &amp;&amp; latestProduct.id == product.id) ? View.GONE : View.VISIBLE}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
