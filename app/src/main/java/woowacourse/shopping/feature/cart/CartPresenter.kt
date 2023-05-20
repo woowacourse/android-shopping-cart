@@ -20,8 +20,12 @@ class CartPresenter(
     private var _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
     val totalPrice: LiveData<Int> get() = _totalPrice
 
+    private var _isAllSelected: MutableLiveData<Boolean> = MutableLiveData(false)
+    val isAllSelected: LiveData<Boolean> get() = _isAllSelected
+
     override fun setup() {
         _totalPrice.value = calculateTotalPrice()
+        _isAllSelected.value = isAllSelected()
         changePageState(getCurrentPageItems())
     }
 
@@ -37,20 +41,19 @@ class CartPresenter(
         changePageState(loadedItems)
 
         _totalPrice.value = calculateTotalPrice()
+        _isAllSelected.value = isAllSelected()
     }
 
     override fun loadPreviousPage() {
         this.page = this.page.previousPage()
 
-        val loadedItems = getCurrentPageItems()
-        changePageState(loadedItems)
+        changePageState(getCurrentPageItems())
     }
 
     override fun loadNextPage() {
         this.page = this.page.nextPage()
 
-        val loadedItems = getCurrentPageItems()
-        changePageState(loadedItems)
+        changePageState(getCurrentPageItems())
     }
 
     override fun setPage(page: PageUiModel) {
@@ -75,11 +78,42 @@ class CartPresenter(
     override fun toggleCartProduct(cartProduct: CartProductUiModel, isSelected: Boolean) {
         cartRepository.updateSelection(cartProduct.productUiModel.toDomain(), isSelected)
         _totalPrice.value = calculateTotalPrice()
+        if (!isSelected) _isAllSelected.value = false
+        else _isAllSelected.value = isAllSelected()
+    }
+
+    override fun toggleAllProductOnPage(isSelected: Boolean) {
+        val notSelectedItems = getCurrentPageItems().filter { !it.isSelected }
+        if (isSelected) {
+            selectAll(notSelectedItems)
+            return
+        }
+        if (notSelectedItems.isEmpty()) {
+            deselectAll()
+        }
+    }
+
+    private fun selectAll(notSelectedItems: List<CartProductUiModel>) {
+        notSelectedItems.forEach { cartProduct ->
+            cartRepository.updateSelection(cartProduct.productUiModel.toDomain(), true)
+        }
+        _totalPrice.value = calculateTotalPrice()
+        changePageState(getCurrentPageItems())
+    }
+
+    private fun deselectAll() {
+        getCurrentPageItems().forEach { cartProduct ->
+            cartRepository.updateSelection(cartProduct.productUiModel.toDomain(), false)
+        }
+        _totalPrice.value = calculateTotalPrice()
+        changePageState(getCurrentPageItems())
     }
 
     private fun calculateTotalPrice(): Int = cartRepository.getAll()
         .filter { it.isSelected }
         .sumOf { it.toPresentation().totalPrice() }
+
+    private fun isAllSelected(): Boolean = getCurrentPageItems().all { it.isSelected }
 
     private fun getCurrentPageItems(): List<CartProductUiModel> {
         val cartProducts =
@@ -89,6 +123,7 @@ class CartPresenter(
     }
 
     private fun changePageState(itemModels: List<CartProductUiModel>) {
+        _isAllSelected.value = isAllSelected()
         view.changeCartProducts(itemModels)
         view.setPageState(
             this.page.hasPreviousPage(),

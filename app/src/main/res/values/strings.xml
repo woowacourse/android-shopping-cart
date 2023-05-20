@@ -12,4 +12,6 @@
     <string name="put_cart">담기</string>
     <string name="minus_button_description">minus button</string>
     <string name="plus_button_description">plus button</string>
+    <string name="all">전체</string>
+    <string name="order">주문하기</string>
 </resources>

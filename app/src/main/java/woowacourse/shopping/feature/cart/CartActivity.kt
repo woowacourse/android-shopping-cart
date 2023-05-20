@@ -51,10 +51,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.presenter = cartPresenter
         presenter.setup()
 
+        initPageClickListener()
+        binding.toggleAllCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            presenter.toggleAllProductOnPage(isChecked)
+        }
+
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        initPageClickListener()
     }
 
     private fun initPageClickListener() {

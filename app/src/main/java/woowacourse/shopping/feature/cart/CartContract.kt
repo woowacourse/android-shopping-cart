@@ -20,5 +20,6 @@ interface CartContract {
         fun increaseCartProduct(product: ProductUiModel, previousCount: Int)
         fun decreaseCartProduct(product: ProductUiModel, previousCount: Int)
         fun toggleCartProduct(cartProduct: CartProductUiModel, isSelected: Boolean)
+        fun toggleAllProductOnPage(isSelected: Boolean)
     }
 }
