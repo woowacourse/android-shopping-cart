@@ -2,7 +2,8 @@ package woowacourse.shopping.presentation.view.productlist
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -25,6 +26,7 @@ import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductW
 
 class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private lateinit var binding: ActivityProductListBinding
+    private var cartCountTextView: TextView? = null
 
     private val presenter: ProductContract.Presenter by lazy {
         ProductListPresenter(
@@ -61,7 +63,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
-
         initLayoutManager()
         presenter.deleteNotTodayRecentProducts()
         presenter.loadProductItems()
@@ -72,18 +73,28 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_list_toolbar, menu)
-
+        menu?.findItem(R.id.action_cart)?.actionView?.let { view ->
+            setMenuView(view)
+        }
+        observeCartCount()
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_cart -> {
-                startActivity(CartActivity.createIntent(this))
-            }
+    private fun setMenuView(view: View) {
+        view.setOnClickListener {
+            startActivity(CartActivity.createIntent(this))
         }
+        view.findViewById<TextView>(R.id.tv_cart_badge)?.let {
+            cartCountTextView = it
+        }
+    }
 
-        return super.onOptionsItemSelected(item)
+    private fun observeCartCount() {
+        presenter.cartCount.observe(
+            this
+        ) {
+            cartCountTextView?.text = it.toString()
+        }
     }
 
     private fun initLayoutManager() {
@@ -132,8 +143,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         moveToActivity(product.id)
     }
 
-    private fun onCountChangedEvent(id: Long, Count: Int) {
-        presenter.updateCartProduct(id, Count)
+    private fun onCountChangedEvent(id: Long, Count: Int, position: Int) {
+        presenter.updateCartProduct(id, Count, position)
     }
 
     private fun moveToActivity(productId: Long) {

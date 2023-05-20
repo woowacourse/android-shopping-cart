@@ -9,13 +9,7 @@ class ProductRepositoryImpl(private val cartDao: CartDao) :
     override fun getData(startPosition: Int, count: Int): List<ProductModel> {
         val productData = ProductsDao.getData(startPosition, count).map { it.toUIModel() }
         val result = productData.map {
-            ProductModel(
-                it.id,
-                it.title,
-                it.price,
-                it.imageUrl,
-                cartDao.getItemsWithProductCount(it.id) ?: 0
-            )
+            it.copy(count = cartDao.getItemsWithProductCount(it.id) ?: 0)
         }
         return result
     }

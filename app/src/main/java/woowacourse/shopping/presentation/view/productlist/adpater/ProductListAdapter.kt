@@ -8,7 +8,7 @@ import woowacourse.shopping.presentation.view.productlist.viewholder.ProductList
 class ProductListAdapter(
     products: List<ProductModel>,
     private val onButtonClick: (ProductModel) -> Unit,
-    private val onCountChanged: (Long, Int) -> Unit,
+    private val onCountChanged: (Long, Int, Int) -> Unit,
 ) : RecyclerView.Adapter<ProductListViewHolder>() {
     private val _products = products.toMutableList()
 
@@ -16,7 +16,7 @@ class ProductListAdapter(
         return ProductListViewHolder(
             parent, { onButtonClick(_products[it]) },
             { position, count ->
-                onCountChanged(_products[position].id, count)
+                onCountChanged(_products[position].id, count, position)
                 updateCartCount(position, count)
             }
         )

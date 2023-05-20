@@ -49,6 +49,10 @@ class CartPresenter(
         loadCartItems()
     }
 
+    override fun changeAllCartSelectedStatus(isSelected: Boolean) {
+        // cartRepository.changeAllCartSelectedStatus(isSelected)
+    }
+
     companion object {
         private const val FIRST_PAGE_NUMBER = 0
         private const val DISPLAY_CART_COUNT_CONDITION = 3

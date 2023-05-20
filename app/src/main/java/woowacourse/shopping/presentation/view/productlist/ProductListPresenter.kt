@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.view.productlist
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
@@ -16,6 +18,9 @@ class ProductListPresenter(
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()
     private val recentProducts = mutableListOf<RecentProductModel>()
+    private val _cartCount = MutableLiveData<Int>()
+    override val cartCount: LiveData<Int>
+        get() = _cartCount
 
     override fun deleteNotTodayRecentProducts() {
         val today = LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN))
@@ -25,6 +30,7 @@ class ProductListPresenter(
     override fun loadProductItems() {
         products.addAll(productRepository.getData(0, LOAD_PRODUCT_COUNT))
         view.setProductItemsView(products.toList())
+        updateCartCount()
     }
 
     override fun loadRecentProductItems() {
@@ -48,8 +54,16 @@ class ProductListPresenter(
         view.updateMoreProductsView(newProducts)
     }
 
-    override fun updateCartProduct(productId: Long, count: Int) {
+    override fun updateCartProduct(productId: Long, count: Int, position: Int) {
         cartRepository.insertCart(productId, count)
+        products[position] = products[position].copy(count = count)
+        updateCartCount()
+    }
+
+    private fun updateCartCount() {
+        _cartCount.value = products.sumOf {
+            it.count
+        }
     }
 
     companion object {

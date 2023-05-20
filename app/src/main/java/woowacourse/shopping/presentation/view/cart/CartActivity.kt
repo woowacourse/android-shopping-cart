@@ -32,6 +32,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
+        binding.checkboxCartAll.setOnClickListener {
+            presenter.changeAllCartSelectedStatus(binding.checkboxCartAll.isChecked)
+        }
         setSupportActionBar()
         presenter.loadCartItems()
         setLeftButtonClick()
