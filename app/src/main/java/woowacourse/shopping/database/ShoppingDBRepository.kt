@@ -51,6 +51,23 @@ class ShoppingDBRepository(
         return products
     }
 
+    override fun selectAllShoppingCartProducts(): List<CartProduct> {
+        val shoppingCartProducts = mutableListOf<CartProduct>()
+        val cursor = shoppingDB.rawQuery(
+            "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME}",
+            null,
+        ).apply {
+            if (moveToFirst()) {
+                do {
+                    shoppingCartProducts.add(getShoppingCartProductById())
+                } while (moveToNext())
+            }
+        }
+        cursor.close()
+
+        return shoppingCartProducts.toList()
+    }
+
     override fun selectShoppingCartProducts(from: Int, count: Int): List<CartProduct> {
         val shoppingCartProducts = mutableListOf<CartProduct>()
         val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(

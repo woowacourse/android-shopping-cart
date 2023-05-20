@@ -31,5 +31,7 @@ interface ShoppingCartContract {
         fun changeShoppingCartProductSelection(id: Int, isSelected: Boolean)
 
         fun checkAllBox(products: List<CartProductUiModel>, isSelected: Boolean)
+
+        fun checkAllShoppingCartProducts()
     }
 }

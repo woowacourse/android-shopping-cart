@@ -42,7 +42,6 @@ class ShoppingCartRecyclerAdapter(
         holder.bind(
             cartProduct = showingProducts[position],
             onRemoveClicked = ::removeItem,
-            products = showingProducts,
         )
     }
 

@@ -62,11 +62,23 @@ class ShoppingCartPresenter(
         updateOrderInfo()
     }
 
+    override fun checkAllShoppingCartProducts() {
+        val products = repository.selectAllShoppingCartProducts()
+        products.forEach {
+            repository.updateShoppingCartSelection(it.product.id, true)
+        }
+    }
+
     private fun updateOrderInfo() {
         var totalPrice = Price()
+        var selectedProductsSize = 0
         val selectedProducts = repository.getSelectedShoppingCartProducts()
-        selectedProducts.forEach { totalPrice += (it.product.price * it.count) }
-        view.updateTotalInfo(totalPrice.value, selectedProducts.size)
+        selectedProducts.forEach {
+            totalPrice += (it.product.price * it.count)
+            selectedProductsSize += it.count
+        }
+
+        view.updateTotalInfo(totalPrice.value, selectedProductsSize)
     }
 
     companion object {

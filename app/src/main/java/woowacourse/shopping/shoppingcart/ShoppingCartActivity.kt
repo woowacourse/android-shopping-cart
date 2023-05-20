@@ -28,6 +28,11 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         presenter.loadShoppingCartProducts()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.checkAllShoppingCartProducts()
+    }
+
     private fun setUpShoppingCartToolbar() {
         setSupportActionBar(binding.toolbarShoppingCart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

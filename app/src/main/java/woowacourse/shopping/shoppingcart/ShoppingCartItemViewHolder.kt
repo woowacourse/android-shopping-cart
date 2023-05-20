@@ -16,7 +16,6 @@ class ShoppingCartItemViewHolder(
     fun bind(
         cartProduct: CartProductUiModel,
         onRemoveClicked: (Int) -> Unit,
-        products: List<CartProductUiModel>,
     ) {
         with(binding) {
             this.cartProduct = cartProduct
@@ -24,15 +23,15 @@ class ShoppingCartItemViewHolder(
             imageRemoveProduct.setOnClickListener { onRemoveClicked(adapterPosition) }
             countView.count = cartProduct.count
             countView.plusClickListener = {
-                products[adapterPosition].count += CALCULATE_AMOUNT
+                cartProduct.count += CALCULATE_AMOUNT
                 countClickListener.onPlusClick(cartProduct.product.id)
             }
             countView.minusClickListener = {
-                products[adapterPosition].count -= CALCULATE_AMOUNT
+                cartProduct.count -= CALCULATE_AMOUNT
                 countClickListener.onMinusClick(cartProduct.product.id)
             }
             checkboxSelected.setOnClickListener {
-                products[adapterPosition].isSelected = checkboxSelected.isChecked
+                cartProduct.isSelected = checkboxSelected.isChecked
                 onCheckBoxClicked(cartProduct.product.id, checkboxSelected.isChecked)
             }
         }

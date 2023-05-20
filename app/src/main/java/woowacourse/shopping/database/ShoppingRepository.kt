@@ -7,6 +7,8 @@ interface ShoppingRepository {
 
     fun selectProducts(from: Int, count: Int): List<Product>
 
+    fun selectAllShoppingCartProducts(): List<CartProduct>
+
     fun selectShoppingCartProducts(from: Int, count: Int): List<CartProduct>
 
     fun getShoppingCartProductsSize(): Int
