@@ -10,7 +10,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.model.RecentProductUIModel
 import woowacourse.shopping.repositoryImpl.MockWeb
@@ -112,8 +111,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         adapter.updateRecentProducts(recentProductsData)
     }
 
-    override fun setCartProducts(cartProductsData: List<CartProductUIModel>) {
-        adapter.updateCartProducts(cartProductsData)
+    override fun setCartProducts(cartCounts: Map<Int, Int>) {
+        adapter.updateCartCounts(cartCounts)
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {

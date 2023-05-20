@@ -50,6 +50,10 @@ class ShoppingPresenterTest {
     private val fakeRecentProducts = List(10) { fakeRecentProduct }
     private val fakeCartProducts = CartProducts(List(10) { fakeCartProduct })
 
+    private val fakeCartCounts = fakeCartProducts.toUIModel()
+        .associateBy { it.id }
+        .mapValues { it.value.count }
+
     @Before
     fun setUp() {
         view = mockk()
@@ -81,7 +85,7 @@ class ShoppingPresenterTest {
             view.addMoreProducts(fakeProducts.map { it.toUIModel() })
         }
         verify(exactly = 1) {
-            view.setCartProducts(fakeCartProducts.toUIModel())
+            view.setCartProducts(fakeCartCounts)
         }
     }
 
@@ -109,7 +113,7 @@ class ShoppingPresenterTest {
 
         // then
         verify(exactly = 1) {
-            view.setCartProducts(fakeCartProducts.toUIModel())
+            view.setCartProducts(fakeCartCounts)
         }
     }
 
@@ -147,7 +151,7 @@ class ShoppingPresenterTest {
 
         // then
         verify(exactly = 1) {
-            view.setCartProducts(fakeCartProducts.toUIModel())
+            view.setCartProducts(fakeCartCounts)
         }
     }
 

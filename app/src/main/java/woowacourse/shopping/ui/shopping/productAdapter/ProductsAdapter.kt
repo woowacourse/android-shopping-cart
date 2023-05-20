@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.shopping.productAdapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.model.RecentProductUIModel
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ProductsViewHolder
@@ -12,7 +11,7 @@ import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ShoppingViewHo
 
 class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Adapter<ShoppingViewHolder>() {
     private val productItems: MutableList<ProductsItemType> = mutableListOf()
-    private val carts: MutableList<CartProductUIModel> = mutableListOf()
+    private val cartCounts: MutableMap<Int, Int> = mutableMapOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingViewHolder {
         return when (viewType) {
@@ -56,22 +55,21 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
         }
     }
 
-    fun updateCartProducts(cartProducts: List<CartProductUIModel>) {
-        carts.clear()
-        carts.addAll(cartProducts)
+    fun updateCartCounts(cartCounts: Map<Int, Int>) {
         productItems.filterIsInstance<ProductsItemType.Product>()
-            .forEach { it.count = getCount(it.product.id) }
+            .forEach { it.count = cartCounts[it.product.id] ?: 0 }
 
         notifyItemRangeChanged(0, productItems.size - 1)
     }
 
     fun updateItemCount(productId: Int, count: Int) {
+        cartCounts[productId] = count
         val index = productItems
             .indexOfFirst { it is ProductsItemType.Product && it.product.id == productId }
         productItems[index] = (productItems[index] as ProductsItemType.Product).copy(count = count)
     }
 
     private fun getCount(productId: Int): Int {
-        return carts.firstOrNull { it.id == productId }?.count ?: 0
+        return cartCounts[productId] ?: 0
     }
 }

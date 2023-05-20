@@ -17,6 +17,13 @@ class ShoppingPresenter(
         fetchRecentProducts()
     }
 
+    override fun fetchCartProducts() {
+        cartRepository.getAll().toUIModel()
+            .associateBy { it.id }
+            .mapValues { it.value.count }
+            .let { view.setCartProducts(it) }
+    }
+
     override fun fetchNextProducts() {
         view.addMoreProducts(
             productRepository.getNext(PRODUCT_COUNT).map { it.toUIModel() }
@@ -26,12 +33,6 @@ class ShoppingPresenter(
     override fun fetchRecentProducts() {
         view.setRecentProducts(
             recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
-        )
-    }
-
-    override fun fetchCartProducts() {
-        view.setCartProducts(
-            cartRepository.getAll().toUIModel()
         )
     }
 
