@@ -5,18 +5,22 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class ProductDetailPresenterTest {
     private lateinit var presenter: ProductDetailPresenter
     private lateinit var view: ProductDetailContract.View
+    private lateinit var recentProductRepository: RecentProductRepository
 
     @Before
     fun setUP() {
         view = mockk(relaxed = true)
+        recentProductRepository = mockk(relaxed = true)
         presenter = ProductDetailPresenter(
             view,
             productModel = mockk(relaxed = true),
-            recentProductModel = mockk(relaxed = true)
+            recentProductModel = mockk(relaxed = true),
+            recentProductRepository = recentProductRepository
         )
     }
 
@@ -55,5 +59,16 @@ class ProductDetailPresenterTest {
 
         // then
         verify { view.showCartProductDialog(any()) }
+    }
+
+    @Test
+    fun 마지막으로_본_상품을_열면_최근_본_상품이_없는_상품_상세정보를_보여준다() {
+        // given
+
+        // when
+        presenter.openProduct(mockk(relaxed = true))
+
+        // then
+        verify { view.showProductDetail(any(), isNull()) }
     }
 }

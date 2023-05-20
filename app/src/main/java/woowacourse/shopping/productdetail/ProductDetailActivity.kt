@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.utils.getSerializable
+import woowacourse.shopping.data.database.ShoppingDBOpenHelper
+import woowacourse.shopping.data.database.dao.RecentProductDao
+import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.productdetail.dialog.CartProductDialog
 
@@ -52,11 +55,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun setupRecentProductDetail(recentProductModel: ProductModel?) {
         binding.recentProduct = recentProductModel
+        if (recentProductModel != null) {
+            binding.latestRecentProductLayout.setOnClickListener {
+                presenter.openProduct(recentProductModel)
+            }
+        }
     }
 
     override fun showCartProductDialog(productModel: ProductModel) {
         val dialog = CartProductDialog.createDialog(productModel)
         dialog.show(supportFragmentManager, "CartProductDialog")
+    }
+
+    override fun showProductDetail(productModel: ProductModel, recentProductModel: ProductModel?) {
+        startProductDetailActivity(productModel, recentProductModel)
     }
 
     private fun initExtras() {
@@ -71,11 +83,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initPresenter() {
+        val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ProductDetailPresenter(
             this,
             productModel = productModel,
-            recentProductModel = recentProductModel
+            recentProductModel = recentProductModel,
+            recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(db))
         )
+    }
+
+    private fun startProductDetailActivity(productModel: ProductModel, recentProductModel: ProductModel?) {
+        val intent = createIntent(this, productModel, recentProductModel)
+        startActivity(intent)
     }
 
     companion object {

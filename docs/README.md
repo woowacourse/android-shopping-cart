@@ -38,13 +38,15 @@
             - [x] cartRepository.addCartProduct(cartProduct)
         - [x] private updateShoppingProduct(cartProduct, productModel)
             - [x] view.updateShoppingProduct(shoppingProductModel)
-    - [ ] ProductDetail
+    - [x] ProductDetail
+        - RecentProductRepository 
         - [x] init { }
             - [x] view.setupRecentProductDetail(productModel)
         - [x] setupCartProductDialog()
             - [x] view.showCartProductDialog(productModel)
-        - [ ] openRecentProductDetail()
-            - [ ] view.showRecentProductDetail(recentProductModel)
+        - [x] openProduct()
+            - [x] recentProductRepository.modifyRecentProduct(recentProduct)
+            - [x] view.showRecentProductDetail(recentProductModel)
     - [x] CartProductDialog
         - CartProduct
         - [x] init { }
