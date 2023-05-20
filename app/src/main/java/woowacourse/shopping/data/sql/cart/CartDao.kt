@@ -8,6 +8,8 @@ import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import woowacourse.shopping.data.model.CartEntity
+import woowacourse.shopping.data.model.CartEntity.Companion.CHECK
+import woowacourse.shopping.data.model.CartEntity.Companion.NON_CHECK
 
 class CartDao(
     context: Context
@@ -50,11 +52,11 @@ class CartDao(
     }
 
     fun insertProduct(product: Product, count: Int = 1) {
-        if (count <= 0) return
+        if (count <= ZERO) return
         val values = ContentValues().apply {
             put(CartTableContract.TABLE_COLUMN_PRODUCT_ID, product.id)
             put(CartTableContract.TABLE_COLUMN_PRODUCT_COUNT, count) // 일단 1로 고정
-            put(CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED, 0) // 처음은 체크 안함
+            put(CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED, ZERO) // 처음은 체크 안함
         }
         writableDatabase.insert(CartTableContract.TABLE_NAME, null, values)
     }
@@ -67,7 +69,7 @@ class CartDao(
 
     fun deleteAllCheckedCartProduct() {
         val selection = "${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED} = ?"
-        val selectionArgs = arrayOf("1")
+        val selectionArgs = arrayOf("$CHECK")
         writableDatabase.delete(CartTableContract.TABLE_NAME, selection, selectionArgs)
     }
 
@@ -78,7 +80,7 @@ class CartDao(
                 newCount
             )
 
-        if (newCount <= 0) return deleteCartProduct(findCartProduct)
+        if (newCount <= ZERO) return deleteCartProduct(findCartProduct)
 
         val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
             "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_COUNT}=$newCount " +
@@ -89,7 +91,7 @@ class CartDao(
     fun updateCartProductChecked(product: Product, checked: Boolean) {
         val findCartProduct =
             selectAll().find { it.product.id == product.id } ?: return
-        val checkedState = if (checked) 1 else 0
+        val checkedState = if (checked) CHECK else NON_CHECK
 
         val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
             "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=$checkedState " +
@@ -98,7 +100,7 @@ class CartDao(
     }
 
     fun updateAllChecked(cartIds: List<Long>, checked: Boolean) {
-        val checkedState = if (checked) 1 else 0
+        val checkedState = if (checked) CHECK else NON_CHECK
 
         val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
             "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=$checkedState " +
@@ -115,5 +117,6 @@ class CartDao(
     companion object {
         private const val DB_NAME = "cart_db"
         private const val VERSION = 4
+        private const val ZERO = 0
     }
 }

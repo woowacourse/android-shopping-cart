@@ -7,6 +7,11 @@ data class CartEntity(
     val checked: Boolean
 ) {
     constructor(cartId: Long, productId: Long, count: Int, checked: Int) : this(
-        cartId, productId, count, checked == 1
+        cartId, productId, count, checked == CHECK
     )
+
+    companion object {
+        const val CHECK = 1
+        const val NON_CHECK = 0
+    }
 }
