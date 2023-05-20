@@ -17,6 +17,8 @@ interface BasketContract {
         fun updateTotalPrice(totalPrice: Int)
 
         fun updateCheckedProductsCount(checkedProductsCount: Int)
+
+        fun updateTotalCheckBox(isChecked: Boolean)
     }
 
     interface Presenter {

@@ -20,7 +20,11 @@ class BasketPresenter(
     override fun updateBasketProductCheckState(basketProduct: BasketProduct) {
         basket.updateCheck(basketProduct)
         updateOrderInformation()
+        view.updateTotalCheckBox(getTotalIsChecked())
     }
+
+    private fun getTotalIsChecked(): Boolean =
+        basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE).products.none { !it.checked }
 
     private fun updateOrderInformation() {
         view.updateTotalPrice(basket.getCheckedProductsTotalPrice())

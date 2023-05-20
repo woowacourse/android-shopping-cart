@@ -90,6 +90,10 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         binding.checkedCount = checkedProductsCount
     }
 
+    override fun updateTotalCheckBox(isChecked: Boolean) {
+        binding.cbTotal.isChecked = isChecked
+    }
+
     companion object {
         fun getIntent(context: Context) = Intent(context, BasketActivity::class.java)
     }
