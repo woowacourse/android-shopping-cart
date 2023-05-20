@@ -11,6 +11,10 @@
         <variable
             name="checkedCount"
             type="Integer" />
+
+        <variable
+            name="checkButtonClickListener"
+            type="kotlin.jvm.functions.Function0" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -125,10 +129,10 @@
                 android:background="@color/woowa_previous_enable"
                 android:gravity="center"
                 android:includeFontPadding="false"
+                android:text="@{@string/tv_order(checkedCount)}"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="@{@string/tv_order(checkedCount)}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="122"
                 app:layout_constraintStart_toEndOf="@id/tv_total_price"
@@ -142,6 +146,7 @@
                 android:buttonTint="@color/check_box_color"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
+                android:onClick="@{()->checkButtonClickListener.invoke()}"
                 app:layout_constraintBottom_toTopOf="@id/tv_total"
                 app:layout_constraintEnd_toEndOf="@+id/tv_total"
                 app:layout_constraintStart_toStartOf="@+id/tv_total"

@@ -24,6 +24,8 @@ interface BasketContract {
     interface Presenter {
         val view: View
 
+        fun fetchTotalCheckToCurrentPage(totalIsChecked: Boolean)
+
         fun updateBasketProductCheckState(basketProduct: BasketProduct)
 
         fun addBasketProduct(product: Product)

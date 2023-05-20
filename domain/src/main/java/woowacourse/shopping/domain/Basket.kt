@@ -49,4 +49,8 @@ data class Basket(val products: List<BasketProduct>) {
 
     fun getCheckedProductsCount(): Int =
         products.filter { it.checked }.size
+
+    fun toggleAllCheck(isChecked: Boolean) {
+        products.map { it.checked = isChecked }
+    }
 }

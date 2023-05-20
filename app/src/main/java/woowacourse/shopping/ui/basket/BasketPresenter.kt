@@ -17,6 +17,12 @@ class BasketPresenter(
     private var basket: Basket = Basket(basketRepository.getAll())
     private var startId: Int = 0
 
+    override fun fetchTotalCheckToCurrentPage(totalIsChecked: Boolean) {
+        basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE).toggleAllCheck(totalIsChecked)
+        updateOrderInformation()
+        updateViewBasketProduct()
+    }
+
     override fun updateBasketProductCheckState(basketProduct: BasketProduct) {
         basket.updateCheck(basketProduct)
         updateOrderInformation()

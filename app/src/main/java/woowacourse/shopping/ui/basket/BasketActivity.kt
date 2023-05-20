@@ -30,6 +30,12 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         initAdapter()
         initToolbarBackButton()
         navigatorClickListener()
+        initTotalCheckBoxOnCheckedChangedListener()
+    }
+
+    private fun initTotalCheckBoxOnCheckedChangedListener() {
+        binding.checkButtonClickListener =
+            { presenter.fetchTotalCheckToCurrentPage(binding.cbTotal.isChecked) }
     }
 
     private fun initSetResult() {
