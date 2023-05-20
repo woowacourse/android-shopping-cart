@@ -21,10 +21,10 @@ class CartPresenter(
         get() = (currentPage - 1) * DISPLAY_CART_COUNT_CONDITION
 
     override fun loadCartItems() {
-        val newCarts = getCurrentPageCarts()
         view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(carts.size > startPosition + DISPLAY_CART_COUNT_CONDITION)
 
+        val newCarts = getCurrentPageCarts()
         view.setCartItemsView(newCarts)
     }
 
@@ -41,7 +41,11 @@ class CartPresenter(
     override fun deleteCartItem(itemId: Long) {
         cartRepository.deleteCartByCartId(itemId)
         carts.removeIf { it.id == itemId }
-        loadCartItems()
+
+        view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
+        view.setEnableRightButton(carts.size > startPosition + DISPLAY_CART_COUNT_CONDITION)
+
+        view.setChangedCartItemsView(carts.subList(startPosition, getCurrentPageCartLastIndex()))
     }
 
     override fun calculatePreviousPage() {
@@ -71,8 +75,11 @@ class CartPresenter(
     }
 
     override fun updateProductChecked(cartId: Long, checked: Boolean) {
-        carts.find { it.id == cartId }?.checked = checked
-        cartRepository.updateCartCheckedByCartId(cartId, checked)
+        carts.find { it.id == cartId }?.let {
+            if (it.checked == checked) return@let
+            it.checked = checked
+            cartRepository.updateCartCheckedByCartId(it.id, it.checked)
+        }
         view.setAllCartChecked(isAllChecked())
     }
 

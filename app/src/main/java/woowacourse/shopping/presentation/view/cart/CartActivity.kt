@@ -71,6 +71,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.rvCart.adapter = cartAdapter
     }
 
+    override fun setChangedCartItemsView(carts: List<CartModel>) {
+        cartAdapter.updateList(carts)
+    }
+
     override fun setEnableLeftButton(isEnabled: Boolean) {
         binding.btCartListPageLeft.isEnabled = isEnabled
     }

@@ -51,6 +51,7 @@ class CartPresenterTest {
     @Test
     fun `카트 데이터가 하나 삭제된다`() {
         // given
+        every { cartRepository.getAllCarts() } returns CartFixture.getFixture()
         justRun { cartRepository.deleteCartByCartId(1) }
         justRun { view.setEnableLeftButton(false) }
         justRun { view.setEnableRightButton(false) }
@@ -58,7 +59,7 @@ class CartPresenterTest {
         presenter = CartPresenter(view, cartRepository)
 
         val slot = slot<List<CartModel>>()
-        justRun { view.setCartItemsView(capture(slot)) }
+        justRun { view.setChangedCartItemsView(capture(slot)) }
 
         // when
         presenter.deleteCartItem(1)
@@ -70,7 +71,7 @@ class CartPresenterTest {
         verify { cartRepository.deleteCartByCartId(1) }
         verify { view.setEnableLeftButton(false) }
         verify { view.setEnableRightButton(false) }
-        verify { view.setCartItemsView(actual) }
+        verify { view.setChangedCartItemsView(actual) }
     }
 
     @Test

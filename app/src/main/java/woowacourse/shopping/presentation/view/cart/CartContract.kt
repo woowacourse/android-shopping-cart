@@ -5,6 +5,7 @@ import woowacourse.shopping.presentation.model.CartModel
 interface CartContract {
     interface View {
         fun setCartItemsView(carts: List<CartModel>)
+        fun setChangedCartItemsView(carts: List<CartModel>)
         fun setEnableLeftButton(isEnabled: Boolean)
         fun setEnableRightButton(isEnabled: Boolean)
         fun setAllCartChecked(isChecked: Boolean)
