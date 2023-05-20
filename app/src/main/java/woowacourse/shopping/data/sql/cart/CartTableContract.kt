@@ -9,10 +9,10 @@ object CartTableContract {
 
     fun createSQL(): String {
         return "CREATE TABLE $TABLE_NAME(" +
-                "  $TABLE_COLUMN_CART_ID INTEGER primary key autoincrement," +
-                "  $TABLE_COLUMN_PRODUCT_ID int," +
-                "  $TABLE_COLUMN_PRODUCT_COUNT int," +
-                "  $TABLE_COLUMN_PRODUCT_CHECKED int" +
-                ");"
+            "  $TABLE_COLUMN_CART_ID INTEGER primary key autoincrement," +
+            "  $TABLE_COLUMN_PRODUCT_ID int," +
+            "  $TABLE_COLUMN_PRODUCT_COUNT int," +
+            "  $TABLE_COLUMN_PRODUCT_CHECKED int" +
+            ");"
     }
 }

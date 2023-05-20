@@ -3,7 +3,12 @@ package woowacourse.shopping.feature.detail
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.RecentProductRepository
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toDomain
@@ -32,7 +37,7 @@ internal class DetailPresenterTest {
             mockRecentProduct1.toPresentation()
         )
 
-        //when
+        // when
         presenter.initScreen()
 
         verify { view.hideRecentScreen() }
@@ -48,7 +53,7 @@ internal class DetailPresenterTest {
             mockRecentProduct2.toPresentation()
         )
 
-        //when
+        // when
         presenter.initScreen()
 
         verify { view.setRecentScreen(any(), any()) }
@@ -92,23 +97,6 @@ internal class DetailPresenterTest {
 
         // then
         verify { view.showSelectCartProductCountScreen(presenter.product) }
-    }
-
-    @Test
-    fun `최근 본 상품의 상세 페이지면 뒤로 나갈 경우 메인화면으로 이동한다`() {
-        // given
-        presenter = DetailPresenter(
-            view,
-            recentProductRepository,
-            mockProduct1,
-            mockRecentProduct1.toPresentation()
-        )
-
-        // when
-        presenter.exit()
-
-        // then
-        verify { view.navigateMainScreen() }
     }
 
     private val mockProduct1 = productsDatasource[0].toPresentation()

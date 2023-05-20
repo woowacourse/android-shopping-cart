@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.databinding.BindingAdapter
 import woowacourse.shopping.databinding.LayoutProductCounterBinding
 
 class ProductCounterView @JvmOverloads constructor(

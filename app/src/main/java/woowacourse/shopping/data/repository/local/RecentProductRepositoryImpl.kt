@@ -6,7 +6,7 @@ import woowacourse.shopping.data.sql.recent.RecentDao
 
 class RecentProductRepositoryImpl(
     private val recentDao: RecentDao
-):RecentProductRepository {
+) : RecentProductRepository {
     override fun getAll(): List<RecentProduct> {
         return recentDao.selectAllRecent()
     }

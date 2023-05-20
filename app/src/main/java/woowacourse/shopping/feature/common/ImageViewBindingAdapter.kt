@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.common
 
-import android.util.Log
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide

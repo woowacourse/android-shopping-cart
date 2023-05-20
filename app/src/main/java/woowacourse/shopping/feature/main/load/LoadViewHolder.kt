@@ -17,7 +17,6 @@ class LoadViewHolder private constructor(
         binding.loadMore.visibility = View.GONE
     }
 
-
     companion object {
         fun create(parent: ViewGroup): LoadViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)

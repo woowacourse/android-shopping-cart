@@ -7,4 +7,4 @@ fun CartProduct.toPresentation(): CartProductUiModel =
     CartProductUiModel(cartId, product.toPresentation().copy(count = count), checked)
 
 fun CartProductUiModel.toDomain(): CartProduct =
-    CartProduct(cartId, productUiModel.toDomain(),productUiModel.count, checked)
+    CartProduct(cartId, productUiModel.toDomain(), productUiModel.count, checked)

@@ -25,7 +25,6 @@ class LoadAdapter(
 
     fun hide() = loadViewHolder.hide()
 
-
     companion object {
         const val VIEW_TYPE = 333
     }

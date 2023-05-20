@@ -5,7 +5,11 @@ import com.example.domain.datasource.secondJsonProducts
 import com.example.domain.datasource.thirdJsonProducts
 import com.example.domain.model.Price
 import com.example.domain.model.Product
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -51,7 +55,6 @@ class MockProductRemoteService {
         }
     }
 
-
     fun request(
         lastProductId: Long,
         onSuccess: (List<Product>) -> Unit,
@@ -63,7 +66,6 @@ class MockProductRemoteService {
                 _mockWebServer?.url("/")
                 _mockWebServer?.dispatcher = dispatcher
             }
-
 
             val baseUrl = String.format("http://localhost:%s", mockWebServer.port)
             val okHttpClient = OkHttpClient()

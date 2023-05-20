@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.main
 
-import android.util.Log
 import com.example.domain.model.Product
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.CartRepository
@@ -11,7 +10,6 @@ import woowacourse.shopping.mapper.toPresentation
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentProductUiModel
 import java.time.LocalDateTime
-import java.util.logging.Handler
 
 class MainPresenter(
     private val view: MainContract.View,

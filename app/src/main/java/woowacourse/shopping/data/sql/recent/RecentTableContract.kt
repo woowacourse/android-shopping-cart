@@ -7,8 +7,8 @@ object RecentTableContract {
 
     fun createSQL(): String {
         return "CREATE TABLE $TABLE_NAME(" +
-                "  $TABLE_COLUMN_RECENT_PRODUCT_ID int," +
-                "  $TABLE_COLUMN_DATE_TIME int" +
-                ");"
+            "  $TABLE_COLUMN_RECENT_PRODUCT_ID int," +
+            "  $TABLE_COLUMN_DATE_TIME int" +
+            ");"
     }
 }

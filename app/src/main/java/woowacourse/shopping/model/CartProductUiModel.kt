@@ -1,7 +1,6 @@
 package woowacourse.shopping.model
 
 import android.os.Parcelable
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

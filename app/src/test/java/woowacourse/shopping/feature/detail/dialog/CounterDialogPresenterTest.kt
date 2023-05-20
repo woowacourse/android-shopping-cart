@@ -2,11 +2,15 @@ package woowacourse.shopping.feature.detail.dialog
 
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.repository.CartRepository
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toPresentation
-
 
 internal class CounterDialogPresenterTest {
     private lateinit var view: CounterDialogContract.View
@@ -20,7 +24,8 @@ internal class CounterDialogPresenterTest {
         presenter = CounterDialogPresenter(
             view,
             cartRepository,
-            mockProduct.toPresentation().apply { count = 3 })
+            mockProduct.toPresentation().apply { count = 3 }
+        )
     }
 
     @Test

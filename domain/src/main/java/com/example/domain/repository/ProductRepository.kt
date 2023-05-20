@@ -18,7 +18,7 @@ interface ProductRepository {
 
     fun resetCache()
 
-    companion object{
+    companion object {
         val LOAD_SIZE = 20
     }
 }

@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
-import woowacourse.shopping.data.repository.local.ProductMockRepositoryImpl
 import woowacourse.shopping.data.repository.local.RecentProductRepositoryImpl
 import woowacourse.shopping.data.repository.remote.MockRemoteProductRepositoryImpl
 import woowacourse.shopping.data.service.MockProductRemoteService

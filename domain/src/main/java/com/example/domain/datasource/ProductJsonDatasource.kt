@@ -125,7 +125,6 @@ val firstJsonProducts = """
     ]
 """.trimIndent()
 
-
 val secondJsonProducts = """
 [
     {

@@ -4,10 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import androidx.annotation.ColorRes
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.BindingAdapter
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.LayoutCounterBinding
 
 class CounterView @JvmOverloads constructor(
@@ -87,16 +84,5 @@ class CounterView @JvmOverloads constructor(
         fun setCounterViewMaxValue(counterView: CounterView, value: Int) {
             counterView.maxCountValue = value
         }
-
-//        @JvmStatic
-//        @BindingAdapter("onChangeCounter")
-//        fun setChangeCountListenerById(counterView: CounterView, onChangeCount:(id:Long, count:Int)->Unit) {
-//            counterView.countStateChangeListener = object : OnCountStateChangeListener{
-//                override fun onCountChanged(counterNavigationView: CounterView?, count: Int) {
-//                    onChangeCount
-//                }
-//            }
-//        }
-
     }
 }

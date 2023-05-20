@@ -16,7 +16,6 @@ import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.dialog.CounterDialog
-import woowacourse.shopping.feature.main.MainActivity
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentProductUiModel
 import woowacourse.shopping.util.getParcelableCompat

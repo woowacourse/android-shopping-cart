@@ -19,4 +19,3 @@ data class PaginationUiModel(
         const val PAGE_LOAD_SIZE = 5
     }
 }
-

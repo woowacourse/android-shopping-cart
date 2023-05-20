@@ -81,8 +81,8 @@ class CartDao(
         if (newCount <= 0) return deleteCartProduct(findCartProduct)
 
         val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
-                "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_COUNT}=${newCount} " +
-                "WHERE ${CartTableContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+            "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_COUNT}=$newCount " +
+            "WHERE ${CartTableContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
         writableDatabase.execSQL(updateSql)
     }
 
@@ -92,8 +92,8 @@ class CartDao(
         val checkedState = if (checked) 1 else 0
 
         val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
-                "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=${checkedState} " +
-                "WHERE ${CartTableContract.TABLE_COLUMN_CART_ID}=${findCartProduct.cartId}"
+            "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=$checkedState " +
+            "WHERE ${CartTableContract.TABLE_COLUMN_CART_ID}=${findCartProduct.cartId}"
         writableDatabase.execSQL(updateSql)
     }
 
@@ -101,14 +101,14 @@ class CartDao(
         val checkedState = if (checked) 1 else 0
 
         val updateSql = "UPDATE ${CartTableContract.TABLE_NAME} " +
-                "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=${checkedState} " +
-                "WHERE ${CartTableContract.TABLE_COLUMN_CART_ID} IN ${
-                    cartIds.joinToString(
-                        ", ",
-                        "(",
-                        ")"
-                    )
-                }"
+            "SET ${CartTableContract.TABLE_COLUMN_PRODUCT_CHECKED}=$checkedState " +
+            "WHERE ${CartTableContract.TABLE_COLUMN_CART_ID} IN ${
+            cartIds.joinToString(
+                ", ",
+                "(",
+                ")"
+            )
+            }"
         writableDatabase.execSQL(updateSql)
     }
 

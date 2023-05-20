@@ -70,7 +70,7 @@ class CartPresenter(
     override fun handleCurrentPageAllCheckedChange(checked: Boolean) {
         page = page.toDomain().setCurrentPageAllChecked(checked).toPresentation()
         val currentIds = page.currentPageCartProducts.map { it.cartId }
-        cartRepository.changeCurrentPageAllCheckedState(currentIds,checked)
+        cartRepository.changeCurrentPageAllCheckedState(currentIds, checked)
         changePageState(page.currentPageCartProducts)
     }
 

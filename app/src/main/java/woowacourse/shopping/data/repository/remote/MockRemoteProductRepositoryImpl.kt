@@ -1,11 +1,9 @@
 package woowacourse.shopping.data.repository.remote
 
-import android.util.Log
 import com.example.domain.cache.ProductCache
 import com.example.domain.cache.ProductLocalCache
 import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
-import com.example.domain.repository.ProductRepository.Companion.LOAD_SIZE
 import woowacourse.shopping.data.service.MockProductRemoteService
 
 class MockRemoteProductRepositoryImpl(
