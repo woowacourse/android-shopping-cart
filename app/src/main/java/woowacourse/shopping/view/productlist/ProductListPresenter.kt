@@ -95,7 +95,6 @@ class ProductListPresenter(
         }
     }
 
-
     override fun fetchProductCount(id: Int) {
         if (id == -1) return
         val product = cartRepository.find(id)

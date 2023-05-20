@@ -18,11 +18,11 @@ interface CartContract {
         val isCheckedAll: LiveData<Boolean>
 
         fun fetchProducts()
-        fun removeProduct(id: Int)
         fun fetchNextPage()
         fun fetchPrevPage()
+        fun removeProduct(id: Int)
         fun updateCartProductCount(id: Int, count: Int)
-        fun selectProduct(product: CartProductModel)
-        fun selectAll()
+        fun checkProduct(product: CartProductModel)
+        fun checkProductsAll()
     }
 }

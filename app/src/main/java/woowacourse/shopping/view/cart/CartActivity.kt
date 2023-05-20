@@ -5,12 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductModel
-import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.view.productlist.ProductListActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -61,7 +59,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 }
 
                 override fun onSelectProduct(product: CartProductModel) {
-                    presenter.selectProduct(product)
+                    presenter.checkProduct(product)
                 }
             }
         )

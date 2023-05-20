@@ -77,7 +77,7 @@ class CartPresenter(
         )
     }
 
-    override fun selectAll() {
+    override fun checkProductsAll() {
         val isChecked = _isCheckedAll.value?.not() ?: true
 
         cartItems.filterIsInstance<CartViewItem.CartProductItem>().forEachIndexed { index, it ->
@@ -90,7 +90,6 @@ class CartPresenter(
         } else { // 전체 해제
             convertItemsToCartProducts(cartItems).intersect(cartSystem.selectedProducts.toSet())
         }
-        Log.d("PRODUCTS", products.toString())
         var result: CartSystemResult? = _cartSystemResult.value
         products.forEach {
             result = cartSystem.selectProduct(it)
@@ -99,7 +98,7 @@ class CartPresenter(
         _isCheckedAll.value = isChecked
     }
 
-    override fun selectProduct(product: CartProductModel) {
+    override fun checkProduct(product: CartProductModel) {
         _cartSystemResult.value = cartSystem.selectProduct(product.toDomain())
         _isCheckedAll.value = getIsCheckedAll()
     }
