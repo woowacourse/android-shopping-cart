@@ -19,7 +19,7 @@ class CounterView @JvmOverloads constructor(
 
     var count: Int = MIN_COUNT_VALUE
         set(value) {
-            require(value in minCountValue..maxCountValue) { ERROR_COUNT_RANGE_OVER }
+            require(value in minCountValue..DEFAULT_MAX_COUNT_VALUE) { ERROR_COUNT_RANGE_OVER }
             field = value
             binding.countNumberTextView.text = field.toString()
             countStateChangeListener?.onCountChanged(this, field)
@@ -28,14 +28,7 @@ class CounterView @JvmOverloads constructor(
     // 카운터의 최소치 조정 가능
     var minCountValue: Int = DEFAULT_MIN_COUNT_VALUE
         set(value) {
-            require(maxCountValue > value) {}
-            field = value
-        }
-
-    // 카운터의 최대치 조정 가능
-    var maxCountValue: Int = DEFAULT_MAX_COUNT_VALUE
-        set(value) {
-            require(value > minCountValue) {}
+            require(DEFAULT_MAX_COUNT_VALUE > value) {}
             field = value
         }
 
@@ -47,7 +40,7 @@ class CounterView @JvmOverloads constructor(
 
     init {
         binding.plusButton.setOnClickListener {
-            if (count == maxCountValue) return@setOnClickListener
+            if (count == DEFAULT_MAX_COUNT_VALUE) return@setOnClickListener
             count++
         }
         binding.minusButton.setOnClickListener {
@@ -77,12 +70,6 @@ class CounterView @JvmOverloads constructor(
         @BindingAdapter("counterViewMinValue")
         fun setCounterViewMinValue(counterView: CounterView, value: Int) {
             counterView.minCountValue = value
-        }
-
-        @JvmStatic
-        @BindingAdapter("counterViewMaxValue")
-        fun setCounterViewMaxValue(counterView: CounterView, value: Int) {
-            counterView.maxCountValue = value
         }
     }
 }

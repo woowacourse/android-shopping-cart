@@ -53,7 +53,7 @@ class MainPresenter(
 
     override fun loadMoreProduct() {
         val lastProductId: Long = products.lastOrNull()?.id ?: 0
-        val nextProducts = productRepository.getNextProducts(
+        productRepository.getNextProducts(
             lastProductId,
             onSuccess = {
                 val nextProductUiModels = makeProductUiModels(it)
