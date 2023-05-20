@@ -24,7 +24,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> productClickListener.onProductClick(basketProduct.product)}"
+        android:onClick="@{() -> productClickListener.onClickProduct(basketProduct.product)}"
         android:paddingHorizontal="20dp"
         android:paddingVertical="20dp">
 
@@ -47,7 +47,7 @@
             android:layout_gravity="end|bottom"
             android:layout_margin="8dp"
             android:gravity="center"
-            android:onClick="@{() -> productClickListener.onPlusProductClick(basketProduct.product)}"
+            android:onClick="@{() -> productClickListener.onClickProductPlus(basketProduct.product)}"
             android:visibility="@{basketProduct.shouldShowCounter ? View.GONE : View.VISIBLE}"
             app:backgroundTint="@color/white"
             app:icon="@drawable/ic_plus"
@@ -64,8 +64,8 @@
             android:layout_height="0dp"
             android:layout_margin="8dp"
             bind:count="@{basketProduct.selectedCount.value}"
-            bind:onMinusClick="@{() -> counterClickListener.onClickMinus(basketProduct.product)}"
-            bind:onPlusClick="@{() -> counterClickListener.onClickPlus(basketProduct.product)}"
+            bind:onMinusClick="@{() -> counterClickListener.onClickCounterMinus(basketProduct.product)}"
+            bind:onPlusClick="@{() -> counterClickListener.onClickCounterPlus(basketProduct.product)}"
             android:visibility="@{basketProduct.shouldShowCounter ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
             app:layout_constraintEnd_toEndOf="@id/product_image_view"

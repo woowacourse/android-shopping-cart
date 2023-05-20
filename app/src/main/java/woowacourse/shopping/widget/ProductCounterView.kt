@@ -63,7 +63,7 @@ class ProductCounterView(context: Context, attrs: AttributeSet) : ConstraintLayo
     }
 
     interface OnClickListener {
-        fun onClickPlus(product: UiProduct)
-        fun onClickMinus(product: UiProduct)
+        fun onClickCounterPlus(product: UiProduct)
+        fun onClickCounterMinus(product: UiProduct)
     }
 }

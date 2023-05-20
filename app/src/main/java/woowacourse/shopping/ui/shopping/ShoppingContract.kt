@@ -15,7 +15,7 @@ interface ShoppingContract {
         fun navigateToBasket()
         fun showLoadMoreButton()
         fun hideLoadMoreButton()
-        fun updateBasketProductCount(count: ProductCount)
+        fun updateBasketProductBadge(count: ProductCount)
     }
 
     abstract class Presenter(protected val view: View) {

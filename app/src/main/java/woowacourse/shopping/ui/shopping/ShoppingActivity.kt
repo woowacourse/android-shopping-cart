@@ -91,7 +91,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         loadMoreAdapter.hideButton()
     }
 
-    override fun updateBasketProductCount(count: ProductCount) {
+    override fun updateBasketProductBadge(count: ProductCount) {
         val basketBadgeView = binding.shoppingToolBar.findItemActionView(R.id.basket) ?: return
         val productCountTextView = basketBadgeView.findTextView(R.id.basket_count_badge) ?: return
 
@@ -99,33 +99,32 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         productCountTextView.text = count.toText()
     }
 
-    override fun onProductClick(product: UiProduct) {
+    override fun onClickProduct(product: UiProduct) {
         presenter.inquiryProductDetail(product)
     }
 
-    override fun onPlusProductClick(product: UiProduct) {
+    override fun onClickProductPlus(product: UiProduct) {
         presenter.addBasketProduct(product)
     }
 
-    override fun onClickPlus(product: UiProduct) {
+    override fun onClickCounterPlus(product: UiProduct) {
         presenter.addBasketProduct(product)
     }
 
-    override fun onClickMinus(product: UiProduct) {
+    override fun onClickCounterMinus(product: UiProduct) {
         presenter.removeBasketProduct(product)
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         val product = intent?.getParcelableExtraCompat<UiProduct>(PRODUCT_KEY) ?: return
-        val count = intent.getIntExtra(COUNT_KEY, DEFAULT_PRODUCT_COUNT)
+        val count = intent.getIntExtra(COUNT_KEY, 0)
         presenter.addBasketProduct(product, count)
     }
 
     companion object {
         private const val PRODUCT_KEY = "product_key"
         private const val COUNT_KEY = "count_key"
-        private const val DEFAULT_PRODUCT_COUNT = 0
 
         fun getIntent(context: Context, product: UiProduct, count: Int): Intent =
             Intent(context, ShoppingActivity::class.java)

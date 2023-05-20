@@ -103,7 +103,7 @@ class ShoppingPresenter(
     }
 
     private fun updateBasketView() {
-        view.updateBasketProductCount(productInBasketSize)
+        view.updateBasketProductBadge(productInBasketSize)
         view.updateProducts(basket.takeItemsUpTo(currentPage).map { it.toUi() })
     }
 
