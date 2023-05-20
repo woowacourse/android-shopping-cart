@@ -130,4 +130,52 @@ class BasketTest {
         // then
         assertThat(actual).isEqualTo(expected)
     }
+
+    @Test
+    fun `장바구니 index3 아이템부터 5개를 가져온다 총아이템수 30개`() {
+        // given
+        val basketProducts = List(30) {
+            BasketProduct(it, Count(3), Product(it, "새상품", Price(500), "url"))
+        }
+        val basket = Basket(basketProducts)
+
+        // when
+        val expected = Basket(
+            listOf(
+                BasketProduct(3, Count(3), Product(3, "새상품", Price(500), "url")),
+                BasketProduct(4, Count(3), Product(4, "새상품", Price(500), "url")),
+                BasketProduct(5, Count(3), Product(5, "새상품", Price(500), "url")),
+                BasketProduct(6, Count(3), Product(6, "새상품", Price(500), "url")),
+                BasketProduct(7, Count(3), Product(7, "새상품", Price(500), "url"))
+            )
+        )
+        val actual = basket.getSubBasketByStartId(3, 5)
+
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `장바구니 index3 아이템부터 5개를 가져온다 총아이템수 6개`() {
+        // given
+        val basketProducts = List(6) {
+            BasketProduct(it, Count(3), Product(it, "새상품", Price(500), "url"))
+        }
+        val basket = Basket(basketProducts)
+
+        println(basket.products.lastIndex)
+
+        // when
+        val expected = Basket(
+            listOf(
+                BasketProduct(3, Count(3), Product(3, "새상품", Price(500), "url")),
+                BasketProduct(4, Count(3), Product(4, "새상품", Price(500), "url")),
+                BasketProduct(5, Count(3), Product(5, "새상품", Price(500), "url"))
+            )
+        )
+        val actual = basket.getSubBasketByStartId(3, 5)
+
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
 }

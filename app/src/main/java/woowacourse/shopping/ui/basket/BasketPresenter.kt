@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.basket
 
+import woowacourse.shopping.domain.Basket
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
@@ -13,6 +14,14 @@ class BasketPresenter(
     private var lastId: Int = -1
     private var currentPage: Int = 1
     private var currentBasketProducts: List<UiBasketProduct> = listOf()
+
+    private var basket: Basket = Basket(basketRepository.getAll())
+    private var startId: Int = 0
+
+    private fun amendStartId() {
+        if (basket.products.size < startId) startId -= BASKET_PAGING_SIZE
+        if (startId < 0) startId = 0
+    }
 
     override fun initBasketProducts() {
         fetchBasketProducts(lastId, false)

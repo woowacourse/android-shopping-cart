@@ -33,4 +33,10 @@ data class Basket(val products: List<BasketProduct>) {
 
     fun getCheckedProductsTotalPrice(): Int =
         products.fold(0) { acc, basketProduct -> if (basketProduct.checked) acc + basketProduct.getTotalPrice().value else acc }
+
+    fun getSubBasketByStartId(startId: Int, subBasketSize: Int): Basket {
+        val endIndex =
+            if (startId + subBasketSize > products.lastIndex) products.lastIndex + 1 else startId + subBasketSize
+        return Basket(products.subList(startId, endIndex))
+    }
 }
