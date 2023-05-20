@@ -55,6 +55,17 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_T
         return viewedProducts
     }
 
+    fun selectMostRecent(): Int? {
+        val sql =
+            "select * from ${RecentViewedContract.TABLE_NAME} WHERE rowid = (SELECT MAX(rowid) FROM ${RecentViewedContract.TABLE_NAME});"
+        val cursor = readableDatabase.rawQuery(sql, null)
+        while (cursor.moveToNext()) {
+            return cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
+        }
+        cursor.close()
+        return null
+    }
+
     fun removeOldest() {
         writableDatabase.execSQL("DELETE FROM ${RecentViewedContract.TABLE_NAME} WHERE rowid = (SELECT MIN(rowid) FROM ${RecentViewedContract.TABLE_NAME});")
     }

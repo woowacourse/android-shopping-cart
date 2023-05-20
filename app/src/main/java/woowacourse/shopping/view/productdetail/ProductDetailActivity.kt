@@ -9,6 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDbRepository
+import woowacourse.shopping.data.ProductMockRepository
 import woowacourse.shopping.data.RecentViewedDbRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductModel
@@ -36,7 +37,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setPresenter() {
         presenter =
-            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
+            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this), ProductMockRepository)
     }
 
     override fun getData() {
@@ -45,6 +46,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun bindView() {
         binding.product = presenter.getProductData()
+        binding.recentViewedProduct = presenter.getRecentViewedProductData()
         binding.presenter = presenter
     }
 
@@ -57,6 +59,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun startCartActivity() {
         val intent = CartActivity.newIntent(this)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun showProductRecentViewedDetail(product: ProductModel) {
+        val intent = newIntent(this, product)
         startActivity(intent)
         finish()
     }

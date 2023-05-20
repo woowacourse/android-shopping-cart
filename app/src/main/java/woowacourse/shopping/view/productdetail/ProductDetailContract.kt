@@ -9,6 +9,7 @@ interface ProductDetailContract {
         fun startCartActivity()
         fun onOptionsItemSelected(item: MenuItem): Boolean
         fun handleBackButtonClicked()
+        fun showProductRecentViewedDetail(product: ProductModel)
     }
 
     interface Presenter {
@@ -17,5 +18,7 @@ interface ProductDetailContract {
         fun handleNextStep(itemId: Int)
         fun setProductData(productModel: ProductModel)
         fun getProductData(): ProductModel
+        fun getRecentViewedProductData(): ProductModel
+        fun navigateRecentViewedDetail()
     }
 }

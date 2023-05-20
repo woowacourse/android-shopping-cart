@@ -10,6 +10,10 @@
             type="woowacourse.shopping.model.ProductModel" />
 
         <variable
+            name="recentViewedProduct"
+            type="woowacourse.shopping.model.ProductModel" />
+
+        <variable
             name="presenter"
             type="woowacourse.shopping.view.productdetail.ProductDetailContract.Presenter" />
     </data>
@@ -77,6 +81,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/last_product_layout"
+            android:onClick="@{() -> presenter.navigateRecentViewedDetail()}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -102,6 +107,7 @@
 
             <TextView
                 android:id="@+id/last_product_title"
+                android:text="@{recentViewedProduct.name}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
@@ -116,6 +122,7 @@
 
             <TextView
                 android:id="@+id/last_product_price"
+                setPrice="@{recentViewedProduct.price}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="18dp"
