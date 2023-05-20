@@ -41,6 +41,24 @@ class MainProductAdapter(
         notifyItemRangeInserted(previousSize, newItems.size)
     }
 
+    fun updateItems(cartProducts: List<ProductUiModel>) {
+        _items.forEachIndexed { index, item ->
+            if (item.count != 0) {
+                _items[index] = _items[index].copy(
+                    count = cartProducts.find { it.id == item.id }?.count ?: 0
+                )
+                notifyItemChanged(index)
+            }
+        }
+    }
+
+    fun updateItem(product: ProductUiModel) {
+        val index = _items.indexOfFirst { it.id == product.id }
+        if (index != -1) {
+            _items[index] = _items[index].copy(count = product.count)
+        }
+    }
+
     companion object {
         const val VIEW_TYPE = 222
     }

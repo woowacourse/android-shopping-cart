@@ -59,6 +59,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter.loadRecent()
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.updateProducts()
+    }
+
     private fun initAdapters() {
         mainProductAdapter = MainProductAdapter(
             listOf(),
@@ -120,9 +125,19 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun updateCartProductCount(count: Int) {
-        if (count == 0) cartProductCountTv.visibility = View.GONE
-        else cartProductCountTv.visibility = View.VISIBLE
-        cartProductCountTv.text = count.toString()
+        if (::cartProductCountTv.isInitialized) {
+            if (count == 0) cartProductCountTv.visibility = View.GONE
+            else cartProductCountTv.visibility = View.VISIBLE
+            cartProductCountTv.text = count.toString()
+        }
+    }
+
+    override fun updateProductsCount(products: List<ProductUiModel>) {
+        mainProductAdapter.updateItems(products)
+    }
+
+    override fun updateProductCount(product: ProductUiModel) {
+        mainProductAdapter.updateItem(product)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
