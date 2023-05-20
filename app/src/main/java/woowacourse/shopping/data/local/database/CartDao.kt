@@ -46,7 +46,7 @@ class CartDao(context: Context) {
                         productCount,
                         isSelected == "y"
                     )
-                ) // TODO 데이터 어느 레이어에서 가공할까?
+                )
             }
         }
         cursor.close()
@@ -58,7 +58,21 @@ class CartDao(context: Context) {
         return db.rawQuery(CartContract.getCartSql(startPosition, cartItemCount), null)
     }
 
-    companion object
+    fun getItemsWithProductCount(productId: Long): Int? {
+        val result = mutableListOf<Int>()
+
+        val cursor = getCartProductCount(productId)
+        while (cursor.moveToNext()) {
+            result.add(cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.Cart.PRODUCT_COUNT)))
+        }
+
+        cursor.close()
+        return result.firstOrNull()
+    }
+
+    private fun getCartProductCount(productId: Long): Cursor {
+        return db.rawQuery(CartContract.getProductCount(productId), null)
+    }
 }
 
 // https://hongal.tistory.com/50

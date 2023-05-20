@@ -8,6 +8,7 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
@@ -20,14 +21,17 @@ class ProductListPresenterTest {
     private lateinit var view: ProductContract.View
     private lateinit var productRepository: ProductRepository
     private lateinit var recentProductRepository: RecentProductRepository
+    private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk()
         recentProductRepository = mockk()
+        cartRepository = mockk()
 
-        presenter = ProductListPresenter(view, productRepository, recentProductRepository)
+        presenter =
+            ProductListPresenter(view, productRepository, recentProductRepository, cartRepository)
     }
 
     @Test

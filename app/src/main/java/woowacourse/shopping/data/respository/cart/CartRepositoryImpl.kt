@@ -13,7 +13,7 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
         cartDao.deleteAllProduct(productId)
     }
 
-    override fun addCart(productId: Long, productCount: Int) {
+    override fun insertCart(productId: Long, productCount: Int) {
         cartDao.insertProduct(productId, productCount)
     }
 }

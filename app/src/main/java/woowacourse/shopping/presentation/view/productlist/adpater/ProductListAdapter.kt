@@ -15,7 +15,10 @@ class ProductListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
         return ProductListViewHolder(
             parent, { onButtonClick(_products[it]) },
-            { position, count -> onCountChanged(_products[position].id, count) }
+            { position, count ->
+                onCountChanged(_products[position].id, count)
+                updateCartCount(position, count)
+            }
         )
     }
 
@@ -30,6 +33,17 @@ class ProductListAdapter(
     fun updateDataSet(newProducts: List<ProductModel>) {
         _products.addAll(newProducts)
         notifyItemRangeInserted(itemCount, newProducts.size)
+    }
+
+    fun updateCartCount(position: Int, count: Int) {
+        _products[position] = ProductModel(
+            _products[position].id,
+            _products[position].title,
+            _products[position].price,
+            _products[position].imageUrl,
+            count
+        )
+        notifyItemChanged(position)
     }
 
     companion object {

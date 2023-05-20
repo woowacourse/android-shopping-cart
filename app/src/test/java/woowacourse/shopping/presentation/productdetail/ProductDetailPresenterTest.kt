@@ -55,7 +55,7 @@ class ProductDetailPresenterTest {
         // given
         val slotProductId = slot<Long>()
         val slotItemCount = slot<Int>()
-        justRun { cartRepository.addCart(capture(slotProductId), capture(slotItemCount)) }
+        justRun { cartRepository.insertCart(capture(slotProductId), capture(slotItemCount)) }
         justRun { view.addCartSuccessView() }
 
         // when
@@ -66,7 +66,7 @@ class ProductDetailPresenterTest {
         val actualProductCount = slotItemCount.captured
         val expected = 1L
         assertEquals(expected, actualProductId)
-        verify { cartRepository.addCart(actualProductId, actualProductCount) }
+        verify { cartRepository.insertCart(actualProductId, actualProductCount) }
         verify { view.addCartSuccessView() }
     }
 }

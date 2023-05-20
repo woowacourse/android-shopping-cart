@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.view.productlist.viewholder
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,6 @@ class ProductListViewHolder(
             onProductClick(bindingAdapterPosition)
         }
 
-        //TODO("리팩토링을 고민한다")
         binding.btProductAdd.setOnClickListener {
             it.visibility = View.GONE
             binding.countViewProductListOrderCount.visibility = View.VISIBLE
@@ -46,9 +46,18 @@ class ProductListViewHolder(
     }
 
     fun bind(product: ProductModel) {
+        Log.d("test", "${product.title} and ${product.count}")
         Glide.with(binding.root).load(product.imageUrl).into(binding.ivProductThumbnail)
         binding.tvProductTitle.text = product.title
         binding.tvProductPrice.text =
             binding.root.context.getString(R.string.product_price_format, product.price)
+        if (product.count > 0) {
+            binding.countViewProductListOrderCount.count = product.count
+            binding.countViewProductListOrderCount.visibility = View.VISIBLE
+            binding.btProductAdd.visibility = View.GONE
+        } else {
+            binding.countViewProductListOrderCount.visibility = View.GONE
+            binding.btProductAdd.visibility = View.VISIBLE
+        }
     }
 }

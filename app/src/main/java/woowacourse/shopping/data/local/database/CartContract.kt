@@ -16,6 +16,12 @@ object CartContract {
             "LIMIT $startPosition, $CartItemCount"
     }
 
+    fun getProductCount(productId: Long): String {
+        return "SELECT ${Cart.PRODUCT_COUNT} " +
+            "FROM ${Cart.TABLE_NAME} " +
+            "WHERE ${Cart.PRODUCT_ID} = $productId"
+    }
+
     object Cart : BaseColumns {
         const val TABLE_NAME = "Cart"
         const val PRODUCT_ID = "ProductId"

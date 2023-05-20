@@ -11,6 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.local.database.CartDao
 import woowacourse.shopping.data.local.database.RecentProductDao
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
+import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.model.ProductModel
@@ -28,6 +29,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private val presenter: ProductContract.Presenter by lazy {
         ProductListPresenter(
             this,
+            productRepository = ProductRepositoryImpl(CartDao(this)),
             recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this)),
             cartRepository = CartRepositoryImpl(CartDao(this))
         )
