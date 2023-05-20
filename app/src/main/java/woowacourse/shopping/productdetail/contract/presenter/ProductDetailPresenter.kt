@@ -52,11 +52,9 @@ class ProductDetailPresenter(
 
     override fun increaseCount() {
         _count++
-        view.setCount(_count)
     }
 
     override fun decreaseCount() {
         _count--
-        view.setCount(_count)
     }
 }

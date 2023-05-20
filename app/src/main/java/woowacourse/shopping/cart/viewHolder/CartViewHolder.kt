@@ -11,18 +11,15 @@ class CartViewHolder private constructor(
     val binding: CartItemBinding,
     val onItemClick: (CartProductUIModel) -> Unit,
     val onRemove: (Int) -> Unit,
-    onIncreaseCount: (Int) -> Unit,
-    onDecreaseCount: (Int) -> Unit,
-    onUpdateCount: (Int) -> Unit,
+    onIncreaseCount: (Int, Int) -> Unit,
+    onDecreaseCount: (Int, Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.customCountView.plusClickListener = {
-            onIncreaseCount(bindingAdapterPosition)
-//            onUpdateCount(bindingAdapterPosition)
+            onIncreaseCount(binding.customCountView.count, bindingAdapterPosition)
         }
         binding.customCountView.minusClickListener = {
-            onDecreaseCount(bindingAdapterPosition)
-//            onUpdateCount(bindingAdapterPosition)
+            onDecreaseCount(binding.customCountView.count, bindingAdapterPosition)
         }
     }
 
@@ -38,9 +35,8 @@ class CartViewHolder private constructor(
             parent: ViewGroup,
             onClick: (CartProductUIModel) -> Unit,
             onRemove: (Int) -> Unit,
-            onIncreaseCount: (Int) -> Unit,
-            onDecreaseCount: (Int) -> Unit,
-            onUpdateCount: (Int) -> Unit,
+            onIncreaseCount: (Int, Int) -> Unit,
+            onDecreaseCount: (Int, Int) -> Unit,
         ): CartViewHolder {
             val binding =
                 CartItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -50,7 +46,6 @@ class CartViewHolder private constructor(
                 onRemove,
                 onIncreaseCount,
                 onDecreaseCount,
-                onUpdateCount,
             )
         }
     }

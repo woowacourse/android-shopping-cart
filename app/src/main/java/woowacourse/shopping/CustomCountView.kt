@@ -26,6 +26,7 @@ class CustomCountView @JvmOverloads constructor(
             field = value
             binding.tvPlus.setOnClickListener {
                 value?.invoke()
+                count++
             }
         }
 
@@ -34,6 +35,7 @@ class CustomCountView @JvmOverloads constructor(
             field = value
             binding.tvMinus.setOnClickListener {
                 value?.invoke()
+                count--
             }
         }
 }

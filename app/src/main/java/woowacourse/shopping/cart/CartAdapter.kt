@@ -9,8 +9,8 @@ class CartAdapter(
     private val cartItems: List<CartItem>,
     private val onItemClick: (CartProductUIModel) -> Unit,
     private val onItemRemove: (Int) -> Unit,
-    private val onIncreaseCount: (CartProductUIModel) -> Unit,
-    private val onDecreaseCount: (CartProductUIModel) -> Unit,
+    private val onIncreaseCount: (Int, CartProductUIModel) -> Unit,
+    private val onDecreaseCount: (Int, CartProductUIModel) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
@@ -18,9 +18,8 @@ class CartAdapter(
             parent,
             onItemClick,
             onItemRemove,
-            { onIncreaseCount(cartItems[it].cartProduct) },
-            { onDecreaseCount(cartItems[it].cartProduct) },
-            { notifyItemChanged(it) },
+            { count, index -> onIncreaseCount(count, cartItems[index].cartProduct) },
+            { count, index -> onDecreaseCount(count, cartItems[index].cartProduct) },
         )
     }
 
