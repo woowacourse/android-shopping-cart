@@ -1,10 +1,11 @@
 package woowacourse.shopping.presentation.common
 
 import woowacourse.shopping.Counter
+import woowacourse.shopping.util.SafeLiveData
 
 interface CounterContract {
     interface Presenter {
-        var counter: Counter
+        val counter: SafeLiveData<Counter>
         fun updateCount(count: Int)
         fun plusCount()
         fun minusCount()
@@ -12,7 +13,6 @@ interface CounterContract {
     }
 
     interface View {
-        fun setCounterText(number: Int)
         fun setCounterVisibility(visible: Boolean)
     }
 }
