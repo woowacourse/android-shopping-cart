@@ -73,6 +73,9 @@
             - [x] cartRepository.modifyCartProduct(cartProduct)
     - [ ] Cart
         - Cart
+        - [x] init { }
+          - [x] view.updateCartTotalPrice(price: Int)
+          - [x] view.updateCartTotalAmount(amount: Int)
         - [ ] updateCartProductChecked(cartProductModel)
             - [ ] updateCartProduct(cartProduct)
         - [ ] decreaseCartProductAmount()

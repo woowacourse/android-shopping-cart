@@ -16,6 +16,10 @@ interface CartContract {
 
         fun updateNavigationVisibility(visibility: Boolean)
 
+        fun updateCartTotalPrice(price: Int)
+
+        fun updateCartTotalAmount(amount: Int)
+
         fun setResultForChange()
     }
 }

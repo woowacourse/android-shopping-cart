@@ -46,6 +46,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         cartAdapter.updateNavigationVisible(visibility)
     }
 
+    override fun updateCartTotalPrice(price: Int) {
+        binding.cartTotalPrice.text = getString(R.string.product_price, price)
+    }
+
+    override fun updateCartTotalAmount(amount: Int) {
+        binding.cartOrderButton.text = getString(R.string.order_button, amount)
+    }
+
     override fun setResultForChange() {
         setResult(Activity.RESULT_OK)
     }

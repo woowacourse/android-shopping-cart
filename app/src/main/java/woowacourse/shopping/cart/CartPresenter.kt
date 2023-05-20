@@ -12,9 +12,14 @@ class CartPresenter(
     private var currentPage: Int = 0,
     private val sizePerPage: Int
 ) : CartContract.Presenter {
+    private var totalPrice: Int = 0
+    private var totalAmount: Int = 0
+
     init {
         view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
+        setupTotalPrice()
+        setupTotalAmount()
     }
 
     override fun removeCartProduct(cartProductModel: CartProductModel) {
@@ -43,6 +48,16 @@ class CartPresenter(
             currentPage = currentPage + 1,
             isLastPage = isLastPageCart(cart)
         )
+    }
+
+    private fun setupTotalPrice() {
+        totalPrice = cartRepository.getTotalPrice()
+        view.updateCartTotalPrice(totalPrice)
+    }
+
+    private fun setupTotalAmount() {
+        totalAmount = cartRepository.getTotalAmount()
+        view.updateCartTotalAmount(totalAmount)
     }
 
     private fun isLastPageCart(cart: Cart): Boolean {

@@ -40,4 +40,8 @@ class CartRepositoryImpl(
     override fun modifyCartProduct(cartProduct: CartProduct) {
         cartDao.updateCartProduct(cartProduct)
     }
+
+    override fun getTotalPrice(): Int {
+        return cartDao.getTotalPrice()
+    }
 }

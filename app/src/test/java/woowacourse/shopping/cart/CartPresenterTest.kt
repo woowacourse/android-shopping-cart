@@ -46,6 +46,36 @@ class CartPresenterTest {
     }
 
     @Test
+    fun 프레젠터가_생성되면_총_가격을_업데이트_한다() {
+        // given
+        justRun {
+            view.updateCartTotalPrice(any())
+        }
+
+        // when
+
+        // then
+        verify {
+            view.updateCartTotalPrice(any())
+        }
+    }
+
+    @Test
+    fun 프레젠터가_생성되면_총_수량을_업데이트_한다() {
+        // given
+        justRun {
+            view.updateCartTotalAmount(any())
+        }
+
+        // when
+
+        // then
+        verify {
+            view.updateCartTotalAmount(any())
+        }
+    }
+
+    @Test
     fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
         // given
         justRun {

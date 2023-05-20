@@ -20,4 +20,6 @@ interface CartRepository {
     fun getCartProductByProduct(product: Product): CartProduct?
 
     fun modifyCartProduct(cartProduct: CartProduct)
+
+    fun getTotalPrice(): Int
 }

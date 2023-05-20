@@ -138,4 +138,19 @@ class CartDao(private val db: SQLiteDatabase) {
 
         return SqlProduct.selectRowId(db, productRow)
     }
+
+    fun getTotalPrice(): Int {
+        val cursor = db.rawQuery(
+            """
+                |SELECT SUM(${SqlProduct.PRICE} * ${SqlCart.AMOUNT}) FROM ${SqlCart.name}, ${SqlProduct.name} 
+                |ON ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}
+            """.trimMargin(),
+            null
+        )
+
+        return cursor.use {
+            if (it.moveToNext()) it.getInt(0)
+            else 0
+        }
+    }
 }
