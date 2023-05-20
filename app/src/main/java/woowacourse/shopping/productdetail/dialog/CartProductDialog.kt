@@ -37,6 +37,7 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCartProductAmountDecreaseButton()
+        setupCartProductAmountIncreaseButton()
     }
 
     override fun updateCartProductAmount(amount: Int) {
@@ -64,9 +65,15 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
         }
     }
 
-    companion object {
+    private fun setupCartProductAmountIncreaseButton() {
+        binding.dialogCartProductAmountPlusButton.setOnClickListener {
+            presenter.increaseCartProductAmount()
+        }
+    }
 
+    companion object {
         private const val BUNDLE_KEY_PRODUCT = "product"
+
         fun createDialog(product: ProductModel): CartProductDialog {
             val bundle = Bundle()
             bundle.putSerializable(BUNDLE_KEY_PRODUCT, product)

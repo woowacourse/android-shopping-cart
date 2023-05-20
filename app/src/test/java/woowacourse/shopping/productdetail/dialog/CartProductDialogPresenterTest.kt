@@ -66,4 +66,21 @@ class CartProductDialogPresenterTest {
         // then
         verify(exactly = 1) { view.updateCartProductAmount(any()) }
     }
+
+    @Test
+    fun 카트_상품_수량을_증가시키면_뷰에_카트_상품_수량이_업데이트_된다() {
+        // given
+        presenter = CartProductDialogPresenter(
+            view,
+            productModel = mockk(relaxed = true),
+            cartRepository,
+            cartProductAmount = 1
+        )
+
+        // when
+        presenter.increaseCartProductAmount()
+
+        // then
+        verify(exactly = 2) { view.updateCartProductAmount(any()) }
+    }
 }

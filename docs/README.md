@@ -46,16 +46,19 @@
         - [ ] openRecentProductDetail()
             - [ ] view.showRecentProductDetail(recentProductModel)
     - [ ] CartProductDialog
+        - CartProduct
         - [x] init { }
             - [x] create cart product
-            - [x] view.updateCartProductAmount(amount)
+            - [x] updateCartProductAmount()
         - [x] decreaseCartProductAmount()
             - [x] if(amount > 1)
                 - [x] cartProduct.decreaseAmount()
-                - [x] view.updateCartProductAmount(amount)
-        - [ ] increaseCartProductAmount()
-            - [ ] cartProduct.increaseAmount()
-            - [ ] view.updateCartProduct(cartProductModel)
+                - [x] updateCartProductAmount()
+        - [x] increaseCartProductAmount()
+            - [x] cartProduct.increaseAmount()
+            - [x] updateCartProductAmount()
+        - [x] private updateCartProductAmount()
+            - [x] view.updateCartProductAmount(amount)
         - [ ] addToCart()
             - [ ] if (cartRepository.getCartProductByProduct(product) == null)
                 - [ ] cartRepository.addCartProduct(cartProduct)

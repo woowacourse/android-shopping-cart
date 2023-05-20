@@ -16,14 +16,23 @@ class CartProductDialogPresenter(
 
     init {
         cartProduct = CartProduct(LocalDateTime.now(), cartProductAmount, true, productModel.toDomain())
-        view.updateCartProductAmount(cartProduct.amount)
+        updateCartProductAmount()
     }
 
     override fun decreaseCartProductAmount() {
         if (cartProduct.amount > MINIMUM_CART_PRODUCT_AMOUNT) {
             cartProduct = cartProduct.decreaseAmount()
-            view.updateCartProductAmount(cartProduct.amount)
+            updateCartProductAmount()
         }
+    }
+
+    override fun increaseCartProductAmount() {
+        cartProduct = cartProduct.increaseAmount()
+        updateCartProductAmount()
+    }
+
+    private fun updateCartProductAmount() {
+        view.updateCartProductAmount(cartProduct.amount)
     }
 
     companion object {

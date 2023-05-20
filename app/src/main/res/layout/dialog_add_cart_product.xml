@@ -2,7 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.common.model.ProductModel" />
@@ -20,9 +22,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.title}"
             android:textColor="#333333"
             android:textSize="18sp"
-            android:text="@{product.title}"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,9 +35,9 @@
             android:id="@+id/dialog_cart_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{@string/product_price(product.price)}"
             android:textColor="#333333"
             android:textSize="16sp"
-            android:text="@{@string/product_price(product.price)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_cart_product_title"
             tools:text="99,800원" />
@@ -48,16 +50,6 @@
             android:background="@drawable/cart_product_amount_bar_minus_background"
             android:text="@string/minus"
             app:layout_constraintEnd_toStartOf="@id/dialog_cart_product_amount"
-            app:layout_constraintTop_toTopOf="@id/dialog_cart_product_amount" />
-
-        <Button
-            android:id="@+id/dialog_cart_product_amount_plus_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/cart_product_amount_bar_plus_background"
-            android:text="@string/plus"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/dialog_cart_product_amount" />
 
         <TextView
@@ -73,6 +65,16 @@
             tools:text="1" />
 
         <Button
+            android:id="@+id/dialog_cart_product_amount_plus_button"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/cart_product_amount_bar_plus_background"
+            android:text="@string/plus"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dialog_cart_product_amount" />
+
+        <Button
             android:layout_width="290dp"
             android:layout_height="40dp"
             android:background="@color/primary"
@@ -80,8 +82,8 @@
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/dialog_cart_product_amount" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
