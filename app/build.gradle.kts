@@ -51,4 +51,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.github.bumptech.glide:glide:4.15.1")
     testImplementation("io.mockk:mockk-android:1.13.5")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 }
