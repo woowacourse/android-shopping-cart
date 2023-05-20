@@ -5,8 +5,6 @@ import woowacourse.shopping.common.model.ProductModel
 interface ProductDetailContract {
     interface Presenter {
         fun setupCartProductDialog()
-
-        fun addToCart()
     }
 
     interface View {
@@ -15,7 +13,5 @@ interface ProductDetailContract {
         fun setupRecentProductDetail(recentProductModel: ProductModel?)
 
         fun showCartProductDialog(productModel: ProductModel)
-
-        fun showCart()
     }
 }

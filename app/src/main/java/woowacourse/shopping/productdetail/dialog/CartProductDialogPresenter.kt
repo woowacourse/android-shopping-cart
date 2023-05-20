@@ -35,6 +35,21 @@ class CartProductDialogPresenter(
         view.updateCartProductAmount(cartProduct.amount)
     }
 
+    override fun addToCart() {
+        val prevCartProduct = cartRepository.getCartProductByProduct(cartProduct.product)
+        if (prevCartProduct == null) {
+            cartRepository.addCartProduct(cartProduct)
+        } else {
+            updateCartProduct(prevCartProduct)
+        }
+        view.showCart()
+    }
+
+    private fun updateCartProduct(prevCartProduct: CartProduct) {
+        cartProduct = prevCartProduct.copy(amount = prevCartProduct.amount + cartProduct.amount)
+        cartRepository.modifyCartProduct(cartProduct)
+    }
+
     companion object {
         private const val MINIMUM_CART_PRODUCT_AMOUNT = 1
     }

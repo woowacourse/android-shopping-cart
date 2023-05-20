@@ -205,7 +205,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun startProductDetailActivity(productModel: ProductModel, recentProductModel: ProductModel?) {
         val intent = ProductDetailActivity.createIntent(this, productModel, recentProductModel)
-        startActivity(intent)
+        activityResultLauncher.launch(intent)
     }
 
     companion object {

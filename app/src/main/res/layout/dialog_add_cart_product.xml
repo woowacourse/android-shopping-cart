@@ -75,6 +75,7 @@
             app:layout_constraintTop_toTopOf="@id/dialog_cart_product_amount" />
 
         <Button
+            android:id="@+id/dialog_add_to_cart_button"
             android:layout_width="290dp"
             android:layout_height="40dp"
             android:background="@color/primary"

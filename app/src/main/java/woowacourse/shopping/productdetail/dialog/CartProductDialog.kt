@@ -1,10 +1,12 @@
 package woowacourse.shopping.productdetail.dialog
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.utils.getSerializableByKey
 import woowacourse.shopping.data.cart.CartRepositoryImpl
@@ -38,10 +40,15 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
         super.onViewCreated(view, savedInstanceState)
         setupCartProductAmountDecreaseButton()
         setupCartProductAmountIncreaseButton()
+        setupAddToCartButton()
     }
 
     override fun updateCartProductAmount(amount: Int) {
         binding.dialogCartProductAmount.text = amount.toString()
+    }
+
+    override fun showCart() {
+        startCartActivity()
     }
 
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
@@ -69,6 +76,23 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
         binding.dialogCartProductAmountPlusButton.setOnClickListener {
             presenter.increaseCartProductAmount()
         }
+    }
+
+    private fun setupAddToCartButton() {
+        binding.dialogAddToCartButton.setOnClickListener {
+            setResultForChange()
+            presenter.addToCart()
+        }
+    }
+
+    private fun setResultForChange() {
+        activity?.setResult(Activity.RESULT_OK)
+    }
+
+    private fun startCartActivity() {
+        val intent = CartActivity.createIntent(requireContext())
+        startActivity(intent)
+        dismiss()
     }
 
     companion object {

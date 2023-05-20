@@ -5,9 +5,13 @@ interface CartProductDialogContract {
         fun decreaseCartProductAmount()
 
         fun increaseCartProductAmount()
+
+        fun addToCart()
     }
 
     interface View {
         fun updateCartProductAmount(amount: Int)
+
+        fun showCart()
     }
 }

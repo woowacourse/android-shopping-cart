@@ -7,12 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.utils.getSerializable
-import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.productdetail.dialog.CartProductDialog
 
@@ -63,15 +59,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         dialog.show(supportFragmentManager, "CartProductDialog")
     }
 
-    override fun showCart() {
-        startCartActivity()
-    }
-
-    private fun startCartActivity() {
-        val intent = CartActivity.createIntent(this)
-        startActivity(intent)
-    }
-
     private fun initExtras() {
         productModel = intent.getSerializable(EXTRA_KEY_PRODUCT) ?: return finish()
         recentProductModel = intent.getSerializable(EXTRA_KEY_RECENT_PRODUCT)
@@ -84,12 +71,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initPresenter() {
-        val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ProductDetailPresenter(
             this,
             productModel = productModel,
-            recentProductModel = recentProductModel,
-            cartRepository = CartRepositoryImpl(CartDao(db))
+            recentProductModel = recentProductModel
         )
     }
 

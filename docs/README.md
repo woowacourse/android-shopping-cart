@@ -45,7 +45,7 @@
             - [x] view.showCartProductDialog(productModel)
         - [ ] openRecentProductDetail()
             - [ ] view.showRecentProductDetail(recentProductModel)
-    - [ ] CartProductDialog
+    - [x] CartProductDialog
         - CartProduct
         - [x] init { }
             - [x] create cart product
@@ -59,11 +59,15 @@
             - [x] updateCartProductAmount()
         - [x] private updateCartProductAmount()
             - [x] view.updateCartProductAmount(amount)
-        - [ ] addToCart()
-            - [ ] if (cartRepository.getCartProductByProduct(product) == null)
-                - [ ] cartRepository.addCartProduct(cartProduct)
-            - [ ] else
-                - [ ] cartRepository.modifyCartProduct(cartProduct)
+        - [x] addToCart()
+            - [x] if (cartRepository.getCartProductByProduct(product) == null)
+                - [x] cartRepository.addCartProduct(cartProduct)
+            - [x] else
+                - [x] updateCartProduct(cartProduct)
+        - [x] updateCartProduct(cartProduct)
+            - [x] update amount to sum of prev cart product amount and current cart product
+              amount
+            - [x] cartRepository.modifyCartProduct(cartProduct)
     - [ ] Cart
         - Cart
         - [ ] updateCartProductChecked(cartProductModel)
