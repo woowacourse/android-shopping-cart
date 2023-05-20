@@ -24,14 +24,12 @@ fun inject(
 
 fun inject(
     view: ProductDetailContract.View,
-    context: Context,
     detailProduct: UiProduct,
     recentProduct: UiRecentProduct?,
 ): ProductDetailContract.Presenter = ProductDetailPresenter(
     view = view,
     product = detailProduct,
     recentProduct = recentProduct,
-    basketRepository = inject(inject(injectBasketDao(createShoppingDatabase(context)))),
 )
 
 fun inject(

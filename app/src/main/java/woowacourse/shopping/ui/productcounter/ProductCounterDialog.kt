@@ -9,7 +9,7 @@ import woowacourse.shopping.model.UiProduct
 class ProductCounterDialog(
     context: Context,
     product: UiProduct,
-    onPutInBasket: (Int) -> Unit,
+    onPutInBasket: (count: Int) -> Unit,
 ) : Dialog(context) {
 
     init {

@@ -20,10 +20,9 @@ import woowacourse.shopping.util.inject.inject
 
 class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener {
     private lateinit var binding: ActivityProductDetailBinding
-    override val presenter: Presenter by lazy {
+    private val presenter: Presenter by lazy {
         inject(
             view = this,
-            context = this,
             detailProduct = intent.getParcelableExtraCompat(DETAIL_PRODUCT_KEY)!!,
             recentProduct = intent.getParcelableExtraCompat(LAST_VIEWED_PRODUCT_KEY),
         )
@@ -44,14 +43,12 @@ class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener
         binding.detailProduct = product
     }
 
-    override fun showLastViewedProductDetail(product: UiProduct?) {
-        binding.lastViewedProduct = product
+    override fun showLastViewedProductDetail(lastViewedProduct: UiProduct?) {
+        binding.lastViewedProduct = lastViewedProduct
     }
 
     override fun showProductCounter(product: UiProduct) {
-        ProductCounterDialog(this, product) { count ->
-            presenter.navigateToHome(count)
-        }.show()
+        ProductCounterDialog(this, product, presenter::navigateToHome).show()
     }
 
     override fun navigateToHome(product: UiProduct, count: Int) {

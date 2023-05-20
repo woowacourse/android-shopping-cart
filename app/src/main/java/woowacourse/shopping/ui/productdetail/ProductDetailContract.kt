@@ -5,10 +5,8 @@ import woowacourse.shopping.model.UiRecentProduct
 
 interface ProductDetailContract {
     interface View {
-        val presenter: Presenter
-
         fun showProductDetail(product: UiProduct)
-        fun showLastViewedProductDetail(product: UiProduct?)
+        fun showLastViewedProductDetail(lastViewedProduct: UiProduct?)
         fun showProductCounter(product: UiProduct)
         fun navigateToProductDetail(recentProduct: UiRecentProduct)
         fun navigateToHome(product: UiProduct, count: Int)
