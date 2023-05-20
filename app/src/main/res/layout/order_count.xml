@@ -11,6 +11,10 @@
             type="int" />
 
         <variable
+            name="product"
+            type="woowacourse.shopping.model.ProductUIModel" />
+
+        <variable
             name="listener"
             type="woowacourse.shopping.utils.CustomViewOnClickListener" />
     </data>
@@ -26,7 +30,7 @@
             android:layout_height="42dp"
             android:paddingHorizontal="14dp"
             android:src="@drawable/remove_button"
-            android:onClick="@{() -> listener.decreaseCount() }"
+            android:onClick="@{() -> listener.decreaseCount(product.id) }"
             android:visibility = "@{count > 1 ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +54,7 @@
             android:layout_height="42dp"
             android:paddingHorizontal="14dp"
             android:src="@drawable/add_button"
-            android:onClick="@{() -> listener.increaseCount()}"
+            android:onClick="@{() -> listener.increaseCount(product.id)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

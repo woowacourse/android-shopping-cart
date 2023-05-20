@@ -18,8 +18,8 @@ interface ProductDetailContract {
         fun addProductToCart()
         fun addProductToRecent()
 
-        fun addProductCount()
-        fun subtractProductCount()
+        fun addProductCount(id: Long)
+        fun subtractProductCount(id: Long)
 
         fun setProductCountDialog()
 

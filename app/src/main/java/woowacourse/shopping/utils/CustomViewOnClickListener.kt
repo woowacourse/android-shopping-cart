@@ -1,6 +1,6 @@
 package woowacourse.shopping.utils
 
 interface CustomViewOnClickListener {
-    fun increaseCount()
-    fun decreaseCount()
+    fun increaseCount(id: Long)
+    fun decreaseCount(id: Long)
 }

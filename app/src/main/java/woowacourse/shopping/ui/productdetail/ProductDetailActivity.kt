@@ -89,12 +89,12 @@ class ProductDetailActivity :
         navigateToCart()
     }
 
-    override fun increaseCount() {
-        presenter.addProductCount()
+    override fun increaseCount(id: Long) {
+        presenter.addProductCount(id)
     }
 
-    override fun decreaseCount() {
-        presenter.subtractProductCount()
+    override fun decreaseCount(id: Long) {
+        presenter.subtractProductCount(id)
     }
 
     override fun navigateToDetail(product: ProductUIModel) {

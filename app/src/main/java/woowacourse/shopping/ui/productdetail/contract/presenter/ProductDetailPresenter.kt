@@ -68,11 +68,11 @@ class ProductDetailPresenter(
         latestProduct?.let { view.navigateToDetail(it) }
     }
 
-    override fun addProductCount() {
+    override fun addProductCount(id: Long) {
         _count.value = _count.value?.plus(1)
     }
 
-    override fun subtractProductCount() {
+    override fun subtractProductCount(id: Long) {
         _count.value = _count.value?.minus(1)
     }
 }
