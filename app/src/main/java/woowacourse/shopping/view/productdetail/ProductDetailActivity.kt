@@ -26,6 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setPresenter()
         getData()
         bindView()
+        showDialog()
         presenter.updateRecentViewedProducts()
     }
 
@@ -45,6 +46,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun bindView() {
         binding.product = presenter.getProductData()
         binding.presenter = presenter
+    }
+
+    private fun showDialog() {
+        binding.btnPutInCart.setOnClickListener {
+            val dialog = CartDialog(this, CartDbRepository(this))
+            dialog.show(presenter.getProductData())
+        }
     }
 
     override fun startCartActivity() {

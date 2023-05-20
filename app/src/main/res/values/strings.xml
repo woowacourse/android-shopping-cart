@@ -12,4 +12,6 @@
     <string name="count">%d</string>
     <string name="whole_check">전체</string>
     <string name="order_text">주문하기(%d)</string>
+    <string name="put">담기</string>
+    <string name="last_product_description">마지막으로 본 상품</string>
 </resources>
