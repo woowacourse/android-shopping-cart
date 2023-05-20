@@ -20,27 +20,41 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/item_layout"
-            android:layout_margin="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_large"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/cart_product_name_tv"
+            <CheckBox
+                android:id="@+id/cart_product_check_box"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                tools:text="제품명"
+                android:text="@{cartProduct.productName}"
                 android:textSize="@dimen/product_cart_item_large_text_size"
                 android:textColor="@color/black"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="제품명"
-                android:text="@{cartProduct.productName}"/>
+                app:layout_constraintStart_toStartOf="parent"/>
+
+<!--            <TextView-->
+<!--                android:id="@+id/cart_product_name_tv"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textSize="@dimen/product_cart_item_large_text_size"-->
+<!--                android:textColor="@color/black"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                tools:text="제품명"-->
+<!--                android:text="@{cartProduct.productName}"/>-->
 
             <ImageView
                 android:id="@+id/cart_clear_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/cart_product_name_tv"
-                app:layout_constraintBottom_toBottomOf="@id/cart_product_name_tv"
+                app:layout_constraintTop_toTopOf="@id/cart_product_check_box"
+                app:layout_constraintBottom_toBottomOf="@id/cart_product_check_box"
                 app:layout_constraintEnd_toEndOf="@id/item_layout"
                 android:src="@drawable/icon_clear"/>
 
@@ -48,10 +62,9 @@
                 android:id="@+id/cart_product_image_view"
                 android:layout_width="136dp"
                 android:layout_height="72dp"
-                android:layout_marginTop="@dimen/margin_small"
                 loadUrl="@{cartProduct.productImageUrl}"
-                app:layout_constraintStart_toStartOf="@id/cart_product_name_tv"
-                app:layout_constraintTop_toBottomOf="@id/cart_product_name_tv"
+                app:layout_constraintStart_toStartOf="@id/cart_product_check_box"
+                app:layout_constraintTop_toBottomOf="@id/cart_product_check_box"
                 tools:src="@drawable/ic_launcher_background"/>
 
             <TextView

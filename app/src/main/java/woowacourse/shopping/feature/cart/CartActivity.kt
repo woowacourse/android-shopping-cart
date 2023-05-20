@@ -12,6 +12,7 @@ import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductState
+import woowacourse.shopping.util.extension.formatPriceWon
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private var _binding: ActivityCartBinding? = null
@@ -25,8 +26,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val adapter: CartProductListAdapter by lazy {
         CartProductListAdapter(
             onCartProductDeleteClick = { presenter.deleteCartProduct(it) },
-            onCountMinusClick = { presenter.minusCountNumber(it, it.count) },
-            onCountPlusClick = { presenter.plusCountNumber(it, it.count) }
+            updateCount = { productId: Int, count: Int -> presenter.updateCount(productId, count) },
+            updateChecked = { productId: Int, checked: Boolean -> presenter.updateChecked(productId, checked) }
         )
     }
 
@@ -53,7 +54,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         if (isEnable) {
             binding.pageNumberPlusTv.setBackgroundColor(getColor(R.color.teal_200))
         } else {
-            binding.pageNumberPlusTv.setBackgroundColor(getColor(R.color.gray))
+            binding.pageNumberPlusTv.setBackgroundColor(getColor(R.color.light_gray))
         }
     }
 
@@ -61,8 +62,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         if (isEnable) {
             binding.pageNumberMinusTv.setBackgroundColor(getColor(R.color.teal_200))
         } else {
-            binding.pageNumberMinusTv.setBackgroundColor(getColor(R.color.gray))
+            binding.pageNumberMinusTv.setBackgroundColor(getColor(R.color.light_gray))
         }
+    }
+
+    override fun setTotalCost(paymentAmount: Int) {
+        binding.totalCostTv.formatPriceWon(paymentAmount)
     }
 
     override fun showPageSelectorView() {

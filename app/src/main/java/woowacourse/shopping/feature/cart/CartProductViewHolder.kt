@@ -12,8 +12,8 @@ import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 class CartProductViewHolder(
     binding: ViewDataBinding,
     private val onCartProductDeleteClick: (CartProductState) -> Unit,
-    private val onCountMinusClick: (CartProductState) -> Unit,
-    private val onCountPlusClick: (CartProductState) -> Unit
+    private val updateCount: (productId: Int, count: Int) -> Unit,
+    private val updateChecked: (productId: Int, checked: Boolean) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     private val binding = binding as ItemCartProductBinding
 
@@ -26,14 +26,22 @@ class CartProductViewHolder(
             binding.counterView.count++
             if (MAX_COUNT_VALUE < binding.counterView.count) binding.counterView.count--
             cartProductState.count = binding.counterView.count
-            onCountPlusClick(cartProductState)
+            updateCount(cartProductState.productId, binding.counterView.count)
         }
         binding.counterView.minusClickListener = {
             binding.counterView.count--
             if (binding.counterView.count < MIN_COUNT_VALUE) binding.counterView.count++
             cartProductState.count = binding.counterView.count
-            onCountMinusClick(cartProductState)
+            updateCount(cartProductState.productId, binding.counterView.count)
         }
+//        binding.cartProductCheckBox.setOnClickListener {
+//            binding.cartProductCheckBox.c
+//            updateChecked(cartProductState.productId, )
+//        }
+        binding.cartProductCheckBox.setOnCheckedChangeListener { compoundButton, b ->
+            updateChecked(cartProductState.productId, binding.cartProductCheckBox.isChecked)
+        }
+
         /*
             홀더 또한 뷰이기 때문에 값을 더하거나 빼는 등의 로직은 presenter와 같은 위치에 있는 것이 좋을 것 같으나
             어떻게 하면 좋을지 잘 모르겠습니다...
@@ -45,13 +53,13 @@ class CartProductViewHolder(
         fun createInstance(
             parent: ViewGroup,
             onCartProductDeleteClick: (CartProductState) -> Unit,
-            onCountMinusClick: (CartProductState) -> Unit,
-            onCountPlusClick: (CartProductState) -> Unit
+            updateCount: (productId: Int, count: Int) -> Unit,
+            updateChecked: (productId: Int, checked: Boolean) -> Unit
         ): CartProductViewHolder {
             val inflater = LayoutInflater.from(parent.context)
             val binding = ItemCartProductBinding.inflate(inflater, parent, false)
             return CartProductViewHolder(
-                binding, onCartProductDeleteClick, onCountMinusClick, onCountPlusClick
+                binding, onCartProductDeleteClick, updateCount, updateChecked
             )
         }
     }

@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.cart
 
 import com.example.domain.CartProduct
+import com.example.domain.PaymentCalculator
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.model.CartProductState
 import woowacourse.shopping.model.mapper.toUi
@@ -13,9 +14,8 @@ class CartPresenter(
     private val maxProductsPerPage: Int = 5
     private val minPageNumber: Int = 1
     private val maxPageNumber: Int
-        get() = getMaxPageNumber(cartProducts.size)
+        get() = getMaxPageNumber(cartRepository.getAll().size)
 
-    private var cartProducts: List<CartProduct> = cartRepository.getAll()
     private var pageNumber: Int = 1
 
     override fun loadCart() {
@@ -23,7 +23,7 @@ class CartPresenter(
         val endIndex = pageNumber * maxProductsPerPage - 1
 
         val items: List<CartProductState> =
-            cartProducts.filterIndexed { index, _ ->
+            cartRepository.getAll().filterIndexed { index, _ ->
                 index in startIndex..endIndex
             }.map(CartProduct::toUi)
 
@@ -58,17 +58,18 @@ class CartPresenter(
         loadCart()
     }
 
-    override fun plusCountNumber(cartProductState: CartProductState, count: Int) {
-        cartRepository.updateCartProductCount(cartProductState.productId, cartProductState.count)
+    override fun updateCount(productId: Int, count: Int) {
+        cartRepository.updateCartProductCount(productId, count)
+        view.setTotalCost(PaymentCalculator.totalPaymentAmount(cartRepository.getAll()).toInt())
     }
 
-    override fun minusCountNumber(cartProductState: CartProductState, count: Int) {
-        cartRepository.updateCartProductCount(cartProductState.productId, cartProductState.count)
+    override fun updateChecked(productId: Int, checked: Boolean) {
+        cartRepository.updateCartProductChecked(productId, checked)
+        view.setTotalCost(PaymentCalculator.totalPaymentAmount(cartRepository.getAll()).toInt())
     }
 
     override fun deleteCartProduct(cartProductState: CartProductState) {
         cartRepository.deleteCartProduct(cartProductState.productId)
-        cartProducts = cartRepository.getAll()
         loadCart()
     }
 
