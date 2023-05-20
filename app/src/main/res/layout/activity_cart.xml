@@ -9,7 +9,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cart_product_rv"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="@dimen/margin_large"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
