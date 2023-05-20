@@ -12,28 +12,32 @@ class ShoppingPresenter(
     private val cartRepository: CartRepository
 ) : ShoppingContract.Presenter {
     override fun setUpProducts() {
-        fetchCartProducts()
-        fetchNextProducts()
-        fetchRecentProducts()
+        setUpCartCounts()
+        setUpNextProducts()
+        setUpRecentProducts()
     }
 
-    override fun fetchCartProducts() {
+    override fun setUpCartCounts() {
         cartRepository.getAll().toUIModel()
             .associateBy { it.id }
             .mapValues { it.value.count }
             .let { view.setCartProducts(it) }
     }
 
-    override fun fetchNextProducts() {
+    override fun setUpNextProducts() {
         view.addMoreProducts(
             productRepository.getNext(PRODUCT_COUNT).map { it.toUIModel() }
         )
     }
 
-    override fun fetchRecentProducts() {
+    override fun setUpRecentProducts() {
         view.setRecentProducts(
             recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
         )
+    }
+
+    override fun setUpTotalCount() {
+        view.setToolbar(cartRepository.getTotalSelectedCount())
     }
 
     override fun updateItemCount(productId: Int, count: Int): Int {
@@ -41,10 +45,6 @@ class ShoppingPresenter(
             productRepository.findById(productId)
         )
         return cartRepository.updateCount(productId, count)
-    }
-
-    override fun fetchTotalCount() {
-        view.updateToolbar(cartRepository.getTotalSelectedCount())
     }
 
     override fun navigateToItemDetail(productId: Int) {

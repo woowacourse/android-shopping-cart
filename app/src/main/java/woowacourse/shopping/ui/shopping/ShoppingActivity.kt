@@ -41,8 +41,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.fetchRecentProducts()
-        presenter.fetchCartProducts()
+        presenter.setUpRecentProducts()
+        presenter.setUpCartCounts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,7 +51,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             view.setOnClickListener { navigateToCart() }
             view.findViewById<TextView>(R.id.tv_counter)?.let { tvCount = it }
         }
-        presenter.fetchTotalCount()
+        presenter.setUpTotalCount()
         return true
     }
 
@@ -78,9 +78,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             RecentProductDatabase(this),
             CartDatabase(this)
         )
-        presenter.fetchRecentProducts()
-        presenter.fetchNextProducts()
-        presenter.fetchCartProducts()
+        presenter.setUpRecentProducts()
+        presenter.setUpNextProducts()
+        presenter.setUpCartCounts()
     }
 
     private fun initLayoutManager() {
@@ -94,12 +94,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             presenter.navigateToItemDetail(productId)
         }
         override fun onReadMoreClick() {
-            presenter.fetchNextProducts()
+            presenter.setUpNextProducts()
         }
         override fun onAddCartOrUpdateCount(productId: Int, count: Int) {
             adapter.updateItemCount(productId, count)
             presenter.updateItemCount(productId, count)
-            presenter.fetchTotalCount()
+            presenter.setUpTotalCount()
         }
     }
 
@@ -119,7 +119,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         startActivity(DetailedProductActivity.getIntent(this, product))
     }
 
-    override fun updateToolbar(totalCount: Int) {
+    override fun setToolbar(totalCount: Int) {
         tvCount?.text = totalCount.toString()
     }
 

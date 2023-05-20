@@ -8,17 +8,17 @@ interface ShoppingContract {
         fun addMoreProducts(products: List<ProductUIModel>)
         fun setRecentProducts(recentProductsData: List<RecentProductUIModel>)
         fun setCartProducts(cartCounts: Map<Int, Int>)
-        fun updateToolbar(totalCount: Int)
+        fun setToolbar(totalCount: Int)
         fun navigateToProductDetail(product: ProductUIModel)
     }
 
     interface Presenter {
         fun setUpProducts()
-        fun fetchCartProducts()
-        fun fetchRecentProducts()
-        fun fetchNextProducts()
+        fun setUpNextProducts()
+        fun setUpRecentProducts()
+        fun setUpCartCounts()
+        fun setUpTotalCount()
         fun updateItemCount(productId: Int, count: Int): Int
-        fun fetchTotalCount()
         fun navigateToItemDetail(productId: Int)
     }
 }

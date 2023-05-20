@@ -96,7 +96,7 @@ class ShoppingPresenterTest {
         every { view.addMoreProducts(any()) } returns Unit
 
         // when
-        presenter.fetchNextProducts()
+        presenter.setUpNextProducts()
 
         // then
         verify(exactly = 1) { view.addMoreProducts(fakeProducts.map { it.toUIModel() }) }
@@ -109,7 +109,7 @@ class ShoppingPresenterTest {
         every { view.setCartProducts(any()) } returns Unit
 
         // when
-        presenter.fetchCartProducts()
+        presenter.setUpCartCounts()
 
         // then
         verify(exactly = 1) {
@@ -144,10 +144,10 @@ class ShoppingPresenterTest {
         // given
         every { cartRepository.getAll() } returns fakeCartProducts
         every { view.setCartProducts(any()) } returns Unit
-        every { view.updateToolbar(any()) } returns Unit
+        every { view.setToolbar(any()) } returns Unit
 
         // when
-        presenter.fetchCartProducts()
+        presenter.setUpCartCounts()
 
         // then
         verify(exactly = 1) {
