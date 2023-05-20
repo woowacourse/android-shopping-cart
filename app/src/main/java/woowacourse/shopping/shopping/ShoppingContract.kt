@@ -19,6 +19,8 @@ interface ShoppingContract {
         fun refreshShoppingProductsView(
             toAdd: List<ProductUiModel>,
         )
+
+        fun updateToolbar(count: Int)
     }
 
     interface Presenter {
@@ -30,5 +32,7 @@ interface ShoppingContract {
         fun readMoreShoppingProducts()
 
         fun updateRecentViewedProducts()
+
+        fun updateToolbar()
     }
 }

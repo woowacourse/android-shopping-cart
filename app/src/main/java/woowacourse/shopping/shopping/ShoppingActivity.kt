@@ -3,7 +3,8 @@ package woowacourse.shopping.shopping
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
-import woowacourse.shopping.productdetail.ProductDetailActivity.Companion.ACTIVITY_RESULT_CODE
+import woowacourse.shopping.productdetail.ProductDetailActivity.Companion.DETAIL_ACTIVITY_RESULT_CODE
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.generateShoppingPresenter
 
@@ -27,11 +28,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val shoppingDetailResultLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             when (result.resultCode) {
-                ACTIVITY_RESULT_CODE -> {
+                DETAIL_ACTIVITY_RESULT_CODE -> {
                     presenter.updateRecentViewedProducts()
                 }
             }
         }
+    private var shoppingCartCountView: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,17 +46,39 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_shopping, menu)
 
-        return true
+        menu?.findItem(R.id.shopping_cart)?.actionView?.let { view ->
+            view.setOnClickListener {
+                navigateToShoppingCartView()
+            }
+            view.findViewById<TextView>(R.id.text_total_cart_size_count)
+                ?.let { shoppingCartCountView = it }
+        }
+        presenter.updateToolbar()
+
+        return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.shopping_cart -> {
-                startActivity(Intent(this, ShoppingCartActivity::class.java))
-            }
-        }
+    private fun navigateToShoppingCartView() {
+        startActivity(
+            Intent(
+                this,
+                ShoppingCartActivity::class.java,
+            ),
+        )
+    }
 
-        return super.onOptionsItemSelected(item)
+    override fun updateToolbar(count: Int) {
+        if (count < MINIMUM_SIZE) {
+            shoppingCartCountView?.visibility = View.GONE
+        } else {
+            shoppingCartCountView?.visibility = View.VISIBLE
+        }
+        shoppingCartCountView?.text = count.toString()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.updateToolbar()
     }
 
     override fun setUpShoppingView(
@@ -91,5 +115,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         val intent = ProductDetailActivity.getIntent(this, product)
 
         shoppingDetailResultLauncher.launch(intent)
+    }
+
+    companion object {
+        private const val MINIMUM_SIZE = 1
     }
 }

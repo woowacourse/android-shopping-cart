@@ -48,6 +48,13 @@ class ShoppingPresenter(
         view.refreshRecentViewedProductsView(recentViewedProducts)
     }
 
+    override fun updateToolbar() {
+        var totalCount = 0
+        val shoppingCartProducts = repository.getSelectedShoppingCartProducts()
+        shoppingCartProducts.forEach { totalCount += it.count }
+        view.updateToolbar(totalCount)
+    }
+
     companion object {
         private const val COUNT_TO_READ = 20
     }
