@@ -12,13 +12,13 @@ class CartItemViewHolder private constructor(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun setOnClicked(
-        onRemoveClicked: (product: CartProductUiModel) -> Unit,
+        onRemoveClicked: (id: Int) -> Unit,
         onSelectingChanged: (product: CartProductUiModel, isSelected: Boolean) -> Unit,
     ) {
         with(binding) {
             imageRemoveProduct.setOnClickListener {
                 onRemoveClicked(
-                    product ?: return@setOnClickListener
+                    product?.id ?: return@setOnClickListener
                 )
             }
             checkBoxSelecting.setOnCheckedChangeListener { _, isChecked ->
@@ -32,12 +32,12 @@ class CartItemViewHolder private constructor(
 
     fun bind(
         product: CartProductUiModel,
-        getCountPickerListener: (product: CartProductUiModel) -> CountPickerListener,
+        getCountPickerListener: (id: Int) -> CountPickerListener,
     ) {
         with(binding) {
             this.product = product
             countPicker.setListener(
-                listener = getCountPickerListener(binding.product ?: return)
+                listener = getCountPickerListener(binding.product?.id ?: return)
             )
             countPicker.setTextCount(product.count)
         }

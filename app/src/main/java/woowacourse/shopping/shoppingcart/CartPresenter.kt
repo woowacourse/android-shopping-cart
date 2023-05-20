@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import model.Cart
 import model.CartPage
 import model.CartPagination
-import model.CartProduct
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.util.toDomainModel
@@ -40,44 +39,36 @@ class CartPresenter(
     val currentPage: LiveData<Int>
         get() = _currentPage
 
-    private fun selectCartProducts(): List<CartProduct> {
-        val products = repository.selectShoppingCartProducts(
-            from = cartPage.cart.products.size,
-            count = CartPage.ITEM_COUNT_ON_EACH_PAGE
-        )
-
-        return products
-    }
-
     override fun loadShoppingCartProducts() {
-        val products = selectCartProducts()
+        val products = repository.selectShoppingCartProducts()
         cart.addAll(products)
         updatePage(cartPage)
     }
 
-    override fun removeShoppingCartProduct(product: CartProductUiModel) {
-        repository.deleteFromShoppingCart(product.id)
-        cart.remove(product.toDomainModel())
+    override fun removeShoppingCartProduct(id: Int) {
+        repository.deleteFromShoppingCart(id)
+        cart.remove(id)
+        updatePage(cartPage)
     }
 
-    override fun plusShoppingCartProductCount(product: CartProductUiModel) {
-        cart.plusProductCount(product.toDomainModel())
+    override fun plusShoppingCartProductCount(id: Int) {
+        cart.plusProductCount(id)
 
         repository.insertToShoppingCart(
-            id = product.id,
-            count = cart.find(product.id)
+            id = id,
+            count = cart.products.first { it.product.id == id }
                 .count
                 .value
         )
     }
 
-    override fun minusShoppingCartProductCount(product: CartProductUiModel) {
-        cart.minusProductCount(product.toDomainModel())
+    override fun minusShoppingCartProductCount(id: Int) {
+        cart.minusProductCount(id)
         _showingProducts.value = cartPage.showingProducts.map { it.toUiModel() }
 
         repository.insertToShoppingCart(
-            id = product.id,
-            count = cart.find(product.id)
+            id = id,
+            count = cart.products.first { it.product.id == id }
                 .count
                 .value
         )
@@ -102,17 +93,8 @@ class CartPresenter(
     override fun moveToNextPage() {
         cartPage.moveToNextPage(
             callBack = ::updatePage,
-            onReachedEndPage = ::onReachedEndPage
+            onReachedEndPage = view::showMessageReachedEndPage
         )
-    }
-
-    private fun onReachedEndPage(cart: Cart) {
-        val products = selectCartProducts()
-
-        if (products.isEmpty()) {
-            return view.showMessageReachedEndPage()
-        }
-        cart.addAll(products)
     }
 
     override fun moveToPrevPage() {

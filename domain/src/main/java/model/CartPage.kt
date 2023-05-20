@@ -37,10 +37,10 @@ class CartPage(
 
     override fun moveToNextPage(
         callBack: (cartPage: CartPagination) -> Unit,
-        onReachedEndPage: (cart: Cart) -> Unit,
+        onReachedEndPage: () -> Unit,
     ) {
         if (isReachedEndPage) {
-            onReachedEndPage(cart)
+            onReachedEndPage()
         }
         if (currentPage < endPage) {
             currentPage = currentPage.next()

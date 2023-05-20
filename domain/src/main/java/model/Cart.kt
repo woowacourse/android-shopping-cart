@@ -20,16 +20,16 @@ class Cart(
         }
     }
 
-    fun plusProductCount(product: CartProduct) {
-        val index = _products.indexOf(product)
+    fun plusProductCount(id: Int) {
+        val index = _products.indexOfFirst { it.product.id == id }
 
         _products[index] = _products[index].plusCount()
     }
 
     fun minusProductCount(
-        product: CartProduct,
+        id: Int,
     ) {
-        val index = _products.indexOf(product)
+        val index = _products.indexOfFirst { it.product.id == id }
 
         runCatching {
             _products[index] = _products[index].minusCount()
@@ -40,8 +40,8 @@ class Cart(
         _products.addAll(products)
     }
 
-    fun remove(product: CartProduct) {
-        _products.remove(product)
+    fun remove(id: Int) {
+        _products.removeIf { it.product.id == id }
     }
 
     fun find(id: Int): CartProduct {

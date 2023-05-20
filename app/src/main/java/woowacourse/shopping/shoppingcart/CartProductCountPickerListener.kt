@@ -1,10 +1,8 @@
 package woowacourse.shopping.shoppingcart
 
-import woowacourse.shopping.model.CartProductUiModel
-
 interface CartProductCountPickerListener {
 
-    fun onPlus(product: CartProductUiModel)
+    fun onPlus(id: Int)
 
-    fun onMinus(product: CartProductUiModel)
+    fun onMinus(id: Int)
 }

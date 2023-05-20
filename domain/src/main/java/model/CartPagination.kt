@@ -10,7 +10,7 @@ interface CartPagination {
 
     fun moveToNextPage(
         callBack: (cartPage: CartPagination) -> Unit,
-        onReachedEndPage: (cart: Cart) -> Unit
+        onReachedEndPage: () -> Unit
     )
 
     fun moveToPreviousPage(callBack: (cartPage: CartPagination) -> Unit)

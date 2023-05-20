@@ -10,7 +10,7 @@ class CartRecyclerAdapter(
     private var shoppingCartProducts: List<CartProductUiModel>,
     private val cartProductCountPickerListener: CartProductCountPickerListener,
     private val onProductSelectingChanged: (product: CartProductUiModel, isSelected: Boolean) -> Unit,
-    private val onShoppingCartProductRemoved: (product: CartProductUiModel) -> Unit,
+    private val onShoppingCartProductRemoved: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<CartItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
@@ -36,15 +36,15 @@ class CartRecyclerAdapter(
         notifyDataSetChanged()
     }
 
-    private fun getCountPickerListenerImpl(product: CartProductUiModel) =
+    private fun getCountPickerListenerImpl(id: Int) =
         object : CountPickerListener {
 
             override fun onPlus() {
-                cartProductCountPickerListener.onPlus(product)
+                cartProductCountPickerListener.onPlus(id)
             }
 
             override fun onMinus() {
-                cartProductCountPickerListener.onMinus(product)
+                cartProductCountPickerListener.onMinus(id)
             }
         }
 

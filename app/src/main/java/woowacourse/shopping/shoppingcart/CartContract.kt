@@ -13,11 +13,11 @@ interface CartContract {
 
         fun loadShoppingCartProducts()
 
-        fun removeShoppingCartProduct(product: CartProductUiModel)
+        fun removeShoppingCartProduct(id: Int)
 
-        fun plusShoppingCartProductCount(product: CartProductUiModel)
+        fun plusShoppingCartProductCount(id: Int)
 
-        fun minusShoppingCartProductCount(product: CartProductUiModel)
+        fun minusShoppingCartProductCount(id: Int)
 
         fun changeProductSelectedState(product: CartProductUiModel, isSelected: Boolean)
 

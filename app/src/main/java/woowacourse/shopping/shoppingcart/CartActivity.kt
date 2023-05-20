@@ -87,12 +87,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun getCartProductCountPicker() = object : CartProductCountPickerListener {
 
-        override fun onPlus(product: CartProductUiModel) {
-            presenter.plusShoppingCartProductCount(product)
+        override fun onPlus(id: Int) {
+            presenter.plusShoppingCartProductCount(id)
         }
 
-        override fun onMinus(product: CartProductUiModel) {
-            presenter.minusShoppingCartProductCount(product)
+        override fun onMinus(id: Int) {
+            presenter.minusShoppingCartProductCount(id)
         }
     }
 

@@ -52,14 +52,9 @@ class ShoppingDBAdapter(
         return products
     }
 
-    override fun selectShoppingCartProducts(
-        from: Int,
-        count: Int,
-    ): List<CartProduct> {
+    override fun selectShoppingCartProducts(): List<CartProduct> {
         val cartProducts = mutableListOf<CartProduct>()
-        val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME} LIMIT %s OFFSET %s".format(
-            count, from
-        )
+        val query = "SELECT * FROM ${ShoppingCartDBContract.TABLE_NAME}"
         val cursor = shoppingDB.rawQuery(query, null)
 
         cursor?.apply {
