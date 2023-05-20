@@ -23,4 +23,8 @@
     <string name="btn_plus">+</string>
     <string name="btn_minus">-</string>
 
+    <!-- activity_basket -->
+    <string name="tv_total">전체</string>
+    <string name="tv_order">주문하기(%d)</string>
+
 </resources>
