@@ -9,7 +9,7 @@ import woowacourse.shopping.model.UiProduct
 class ProductCounterDialog(
     context: Context,
     product: UiProduct,
-    onPutInBasket: (count: Int) -> Unit,
+    putInBasket: (count: Int) -> Unit,
 ) : Dialog(context) {
 
     init {
@@ -18,7 +18,7 @@ class ProductCounterDialog(
         initDialogSize(context)
         binding.product = product
         binding.onPutInBasket = { count ->
-            onPutInBasket(count)
+            putInBasket(count)
             dismiss()
         }
     }
