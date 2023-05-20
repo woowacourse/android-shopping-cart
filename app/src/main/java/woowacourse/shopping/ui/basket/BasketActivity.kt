@@ -12,7 +12,8 @@ import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.databinding.ActivityBasketBinding
-import woowacourse.shopping.ui.model.UiBasketProduct
+import woowacourse.shopping.domain.Basket
+import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.shopping.ShoppingActivity
 
 class BasketActivity : AppCompatActivity(), BasketContract.View {
@@ -67,8 +68,8 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         }
     }
 
-    override fun updateBasketProducts(products: List<UiBasketProduct>) {
-        basketAdapter.submitList(products)
+    override fun updateBasketProducts(basket: Basket) {
+        basketAdapter.submitList(basket.products.map { it.toUi() })
     }
 
     override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {

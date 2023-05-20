@@ -6,82 +6,54 @@ import woowacourse.shopping.domain.Count
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.ui.mapper.toDomain
-import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.model.UiBasketProduct
 
 class BasketPresenter(
     override val view: BasketContract.View,
     private val basketRepository: BasketRepository
 ) : BasketContract.Presenter {
-    private var hasNext: Boolean = false
-    private var lastId: Int = -1
+    private val hasNext: Boolean get() = basket.products.lastIndex >= startId + BASKET_PAGING_SIZE
     private var currentPage: Int = 1
-    private var currentBasketProducts: List<UiBasketProduct> = listOf()
-
     private var basket: Basket = Basket(basketRepository.getAll())
     private var startId: Int = 0
-
-    private fun amendStartId() {
-        if (basket.products.size < startId) startId -= BASKET_PAGING_SIZE
-        if (startId < 0) startId = 0
-    }
 
     override fun addBasketProduct(product: Product) {
         val addedProduct = BasketProduct(count = Count(1), product = product)
         basketRepository.add(addedProduct)
         basket = basket.add(addedProduct)
-        // 화면 관련 처리로직 submit List 해야함
+        updateBasketProductViewData()
     }
 
     override fun removeBasketProduct(product: Product) {
         val removedProduct = BasketProduct(count = Count(1), product = product)
         basketRepository.minus(removedProduct)
         basket = basket.delete(removedProduct)
-        // 화면 관련 처리로직 submit List 해야함
+        updateBasketProductViewData()
     }
 
     override fun initBasketProducts() {
-        fetchBasketProducts(lastId, false)
+        updateBasketProductViewData()
     }
 
     override fun updatePreviousPage() {
         updateCurrentPage(false)
-        fetchPreviousBasketProducts(currentBasketProducts)
+        if (startId - BASKET_PAGING_SIZE > 0) startId -= BASKET_PAGING_SIZE else startId = 0
+        updateBasketProductViewData()
     }
 
     override fun updateNextPage() {
         updateCurrentPage(true)
-        fetchBasketProducts(lastId, false)
-    }
-
-    private fun fetchPreviousBasketProducts(currentProducts: List<UiBasketProduct>) {
-        var basketProducts = basketRepository.getPreviousPartially(
-            size = BASKET_PAGING_SIZE,
-            standard = currentProducts.minOfOrNull { it.id } ?: -1,
-            includeStandard = false
-        ).map { it.toUi() }
-        currentBasketProducts = basketProducts
-        hasNext = true
-        lastId = basketProducts.maxOfOrNull { it.id } ?: -1
-        updateBasketProductViewData()
-    }
-
-    private fun fetchBasketProducts(standard: Int, includeStandard: Boolean) {
-        var basketProducts = basketRepository.getNextPartially(
-            size = TOTAL_LOAD_BASKET_SIZE_AT_ONCE,
-            standard = standard,
-            includeStandard = includeStandard
-        ).map { it.toUi() }
-        hasNext = checkHasNext(basketProducts)
-        if (hasNext) basketProducts = basketProducts.dropLast(1)
-        currentBasketProducts = basketProducts
-        lastId = basketProducts.maxOfOrNull { it.id } ?: -1
+        if (startId + BASKET_PAGING_SIZE < basket.products.lastIndex) startId += BASKET_PAGING_SIZE
         updateBasketProductViewData()
     }
 
     private fun updateBasketProductViewData() {
-        view.updateBasketProducts(currentBasketProducts)
+        updateViewBasketProduct()
         view.updateNavigatorEnabled(currentPage > 1, hasNext)
+    }
+
+    private fun updateViewBasketProduct() {
+        view.updateBasketProducts(basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE))
     }
 
     override fun deleteBasketProduct(
@@ -89,15 +61,19 @@ class BasketPresenter(
         currentProducts: List<UiBasketProduct>
     ) {
         basketRepository.remove(product.toDomain())
-        fetchBasketProducts(getStartIdExceptRemovedProduct(product, currentProducts), true)
+        basket = basket.remove(product.toDomain())
+        amendStartId()
+        updateBasketProductViewData()
     }
 
-    private fun getStartIdExceptRemovedProduct(
-        product: UiBasketProduct,
-        currentProducts: List<UiBasketProduct>
-    ): Int = currentProducts.toMutableList().run {
-        remove(product)
-        minOfOrNull { it.id } ?: -1
+    private fun amendStartId() {
+        if (basket.products.lastIndex < startId) {
+            startId -= BASKET_PAGING_SIZE
+            currentPage -= 1
+            view.updateCurrentPage(currentPage)
+        }
+        if (startId < 0) startId = 0
+        if (currentPage < 1) currentPage = 1
     }
 
     private fun updateCurrentPage(isIncrease: Boolean) {
@@ -105,13 +81,7 @@ class BasketPresenter(
         view.updateCurrentPage(currentPage)
     }
 
-    private fun checkHasNext(products: List<UiBasketProduct>): Boolean =
-        products.size == TOTAL_LOAD_BASKET_SIZE_AT_ONCE
-
     companion object {
         private const val BASKET_PAGING_SIZE = 5
-        private const val BASKET_SIZE_FOR_HAS_NEXT = 1
-        private const val TOTAL_LOAD_BASKET_SIZE_AT_ONCE =
-            BASKET_PAGING_SIZE + BASKET_SIZE_FOR_HAS_NEXT
     }
 }

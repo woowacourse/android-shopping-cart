@@ -25,6 +25,9 @@ data class Basket(val products: List<BasketProduct>) {
         )
         else Basket((products - basketProduct).filter { !it.count.isZero() })
 
+    fun remove(basketProduct: BasketProduct): Basket =
+        Basket(products.toMutableList().apply { remove(basketProduct) })
+
     fun getCountByProductId(productId: Int): Int =
         products.find { it.product.id == productId }?.count?.value ?: 0
 
