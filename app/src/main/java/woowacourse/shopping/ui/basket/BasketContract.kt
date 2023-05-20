@@ -13,7 +13,6 @@ interface BasketContract {
         fun updateTotalPrice(price: Int)
         fun showOrderFailed()
         fun showOrderComplete(productCount: Int)
-        fun updateAllCheckedState(basketProducts: List<UiBasketProduct>)
     }
 
     abstract class Presenter(protected val view: View) {
