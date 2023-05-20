@@ -26,9 +26,8 @@ import woowacourse.shopping.feature.util.SpanSizeLookUpManager
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var binding: ActivityMainBinding
-
-    lateinit var productsAdapter: ProductsAdapter
-    lateinit var presenter: MainContract.Presenter
+    private lateinit var productsAdapter: ProductsAdapter
+    override lateinit var presenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +89,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         )
     }
 
-    override fun setProducts(products: List<ProductView.ProductItem>, recentProducts: ProductView.RecentProductsItem) {
+    override fun setProducts(
+        products: List<ProductView.ProductItem>,
+        recentProducts: ProductView.RecentProductsItem,
+    ) {
         val list = listOf(recentProducts) + products
         productsAdapter.setItems(list)
     }

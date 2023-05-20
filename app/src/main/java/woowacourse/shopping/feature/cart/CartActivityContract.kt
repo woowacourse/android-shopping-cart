@@ -4,6 +4,8 @@ import woowacourse.shopping.feature.list.item.CartProductItem
 
 interface CartActivityContract {
     interface View {
+        val presenter: CartActivityPresenter
+
         fun setUpRecyclerView(cartItems: List<CartProductItem>)
         fun updateAdapterData(cartItems: List<CartProductItem>)
         fun setButtonListener(maxPage: Int)

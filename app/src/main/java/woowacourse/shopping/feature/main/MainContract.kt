@@ -6,6 +6,8 @@ import woowacourse.shopping.feature.list.item.ProductView
 interface MainContract {
 
     interface View {
+        val presenter: MainPresenter
+
         fun setProducts(products: List<ProductView.ProductItem>, recentProducts: ProductView.RecentProductsItem)
         fun addProducts(products: List<Product>)
     }

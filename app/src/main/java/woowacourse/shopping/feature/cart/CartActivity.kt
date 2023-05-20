@@ -12,8 +12,8 @@ import woowacourse.shopping.feature.list.item.CartProductItem
 import kotlin.properties.Delegates
 
 class CartActivity : AppCompatActivity(), CartActivityContract.View {
-    private lateinit var presenter: CartActivityContract.Presenter
     private lateinit var binding: ActivityCartBinding
+    override lateinit var presenter: CartActivityPresenter
 
     private var page: Int by Delegates.observable(1) { _, _, new ->
         presenter.setUpData(new)
