@@ -35,6 +35,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
                 presenter.updateRecentViewed(id ?: -1)
                 presenter.fetchCartCount()
                 presenter.fetchProductCount(id ?: -1)
+                showToastAddInCart()
             }
             RESULT_VISIT_CART -> {
                 presenter.fetchCartCount()
