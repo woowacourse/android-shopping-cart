@@ -19,5 +19,8 @@ interface MainContract {
         fun loadMoreProducts()
         fun addRecentProduct(product: Product)
         fun showProductDetail(productState: ProductState)
+        fun storeCartProduct(productState: ProductState)
+        fun minusCartProductCount(productState: ProductState)
+        fun plusCartProductCount(productState: ProductState)
     }
 }

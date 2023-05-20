@@ -10,6 +10,8 @@ import com.example.domain.Product
 import com.example.domain.RecentProduct
 import woowacourse.shopping.R
 import woowacourse.shopping.common.adapter.LoadMoreAdapter
+import woowacourse.shopping.data.cart.CartDao
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDao
@@ -33,10 +35,16 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private val presenter: MainContract.Presenter by lazy {
         val productRepository = ProductRepositoryImpl(ProductDao(this))
         val recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this))
-        MainPresenter(this, productRepository, recentProductRepository)
+        val cartRepository = CartRepositoryImpl(CartDao(this))
+        MainPresenter(this, productRepository, recentProductRepository, cartRepository)
     }
     private val productListAdapter: ProductListAdapter by lazy {
-        ProductListAdapter(onItemClick = { presenter.showProductDetail(it) })
+        ProductListAdapter(
+            onProductClick = { presenter.showProductDetail(it) },
+            cartProductAddFab = { presenter.storeCartProduct(it) },
+            cartProductCountMinus = {},
+            cartProductCountPlus = {},
+        )
     }
     private val recentProductListAdapter by lazy {
         RecentProductListAdapter(emptyList())

@@ -7,7 +7,10 @@ import woowacourse.shopping.model.ProductState
 
 class ProductListAdapter(
     private var productStates: List<ProductState> = listOf(),
-    private val onItemClick: (ProductState) -> Unit
+    private val onProductClick: (ProductState) -> Unit,
+    private val cartProductAddFab: (ProductState) -> Unit,
+    private val cartProductCountMinus: (ProductState) -> Unit,
+    private val cartProductCountPlus: (ProductState) -> Unit
 ) : RecyclerView.Adapter<ProductViewHolder>() {
 
     override fun getItemCount(): Int {
@@ -19,7 +22,10 @@ class ProductListAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(productStates[position], onItemClick)
+        holder.bind(
+            productStates[position],
+            onProductClick, cartProductAddFab, cartProductCountMinus, cartProductCountPlus
+        )
     }
 
     override fun getItemViewType(position: Int): Int = ViewType.PRODUCT.ordinal

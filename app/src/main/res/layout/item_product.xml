@@ -15,14 +15,14 @@
 
         <ImageView
             android:id="@+id/product_image"
+            loadUrl="@{product.imageUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background"
-            loadUrl="@{product.imageUrl}"/>
+            tools:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/product_name"
@@ -49,6 +49,32 @@
             app:layout_constraintTop_toBottomOf="@id/product_name"
             tools:text="23000원"
             formatMoneyWon="@{product.price}"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/product_add_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginBottom="@dimen/margin_small"
+            android:backgroundTint="@color/white"
+            android:elevation="0dp"
+            android:src="@drawable/baseline_add_24"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="@+id/product_image"
+            app:layout_constraintEnd_toEndOf="@+id/product_image" />
+
+        <woowacourse.shopping.common.view.CounterView
+            android:id="@+id/counter_view"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:visibility="invisible"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
+            app:layout_constraintBottom_toBottomOf="@+id/product_add_fab"
+            app:layout_constraintEnd_toEndOf="@+id/product_image"
+            app:layout_constraintStart_toStartOf="@+id/product_image"
+            app:layout_constraintTop_toTopOf="@+id/product_add_fab" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
