@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="item"
             type="woowacourse.shopping.ui.cart.uistate.CartUIState" />
@@ -15,13 +16,15 @@
         android:layout_marginHorizontal="18dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/item_card_background"
-        android:paddingHorizontal="18dp"
         android:paddingBottom="18dp">
 
         <CheckBox
             android:id="@+id/cb_cart"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/selector_checkbox_cart_item"
+            android:button="@android:color/transparent"
             app:layout_constraintBottom_toTopOf="@id/iv_cart"
             app:layout_constraintEnd_toStartOf="@+id/tv_cart_name"
             app:layout_constraintStart_toStartOf="parent"
@@ -45,6 +48,7 @@
             android:id="@+id/iv_cart"
             android:layout_width="0dp"
             android:layout_height="60dp"
+            android:layout_marginStart="18dp"
             android:layout_marginTop="24dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,6 +61,8 @@
             android:id="@+id/tv_cart_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="13dp"
+            android:text="@{@string/product_price(item.price)}"
             android:textColor="@color/black"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/btn_cart_plus_count"

@@ -7,7 +7,6 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.ui.cart.uistate.CartUIState
-import woowacourse.shopping.utils.PRICE_FORMAT
 
 class CartListAdapter(
     private val cartItems: MutableList<CartUIState>,
@@ -71,9 +70,6 @@ class CartListAdapter(
         fun bind(product: CartUIState) {
             binding.item = product
 
-            binding.tvCartPrice.text = itemView.context.getString(R.string.product_price).format(
-                PRICE_FORMAT.format(product.price),
-            )
             Glide.with(itemView)
                 .load(product.imageUrl)
                 .into(binding.ivCart)

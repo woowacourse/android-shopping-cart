@@ -7,7 +7,6 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.products.uistate.ProductUIState
-import woowacourse.shopping.utils.PRICE_FORMAT
 
 class ProductListAdapter(
     private val products: MutableList<ProductUIState>,
@@ -21,7 +20,7 @@ class ProductListAdapter(
             false,
         )
 
-        return ProductListViewHolder(ItemProductBinding.bind(view), onClick)
+        return ProductListViewHolder(ItemProductBinding.bind(view)) { onClick(products[it].id) }
     }
 
     override fun getItemCount(): Int = products.size
@@ -36,17 +35,19 @@ class ProductListAdapter(
 
     class ProductListViewHolder(
         private val binding: ItemProductBinding,
-        private val onClick: (Long) -> Unit,
+        private val onClick: (Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener { onClick(position) }
+        }
 
         fun bind(product: ProductUIState) {
             binding.product = product
-            binding.tvProductPrice.text = itemView.context.getString(R.string.product_price)
-                .format(PRICE_FORMAT.format(product.price))
+
             Glide.with(itemView)
                 .load(product.imageUrl)
                 .into(binding.ivProduct)
-            binding.root.setOnClickListener { onClick(product.id) }
         }
     }
 }

@@ -14,7 +14,6 @@ import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
-import woowacourse.shopping.utils.PRICE_FORMAT
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
@@ -61,8 +60,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             .into(binding.ivProductDetail)
 
         binding.tvProductDetailName.text = product.name
-        binding.tvProductDetailPrice.text =
-            getString(R.string.product_price).format(PRICE_FORMAT.format(product.price))
+        binding.tvProductDetailPrice.text = getString(R.string.product_price).format(product.price)
+//            getString(R.string.product_price).format(PRICE_FORMAT.format(product.price))
         binding.btnProductDetailAdd.setOnClickListener {
             // TODO : 초기 수량은 1, 추후에 수량 결정할 버튼 추가 예정
             presenter.addProductToCart(product.id, 1)

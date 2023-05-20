@@ -2,13 +2,17 @@
     <string name="app_name">Shopping</string>
 
     <!-- 상품 -->
-    <string name="product_price">%s원</string>
+    <string name="product_price">%,d원</string>
     <string name="recently_viewed_products">최근 본 상품</string>
 
     <!-- 상품 상세 -->
     <string name="add_to_cart">장바구니 담기</string>
     <string name="price_title">금액</string>
     <string name="error_not_found">존재하지 않는 상품입니다</string>
+
+    <!-- 장바구니 -->
+    <string name="checkbox_cart_total">전체</string>
+    <string name="button_purchase">구매하기(%d)</string>
 
     <!-- App Bar -->
     <string name="app_bar_title_product_list">Shopping</string>
