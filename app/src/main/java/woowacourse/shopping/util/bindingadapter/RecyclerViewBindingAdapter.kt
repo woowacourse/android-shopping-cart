@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import woowacourse.shopping.ui.shopping.recyclerview.listener.EndScrollListener
 
-@BindingAdapter("bind:adapter")
-fun RecyclerView.setAdapter(adapter: ConcatAdapter) {
+@BindingAdapter("bind:adapter", "bind:onAdapted", requireAll = false)
+fun RecyclerView.setAdapter(adapter: ConcatAdapter, onAdapted: () -> Unit) {
     this.adapter = adapter
+    onAdapted.invoke()
 }
 
 @BindingAdapter("bind:fixedSize")

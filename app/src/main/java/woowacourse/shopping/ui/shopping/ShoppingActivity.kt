@@ -23,9 +23,9 @@ import woowacourse.shopping.ui.shopping.recyclerview.adapter.product.ProductAdap
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct.RecentProductWrapperAdapter
 import woowacourse.shopping.util.builder.add
+import woowacourse.shopping.util.builder.isolatedViewTypeConcatAdapter
 import woowacourse.shopping.util.extension.getItemActionView
 import woowacourse.shopping.util.extension.getParcelableExtraCompat
-import woowacourse.shopping.util.builder.isolatedViewTypeConcatAdapter
 import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.inject.inject
 import woowacourse.shopping.util.listener.ProductClickListener
@@ -50,13 +50,6 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         initView()
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        val product = intent?.getParcelableExtraCompat<UiProduct>(PRODUCT_KEY) ?: return
-        val count = intent.getIntExtra(COUNT_KEY, 0)
-        presenter.addBasketProduct(product, count)
-    }
-
     private fun initView() {
         binding.presenter = presenter
         initMenuClickListener()
@@ -74,7 +67,6 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
             add(productAdapter)
             add(loadMoreAdapter)
         }
-        presenter.fetchAll()
     }
 
     override fun updateProducts(products: List<UiBasketProduct>) {
@@ -122,6 +114,13 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
 
     override fun onClickMinus(product: UiProduct) {
         presenter.removeBasketProduct(product)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val product = intent?.getParcelableExtraCompat<UiProduct>(PRODUCT_KEY) ?: return
+        val count = intent.getIntExtra(COUNT_KEY, 0)
+        presenter.addBasketProduct(product, count)
     }
 
     companion object {
