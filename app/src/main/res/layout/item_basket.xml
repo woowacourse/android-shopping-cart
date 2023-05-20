@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="basketProductTotalPrice"
+            type="Integer" />
+
+        <variable
             name="basketProduct"
             type="woowacourse.shopping.ui.model.BasketProduct" />
 
@@ -80,7 +84,7 @@
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/price_format(basketProduct.product.price.value)}"
+            android:text="@{@string/price_format(basketProductTotalPrice)}"
             android:textColor="@color/woowa_text_black"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/counter_basket"

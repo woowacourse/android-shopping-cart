@@ -103,7 +103,7 @@ class BasketPresenterTest() {
         } returns List(pagingSize) { BasketProduct(it, Product(it, "더미", Price(1000), "url")) }
 
         // when
-        presenter.removeBasketProduct(
+        presenter.deleteBasketProduct(
             product = UiBasketProduct(
                 1,
                 UiProduct(1, "더미", UiPrice(1000), "url")

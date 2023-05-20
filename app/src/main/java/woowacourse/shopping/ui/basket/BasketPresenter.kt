@@ -1,6 +1,9 @@
 package woowacourse.shopping.ui.basket
 
 import woowacourse.shopping.domain.Basket
+import woowacourse.shopping.domain.BasketProduct
+import woowacourse.shopping.domain.Count
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
@@ -21,6 +24,20 @@ class BasketPresenter(
     private fun amendStartId() {
         if (basket.products.size < startId) startId -= BASKET_PAGING_SIZE
         if (startId < 0) startId = 0
+    }
+
+    override fun addBasketProduct(product: Product) {
+        val addedProduct = BasketProduct(count = Count(1), product = product)
+        basketRepository.add(addedProduct)
+        basket = basket.add(addedProduct)
+        // 화면 관련 처리로직 submit List 해야함
+    }
+
+    override fun removeBasketProduct(product: Product) {
+        val removedProduct = BasketProduct(count = Count(1), product = product)
+        basketRepository.minus(removedProduct)
+        basket = basket.delete(removedProduct)
+        // 화면 관련 처리로직 submit List 해야함
     }
 
     override fun initBasketProducts() {
@@ -67,7 +84,7 @@ class BasketPresenter(
         view.updateNavigatorEnabled(currentPage > 1, hasNext)
     }
 
-    override fun removeBasketProduct(
+    override fun deleteBasketProduct(
         product: UiBasketProduct,
         currentProducts: List<UiBasketProduct>
     ) {

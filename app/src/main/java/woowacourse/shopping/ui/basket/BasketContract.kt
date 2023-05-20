@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.basket
 
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.model.UiBasketProduct
 
 interface BasketContract {
@@ -15,12 +16,16 @@ interface BasketContract {
     interface Presenter {
         val view: View
 
+        fun addBasketProduct(product: Product)
+
+        fun removeBasketProduct(product: Product)
+
         fun initBasketProducts()
 
         fun updatePreviousPage()
 
         fun updateNextPage()
 
-        fun removeBasketProduct(product: UiBasketProduct, currentProducts: List<UiBasketProduct>)
+        fun deleteBasketProduct(product: UiBasketProduct, currentProducts: List<UiBasketProduct>)
     }
 }
