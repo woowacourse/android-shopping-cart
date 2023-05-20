@@ -36,4 +36,8 @@ class CartAdapter(
         items.addAll(newItems)
         diffResult.dispatchUpdatesTo(this)
     }
+
+    fun updateAllChecking(startPosition: Int, count: Int) {
+        notifyItemRangeChanged(startPosition, count)
+    }
 }

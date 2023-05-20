@@ -11,6 +11,7 @@ interface CartContract {
         fun setAllCartChecked(isChecked: Boolean)
         fun setPageCountView(page: Int)
         fun setTotalPriceView(totalPrice: Int)
+        fun updateAllChecking(startPosition: Int, count: Int)
     }
 
     interface Presenter {
@@ -20,7 +21,7 @@ interface CartContract {
         fun calculateNextPage()
         fun calculateTotalPrice()
         fun updateProductCount(cartId: Long, count: Int)
-        fun updateProductChecked(cartId: Long, checked: Boolean)
+        fun updateProductChecked(cartId: Long, isChecked: Boolean)
         fun updateCurrentPageAllProductChecked(isChecked: Boolean)
     }
 }

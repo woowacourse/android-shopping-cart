@@ -26,6 +26,7 @@ class CartPresenter(
 
         val newCarts = getCurrentPageCarts()
         view.setCartItemsView(newCarts)
+        view.setAllCartChecked(isAllChecked())
     }
 
     private fun getCurrentPageCarts(): List<CartModel> {
@@ -74,13 +75,13 @@ class CartPresenter(
         carts.find { it.id == cartId }?.product?.count = count
     }
 
-    override fun updateProductChecked(cartId: Long, checked: Boolean) {
-        carts.find { it.id == cartId }?.let {
-            if (it.checked == checked) return@let
-            it.checked = checked
-            cartRepository.updateCartCheckedByCartId(it.id, it.checked)
+    override fun updateProductChecked(cartId: Long, isChecked: Boolean) {
+        carts.find { it.id == cartId }?.run {
+            if (checked == isChecked) return@run
+            checked = isChecked
+            cartRepository.updateCartCheckedByCartId(id, checked)
+            view.setAllCartChecked(isAllChecked())
         }
-        view.setAllCartChecked(isAllChecked())
     }
 
     private fun isAllChecked(): Boolean {
@@ -91,6 +92,7 @@ class CartPresenter(
         for (index in startPosition until getCurrentPageCartLastIndex()) {
             updateProductChecked(carts[index].id, isChecked)
         }
+        view.updateAllChecking(0, DISPLAY_CART_COUNT_CONDITION)
     }
 
     companion object {

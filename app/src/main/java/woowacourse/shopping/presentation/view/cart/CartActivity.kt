@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.SimpleItemAnimator
 import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -45,6 +46,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
         setSupportActionBar()
+        setRecyclerViewAnimator()
         presenter.loadCartItems()
         presenter.calculateTotalPrice()
         setLeftButtonClick()
@@ -64,6 +66,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setRecyclerViewAnimator() {
+        val animator = binding.rvCart.itemAnimator
+        if (animator is SimpleItemAnimator) {
+            animator.supportsChangeAnimations = false
+        }
     }
 
     override fun setCartItemsView(carts: List<CartModel>) {
@@ -100,11 +109,18 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun setAllProduceCheckedClick() {
         binding.cbCartAll.setOnCheckedChangeListener { _, isChecked ->
             presenter.updateCurrentPageAllProductChecked(isChecked)
+            presenter.calculateTotalPrice()
         }
     }
 
+    override fun updateAllChecking(startPosition: Int, count: Int) {
+        cartAdapter.updateAllChecking(startPosition, count)
+    }
+
     override fun setAllCartChecked(isChecked: Boolean) {
+        binding.cbCartAll.setOnCheckedChangeListener { _, _ -> }
         binding.cbCartAll.isChecked = isChecked
+        setAllProduceCheckedClick()
     }
 
     override fun setPageCountView(page: Int) {
