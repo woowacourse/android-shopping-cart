@@ -32,12 +32,24 @@ class ShoppingPresenter(
         fetchRecentProducts()
     }
 
+    override fun refreshProduct() {
+        val refreshedProducts =
+            basketRepository.getProductInRange(currentPage.getStartPage(), currentPage)
+        basket = basket.update(refreshedProducts)
+        updateBasketView()
+    }
+
     override fun fetchProducts() {
         basket += basketRepository.getProductByPage(currentPage)
         updateBasketView()
         view.updateLoadMoreVisible()
+    }
 
+    override fun loadMore() {
         currentPage = currentPage.next()
+        basket += basketRepository.getProductByPage(currentPage)
+        updateBasketView()
+        view.updateLoadMoreVisible()
     }
 
     override fun fetchRecentProducts() {

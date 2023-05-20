@@ -19,4 +19,5 @@ interface BasketDao {
     fun update(basketProduct: DataBasketProduct)
     fun updateCount(product: Product, count: Int)
     fun getCheckedProductCount(): Int
+    fun getProductInRange(start: DataPageNumber, end: DataPageNumber): DataBasket
 }

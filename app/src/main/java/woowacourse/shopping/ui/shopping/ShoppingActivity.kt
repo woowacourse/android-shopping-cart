@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
@@ -40,7 +42,11 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     private val recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
     private val recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
     private val productAdapter = ProductAdapter(this, this)
-    private val loadMoreAdapter = LoadMoreAdapter(presenter::fetchProducts)
+    private val loadMoreAdapter = LoadMoreAdapter(presenter::loadMore)
+
+    private val basketActivityLauncher = registerForActivityResult(StartActivityForResult()) {
+        presenter.refreshProduct()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,7 +92,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     }
 
     override fun navigateToBasketScreen() {
-        startActivity(BasketActivity.getIntent(this))
+        basketActivityLauncher.launch(BasketActivity.getIntent(this))
     }
 
     override fun showLoadMoreButton() {

@@ -50,6 +50,7 @@ class BasketActivity : AppCompatActivity(), View {
     }
 
     override fun navigateToHome() {
+        setResult(RESULT_OK)
         finish()
     }
 

@@ -168,6 +168,36 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         return checkedProductCount
     }
 
+    @SuppressLint("Range")
+    override fun getProductInRange(start: DataPageNumber, end: DataPageNumber): DataBasket {
+        val basketProducts = mutableListOf<BasketProduct>()
+
+        val db = database.writableDatabase
+        val cursor = db.rawQuery(GET_ALL_BASKET_PRODUCT_QUERY, null)
+
+        while (cursor.moveToNext()) {
+            val basketId: Int =
+                cursor.getInt(cursor.getColumnIndex(BasketContract.BASKET_ID))
+            val productId: Int =
+                cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val name: String =
+                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
+            val price: DataPrice =
+                DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
+            val imageUrl: String =
+                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
+            val count: Int =
+                cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_COUNT))
+            val isChecked: Int =
+                cursor.getInt(cursor.getColumnIndex(BasketContract.COLUMN_CHECKED))
+            val product = Product(productId, name, price, imageUrl)
+            basketProducts.add(BasketProduct(basketId, product, ProductCount(count), isChecked))
+        }
+        cursor.close()
+
+        return DataBasket(basketProducts = basketProducts.safeSubList(start.start, end.end))
+    }
+
     override fun contains(product: Product): Boolean {
         val db = database.writableDatabase
         val cursor = db.rawQuery(

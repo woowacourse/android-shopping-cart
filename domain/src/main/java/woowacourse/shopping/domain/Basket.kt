@@ -13,18 +13,20 @@ data class Basket(
     fun add(newItem: Product, count: Int = 1): Basket =
         copy(basketProducts = basketProducts.map { item ->
             if (item.product.id == newItem.id) item.plusCount(count) else item
-        })
+        }.distinctBy { it.product.id })
 
     fun remove(product: Product): Basket = copy(basketProducts = basketProducts.map { item ->
         if (item.product.id == product.id && item.selectedCount.value > minProductSize) item.minusCount() else item
-    })
+    }.distinctBy { it.product.id })
 
     /* Shopping */
     fun canLoadMore(page: PageNumber): Boolean =
         basketProducts.size >= page.value * loadUnit
 
-    fun takeItemsUpTo(page: PageNumber): List<BasketProduct> =
-        basketProducts.take(loadUnit * page.value)
+    fun takeItemsUpTo(page: PageNumber): List<BasketProduct> {
+        page.value * loadUnit
+        return basketProducts.take(page.value * loadUnit)
+    }
 
     /* Basket */
     fun canLoadNextPage(page: PageNumber): Boolean =
@@ -62,10 +64,10 @@ data class Basket(
         copy(basketProducts = basketProducts.map { it.unselect() })
 
     fun update(basket: Basket): Basket =
-        copy(basketProducts = basket.basketProducts)
+        copy(basketProducts = basket.basketProducts.distinctBy { it.product.id })
 
     operator fun plus(items: Basket): Basket =
-        copy(basketProducts = basketProducts + items.basketProducts)
+        copy(basketProducts = (basketProducts + items.basketProducts).distinctBy { it.product.id })
 
     operator fun minus(item: Product): Basket = remove(item)
 }

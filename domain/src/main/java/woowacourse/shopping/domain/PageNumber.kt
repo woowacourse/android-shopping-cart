@@ -10,6 +10,8 @@ data class PageNumber(
         require(value >= DEFAULT_PAGE) { INVALID_PAGE_NUMBER_ERROR_MESSAGE }
     }
 
+    fun getStartPage(): PageNumber = copy(value = 1)
+
     fun hasPrevious(): Boolean = value > MIN_PAGE
 
     fun next(): PageNumber = copy(value = value + 1)

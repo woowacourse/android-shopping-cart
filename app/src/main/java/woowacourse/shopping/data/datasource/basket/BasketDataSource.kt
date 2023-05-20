@@ -15,6 +15,7 @@ interface BasketDataSource {
         fun update(basket: DataBasket)
         fun getTotalPrice(): Int
         fun getCheckedProductCount(): Int
+        fun getProductInRange(start: DataPageNumber, end: DataPageNumber): DataBasket
     }
 
     interface Remote
