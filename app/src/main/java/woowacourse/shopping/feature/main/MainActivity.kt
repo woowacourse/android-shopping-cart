@@ -108,8 +108,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(CartActivity.getIntent(this))
     }
 
-    override fun showProductDetailScreenByProduct(product: ProductUiModel) {
-        startActivity(DetailActivity.getIntent(this, product))
+    override fun showProductDetailScreenByProduct(
+        product: ProductUiModel,
+        recentProduct: ProductUiModel?
+    ) {
+        startActivity(DetailActivity.getIntent(this, product, recentProduct))
     }
 
     override fun addProducts(products: List<ProductUiModel>) {

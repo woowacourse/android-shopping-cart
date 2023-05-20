@@ -14,4 +14,5 @@
     <string name="plus_button_description">plus button</string>
     <string name="all">전체</string>
     <string name="order">주문하기(%d)</string>
+    <string name="most_recent_product">마지막으로 본 상품</string>
 </resources>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -31,6 +32,29 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
             ?: return keyError(PRODUCT_KEY)
         presenter = DetailPresenter(this, CartRepositoryImpl(CartDao(this)), product)
         binding.presenter = presenter
+
+        initRecentProduct()
+    }
+
+    private fun initRecentProduct() {
+        val recentProduct = intent.getParcelableCompat<ProductUiModel>(RECENT_PRODUCT_KEY)
+        if (recentProduct == null) {
+            binding.mostRecentLayout.visibility = View.GONE
+            return
+        } else {
+            binding.mostRecentTitle.text = recentProduct.name
+            binding.mostRecentPrice.text =
+                resources.getString(R.string.price_format).format(recentProduct.price)
+            binding.mostRecentLayout.setOnClickListener {
+                showProductDetail(recentProduct)
+            }
+        }
+    }
+
+    private fun showProductDetail(product: ProductUiModel) {
+        val intent = getIntent(this, product, null)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
     }
 
     override fun showCartScreen() = startActivity(CartActivity.getIntent(this))
@@ -72,10 +96,16 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
 
     companion object {
         private const val PRODUCT_KEY = "PRODUCT_KEY"
-        fun getIntent(context: Context, product: ProductUiModel): Intent {
+        private const val RECENT_PRODUCT_KEY = "RECENT_PRODUCT_KEY"
+
+        fun getIntent(
+            context: Context,
+            product: ProductUiModel,
+            recentProduct: ProductUiModel? = null
+        ): Intent {
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra(PRODUCT_KEY, product)
-
+            recentProduct?.let { intent.putExtra(RECENT_PRODUCT_KEY, recentProduct) }
             return intent
         }
     }

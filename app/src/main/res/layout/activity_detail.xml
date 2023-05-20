@@ -91,6 +91,48 @@
             app:layout_constraintTop_toBottomOf="@id/divider"
             tools:text="10,000원" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/most_recent_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_round_border"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            app:layout_constraintBottom_toTopOf="@id/add_cart_btn"
+            app:layout_constraintTop_toBottomOf="@id/product_price">
+
+            <TextView
+                android:id="@+id/most_recent_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/most_recent_product"
+                android:textColor="@color/mint"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/most_recent_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@id/most_recent_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <TextView
+                android:id="@+id/most_recent_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="10,000원" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:id="@+id/add_cart_btn"
             android:layout_width="match_parent"

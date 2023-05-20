@@ -56,8 +56,11 @@ class MainPresenter(
 
     override fun moveToDetail(product: ProductUiModel) {
         addRecentProduct(RecentProduct(product.toDomain(), LocalDateTime.now()))
-        view.showProductDetailScreenByProduct(product)
         loadRecent()
+        view.showProductDetailScreenByProduct(
+            product,
+            recentProductRepository.getMostRecentProduct()?.product?.toPresentation()
+        )
     }
 
     override fun refresh() {

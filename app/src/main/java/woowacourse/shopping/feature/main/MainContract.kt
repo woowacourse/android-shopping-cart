@@ -6,7 +6,7 @@ import woowacourse.shopping.model.RecentProductUiModel
 interface MainContract {
     interface View {
         fun showCartScreen()
-        fun showProductDetailScreenByProduct(product: ProductUiModel)
+        fun showProductDetailScreenByProduct(product: ProductUiModel, recentProduct: ProductUiModel?)
         fun addProducts(products: List<ProductUiModel>)
         fun updateRecent(recent: List<RecentProductUiModel>)
         fun showProductDetailScreenByRecent(recentProduct: RecentProductUiModel)
