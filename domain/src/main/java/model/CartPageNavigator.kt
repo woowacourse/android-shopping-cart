@@ -1,6 +1,6 @@
 package model
 
-interface CartPagination {
+interface CartPageNavigator {
 
     val cart: Cart
     var currentPage: Page
@@ -9,10 +9,10 @@ interface CartPagination {
     val showingProducts: List<CartProduct>
 
     fun moveToNextPage(
-        callBack: (cartPage: CartPagination) -> Unit,
+        onPageChanged: (cartPage: CartPageNavigator) -> Unit,
         onReachedEndPage: () -> Unit
     )
 
-    fun moveToPreviousPage(callBack: (cartPage: CartPagination) -> Unit)
+    fun moveToPreviousPage(onPageChanged: (cartPage: CartPageNavigator) -> Unit)
     val totalPrice: Int
 }

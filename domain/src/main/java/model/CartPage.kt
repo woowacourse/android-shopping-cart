@@ -2,7 +2,7 @@ package model
 
 class CartPage(
     override val cart: Cart,
-) : CartPagination {
+) : CartPageNavigator {
 
     override var currentPage = Page()
     override val endPage: Page
@@ -36,7 +36,7 @@ class CartPage(
     }
 
     override fun moveToNextPage(
-        callBack: (cartPage: CartPagination) -> Unit,
+        onPageChanged: (cartPage: CartPageNavigator) -> Unit,
         onReachedEndPage: () -> Unit,
     ) {
         if (isReachedEndPage) {
@@ -44,13 +44,13 @@ class CartPage(
         }
         if (currentPage < endPage) {
             currentPage = currentPage.next()
-            callBack(this)
+            onPageChanged(this)
         }
     }
 
-    override fun moveToPreviousPage(callBack: (cartPage: CartPagination) -> Unit) {
+    override fun moveToPreviousPage(onPageChanged: (cartPage: CartPageNavigator) -> Unit) {
         currentPage = currentPage.prev()
-        callBack(this)
+        onPageChanged(this)
     }
 
     companion object {

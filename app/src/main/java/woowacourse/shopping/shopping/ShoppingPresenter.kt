@@ -103,7 +103,7 @@ class ShoppingPresenter(
 
         recentViewedProducts.add(
             product = product,
-            removeOldestViewedProduct = repository::deleteFromRecentViewedProducts
+            handleOldestViewedProduct = repository::deleteFromRecentViewedProducts
         )
         repository.insertToRecentViewedProducts(id)
         view.refreshRecentViewedProductsView(

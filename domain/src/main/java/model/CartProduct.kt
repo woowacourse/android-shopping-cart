@@ -15,8 +15,12 @@ data class CartProduct(
         )
     }
 
-    fun minusCount(): CartProduct {
-
+    fun minusCount(
+        handleZeroCount: (cartProduct: CartProduct) -> Unit = {},
+    ): CartProduct {
+        if (this.count.value == MINIMUM_COUNT) {
+            handleZeroCount(this)
+        }
         return CartProduct(
             product = product,
             count = count.minus()
@@ -30,5 +34,9 @@ data class CartProduct(
             count = count,
             selected = selected
         )
+    }
+
+    companion object {
+        private const val MINIMUM_COUNT = 1
     }
 }

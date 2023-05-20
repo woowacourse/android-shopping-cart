@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import model.Cart
 import model.CartPage
-import model.CartPagination
+import model.CartPageNavigator
 import woowacourse.shopping.database.ShoppingRepository
 import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.util.toUiModel
@@ -12,7 +12,7 @@ import woowacourse.shopping.util.toUiModel
 class CartPresenter(
     private val view: CartContract.View,
     private val repository: ShoppingRepository,
-    private val cartPage: CartPagination = CartPage(
+    private val cartPage: CartPageNavigator = CartPage(
         cart = Cart()
     )
 ) : CartContract.Presenter {
@@ -93,16 +93,16 @@ class CartPresenter(
 
     override fun moveToNextPage() {
         cartPage.moveToNextPage(
-            callBack = ::updatePage,
+            onPageChanged = ::updatePage,
             onReachedEndPage = view::showMessageReachedEndPage
         )
     }
 
     override fun moveToPrevPage() {
-        cartPage.moveToPreviousPage(callBack = ::updatePage)
+        cartPage.moveToPreviousPage(onPageChanged = ::updatePage)
     }
 
-    private fun updatePage(cartPage: CartPagination) {
+    private fun updatePage(cartPage: CartPageNavigator) {
         _showingProducts.value = cartPage.showingProducts.map { it.toUiModel() }
         _totalPrice.value = cartPage.totalPrice
         _currentPage.value = cartPage.currentPage.value
