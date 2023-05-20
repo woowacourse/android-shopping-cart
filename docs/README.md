@@ -39,7 +39,7 @@
         - [x] private updateShoppingProduct(cartProduct, productModel)
             - [x] view.updateShoppingProduct(shoppingProductModel)
     - [x] ProductDetail
-        - RecentProductRepository 
+        - RecentProductRepository
         - [x] init { }
             - [x] view.setupRecentProductDetail(productModel)
         - [x] setupCartProductDialog()
@@ -66,6 +66,7 @@
                 - [x] cartRepository.addCartProduct(cartProduct)
             - [x] else
                 - [x] updateCartProduct(cartProduct)
+            - [x] view.notifyAddToCartCompleted()
         - [x] updateCartProduct(cartProduct)
             - [x] update amount to sum of prev cart product amount and current cart product
               amount

@@ -42,7 +42,7 @@ class CartProductDialogPresenter(
         } else {
             updateCartProduct(prevCartProduct)
         }
-        view.showCart()
+        view.notifyAddToCartCompleted()
     }
 
     private fun updateCartProduct(prevCartProduct: CartProduct) {

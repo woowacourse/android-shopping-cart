@@ -86,7 +86,7 @@ class CartProductDialogPresenterTest {
     }
 
     @Test
-    fun 새로운_상품을_카트에_담으면_카트에_담기고_카트를_보여준다() {
+    fun 새로운_상품을_카트에_담으면_카트에_담기고_완료를_알린다() {
         // given
         presenter = CartProductDialogPresenter(
             view,
@@ -102,12 +102,12 @@ class CartProductDialogPresenterTest {
         // then
         verify {
             cartRepository.addCartProduct(any())
-            view.showCart()
+            view.notifyAddToCartCompleted()
         }
     }
 
     @Test
-    fun 이미_담겨있는_상품을_카트에_담으면_카트_상품이_업데이트_되고_카트를_보여준다() {
+    fun 이미_담겨있는_상품을_카트에_담으면_카트_상품이_업데이트_되고_완료를_알린다() {
         // given
         presenter = CartProductDialogPresenter(
             view,
@@ -123,7 +123,7 @@ class CartProductDialogPresenterTest {
         // then
         verify {
             cartRepository.modifyCartProduct(any())
-            view.showCart()
+            view.notifyAddToCartCompleted()
         }
     }
 }

@@ -12,6 +12,6 @@ interface CartProductDialogContract {
     interface View {
         fun updateCartProductAmount(amount: Int)
 
-        fun showCart()
+        fun notifyAddToCartCompleted()
     }
 }

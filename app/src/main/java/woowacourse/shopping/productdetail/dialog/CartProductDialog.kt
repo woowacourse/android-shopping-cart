@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.utils.Toaster
 import woowacourse.shopping.common.utils.getSerializableByKey
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
@@ -47,8 +47,9 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
         binding.dialogCartProductAmount.text = amount.toString()
     }
 
-    override fun showCart() {
-        startCartActivity()
+    override fun notifyAddToCartCompleted() {
+        Toaster.showToast(requireContext(), TOAST_MESSAGE_ADD_TO_CART_COMPLETED)
+        dismiss()
     }
 
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
@@ -89,14 +90,9 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
         activity?.setResult(Activity.RESULT_OK)
     }
 
-    private fun startCartActivity() {
-        val intent = CartActivity.createIntent(requireContext())
-        startActivity(intent)
-        dismiss()
-    }
-
     companion object {
         private const val BUNDLE_KEY_PRODUCT = "product"
+        private const val TOAST_MESSAGE_ADD_TO_CART_COMPLETED = "장바구니에 추가되었습니다!"
 
         fun createDialog(product: ProductModel): CartProductDialog {
             val bundle = Bundle()
