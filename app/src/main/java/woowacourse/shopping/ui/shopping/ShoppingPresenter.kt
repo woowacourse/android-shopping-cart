@@ -41,6 +41,13 @@ class ShoppingPresenter(
         }
     }
 
+    override fun updateBasket() {
+        basket = Basket(basketRepository.getAll())
+        fetchBasketCount()
+        fetchTotalBasketCount()
+        view.updateProducts(totalProducts)
+    }
+
     override fun fetchTotalBasketCount() {
         view.updateTotalBasketCount(basket.products.fold(0) { acc, basketProduct -> acc + basketProduct.count.value })
     }

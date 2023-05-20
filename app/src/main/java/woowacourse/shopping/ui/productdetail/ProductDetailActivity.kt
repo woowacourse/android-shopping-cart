@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.productdetail
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,6 +14,7 @@ import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.shopping.ShoppingActivity
 import woowacourse.shopping.util.getParcelableExtraCompat
 import woowacourse.shopping.util.intentDataNullProcess
 import woowacourse.shopping.util.setThrottleFirstOnClickListener
@@ -25,11 +27,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initSetResult()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         if (!initExtraData()) return
         initPresenter()
         presenter.initProductData()
         initButtonCloseClickListener()
+    }
+
+    private fun initSetResult() {
+        setResult(Activity.RESULT_OK, ShoppingActivity.getResultIntent())
     }
 
     private fun initExtraData(): Boolean {

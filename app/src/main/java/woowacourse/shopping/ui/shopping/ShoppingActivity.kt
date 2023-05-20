@@ -1,6 +1,9 @@
 package woowacourse.shopping.ui.shopping
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -42,12 +45,25 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var moreButtonAdapter: MoreButtonAdapter
     private lateinit var concatAdapter: ConcatAdapter
 
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val returnPoint = result.data?.getBooleanExtra(FROM_ANOTHER_ACTIVITY, false) ?: false
+            if (returnPoint) {
+                presenter.updateBasket()
+                presenter.fetchRecentProducts()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         initPresenter()
         initAdapter()
         initProductData()
+        initRecentProductsData()
         initButtonBasketClickListener()
         initShoppingRecyclerViewScrollListener()
     }
@@ -83,7 +99,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun showProductDetail(product: UiProduct) {
-        startActivity(ProductDetailActivity.getIntent(this, product))
+        activityResultLauncher.launch(ProductDetailActivity.getIntent(this, product))
     }
 
     override fun updateMoreButtonState(isVisible: Boolean) {
@@ -154,12 +170,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initButtonBasketClickListener() {
         binding.ivBasket.setThrottleFirstOnClickListener {
-            startActivity(BasketActivity.getIntent(this))
+            activityResultLauncher.launch(BasketActivity.getIntent(this))
         }
     }
 
     companion object {
         private const val LOAD_POSITION = 4
         private const val STATE_LOWEST = 1
+
+        private const val FROM_ANOTHER_ACTIVITY = "FromAnotherActivity"
+
+        fun getResultIntent() = Intent().putExtra(FROM_ANOTHER_ACTIVITY, true)
     }
 }

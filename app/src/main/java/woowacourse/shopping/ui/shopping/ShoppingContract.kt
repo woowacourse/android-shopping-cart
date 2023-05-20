@@ -21,6 +21,8 @@ interface ShoppingContract {
     interface Presenter {
         val view: View
 
+        fun updateBasket()
+
         fun fetchTotalBasketCount()
 
         fun addBasketProduct(product: Product)

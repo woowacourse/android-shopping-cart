@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.basket
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,7 @@ import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.ui.model.UiBasketProduct
+import woowacourse.shopping.ui.shopping.ShoppingActivity
 
 class BasketActivity : AppCompatActivity(), BasketContract.View {
     private lateinit var presenter: BasketContract.Presenter
@@ -21,11 +23,16 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initSetResult()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_basket)
         initPresenter()
         initAdapter()
         initToolbarBackButton()
         navigatorClickListener()
+    }
+
+    private fun initSetResult() {
+        setResult(Activity.RESULT_OK, ShoppingActivity.getResultIntent())
     }
 
     private fun initPresenter() {
