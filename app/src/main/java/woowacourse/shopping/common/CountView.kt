@@ -35,6 +35,15 @@ class CountView @JvmOverloads constructor(
         set(value) {
             field = value
             binding.buttonMinus.setOnClickListener {
+                value?.invoke()
+                count--
+            }
+        }
+
+    var minusClickListenerInCart: (() -> Unit)? = null
+        set(value) {
+            field = value
+            binding.buttonMinus.setOnClickListener {
                 if (count > 1) {
                     value?.invoke()
                     count--

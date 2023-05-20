@@ -26,10 +26,11 @@ class ShoppingCartItemViewHolder(
                 cartProduct.count += CALCULATE_AMOUNT
                 countClickListener.onPlusClick(cartProduct.product.id)
             }
-            countView.minusClickListener = {
+            countView.minusClickListenerInCart = {
                 cartProduct.count -= CALCULATE_AMOUNT
                 countClickListener.onMinusClick(cartProduct.product.id)
             }
+
             checkboxSelected.setOnClickListener {
                 cartProduct.isSelected = checkboxSelected.isChecked
                 onCheckBoxClicked(cartProduct.product.id, checkboxSelected.isChecked)
