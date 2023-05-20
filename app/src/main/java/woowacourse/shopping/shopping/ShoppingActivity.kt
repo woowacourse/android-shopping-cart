@@ -79,6 +79,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                     ShoppingRecyclerSpanSizeManager(shoppingRecyclerAdapter::getItemViewType)
             }
             productRecyclerView.adapter = shoppingRecyclerAdapter
+            productRecyclerView.addItemDecoration(
+                ProductItemDecoration(
+                    getItemViewType = shoppingRecyclerAdapter::getItemViewType,
+                )
+            )
         }
     }
 

@@ -6,11 +6,11 @@ import model.Product
 import model.RecentViewedProduct
 import woowacourse.shopping.model.ProductUiModel
 
-fun Product(id: Int = 0, name: String = "밀크티"): Product = Product(
+fun Product(id: Int = 0, name: String = "밀크티", price: Int = 5000): Product = Product(
     id = id,
     name = Name(name),
     imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000002081]_20210415133656839.jpg",
-    price = Price(5000)
+    price = Price(price)
 )
 
 fun ProductUiModel(id: Int = 0, name: String = "밀크티"): ProductUiModel = ProductUiModel(

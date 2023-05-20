@@ -12,9 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginStart="10dp">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image_add_to_cart"
@@ -29,6 +27,7 @@
 
         <ImageView
             android:id="@+id/image_product"
+            android:scaleType="fitXY"
             imageUrl="@{product.imageUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
