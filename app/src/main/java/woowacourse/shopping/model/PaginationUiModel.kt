@@ -1,14 +1,17 @@
 package woowacourse.shopping.model
 
+import com.example.domain.model.CartProducts
+import com.example.domain.model.Pagination
+import woowacourse.shopping.mapper.toDomain
+
 data class PaginationUiModel(
-    val cartProducts: List<CartProductUiModel>,
+    private val cartProducts: List<CartProductUiModel>,
     val currentPageCartProducts: List<CartProductUiModel>,
-    val currentPage: Int,
+    val pageBottomNavigationUiModel: PageBottomNavigationUiModel,
+    val cartBottomNavigationUiModel: CartBottomNavigationUiModel,
     val pageTotalCount: Int,
-    val hasPreviousPage: Boolean,
-    val hasNextPage: Boolean,
-    val isCurrentPageAllChecked: Boolean,
-    val isAnyChecked: Boolean,
-    val checkedCount: Int,
-    val totalCheckedMoney: Int
-)
+) {
+    fun toDomain(): Pagination {
+        return Pagination(CartProducts(cartProducts.map { it.toDomain() }), pageBottomNavigationUiModel.currentPageNumber)
+    }
+}

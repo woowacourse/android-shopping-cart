@@ -2,7 +2,7 @@ package woowacourse.shopping.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.text.DecimalFormat
+import woowacourse.shopping.util.toMoneyFormat
 
 @Parcelize
 data class ProductUiModel(
@@ -12,7 +12,5 @@ data class ProductUiModel(
     val price: Int,
     var count: Int = 0
 ) : Parcelable {
-    fun toPriceFormat(): String {
-        return DecimalFormat("#,###").format(price)
-    }
+    fun toMoneyFormat() = price.toMoneyFormat()
 }

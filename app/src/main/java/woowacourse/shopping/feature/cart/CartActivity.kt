@@ -11,7 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.CartProductUiModel
+import woowacourse.shopping.util.toMoneyFormat
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -47,6 +47,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         setRecyclerViewAnimator()
+        observePresenter()
     }
 
     private fun setRecyclerViewAnimator() {
@@ -56,23 +57,26 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun updateCartProducts(newItems: List<CartProductUiModel>) {
-        cartProductAdapter.setItems(newItems)
+    private fun observePresenter() {
+        presenter.currentPageCartProducts.observe(this) {
+            cartProductAdapter.setItems(it)
+        }
+        presenter.pageBottomNavigationUiModel.observe(this) {
+            binding.previousPageBtn.isEnabled = it.hasPreviousPage
+            binding.nextPageBtn.isEnabled = it.hasNextPage
+            binding.pageCountTextView.text = it.currentPageNumber.toString()
+        }
+        presenter.cartBottomNavigationUiModel.observe(this) {
+            setAllCheckedButtonState(it.isCurrentPageAllChecked)
+
+            binding.orderCount = it.checkedCount
+            binding.orderConfirmView.isEnabled = it.isAnyChecked
+
+            binding.money = it.totalCheckedMoney.toMoneyFormat()
+        }
     }
 
-    override fun setPreviousButtonState(enabled: Boolean) {
-        binding.previousPageBtn.isEnabled = enabled
-    }
-
-    override fun setNextButtonState(enabled: Boolean) {
-        binding.nextPageBtn.isEnabled = enabled
-    }
-
-    override fun setPageCount(count: Int) {
-        binding.pageCountTextView.text = count.toString()
-    }
-
-    override fun setAllCheckedButtonState(isAllChecked: Boolean) {
+    private fun setAllCheckedButtonState(isAllChecked: Boolean) {
         binding.allCheckView.setOnCheckedChangeListener { _, _ -> }
         binding.allCheckView.isChecked = isAllChecked
         binding.allCheckView.setOnCheckedChangeListener { _, isChecked ->
@@ -80,18 +84,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setOrderButtonState(enabled: Boolean, orderCount: Int) {
-        binding.orderCount = orderCount
-        binding.orderConfirmView.isEnabled = enabled
-    }
-
-    override fun setTotalMoney(money: String) {
-        binding.money = money
-    }
-
-    override fun exitCartScreen() {
-        finish()
-    }
+    override fun exitCartScreen() = finish()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -106,7 +99,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(CURRENT_PAGE_KEY, presenter.page.currentPage)
+        outState.putInt(
+            CURRENT_PAGE_KEY,
+            presenter.pageBottomNavigationUiModel.value?.currentPageNumber ?: 1
+        )
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

@@ -1,106 +1,105 @@
 package woowacourse.shopping.feature.cart
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.domain.model.CartProducts
 import com.example.domain.model.Pagination
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toPresentation
+import woowacourse.shopping.model.CartBottomNavigationUiModel
+import woowacourse.shopping.model.CartProductUiModel
+import woowacourse.shopping.model.PageBottomNavigationUiModel
 import woowacourse.shopping.model.PaginationUiModel
-import woowacourse.shopping.util.convertToMoneyFormat
 
 class CartPresenter(
     val view: CartContract.View,
     private val cartRepository: CartRepository,
 ) : CartContract.Presenter {
-    override lateinit var page: PaginationUiModel
-        private set
+    private var _page: PaginationUiModel? = null
+        set(value) {
+            value?.let {
+                _currentPageCartProducts.value = it.currentPageCartProducts
+                _pageBottomNavigationUiModel.value = it.pageBottomNavigationUiModel
+                _cartBottomNavigationUiModel.value = it.cartBottomNavigationUiModel
+            }
+            field = value
+        }
+    private val page: PaginationUiModel
+        get() = _page!!
+
+    private val _currentPageCartProducts: MutableLiveData<List<CartProductUiModel>> =
+        MutableLiveData()
+    override val currentPageCartProducts: LiveData<List<CartProductUiModel>>
+        get() = _currentPageCartProducts
+
+    private val _pageBottomNavigationUiModel: MutableLiveData<PageBottomNavigationUiModel> =
+        MutableLiveData()
+    override val pageBottomNavigationUiModel: LiveData<PageBottomNavigationUiModel>
+        get() = _pageBottomNavigationUiModel
+
+    private val _cartBottomNavigationUiModel: MutableLiveData<CartBottomNavigationUiModel> =
+        MutableLiveData()
+    override val cartBottomNavigationUiModel: LiveData<CartBottomNavigationUiModel>
+        get() = _cartBottomNavigationUiModel
 
     override fun loadInitCartProduct() {
-        page = Pagination(CartProducts(cartRepository.getAll()), 1).toPresentation()
-
-        changePageState()
+        _page = Pagination(CartProducts(cartRepository.getAll()), 1).toPresentation()
     }
 
     override fun loadPreviousPage() {
-        if (page.hasPreviousPage.not()) return
-        page = page.toDomain().previousPage().toPresentation()
-
-        changePageState()
+        if (page.pageBottomNavigationUiModel.hasPreviousPage.not()) return
+        _page = page.toDomain().previousPage().toPresentation()
     }
 
     override fun loadNextPage() {
-        if (page.hasNextPage.not()) return
-        page = page.toDomain().nextPage().toPresentation()
-
-        changePageState()
+        if (page.pageBottomNavigationUiModel.hasNextPage.not()) return
+        _page = page.toDomain().nextPage().toPresentation()
     }
 
     override fun handleDeleteCartProductClick(cartId: Long) {
         val cartProduct = page.currentPageCartProducts.find { it.cartId == cartId } ?: return
         cartRepository.deleteProduct(cartProduct.toDomain())
-        page = page.toDomain().remove(cartId).toPresentation()
-        changePageState()
+        _page = page.toDomain().remove(cartId).toPresentation()
     }
 
     override fun handleCartProductCartCountChange(cartId: Long, count: Int) {
         val findCartProduct =
             page.currentPageCartProducts.find { it.cartId == cartId } ?: return
 
-        page = page.toDomain().changeCountState(cartId, count).toPresentation()
+        _page = page.toDomain().changeCountState(cartId, count).toPresentation()
 
         cartRepository.changeCartProductCount(findCartProduct.productUiModel.toDomain(), count)
-
-        changePageState()
     }
 
     override fun handlePurchaseSelectedCheckedChange(cartId: Long, checked: Boolean) {
         val findCartProduct =
             page.currentPageCartProducts.find { it.cartId == cartId } ?: return
-        page = page.toDomain().changeChecked(cartId, checked).toPresentation()
+        _page = page.toDomain().changeChecked(cartId, checked).toPresentation()
 
         cartRepository.changeCartProductCheckedState(
             findCartProduct.productUiModel.toDomain(),
             checked
         )
-
-        changePageState()
     }
 
     override fun handleCurrentPageAllCheckedChange(checked: Boolean) {
-        page = page.toDomain().setCurrentPageAllChecked(checked).toPresentation()
+        _page = page.toDomain().setCurrentPageAllChecked(checked).toPresentation()
         val currentIds = page.currentPageCartProducts.map { it.cartId }
         cartRepository.changeCurrentPageAllCheckedState(currentIds, checked)
-        changePageState()
     }
 
     override fun processOrderClick() {
-        if (page.isAnyChecked.not()) return
+        if (page.cartBottomNavigationUiModel.isAnyChecked.not()) return
         cartRepository.deleteAllCheckedCartProduct()
-        page = page.toDomain().removeAllChecked().toPresentation()
-        changePageState()
+        _page = page.toDomain().removeAllChecked().toPresentation()
     }
 
     override fun setPage(restorePage: Int) {
-        page = Pagination(CartProducts(cartRepository.getAll()), restorePage).toPresentation()
-        changePageState()
+        _page = Pagination(CartProducts(cartRepository.getAll()), restorePage).toPresentation()
     }
 
     override fun exit() {
         view.exitCartScreen()
-    }
-
-    private fun changePageState() {
-        view.updateCartProducts(page.currentPageCartProducts)
-        view.setPreviousButtonState(page.hasPreviousPage)
-        view.setNextButtonState(page.hasNextPage)
-        view.setPageCount(page.currentPage)
-
-        when {
-            page.checkedCount > 0 -> view.setOrderButtonState(true, page.checkedCount)
-            else -> view.setOrderButtonState(false, page.checkedCount)
-        }
-
-        view.setTotalMoney(convertToMoneyFormat(page.totalCheckedMoney))
-        view.setAllCheckedButtonState(page.isCurrentPageAllChecked)
     }
 }
