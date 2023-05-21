@@ -15,6 +15,10 @@
             type="woowacourse.shopping.model.BasketProduct" />
 
         <variable
+            name="cartClickListener"
+            type="woowacourse.shopping.ui.basket.listener.CartClickListener" />
+
+        <variable
             name="onDelete"
             type="ClickListener" />
 
@@ -51,7 +55,7 @@
             android:checked="@{basketProduct.isChecked}"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:onCheckedChanged="@{(_, isChecked) -> isChecked ? onSelect.invoke() : onUnselect.invoke()}"
+            android:onCheckedChanged="@{(_, isChecked) -> cartClickListener.onCheckStateChanged(basketProduct.product, isChecked)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="24dp"
-            android:onClick="@{() -> onDelete.invoke()}"
+            android:onClick="@{() -> cartClickListener.onDeleteClick(basketProduct.product)}"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="@+id/product_name_text_view"
             app:layout_constraintEnd_toEndOf="parent"
@@ -119,8 +123,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             bind:count="@{basketProduct.selectedCount.value}"
-            bind:onMinusClick="@{() -> onDecrease.invoke()}"
-            bind:onPlusClick="@{() -> onIncrease.invoke()}"
+            bind:onPlusClick="@{() -> cartClickListener.onCountChanged(basketProduct.product, 1, true)}"
+            bind:onMinusClick="@{() -> cartClickListener.onCountChanged(basketProduct.product, 1, false)}"
             app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
             app:layout_constraintEnd_toEndOf="@+id/product_price_text_view"
             app:layout_constraintHeight_percent="0.3"

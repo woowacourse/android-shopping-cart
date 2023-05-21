@@ -16,9 +16,9 @@ interface BasketContract {
 
     abstract class Presenter(protected val view: View) {
         abstract fun fetchBasket(page: Int)
-        abstract fun removeFromCart(basketProduct: UiBasketProduct)
+        abstract fun changeProductCount(product: UiProduct, count: Int, increase: Boolean)
+        abstract fun changeProductSelectState(product: UiProduct, checked: Boolean)
+        abstract fun removeFromCart(product: UiProduct)
         abstract fun closeScreen()
-        abstract fun decreaseProductCount(product: UiProduct)
-        abstract fun increaseProductCount(product: UiProduct)
     }
 }

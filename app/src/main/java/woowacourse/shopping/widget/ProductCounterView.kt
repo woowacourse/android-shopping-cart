@@ -34,17 +34,17 @@ class ProductCounterView(context: Context, attrs: AttributeSet) : ConstraintLayo
         }
     }
 
-    fun setOnPlusClickListener(onPlusClick: (ProductCounterView) -> Unit) {
+    fun setOnPlusClickListener(onPlusClick: (view: ProductCounterView, newCount: Int) -> Unit) {
         binding.counterPlusButton.setOnClickListener {
-            onPlusClick(this)
             plusCount()
+            onPlusClick(this, count)
         }
     }
 
-    fun setOnMinusClickListener(onMinusClick: (ProductCounterView) -> Unit) {
+    fun setOnMinusClickListener(onMinusClick: (view: ProductCounterView, newCount: Int) -> Unit) {
         binding.counterMinusButton.setOnClickListener {
-            onMinusClick(this)
             minusCount()
+            onMinusClick(this, count)
         }
     }
 

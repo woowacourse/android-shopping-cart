@@ -10,11 +10,10 @@ fun ProductCounterView.setCount(count: Int) {
 
 @BindingAdapter("bind:onPlusClick")
 fun ProductCounterView.setOnPlusClick(onClick: Runnable) {
-    setOnPlusClickListener { onClick.run() }
+    setOnPlusClickListener { _, _ -> onClick.run() }
 }
 
 @BindingAdapter("bind:onMinusClick")
 fun ProductCounterView.setOnMinusClick(onClick: Runnable) {
-    setOnMinusClickListener { onClick.run() }
-
+    setOnMinusClickListener { _, _ -> onClick.run() }
 }

@@ -8,13 +8,15 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.model.UiBasketProduct
 import woowacourse.shopping.model.UiPageNumber
+import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.ui.basket.BasketContract.View
+import woowacourse.shopping.ui.basket.listener.CartClickListener
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
 import woowacourse.shopping.util.extension.setContentView
 import woowacourse.shopping.util.extension.showToast
 import woowacourse.shopping.util.inject.inject
 
-class BasketActivity : AppCompatActivity(), View {
+class BasketActivity : AppCompatActivity(), View, CartClickListener {
     private val presenter: BasketPresenter by lazy { inject(this, this) }
     private lateinit var binding: ActivityBasketBinding
 
@@ -23,13 +25,7 @@ class BasketActivity : AppCompatActivity(), View {
         binding = ActivityBasketBinding.inflate(layoutInflater).setContentView(this)
         binding.lifecycleOwner = this
         binding.presenter = presenter
-        binding.adapter = BasketAdapter(
-            presenter::removeFromCart,
-            presenter::selectProduct,
-            presenter::unselectProduct,
-            presenter::increaseProductCount,
-            presenter::decreaseProductCount,
-        )
+        binding.adapter = BasketAdapter(this)
         presenter.fetchBasket(1)
     }
 
@@ -44,6 +40,18 @@ class BasketActivity : AppCompatActivity(), View {
 
     override fun updatePageNumber(page: UiPageNumber) {
         binding.pageNumberTextView.text = page.toText()
+    }
+
+    override fun onCountChanged(product: UiProduct, count: Int, isIncreased: Boolean) {
+        presenter.changeProductCount(product, count, isIncreased)
+    }
+
+    override fun onCheckStateChanged(product: UiProduct, isChecked: Boolean) {
+        presenter.changeProductSelectState(product, isChecked)
+    }
+
+    override fun onDeleteClick(product: UiProduct) {
+        presenter.removeFromCart(product)
     }
 
     override fun showOrderComplete(productCount: Int) {

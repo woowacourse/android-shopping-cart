@@ -16,7 +16,7 @@ data class Basket(
 
     fun decreaseProductCount(product: Product, count: Int = 1): Basket =
         copy(basketProducts = basketProducts
-            .map { item -> if (item.product.id == product.id) item.minusCount(count) else item }
+            .map { item -> if (item.product.id == product.id && item.selectedCount.value > minProductSize) item.minusCount(count) else item }
             .filter { it.selectedCount.value >= minProductSize }
             .distinctBy { it.product.id })
 
@@ -40,9 +40,6 @@ data class Basket(
         basketProducts = basketProducts.safeSubList(0, page.sizePerPage)
     )
 
-    fun isAllChecked(page: PageNumber): Boolean =
-        basketProducts.safeSubList(0, page.sizePerPage).all { it.isChecked }
-
     fun select(product: Product): Basket =
         copy(basketProducts = basketProducts.map { item ->
             if (item.product.id == product.id) item.select() else item
@@ -56,7 +53,6 @@ data class Basket(
     fun getCheckedSize(page: PageNumber): Int = basketProducts
         .safeSubList(0, page.sizePerPage)
         .count { it.isChecked }
-
 
     fun selectAll(): Basket =
         copy(basketProducts = basketProducts.map { it.select() })

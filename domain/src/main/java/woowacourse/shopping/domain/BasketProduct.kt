@@ -8,9 +8,6 @@ data class BasketProduct(
     val selectedCount: ProductCount = ProductCount(0),
     val isChecked: Boolean,
 ) {
-    constructor(product: Product, count: Int, isChecked: Boolean) :
-            this(0, product, ProductCount(count), isChecked)
-
     fun plusCount(count: Int = 1): BasketProduct =
         copy(selectedCount = selectedCount + count)
 
@@ -30,4 +27,8 @@ data class BasketProduct(
         copy(selectedCount = selectedCount - count)
 
     fun isEmpty(): Boolean = selectedCount.isZero()
+
+    fun changeCount(count: Int): BasketProduct {
+        return copy(selectedCount = ProductCount(count))
+    }
 }
