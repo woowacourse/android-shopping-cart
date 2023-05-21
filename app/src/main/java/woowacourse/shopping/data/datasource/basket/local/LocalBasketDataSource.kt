@@ -24,7 +24,7 @@ class LocalBasketDataSource(private val dao: BasketDao) : BasketDataSource.Local
     override fun getAll(): List<DataBasketProduct> =
         dao.getAll()
 
-    override fun getByProductId(productId: Int): DataBasketProduct =
+    override fun getByProductId(productId: Int): DataBasketProduct? =
         dao.getByProductId(productId)
 
     override fun add(basketProduct: DataBasketProduct) {

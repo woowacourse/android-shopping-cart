@@ -18,7 +18,7 @@ interface BasketRepository {
 
     fun getAll(): List<BasketProduct>
 
-    fun getByProductId(productId: Int): BasketProduct
+    fun getByProductId(productId: Int): BasketProduct?
 
     fun add(basketProduct: BasketProduct)
 

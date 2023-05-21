@@ -18,7 +18,7 @@ interface BasketDataSource {
 
         fun getAll(): List<DataBasketProduct>
 
-        fun getByProductId(productId: Int): DataBasketProduct
+        fun getByProductId(productId: Int): DataBasketProduct?
 
         fun add(basketProduct: DataBasketProduct)
 

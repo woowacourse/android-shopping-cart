@@ -9,7 +9,11 @@ interface ProductDetailContract {
 
         fun updateBindingData(product: UiProduct, previousProduct: UiProduct?)
 
-        fun showBasketDialog(curentProduct: UiProduct)
+        fun showBasketDialog(
+            currentProduct: UiProduct,
+            minusClickListener: () -> Unit,
+            plusClickListener: () -> Unit
+        )
 
         fun updateProductCount(count: Int)
     }

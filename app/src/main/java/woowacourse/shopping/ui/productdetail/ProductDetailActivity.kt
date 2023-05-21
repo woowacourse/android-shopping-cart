@@ -49,13 +49,19 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.addMarketClickListener = presenter::setBasketDialog
     }
 
-    override fun showBasketDialog(curentProduct: UiProduct) {
+    override fun showBasketDialog(
+        currentProduct: UiProduct,
+        minusClickListener: () -> Unit,
+        plusClickListener: () -> Unit
+    ) {
         dialogViewBinding = DialogProductDetailBinding.inflate(layoutInflater)
         val alertDialog = AlertDialog.Builder(this)
             .setView(dialogViewBinding.root)
             .create()
 
-        dialogViewBinding.product = curentProduct
+        dialogViewBinding.product = currentProduct
+        dialogViewBinding.dialogCounter.minusClickListener = { _ -> minusClickListener() }
+        dialogViewBinding.dialogCounter.plusClickListener = { _ -> plusClickListener() }
 
         alertDialog.show()
     }

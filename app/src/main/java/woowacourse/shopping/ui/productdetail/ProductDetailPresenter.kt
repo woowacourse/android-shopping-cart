@@ -13,12 +13,33 @@ class ProductDetailPresenter(
     private var previousProduct: UiProduct?
 ) : ProductDetailContract.Presenter {
 
+    init {
+        currentProduct.basketCount =
+            basketRepository.getByProductId(currentProduct.id)?.count?.value ?: 0
+        if (previousProduct != null) {
+            previousProduct?.basketCount =
+                basketRepository.getByProductId(requireNotNull(previousProduct).id)?.count?.value
+                    ?: 0
+        }
+    }
+
     override fun initProductData() {
         view.updateBindingData(currentProduct, previousProduct)
     }
 
     override fun setBasketDialog() {
-        view.showBasketDialog(currentProduct)
+        view.showBasketDialog(currentProduct, ::minusProductCount, ::plusProductCount)
+        view.updateProductCount(currentProduct.basketCount)
+    }
+
+    private fun minusProductCount() {
+        if (currentProduct.basketCount - 1 >= 0) currentProduct.basketCount -= 1
+        view.updateProductCount(currentProduct.basketCount)
+    }
+
+    private fun plusProductCount() {
+        currentProduct.basketCount += 1
+        view.updateProductCount(currentProduct.basketCount)
     }
 
     override fun selectPreviousProduct() {

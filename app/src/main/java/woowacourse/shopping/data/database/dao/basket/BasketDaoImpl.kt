@@ -188,7 +188,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     }
 
     @SuppressLint("Range")
-    override fun getByProductId(productId: Int): DataBasketProduct {
+    override fun getByProductId(productId: Int): DataBasketProduct? {
         val products = mutableListOf<DataBasketProduct>()
         database.writableDatabase.use { db ->
             val cursor = db.rawQuery(GET_ITEM_BY_PRODUCT_ID, arrayOf(productId.toString()))
@@ -214,7 +214,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
             }
             cursor.close()
         }
-        return products.first()
+        return products.firstOrNull()
     }
 
     override fun add(basketProduct: DataBasketProduct) {
@@ -249,7 +249,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
     }
 
     override fun minus(basketProduct: DataBasketProduct) {
-        val existingBasketItem = getByProductId(basketProduct.product.id)
+        val existingBasketItem = getByProductId(basketProduct.product.id) ?: return
         if ((existingBasketItem.count.toDomain() - basketProduct.count.toDomain()).value <= 0) {
             remove(existingBasketItem)
         } else {
