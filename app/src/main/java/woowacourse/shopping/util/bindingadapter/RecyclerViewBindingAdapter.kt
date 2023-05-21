@@ -20,3 +20,8 @@ fun RecyclerView.setFixedSize(fixedSize: Boolean) {
 fun RecyclerView.setLayoutManager(layoutManager: LayoutManager) {
     this.layoutManager = layoutManager
 }
+
+@BindingAdapter("bind:animator")
+fun RecyclerView.setAnimator(itemAnimator: RecyclerView.ItemAnimator?) {
+    this.itemAnimator = itemAnimator
+}

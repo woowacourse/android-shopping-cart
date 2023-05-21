@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             bind:adapter="@{adapter}"
+            bind:animator="@{null}"
             bind:fixedSize="@{true}"
             bind:layoutManager="@{ShoppingGridLayoutManager.create(context, adapter)}"
             bind:onAdapted="@{() -> presenter.fetchAll()}"

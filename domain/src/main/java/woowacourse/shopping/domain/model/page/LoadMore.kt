@@ -2,7 +2,6 @@ package woowacourse.shopping.domain.model.page
 
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.domain.util.safeSubList
 
 typealias DomainLoadMore = LoadMore
 
