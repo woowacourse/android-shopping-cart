@@ -24,10 +24,47 @@ class RecentProductDao(context: Context) {
                 RecentProductContract.TABLE_COLUMN_PRODUCT_ID,
                 RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL,
                 RecentProductContract.TABLE_COLUMN_PRODUCT_NAME,
+                RecentProductContract.TABLE_COLUMN_PRODUCT_PRICE,
                 RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME
             ),
             selection, arrayOf(), null, null, ""
         )
+    }
+
+    fun getMostRecentProduct(): RecentProduct? {
+        val all = getAll()
+        return if (all.isEmpty()) null else all[0]
+    }
+
+    fun getRecentProduct(productId: Int): RecentProduct? {
+        val cursor = getCursor("${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} = $productId")
+        var recentProduct: RecentProduct? = null
+
+        with(cursor) {
+            while (moveToNext()) {
+                val productId =
+                    getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_ID))
+                val productImageUrl =
+                    getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
+                val productName =
+                    getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME))
+                val productPrice =
+                    getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_PRICE))
+                val viewedDateTime =
+                    getLong(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME))
+                recentProduct = RecentProduct(
+                    productId = productId, productImageUrl = productImageUrl,
+                    productName = productName, productPrice = productPrice,
+                    viewedDateTime = LocalDateTime.ofEpochSecond(
+                        viewedDateTime,
+                        0,
+                        ZoneOffset.UTC
+                    )
+                )
+            }
+        }
+        cursor.close()
+        return recentProduct
     }
 
     fun getAll(): List<RecentProduct> {
@@ -42,6 +79,8 @@ class RecentProductDao(context: Context) {
                     getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL))
                 val productName =
                     getString(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME))
+                val productPrice =
+                    getInt(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_PRODUCT_PRICE))
                 val viewedDateTime =
                     getLong(getColumnIndexOrThrow(RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME))
 
@@ -50,6 +89,7 @@ class RecentProductDao(context: Context) {
                         productId = productId,
                         productImageUrl = productImageUrl,
                         productName = productName,
+                        productPrice = productPrice,
                         viewedDateTime = LocalDateTime.ofEpochSecond(
                             viewedDateTime,
                             0,
@@ -78,6 +118,7 @@ class RecentProductDao(context: Context) {
                 put(RecentProductContract.TABLE_COLUMN_PRODUCT_ID, it.id)
                 put(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, it.imageUrl)
                 put(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME, it.name)
+                put(RecentProductContract.TABLE_COLUMN_PRODUCT_PRICE, it.price)
                 put(
                     RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME,
                     viewedDateTime.toEpochSecond(ZoneOffset.UTC)

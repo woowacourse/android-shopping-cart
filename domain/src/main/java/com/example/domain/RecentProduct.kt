@@ -6,5 +6,6 @@ data class RecentProduct(
     val productId: Int,
     val productImageUrl: String,
     val productName: String,
+    val productPrice: Int,
     val viewedDateTime: LocalDateTime
 )

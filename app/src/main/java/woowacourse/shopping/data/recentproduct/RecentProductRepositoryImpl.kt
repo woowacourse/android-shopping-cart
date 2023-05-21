@@ -12,6 +12,14 @@ class RecentProductRepositoryImpl(
         return recentProductDao.getAll()
     }
 
+    override fun getMostRecentProduct(): RecentProduct? {
+        return recentProductDao.getMostRecentProduct()
+    }
+
+    override fun getRecentProduct(productId: Int): RecentProduct? {
+        return recentProductDao.getRecentProduct(productId)
+    }
+
     override fun addRecentProduct(productId: Int, viewedDateTime: LocalDateTime) {
         recentProductDao.addColumn(productId, viewedDateTime)
     }
