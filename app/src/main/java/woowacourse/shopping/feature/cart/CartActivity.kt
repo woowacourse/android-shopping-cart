@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.SimpleItemAnimator
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
@@ -46,7 +47,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.cartItemRecyclerview.itemAnimator = null
+        setRecyclerViewAnimator()
+    }
+
+    private fun setRecyclerViewAnimator() {
+        val animator = binding.cartItemRecyclerview.itemAnimator
+        if (animator is SimpleItemAnimator) {
+            animator.supportsChangeAnimations = false
+        }
     }
 
     private fun initClickListener() {
@@ -75,7 +83,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setAllCheckedButtonState(isAllChecked: Boolean) {
-        binding.allCheckView.setOnCheckedChangeListener { _, isChecked -> }
+        binding.allCheckView.setOnCheckedChangeListener { _, _ -> }
         binding.allCheckView.isChecked = isAllChecked
         binding.allCheckView.setOnCheckedChangeListener { _, isChecked ->
             presenter.handleCurrentPageAllCheckedChange(isChecked)
@@ -87,7 +95,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.orderConfirmView.isEnabled = enabled
     }
 
-    override fun updateMoney(money: String) {
+    override fun setTotalMoney(money: String) {
         binding.money = money
     }
 

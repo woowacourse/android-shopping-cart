@@ -10,7 +10,7 @@ interface CartContract {
         fun setNextButtonState(enabled: Boolean)
         fun setPageCount(count: Int)
         fun setAllCheckedButtonState(isAllChecked: Boolean)
-        fun updateMoney(money: String)
+        fun setTotalMoney(money: String)
         fun setOrderButtonState(enabled: Boolean, orderCount: Int)
         fun exitCartScreen()
     }

@@ -8,10 +8,6 @@ import woowacourse.shopping.model.CartProductUiModel
 class CartProductAdapter(private val cartProductClickListener: CartProductClickListener) :
     ListAdapter<CartProductUiModel, CartProductViewHolder>(CartDiffUtil) {
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
         return CartProductViewHolder.create(parent, cartProductClickListener)
     }
@@ -22,10 +18,6 @@ class CartProductAdapter(private val cartProductClickListener: CartProductClickL
 
     fun setItems(newItems: List<CartProductUiModel>) {
         submitList(newItems)
-    }
-
-    override fun getItemId(position: Int): Long {
-        return getItem(position).cartId
     }
 
     companion object {
