@@ -17,6 +17,10 @@ class ProductDetailPresenter(
         view.updateBindingData(currentProduct, previousProduct)
     }
 
+    override fun setBasketDialog() {
+        view.showBasketDialog(currentProduct)
+    }
+
     override fun selectPreviousProduct() {
         currentProduct = previousProduct ?: throw IllegalStateException(NO_PREVIOUS_PRODUCT_ERROR)
         previousProduct = null

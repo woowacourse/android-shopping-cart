@@ -11,5 +11,5 @@ data class Product(
     val name: String,
     val price: UiPrice,
     val imageUrl: String,
-    val basketCount: Int = 0
+    var basketCount: Int = 0
 ) : Parcelable

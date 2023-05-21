@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.productdetail
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,7 @@ import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.databinding.DialogProductDetailBinding
 import woowacourse.shopping.ui.basket.BasketActivity
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.ui.shopping.ShoppingActivity
@@ -22,6 +24,7 @@ import woowacourse.shopping.util.setThrottleFirstOnClickListener
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
+    private lateinit var dialogViewBinding: DialogProductDetailBinding
     private lateinit var currentProduct: UiProduct
     private var previousProduct: UiProduct? = null
     private lateinit var presenter: ProductDetailContract.Presenter
@@ -43,7 +46,22 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initBasketButtonClickListener() {
-        binding.addMarketClickListener = presenter::addBasketProduct
+        binding.addMarketClickListener = presenter::setBasketDialog
+    }
+
+    override fun showBasketDialog(curentProduct: UiProduct) {
+        dialogViewBinding = DialogProductDetailBinding.inflate(layoutInflater)
+        val alertDialog = AlertDialog.Builder(this)
+            .setView(dialogViewBinding.root)
+            .create()
+
+        dialogViewBinding.product = curentProduct
+
+        alertDialog.show()
+    }
+
+    override fun updateProductCount(count: Int) {
+        dialogViewBinding.dialogCounter.count = count
     }
 
     private fun initPreviousProductClickListener() {
