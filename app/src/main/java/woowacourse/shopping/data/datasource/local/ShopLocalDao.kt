@@ -3,40 +3,26 @@ package woowacourse.shopping.data.datasource.local
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.table.SqlCart
-import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.ShopDataSource
+import woowacourse.shopping.data.datasource.entity.ProductEntity
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Shop
-import woowacourse.shopping.domain.URL
 
 class ShopLocalDao(private val db: SQLiteDatabase) : ShopDataSource {
-    override fun selectByRange(start: Int, range: Int): Shop {
-        val cursor = db.rawQuery(
-            "SELECT ${SqlProduct.name}.*, COALESCE(${SqlCart.AMOUNT}, 0) as ${SqlCart.AMOUNT} FROM ${SqlProduct.name} left join ${SqlCart.name} on ${SqlProduct.ID} = ${SqlCart.PRODUCT_ID} LIMIT $start, $range",
-            null
+    override fun selectByRange(products: List<ProductEntity>): Shop {
+        return Shop(
+            products.map {
+                db.rawQuery(
+                    "SELECT * FROM ${SqlCart.name} WHERE ${SqlCart.PRODUCT_ID} = ${it.id}", null
+                ).use { cursor ->
+                    if (cursor.moveToNext()) makeCartProduct(cursor, it)
+                    else CartProduct(0, it.product)
+                }
+            }
         )
-        return makeCart(cursor)
     }
 
-    private fun makeCart(cursor: Cursor) = Shop(
-        cursor.use {
-            val cart = mutableListOf<CartProduct>()
-            while (it.moveToNext()) cart.add(
-                makeCartProduct(it)
-            )
-            cart
-        }
-    )
-
-    private fun makeCartProduct(it: Cursor) = CartProduct(
-        it.getInt(it.getColumnIndexOrThrow(SqlCart.AMOUNT)),
-        makeProduct(it)
-    )
-
-    private fun makeProduct(it: Cursor) = Product(
-        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
+    private fun makeCartProduct(cursor: Cursor, product: ProductEntity) = CartProduct(
+        cursor.getInt(cursor.getColumnIndexOrThrow(SqlCart.AMOUNT)), product.product
     )
 }

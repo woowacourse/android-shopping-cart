@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.datasource.remote
 
 import woowacourse.shopping.data.datasource.ProductDataSource
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.data.datasource.entity.ProductEntity
 
 class ProductRemoteDao : ProductDataSource {
-    override fun selectAll(start: Int, range: Int): List<Product> {
+    override fun selectByRange(start: Int, range: Int): List<ProductEntity> {
         TODO("Not yet implemented")
     }
 

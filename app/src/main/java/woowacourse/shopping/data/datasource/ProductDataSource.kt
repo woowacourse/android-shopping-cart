@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.data.datasource.entity.ProductEntity
 
 interface ProductDataSource {
-    fun selectAll(start: Int, range: Int): List<Product>
+    fun selectByRange(start: Int, range: Int): List<ProductEntity>
     fun initMockData()
 }

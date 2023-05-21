@@ -5,29 +5,29 @@ import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Shop
 
-class CartRepository(private val localDataSource: CartDataSource) {
+class CartRepository(private val dataSource: CartDataSource) {
 
     fun addCartProduct(cartProduct: CartProduct) {
-        localDataSource.addCartProduct(cartProduct)
+        dataSource.addCartProduct(cartProduct)
     }
 
     fun plusCartProduct(product: Product) {
-        localDataSource.plusCartProduct(product)
+        dataSource.plusCartProduct(product)
     }
 
     fun minusCartProduct(product: Product) {
-        localDataSource.minusCartProduct(product)
+        dataSource.minusCartProduct(product)
     }
 
     fun deleteCartProduct(product: Product) {
-        localDataSource.deleteCartProduct(product)
+        dataSource.deleteCartProduct(product)
     }
 
     fun selectAllCount(): Int {
-        return localDataSource.selectAllCount()
+        return dataSource.selectAllCount()
     }
 
     fun selectAll(): Shop {
-        return localDataSource.selectAll()
+        return dataSource.selectAll()
     }
 }

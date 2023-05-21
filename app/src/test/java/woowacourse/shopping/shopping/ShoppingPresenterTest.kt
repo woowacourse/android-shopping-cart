@@ -10,8 +10,8 @@ import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
 import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.data.repository.ProductRepository
+import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
