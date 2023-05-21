@@ -17,10 +17,12 @@ data class CartProduct(
 
     fun minusCount(
         handleZeroCount: (cartProduct: CartProduct) -> Unit = {},
-    ): CartProduct {
+    ): CartProduct? {
         if (this.count.value == MINIMUM_COUNT) {
             handleZeroCount(this)
+            return null
         }
+
         return CartProduct(
             product = product,
             count = count.minus()
