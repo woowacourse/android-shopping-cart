@@ -6,10 +6,17 @@ import woowacourse.shopping.databinding.ItemReadMoreBinding
 
 class ReadMoreViewHolder private constructor(
     binding: ItemReadMoreBinding,
-) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ReadMoreDescription, ItemReadMoreBinding>(binding) {
+    private val onReadMoreButtonClicked: () -> Unit,
+) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ReadMoreDescription, ItemReadMoreBinding>(
+    binding
+) {
 
-    fun setOnClicked(onClicked: () -> Unit) {
-        binding.buttonReadMore.setOnClickListener { onClicked() }
+    init {
+        setOnClicked()
+    }
+
+    private fun setOnClicked() {
+        binding.buttonReadMore.setOnClickListener { onReadMoreButtonClicked() }
     }
 
     override fun bind(itemData: ShoppingRecyclerItem.ReadMoreDescription) {
@@ -17,11 +24,17 @@ class ReadMoreViewHolder private constructor(
     }
 
     companion object {
-        fun from(parent: ViewGroup): ReadMoreViewHolder {
+        fun from(
+            parent: ViewGroup,
+            onReadMoreButtonClicked: () -> Unit,
+        ): ReadMoreViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemReadMoreBinding.inflate(layoutInflater, parent, false)
 
-            return ReadMoreViewHolder(binding)
+            return ReadMoreViewHolder(
+                binding = binding,
+                onReadMoreButtonClicked = onReadMoreButtonClicked
+            )
         }
     }
 }

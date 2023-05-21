@@ -9,17 +9,18 @@ import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingProductViewHolder private constructor(
     binding: ItemShoppingProductBinding,
-) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ShoppingProduct, ItemShoppingProductBinding>(
-    binding
-) {
+    private val onProductImageClicked: (product: ProductUiModel) -> Unit,
+    private val onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
+    private val getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
+) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ShoppingProduct, ItemShoppingProductBinding>(binding) {
 
     private lateinit var getlistener: (product: ProductUiModel) -> CountPickerListener
 
-    fun setOnClicked(
-        onProductImageClicked: (product: ProductUiModel) -> Unit,
-        onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
-        getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
-    ) {
+    init {
+        setOnClicked()
+    }
+
+    private fun setOnClicked() {
         with(binding) {
             imageProduct.setOnClickListener {
                 onProductImageClicked(product ?: return@setOnClickListener)
@@ -43,11 +44,21 @@ class ShoppingProductViewHolder private constructor(
     }
 
     companion object {
-        fun from(parent: ViewGroup): ShoppingProductViewHolder {
+        fun from(
+            parent: ViewGroup,
+            onProductImageClicked: (product: ProductUiModel) -> Unit,
+            onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
+            getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
+        ): ShoppingProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemShoppingProductBinding.inflate(layoutInflater, parent, false)
 
-            return ShoppingProductViewHolder(binding)
+            return ShoppingProductViewHolder(
+                binding = binding,
+                onProductImageClicked = onProductImageClicked,
+                onAddToCartButtonClicked = onAddToCartButtonClicked,
+                getCountPickerListener = getCountPickerListener
+            )
         }
     }
 }

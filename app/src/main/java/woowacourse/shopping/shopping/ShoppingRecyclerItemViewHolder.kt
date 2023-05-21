@@ -3,7 +3,7 @@ package woowacourse.shopping.shopping
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
-sealed class ShoppingRecyclerItemViewHolder<T : ShoppingRecyclerItem, VB : ViewDataBinding>(protected val binding: VB) :
+abstract class ShoppingRecyclerItemViewHolder<T : ShoppingRecyclerItem, VB : ViewDataBinding>(protected val binding: VB) :
     RecyclerView.ViewHolder(binding.root) {
 
     abstract fun bind(itemData: T)

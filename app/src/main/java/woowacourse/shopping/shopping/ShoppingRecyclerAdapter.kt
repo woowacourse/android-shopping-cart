@@ -43,19 +43,17 @@ class ShoppingRecyclerAdapter(
         return when (ShoppingRecyclerItemViewType.find(viewType)) {
             RECENT_VIEWED -> RecentViewedViewHolder.from(parent)
 
-            PRODUCT -> ShoppingProductViewHolder.from(parent)
-                .apply {
-                    setOnClicked(
-                        onProductImageClicked = onProductClicked,
-                        onAddToCartButtonClicked = productCountPickerListener::onAdded,
-                        getCountPickerListener = ::getCountPickerListenerImpl
-                    )
-                }
+            PRODUCT -> ShoppingProductViewHolder.from(
+                parent = parent,
+                onProductImageClicked = onProductClicked,
+                onAddToCartButtonClicked = productCountPickerListener::onAdded,
+                getCountPickerListener = ::getCountPickerListenerImpl
+            )
 
-            READ_MORE -> ReadMoreViewHolder.from(parent)
-                .apply {
-                    setOnClicked(onClicked = onReadMoreButtonClicked)
-                }
+            READ_MORE -> ReadMoreViewHolder.from(
+                parent = parent,
+                onReadMoreButtonClicked = onReadMoreButtonClicked
+            )
         }
     }
 
