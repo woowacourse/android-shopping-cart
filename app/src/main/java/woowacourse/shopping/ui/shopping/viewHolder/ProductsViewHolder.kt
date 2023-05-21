@@ -3,28 +3,32 @@ package woowacourse.shopping.ui.shopping.viewHolder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import woowacourse.shopping.databinding.ProductItemBinding
 import woowacourse.shopping.ui.shopping.ProductItem
 import woowacourse.shopping.ui.shopping.ProductsItemType
+import woowacourse.shopping.ui.shopping.contract.ShoppingContract
+import woowacourse.shopping.ui.shopping.contract.presenter.ShoppingPresenter
+import woowacourse.shopping.utils.CustomViewOnClickListener
 
 class ProductsViewHolder private constructor(
     private val binding: ProductItemBinding,
+    private val presenter: ShoppingContract.Presenter,
+    private val lifeCycleOwner: LifecycleOwner,
     private val onClickListener: ProductsOnClickListener,
 ) :
     ItemViewHolder(binding.root) {
 
-    init {
-        binding.listener = onClickListener
-    }
-
     fun bind(productItemType: ProductsItemType) {
         val productItem = productItemType as? ProductItem ?: return
         binding.product = productItem.product
-        binding.count = productItem.count
+        binding.lifecycleOwner = lifeCycleOwner
+        binding.presenter = presenter as ShoppingPresenter?
+        binding.listener = onClickListener
 
         binding.addCartBtn.setOnClickListener {
             onClickListener.onAddCart(productItem.product.id, 1)
-            binding.count = 1
+            presenter.inCreaseCount(productItem.product.id)
             binding.addCartBtn.visibility = View.GONE
         }
     }
@@ -32,11 +36,18 @@ class ProductsViewHolder private constructor(
     companion object {
         fun from(
             parent: ViewGroup,
+            presenter: ShoppingContract.Presenter,
+            lifeCycleOwner: LifecycleOwner,
             onClickListener: ProductsOnClickListener,
         ): ProductsViewHolder {
             val binding = ProductItemBinding
                 .inflate(LayoutInflater.from(parent.context), parent, false)
-            return ProductsViewHolder(binding, onClickListener)
+            return ProductsViewHolder(
+                binding,
+                presenter,
+                lifeCycleOwner,
+                onClickListener,
+            )
         }
     }
 }

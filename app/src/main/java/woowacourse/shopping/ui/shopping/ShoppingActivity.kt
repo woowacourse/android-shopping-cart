@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.shopping
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -21,8 +22,9 @@ import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.contract.ShoppingContract
 import woowacourse.shopping.ui.shopping.contract.presenter.ShoppingPresenter
 import woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener
+import woowacourse.shopping.utils.CustomViewOnClickListener
 
-class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnClickListener {
+class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnClickListener, CustomViewOnClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
@@ -100,6 +102,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnC
     override fun setProducts(data: List<ProductsItemType>) {
         binding.productRecyclerview.adapter = ProductsAdapter(
             data,
+            presenter,
+            this,
             this,
             presenter::fetchMoreProducts,
         )
@@ -135,10 +139,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnC
     }
 
     override fun increaseCount(id: Long) {
-        TODO("Not yet implemented")
+        presenter.inCreaseCount(id)
     }
 
     override fun decreaseCount(id: Long) {
-        TODO("Not yet implemented")
+        presenter.decreaseCount(id)
     }
 }

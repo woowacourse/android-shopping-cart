@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.shopping.contract.presenter
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
@@ -19,10 +21,16 @@ class ShoppingPresenter(
     private val cartRepository: CartRepository,
 ) : ShoppingContract.Presenter {
     private var productsData: MutableList<ProductsItemType> = mutableListOf()
+    private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
+    val countLiveDatas: Map<Long, LiveData<Int>> = _countLiveDatas
 
     override fun setUpProducts() {
-        productsData += repository.getNext(PRODUCT_COUNT)
+        val datas = repository.getNext(PRODUCT_COUNT)
+        productsData += datas
             .map { product: Product -> ProductItem(product.toUIModel(), getCount(product.id)) }
+        datas.forEach {
+            _countLiveDatas[it.id] = MutableLiveData(getCount(it.id))
+        }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
@@ -52,6 +60,16 @@ class ShoppingPresenter(
         repository.findById(id).let {
             cartRepository.insert(CartProduct(it, count, true))
         }
+    }
+
+    override fun inCreaseCount(id: Long) {
+        _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.plus(1)
+        _countLiveDatas[id]?.value?.let { cartRepository.updateCount(id, it) }
+    }
+
+    override fun decreaseCount(id: Long) {
+        _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.minus(1)
+        _countLiveDatas[id]?.value?.let { cartRepository.updateCount(id, it) }
     }
 
     private fun getCount(id: Long): Int {

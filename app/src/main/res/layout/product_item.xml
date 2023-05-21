@@ -16,8 +16,9 @@
             type="woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener" />
 
         <variable
-            name="count"
-            type="int" />
+            name="presenter"
+            type="woowacourse.shopping.ui.shopping.contract.presenter.ShoppingPresenter" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,7 +70,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:src="@drawable/add_cart_button"
-            android:visibility="@{count == 0 ? View.VISIBLE : View.GONE }"
+            android:visibility="@{presenter.countLiveDatas[product.id] == 0? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toBottomOf="@+id/productImg"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -77,12 +78,14 @@
         <include
             android:id="@+id/order_count_layout"
             layout="@layout/order_count"
-            app:count="@{count}"
+            app:count="@{presenter.countLiveDatas[product.id]}"
+            app:listener ="@{listener}"
+            app:product = "@{product}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="11dp"
-            android:visibility="@{count >= 1 ? View.VISIBLE : View.GONE }"
+            android:visibility="@{presenter.countLiveDatas[product.id] >= 1? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toBottomOf="@+id/productImg"
             app:layout_constraintEnd_toEndOf="@+id/productImg"
             app:layout_constraintStart_toStartOf="parent" />

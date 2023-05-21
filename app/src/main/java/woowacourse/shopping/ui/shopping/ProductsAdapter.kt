@@ -1,7 +1,9 @@
 package woowacourse.shopping.ui.shopping
 
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.ui.shopping.contract.ShoppingContract
 import woowacourse.shopping.ui.shopping.viewHolder.ItemViewHolder
 import woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener
 import woowacourse.shopping.ui.shopping.viewHolder.ProductsViewHolder
@@ -10,6 +12,8 @@ import woowacourse.shopping.ui.shopping.viewHolder.RecentProductsViewHolder
 
 class ProductsAdapter(
     productItemTypes: List<ProductsItemType>,
+    private val presenter: ShoppingContract.Presenter,
+    private val lifecycleOwner: LifecycleOwner,
     private val onClickListener: ProductsOnClickListener,
     private val onReadMoreClick: () -> Unit,
 ) : RecyclerView.Adapter<ItemViewHolder>() {
@@ -19,7 +23,12 @@ class ProductsAdapter(
         return when (viewType) {
             ProductsItemType.TYPE_HEADER -> RecentProductsViewHolder.from(parent, onClickListener)
             ProductsItemType.TYPE_FOOTER -> ReadMoreViewHolder.from(parent) { onReadMoreClick() }
-            ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(parent, onClickListener)
+            ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(
+                parent,
+                presenter,
+                lifecycleOwner,
+                onClickListener,
+            )
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
