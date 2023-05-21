@@ -115,10 +115,6 @@ class CartPresenter(
     }
 
     override fun setAllCheckbox() {
-        /*val cartItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
-        val isChecked = cartItems.filter { it.isChecked }.size == cartItems.size
-
-        view.setAllCheckbox(isChecked)*/
         val cartItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
         val allChecked = cartItems.all { it.isChecked }
 

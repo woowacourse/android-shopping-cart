@@ -21,5 +21,6 @@ interface ShoppingContract {
         fun inCreaseCount(id: Long)
         fun decreaseCount(id: Long)
         fun updateCountSize()
+        fun updateItemCounts()
     }
 }

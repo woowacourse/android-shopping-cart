@@ -61,7 +61,9 @@ class ShoppingActivity :
 
     override fun onResume() {
         super.onResume()
+        presenter.updateItemCounts()
         presenter.updateProducts()
+        presenter.updateCountSize()
     }
 
     private fun initLayoutManager() {

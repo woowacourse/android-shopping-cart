@@ -56,6 +56,12 @@ class ShoppingPresenter(
         view.navigateToProductDetail(product.toUIModel())
     }
 
+    override fun updateItemCounts() {
+        cartRepository.getAll().forEach {
+            _countLiveDatas[it.product.id]?.value = it.count
+        }
+    }
+
     override fun updateItemCount(id: Long, count: Int) {
         repository.findById(id).let {
             cartRepository.insert(CartProduct(it, count, true))

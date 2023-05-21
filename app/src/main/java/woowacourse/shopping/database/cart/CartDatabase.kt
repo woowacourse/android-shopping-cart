@@ -82,8 +82,17 @@ class CartDatabase(
     }
 
     override fun getSubList(offset: Int, size: Int): List<CartProduct> {
-        val lastIndex = getAll().lastIndex
+        val allProducts = getAll().ifEmpty { emptyList() }
+        val lastIndex = allProducts.lastIndex
         val endIndex = (lastIndex + 1).coerceAtMost(offset + size)
+        if (offset < 0) {
+            return if (size > 0 && size <= lastIndex + 1) {
+                getAll().subList(0, size)
+            } else {
+                getAll()
+            }
+        }
+
         return if (offset <= lastIndex) getAll().subList(offset, endIndex) else emptyList()
     }
 
