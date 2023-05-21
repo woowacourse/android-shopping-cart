@@ -14,6 +14,7 @@ import woowacourse.shopping.data.model.RecentProductEntity
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
+import woowacourse.shopping.presentation.CartFixture
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.RecentProductModel
 import woowacourse.shopping.presentation.view.productlist.ProductContract
@@ -128,6 +129,30 @@ class ProductListPresenterTest {
 
         // then
         verify { view.moveToCartView() }
+    }
+
+    @Test
+    fun `최근 본 상품의 스크롤 위치를 저장한다`() {
+        presenter.updateRecentProductsLastScroll(100)
+        val actual = presenter.getRecentProductsLastScroll()
+        val expected = 100
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `상품의 개수가 추가 된 상품들은 장바구니에 추가된다`() {
+        // given
+        every { cartRepository.getAllCarts() } returns CartFixture.getFixture()
+        justRun { view.updateToolbarCartCountView(2) }
+        justRun { view.setVisibleToolbarCartCountView() }
+
+        // when
+        presenter.updateCount(1L, 1)
+
+        // then
+        verify { cartRepository.getAllCarts() }
+        verify { view.updateToolbarCartCountView(2) }
+        verify { view.setVisibleToolbarCartCountView() }
     }
 
     companion object {
