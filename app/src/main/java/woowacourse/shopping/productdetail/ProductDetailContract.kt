@@ -1,6 +1,7 @@
 package woowacourse.shopping.productdetail
 
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.productdetail.navigator.ProductDetailNavigator
 
 interface ProductDetailContract {
 

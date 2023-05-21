@@ -15,6 +15,8 @@ import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.productdetail.navigator.ProductDetailNavigator
+import woowacourse.shopping.productdetail.navigator.ProductDetailNavigatorImpl
 import woowacourse.shopping.util.handleMissingSerializableData
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
