@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
-import woowacourse.shopping.database.ShoppingDBAdapter
+import woowacourse.shopping.database.ShoppingCacheImpl
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.model.CartProductUiModel
@@ -19,7 +19,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val presenter: CartPresenter by lazy {
         CartPresenter(
             view = this,
-            repository = ShoppingDBAdapter(
+            shoppingCache = ShoppingCacheImpl(
                 shoppingDao = ShoppingDao(this)
             )
         )

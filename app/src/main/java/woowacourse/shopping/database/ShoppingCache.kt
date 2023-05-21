@@ -4,7 +4,7 @@ import model.CartProduct
 import model.Product
 import model.RecentViewedProduct
 
-interface ShoppingRepository {
+interface ShoppingCache {
 
     fun selectProducts(from: Int, count: Int): List<Product>
 

@@ -1,4 +1,8 @@
-package model
+package woowacourse.shopping.shoppingcart
+
+import model.Cart
+import model.CartProduct
+import model.Page
 
 interface CartPageNavigator {
 

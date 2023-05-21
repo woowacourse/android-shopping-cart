@@ -2,7 +2,7 @@ package woowacourse.shopping.productdetail
 
 import model.CartProduct
 import model.Count
-import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toDomainModel
 
@@ -10,7 +10,7 @@ class ProductDetailPresenter(
     product: ProductUiModel,
     private val view: ProductDetailContract.View,
     private val latestViewedProduct: ProductUiModel?,
-    private val repository: ShoppingRepository,
+    private val shoppingCache: ShoppingCache,
 ) : ProductDetailContract.Presenter {
 
     private var cartProduct: CartProduct = CartProduct(
@@ -24,7 +24,7 @@ class ProductDetailPresenter(
     }
 
     override fun addToCart() {
-        repository.insertToShoppingCart(
+        shoppingCache.insertToShoppingCart(
             id = cartProduct.product.id,
             count = cartProduct.count.value
         )

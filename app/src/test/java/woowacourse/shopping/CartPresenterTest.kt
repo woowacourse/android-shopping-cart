@@ -5,13 +5,13 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import model.Cart
-import model.CartPage
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.shoppingcart.CartContract
+import woowacourse.shopping.shoppingcart.CartPage
 import woowacourse.shopping.shoppingcart.CartPresenter
 import woowacourse.shopping.util.toUiModel
 
@@ -19,7 +19,7 @@ class CartPresenterTest {
 
     private lateinit var presenter: CartPresenter
     private lateinit var view: CartContract.View
-    private lateinit var repository: ShoppingRepository
+    private lateinit var shoppingCache: ShoppingCache
     private lateinit var cartPage: CartPage
 
     @get:Rule
@@ -28,11 +28,11 @@ class CartPresenterTest {
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        repository = mockk(relaxed = true)
+        shoppingCache = mockk(relaxed = true)
         cartPage = CartPage(Cart())
         presenter = CartPresenter(
             view = view,
-            repository = repository,
+            shoppingCache = shoppingCache,
             cartPage = cartPage
         )
     }
@@ -44,7 +44,7 @@ class CartPresenterTest {
             CartProduct(name = "아메리카노", id = 1),
             CartProduct(name = "밀크티", id = 2),
         )
-        every { repository.selectShoppingCartProducts() } returns products
+        every { shoppingCache.selectShoppingCartProducts() } returns products
 
         // when
         presenter.loadShoppingCartProducts()
@@ -64,14 +64,14 @@ class CartPresenterTest {
             CartProduct(name = "아메리카노", id = 1),
             CartProduct(name = "밀크티", id = 2),
         )
-        every { repository.selectShoppingCartProducts() } returns products
+        every { shoppingCache.selectShoppingCartProducts() } returns products
         presenter.loadShoppingCartProducts()
 
         // when
         presenter.removeShoppingCartProduct(removingProduct.product.id)
 
         // then
-        verify { repository.deleteFromShoppingCart(id = 1) }
+        verify { shoppingCache.deleteFromShoppingCart(id = 1) }
 
         val expected = listOf(CartProduct(id = 2).toUiModel())
         assertEquals(expected, presenter.showingProducts.value)
@@ -84,14 +84,14 @@ class CartPresenterTest {
             CartProduct(name = "아메리카노", id = 1, count = 5),
             CartProduct(name = "밀크티", id = 2, count = 1),
         )
-        every { repository.selectShoppingCartProducts() } returns products
+        every { shoppingCache.selectShoppingCartProducts() } returns products
         presenter.loadShoppingCartProducts()
 
         // when
         presenter.plusShoppingCartProductCount(id = 1)
 
         // then
-        verify { repository.insertToShoppingCart(id = 1, count = 6) }
+        verify { shoppingCache.insertToShoppingCart(id = 1, count = 6) }
 
         val expected = listOf(
             CartProduct(id = 1, name = "아메리카노", count = 6),
@@ -108,14 +108,14 @@ class CartPresenterTest {
             CartProduct(id = 1, name = "아메리카노", count = 5),
             CartProduct(id = 2, name = "밀크티", count = 6),
         )
-        every { repository.selectShoppingCartProducts() } returns products
+        every { shoppingCache.selectShoppingCartProducts() } returns products
         presenter.loadShoppingCartProducts()
 
         // when
         presenter.minusShoppingCartProductCount(id = 2)
 
         // then
-        verify { repository.insertToShoppingCart(id = 2, count = 5) }
+        verify { shoppingCache.insertToShoppingCart(id = 2, count = 5) }
 
         val expected = listOf(
             CartProduct(id = 1, name = "아메리카노", count = 5),
@@ -133,7 +133,7 @@ class CartPresenterTest {
             CartProduct(price = 1000),
             CartProduct(price = 2000),
         )
-        every { repository.selectShoppingCartProducts() } returns products
+        every { shoppingCache.selectShoppingCartProducts() } returns products
 
         // when
         presenter.loadShoppingCartProducts()
@@ -151,7 +151,7 @@ class CartPresenterTest {
             CartProduct(id = 1, name = "아메리카노"),
             CartProduct(id = 2, name = "밀크티"),
         )
-        every { repository.selectShoppingCartProducts() } returns products
+        every { shoppingCache.selectShoppingCartProducts() } returns products
         presenter.loadShoppingCartProducts()
 
         // when

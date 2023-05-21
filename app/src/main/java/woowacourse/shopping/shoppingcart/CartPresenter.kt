@@ -3,15 +3,13 @@ package woowacourse.shopping.shoppingcart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import model.Cart
-import model.CartPage
-import model.CartPageNavigator
-import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.util.toUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val repository: ShoppingRepository,
+    private val shoppingCache: ShoppingCache,
     private val cartPage: CartPageNavigator = CartPage(
         cart = Cart()
     )
@@ -39,13 +37,13 @@ class CartPresenter(
         get() = _currentPage
 
     override fun loadShoppingCartProducts() {
-        val products = repository.selectShoppingCartProducts()
+        val products = shoppingCache.selectShoppingCartProducts()
         cart.addAll(products)
         updatePage(cartPage)
     }
 
     override fun removeShoppingCartProduct(id: Int) {
-        repository.deleteFromShoppingCart(id)
+        shoppingCache.deleteFromShoppingCart(id)
         cart.remove(id)
         updatePage(cartPage)
     }
@@ -53,7 +51,7 @@ class CartPresenter(
     override fun plusShoppingCartProductCount(id: Int) {
         cart.plusProductCount(id)
 
-        repository.insertToShoppingCart(
+        shoppingCache.insertToShoppingCart(
             id = id,
             count = cart.products.first { it.product.id == id }
                 .count
@@ -66,7 +64,7 @@ class CartPresenter(
         cart.minusProductCount(id)
         _showingProducts.value = cartPage.showingProducts.map { it.toUiModel() }
 
-        repository.insertToShoppingCart(
+        shoppingCache.insertToShoppingCart(
             id = id,
             count = cart.products.first { it.product.id == id }
                 .count

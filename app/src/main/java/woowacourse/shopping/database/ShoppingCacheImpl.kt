@@ -16,9 +16,9 @@ import woowacourse.shopping.database.product.ShoppingCartDBContract
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.model.ProductUiModel
 
-class ShoppingDBAdapter(
+class ShoppingCacheImpl(
     shoppingDao: ShoppingDao,
-) : ShoppingRepository {
+) : ShoppingCache {
 
     private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
 
