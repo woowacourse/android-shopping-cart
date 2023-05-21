@@ -9,10 +9,6 @@ import woowacourse.shopping.data.model.CartProductEntity
 class CartDao(context: Context) {
     private val db = CartHelper(context).writableDatabase
 
-    // TODO("가격 업데이트")
-    // TODO("전체 선택")
-    // TODO("이전 화면 돌아갈 시 데이터") // 4시까지
-    // TODO("PRODUCTDETAIL") // 5시까지
     fun insertProduct(productId: Long, productCount: Int) {
         val value = ContentValues().apply {
             put(CartContract.Cart.PRODUCT_ID, productId)
