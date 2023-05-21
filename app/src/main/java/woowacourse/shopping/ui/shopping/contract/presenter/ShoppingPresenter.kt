@@ -22,7 +22,7 @@ class ShoppingPresenter(
 ) : ShoppingContract.Presenter {
     private var productsData: MutableList<ProductsItemType> = mutableListOf()
     private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
-    val countLiveDatas: Map<Long, LiveData<Int>> = _countLiveDatas
+    val countLiveDatas: Map<Long, LiveData<Int>> get() = _countLiveDatas
 
     override fun setUpProducts() {
         val datas = repository.getNext(PRODUCT_COUNT)
@@ -68,7 +68,7 @@ class ShoppingPresenter(
         }
     }
 
-    override fun inCreaseCount(id: Long) {
+    override fun increaseCount(id: Long) {
         _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.plus(1)
         _countLiveDatas[id]?.value?.let { cartRepository.updateCount(id, it) }
     }

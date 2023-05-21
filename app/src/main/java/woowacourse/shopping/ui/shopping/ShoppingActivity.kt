@@ -146,7 +146,7 @@ class ShoppingActivity :
     }
 
     override fun increaseCount(id: Long) {
-        presenter.inCreaseCount(id)
+        presenter.increaseCount(id)
     }
 
     override fun decreaseCount(id: Long) {

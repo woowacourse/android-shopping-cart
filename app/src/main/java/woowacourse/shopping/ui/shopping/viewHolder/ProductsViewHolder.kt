@@ -27,7 +27,7 @@ class ProductsViewHolder private constructor(
 
         binding.addCartBtn.setOnClickListener {
             onClickListener.onAddCart(productItem.product.id, 1)
-            presenter.inCreaseCount(productItem.product.id)
+            presenter.increaseCount(productItem.product.id)
             binding.addCartBtn.visibility = View.GONE
         }
     }

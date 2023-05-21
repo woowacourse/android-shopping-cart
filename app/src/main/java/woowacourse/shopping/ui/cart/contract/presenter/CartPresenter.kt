@@ -33,10 +33,10 @@ class CartPresenter(
     private var cartItems: CartItemsUIModel =
         CartItemsUIModel(repository.getCheckCart().map { it.toUIModel() })
     private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
-    val countLiveDatas: Map<Long, LiveData<Int>> = _countLiveDatas
+    val countLiveDatas: Map<Long, LiveData<Int>> get() = _countLiveDatas
 
     private var _checkedLiveDatas: MutableMap<Long, MutableLiveData<Boolean>> = mutableMapOf()
-    val checkedLiveDatas: Map<Long, LiveData<Boolean>> = _checkedLiveDatas
+    val checkedLiveDatas: Map<Long, LiveData<Boolean>> get() = _checkedLiveDatas
 
     init {
         setAllOrderCount()

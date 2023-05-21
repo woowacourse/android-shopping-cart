@@ -1,7 +1,8 @@
 package woowacourse.shopping.ui.productdetail.contract.presenter
 
-import com.example.domain.repository.CartRepository
+import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
+import com.example.domain.repository.CartRepository
 import com.example.domain.repository.RecentRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -13,27 +14,36 @@ import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
+import kotlin.properties.Delegates
 
 internal class ProductDetailPresenterTest {
     private lateinit var view: ProductDetailContract.View
     private lateinit var presenter: ProductDetailContract.Presenter
     private lateinit var cartRepository: CartRepository
     private lateinit var recentRepository: RecentRepository
+    private var visible by Delegates.notNull<Boolean>()
 
     private val fakeProduct: Product = Product(
         1,
         "[사미헌] 갈비탕",
         12000,
-        "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg"
+        "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg",
     )
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
+        visible = true
         cartRepository = mockk(relaxed = true)
         recentRepository = mockk(relaxed = true)
         presenter =
-            ProductDetailPresenter(view, fakeProduct.toUIModel(), cartRepository, recentRepository)
+            ProductDetailPresenter(
+                view,
+                fakeProduct.toUIModel(),
+                visible,
+                cartRepository,
+                recentRepository,
+            )
     }
 
     @Test
@@ -56,7 +66,7 @@ internal class ProductDetailPresenterTest {
         // when
         presenter.addProductToCart()
         // then
-        verify(exactly = 1) { cartRepository.insert(fakeProduct) }
+        verify(exactly = 1) { cartRepository.insert(CartProduct(fakeProduct, 1, true)) }
     }
 
     @Test

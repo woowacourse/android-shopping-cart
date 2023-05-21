@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.cart.contract.presenter
 
-import com.example.domain.repository.CartRepository
 import com.example.domain.model.Product
+import com.example.domain.repository.CartRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
@@ -92,7 +92,7 @@ internal class CartPresenterTest {
         every { view.setCarts(any(), capture(slot)) } answers { nothing }
 
         // when
-        presenter.navigateToItemDetail(fakeProduct.toUIModel())
+        presenter.navigateToItemDetail(fakeProduct.id)
 
         // then
         verify(exactly = 1) { view.navigateToItemDetail(fakeProduct.toUIModel()) }
