@@ -22,80 +22,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
 
+    private lateinit var mockWeb: MockWeb
+
     private val adapter: CartAdapter = CartAdapter(getCartListener())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initMockWeb()
         initBinding()
         initToolbar()
         initPresenter(savedInstanceState)
         initObserve()
-    }
-
-    private fun initBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-    }
-
-    private fun initPresenter(savedInstanceState: Bundle?) {
-        var url: String? = null
-        val thread = Thread { url = MockWeb().url }
-        thread.start()
-        thread.join()
-        presenter = CartPresenter(
-            this,
-            CartDatabase(this),
-            RemoteProductRepository(url ?: ""),
-            savedInstanceState?.getInt(KEY_OFFSET) ?: 0
-        )
-        presenter.setUpCarts()
-        binding.cartBottom.onAllCheckClick = presenter::setProductsCheck
-        binding.rvProducts.adapter = adapter
-        binding.rvProducts.itemAnimator = null
-    }
-
-    private fun initObserve() {
-        presenter.checkedCount.observe(this) { binding.cartBottom.totalCount = it }
-        presenter.totalPrice.observe(this) { binding.cartBottom.price = it }
-    }
-
-    private fun initToolbar() {
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun getCartListener() = object : CartListener {
-        override fun onPageNext() {
-            presenter.moveToPageNext()
-        }
-        override fun onPagePrev() {
-            presenter.moveToPagePrev()
-        }
-        override fun onItemRemove(productId: Int) {
-            presenter.removeProduct(productId)
-        }
-        override fun onItemClick(product: CartProductUIModel) {
-            presenter.navigateToItemDetail(product.id)
-        }
-        override fun onItemUpdate(productId: Int, count: Int) {
-            presenter.updateItemCount(productId, count)
-        }
-        override fun onItemCheckChanged(productId: Int, checked: Boolean) {
-            binding.cartBottom.onAllCheckClick = { }
-            presenter.updateItemCheck(productId, checked)
-            binding.cartBottom.onAllCheckClick = presenter::setProductsCheck
-        }
-    }
-
-    override fun setCarts(products: List<CartProductUIModel>, pageUIModel: PageUIModel) {
-        adapter.submitList(products, pageUIModel)
-    }
-
-    override fun setAllItemCheck(all: Boolean) {
-        binding.cartBottom.cbCheckAll.isChecked = all
-    }
-
-    override fun navigateToItemDetail(product: ProductUIModel) {
-        startActivity(DetailedProductActivity.getIntent(this, product))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -111,6 +48,90 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.getPageIndex().let {
             outState.putInt(KEY_OFFSET, it)
         }
+    }
+
+    private fun initMockWeb() {
+        val thread = Thread { mockWeb = MockWeb() }
+        thread.start()
+        thread.join()
+    }
+
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
+    }
+
+    private fun initToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun initPresenter(savedInstanceState: Bundle?) {
+        presenter = CartPresenter(
+            this,
+            CartDatabase(this),
+            RemoteProductRepository(mockWeb.url),
+            savedInstanceState?.getInt(KEY_OFFSET) ?: 0
+        )
+        presenter.setUpView()
+
+        binding.cartBottom.onAllCheckClick = presenter::setUpProductsCheck
+    }
+
+    private fun initObserve() {
+        observeCheckedCount()
+        observeTotalPrice()
+        observeAllCheck()
+    }
+
+    private fun observeCheckedCount() {
+        presenter.checkedCount.observe(this) {
+            binding.cartBottom.totalCount = it
+        }
+    }
+
+    private fun observeTotalPrice() {
+        presenter.totalPrice.observe(this) {
+            binding.cartBottom.price = it
+        }
+    }
+
+    private fun observeAllCheck() {
+        presenter.allCheck.observe(this) {
+            binding.cartBottom.cbCheckAll.isChecked = it
+        }
+    }
+
+    private fun getCartListener() = object : CartListener {
+        override fun onPageNext() {
+            presenter.moveToPageNext()
+        }
+        override fun onPagePrev() {
+            presenter.moveToPagePrev()
+        }
+        override fun onItemRemove(productId: Int) {
+            presenter.removeItem(productId)
+        }
+        override fun onItemClick(product: CartProductUIModel) {
+            presenter.navigateToItemDetail(product.id)
+        }
+        override fun onItemUpdate(productId: Int, count: Int) {
+            presenter.updateItemCount(productId, count)
+        }
+        override fun onItemCheckChanged(productId: Int, checked: Boolean) {
+            binding.cartBottom.onAllCheckClick = { }
+            presenter.updateItemCheck(productId, checked)
+            binding.cartBottom.onAllCheckClick = presenter::setUpProductsCheck
+        }
+    }
+
+    override fun setPage(page: List<CartProductUIModel>, pageUIModel: PageUIModel) {
+        adapter.submitList(page, pageUIModel)
+    }
+
+    override fun navigateToItemDetail(product: ProductUIModel) {
+        startActivity(DetailedProductActivity.getIntent(this, product))
     }
 
     companion object {

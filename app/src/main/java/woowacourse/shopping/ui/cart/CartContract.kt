@@ -8,22 +8,22 @@ import woowacourse.shopping.utils.NonNullLiveData
 interface CartContract {
 
     interface View {
-        fun setCarts(products: List<CartProductUIModel>, pageUIModel: PageUIModel)
+        fun setPage(page: List<CartProductUIModel>, pageUIModel: PageUIModel)
         fun navigateToItemDetail(product: ProductUIModel)
-        fun setAllItemCheck(all: Boolean)
     }
 
     interface Presenter {
         val totalPrice: NonNullLiveData<Int>
         val checkedCount: NonNullLiveData<Int>
-        fun setUpCarts()
+        val allCheck: NonNullLiveData<Boolean>
+        fun setUpView()
+        fun setUpProductsCheck(checked: Boolean)
         fun moveToPageNext()
         fun moveToPagePrev()
-        fun removeProduct(productId: Int)
-        fun navigateToItemDetail(productId: Int)
-        fun getPageIndex(): Int
         fun updateItemCount(productId: Int, count: Int)
         fun updateItemCheck(productId: Int, checked: Boolean)
-        fun setProductsCheck(checked: Boolean)
+        fun removeItem(productId: Int)
+        fun getPageIndex(): Int
+        fun navigateToItemDetail(productId: Int)
     }
 }
