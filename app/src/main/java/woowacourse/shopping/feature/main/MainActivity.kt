@@ -89,10 +89,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         presenter.loadRecent()
     }
 
-    override fun onRestart() {
-        super.onRestart()
-    }
-
     private fun initAdapters() {
         mainProductAdapter = MainProductAdapter(productClickListener)
         recentAdapter = RecentAdapter(recentProductClickListener)

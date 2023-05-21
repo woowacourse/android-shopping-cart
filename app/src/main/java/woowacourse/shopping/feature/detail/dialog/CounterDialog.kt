@@ -82,6 +82,12 @@ class CounterDialog : DialogFragment(), CounterDialogContract.View {
     }
 
     companion object {
+        private const val PRODUCT_KEY = "product_key"
+        private const val COUNT_RESTORE_KEY = "count_restore_key"
+
+        const val CHANGE_COUNTER_APPLY_KEY = "change_counter_apply_key"
+        const val COUNT_KEY = "change_count_key"
+
         @JvmStatic
         fun newInstance(product: ProductUiModel): CounterDialog {
             return CounterDialog().apply {
@@ -90,11 +96,5 @@ class CounterDialog : DialogFragment(), CounterDialogContract.View {
                 )
             }
         }
-
-        private const val PRODUCT_KEY = "product_key"
-        private const val COUNT_RESTORE_KEY = "count_restore_key"
-
-        const val CHANGE_COUNTER_APPLY_KEY = "change_counter_apply_key"
-        const val COUNT_KEY = "change_count_key"
     }
 }
