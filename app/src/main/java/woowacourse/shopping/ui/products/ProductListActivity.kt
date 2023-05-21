@@ -105,11 +105,15 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun moveToProductDetailActivity(productId: Long) {
-        ProductDetailActivity.startActivity(this, productId)
+        startActivity(
+            ProductDetailActivity.getIntent(this, productId),
+        )
     }
 
     private fun moveToCartActivity() {
-        CartActivity.startActivity(this)
+        startActivity(
+            CartActivity.getIntent(this),
+        )
     }
 
     companion object {

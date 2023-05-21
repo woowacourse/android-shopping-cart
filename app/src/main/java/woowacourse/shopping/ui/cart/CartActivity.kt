@@ -130,10 +130,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     companion object {
-        fun startActivity(context: Context) {
-            Intent(context, CartActivity::class.java).also {
-                context.startActivity(it)
-            }
+        fun getIntent(context: Context): Intent {
+            return Intent(context, CartActivity::class.java)
         }
     }
 }

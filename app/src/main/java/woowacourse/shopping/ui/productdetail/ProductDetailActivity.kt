@@ -76,6 +76,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun showLastlyViewedProduct(product: RecentlyViewedProductUIState) {
         binding.recentProduct = product
+        binding.layoutLastlyViewed.setOnClickListener {
+            moveToProductDetailActivity(product.id)
+        }
     }
 
     override fun hideLastlyViewedProduct() {
@@ -86,19 +89,28 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         Toast.makeText(this, getString(R.string.error_not_found), Toast.LENGTH_SHORT).show()
     }
 
+    private fun moveToProductDetailActivity(productId: Long) {
+        startActivity(
+            ProductDetailActivity.getIntent(this, productId).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            },
+        )
+    }
+
     private fun moveToCartActivity() {
         finish()
-        CartActivity.startActivity(this)
+        startActivity(
+            CartActivity.getIntent(this),
+        )
     }
 
     companion object {
         private const val PRODUCT_ID = "PRODUCT_ID"
 
-        fun startActivity(context: Context, productId: Long) {
-            val intent = Intent(context, ProductDetailActivity::class.java).apply {
+        fun getIntent(context: Context, productId: Long): Intent {
+            return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, productId)
             }
-            context.startActivity(intent)
         }
     }
 }
