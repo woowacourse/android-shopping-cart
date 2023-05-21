@@ -8,13 +8,13 @@ import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
 import woowacourse.shopping.common.model.mapper.RecentProductMapper.toViewModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
-import woowacourse.shopping.data.repository.ShoppingRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
-    private val shoppingRepository: ShoppingRepository,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductRepository: RecentProductRepository,
     private val recentProductSize: Int,
@@ -23,7 +23,7 @@ class ShoppingPresenter(
     private var productLoadedCount: Int = 0
 
     init {
-        shoppingRepository.initMockData()
+        productRepository.initMockData()
         productLoadedCount += productLoadSize
     }
 
@@ -47,7 +47,7 @@ class ShoppingPresenter(
     }
 
     override fun loadMoreProduct() {
-        val loadedProducts = shoppingRepository.selectByRange(productLoadedCount, productLoadSize)
+        val loadedProducts = productRepository.selectByRange(productLoadedCount, productLoadSize)
         productLoadedCount += productLoadSize
         view.addProducts(loadedProducts.products.map { it.toViewModel() })
     }
@@ -68,7 +68,7 @@ class ShoppingPresenter(
     }
 
     private fun updateProducts() {
-        val loadedProducts = shoppingRepository.selectByRange(0, productLoadSize)
+        val loadedProducts = productRepository.selectByRange(0, productLoadSize)
         view.updateProducts(loadedProducts.products.map { it.toViewModel() })
         view.updateCartProductsCount(cartRepository.selectAllCount())
     }

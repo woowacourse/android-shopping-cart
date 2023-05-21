@@ -11,12 +11,12 @@ import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.data.datasource.dao.CartDao
-import woowacourse.shopping.data.datasource.dao.RecentProductDao
-import woowacourse.shopping.data.datasource.dao.ShoppingDao
+import woowacourse.shopping.data.datasource.local.CartLocalDao
+import woowacourse.shopping.data.datasource.local.RecentProductLocalDao
+import woowacourse.shopping.data.datasource.local.ProductLocalDao
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
-import woowacourse.shopping.data.repository.ShoppingRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.shopping.recyclerview.ProductAdapter
@@ -126,9 +126,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initPresenter() {
         presenter = ShoppingPresenter(
             this,
-            shoppingRepository = ShoppingRepository(ShoppingDao(shoppingDBOpenHelper.writableDatabase)),
-            cartRepository = CartRepository(CartDao(shoppingDBOpenHelper.writableDatabase)),
-            recentProductRepository = RecentProductRepository(RecentProductDao(shoppingDBOpenHelper.writableDatabase)),
+            productRepository = ProductRepository(ProductLocalDao(shoppingDBOpenHelper.writableDatabase)),
+            cartRepository = CartRepository(CartLocalDao(shoppingDBOpenHelper.writableDatabase)),
+            recentProductRepository = RecentProductRepository(RecentProductLocalDao(shoppingDBOpenHelper.writableDatabase)),
             recentProductSize = 10,
             productLoadSize = 20
         )

@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.datasource.dao
+package woowacourse.shopping.data.datasource.local
 
 import android.content.ContentValues
 import android.database.Cursor
@@ -12,7 +12,7 @@ import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.domain.URL
 
-class RecentProductDao(private val db: SQLiteDatabase) : RecentProductDataSource {
+class RecentProductLocalDao(private val db: SQLiteDatabase) : RecentProductDataSource {
     override fun insertRecentProduct(recentProduct: RecentProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
         productRow[SqlProduct.PICTURE] = recentProduct.product.picture.value

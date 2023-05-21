@@ -11,7 +11,7 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
-import woowacourse.shopping.data.repository.ShoppingRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
@@ -23,14 +23,14 @@ class ShoppingPresenterTest {
     @Test
     fun 프레젠터가_생성되면_뷰의_상품_목록과_최근_상품_목록을_갱신한다() {
         // given
-        val shoppingRepository: ShoppingRepository = mockk()
+        val productRepository: ProductRepository = mockk()
 
-        initAnswers(shoppingRepository)
+        initAnswers(productRepository)
 
         // when
         ShoppingPresenter(
             view = mockk(),
-            shoppingRepository = shoppingRepository,
+            productRepository = productRepository,
             cartRepository = mockk(),
             recentProductRepository = mockk(),
             recentProductSize = 0,
@@ -39,7 +39,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            shoppingRepository.initMockData()
+            productRepository.initMockData()
         }
     }
 
@@ -47,7 +47,7 @@ class ShoppingPresenterTest {
     fun 상품을_선택하면_최근_본_상품에_추가하고_상품_상세정보를_보여준다() {
         // given
         val view: ShoppingContract.View = mockk()
-        val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
+        val productRepository: ProductRepository = mockk(relaxed = true)
         val cartProductModel = CartProductModel(0, ProductModel("", "", 0))
         val recentProductRepository: RecentProductRepository = mockk()
         val recentProducts = RecentProducts(
@@ -58,7 +58,7 @@ class ShoppingPresenterTest {
             )
         )
 
-        initAnswers(shoppingRepository)
+        initAnswers(productRepository)
 
         every {
             recentProductRepository.selectAll()
@@ -71,7 +71,7 @@ class ShoppingPresenterTest {
 
         val presenter = ShoppingPresenter(
             view = view,
-            shoppingRepository = shoppingRepository,
+            productRepository = productRepository,
             cartRepository = mockk(),
             recentProductRepository = recentProductRepository,
             recentProductSize = 0,
@@ -94,15 +94,15 @@ class ShoppingPresenterTest {
     fun 카트를_열면_카트_뷰를_보여준다() {
         // given
         val view: ShoppingContract.View = mockk()
-        val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
+        val productRepository: ProductRepository = mockk(relaxed = true)
 
-        initAnswers(shoppingRepository)
+        initAnswers(productRepository)
 
         every { view.showCart() } just runs
 
         val presenter = ShoppingPresenter(
             view = view,
-            shoppingRepository = shoppingRepository,
+            productRepository = productRepository,
             cartRepository = mockk(),
             recentProductRepository = mockk(),
             recentProductSize = 0,
@@ -120,13 +120,13 @@ class ShoppingPresenterTest {
     fun 새로운_상품을_불러오고_갱신한다() {
         // given
         val view: ShoppingContract.View = mockk()
-        val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
+        val productRepository: ProductRepository = mockk(relaxed = true)
         val shop = Shop(emptyList())
 
-        initAnswers(shoppingRepository)
+        initAnswers(productRepository)
 
         every {
-            shoppingRepository.selectByRange(any(), any())
+            productRepository.selectByRange(any(), any())
         } returns shop
 
         every {
@@ -135,7 +135,7 @@ class ShoppingPresenterTest {
 
         val presenter = ShoppingPresenter(
             view = view,
-            shoppingRepository = shoppingRepository,
+            productRepository = productRepository,
             cartRepository = mockk(),
             recentProductRepository = mockk(),
             recentProductSize = 0,
@@ -147,7 +147,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            shoppingRepository.selectByRange(0, 0)
+            productRepository.selectByRange(0, 0)
             view.addProducts(Shop(emptyList()).products.map { it.toViewModel() })
         }
     }
@@ -156,13 +156,13 @@ class ShoppingPresenterTest {
     fun 상품의_장바구니_수량을_빼준_후_저장하고_뷰에서_갱신한다() {
         // given
         val view: ShoppingContract.View = mockk()
-        val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
+        val productRepository: ProductRepository = mockk(relaxed = true)
         val cartRepository: CartRepository = mockk()
         val cartProduct = CartProduct(
             2, Product()
         )
 
-        initAnswers(shoppingRepository)
+        initAnswers(productRepository)
 
         every {
             cartRepository.minusCartProduct(any())
@@ -171,7 +171,7 @@ class ShoppingPresenterTest {
         } just runs
 
         every {
-            shoppingRepository.selectByRange(any(), any())
+            productRepository.selectByRange(any(), any())
         } returns mockk(relaxed = true)
 
         every {
@@ -180,7 +180,7 @@ class ShoppingPresenterTest {
 
         val presenter = ShoppingPresenter(
             view = view,
-            shoppingRepository = shoppingRepository,
+            productRepository = productRepository,
             cartRepository = cartRepository,
             recentProductRepository = mockk(),
             recentProductSize = 0,
@@ -202,13 +202,13 @@ class ShoppingPresenterTest {
     fun 상품의_장바구니_수량을_더해준_후_저장하고_뷰에서_갱신한다() {
         // given
         val view: ShoppingContract.View = mockk()
-        val shoppingRepository: ShoppingRepository = mockk(relaxed = true)
+        val productRepository: ProductRepository = mockk(relaxed = true)
         val cartRepository: CartRepository = mockk()
         val cartProduct = CartProduct(
             2, Product()
         )
 
-        initAnswers(shoppingRepository)
+        initAnswers(productRepository)
 
         every {
             cartRepository.plusCartProduct(any())
@@ -217,7 +217,7 @@ class ShoppingPresenterTest {
         } just runs
 
         every {
-            shoppingRepository.selectByRange(any(), any())
+            productRepository.selectByRange(any(), any())
         } returns mockk(relaxed = true)
 
         every {
@@ -226,7 +226,7 @@ class ShoppingPresenterTest {
 
         val presenter = ShoppingPresenter(
             view = view,
-            shoppingRepository = shoppingRepository,
+            productRepository = productRepository,
             cartRepository = cartRepository,
             recentProductRepository = mockk(),
             recentProductSize = 0,
@@ -244,9 +244,9 @@ class ShoppingPresenterTest {
         }
     }
 
-    private fun initAnswers(shoppingRepository: ShoppingRepository) {
+    private fun initAnswers(productRepository: ProductRepository) {
         every {
-            shoppingRepository.initMockData()
+            productRepository.initMockData()
         } just runs
     }
 

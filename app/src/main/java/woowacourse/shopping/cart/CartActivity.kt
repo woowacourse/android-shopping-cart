@@ -9,7 +9,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.common.model.CheckableCartProductModel
 import woowacourse.shopping.common.model.PageNavigatorModel
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.data.datasource.dao.CartDao
+import woowacourse.shopping.data.datasource.local.CartLocalDao
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 
@@ -104,7 +104,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initPresenter() {
         presenter = CartPresenter(
             this,
-            cartRepository = CartRepository(CartDao(shoppingDBOpenHelper.writableDatabase)),
+            cartRepository = CartRepository(CartLocalDao(shoppingDBOpenHelper.writableDatabase)),
             countPerPage = SIZE_PER_PAGE
         )
     }
