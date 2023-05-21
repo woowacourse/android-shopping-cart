@@ -163,8 +163,6 @@ class BasketTest {
         }
         val basket = Basket(basketProducts)
 
-        println(basket.products.lastIndex)
-
         // when
         val expected = Basket(
             listOf(
@@ -174,6 +172,112 @@ class BasketTest {
             )
         )
         val actual = basket.getSubBasketByStartId(3, 5)
+
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `장바구니에서 basketProduct를 제거한다`() {
+        // given
+        val basketProducts = List(6) {
+            BasketProduct(it, Count(3), Product(it, "새상품", Price(500), "url"))
+        }
+        val basket = Basket(basketProducts)
+
+        // when
+        val deleteItem = BasketProduct(3, Count(3), Product(3, "새상품", Price(500), "url"))
+
+        val expected = Basket(
+            listOf(
+                BasketProduct(0, Count(3), Product(0, "새상품", Price(500), "url")),
+                BasketProduct(1, Count(3), Product(1, "새상품", Price(500), "url")),
+                BasketProduct(2, Count(3), Product(2, "새상품", Price(500), "url")),
+                BasketProduct(4, Count(3), Product(4, "새상품", Price(500), "url")),
+                BasketProduct(5, Count(3), Product(5, "새상품", Price(500), "url"))
+            )
+        )
+        val actual = basket.delete(deleteItem)
+
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `장바구니의 아이템중 productId를 통해 count를 가져온다`() {
+        // given
+        val basketProducts = List(6) {
+            BasketProduct(it, Count(it), Product(it, "새상품", Price(500), "url"))
+        }
+        val basket = Basket(basketProducts)
+
+        // when
+        val productId = 3
+        val expectedCount = 3
+
+        val actualCount = basket.getCountByProductId(productId)
+
+        // then
+        assertThat(actualCount).isEqualTo(expectedCount)
+    }
+
+    @Test
+    fun `장바구니에서 기존 checked 상태가 false 인것을 ture로 업데이트 시킨다`() {
+        // given
+        val basketProducts = List(6) {
+            BasketProduct(it, Count(3), Product(it, "새상품", Price(500), "url"))
+        }
+        val basket = Basket(basketProducts)
+
+        // when
+        val updateCheckItem = BasketProduct(3, Count(3), Product(3, "새상품", Price(500), "url"), true)
+
+        val expected = Basket(
+            listOf(
+                BasketProduct(0, Count(3), Product(0, "새상품", Price(500), "url")),
+                BasketProduct(1, Count(3), Product(1, "새상품", Price(500), "url")),
+                BasketProduct(2, Count(3), Product(2, "새상품", Price(500), "url")),
+                BasketProduct(3, Count(3), Product(3, "새상품", Price(500), "url"), true),
+                BasketProduct(4, Count(3), Product(4, "새상품", Price(500), "url")),
+                BasketProduct(5, Count(3), Product(5, "새상품", Price(500), "url"))
+            )
+        )
+        basket.updateCheck(updateCheckItem)
+
+        // then
+        assertThat(basket).isEqualTo(expected)
+    }
+
+    @Test
+    fun `장바구니에서 체크된 항목의 개수를 가져온다`() {
+        // given
+        val basketProducts = List(6) {
+            val checked = it in listOf(1, 2, 5)
+            BasketProduct(it, Count(3), Product(it, "새상품", Price(500), "url"), checked)
+        }
+        val basket = Basket(basketProducts)
+
+        // when
+        val expected = 3
+        val actual = basket.getCheckedProductsCount()
+
+        // then
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun `장바구니의 모든항목을 true로 일치시킨다`() {
+        // given
+        val basketProducts = List(6) {
+            val checked = it in listOf(1, 2, 5)
+            BasketProduct(it, Count(3), Product(it, "새상품", Price(500), "url"), checked)
+        }
+        val basket = Basket(basketProducts)
+
+        // when
+        basket.toggleAllCheck(true)
+        val actual = basket.products.filter { !it.checked }
+        val expected = emptyList<BasketProduct>()
 
         // then
         assertThat(actual).isEqualTo(expected)
