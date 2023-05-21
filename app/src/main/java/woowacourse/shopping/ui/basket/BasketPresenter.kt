@@ -44,16 +44,16 @@ class BasketPresenter(
         _pageCheckSize.value = basket.getCheckedSize(currentPage)
     }
 
-    fun loadPage(page: Int) {
-        currentPage = currentPage.copy(page)
-        basket = basket.update(basketRepository.getProductInBasketByPage(currentPage))
-
-        view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
-        view.updateNavigatorEnabled(currentPage.hasPrevious(), basket.canLoadNextPage(currentPage))
-        view.updatePageNumber(currentPage.toUi())
-
-        _pageCheckSize.value = basket.getCheckedSize(currentPage)
-    }
+//    fun loadPage(page: Int) {
+//        currentPage = currentPage.copy(page)
+//        basket = basket.update(basketRepository.getProductInBasketByPage(currentPage))
+//
+//        view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
+//        view.updateNavigatorEnabled(currentPage.hasPrevious(), basket.canLoadNextPage(currentPage))
+//        view.updatePageNumber(currentPage.toUi())
+//
+//        _pageCheckSize.value = basket.getCheckedSize(currentPage)
+//    }
 
     override fun removeFromCart(product: UiProduct) {
         basketRepository.deleteByProductId(product.id)

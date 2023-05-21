@@ -72,7 +72,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         }
         cursor.close()
 
-        return DataBasket(basketProducts = basketProducts.safeSubList(page.start, page.end))
+        return DataBasket(basketProducts = basketProducts.safeSubList(page.start, page.end + 1))
     }
 
     override fun insert(product: Product, count: Int) {

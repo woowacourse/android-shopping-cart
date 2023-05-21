@@ -30,8 +30,9 @@ data class Basket(
     }
 
     /* Basket */
-    fun canLoadNextPage(page: PageNumber): Boolean =
-        basketProducts.size > page.sizePerPage
+    fun canLoadNextPage(page: PageNumber): Boolean {
+        return basketProducts.size > page.sizePerPage
+    }
 
     fun takeItemsUpToPage(page: PageNumber): List<BasketProduct> =
         basketProducts.safeSubList(0, page.sizePerPage)

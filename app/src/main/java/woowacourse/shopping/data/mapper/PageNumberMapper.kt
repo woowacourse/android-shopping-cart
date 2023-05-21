@@ -5,5 +5,5 @@ import woowacourse.shopping.domain.DomainPageNumber
 
 fun DataPageNumber.toDomain(): DomainPageNumber = DomainPageNumber(value = value)
 
-fun DomainPageNumber.toData(): DataPageNumber =
-    DataPageNumber(value = value, sizePerPage = sizePerPage)
+fun DomainPageNumber.toData(extraSize: Int = 0): DataPageNumber =
+    DataPageNumber(value = value, sizePerPage = sizePerPage + extraSize)
