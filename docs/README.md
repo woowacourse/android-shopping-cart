@@ -119,3 +119,5 @@
         - [x] decreaseAmount()
         - [x] increaseAmount()
         - [x] changeChecked(isChecked)
+
+- [x] Products HTTP Client

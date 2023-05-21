@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.database.dao
 
+import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.table.SqlCart
@@ -47,4 +48,13 @@ class ProductDao(private val db: SQLiteDatabase) {
         cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.TITLE)),
         cursor.getInt(cursor.getColumnIndexOrThrow(SqlProduct.PRICE))
     )
+
+    fun insertProduct(product: Product) {
+        val row = ContentValues()
+        row.put(SqlProduct.PICTURE, product.picture.value)
+        row.put(SqlProduct.TITLE, product.title)
+        row.put(SqlProduct.PRICE, product.price)
+
+        db.insert(SqlProduct.name, null, row)
+    }
 }

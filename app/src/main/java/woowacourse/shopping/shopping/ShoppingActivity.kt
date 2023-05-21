@@ -29,6 +29,7 @@ import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.server.ProductRemoteDataSource
 import woowacourse.shopping.shopping.recyclerview.LoadMoreAdapter
 import woowacourse.shopping.shopping.recyclerview.ProductAdapter
 import woowacourse.shopping.shopping.recyclerview.RecentProductAdapter
@@ -181,9 +182,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initPresenter() {
         val db = ShoppingDBOpenHelper(this).writableDatabase
+        val productRepository = ProductRepositoryImpl(
+            productDao = ProductDao(db),
+            productRemoteDataSource = ProductRemoteDataSource()
+        )
         presenter = ShoppingPresenter(
             this,
-            productRepository = ProductRepositoryImpl(ProductDao(db)),
+            productRepository = productRepository,
             recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(db)),
             cartRepository = CartRepositoryImpl(CartDao(db)),
             recentProductSize = 10,
