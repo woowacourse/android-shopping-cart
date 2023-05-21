@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import woowacourse.shopping.databinding.LayoutCountBadgeBinding
 
 class CountBadge(
@@ -17,5 +18,6 @@ class CountBadge(
         get() = binding.tvCartCount.toString().toInt()
         set(value) {
             binding.tvCartCount.text = value.toString()
+            binding.root.isVisible = value > 0
         }
 }
