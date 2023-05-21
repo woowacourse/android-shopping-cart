@@ -128,7 +128,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            view.navigateToProductDetailView(
+            view.shoppingNavigator.navigateToProductDetailView(
                 product = Product(name = "아메리카노").toProductUiModel(),
                 latestViewedProduct = product
             )

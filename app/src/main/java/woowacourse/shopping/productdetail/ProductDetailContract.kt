@@ -6,15 +6,13 @@ interface ProductDetailContract {
 
     interface View {
 
+        val productDetailNavigator: ProductDetailNavigator
+
         fun setUpProductDetailView(product: ProductUiModel)
 
         fun setUpLatestViewedProductView(product: ProductUiModel?)
 
         fun setUpDialogTotalPriceView(totalPrice: Int)
-
-        fun navigateToCartView()
-
-        fun navigateToProductDetailView(product: ProductUiModel)
     }
 
     interface Presenter {

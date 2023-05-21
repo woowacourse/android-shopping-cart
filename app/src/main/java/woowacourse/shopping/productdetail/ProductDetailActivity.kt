@@ -15,7 +15,6 @@ import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.model.ProductUiModel
-import woowacourse.shopping.shoppingcart.CartActivity
 import woowacourse.shopping.util.handleMissingSerializableData
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
@@ -62,6 +61,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override val productDetailNavigator: ProductDetailNavigator by lazy {
+        ProductDetailNavigatorImpl(this)
     }
 
     override fun setUpProductDetailView(
@@ -114,25 +117,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun setUpDialogTotalPriceView(totalPrice: Int) {
         dialog.setTextTotalPrice(totalPrice)
-    }
-
-    override fun navigateToCartView() {
-        startActivity(
-            CartActivity.getIntent(this)
-        )
-        finish()
-    }
-
-    override fun navigateToProductDetailView(product: ProductUiModel) {
-        val intent = getIntent(
-            context = this,
-            product = product,
-            latestViewedProduct = null
-        ).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-
-        startActivity(intent)
     }
 
     companion object {

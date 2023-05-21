@@ -68,7 +68,7 @@ class ProductDetailPresenterTest {
         // then
         val expected = Product().toProductUiModel()
         verify { shoppingCache.insertToShoppingCart(expected.id) }
-        verify { view.navigateToCartView() }
+        verify { view.productDetailNavigator.navigateToCartView() }
     }
 
     @Test

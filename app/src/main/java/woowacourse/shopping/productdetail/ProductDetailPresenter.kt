@@ -28,12 +28,12 @@ class ProductDetailPresenter(
             id = cartProduct.product.id,
             count = cartProduct.count.value
         )
-        view.navigateToCartView()
+        view.productDetailNavigator.navigateToCartView()
     }
 
     override fun loadLatestViewedProduct() {
         latestViewedProduct?.let {
-            view.navigateToProductDetailView(it)
+            view.productDetailNavigator.navigateToProductDetailView(it)
         }
     }
 
