@@ -61,7 +61,7 @@ class RecentProductDao(context: Context) {
         }
 
         cursor.close()
-        return recentProducts.sortedBy { it.viewedDateTime }.reversed()
+        return recentProducts.sortedBy { it.viewedDateTime }.reversed().subList(0, SHOW_COUNT)
     }
 
     fun addColumn(productId: Int, viewedDateTime: LocalDateTime) {
@@ -113,5 +113,9 @@ class RecentProductDao(context: Context) {
                 DROP TABLE IF EXISTS ${RecentProductContract.TABLE_NAME};
             """.trimIndent()
         )
+    }
+
+    companion object {
+        private const val SHOW_COUNT = 10
     }
 }
