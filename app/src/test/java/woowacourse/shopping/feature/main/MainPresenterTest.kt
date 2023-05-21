@@ -7,7 +7,12 @@ import com.example.domain.model.RecentProduct
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.mapper.toDomain
@@ -37,7 +42,7 @@ internal class MainPresenterTest {
         // given
         val successSlot = slot<(List<Product>) -> Unit>()
         every {
-            productRepository.getFirstProducts(onSuccess = capture(successSlot), any())
+            productRepository.fetchFirstProducts(onSuccess = capture(successSlot), any())
         } answers {
             successSlot.captured.invoke(mockProducts.take(20)) // 기억한 람다를 실행시킨다. 이때 데이터 20개를 넘겨줌
         }
@@ -71,7 +76,7 @@ internal class MainPresenterTest {
         // given
         val successSlot = slot<(List<Product>) -> Unit>()
         every {
-            productRepository.getFirstProducts(onSuccess = capture(successSlot), any())
+            productRepository.fetchFirstProducts(onSuccess = capture(successSlot), any())
         } answers {
             successSlot.captured.invoke(mockProducts.take(20)) // 기억한 람다를 실행시킨다. 이때 데이터 20개를 넘겨줌
         }
@@ -81,7 +86,7 @@ internal class MainPresenterTest {
         val lastProductId = 20L
         val nextSuccessSlot = slot<(List<Product>) -> Unit>()
         every {
-            productRepository.getNextProducts(
+            productRepository.fetchNextProducts(
                 lastProductId,
                 capture(nextSuccessSlot),
                 any()

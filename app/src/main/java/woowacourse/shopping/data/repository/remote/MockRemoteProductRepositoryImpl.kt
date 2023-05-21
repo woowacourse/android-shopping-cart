@@ -10,7 +10,7 @@ class MockRemoteProductRepositoryImpl(
     private val service: MockProductRemoteService,
     override val cache: ProductCache = ProductLocalCache
 ) : ProductRepository {
-    override fun getFirstProducts(
+    override fun fetchFirstProducts(
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit
     ) {
@@ -30,7 +30,7 @@ class MockRemoteProductRepositoryImpl(
         }
     }
 
-    override fun getNextProducts(
+    override fun fetchNextProducts(
         lastProductId: Long,
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit

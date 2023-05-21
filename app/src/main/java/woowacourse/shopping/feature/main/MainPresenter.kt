@@ -21,7 +21,7 @@ class MainPresenter(
     private val recentProducts: MutableList<RecentProductUiModel> = mutableListOf()
 
     override fun loadProducts() {
-        productRepository.getFirstProducts(
+        productRepository.fetchFirstProducts(
             onSuccess = {
                 val productUiModels = makeProductUiModels(it)
                 products.clear()
@@ -53,7 +53,7 @@ class MainPresenter(
 
     override fun loadMoreProduct() {
         val lastProductId: Long = products.lastOrNull()?.id ?: 0
-        productRepository.getNextProducts(
+        productRepository.fetchNextProducts(
             lastProductId,
             onSuccess = {
                 val nextProductUiModels = makeProductUiModels(it)

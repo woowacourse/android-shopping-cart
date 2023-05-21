@@ -28,7 +28,7 @@ internal class MockRemoteProductRepositoryTest {
         var actual: List<Product> = listOf()
 
         // when
-        mockRemoteProductRepository.getFirstProducts(
+        mockRemoteProductRepository.fetchFirstProducts(
             onSuccess = {
                 actual = it
             },
@@ -47,7 +47,7 @@ internal class MockRemoteProductRepositoryTest {
         var actual: List<Product> = listOf()
 
         // when
-        mockRemoteProductRepository.getNextProducts(
+        mockRemoteProductRepository.fetchNextProducts(
             20L,
             onSuccess = {
                 actual = it
@@ -67,7 +67,7 @@ internal class MockRemoteProductRepositoryTest {
         var actual: List<Product> = listOf()
 
         // when
-        mockRemoteProductRepository.getNextProducts(
+        mockRemoteProductRepository.fetchNextProducts(
             40L,
             onSuccess = {
                 actual = it
