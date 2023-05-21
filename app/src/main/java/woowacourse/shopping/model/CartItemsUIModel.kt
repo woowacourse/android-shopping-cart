@@ -8,6 +8,6 @@ class CartItemsUIModel(products: List<CartProductUIModel>) {
         CartItemsUIModel(data)
 
     fun caculatePrice(): Int {
-        return _products.fold(0) { total, product -> total + (product.count.get() * product.product.price) }
+        return _products.fold(0) { total, product -> total + (product.count * product.product.price) }
     }
 }

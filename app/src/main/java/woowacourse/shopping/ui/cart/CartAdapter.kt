@@ -2,17 +2,19 @@ package woowacourse.shopping.ui.cart
 
 import android.util.Log
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.ui.cart.contract.CartContract
 import woowacourse.shopping.ui.cart.viewHolder.CartViewHolder
+import woowacourse.shopping.ui.cart.viewHolder.OnCartClickListener
 
 class CartAdapter(
     cartItems: List<CartProductUIModel>,
-    private val onItemClick: (ProductUIModel) -> Unit,
-    private val onItemRemove: (Long) -> Unit,
-    private val onCountChanged: (Long, Int) -> Unit,
-    private val onCheckChanged: (Long, Boolean) -> Unit,
+    private val lifecycleOwner: LifecycleOwner,
+    private val presenter: CartContract.Presenter,
+    private val onCartClickListener: OnCartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
 
     private var cartItems: MutableList<CartProductUIModel> = cartItems.toMutableList()
@@ -20,10 +22,9 @@ class CartAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return CartViewHolder.from(
             parent,
-            onItemClick,
-            onItemRemove,
-            onCountChanged,
-            onCheckChanged,
+            lifecycleOwner,
+            presenter,
+            onCartClickListener
         )
     }
 

@@ -20,7 +20,7 @@ interface CartContract {
         fun pageUp()
         fun pageDown()
         fun removeItem(id: Long)
-        fun navigateToItemDetail(product: ProductUIModel)
+        fun navigateToItemDetail(id: Long)
 
         fun saveOffsetState(outState: MutableMap<String, Int>)
 
@@ -32,5 +32,7 @@ interface CartContract {
         fun onAllCheckboxClick(isChecked: Boolean)
         fun setAllCheckbox()
         fun setAllOrderCount()
+        fun increaseCount(id: Long)
+        fun decreaseCount(id: Long)
     }
 }

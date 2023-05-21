@@ -16,9 +16,10 @@ import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.contract.CartContract
 import woowacourse.shopping.ui.cart.contract.presenter.CartPresenter
+import woowacourse.shopping.ui.cart.viewHolder.OnCartClickListener
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
-class CartActivity : AppCompatActivity(), CartContract.View {
+class CartActivity : AppCompatActivity(), CartContract.View, OnCartClickListener {
 
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
@@ -60,10 +61,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         val cartAdapter = CartAdapter(
             products.map { it },
-            presenter::navigateToItemDetail,
-            presenter::removeItem,
-            presenter::onChangeCartCount,
-            presenter::onCheckChanged,
+            this,
+            presenter,
+            this
         )
 
         binding.cartRecyclerview.adapter = ConcatAdapter(
@@ -104,6 +104,26 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         val state = mutableMapOf<String, Int>()
         presenter.saveOffsetState(state)
         state[KEY_OFFSET]?.let { outState.putInt(KEY_OFFSET, it) }
+    }
+
+    override fun onClick(id: Long) {
+        presenter.navigateToItemDetail(id)
+    }
+
+    override fun onRemove(id: Long) {
+        presenter.removeItem(id)
+    }
+
+    override fun onCheckChanged(id: Long, isChecked: Boolean) {
+        presenter.onCheckChanged(id, isChecked)
+    }
+
+    override fun increaseCount(id: Long) {
+        presenter.increaseCount(id)
+    }
+
+    override fun decreaseCount(id: Long) {
+        presenter.decreaseCount(id)
     }
 
     companion object {

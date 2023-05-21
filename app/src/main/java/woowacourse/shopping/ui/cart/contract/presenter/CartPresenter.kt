@@ -1,10 +1,11 @@
 package woowacourse.shopping.ui.cart.contract.presenter
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.CartItemsUIModel
 import woowacourse.shopping.model.CartUIModel
-import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.CartActivity.Companion.KEY_OFFSET
 import woowacourse.shopping.ui.cart.contract.CartContract
 
@@ -31,6 +32,8 @@ class CartPresenter(
     private var cartOffset = Offset(offset, repository)
     private var cartItems: CartItemsUIModel =
         CartItemsUIModel(repository.getCheckCart().map { it.toUIModel() })
+    private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
+    val countLiveDatas: Map<Long, LiveData<Int>> = _countLiveDatas
 
     init {
         setAllOrderCount()
@@ -38,9 +41,13 @@ class CartPresenter(
     }
 
     override fun setUpCarts() {
+        val datas = repository.getSubList(cartOffset.getOffset(), STEP)
+        datas.forEach {
+            _countLiveDatas[it.product.id] = MutableLiveData(getCount(it.product.id))
+        }
         setCartItemsPrice()
         view.setCarts(
-            repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() },
+            datas.map { it.toUIModel() },
             CartUIModel(
                 cartOffset.getOffset() + STEP < repository.getAll().size,
                 0 < cartOffset.getOffset(),
@@ -68,8 +75,9 @@ class CartPresenter(
         updateCartItems()
     }
 
-    override fun navigateToItemDetail(product: ProductUIModel) {
-        view.navigateToItemDetail(product)
+    override fun navigateToItemDetail(id: Long) {
+        val product = repository.getFindById(id)?.product
+        product?.let { view.navigateToItemDetail(it.toUIModel()) }
     }
 
     override fun saveOffsetState(outState: MutableMap<String, Int>) {
@@ -115,10 +123,26 @@ class CartPresenter(
         view.setAllOrderCount(cartItems.products.size)
     }
 
+    override fun increaseCount(id: Long) {
+        _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.plus(1)
+        _countLiveDatas[id]?.value?.let { repository.updateCount(id, it) }
+        updateCartItems()
+    }
+
+    override fun decreaseCount(id: Long) {
+        _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.minus(1)
+        _countLiveDatas[id]?.value?.let { repository.updateCount(id, it) }
+        updateCartItems()
+    }
+
     private fun updateCartItems() {
         cartItems = cartItems.updateCartItems(repository.getCheckCart().map { it.toUIModel() })
         setAllOrderCount()
         setCartItemsPrice()
+    }
+
+    private fun getCount(id: Long): Int {
+        return repository.getFindById(id)?.count ?: 0
     }
 
     companion object {
