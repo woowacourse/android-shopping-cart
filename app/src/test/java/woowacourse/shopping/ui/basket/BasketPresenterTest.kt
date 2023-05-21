@@ -48,7 +48,9 @@ internal class BasketPresenterTest {
         presenter = BasketPresenter(view, basketRepository)
 
         val currentPage = slot<PageNumber>()
-        every { basketRepository.getProductInBasketByPage(capture(currentPage)) } returns mockk(relaxed = true)
+        every { basketRepository.getProductInBasketByPage(capture(currentPage)) } returns mockk(
+            relaxed = true
+        )
 
         // when
         presenter.fetchBasket(page - 1)
@@ -67,7 +69,9 @@ internal class BasketPresenterTest {
         presenter = BasketPresenter(view, basketRepository)
 
         val currentPage = slot<PageNumber>()
-        every { basketRepository.getProductInBasketByPage(capture(currentPage)) } returns mockk(relaxed = true)
+        every { basketRepository.getProductInBasketByPage(capture(currentPage)) } returns mockk(
+            relaxed = true
+        )
 
         // when
         presenter.fetchBasket(page + 1)
@@ -86,7 +90,11 @@ internal class BasketPresenterTest {
             Product(id, "상품 $id", UiPrice(1000), "")
         }
         val product = Product(0, "상품 0", UiPrice(1000), "")
-        every { basketRepository.decreaseCartCount(product.toDomain()) } answers { products.remove(product) }
+        every { basketRepository.decreaseCartCount(product.toDomain()) } answers {
+            products.remove(
+                product
+            )
+        }
 
 
         // when

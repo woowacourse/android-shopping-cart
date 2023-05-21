@@ -7,7 +7,6 @@ import android.provider.BaseColumns
 import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.database.contract.RecentProductContract
 import woowacourse.shopping.data.model.DataPrice
-import woowacourse.shopping.data.model.BasketProduct
 import woowacourse.shopping.data.model.DataRecentProduct
 import woowacourse.shopping.data.model.Product
 

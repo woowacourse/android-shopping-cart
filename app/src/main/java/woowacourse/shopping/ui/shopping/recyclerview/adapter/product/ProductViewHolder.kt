@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.UiBasketProduct
-import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.util.listener.ProductClickListener
 import woowacourse.shopping.widget.ProductCounterView.OnClickListener
 
