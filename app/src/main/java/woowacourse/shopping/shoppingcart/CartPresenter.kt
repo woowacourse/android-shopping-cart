@@ -10,7 +10,7 @@ import woowacourse.shopping.util.toCartProductUiModel
 class CartPresenter(
     private val view: CartContract.View,
     private val shoppingCache: ShoppingCache,
-    private val cartPage: CartPageNavigator = CartPage(
+    private val cartPage: CartPageHandler = CartPage(
         cart = Cart()
     )
 ) : CartContract.Presenter {
@@ -100,7 +100,7 @@ class CartPresenter(
         cartPage.moveToPreviousPage(onPageChanged = ::updatePage)
     }
 
-    private fun updatePage(cartPage: CartPageNavigator) {
+    private fun updatePage(cartPage: CartPageHandler) {
         _showingProducts.value = cartPage.showingProducts.map { it.toCartProductUiModel() }
         _totalPrice.value = cartPage.totalPrice
         _currentPage.value = cartPage.currentPage.value

@@ -6,7 +6,7 @@ import model.Page
 
 class CartPage(
     override val cart: Cart,
-) : CartPageNavigator {
+) : CartPageHandler {
 
     override var currentPage = Page()
     override val endPage: Page
@@ -40,7 +40,7 @@ class CartPage(
     }
 
     override fun moveToNextPage(
-        onPageChanged: (cartPage: CartPageNavigator) -> Unit,
+        onPageChanged: (cartPage: CartPageHandler) -> Unit,
         onReachedEndPage: () -> Unit,
     ) {
         if (isReachedEndPage) {
@@ -52,7 +52,7 @@ class CartPage(
         }
     }
 
-    override fun moveToPreviousPage(onPageChanged: (cartPage: CartPageNavigator) -> Unit) {
+    override fun moveToPreviousPage(onPageChanged: (cartPage: CartPageHandler) -> Unit) {
         currentPage = currentPage.prev()
         onPageChanged(this)
     }

@@ -4,7 +4,7 @@ import model.Cart
 import model.CartProduct
 import model.Page
 
-interface CartPageNavigator {
+interface CartPageHandler {
 
     val cart: Cart
     var currentPage: Page
@@ -13,10 +13,10 @@ interface CartPageNavigator {
     val showingProducts: List<CartProduct>
 
     fun moveToNextPage(
-        onPageChanged: (cartPage: CartPageNavigator) -> Unit,
+        onPageChanged: (cartPage: CartPageHandler) -> Unit,
         onReachedEndPage: () -> Unit
     )
 
-    fun moveToPreviousPage(onPageChanged: (cartPage: CartPageNavigator) -> Unit)
+    fun moveToPreviousPage(onPageChanged: (cartPage: CartPageHandler) -> Unit)
     val totalPrice: Int
 }
