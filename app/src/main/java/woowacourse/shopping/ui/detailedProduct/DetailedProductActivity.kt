@@ -78,7 +78,11 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
     }
 
     override fun navigateToDetailedProduct(product: ProductUIModel) {
-        startActivity(getIntent(this, product))
+        startActivity(
+            getIntent(this, product).apply {
+                flags = FLAG_ACTIVITY_CLEAR_TOP
+            }
+        )
     }
 
     override fun navigateToAddToCartDialog(product: ProductUIModel) {
@@ -96,7 +100,6 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
         fun getIntent(context: Context, product: ProductUIModel): Intent {
             return Intent(context, DetailedProductActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
-                flags = FLAG_ACTIVITY_CLEAR_TOP
             }
         }
     }
