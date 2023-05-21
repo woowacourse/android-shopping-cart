@@ -28,92 +28,62 @@ class BasketPresenter(
         pageCheckSize == basket.takeItemsUpToPage(currentPage).size
     }
 
-    private val _totalPrice = MutableLiveData(0)
-    val totalPrice: LiveData<Int> get() = _totalPrice
-
     override fun fetchBasket(page: Int) {
         currentPage = currentPage.copy(page)
         basket = basket.update(basketRepository.getProductInBasketByPage(currentPage))
 
-        view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
         view.updateNavigatorEnabled(currentPage.hasPrevious(), basket.canLoadNextPage(currentPage))
         view.updatePageNumber(currentPage.toUi())
-
-        _totalPrice.value = basketRepository.getTotalPrice()
-        _totalCheckSize.value = basketRepository.getCheckedProductCount()
-        _pageCheckSize.value = basket.getCheckedSize(currentPage)
+        fetchView()
     }
 
-//    fun loadPage(page: Int) {
-//        currentPage = currentPage.copy(page)
-//        basket = basket.update(basketRepository.getProductInBasketByPage(currentPage))
-//
-//        view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
-//        view.updateNavigatorEnabled(currentPage.hasPrevious(), basket.canLoadNextPage(currentPage))
-//        view.updatePageNumber(currentPage.toUi())
-//
-//        _pageCheckSize.value = basket.getCheckedSize(currentPage)
-//    }
+    override fun changeProductCount(product: UiProduct, count: Int, increase: Boolean) {
+        updateBasket(changeCount(product, count, increase))
+    }
 
-    override fun removeFromCart(product: UiProduct) {
+    private fun changeCount(product: UiProduct, count: Int, isInc: Boolean): Basket = when (isInc) {
+        true -> basket.increaseProductCount(product.toDomain(), count)
+        false -> basket.decreaseProductCount(product.toDomain(), count)
+    }
+
+    override fun changeProductSelectState(product: UiProduct, isSelect: Boolean) {
+        updateBasket(changeSelectState(product, isSelect))
+    }
+
+    private fun changeSelectState(product: UiProduct, isSelect: Boolean): Basket =
+        if (isSelect) basket.select(product.toDomain()) else basket.unselect(product.toDomain())
+
+    override fun toggleAllCheckState() {
+        updateBasket(if (isAllChecked.value == true) basket.unselectAll() else basket.selectAll())
+    }
+
+    override fun removeProduct(product: UiProduct) {
         basketRepository.deleteByProductId(product.id)
         fetchBasket(currentPage.value)
     }
 
-    override fun changeProductCount(product: UiProduct, count: Int, increase: Boolean) {
-        if (increase) increaseProductCount(product, count) else decreaseProductCount(product, count)
-        basketRepository.update(basket.takeBasketUpToPage(currentPage))
-        _totalPrice.value = basketRepository.getTotalPrice()
-        _totalCheckSize.value = basketRepository.getCheckedProductCount()
-    }
-
-    private fun increaseProductCount(product: UiProduct, count: Int) {
-        basket = basket.increaseProductCount(product.toDomain(), count)
-    }
-
-    private fun decreaseProductCount(product: UiProduct, count: Int) {
-        basket = basket.decreaseProductCount(product.toDomain(), count)
-    }
-
-    override fun changeProductSelectState(product: UiProduct, checked: Boolean) {
-        if (checked) selectProduct(product) else unselectProduct(product)
-        basket
-        basketRepository.update(basket.takeBasketUpToPage(currentPage))
-        _totalPrice.value = basketRepository.getTotalPrice()
-        _totalCheckSize.value = basketRepository.getCheckedProductCount()
-        _pageCheckSize.value = basket.getCheckedSize(currentPage)
-        view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
-    }
-
-    private fun selectProduct(product: UiProduct) {
-        basket = basket.select(product.toDomain())
-    }
-
-    private fun unselectProduct(product: UiProduct) {
-        basket = basket.unselect(product.toDomain())
-    }
-
-    fun toggleAllCheckState() {
-        basket = if (isAllChecked.value == true) basket.unselectAll() else basket.selectAll()
-        basketRepository.update(basket.takeBasketUpToPage(currentPage))
-
-        _totalCheckSize.value = basketRepository.getCheckedProductCount()
-        _pageCheckSize.value = basket.getCheckedSize(currentPage)
-        view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
-        _totalPrice.value = basketRepository.getTotalPrice()
-    }
-
-    fun order() {
+    override fun order() {
         if (_totalCheckSize.value == 0) {
-            view.showOrderFailed()
-            return
+            view.showOrderFailed(); return
         }
         basketRepository.removeCheckedProducts()
         view.showOrderComplete(_totalCheckSize.value ?: 0)
+    }
+
+    override fun navigateToHome() {
         view.navigateToHome()
     }
 
-    override fun closeScreen() {
-        view.navigateToHome()
+    private fun updateBasket(newBasket: Basket) {
+        basket = basket.update(newBasket)
+        basketRepository.update(basket.takeBasketUpToPage(currentPage))
+        fetchView()
+    }
+
+    private fun fetchView() {
+        _totalCheckSize.value = basketRepository.getCheckedProductCount()
+        _pageCheckSize.value = basket.getCheckedSize(currentPage)
+        view.updateTotalPrice(basketRepository.getTotalPrice())
+        view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
     }
 }

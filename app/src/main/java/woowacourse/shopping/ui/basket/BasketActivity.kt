@@ -42,6 +42,10 @@ class BasketActivity : AppCompatActivity(), View, CartClickListener {
         binding.pageNumberTextView.text = page.toText()
     }
 
+    override fun updateTotalPrice(totalPrice: Int) {
+        binding.totalPriceTextView.text = getString(R.string.price_format, totalPrice)
+    }
+
     override fun onCountChanged(product: UiProduct, count: Int, isIncreased: Boolean) {
         presenter.changeProductCount(product, count, isIncreased)
     }
@@ -51,11 +55,12 @@ class BasketActivity : AppCompatActivity(), View, CartClickListener {
     }
 
     override fun onDeleteClick(product: UiProduct) {
-        presenter.removeFromCart(product)
+        presenter.removeProduct(product)
     }
 
     override fun showOrderComplete(productCount: Int) {
         showToast(getString(R.string.order_success_message, productCount))
+        navigateToHome()
     }
 
     override fun showOrderFailed() {

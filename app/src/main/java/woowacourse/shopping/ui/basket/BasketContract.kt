@@ -8,17 +8,20 @@ interface BasketContract {
     interface View {
         fun updateBasket(basketProducts: List<UiBasketProduct>)
         fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean)
-        fun navigateToHome()
         fun updatePageNumber(page: PageNumber)
-        fun showOrderFailed()
+        fun updateTotalPrice(totalPrice: Int)
         fun showOrderComplete(productCount: Int)
+        fun showOrderFailed()
+        fun navigateToHome()
     }
 
     abstract class Presenter(protected val view: View) {
         abstract fun fetchBasket(page: Int)
         abstract fun changeProductCount(product: UiProduct, count: Int, increase: Boolean)
-        abstract fun changeProductSelectState(product: UiProduct, checked: Boolean)
-        abstract fun removeFromCart(product: UiProduct)
-        abstract fun closeScreen()
+        abstract fun changeProductSelectState(product: UiProduct, isSelect: Boolean)
+        abstract fun toggleAllCheckState()
+        abstract fun removeProduct(product: UiProduct)
+        abstract fun order()
+        abstract fun navigateToHome()
     }
 }

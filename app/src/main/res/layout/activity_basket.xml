@@ -13,10 +13,6 @@
         <variable
             name="presenter"
             type="woowacourse.shopping.ui.basket.BasketPresenter" />
-
-        <variable
-            name="totalPrice"
-            type="woowacourse.shopping.model.Price" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/woowa_dark_gray"
-            bind:onNavigationIconClick="@{() -> presenter.closeScreen()}"
+            bind:onNavigationIconClick="@{() -> presenter.navigateToHome()}"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_left_arrow"
             app:navigationIconTint="@color/white"
@@ -147,7 +143,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
-                bind:price="@{presenter.totalPrice}"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"

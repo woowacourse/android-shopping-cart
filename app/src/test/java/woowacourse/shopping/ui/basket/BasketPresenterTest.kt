@@ -98,7 +98,7 @@ internal class BasketPresenterTest {
 
 
         // when
-        presenter.removeFromCart(product)
+        presenter.removeProduct(product)
 
         // then
         verify(exactly = 1) { basketRepository.decreaseCartCount(product.toDomain()) }
@@ -114,7 +114,7 @@ internal class BasketPresenterTest {
         /* ... */
 
         // when
-        presenter.closeScreen()
+        presenter.navigateToHome()
 
         // then
         verify(exactly = 1) { view.navigateToHome() }

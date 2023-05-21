@@ -17,26 +17,6 @@
         <variable
             name="cartClickListener"
             type="woowacourse.shopping.ui.basket.listener.CartClickListener" />
-
-        <variable
-            name="onDelete"
-            type="ClickListener" />
-
-        <variable
-            name="onSelect"
-            type="ClickListener" />
-
-        <variable
-            name="onUnselect"
-            type="ClickListener" />
-
-        <variable
-            name="onIncrease"
-            type="ClickListener" />
-
-        <variable
-            name="onDecrease"
-            type="ClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -123,8 +103,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             bind:count="@{basketProduct.selectedCount.value}"
-            bind:onPlusClick="@{() -> cartClickListener.onCountChanged(basketProduct.product, 1, true)}"
             bind:onMinusClick="@{() -> cartClickListener.onCountChanged(basketProduct.product, 1, false)}"
+            bind:onPlusClick="@{() -> cartClickListener.onCountChanged(basketProduct.product, 1, true)}"
             app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
             app:layout_constraintEnd_toEndOf="@+id/product_price_text_view"
             app:layout_constraintHeight_percent="0.3"
