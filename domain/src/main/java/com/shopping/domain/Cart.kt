@@ -7,13 +7,13 @@ class Cart(products: List<CartProduct> = emptyList()) {
         this.products = products.distinctBy { it.product.id }
     }
 
-    fun addAll(anotherCart: Cart): Cart = Cart(this.products + anotherCart.products)
+    fun addAll(anotherCart: Cart): Cart = Cart(products + anotherCart.products)
 
-    fun addAll(cartProducts: List<CartProduct>): Cart = Cart(this.products + cartProducts)
+    fun addAll(cartProducts: List<CartProduct>): Cart = Cart(products + cartProducts)
 
-    fun remove(product: CartProduct): Cart = Cart(this.products - product)
+    fun remove(product: CartProduct): Cart = Cart(products - product)
 
-    fun removeAll(anotherCart: Cart): Cart = Cart(this.products - anotherCart.products)
+    fun removeAll(anotherCart: Cart): Cart = Cart(products - anotherCart.products)
 
     fun getPickedProductsTotalPrice(): Int = products
         .filter { it.isPicked }
@@ -30,7 +30,7 @@ class Cart(products: List<CartProduct> = emptyList()) {
         return Cart(removedProducts + updatedProduct)
     }
 
-    fun getTotalPickedProductsCount(): Int = products.filter { it.isPicked }.sumOf { it.count }
+    fun getTotalPickedProductsCount(): Int = products.count { it.isPicked }
 
     fun isAllPicked(): Boolean = products.count() == products.count { it.isPicked }
 

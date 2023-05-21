@@ -213,7 +213,7 @@ class CartTest {
         val actual = cart.getTotalPickedProductsCount()
 
         // then
-        assertThat(actual).isEqualTo(3)
+        assertThat(actual).isEqualTo(2)
     }
 
     @Test
