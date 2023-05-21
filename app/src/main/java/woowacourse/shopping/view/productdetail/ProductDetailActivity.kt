@@ -94,6 +94,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun finishActivity(isAdd: Boolean) {
         setUpResult(isAdd)
+        dialog.dismiss()
         finish()
     }
 

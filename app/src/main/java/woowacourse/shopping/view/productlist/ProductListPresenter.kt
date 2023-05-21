@@ -116,7 +116,7 @@ class ProductListPresenter(
         if (id == -1) return
         if (isExistRecentViewed()) productsListItems.removeIf { it is ProductListViewItem.RecentViewedItem }
 
-        val viewedProductModels = convertIdsToProductModels(recentViewedRepository.findAll())
+        val viewedProductModels = convertIdsToProductModels(recentViewedRepository.findAll()).reversed()
         productsListItems.add(0, ProductListViewItem.RecentViewedItem(viewedProductModels))
         view.notifyRecentViewedChanged()
     }
