@@ -47,12 +47,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun restoreStateIfSavedInstanceStateIsNotNull(savedInstanceState: Bundle?) {
+        fun restoreSelectedCartItems(selectedCartItemIds: String) {
+            presenter.restoreSelectedCartItems(selectedCartItemIds.split(" ").map { it.toLong() })
+        }
+
         if (savedInstanceState != null) {
             presenter.restoreCurrentPage(savedInstanceState.getInt(CURRENT_PAGE))
-            val selectedCartItems = savedInstanceState.getString(SELECTED_CART_ITEMS)
-                ?.split(" ")
-                ?.map { it.toLong() }
-            if (selectedCartItems != null) presenter.restoreSelectedCartItems(selectedCartItems)
+            val selectedCartItemIds = savedInstanceState.getString(SELECTED_CART_ITEMS)
+            if (!selectedCartItemIds.isNullOrBlank()) restoreSelectedCartItems(selectedCartItemIds)
         }
     }
 

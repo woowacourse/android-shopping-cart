@@ -39,7 +39,8 @@ class CartPresenter(
     }
 
     override fun restoreSelectedCartItems(cartItemIds: List<Long>) {
-        this.selectedCartItems = cartItemRepository.findAllByIds(selectedCartItemIds).toSet()
+        this.selectedCartItems = cartItemRepository.findAllByIds(cartItemIds).toSet()
+        showCartItems(_currentPage, selectedCartItems, false)
     }
 
     override fun onLoadCartItemsOfNextPage() {
