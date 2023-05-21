@@ -8,11 +8,11 @@ import woowacourse.shopping.model.RecentProductUiModel
 class RecentAdapter(private val recentProductClickListener: RecentProductClickListener) :
     ListAdapter<RecentProductUiModel, RecentViewHolder>(RecentDiffCallBack) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentViewHolder {
-        return RecentViewHolder.create(parent)
+        return RecentViewHolder.create(parent, recentProductClickListener)
     }
 
     override fun onBindViewHolder(holder: RecentViewHolder, position: Int) {
-        holder.bind(getItem(position), recentProductClickListener)
+        holder.bind(getItem(position))
     }
 
     fun setItems(newItems: List<RecentProductUiModel>) {
