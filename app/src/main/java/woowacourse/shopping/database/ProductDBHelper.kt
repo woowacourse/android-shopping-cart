@@ -3,6 +3,7 @@ package woowacourse.shopping.database
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.provider.BaseColumns
 
 class ProductDBHelper(
     context: Context,
@@ -35,7 +36,8 @@ class ProductDBHelper(
         private const val SQL_CREATE_RECENTLY_VIEWED_PRODUCTS_ENTRIES =
             """
                 CREATE TABLE ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME} (
-                ${ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} int PRIMARY KEY
+                ${BaseColumns._ID} INTEGER PRIMARY KEY AUTOINCREMENT,
+                ${ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID} int
                 );
             """
     }

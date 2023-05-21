@@ -3,6 +3,7 @@ package woowacourse.shopping.database.recentlyviewedproduct
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.provider.BaseColumns
 import woowacourse.shopping.database.ProductContract
 import woowacourse.shopping.database.ProductDBHelper
 import woowacourse.shopping.domain.RecentlyViewedProduct
@@ -23,16 +24,38 @@ class RecentlyViewedProductRepositoryImpl(
         )
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(0)
+            val id =
+                cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID))
             productRepository.findById(id)?.let {
-                products.add(
-                    RecentlyViewedProduct(it.id, it.imageUrl, it.name, it.price),
-                )
+                products.add(RecentlyViewedProduct(it.id, it.imageUrl, it.name, it.price))
             }
         }
 
         cursor.close()
         return products
+    }
+
+    override fun findLast(): RecentlyViewedProduct? {
+        var product: RecentlyViewedProduct? = null
+        val cursor: Cursor = db.rawQuery(
+            """
+                SELECT * FROM ${ProductContract.RecentlyViewedProductEntry.TABLE_NAME} 
+                ORDER BY ${BaseColumns._ID} DESC 
+                LIMIT 1;
+            """.trimIndent(),
+            null,
+        )
+
+        while (cursor.moveToNext()) {
+            val id =
+                cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.RecentlyViewedProductEntry.COLUMN_NAME_PRODUCT_ID))
+            productRepository.findById(id)?.let {
+                product = RecentlyViewedProduct(it.id, it.imageUrl, it.name, it.price)
+            }
+        }
+
+        cursor.close()
+        return product
     }
 
     override fun save(product: RecentlyViewedProduct) {

@@ -7,7 +7,6 @@ interface ProductListContract {
     interface Presenter {
         fun loadRecentlyViewedProducts()
         fun loadProducts(limit: Int, offset: Int)
-        fun addRecentlyViewedProduct(productId: Long)
     }
 
     interface View {

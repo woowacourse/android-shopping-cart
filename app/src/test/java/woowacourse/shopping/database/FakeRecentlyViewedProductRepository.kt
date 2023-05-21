@@ -10,6 +10,10 @@ object FakeRecentlyViewedProductRepository : RecentlyViewedProductRepository {
         return products.values.toList()
     }
 
+    override fun findLast(): RecentlyViewedProduct? {
+        return products.values.last()
+    }
+
     override fun save(product: RecentlyViewedProduct) {
         products[product.id] = product
     }

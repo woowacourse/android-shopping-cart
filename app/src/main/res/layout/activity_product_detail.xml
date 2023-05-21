@@ -3,6 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="detail_product"
+            type="woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState" />
+
+        <variable
+            name="recent_product"
+            type="woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:paddingVertical="13dp"
+            android:text="@{detail_product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -63,6 +75,7 @@
             android:id="@+id/tv_product_detail_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{@string/product_price(detail_product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/tv_product_detail_name"
@@ -74,10 +87,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/button_background"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:text="@string/add_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:layout_editor_absoluteX="-16dp" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_lastly_viewed"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/shape_border_grey_1dp"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="12dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_product_detail_add">
+
+            <TextView
+                android:id="@+id/tv_lastly_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lastly_viewed_title"
+                android:textColor="@color/text_lastly_viewed"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_lastly_viewed_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_lastly_viewed_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{recent_product.name}"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_lastly_title"
+                tools:text="동원 스위트콘" />
+
+            <TextView
+                android:id="@+id/tv_lastly_viewed_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/product_price(recent_product.price)}"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_lastly_title"
+                tools:text="12,300원" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

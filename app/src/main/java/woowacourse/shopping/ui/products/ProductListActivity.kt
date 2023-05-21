@@ -69,7 +69,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun initProductList() {
         binding.rvMainProduct.adapter = ProductListAdapter(mutableListOf()) {
-            presenter.addRecentlyViewedProduct(it)
             moveToProductDetailActivity(it)
         }
         loadMorePage()

@@ -8,6 +8,7 @@
     <!-- 상품 상세 -->
     <string name="add_to_cart">장바구니 담기</string>
     <string name="price_title">금액</string>
+    <string name="lastly_viewed_title">마지막으로 본 상품</string>
     <string name="error_not_found">존재하지 않는 상품입니다</string>
 
     <!-- 장바구니 -->

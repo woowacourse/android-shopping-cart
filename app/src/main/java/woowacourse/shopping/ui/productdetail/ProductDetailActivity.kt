@@ -7,21 +7,25 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
+import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
+import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
-    private val presenter: ProductDetailPresenter by lazy {
+    private val presenter: ProductDetailContract.Presenter by lazy {
         ProductDetailPresenter(
             this,
             ProductRepositoryImpl,
             CartRepositoryImpl(this, ProductRepositoryImpl),
+            RecentlyViewedProductRepositoryImpl(this, ProductRepositoryImpl),
         )
     }
 
@@ -31,7 +35,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setContentView(binding.root)
         setActionBar()
 
-        presenter.loadProduct(intent.getLongExtra(PRODUCT_ID, -1))
+        val productId = intent.getLongExtra(PRODUCT_ID, -1)
+        presenter.loadProduct(productId)
+        presenter.showLastlyViewedProduct(productId)
+        presenter.addRecentlyViewedProduct(productId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,14 +66,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             .load(product.imageUrl)
             .into(binding.ivProductDetail)
 
-        binding.tvProductDetailName.text = product.name
-        binding.tvProductDetailPrice.text = getString(R.string.product_price).format(product.price)
-//            getString(R.string.product_price).format(PRICE_FORMAT.format(product.price))
+        binding.detailProduct = product
         binding.btnProductDetailAdd.setOnClickListener {
             // TODO : 초기 수량은 1, 추후에 수량 결정할 버튼 추가 예정
             presenter.addProductToCart(product.id, 1)
             moveToCartActivity()
         }
+    }
+
+    override fun showLastlyViewedProduct(product: RecentlyViewedProductUIState) {
+        binding.recentProduct = product
+    }
+
+    override fun hideLastlyViewedProduct() {
+        binding.layoutLastlyViewed.isVisible = false
     }
 
     override fun showErrorMessage() {

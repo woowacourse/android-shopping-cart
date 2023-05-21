@@ -23,8 +23,8 @@ class CartRepositoryImpl(
         )
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(0)
-            val count = cursor.getInt(1)
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
             productRepository.findById(id)?.let {
                 products.add(CartProduct(it.id, it.imageUrl, it.name, it.price, count))
             }
@@ -42,8 +42,8 @@ class CartRepositoryImpl(
         )
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(0)
-            val count = cursor.getInt(1)
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID))
+            val count = cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
             productRepository.findById(id)?.let {
                 products.add(CartProduct(it.id, it.imageUrl, it.name, it.price, count))
             }

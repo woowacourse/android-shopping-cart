@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.FakeCartRepository
 import woowacourse.shopping.database.FakeProductRepository
+import woowacourse.shopping.database.FakeRecentlyViewedProductRepository
 import woowacourse.shopping.ui.productdetail.ProductDetailContract
 import woowacourse.shopping.ui.productdetail.ProductDetailPresenter
 
@@ -22,7 +23,7 @@ class CartPresenterTest {
         productDetailView = mockk(relaxed = true)
         cartPresenter = CartPresenter(cartView, FakeCartRepository)
         productDetailPresenter =
-            ProductDetailPresenter(productDetailView, FakeProductRepository, FakeCartRepository)
+            ProductDetailPresenter(productDetailView, FakeProductRepository, FakeCartRepository, FakeRecentlyViewedProductRepository)
     }
 
     @Test
