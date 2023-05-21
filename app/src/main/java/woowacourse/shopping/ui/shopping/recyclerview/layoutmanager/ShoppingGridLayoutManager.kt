@@ -10,8 +10,8 @@ import woowacourse.shopping.ui.shopping.ShoppingViewType
 class ShoppingGridLayoutManager(
     context: Context,
     adapter: Adapter<ViewHolder>,
-    spanSize: Int = DEFAULT_MAXIMUM_SPAN_SIZE,
-) : GridLayoutManager(context, spanSize) {
+    maxSpanSize: Int = DEFAULT_MAXIMUM_SPAN_SIZE,
+) : GridLayoutManager(context, maxSpanSize) {
 
     init {
         spanSizeLookup = object : SpanSizeLookup() {

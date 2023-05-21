@@ -19,16 +19,4 @@ data class BasketProduct(
 
     fun unselect(): BasketProduct =
         copy(isChecked = false)
-
-    fun plusCount(count: ProductCount): BasketProduct =
-        copy(selectedCount = selectedCount + count)
-
-    fun minusCount(count: ProductCount): BasketProduct =
-        copy(selectedCount = selectedCount - count)
-
-    fun isEmpty(): Boolean = selectedCount.isZero()
-
-    fun changeCount(count: Int): BasketProduct {
-        return copy(selectedCount = ProductCount(count))
-    }
 }

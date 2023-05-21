@@ -16,8 +16,6 @@ data class PageNumber(
 
     fun next(): PageNumber = copy(value = value + 1)
 
-    fun prev(): PageNumber = copy(value = (value - 1).coerceAtLeast(MIN_PAGE))
-
     companion object {
         private const val DEFAULT_PAGE = 1
         private const val DEFAULT_SIZE_PER_PAGE = 5

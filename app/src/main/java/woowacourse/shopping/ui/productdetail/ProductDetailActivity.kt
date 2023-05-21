@@ -53,7 +53,6 @@ class ProductDetailActivity : AppCompatActivity(), View, OnMenuItemClickListener
 
     override fun navigateToHome(product: UiProduct, count: Int) {
         startActivity(ShoppingActivity.getIntent(this, product, count))
-        finish()
     }
 
     override fun navigateToProductDetail(recentProduct: UiRecentProduct) {
