@@ -9,10 +9,12 @@
         android:id="@+id/cartBtn"
         android:layout_width="22dp"
         android:layout_height="17dp"
-        android:src="@drawable/ic_cart"
         android:scaleType="fitXY"
+        android:src="@drawable/ic_cart"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginEnd="19dp" />
 
     <TextView
         android:id="@+id/cartSize"

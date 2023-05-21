@@ -57,8 +57,9 @@ class ShoppingPresenter(
     }
 
     override fun updateItemCounts() {
+        _countLiveDatas.clear()
         cartRepository.getAll().forEach {
-            _countLiveDatas[it.product.id]?.value = it.count
+            _countLiveDatas[it.product.id] = MutableLiveData(it.count)
         }
     }
 
@@ -66,6 +67,7 @@ class ShoppingPresenter(
         repository.findById(id).let {
             cartRepository.insert(CartProduct(it, count, true))
         }
+        updateCountSize()
     }
 
     override fun increaseCount(id: Long) {
