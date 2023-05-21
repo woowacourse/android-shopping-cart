@@ -42,7 +42,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
         binding.presenter = presenter
-        initClickListener()
 
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -54,15 +53,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         val animator = binding.cartItemRecyclerview.itemAnimator
         if (animator is SimpleItemAnimator) {
             animator.supportsChangeAnimations = false
-        }
-    }
-
-    private fun initClickListener() {
-        binding.allCheckView.setOnCheckedChangeListener { _, isChecked ->
-            presenter.handleCurrentPageAllCheckedChange(isChecked)
-        }
-        binding.orderConfirmView.setOnClickListener {
-            presenter.processOrderClick()
         }
     }
 
