@@ -7,29 +7,15 @@ import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.CartItemsUIModel
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.ui.cart.CartActivity.Companion.KEY_OFFSET
+import woowacourse.shopping.ui.cart.CartOffset
 import woowacourse.shopping.ui.cart.contract.CartContract
-
-class Offset(offset: Int, private val repository: CartRepository) {
-    private var offset: Int = offset
-        set(value) {
-            field = when {
-                value < 0 -> 0
-                value > repository.getAll().size -> repository.getAll().size
-                else -> value
-            }
-        }
-
-    fun plus(value: Int): Offset = Offset(offset + value, repository)
-    fun minus(value: Int): Offset = Offset(offset - value, repository)
-    fun getOffset(): Int = offset
-}
 
 class CartPresenter(
     val view: CartContract.View,
     private val repository: CartRepository,
     offset: Int = 0,
 ) : CartContract.Presenter {
-    private var cartOffset = Offset(offset, repository)
+    private var cartOffset = CartOffset(offset, repository)
     private var cartItems: CartItemsUIModel =
         CartItemsUIModel(repository.getCheckCart().map { it.toUIModel() })
     private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
@@ -90,7 +76,7 @@ class CartPresenter(
 
     override fun restoreOffsetState(state: Map<String, Int>) {
         val savedOffset = state[KEY_OFFSET] ?: 0
-        cartOffset = Offset(savedOffset, repository)
+        cartOffset = CartOffset(savedOffset, repository)
     }
 
     override fun onCheckChanged(id: Long, isChecked: Boolean) {
