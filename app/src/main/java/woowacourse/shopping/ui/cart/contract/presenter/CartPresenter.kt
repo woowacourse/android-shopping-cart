@@ -35,6 +35,9 @@ class CartPresenter(
     private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
     val countLiveDatas: Map<Long, LiveData<Int>> = _countLiveDatas
 
+    private var _checkedLiveDatas: MutableMap<Long, MutableLiveData<Boolean>> = mutableMapOf()
+    val checkedLiveDatas: Map<Long, LiveData<Boolean>> = _checkedLiveDatas
+
     init {
         setAllOrderCount()
         setAllCheckbox()
@@ -44,6 +47,7 @@ class CartPresenter(
         val datas = repository.getSubList(cartOffset.getOffset(), STEP)
         datas.forEach {
             _countLiveDatas[it.product.id] = MutableLiveData(getCount(it.product.id))
+            _checkedLiveDatas[it.product.id] = MutableLiveData(getChecked(it.product.id))
         }
         setCartItemsPrice()
         view.setCarts(
@@ -89,13 +93,9 @@ class CartPresenter(
         cartOffset = Offset(savedOffset, repository)
     }
 
-    override fun onChangeCartCount(id: Long, count: Int) {
-        repository.updateCount(id, count)
-        updateCartItems()
-    }
-
     override fun onCheckChanged(id: Long, isChecked: Boolean) {
-        repository.updateCheckChanged(id, isChecked)
+        _checkedLiveDatas[id]?.value = isChecked
+        _checkedLiveDatas[id]?.value?.let { repository.updateCheckChanged(id, it) }
         updateCartItems()
     }
 
@@ -107,14 +107,14 @@ class CartPresenter(
         repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
             .forEach { product ->
                 repository.updateCheckChanged(product.product.id, isChecked)
-                view.updateCheckboxItem(product.product.id, isChecked)
+                //view.updateCheckboxItem(product.product.id, isChecked)
             }
         updateCartItems()
     }
 
     override fun setAllCheckbox() {
         val cartItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
-        val isChecked = cartItems.filter { it.isChecked.get() }.size == cartItems.size
+        val isChecked = cartItems.filter { it.isChecked }.size == cartItems.size
 
         view.setAllCheckbox(isChecked)
     }
@@ -143,6 +143,10 @@ class CartPresenter(
 
     private fun getCount(id: Long): Int {
         return repository.getFindById(id)?.count ?: 0
+    }
+
+    private fun getChecked(id: Long): Boolean {
+        return repository.getFindById(id)?.isChecked ?: true
     }
 
     companion object {

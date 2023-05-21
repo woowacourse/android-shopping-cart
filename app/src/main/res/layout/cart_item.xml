@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.model.CartProductUIModel" />
@@ -22,18 +23,19 @@
         android:layout_width="324dp"
         android:layout_height="153dp"
         android:layout_marginTop="24dp"
-        android:onClick="@{() -> listener.onClick(product.product.id)}"
-        android:background="@drawable/layout_border_radius">
+        android:background="@drawable/layout_border_radius"
+        android:onClick="@{() -> listener.onClick(product.product.id)}">
 
         <CheckBox
             android:id="@+id/checkBox"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginStart="16dp"
+            android:checked="@{presenter.checkedLiveDatas[product.product.id]}"
+            android:onCheckedChanged="@{(_, isChecked) -> listener.onCheckChanged(product.product.id, isChecked)}"
             app:layout_constraintBottom_toBottomOf="@+id/product_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/product_title"
-            tools:checked="@{product.isChecked()}" />
+            app:layout_constraintTop_toTopOf="@+id/product_title" />
 
         <TextView
             android:id="@+id/product_title"
@@ -88,14 +90,14 @@
 
         <include
             android:id="@+id/order_count_layout"
-            app:count = "@{presenter.countLiveDatas[product.product.id]}"
-            app:listener="@{listener}"
-            app:product="@{product.product}"
             layout="@layout/order_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:count="@{presenter.countLiveDatas[product.product.id]}"
             app:layout_constraintEnd_toEndOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:listener="@{listener}"
+            app:product="@{product.product}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

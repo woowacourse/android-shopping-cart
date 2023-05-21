@@ -1,11 +1,9 @@
 package woowacourse.shopping.ui.cart
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.CartProductUIModel
-import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.cart.contract.CartContract
 import woowacourse.shopping.ui.cart.viewHolder.CartViewHolder
 import woowacourse.shopping.ui.cart.viewHolder.OnCartClickListener
@@ -24,7 +22,7 @@ class CartAdapter(
             parent,
             lifecycleOwner,
             presenter,
-            onCartClickListener
+            onCartClickListener,
         )
     }
 
@@ -40,8 +38,8 @@ class CartAdapter(
         return position
     }
 
-    fun updateItem(id: Long, checked: Boolean) {
-        cartItems.find { it.product.id == id }?.isChecked?.set(checked)
-        notifyItemChanged(cartItems.size)
-    }
+    /* fun updateItem(id: Long, checked: Boolean) {
+         cartItems.find { it.product.id == id }?.isChecked?.set(checked)
+         notifyItemChanged(cartItems.size)
+     }*/
 }

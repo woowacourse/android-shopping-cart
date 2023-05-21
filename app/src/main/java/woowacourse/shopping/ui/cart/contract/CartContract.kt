@@ -10,7 +10,7 @@ interface CartContract {
         fun setCarts(products: List<CartProductUIModel>, cartUIModel: CartUIModel)
         fun navigateToItemDetail(product: ProductUIModel)
         fun setCartItemsPrice(price: Int)
-        fun updateCheckboxItem(id: Long, checked: Boolean)
+        /*fun updateCheckboxItem(id: Long, checked: Boolean)*/
         fun setAllCheckbox(isChecked: Boolean)
         fun setAllOrderCount(count: Int)
     }
@@ -26,7 +26,6 @@ interface CartContract {
 
         fun restoreOffsetState(state: Map<String, Int>)
 
-        fun onChangeCartCount(id: Long, count: Int)
         fun onCheckChanged(id: Long, isChecked: Boolean)
         fun setCartItemsPrice()
         fun onAllCheckboxClick(isChecked: Boolean)
