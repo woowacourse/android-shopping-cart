@@ -115,6 +115,7 @@ class ProductDetailActivity :
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
                 putExtra("KEY_VISIBLE", isVisible)
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
         }
     }
