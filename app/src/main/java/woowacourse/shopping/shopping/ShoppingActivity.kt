@@ -2,8 +2,6 @@ package woowacourse.shopping.shopping
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -36,28 +34,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
-        setSupportActionBar(binding.toolbar)
         presenter = ShoppingPresenter(
             this,
             savedInstanceState?.getInt(KEY_PRODUCT_OFFSET) ?: 20,
             ProductFakeRepository,
             RecentProductDatabase(this),
         )
+        binding.cartIcon.setOnClickListener { navigateToCart() }
         initLayoutManager()
         presenter.setUpProducts()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.cart_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cart -> navigateToCart()
-            else -> super.onOptionsItemSelected(item)
-        }
-        return true
     }
 
     private fun initLayoutManager() {
