@@ -36,6 +36,7 @@
             android:insetBottom="0dp"
             android:padding="12dp"
             android:src="@drawable/ic_arrow_back_ios_new_24"
+            android:onClick="@{()->presenter.loadPreviousPage()}"
             app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
             app:layout_constraintEnd_toStartOf="@id/page_count_text_view"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -65,6 +66,7 @@
             android:insetBottom="0dp"
             android:padding="12dp"
             android:src="@drawable/ic_arrow_forward_ios_24"
+            android:onClick="@{()->presenter.loadNextPage()}"
             app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/page_count_text_view"
@@ -88,6 +90,7 @@
                 android:layout_marginStart="24dp"
                 android:checked="@{presenter.allSelected}"
                 android:gravity="center"
+                android:onCheckedChanged="@{(_, isChecked)->presenter.toggleAllProductOnPage(isChecked)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent" />

@@ -24,6 +24,21 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.lifecycleOwner = this
 
+        initAdapter()
+        initPresenter()
+
+        supportActionBar?.title = getString(R.string.cart)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    private fun initPresenter() {
+        val cartPresenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
+        presenter = cartPresenter
+        binding.presenter = cartPresenter
+        presenter.setup()
+    }
+
+    private fun initAdapter() {
         cartProductAdapter = CartProductAdapter(
             listOf(),
             object : CartProductClickListener {
@@ -45,28 +60,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             }
         )
         binding.cartItemRecyclerview.adapter = cartProductAdapter
-
-        val cartPresenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
-        presenter = cartPresenter
-        binding.presenter = cartPresenter
-        presenter.setup()
-
-        initPageClickListener()
-        binding.toggleAllCheckbox.setOnCheckedChangeListener { _, isChecked ->
-            presenter.toggleAllProductOnPage(isChecked)
-        }
-
-        supportActionBar?.title = getString(R.string.cart)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun initPageClickListener() {
-        binding.previousPageBtn.setOnClickListener {
-            presenter.loadPreviousPage()
-        }
-        binding.nextPageBtn.setOnClickListener {
-            presenter.loadNextPage()
-        }
     }
 
     override fun changeCartProducts(newItems: List<CartProductUiModel>) {
