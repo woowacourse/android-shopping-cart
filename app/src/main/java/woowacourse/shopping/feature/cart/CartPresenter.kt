@@ -23,11 +23,11 @@ class CartPresenter(
     private var _totalCount: MutableLiveData<Int> = MutableLiveData(0)
     val totalCount: LiveData<Int> get() = _totalCount
 
-    private var _isAllSelected: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isAllSelected: LiveData<Boolean> get() = _isAllSelected
+    private var _allSelected: MutableLiveData<Boolean> = MutableLiveData(false)
+    val allSelected: LiveData<Boolean> get() = _allSelected
 
     override fun setup() {
-        _isAllSelected.value = isAllSelected()
+        _allSelected.value = isAllSelected()
         updateTotalSelectedValues()
         changePageState(getCurrentPageItems())
     }
@@ -44,7 +44,7 @@ class CartPresenter(
 
         changePageState(loadedItems)
         updateTotalSelectedValues()
-        _isAllSelected.value = isAllSelected()
+        _allSelected.value = isAllSelected()
     }
 
     override fun loadPreviousPage() {
@@ -81,8 +81,8 @@ class CartPresenter(
     override fun toggleCartProduct(cartProduct: CartProductUiModel, isSelected: Boolean) {
         cartRepository.updateSelection(cartProduct.productUiModel.toDomain(), isSelected)
 
-        if (!isSelected) _isAllSelected.value = false
-        else _isAllSelected.value = isAllSelected()
+        if (!isSelected) _allSelected.value = false
+        else _allSelected.value = isAllSelected()
         updateTotalSelectedValues()
     }
 
@@ -130,7 +130,7 @@ class CartPresenter(
     }
 
     private fun changePageState(itemModels: List<CartProductUiModel>) {
-        _isAllSelected.value = isAllSelected()
+        _allSelected.value = isAllSelected()
         view.changeCartProducts(itemModels)
         view.setPageState(
             this.page.hasPreviousPage(),
