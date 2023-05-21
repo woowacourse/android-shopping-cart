@@ -36,11 +36,6 @@ class ProductListPresenter(
         view.loadRecentProductModels(recentProducts.toPresentation())
     }
 
-    override fun saveRecentProduct(productId: Int) {
-        recentProductRepository.deleteRecentProductId(productId)
-        recentProductRepository.addRecentProductId(productId)
-    }
-
     override fun putProductInCart(productModel: ProductModel) {
         cartRepository.putProductInCart(productModel.id)
     }
@@ -56,8 +51,7 @@ class ProductListPresenter(
     }
 
     private fun getRecentProducts(): Products {
-        val recentProductIds = recentProductRepository.getRecentProductIdList(RECENT_PRODUCTS_SIZE)
-        return findProductsByIdList(recentProductIds)
+        return Products(recentProductRepository.getRecentProducts(RECENT_PRODUCTS_SIZE))
     }
 
     private fun findProductsByIdList(productIds: List<Int>): Products {

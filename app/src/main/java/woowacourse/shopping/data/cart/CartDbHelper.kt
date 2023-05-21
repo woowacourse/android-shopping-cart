@@ -11,7 +11,7 @@ class CartDbHelper(
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${CartDbContract.TABLE_NAME}(" +
-                "${CartDbContract.PRODUCT_ID} int," +
+                "${CartDbContract.PRODUCT_ID} int PRIMARY KEY," +
                 "${CartDbContract.COUNT} int," +
                 "${CartDbContract.TIMESTAMP} int" +
                 ");",

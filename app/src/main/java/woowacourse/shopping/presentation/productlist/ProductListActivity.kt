@@ -15,6 +15,7 @@ import woowacourse.shopping.data.product.ProductRemoteDataSource
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
+import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.databinding.BadgeCartBinding
 import woowacourse.shopping.presentation.cart.CartActivity
@@ -34,7 +35,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         ProductListPresenter(
             this,
             ProductRepositoryImpl(productRemoteDataSource),
-            RecentProductDao(RecentProductDbHelper(this)),
+            RecentProductRepositoryImpl(
+                RecentProductDao(RecentProductDbHelper(this)),
+                MockProductDao,
+            ),
             CartRepositoryImpl(CartDao(CartDbHelper(this)), productRemoteDataSource),
         )
     }
@@ -117,7 +121,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun productClick(productModel: ProductModel) {
-        presenter.saveRecentProduct(productModel.id)
         showProductDetail(productModel)
     }
 

@@ -3,12 +3,13 @@ package woowacourse.shopping.data.recentproduct
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.repository.RecentProductRepository
 import java.lang.String.valueOf
 
-class RecentProductDao(db: RecentProductDbHelper) : RecentProductRepository {
+class RecentProductDao(db: RecentProductDbHelper) : RecentProductLocalDataSource {
 
     private val writableDb: SQLiteDatabase = db.writableDatabase
+    private fun Cursor.getRecentProductId(): Int =
+        getInt(getColumnIndexOrThrow(RecentProductDbContract.PRODUCT_ID))
 
     override fun getRecentProductIdList(size: Int): List<Int> {
         val productIds = mutableListOf<Int>()
@@ -36,10 +37,13 @@ class RecentProductDao(db: RecentProductDbHelper) : RecentProductRepository {
         return productIds
     }
 
-    private fun Cursor.getRecentProductId(): Int =
-        getInt(getColumnIndexOrThrow(RecentProductDbContract.PRODUCT_ID))
+    override fun getMostRecentProductId(): Int {
+        val list = getRecentProductIdList(1)
+        if (list.isEmpty()) return -1
+        return getRecentProductIdList(1).first()
+    }
 
-    override fun addRecentProductId(recentProductId: Int) {
+    override fun addRecentProduct(recentProductId: Int) {
         val values = ContentValues().apply {
             put(RecentProductDbContract.PRODUCT_ID, recentProductId)
             put(RecentProductDbContract.TIMESTAMP, System.currentTimeMillis())
@@ -48,7 +52,7 @@ class RecentProductDao(db: RecentProductDbHelper) : RecentProductRepository {
         writableDb.insert(RecentProductDbContract.TABLE_NAME, null, values)
     }
 
-    override fun deleteRecentProductId(recentProductId: Int) {
+    override fun deleteRecentProduct(recentProductId: Int) {
         writableDb.delete(
             RecentProductDbContract.TABLE_NAME,
             "${RecentProductDbContract.PRODUCT_ID}=?",

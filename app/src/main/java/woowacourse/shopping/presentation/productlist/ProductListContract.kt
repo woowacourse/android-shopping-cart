@@ -9,7 +9,6 @@ interface ProductListContract {
         val cartProductInfoList: SafeLiveData<CartProductInfoList>
         fun updateProductItems()
         fun updateRecentProductItems()
-        fun saveRecentProduct(id: Int)
         fun updateCartProductCount(productModel: ProductModel, count: Int)
         fun putProductInCart(productModel: ProductModel)
         fun updateCartProductInfoList()

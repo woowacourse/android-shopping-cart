@@ -8,6 +8,7 @@ import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import woowacourse.shopping.presentation.mapper.toDomain
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productlist.ProductListContract
@@ -48,22 +49,11 @@ class ProductListPresenterTest {
         // given
         val product = Product(1, "", "", Price(100))
         val productModels = List(10) { product.toPresentation() }
-        every { recentProductRepository.getRecentProductIdList(10) } returns List(10) { return@List 10 }
-        every { productRepository.findProductById(10) } returns Product(1, "", "", Price(100))
+        every { recentProductRepository.getRecentProducts(10) } returns productModels.map { it.toDomain() }
         // when
         presenter.updateRecentProductItems()
         // then
         verify { view.loadRecentProductModels(productModels) }
-    }
-
-    @Test
-    fun 최근_상품_목록_아이디를_저장한다() {
-        // given
-        val id = 10
-        // when
-        presenter.saveRecentProduct(id)
-        // then
-        verify { recentProductRepository.addRecentProductId(id) }
     }
 
     @Test
