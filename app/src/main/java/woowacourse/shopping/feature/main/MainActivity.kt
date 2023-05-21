@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.data.ProductCacheImpl
+import woowacourse.shopping.data.ProductMockWebServer
+import woowacourse.shopping.data.ProductRemoteMockRepositoryImpl
 import woowacourse.shopping.data.RecentProductRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.data.sql.recent.RecentDao
@@ -47,7 +49,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
         presenter = MainPresenter(
             this,
-            ProductMockRepository(),
+            ProductRemoteMockRepositoryImpl(ProductMockWebServer(), ProductCacheImpl),
             RecentProductRepositoryImpl(RecentDao(this)),
             CartRepositoryImpl(CartDao(this))
         )
@@ -116,7 +118,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun addProducts(products: List<ProductUiModel>) {
-        mainProductAdapter.addItems(products)
+        runOnUiThread { mainProductAdapter.addItems(products) }
     }
 
     override fun updateRecent(recent: List<RecentProductUiModel>) {

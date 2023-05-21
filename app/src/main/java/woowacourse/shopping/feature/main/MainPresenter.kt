@@ -20,10 +20,12 @@ class MainPresenter(
     private var totalCount: Int = 0
 
     override fun loadProducts() {
-        val firstProducts = productRepository.getFirstProducts()
-
-        val productItems = matchCartProductCount(firstProducts)
-        view.addProducts(productItems)
+        productRepository.getFirstProducts(
+            onSuccess = {
+                val productItems = matchCartProductCount(it)
+                view.addProducts(productItems)
+            }
+        )
     }
 
     private fun matchCartProductCount(products: List<Product>): List<ProductUiModel> {
@@ -45,9 +47,12 @@ class MainPresenter(
     }
 
     override fun loadMoreProduct() {
-        val nextProducts = productRepository.getNextProducts()
-        val nextProductItems = matchCartProductCount(nextProducts)
-        view.addProducts(nextProductItems)
+        productRepository.getNextProducts(
+            onSuccess = {
+                val nextProductItems = matchCartProductCount(it)
+                view.addProducts(nextProductItems)
+            }
+        )
     }
 
     override fun moveToCart() {
