@@ -1,6 +1,8 @@
 package woowacourse.shopping.ui.shopping.contract.presenter
 
+import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
+import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentRepository
 import woowacourse.shopping.mapper.toUIModel
@@ -14,12 +16,13 @@ class ShoppingPresenter(
     private val view: ShoppingContract.View,
     private val repository: ProductRepository,
     private val recentRepository: RecentRepository,
+    private val cartRepository: CartRepository,
 ) : ShoppingContract.Presenter {
     private var productsData: MutableList<ProductsItemType> = mutableListOf()
 
     override fun setUpProducts() {
         productsData += repository.getNext(PRODUCT_COUNT)
-            .map { product: Product -> ProductItem(product.toUIModel()) }
+            .map { product: Product -> ProductItem(product.toUIModel(), getCount(product.id)) }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
@@ -36,13 +39,26 @@ class ShoppingPresenter(
 
     override fun fetchMoreProducts() {
         productsData += repository.getNext(PRODUCT_COUNT)
-            .map { ProductItem(it.toUIModel()) }
+            .map { ProductItem(it.toUIModel(), getCount(it.id)) }
         view.addProducts(productsData.plus(ProductReadMore))
     }
 
     override fun navigateToItemDetail(id: Long) {
         val product = repository.findById(id)
         view.navigateToProductDetail(product.toUIModel())
+    }
+
+    override fun updateItemCount(id: Long, count: Int) {
+        repository.findById(id).let {
+            cartRepository.insert(CartProduct(it, count, true))
+        }
+    }
+
+    private fun getCount(id: Long): Int {
+        cartRepository.getFindById(id)?.let {
+            return it.count
+        }
+        return 0
     }
 
     companion object {

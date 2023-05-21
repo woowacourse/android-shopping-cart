@@ -16,5 +16,6 @@ interface ShoppingContract {
         fun updateProducts()
         fun fetchMoreProducts()
         fun navigateToItemDetail(id: Long)
+        fun updateItemCount(id: Long, count: Int)
     }
 }

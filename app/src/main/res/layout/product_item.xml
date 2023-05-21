@@ -2,8 +2,9 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    
+
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
@@ -16,11 +17,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> listener.onClick(product.id)}"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:onClick="@{() -> listener.onClick(product.id)}">
 
         <ImageView
-            android:id="@+id/loadMoreButton"
+            android:id="@+id/productImg"
             android:layout_width="154dp"
             android:layout_height="154dp"
             app:imgResId="@{product.imageUrl}"
@@ -32,26 +33,26 @@
 
         <TextView
             android:id="@+id/productName"
-            android:text="@{product.name}"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginStart="6dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loadMoreButton"
+            app:layout_constraintTop_toBottomOf="@+id/productImg"
             tools:text="가나다라마바사아차자창ㄹ망ㄹ" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="6dp"
             android:text="@{@string/product_price(product.price)}"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/productName"
             tools:text="10000원" />
 
@@ -60,20 +61,21 @@
             android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:onClick="@{()-> listener.onAddCart(product.id, 1)}"
             android:src="@drawable/add_cart_button"
-            app:layout_constraintBottom_toBottomOf="@+id/loadMoreButton"
+            app:layout_constraintBottom_toBottomOf="@+id/productImg"
             app:layout_constraintEnd_toEndOf="parent" />
 
 
         <include
             layout="@layout/order_count"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="11dp"
-            android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/loadMoreButton"
-            app:layout_constraintEnd_toEndOf="@+id/loadMoreButton"
+            app:layout_constraintBottom_toBottomOf="@+id/productImg"
+            app:layout_constraintEnd_toEndOf="@+id/productImg"
             app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

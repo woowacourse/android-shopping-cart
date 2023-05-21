@@ -46,4 +46,11 @@ class ProductsAdapter(
         productItemTypes = data.toMutableList()
         notifyItemChanged(data.size - productItemTypes.size)
     }
+
+    fun updateItemCount(id: Long, count: Int) {
+        val index = productItemTypes.indexOfFirst {
+            it is ProductItem && it.product.id == id
+        }
+        productItemTypes[index] = (productItemTypes[index] as ProductItem).copy(count = count)
+    }
 }

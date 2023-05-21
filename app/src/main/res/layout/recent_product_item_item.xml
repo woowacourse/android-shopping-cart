@@ -21,7 +21,7 @@
         android:onClick="@{() -> listener.onClick(product.id)}">
 
         <ImageView
-            android:id="@+id/loadMoreButton"
+            android:id="@+id/productImg"
             android:layout_width="98dp"
             android:layout_height="98dp"
             app:imgResId="@{product.imageUrl}"
@@ -42,7 +42,7 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loadMoreButton"
+            app:layout_constraintTop_toBottomOf="@+id/productImg"
             tools:text="가나다라마바사아차자창ㄹ망ㄹ" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

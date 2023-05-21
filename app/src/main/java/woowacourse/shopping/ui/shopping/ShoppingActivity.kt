@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductFakeRepository
+import woowacourse.shopping.database.cart.CartDBHelper
+import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
@@ -28,7 +30,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnC
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         setSupportActionBar(binding.toolbar)
-        presenter = ShoppingPresenter(this, ProductFakeRepository, RecentProductDatabase(this))
+        presenter = ShoppingPresenter(
+            this,
+            ProductFakeRepository,
+            RecentProductDatabase(this),
+            CartDatabase(
+                CartDBHelper(this).writableDatabase,
+            ),
+        )
 
         initLayoutManager()
         presenter.setUpProducts()
@@ -114,6 +123,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnC
 
     override fun onClick(id: Long) {
         presenter.navigateToItemDetail(id)
+    }
+
+    override fun onAddCart(id: Long, count: Int) {
+        binding.productRecyclerview.adapter?.let {
+            if (it is ProductsAdapter) {
+                it.updateItemCount(id, count)
+            }
+        }
+        presenter.updateItemCount(id, count)
     }
 
     override fun increaseCount(id: Long) {
