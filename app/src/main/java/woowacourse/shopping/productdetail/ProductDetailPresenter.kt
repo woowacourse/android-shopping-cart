@@ -12,7 +12,7 @@ class ProductDetailPresenter(
 ) : ProductDetailContract.Presenter {
 
     private var _count = 0
-    val count: Int
+    override val count: Int
         get() = _count
 
     override fun setUpView() {

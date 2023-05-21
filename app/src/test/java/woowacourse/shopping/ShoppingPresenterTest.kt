@@ -4,12 +4,14 @@ import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import model.Product
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shopping.ShoppingContract
 import woowacourse.shopping.shopping.ShoppingPresenter
 import woowacourse.shopping.util.toUiModel
@@ -127,5 +129,99 @@ class ShoppingPresenterTest {
         // then
         val expected = products.map { it.toUiModel() }
         verify { view.refreshRecentViewedProductsView(expected) }
+    }
+
+    @Test
+    fun `장바구니에 있는 상품의 수량을 더하면 저장소에 갱신한다`() {
+        // given
+        val cartProducts = listOf(
+            CartProduct(Product(0), count = 1),
+        )
+        val slot = slot<Int>()
+        every { repository.selectAllShoppingCartProducts() } returns cartProducts
+        every { repository.updateShoppingCartCount(0, capture(slot)) } just Runs
+
+        // when
+        presenter.changeShoppingCartProductCount(0, true)
+
+        // then
+        assertEquals(2, slot.captured)
+    }
+
+    @Test
+    fun `장바구니에 없는 상품의 수량을 더하면 저장소에 저장한다`() {
+        // given
+        val cartProducts = listOf(
+            CartProduct(Product(0), count = 1),
+        )
+        val slot = slot<Int>()
+        every { repository.selectAllShoppingCartProducts() } returns cartProducts
+        every { repository.insertToShoppingCart(1, capture(slot), true) } just Runs
+
+        // when
+        presenter.changeShoppingCartProductCount(1, true)
+
+        // then
+        assertEquals(1, slot.captured)
+    }
+
+    @Test
+    fun `장바구니에 1개만 담겨있던 상품의 수량을 빼면 저장소에 삭제한다`() {
+        // given
+        val cartProducts = listOf(
+            CartProduct(Product(0), count = 1),
+        )
+        every { repository.selectAllShoppingCartProducts() } returns cartProducts
+        every { repository.deleteFromShoppingCart(0) } just Runs
+
+        // when
+        presenter.changeShoppingCartProductCount(0, false)
+
+        // then
+        verify { repository.deleteFromShoppingCart(0) }
+    }
+
+    @Test
+    fun `상단 툴바의 장바구니에 담긴 개수를 갱신한다`() {
+        // given
+        val cartProducts = listOf(
+            CartProduct(Product(0), count = 1),
+            CartProduct(Product(1), count = 3),
+        )
+        val totalCount = slot<Int>()
+        every { repository.selectAllShoppingCartProducts() } returns cartProducts
+        every { view.updateToolbar(capture(totalCount)) } just Runs
+
+        // when
+        presenter.updateToolbar()
+
+        // then
+        assertEquals(4, totalCount.captured)
+    }
+
+    @Test
+    fun `화면을 새로고침한다`() {
+        // given
+        val products = listOf(
+            Product(id = 0),
+            Product(id = 1),
+        )
+        val cartProducts = listOf(
+            CartProduct(Product(id = 0), count = 2),
+        )
+        val slot = slot<List<ProductUiModel>>()
+        every { repository.selectProducts(any(), any()) } returns products
+        every { repository.selectAllShoppingCartProducts() } returns cartProducts
+        every { view.refreshShoppingProductsView(capture(slot)) } just Runs
+
+        // when
+        presenter.refreshView()
+
+        // then
+        val expected = listOf(
+            ProductUiModel(id = 0, count = 2),
+            ProductUiModel(id = 1, count = 0),
+        )
+        assertEquals(expected, slot.captured)
     }
 }
