@@ -1,23 +1,22 @@
-
 package woowacourse.shopping
 
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.database.ShoppingCache
+import woowacourse.shopping.database.cart.repository.CartRepository
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.util.toProductUiModel
 
 class ProductDetailPresenterTest {
 
     private lateinit var view: ProductDetailContract.View
-    private lateinit var shoppingCache: ShoppingCache
+    private lateinit var cartRepository: CartRepository
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        shoppingCache = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
     }
 
     @Test
@@ -29,7 +28,7 @@ class ProductDetailPresenterTest {
         ProductDetailPresenter(
             view = view,
             product = product,
-            repository = shoppingCache
+            repository = cartRepository
         )
 
         // then
@@ -45,7 +44,7 @@ class ProductDetailPresenterTest {
         // when
         ProductDetailPresenter(
             view = view,
-            repository = shoppingCache,
+            repository = cartRepository,
             latestViewedProduct = latestViewedProduct.toProductUiModel()
         )
 
@@ -59,7 +58,7 @@ class ProductDetailPresenterTest {
         val presenter = ProductDetailPresenter(
             view = view,
             product = Product().toProductUiModel(),
-            repository = shoppingCache
+            repository = cartRepository
         )
 
         // when
@@ -67,7 +66,7 @@ class ProductDetailPresenterTest {
 
         // then
         val expected = Product().toProductUiModel()
-        verify { shoppingCache.insertToShoppingCart(expected.id) }
+        verify { cartRepository.addToCart(expected.id) }
         verify { view.productDetailNavigator.navigateToCartView() }
     }
 
@@ -77,7 +76,7 @@ class ProductDetailPresenterTest {
         val presenter = ProductDetailPresenter(
             view = view,
             product = product,
-            repository = shoppingCache
+            repository = cartRepository
         )
 
         // when
@@ -95,7 +94,7 @@ class ProductDetailPresenterTest {
         val presenter = ProductDetailPresenter(
             view = view,
             product = product,
-            repository = shoppingCache
+            repository = cartRepository
         )
         presenter.plusCartProductCount()
         presenter.plusCartProductCount()

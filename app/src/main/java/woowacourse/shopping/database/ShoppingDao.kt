@@ -1,9 +1,11 @@
-package woowacourse.shopping.database.product
+package woowacourse.shopping.database
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import woowacourse.shopping.database.DBContract
+import woowacourse.shopping.database.cart.CartDBContract
+import woowacourse.shopping.database.product.ProductDBContract
+import woowacourse.shopping.database.recentviewed.RecentViewedDBContract
 
 class ShoppingDao(
     context: Context
@@ -19,9 +21,9 @@ class ShoppingDao(
         )
 
         db?.execSQL(
-            "CREATE TABLE ${ShoppingCartDBContract.TABLE_NAME}(" +
-                "${ShoppingCartDBContract.CART_PRODUCT_ID} int," +
-                "${ShoppingCartDBContract.COUNT} int" +
+            "CREATE TABLE ${CartDBContract.TABLE_NAME}(" +
+                "${CartDBContract.CART_PRODUCT_ID} int," +
+                "${CartDBContract.COUNT} int" +
                 ");"
         )
 

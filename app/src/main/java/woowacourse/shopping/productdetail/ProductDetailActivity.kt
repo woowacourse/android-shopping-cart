@@ -10,8 +10,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.common.CountPickerListener
-import woowacourse.shopping.database.ShoppingCacheImpl
-import woowacourse.shopping.database.product.ShoppingDao
+import woowacourse.shopping.database.cart.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.model.ProductUiModel
@@ -39,9 +38,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 view = this,
                 product = it,
                 latestViewedProduct = intent.getSerializableCompat(LATEST_VIEWED_PRODUCT_KEY),
-                shoppingCache = ShoppingCacheImpl(
-                    shoppingDao = ShoppingDao(this)
-                )
+                cartRepository = CartRepositoryImpl(this)
             )
         } ?: return handleMissingSerializableData()
     }
