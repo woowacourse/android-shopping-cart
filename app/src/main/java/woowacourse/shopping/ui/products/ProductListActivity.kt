@@ -65,7 +65,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
         cartCountBadge =
             menu.findItem(R.id.cart_count_badge).actionView?.findViewById(R.id.cart_count_badge)
-                ?: throw IllegalStateException("장바구니 아이템 개수 배지가 메뉴에 없으면 메뉴를 다시 보세요.")
+                ?: throw IllegalStateException("장바구니 아이템 개수 배지가 메뉴에 없으면 메뉴 리소스를 다시 보세요.")
 
         presenter.onLoadCartItemCount()
 
