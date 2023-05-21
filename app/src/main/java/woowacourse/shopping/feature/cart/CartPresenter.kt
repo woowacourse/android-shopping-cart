@@ -95,13 +95,12 @@ class CartPresenter(
         view.setNextButtonState(page.hasNextPage)
         view.setPageCount(page.currentPage)
 
-        if (page.checkedCount > 0) {
-            view.setOrderButtonState(true, page.checkedCount)
-        } else {
-            view.setOrderButtonState(false, page.checkedCount)
+        when {
+            page.checkedCount > 0 -> view.setOrderButtonState(true, page.checkedCount)
+            else -> view.setOrderButtonState(false, page.checkedCount)
         }
 
         view.setTotalMoney(convertToMoneyFormat(page.totalCheckedMoney))
-        view.setAllCheckedButtonState(page.currentPageCartProducts.all { it.checked })
+        view.setAllCheckedButtonState(page.isCurrentPageAllChecked)
     }
 }

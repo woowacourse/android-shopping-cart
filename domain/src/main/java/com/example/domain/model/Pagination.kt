@@ -24,8 +24,11 @@ data class Pagination(
             return allList.subList(fromIndex, toIndex)
         }
 
-    val isAllChecked: Boolean
-        get() = allList.all { it.checked }
+    val isCurrentPageAllChecked: Boolean
+        get() {
+            if (currentPageCartProducts.isEmpty()) return false
+            return currentPageCartProducts.all { it.checked }
+        }
 
     val isAnyChecked: Boolean
         get() = allList.any { it.checked }

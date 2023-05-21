@@ -16,7 +16,7 @@ fun Pagination.toPresentation(): PaginationUiModel {
         pageCount,
         hasPreviousPage(),
         hasNextPage(),
-        isAllChecked,
+        isCurrentPageAllChecked,
         isAnyChecked,
         checkedCount,
         totalCheckedMoney

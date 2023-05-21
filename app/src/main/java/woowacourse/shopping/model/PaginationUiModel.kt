@@ -7,15 +7,8 @@ data class PaginationUiModel(
     val pageTotalCount: Int,
     val hasPreviousPage: Boolean,
     val hasNextPage: Boolean,
-    val isAllChecked: Boolean,
+    val isCurrentPageAllChecked: Boolean,
     val isAnyChecked: Boolean,
     val checkedCount: Int,
     val totalCheckedMoney: Int
-) {
-    val allSize: Int
-        get() = cartProducts.size
-
-    companion object {
-        const val PAGE_LOAD_SIZE = 5
-    }
-}
+)
