@@ -19,9 +19,9 @@ class CartPresenter(
     private var _page: PaginationUiModel? = null
         set(value) {
             value?.let {
-                _currentPageCartProducts.value = it.currentPageCartProducts
-                _pageBottomNavigationUiModel.value = it.pageBottomNavigationUiModel
-                _cartBottomNavigationUiModel.value = it.cartBottomNavigationUiModel
+                _currentPageCartProducts.postValue(it.currentPageCartProducts)
+                _pageBottomNavigationUiModel.postValue(it.pageBottomNavigationUiModel)
+                _cartBottomNavigationUiModel.postValue(it.cartBottomNavigationUiModel)
             }
             field = value
         }

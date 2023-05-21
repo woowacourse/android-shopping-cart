@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.cart
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Price
@@ -12,14 +13,18 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.mapper.toDomain
-import woowacourse.shopping.model.CartProductUiModel
+import woowacourse.shopping.feature.getOrAwaitValue
+import woowacourse.shopping.mapper.toPresentation
 
 internal class CartPresenterTest {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var view: CartContract.View
     private lateinit var cartRepository: CartRepository
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun init() {
@@ -31,24 +36,12 @@ internal class CartPresenterTest {
 
     @Test
     fun `처음에 첫 페이지를 불러온다`() {
-        // given
-        val cartProductSlot = slot<List<CartProductUiModel>>()
-        every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
-
         // when
         presenter.loadInitCartProduct()
 
         // then
-        val expected = mockCartProducts.take(5)
-        val actual =
-            cartProductSlot.captured.map {
-                CartProduct(
-                    it.cartId,
-                    it.productUiModel.toDomain(),
-                    it.productUiModel.count,
-                    it.checked
-                )
-            }
+        val actual = presenter.currentPageCartProducts.getOrAwaitValue()
+        val expected = mockCartProducts.take(5).map { it.toPresentation() }
         assert(expected == actual)
     }
 
@@ -73,8 +66,6 @@ internal class CartPresenterTest {
     @Test
     fun `이전 페이지를 불러온다`() {
         // given
-        val cartProductSlot = slot<List<CartProductUiModel>>()
-        every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
         presenter.loadInitCartProduct()
         presenter.loadNextPage() //  2 페이지로 이동
 
@@ -82,24 +73,22 @@ internal class CartPresenterTest {
         presenter.loadPreviousPage() // 1페이지로 이동
 
         // then
-        val actual = cartProductSlot.captured.map { it.toDomain() }
-        val expected = mockCartProducts.take(5) // 1페이지 데이터들
+        val actual = presenter.currentPageCartProducts.getOrAwaitValue()
+        val expected = mockCartProducts.take(5).map { it.toPresentation() } // 1페이지 데이터들
         assert(actual == expected)
     }
 
     @Test
     fun `다음 페이지를 불러온다`() {
         // given
-        val cartProductSlot = slot<List<CartProductUiModel>>()
-        every { view.updateCartProducts(capture(cartProductSlot)) } just Runs
         presenter.loadInitCartProduct() // 현재 1페이지
 
         // when
         presenter.loadNextPage() // 2페이지로 이동
 
         // then
-        val actual = cartProductSlot.captured.map { it.toDomain() }
-        val expected = mockCartProducts.subList(5, 10) // 2페이지 데이터들
+        val actual = presenter.currentPageCartProducts.getOrAwaitValue()
+        val expected = mockCartProducts.subList(5, 10).map { it.toPresentation() } // 2페이지 데이터들
         assert(actual == expected)
     }
 

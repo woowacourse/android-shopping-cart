@@ -66,4 +66,6 @@ dependencies {
     implementation("com.squareup.okhttp3:mockwebserver:4.11.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("org.json:json:20210307")
+
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 }
