@@ -22,7 +22,7 @@ class Counter(
             return count in minCount..maxCount
         }
         override fun getValue(thisRef: Any?, property: KProperty<*>): Int {
-            return binding.tvCount.toString().toInt()
+            return binding.tvCount.text.toString().toInt()
         }
         override fun setValue(thisRef: Any?, property: KProperty<*>, value: Int) {
             binding.tvCount.text = value.toString()
@@ -33,8 +33,6 @@ class Counter(
     val tvMinus = binding.tvMinus
 
     init {
-        binding.tvCount.text = count.toString()
-        binding.tvPlus.setOnClickListener { count++ }
-        binding.tvMinus.setOnClickListener { count-- }
+        binding.tvCount.text = "1"
     }
 }

@@ -24,7 +24,7 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="22sp"
-            tools:text="0" />
+            tools:text="1" />
 
         <TextView
             android:id="@+id/tv_plus"
