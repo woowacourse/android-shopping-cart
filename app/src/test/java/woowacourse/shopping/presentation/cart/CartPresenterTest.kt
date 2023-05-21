@@ -75,6 +75,87 @@ class CartPresenterTest {
     }
 
     @Test
+    fun `상품의 개수를 추가할 수 있다`() {
+        // given
+        every { cartRepository.getAllCarts() } returns CartFixture.getFixture()
+        justRun { cartRepository.updateCartCountByCartId(1L, 2) }
+        presenter = CartPresenter(view, cartRepository)
+
+        // when
+        presenter.updateProductCount(1L, 2)
+
+        // then
+        verify { cartRepository.updateCartCountByCartId(1L, 2) }
+    }
+
+    @Test
+    fun `상품의 개수가 0이면 상품이 장바구니에서 제거된다`() {
+        // given
+        val carts = CartFixture.getFixture()
+        every { cartRepository.getAllCarts() } returns carts
+        justRun { cartRepository.updateCartCountByCartId(2L, 0) }
+        justRun { cartRepository.deleteCartByCartId(2L) }
+        justRun { view.setEnableLeftButton(false) }
+        justRun { view.setEnableRightButton(false) }
+
+        val slot = slot<List<CartModel>>()
+        justRun { view.setChangedCartItemsView(capture(slot)) }
+
+        presenter = CartPresenter(view, cartRepository)
+
+        // when
+        presenter.updateProductCount(2L, 0)
+
+        // then
+        val actual = slot.captured
+        val expected = 2
+        assertEquals(expected, actual.size)
+        verify { cartRepository.updateCartCountByCartId(2L, 0) }
+        verify { cartRepository.deleteCartByCartId(2L) }
+        verify { view.setEnableLeftButton(false) }
+        verify { view.setEnableRightButton(false) }
+        verify { view.setChangedCartItemsView(actual) }
+    }
+
+    @Test
+    fun `상품의 체크 상태를 갱신할 수 있다`() {
+        // given
+        every { cartRepository.getAllCarts() } returns CartFixture.getFixture()
+        justRun { cartRepository.updateCartCheckedByCartId(3L, true) }
+        justRun { view.setAllCartChecked(true) }
+
+        presenter = CartPresenter(view, cartRepository)
+
+        // when
+        presenter.updateProductChecked(3L, true)
+
+        // then
+        verify { cartRepository.updateCartCheckedByCartId(3L, true) }
+        verify { view.setAllCartChecked(true) }
+    }
+
+    @Test
+    fun `체크 되어있는 상품들의 총 가격을 보여준다`() {
+        // given
+        every { cartRepository.getAllCarts() } returns CartFixture.getFixture()
+
+        val slot = slot<Int>()
+        justRun { view.setTotalPriceView(capture(slot)) }
+
+        presenter = CartPresenter(view, cartRepository)
+
+        // when
+        presenter.calculateTotalPrice()
+
+        // then
+        val actual = slot.captured
+        val expected = 24_900 + 7_980
+        assertEquals(expected, actual)
+        verify { cartRepository.getAllCarts() }
+        verify { view.setTotalPriceView(actual) }
+    }
+
+    @Test
     fun `2페이지에서 이전 페이지인 1페이지로 이동한다`() {
         // given
         val slot = slot<Int>()
