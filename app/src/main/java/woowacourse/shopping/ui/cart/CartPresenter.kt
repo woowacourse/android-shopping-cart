@@ -9,11 +9,18 @@ class CartPresenter(
 ) : CartContract.Presenter {
 
     private val checkedItems = mutableSetOf<CartUIState>()
+    private var currentPage: Int = 1
+    private val maxOffset: Int
+        get() {
+            var size = cartRepository.findAll().size
+            if (size == 0) size = 1
+            return (size - 1) / PAGE_SIZE + 1
+        }
 
-    override fun loadCartItems(limit: Int, page: Int) {
-        val offset = (page - 1) * limit
+    override fun loadCartItems() {
+        val offset = (currentPage - 1) * PAGE_SIZE
         view.setCartItems(
-            cartRepository.findAll(limit = limit, offset = offset).map(CartUIState::from)
+            cartRepository.findAll(limit = PAGE_SIZE, offset = offset).map(CartUIState::from)
                 .onEach { it.updateCheckedState(checkedItems.contains(it)) },
         )
     }
@@ -21,14 +28,34 @@ class CartPresenter(
     override fun deleteCartItem(productId: Long) {
         cartRepository.deleteById(productId)
         checkedItems.removeIf { it.id == productId }
-        view.updatePage()
         setTotalInfo()
+        view.updatePage(currentPage)
+        view.updateLeftButtonsEnabled(currentPage > 1)
+        view.updateRightButtonsEnabled(currentPage < maxOffset)
     }
 
-    override fun setPageButtons(limit: Int) {
-        var size = cartRepository.findAll().size
-        if (size == 0) size = 1
-        view.setPageButtonClickListener((size - 1) / limit + 1)
+    override fun setPageButtons() {
+        view.initPageButtonClickListener()
+        view.updateLeftButtonsEnabled(currentPage > 1)
+        view.updateRightButtonsEnabled(currentPage < maxOffset)
+    }
+
+    override fun goLeftPage() {
+        if (currentPage > 1) {
+            currentPage--
+            view.updatePage(currentPage)
+            view.updateLeftButtonsEnabled(currentPage > 1)
+            view.updateRightButtonsEnabled(currentPage < maxOffset)
+        }
+    }
+
+    override fun goRightPage() {
+        if (currentPage < maxOffset) {
+            currentPage++
+            view.updatePage(currentPage)
+            view.updateLeftButtonsEnabled(currentPage > 1)
+            view.updateRightButtonsEnabled(currentPage < maxOffset)
+        }
     }
 
     override fun minusItemCount(productId: Long, oldCount: Int) {
@@ -51,7 +78,7 @@ class CartPresenter(
             checkedItems.add(newItem)
         }
         setTotalInfo()
-        view.updatePage()
+        view.updatePage(currentPage)
     }
 
     override fun updateCheckbox(isChecked: Boolean, item: CartUIState) {
@@ -74,5 +101,6 @@ class CartPresenter(
 
     companion object {
         private const val MAX_STOCK_QUANTITY = 99
+        private const val PAGE_SIZE = 5
     }
 }

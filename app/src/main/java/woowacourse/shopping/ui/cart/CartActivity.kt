@@ -19,7 +19,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val presenter: CartPresenter by lazy {
         CartPresenter(this, CartRepositoryImpl(this, ProductRepositoryImpl))
     }
-    private var page: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,12 +69,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartList() {
-        presenter.loadCartItems(limit = PAGE_SIZE, page = (page - 1) * PAGE_SIZE)
+        presenter.loadCartItems()
     }
 
     private fun initPageControlField() {
-        binding.tvCartPage.text = "$page"
-        presenter.setPageButtons(PAGE_SIZE)
+        binding.tvCartPage.text = "1"
+        presenter.setPageButtons()
     }
 
     private fun initCartTotalItemControlField() {
@@ -83,23 +82,21 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.btnCartPurchase.text = getString(R.string.button_purchase).format(0)
     }
 
-    override fun setPageButtonClickListener(maxOffset: Int) {
-        updateButtonsEnabledState(maxOffset)
-
+    override fun initPageButtonClickListener() {
         binding.btnPageDown.setOnClickListener {
-            if (page > 1) {
-                page--
-                updatePage()
-            }
-            updateButtonsEnabledState(maxOffset)
+            presenter.goLeftPage()
         }
         binding.btnPageUp.setOnClickListener {
-            if (page < maxOffset) {
-                page++
-                updatePage()
-            }
-            updateButtonsEnabledState(maxOffset)
+            presenter.goRightPage()
         }
+    }
+
+    override fun updateLeftButtonsEnabled(isEnabled: Boolean) {
+        binding.btnPageDown.isEnabled = isEnabled
+    }
+
+    override fun updateRightButtonsEnabled(isEnabled: Boolean) {
+        binding.btnPageUp.isEnabled = isEnabled
     }
 
     override fun setCartItems(cartItems: List<CartUIState>) {
@@ -114,19 +111,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.btnCartPurchase.text = getString(R.string.button_purchase).format(amount)
     }
 
-    override fun updatePage() {
-        presenter.loadCartItems(PAGE_SIZE, page)
+    override fun updatePage(page: Int) {
+        presenter.loadCartItems()
         binding.tvCartPage.text = "$page"
     }
 
-    private fun updateButtonsEnabledState(maxOffset: Int) {
-        binding.btnPageDown.isEnabled = page > 1
-        binding.btnPageUp.isEnabled = page < maxOffset
-    }
-
     companion object {
-        private const val PAGE_SIZE = 5
-
         fun startActivity(context: Context) {
             Intent(context, CartActivity::class.java).also {
                 context.startActivity(it)
