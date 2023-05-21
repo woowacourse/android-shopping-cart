@@ -110,6 +110,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
         setSupportActionBar(findViewById(R.id.shopping_toolbar))
 
+        binding.shoppingProductList.itemAnimator = null
+
         initProductList()
 
         initPresenter()

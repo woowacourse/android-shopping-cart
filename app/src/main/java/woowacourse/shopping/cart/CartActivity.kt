@@ -26,6 +26,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setSupportActionBar(findViewById(R.id.cart_toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        binding.cartProductList.itemAnimator = null
+
         initCartAdapter()
 
         setupCartProductAllCheckbox()
