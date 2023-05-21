@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
@@ -36,6 +37,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setActionBar()
 
         presenter.onLoadProduct(intent.getLongExtra(PRODUCT_ID, -1))
+        initLastViewedProduct()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,6 +61,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
+    private fun initLastViewedProduct() {
+        presenter.onLoadLastViewedProduct()
+    }
+
     override fun setProduct(product: ProductDetailUIState) {
         Glide.with(this)
             .load(product.imageUrl)
@@ -71,6 +77,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             presenter.onAddProductToCart(product.id)
             moveToCartActivity()
         }
+    }
+
+    override fun setLastViewedProduct(product: ProductDetailUIState?) {
+        if (product == null) {
+            binding.layoutLastViewedProduct.isVisible = false
+            return
+        }
+        binding.layoutLastViewedProduct.isVisible = true
+        binding.tvLastViewedProductName.text = product.name
+        binding.tvLastViewedProductPrice.text = getString(R.string.product_price).format(
+            PRICE_FORMAT.format(product.price)
+        )
     }
 
     private fun moveToCartActivity() {

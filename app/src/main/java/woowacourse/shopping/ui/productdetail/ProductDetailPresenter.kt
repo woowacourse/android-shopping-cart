@@ -26,4 +26,17 @@ class ProductDetailPresenter(
         val cartItem = CartItem(product, LocalDateTime.now(), 1)
         cartItemRepository.save(cartItem)
     }
+
+    override fun onLoadLastViewedProduct() {
+        val recentlyViewedProducts =
+            recentlyViewedProductRepository.findFirst10OrderByViewedTimeDesc()
+
+        if (recentlyViewedProducts.size < 2){
+            view.setLastViewedProduct(null)
+            return
+        }
+
+        val productDetailUIState = ProductDetailUIState.from(recentlyViewedProducts[1].product)
+        view.setLastViewedProduct(productDetailUIState)
+    }
 }
