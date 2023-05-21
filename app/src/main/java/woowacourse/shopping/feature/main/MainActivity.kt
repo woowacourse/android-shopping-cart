@@ -1,18 +1,16 @@
 package woowacourse.shopping.feature.main
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.common_ui.CartCounterBadge
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
 import woowacourse.shopping.data.repository.local.RecentProductRepositoryImpl
 import woowacourse.shopping.data.repository.remote.MockRemoteProductRepositoryImpl
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var recentWrapperAdapter: RecentWrapperAdapter
     private lateinit var loadAdapter: LoadAdapter
 
-    private var cartCountBadge: TextView? = null
+    private var cartCountBadge: CartCounterBadge? = null
 
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
@@ -144,7 +142,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun updateCartCount(count: Int) {
-        runOnUiThread { cartCountBadge?.text = "$count" }
+        runOnUiThread { cartCountBadge?.count = count }
     }
 
     override fun hideLoadMore() {
@@ -189,12 +187,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onDestroy()
         if (isFinishing) {
             presenter.resetProducts()
-        }
-    }
-
-    companion object {
-        fun getIntent(context: Context): Intent {
-            return Intent(context, MainActivity::class.java)
         }
     }
 }

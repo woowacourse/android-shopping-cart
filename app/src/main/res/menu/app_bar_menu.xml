@@ -9,7 +9,7 @@
 
     <item
         android:id="@+id/cart_count_badge"
-        android:title="@string/cart"
-        app:actionLayout="@layout/layout_cart_count_badge"
+        android:title="@string/cart_count_badge"
+        app:actionLayout="@layout/layout_cart_badge"
         app:showAsAction="always" />
 </menu>
