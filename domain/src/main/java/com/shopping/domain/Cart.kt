@@ -30,6 +30,11 @@ class Cart(products: List<CartProduct> = emptyList()) {
         return Cart(removedProducts + updatedProduct)
     }
 
+    fun updateProductCount(cartProduct: CartProduct, count: Int): Cart {
+        val newProduct = CartProduct(cartProduct.isPicked, count, cartProduct.product)
+        return Cart(products - cartProduct + newProduct)
+    }
+
     fun getTotalPickedProductsCount(): Int = products.count { it.isPicked }
 
     fun isAllPicked(): Boolean = products.count() == products.count { it.isPicked }

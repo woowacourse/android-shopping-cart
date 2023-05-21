@@ -208,6 +208,28 @@ class CartTest {
     }
 
     @Test
+    internal fun `장바구니가 가진 상품의 개수를 바꿀 수 있다`() {
+        // given
+        val count = 3
+        val targetCartProduct = CartProduct(
+            isPicked = false,
+            count = 1,
+            product = Product(
+                id = 1,
+                imageUrl = "",
+                name = "",
+                price = Price(value = 10000)
+            )
+        )
+
+        // when
+        val actual = cart.updateProductCount(targetCartProduct, count)
+
+        // then
+        assertThat(actual.products.find { it.product.id == targetCartProduct.product.id }!!.count).isEqualTo(3)
+    }
+
+    @Test
     internal fun `장바구니의 선택된 상품의 개수를 반환한다`() {
         // when
         val actual = cart.getTotalPickedProductsCount()
