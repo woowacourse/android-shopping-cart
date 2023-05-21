@@ -8,11 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductCount
-import woowacourse.shopping.model.UiBasketProduct
+import woowacourse.shopping.model.UiCartProduct
 import woowacourse.shopping.model.UiProduct
 import woowacourse.shopping.model.UiRecentProduct
-import woowacourse.shopping.ui.basket.BasketActivity
-import woowacourse.shopping.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.shopping.ShoppingContract.Presenter
 import woowacourse.shopping.ui.shopping.ShoppingContract.View
 import woowacourse.shopping.ui.shopping.recyclerview.adapter.loadmore.LoadMoreAdapter
@@ -38,7 +38,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     private val productAdapter = ProductAdapter(this, this)
     private val loadMoreAdapter = LoadMoreAdapter(presenter::loadMoreProducts)
 
-    private val basketActivityLauncher = registerForActivityResult(StartActivityForResult()) {
+    private val cartActivityLauncher = registerForActivityResult(StartActivityForResult()) {
         presenter.fetchProducts()
     }
 
@@ -55,8 +55,8 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     }
 
     private fun initMenuClickListener() {
-        val basketItemView = binding.shoppingToolBar.findItemActionView(R.id.basket)
-        basketItemView?.setOnClickListener { presenter.navigateToBasket() }
+        val cartItemView = binding.shoppingToolBar.findItemActionView(R.id.cart)
+        cartItemView?.setOnClickListener { presenter.navigateToCart() }
     }
 
     private fun initRecyclerView() {
@@ -67,7 +67,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         }
     }
 
-    override fun updateProducts(products: List<UiBasketProduct>) {
+    override fun updateProducts(products: List<UiCartProduct>) {
         productAdapter.submitList(products)
     }
 
@@ -79,8 +79,8 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         startActivity(ProductDetailActivity.getIntent(this, product, recentProduct))
     }
 
-    override fun navigateToBasket() {
-        basketActivityLauncher.launch(BasketActivity.getIntent(this))
+    override fun navigateToCart() {
+        cartActivityLauncher.launch(CartActivity.getIntent(this))
     }
 
     override fun showLoadMoreButton() {
@@ -91,9 +91,9 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
         loadMoreAdapter.hideButton()
     }
 
-    override fun updateBasketProductBadge(count: ProductCount) {
-        val basketBadgeView = binding.shoppingToolBar.findItemActionView(R.id.basket) ?: return
-        val productCountTextView = basketBadgeView.findTextView(R.id.basket_count_badge) ?: return
+    override fun updateCartBadge(count: ProductCount) {
+        val cartBadgeView = binding.shoppingToolBar.findItemActionView(R.id.cart) ?: return
+        val productCountTextView = cartBadgeView.findTextView(R.id.cart_count_badge) ?: return
 
         productCountTextView.visibility = count.getVisibility()
         productCountTextView.text = count.toText()

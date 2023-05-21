@@ -1,21 +1,21 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.domain.DomainBasketProduct
-import woowacourse.shopping.model.UiBasketProduct
+import woowacourse.shopping.domain.DomainCartProduct
+import woowacourse.shopping.model.UiCartProduct
 
-fun UiBasketProduct.toDomain(): DomainBasketProduct = DomainBasketProduct(
+fun UiCartProduct.toDomain(): DomainCartProduct = DomainCartProduct(
     id = id,
     product = product.toDomain(),
     selectedCount = selectedCount.toDomain(),
     isChecked = isChecked,
 )
 
-fun DomainBasketProduct.toUi(): UiBasketProduct = UiBasketProduct(
+fun DomainCartProduct.toUi(): UiCartProduct = UiCartProduct(
     id = id,
     product = product.toUi(),
     selectedCount = selectedCount.toUi(),
     isChecked = isChecked,
 )
 
-fun List<DomainBasketProduct>.toUi(): List<UiBasketProduct> =
-    map { basketProduct -> basketProduct.toUi() }
+fun List<DomainCartProduct>.toUi(): List<UiCartProduct> =
+    map { cartProduct -> cartProduct.toUi() }

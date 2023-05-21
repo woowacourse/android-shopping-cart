@@ -1,13 +1,13 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.domain.DomainBasket
-import woowacourse.shopping.model.UiBasket
+import woowacourse.shopping.domain.DomainCart
+import woowacourse.shopping.model.UiCart
 
-fun UiBasket.toDomain(loadUnit: Int): DomainBasket = DomainBasket(
-    basketProducts = basketProducts.map { it.toDomain() },
+fun UiCart.toDomain(loadUnit: Int): DomainCart = DomainCart(
+    cartProducts = cartProducts.map { it.toDomain() },
     loadUnit = loadUnit,
 )
 
-fun DomainBasket.toUi(): UiBasket = UiBasket(
-    basketProducts = basketProducts.map { it.toUi() },
+fun DomainCart.toUi(): UiCart = UiCart(
+    cartProducts = cartProducts.map { it.toUi() },
 )

@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.model.UiBasketProduct
+import woowacourse.shopping.model.UiCartProduct
 import woowacourse.shopping.util.listener.ProductClickListener
 import woowacourse.shopping.widget.ProductCounterView.OnClickListener
 
@@ -23,7 +23,7 @@ class ProductViewHolder(
         binding.counterClickListener = counterClickListener
     }
 
-    fun bind(basketProduct: UiBasketProduct) {
-        binding.basketProduct = basketProduct
+    fun bind(cartProduct: UiCartProduct) {
+        binding.cartProduct = cartProduct
     }
 }

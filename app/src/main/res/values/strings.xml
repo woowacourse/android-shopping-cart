@@ -10,7 +10,7 @@
 
     <!-- ProductDetailActivity -->
     <string name="tv_price_title">금액</string>
-    <string name="btn_basket">장바구니 담기</string>
+    <string name="btn_cart">장바구니 담기</string>
     <string name="tv_cart">Cart</string>
 
     <!-- item_recent_products -->
@@ -19,7 +19,7 @@
     <string name="tv_next"><![CDATA[>]]></string>
     <string name="default_page">1</string>
     <string name="close_screen">화면 닫기</string>
-    <string name="basket">장바구니</string>
+    <string name="cart">장바구니</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="last_viewed_product">마지막으로 본 상품</string>

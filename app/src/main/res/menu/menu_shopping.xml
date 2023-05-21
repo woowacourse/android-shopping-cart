@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/basket"
-        android:title="@string/basket"
-        app:actionLayout="@layout/layout_basket_badge"
+        android:id="@+id/cart"
+        android:title="@string/cart"
+        app:actionLayout="@layout/layout_cart_badge"
         app:showAsAction="always" />
 </menu>

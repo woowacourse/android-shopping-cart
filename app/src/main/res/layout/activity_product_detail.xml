@@ -10,7 +10,7 @@
 
         <variable
             name="presenter"
-            type="woowacourse.shopping.ui.productdetail.ProductDetailContract.Presenter" />
+            type="woowacourse.shopping.ui.detail.ProductDetailContract.Presenter" />
 
         <variable
             name="detailProduct"
@@ -29,7 +29,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".ui.productdetail.ProductDetailActivity">
+            tools:context=".ui.detail.ProductDetailActivity">
 
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/product_detail_tool_bar"
@@ -113,7 +113,7 @@
                 android:paddingHorizontal="18dp"
                 android:paddingVertical="12dp"
                 android:visibility="@{lastViewedProduct != null ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@+id/basket_button"
+                app:layout_constraintBottom_toTopOf="@+id/cart_button"
                 app:layout_constraintTop_toBottomOf="@+id/price_title_text_view">
 
                 <TextView
@@ -158,14 +158,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/basket_button"
+                android:id="@+id/cart_button"
                 android:layout_width="0dp"
                 android:layout_height="?actionBarSize"
                 android:background="@color/woowa_emerald"
                 android:gravity="center"
                 android:onClick="@{() -> presenter.inquiryProductCounter()}"
                 android:paddingVertical="12dp"
-                android:text="@string/btn_basket"
+                android:text="@string/btn_cart"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"

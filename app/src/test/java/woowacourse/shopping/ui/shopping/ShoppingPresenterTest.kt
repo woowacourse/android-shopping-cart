@@ -83,9 +83,9 @@ internal class ShoppingPresenterTest {
         /* ... */
 
         // when
-        presenter.navigateToBasket()
+        presenter.navigateToCart()
 
         // then
-        verify(exactly = 1) { view.navigateToBasket() }
+        verify(exactly = 1) { view.navigateToCart() }
     }
 }

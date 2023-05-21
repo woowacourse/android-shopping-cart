@@ -1,16 +1,16 @@
 package woowacourse.shopping.data.mapper
 
-import woowacourse.shopping.data.model.DataBasketProduct
-import woowacourse.shopping.domain.BasketProduct
+import woowacourse.shopping.data.model.DataCartProduct
+import woowacourse.shopping.domain.CartProduct
 
-fun DataBasketProduct.toDomain(): BasketProduct = BasketProduct(
+fun DataCartProduct.toDomain(): CartProduct = CartProduct(
     id = id,
     product = product.toDomain(),
     selectedCount = selectedCount.toDomain(),
     isChecked = isChecked == 1,
 )
 
-fun BasketProduct.toData(): DataBasketProduct = DataBasketProduct(
+fun CartProduct.toData(): DataCartProduct = DataCartProduct(
     id = id,
     product = product.toData(),
     selectedCount = selectedCount.toData(),
