@@ -6,5 +6,6 @@ import woowacourse.shopping.presentation.model.CartProductModel
 
 fun CartProductEntity.toUIModel() = CartProductModel(
     product = (ProductsDao.getDataById(productId) ?: ProductsDao.getErrorData()).toUIModel(),
-    count = count
+    count = count,
+    isChecked = isSelected
 )

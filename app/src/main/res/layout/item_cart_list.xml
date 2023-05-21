@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -33,6 +32,7 @@
             app:layout_constraintTop_toBottomOf="@id/space1_cart_list">
 
             <CheckBox
+                android:checked="@{cartItem.isChecked}"
                 android:id="@+id/checkbox_cart_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -94,12 +94,13 @@
                 android:text="@{String.valueOf(cartItem.product.price)}"
                 android:textColor="@color/product_info_text_color"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@id/layout_order_count"
+                app:layout_constraintBottom_toTopOf="@id/count_view_product_list_order_count"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="84,400원" />
 
             <woowacourse.shopping.presentation.view.common.ProductCounterView
-                android:id="@+id/layout_order_count"
+                android:id="@+id/count_view_product_list_order_count"
+                app:count="@{cartItem.count}"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginEnd="13dp"
@@ -107,7 +108,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintDimensionRatio="H,126:42"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintWidth_percent="0.38"/>
+                app:layout_constraintWidth_percent="0.38" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

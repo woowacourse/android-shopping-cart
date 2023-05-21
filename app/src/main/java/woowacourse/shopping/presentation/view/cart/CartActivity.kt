@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.local.database.CartDao
-import woowacourse.shopping.data.local.sharedpreference.SharedPreference
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.data.respository.cart.CartTotalPriceRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -24,7 +23,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         CartPresenter(
             this,
             CartRepositoryImpl(CartDao(this)),
-            CartTotalPriceRepositoryImpl(SharedPreference(this))
+            CartTotalPriceRepositoryImpl(CartDao(this))
         )
     }
 
@@ -39,6 +38,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.loadCartItems()
         setLeftButtonClick()
         setRightButtonClick()
+        observeTotalPrice()
+    }
+
+    private fun observeTotalPrice() {
+        presenter.totalPrice.observe(this) {
+            binding.tvCartTotalPrice.text = getString(R.string.product_price_format, it)
+        }
     }
 
     private fun setSupportActionBar() {
@@ -57,7 +63,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setCartItemsView(carts: List<CartProductModel>) {
         cartAdapter = CartAdapter(
-            carts, ::deleteCartItem, ::changeCartSelectedStatus
+            carts, ::deleteCartItem, ::changeCartSelectedStatus, ::onProductCountChanged
         )
         binding.rvCart.adapter = cartAdapter
     }
@@ -70,7 +76,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.deleteCartItem(itemId)
     }
 
-    private fun changeCartSelectedStatus(isSelected: Boolean) {
+    private fun onProductCountChanged(productId: Long, productCount: Int) {
+        presenter.updateProductCount(productId, productCount)
+    }
+
+    private fun changeCartSelectedStatus(productId: Long, isSelected: Boolean) {
+        presenter.changeCartSelectedStatus(productId, isSelected)
     }
 
     override fun setEnableLeftButton(isEnabled: Boolean) {
@@ -79,6 +90,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setEnableRightButton(isEnabled: Boolean) {
         binding.btCartListPageRight.isEnabled = isEnabled
+    }
+
+    override fun updateTotalPrice(totalPrice: Int) {
+        binding.tvCartTotalPrice.text = getString(R.string.product_price_format, totalPrice)
     }
 
     private fun setLeftButtonClick() {

@@ -8,7 +8,8 @@ import woowacourse.shopping.presentation.view.cart.viewholder.CartViewHolder
 class CartAdapter(
     items: List<CartProductModel>,
     private val onCloseClick: (Long) -> Unit,
-    private val onCheckedChangeListener: (Boolean) -> Unit,
+    private val onCheckedChangeListener: (Long, Boolean) -> Unit,
+    private val onCountChanged: (Long, Int) -> Unit
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val items = items.toMutableList()
 
@@ -16,7 +17,13 @@ class CartAdapter(
         return CartViewHolder(
             parent,
             onCloseClick = { onCloseClick(items[it].product.id) },
-            onCheckedChangeListener = onCheckedChangeListener
+            onCheckedChangeListener = { position, isChecked ->
+                onCheckedChangeListener(
+                    items[position].product.id,
+                    isChecked
+                )
+            },
+            { position, count -> onCountChanged(items[position].product.id, count) }
         )
     }
 
