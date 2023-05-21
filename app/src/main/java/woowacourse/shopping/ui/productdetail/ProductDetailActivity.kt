@@ -22,7 +22,8 @@ import woowacourse.shopping.util.setThrottleFirstOnClickListener
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
-    private lateinit var product: UiProduct
+    private lateinit var currentProduct: UiProduct
+    private var previousProduct: UiProduct? = null
     private lateinit var presenter: ProductDetailContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +41,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initExtraData(): Boolean {
-        product = intent.getParcelableExtraCompat(PRODUCT_KEY)
-            ?: return intentDataNullProcess(PRODUCT_KEY)
+        currentProduct = intent.getParcelableExtraCompat(CURRENT_PRODUCT_KEY)
+            ?: return intentDataNullProcess(CURRENT_PRODUCT_KEY)
+        previousProduct = intent.getParcelableExtraCompat(PREVIOUS_PRODUCT_KEY)
         return true
     }
 
@@ -54,7 +56,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(
             this,
             BasketRepositoryImpl(LocalBasketDataSource(BasketDaoImpl(ShoppingDatabase(this)))),
-            product
+            currentProduct,
+            previousProduct
         )
     }
 
@@ -70,8 +73,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     companion object {
-        private const val PRODUCT_KEY = "product"
-        fun getIntent(context: Context, product: UiProduct): Intent =
-            Intent(context, ProductDetailActivity::class.java).putExtra(PRODUCT_KEY, product)
+        private const val CURRENT_PRODUCT_KEY = "currentProduct"
+        private const val PREVIOUS_PRODUCT_KEY = "previousProduct"
+        fun getIntent(
+            context: Context,
+            currentProduct: UiProduct,
+            previousProduct: UiProduct?
+        ): Intent =
+            Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(CURRENT_PRODUCT_KEY, currentProduct)
+                if (previousProduct != null) putExtra(PREVIOUS_PRODUCT_KEY, previousProduct)
+            }
     }
 }

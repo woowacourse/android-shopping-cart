@@ -11,7 +11,7 @@ interface ShoppingContract {
 
         fun updateRecentProducts(recentProducts: List<UiRecentProduct>)
 
-        fun showProductDetail(product: UiProduct)
+        fun showProductDetail(currentProduct: UiProduct, previousProduct: UiProduct?)
 
         fun updateMoreButtonState(isVisible: Boolean)
 
@@ -34,8 +34,6 @@ interface ShoppingContract {
         fun fetchRecentProducts()
 
         fun inquiryProductDetail(product: UiProduct)
-
-        fun inquiryRecentProductDetail(recentProduct: UiProduct)
 
         fun fetchHasNext()
     }

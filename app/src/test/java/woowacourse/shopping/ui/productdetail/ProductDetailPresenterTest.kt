@@ -27,7 +27,7 @@ class ProductDetailPresenterTest() {
             UiPrice(1000),
             "https://pbs.twimg.com/media/FpFzjV-aAAAIE-v?format=jpg&name=large"
         )
-        presenter = ProductDetailPresenter(view, basketRepository, product)
+        presenter = ProductDetailPresenter(view, basketRepository, product, product)
     }
 
     @Test

@@ -98,8 +98,14 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         recentProductWrapperAdapter.notifyDataSetChanged()
     }
 
-    override fun showProductDetail(product: UiProduct) {
-        activityResultLauncher.launch(ProductDetailActivity.getIntent(this, product))
+    override fun showProductDetail(currentProduct: UiProduct, previousProduct: UiProduct?) {
+        activityResultLauncher.launch(
+            ProductDetailActivity.getIntent(
+                this,
+                currentProduct,
+                previousProduct
+            )
+        )
     }
 
     override fun updateMoreButtonState(isVisible: Boolean) {
@@ -111,7 +117,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initAdapter() {
-        recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
+        recentProductAdapter = RecentProductAdapter(presenter::inquiryProductDetail)
         recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
         productAdapter = ProductAdapter(
             presenter::inquiryProductDetail,

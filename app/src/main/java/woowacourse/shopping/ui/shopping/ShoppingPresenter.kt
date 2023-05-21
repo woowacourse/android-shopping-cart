@@ -11,6 +11,7 @@ import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.model.UiProduct
 import woowacourse.shopping.ui.model.UiRecentProduct
+import woowacourse.shopping.util.secondOrNull
 import kotlin.concurrent.thread
 
 class ShoppingPresenter(
@@ -93,13 +94,10 @@ class ShoppingPresenter(
     }
 
     override fun inquiryProductDetail(product: UiProduct) {
-        view.showProductDetail(product)
+        val previousProduct =
+            if (recentProducts.firstOrNull()?.product == product) recentProducts.secondOrNull()?.product else recentProducts.firstOrNull()?.product
+        view.showProductDetail(currentProduct = product, previousProduct = previousProduct)
         thread { recentProductRepository.add(product.toDomain()) }
-    }
-
-    override fun inquiryRecentProductDetail(recentProduct: UiProduct) {
-        view.showProductDetail(recentProduct)
-        thread { recentProductRepository.add(recentProduct.toDomain()) }
     }
 
     override fun fetchHasNext() {
