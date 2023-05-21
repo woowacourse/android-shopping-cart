@@ -7,8 +7,10 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
-    private val cartDao: CartDao
+    private val cartDao: CartDao,
+    private var cart: Cart = Cart(emptyList())
 ) : CartRepository {
+
     override fun addCartProduct(cartProduct: CartProduct) {
         cartDao.insertCartProduct(cartProduct)
     }
@@ -22,7 +24,15 @@ class CartRepositoryImpl(
     }
 
     override fun getPage(page: Int, sizePerPage: Int): Cart {
-        return cartDao.selectPage(page, sizePerPage)
+        val startIndex = page * sizePerPage
+        val newCart = if (startIndex < cart.cartProducts.size) {
+            cart.getSubCart(startIndex, startIndex + sizePerPage)
+        } else {
+            cartDao.selectPage(page, sizePerPage).apply {
+                cart = Cart(cart.cartProducts + cartProducts)
+            }
+        }
+        return newCart
     }
 
     override fun deleteCartProduct(cartProduct: CartProduct) {
@@ -43,5 +53,9 @@ class CartRepositoryImpl(
 
     override fun getTotalPrice(): Int {
         return cartDao.getTotalPrice()
+    }
+
+    override fun replaceCartProduct(prev: CartProduct, new: CartProduct) {
+        cart = cart.replaceCartProduct(prev, new)
     }
 }

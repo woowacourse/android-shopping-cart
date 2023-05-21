@@ -74,10 +74,14 @@
     - [ ] Cart
         - Cart
         - [x] init { }
-          - [x] view.updateCartTotalPrice(price: Int)
-          - [x] view.updateCartTotalAmount(amount: Int)
-        - [ ] updateCartProductChecked(cartProductModel)
-            - [ ] updateCartProduct(cartProduct)
+            - [x] view.updateCartTotalPrice(price)
+            - [x] view.updateCartTotalAmount(amount)
+        - [x] changeCartProductChecked(cartProductModel)
+            - [x] cartProduct.changeChecked(!isChecked)   
+            - [x] cart.replaceCartProduct(prev, new) 
+            - [x] view.updateCartProduct(prev, new)
+            - [x] apply price to total price
+            - [x] apply amount to total amount
         - [ ] decreaseCartProductAmount()
             - [ ] if(amount > 1) updateCartProduct(cartProduct)
         - [ ] increaseCartProductAmount()
@@ -85,6 +89,8 @@
         - [ ] private updateCartProduct(cartProduct)
             - [ ] cartRepository.updateCartProduct(cartProduct)
             - [ ] view.updateCartProduct(cartProductModel)
+            - [ ] updateCart()
+        - [ ] private updateCart()
             - [ ] view.updateTotalPrice(difference)
             - [ ] view.updateCartAmount(amount)
         - [ ] updateCartProductCheckedInPage(List<CartProductModel>)

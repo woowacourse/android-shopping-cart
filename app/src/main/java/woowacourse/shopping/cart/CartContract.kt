@@ -9,6 +9,8 @@ interface CartContract {
         fun goToPreviousPage()
 
         fun goToNextPage()
+
+        fun changeCartProductChecked(cartProductModel: CartProductModel)
     }
 
     interface View {
@@ -21,5 +23,7 @@ interface CartContract {
         fun updateCartTotalAmount(amount: Int)
 
         fun setResultForChange()
+
+        fun updateCartProduct(prev: CartProductModel, new: CartProductModel)
     }
 }

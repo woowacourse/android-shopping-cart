@@ -58,6 +58,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setResult(Activity.RESULT_OK)
     }
 
+    override fun updateCartProduct(prev: CartProductModel, new: CartProductModel) {
+        cartAdapter.updateCartProduct(prev, new)
+    }
+
     private fun initPresenter() {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = CartPresenter(
@@ -67,10 +71,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initCartAdapter() {
         cartAdapter = CartAdapter(
-            emptyList(),
             onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) },
             onPreviousButtonClick = { presenter.goToPreviousPage() },
-            onNextButtonClick = { presenter.goToNextPage() }
+            onNextButtonClick = { presenter.goToNextPage() },
+            onCheckBoxClick = { cartProductModel ->
+                presenter.changeCartProductChecked(cartProductModel)
+            }
         )
         binding.cartProductList.adapter = cartAdapter
     }

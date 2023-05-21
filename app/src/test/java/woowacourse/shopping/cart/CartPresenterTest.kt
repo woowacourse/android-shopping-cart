@@ -9,6 +9,8 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.createCartProduct
 import woowacourse.shopping.createCartProductModel
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.repository.CartRepository
 
@@ -99,17 +101,66 @@ class CartPresenterTest {
     @Test
     fun 카트의_사이즈보다_현재_페이지와_페이지당_사이즈의_곱이_작다면_캐싱되어_있는_카트를_가져온다() {
         // given
+        val cartDao: CartDao = mockk()
         val cart: Cart = mockk()
+        val cartRepository = CartRepositoryImpl(cartDao, cart)
+        every { cartDao.selectAllCount() } returns 0
+        every { cartDao.getTotalPrice() } returns 0
+        every { cartDao.getTotalAmount() } returns 0
         every { cart.cartProducts } returns listOf(createCartProduct())
         every { cart.cartProducts.size } returns 1
         every { cart.getSubCart(any(), any()) } returns Cart(listOf(createCartProduct()))
 
         // when
         presenter = CartPresenter(
-            view, cartRepository, 0, 1, cart
+            view, cartRepository, 0, 1
         )
 
         // then
         verify { cart.getSubCart(any(), any()) }
+    }
+
+    @Test
+    fun 카트_상품의_체크_상태를_업데이트_하면_카트_상품이_교체되고_뷰에_업데이트_된다() {
+        // given
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        presenter.changeCartProductChecked(createCartProductModel())
+
+        // then
+        verify {
+            cartRepository.replaceCartProduct(any(), any())
+            view.updateCartProduct(any(), any())
+        }
+    }
+
+    @Test
+    fun 카트_상품의_체크_상태를_업데이트_하면_총_가격이_업데이트_된다() {
+        // given
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+        every { view.updateCartTotalPrice(any()) } just runs
+
+        // when
+        presenter.changeCartProductChecked(createCartProductModel())
+
+        // then
+        verify(exactly = 2) { view.updateCartTotalPrice(any()) }
+    }
+
+    @Test
+    fun 카트_상품의_체크_상태를_업데이트_하면_총_수량이_업데이트_된다() {
+        // given
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+        every { view.updateCartTotalAmount(any()) } just runs
+
+        // when
+        presenter.changeCartProductChecked(createCartProductModel())
+
+        // then
+        verify(exactly = 2) { view.updateCartTotalAmount(any()) }
     }
 }
