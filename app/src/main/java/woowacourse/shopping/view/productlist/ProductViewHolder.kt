@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.CartDbRepository
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentViewedBinding
 import woowacourse.shopping.databinding.ItemShowMoreBinding
@@ -30,8 +31,26 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.onItemClick = onProductClick
         }
 
-        fun bind(product: ProductModel) {
+        fun bind(product: ProductModel, cartRepository: CartDbRepository) {
             binding.product = product
+            binding.count.count = product.count
+            binding.countOpen.setOnClickListener { cartRepository.add(product.id, 1, true) }
+            binding.count.plusClickListener = { cartRepository.plusCount(product.id) }
+            binding.count.minusClickListener = {
+                if (product.count <= 1) {
+                    cartRepository.remove(product.id)
+                } else {
+                    cartRepository.subCount(product.id)
+                }
+            }
+
+            if (product.count <= 0) {
+                binding.countOpen.visibility = View.VISIBLE
+                binding.count.visibility = View.GONE
+            } else {
+                binding.countOpen.visibility = View.GONE
+                binding.count.visibility = View.VISIBLE
+            }
         }
     }
 

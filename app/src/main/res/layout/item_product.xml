@@ -32,7 +32,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:background="@color/black" />
+            tools:background="@color/product_list_divider" />
 
         <TextView
             android:id="@+id/text_name"
@@ -61,6 +61,29 @@
             app:layout_constraintStart_toStartOf="@id/text_name"
             app:layout_constraintTop_toBottomOf="@id/text_name"
             tools:text="10,000원" />
+
+        <woowacourse.shopping.common.CountView
+            android:id="@+id/count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/img_product"
+            app:layout_constraintEnd_toEndOf="@+id/img_product"
+            app:layout_constraintStart_toStartOf="@+id/img_product" />
+
+        <ImageView
+            android:id="@+id/count_open"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/img_product"
+            app:layout_constraintEnd_toEndOf="@+id/img_product"
+            app:srcCompat="@drawable/img" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

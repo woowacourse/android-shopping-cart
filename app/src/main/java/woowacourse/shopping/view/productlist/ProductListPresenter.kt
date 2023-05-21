@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.productlist
 
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
@@ -10,6 +11,7 @@ class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductRepository,
     private val recentViewedRepository: RecentViewedRepository,
+    private val cartRepository: CartRepository,
 ) : ProductListContract.Presenter {
     private val productListPagination = ProductListPagination(PAGINATION_SIZE, productRepository)
     private val products = productListPagination.nextItems().map { it.toUiModel() }.toMutableList()
@@ -18,6 +20,7 @@ class ProductListPresenter(
         val viewedProducts = recentViewedRepository.findAll()
         val viewedProductsUiModel =
             viewedProducts.map { productRepository.find(it).toUiModel() }.reversed()
+        setCartProductCount()
         view.showProducts(viewedProductsUiModel, products)
     }
 
@@ -25,6 +28,7 @@ class ProductListPresenter(
         val viewedProducts = recentViewedRepository.findAll()
         val mark = if (viewedProducts.isNotEmpty()) products.size + 1 else products.size
         products.addAll(productListPagination.nextItems().map { it.toUiModel() })
+        setCartProductCount()
         view.notifyAddProducts(mark, PAGINATION_SIZE)
     }
 
@@ -36,6 +40,14 @@ class ProductListPresenter(
             2
         } else {
             1
+        }
+    }
+
+    private fun setCartProductCount() {
+        val cartProducts = cartRepository.findAll()
+        products.map { product ->
+            val count = cartProducts.find { cartProduct -> cartProduct.id == product.id }?.count ?: 0
+            product.count = count
         }
     }
 
