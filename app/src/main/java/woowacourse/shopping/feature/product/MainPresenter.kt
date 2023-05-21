@@ -21,25 +21,29 @@ class MainPresenter(
 ) : MainContract.Presenter {
 
     private val loadItemCountUnit = 20
-
-    private val products: List<Product> = productRepository.getAll()
-
     private var loadItemFromIndex = 0
-    private val loadItemToIndex: Int
-        get() = if (products.size > loadItemFromIndex + loadItemCountUnit) loadItemFromIndex + loadItemCountUnit
-        else products.size
 
     override fun loadMoreProducts() {
-        if (products.isEmpty()) {
-            view.showEmptyProducts()
-            return
-        }
-        if (loadItemFromIndex == 0) {
-            view.setProducts(listOf())
-        }
+        productRepository.fetchNextProducts(
+            lastProductId = loadItemFromIndex.toLong(),
+            onFailure = {
+                view.showEmptyProducts()
+                view.setProducts(listOf())
+            },
+            onSuccess = {
+                view.addProductItems(it.map(Product::toUi))
+            }
+        )
+//        if (products.isEmpty()) {
+//            view.showEmptyProducts()
+//            return
+//        }
+//        if (loadItemFromIndex == 0) {
+//            view.setProducts(listOf())
+//        }
 
-        view.addProductItems(getAddProductsUnit())
-        loadItemFromIndex = loadItemToIndex
+//        view.addProductItems(getAddProductsUnit())
+//        loadItemFromIndex = loadItemToIndex
     }
 
     override fun loadRecentProducts() {
@@ -60,7 +64,8 @@ class MainPresenter(
     }
 
     override fun showProductDetail(productState: ProductState) {
-        val recentProduct: RecentProductState? = recentProductRepository.getMostRecentProduct()?.toUi()
+        val recentProduct: RecentProductState? =
+            recentProductRepository.getMostRecentProduct()?.toUi()
         view.showProductDetail(productState, recentProduct)
         addRecentProduct(productState.toDomain())
     }
@@ -83,10 +88,10 @@ class MainPresenter(
         cartRepository.updateCartProductCount(productState.id, cartProductCount)
     }
 
-    private fun getAddProductsUnit(): List<ProductState> {
-        val productsUnit: List<Product> = products.subList(loadItemFromIndex, loadItemToIndex)
-        return productsUnit.map(Product::toUi)
-    }
+//    private fun getAddProductsUnit(): List<ProductState> {
+//        val productsUnit: List<Product> = products.subList(loadItemFromIndex, loadItemToIndex)
+//        return productsUnit.map(Product::toUi)
+//    }
 
     private fun storeRecentProduct(productId: Int, viewedDateTime: LocalDateTime) {
         recentProductRepository.addRecentProduct(productId, viewedDateTime)

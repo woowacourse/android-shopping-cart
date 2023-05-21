@@ -14,12 +14,13 @@ import com.example.domain.CartProduct
 import com.example.domain.Product
 import com.example.domain.RecentProduct
 import com.example.domain.repository.CartRepository
+import com.example.domain.repository.ProductRepository
 import woowacourse.shopping.R
 import woowacourse.shopping.common.adapter.LoadMoreAdapter
 import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.product.MockProductRemoteService
+import woowacourse.shopping.data.product.MockRemoteProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
@@ -41,7 +42,8 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     private val cartRepository: CartRepository by lazy { CartRepositoryImpl(CartDao(this)) }
     private val presenter: MainContract.Presenter by lazy {
-        val productRepository = ProductRepositoryImpl(ProductDao(this))
+        val productRepository: ProductRepository =
+            MockRemoteProductRepositoryImpl(MockProductRemoteService())
         val recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this))
         MainPresenter(this, productRepository, recentProductRepository, cartRepository)
     }
@@ -78,13 +80,15 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initList()
-        presenter.loadMoreProducts()
+        runOnUiThread { presenter.loadMoreProducts() }
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.loadRecentProducts()
-        presenter.loadCartProductCount()
+        runOnUiThread {
+            presenter.loadRecentProducts()
+            presenter.loadCartProductCount()
+        }
     }
 
     override fun onDestroy() {
@@ -108,22 +112,25 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun addProductItems(products: List<ProductState>) {
-        productListAdapter.addItems(products)
+        runOnUiThread { productListAdapter.addItems(products) }
     }
 
     override fun setProducts(products: List<Product>) {
-        productListAdapter.setItems(products.map(Product::toUi))
+        runOnUiThread { productListAdapter.setItems(products.map(Product::toUi)) }
     }
 
     override fun setRecentProducts(recentProducts: List<RecentProduct>) {
-        recentProductListAdapter.setItems(recentProducts.map(RecentProduct::toUi))
+        runOnUiThread { recentProductListAdapter.setItems(recentProducts.map(RecentProduct::toUi)) }
     }
 
     override fun setCartProductCount(count: Int) {
-        cartCountBadge?.text = count.toString()
+        runOnUiThread { cartCountBadge?.text = count.toString() }
     }
 
-    override fun showProductDetail(productState: ProductState, recentProductState: RecentProductState?) {
+    override fun showProductDetail(
+        productState: ProductState,
+        recentProductState: RecentProductState?
+    ) {
         Log.d("debug_recent_product", "recentProduct: ${recentProductState?.productName}")
         ProductDetailActivity.startActivity(this, productState, recentProductState)
     }

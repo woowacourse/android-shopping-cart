@@ -7,13 +7,14 @@ import android.database.sqlite.SQLiteDatabase
 import com.example.domain.CartProduct
 import com.example.domain.Product
 import com.example.domain.repository.ProductRepository
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.product.MockProductRemoteService
+import woowacourse.shopping.data.product.MockRemoteProductRepositoryImpl
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 
 class CartDao(context: Context) {
 
-    private val productRepository: ProductRepository = ProductRepositoryImpl(ProductDao(context))
+    private val productRepository: ProductRepository =
+        MockRemoteProductRepositoryImpl(MockProductRemoteService())
     private val cartDb: SQLiteDatabase = CartDbHelper(context).writableDatabase
 
     private fun getCursor(selection: String? = ""): Cursor {

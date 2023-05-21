@@ -7,14 +7,15 @@ import android.database.sqlite.SQLiteDatabase
 import com.example.domain.Product
 import com.example.domain.RecentProduct
 import com.example.domain.repository.ProductRepository
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.product.MockProductRemoteService
+import woowacourse.shopping.data.product.MockRemoteProductRepositoryImpl
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class RecentProductDao(context: Context) {
 
-    private val productRepository: ProductRepository = ProductRepositoryImpl(ProductDao(context))
+    private val productRepository: ProductRepository =
+        MockRemoteProductRepositoryImpl(MockProductRemoteService())
     private val recentDb: SQLiteDatabase = RecentProductDbHelper(context).writableDatabase
 
     private fun getCursor(selection: String? = ""): Cursor {
@@ -102,7 +103,10 @@ class RecentProductDao(context: Context) {
 
         cursor.close()
         recentProducts = recentProducts.sortedBy { it.viewedDateTime }.reversed().toMutableList()
-        return if (recentProducts.size >= 10) recentProducts.subList(0, SHOW_COUNT) else recentProducts
+        return if (recentProducts.size >= 10) recentProducts.subList(
+            0,
+            SHOW_COUNT
+        ) else recentProducts
     }
 
     fun addColumn(productId: Int, viewedDateTime: LocalDateTime) {
