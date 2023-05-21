@@ -18,13 +18,13 @@ class ShoppingPresenter(
     override val view: ShoppingContract.View,
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
-    private val basketRepository: BasketRepository
-) : ShoppingContract.Presenter {
-    private var hasNext: Boolean = false
-    private var lastId: Int = -1
-    private var totalProducts: List<UiProduct> = listOf()
-    private var recentProducts: List<UiRecentProduct> = listOf()
+    private val basketRepository: BasketRepository,
+    private var hasNext: Boolean = false,
+    private var lastId: Int = -1,
+    private var totalProducts: List<UiProduct> = listOf(),
+    private var recentProducts: List<UiRecentProduct> = listOf(),
     private var basket: Basket = Basket(basketRepository.getAll())
+) : ShoppingContract.Presenter {
 
     init {
         fetchTotalBasketCount()
