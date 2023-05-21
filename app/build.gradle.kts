@@ -63,4 +63,8 @@ dependencies {
 
     // core-testing
     testImplementation("androidx.arch.core:core-testing:2.2.0")
+
+    // OkHttp
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    testImplementation("com.squareup.okhttp3:mock webserver:4.10.0")
 }
