@@ -96,6 +96,8 @@ class CartPresenter(
     override fun onCheckChanged(id: Long, isChecked: Boolean) {
         _checkedLiveDatas[id]?.value = isChecked
         _checkedLiveDatas[id]?.value?.let { repository.updateCheckChanged(id, it) }
+
+        setAllCheckbox()
         updateCartItems()
     }
 
@@ -107,16 +109,20 @@ class CartPresenter(
         repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
             .forEach { product ->
                 repository.updateCheckChanged(product.product.id, isChecked)
-                //view.updateCheckboxItem(product.product.id, isChecked)
             }
+        setUpCarts()
         updateCartItems()
     }
 
     override fun setAllCheckbox() {
-        val cartItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
+        /*val cartItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
         val isChecked = cartItems.filter { it.isChecked }.size == cartItems.size
 
-        view.setAllCheckbox(isChecked)
+        view.setAllCheckbox(isChecked)*/
+        val cartItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
+        val allChecked = cartItems.all { it.isChecked }
+
+        view.setAllCheckbox(allChecked)
     }
 
     override fun setAllOrderCount() {

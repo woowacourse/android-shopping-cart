@@ -36,8 +36,8 @@ class CartActivity : AppCompatActivity(), CartContract.View, OnCartClickListener
         setToolbar()
         presenter.setUpCarts()
 
-        binding.allCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            presenter.onAllCheckboxClick(isChecked)
+        binding.allCheckBox.setOnClickListener {
+            presenter.onAllCheckboxClick(binding.allCheckBox.isChecked)
         }
     }
 
@@ -91,7 +91,10 @@ class CartActivity : AppCompatActivity(), CartContract.View, OnCartClickListener
     }*/
 
     override fun setAllCheckbox(isChecked: Boolean) {
-        binding.allCheckBox.isChecked = isChecked
+        /*binding.allCheckBox.isChecked = isChecked*/
+        if (binding.allCheckBox.isChecked != isChecked) {
+            binding.allCheckBox.isChecked = isChecked
+        }
     }
 
     override fun setAllOrderCount(count: Int) {
