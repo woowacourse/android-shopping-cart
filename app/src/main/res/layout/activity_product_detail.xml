@@ -97,7 +97,7 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/woowa_text_black"
                 android:textSize="20sp"
-                android:text="@{@string/price_format(detailProduct.price.value)}"
+                bind:price="@{detailProduct.price}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/price_title_text_view"
                 tools:text="99,800원" />
@@ -147,7 +147,7 @@
                     android:id="@+id/recent_product_price_text_view"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/price_format(lastViewedProduct.price.value)}"
+                    bind:price="@{lastViewedProduct.price}"
                     android:textColor="@color/woowa_text_black"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/recent_product_name_text_view"

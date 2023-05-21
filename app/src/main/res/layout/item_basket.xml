@@ -107,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:text="@{@string/price_format(basketProduct.product.price.value)}"
+            bind:price="@{basketProduct.product.price}"
             android:textColor="@color/woowa_text_black"
             android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@+id/counter_view"

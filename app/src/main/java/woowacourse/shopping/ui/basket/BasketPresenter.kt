@@ -16,8 +16,9 @@ import woowacourse.shopping.ui.basket.BasketContract.View
 class BasketPresenter(
     view: View,
     private val basketRepository: BasketRepository,
+    basketSize: Int = 5,
 ) : Presenter(view) {
-    private var basket: Basket = Basket(loadUnit = BASKET_PAGING_SIZE, minProductSize = 1)
+    private var basket: Basket = Basket(loadUnit = basketSize, minProductSize = 1)
     private var currentPage: PageNumber = PageNumber()
 
     private val _totalCheckSize = MutableLiveData(basketRepository.getCheckedProductCount())
@@ -111,9 +112,5 @@ class BasketPresenter(
 
     override fun closeScreen() {
         view.navigateToHome()
-    }
-
-    companion object {
-        private const val BASKET_PAGING_SIZE = 5
     }
 }
