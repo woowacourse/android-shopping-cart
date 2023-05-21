@@ -1,6 +1,6 @@
-package woowacourse.shopping.database.product
+package woowacourse.shopping.database.cart
 
-object ShoppingCartDBContract {
+object CartDBContract {
 
     const val TABLE_NAME = "shopping_cart"
     const val CART_PRODUCT_ID = "id"
