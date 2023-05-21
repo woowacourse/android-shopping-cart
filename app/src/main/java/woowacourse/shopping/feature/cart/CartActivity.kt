@@ -27,7 +27,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         CartProductListAdapter(
             onCartProductDeleteClick = { presenter.deleteCartProduct(it) },
             updateCount = { productId: Int, count: Int -> presenter.updateCount(productId, count) },
-            updateChecked = { productId: Int, checked: Boolean -> presenter.updateChecked(productId, checked) }
+            updateChecked = { productId: Int, checked: Boolean ->
+                presenter.updateChecked(productId, checked)
+                presenter.loadCheckedCartProductCount()
+            }
         )
     }
 
@@ -42,8 +45,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.allCheckBox.setOnCheckedChangeListener { compoundButton, b ->
             presenter.checkAll()
             presenter.loadCart()
+            presenter.loadCheckedCartProductCount()
         }
         presenter.loadCart()
+        presenter.loadCheckedCartProductCount()
     }
 
     override fun setCartProducts(cartProducts: List<CartProductState>) {
@@ -68,6 +73,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         } else {
             binding.pageNumberMinusTv.setBackgroundColor(getColor(R.color.light_gray))
         }
+    }
+
+    override fun setCartProductCount(count: Int) {
+        binding.orderBtn.text = getString(R.string.cart_order_btn_text).format(count)
     }
 
     override fun setTotalCost(paymentAmount: Int) {

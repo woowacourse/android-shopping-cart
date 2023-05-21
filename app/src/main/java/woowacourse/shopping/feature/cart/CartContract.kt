@@ -9,6 +9,7 @@ interface CartContract {
         fun setCartPageNumber(number: Int)
         fun setCartPageNumberPlusEnable(isEnable: Boolean)
         fun setCartPageNumberMinusEnable(isEnable: Boolean)
+        fun setCartProductCount(count: Int)
         fun setTotalCost(paymentAmount: Int)
         fun showPageSelectorView()
         fun hidePageSelectorView()
@@ -16,6 +17,7 @@ interface CartContract {
 
     interface Presenter {
         fun loadCart()
+        fun loadCheckedCartProductCount()
         fun plusPageNumber()
         fun minusPageNumber()
         fun updateCount(productId: Int, count: Int)

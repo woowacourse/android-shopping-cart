@@ -32,6 +32,11 @@ class CartPresenter(
         if (minPageNumber < maxPageNumber) view.showPageSelectorView()
     }
 
+    override fun loadCheckedCartProductCount() {
+        val cartProductCount = cartRepository.getAll().filter { it.checked }.size
+        view.setCartProductCount(cartProductCount)
+    }
+
     override fun plusPageNumber() {
         val nextPage: Int = pageNumber + 1
 
