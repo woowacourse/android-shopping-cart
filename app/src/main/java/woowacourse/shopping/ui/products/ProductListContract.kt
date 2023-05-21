@@ -11,6 +11,8 @@ interface ProductListContract {
         fun onLoadProductsNextPage()
         fun onAddToCart(productId: Long)
         fun onRefreshProducts()
+        fun onPlusCount(cartItemId: Long)
+        fun onMinusCount(cartItemId: Long)
     }
 
     interface View {

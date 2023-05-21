@@ -76,7 +76,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.recyclerViewMainProduct.adapter = ProductListAdapter(
             mutableListOf(),
             { ProductDetailActivity.startActivity(this, it) },
-            { presenter.onAddToCart(it) }
+            { presenter.onAddToCart(it) },
+            { presenter.onPlusCount(it) },
+            { presenter.onMinusCount(it) }
         )
     }
 
@@ -114,7 +116,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.recyclerViewMainProduct.adapter = ProductListAdapter(
             products.toMutableList(),
             { ProductDetailActivity.startActivity(this, it) },
-            { presenter.onAddToCart(it) }
+            { presenter.onAddToCart(it) },
+            { presenter.onPlusCount(it) },
+            { presenter.onMinusCount(it) }
         )
     }
 

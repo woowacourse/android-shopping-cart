@@ -80,6 +80,25 @@ class ProductListPresenter(
         view.replaceProduct(ProductUIState.from(cartItem))
     }
 
+    override fun onPlusCount(cartItemId: Long) {
+        val cartItem = cartItemRepository.findById(cartItemId) ?: return
+        cartItem.plusCount()
+        cartItemRepository.updateCountById(cartItemId, cartItem.count)
+        view.replaceProduct(ProductUIState.from(cartItem))
+    }
+
+    override fun onMinusCount(cartItemId: Long) {
+        val cartItem = cartItemRepository.findById(cartItemId) ?: return
+        if (cartItem.count == 1) {
+            cartItemRepository.deleteById(cartItemId)
+            view.replaceProduct(ProductUIState.from(cartItem.product))
+            return
+        }
+        cartItem.minusCount()
+        cartItemRepository.updateCountById(cartItemId, cartItem.count)
+        view.replaceProduct(ProductUIState.from(cartItem))
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
     }

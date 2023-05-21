@@ -8,7 +8,8 @@ data class ProductUIState(
     val name: String,
     val price: Int,
     val id: Long,
-    val count: Int? = null
+    val cartItemId: Long? = null,
+    val count: Int? = null,
 ) {
     companion object {
         fun from(product: Product): ProductUIState =
@@ -20,6 +21,7 @@ data class ProductUIState(
                 cartItem.product.name,
                 cartItem.product.price,
                 cartItem.product.id,
+                cartItem.id,
                 cartItem.count
             )
     }
