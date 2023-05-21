@@ -56,7 +56,7 @@ class ProductListPresenter(
     }
 
     override fun onRefreshProducts() {
-        val products = productRepository.findAll(PAGE_SIZE, offset)
+        val products = productRepository.findAll(offset + PAGE_SIZE, 0)
         val productUIStates = products.map {
             val cartItem = cartItemRepository.findByProductId(it.id)
             if (cartItem != null) {
