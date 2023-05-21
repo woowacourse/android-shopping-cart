@@ -31,7 +31,11 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.onItemClick = onProductClick
         }
 
-        fun bind(product: ProductModel, cartRepository: CartDbRepository) {
+        fun bind(
+            product: ProductModel,
+            cartRepository: CartDbRepository,
+            showCartItemsCountInMenu: () -> Unit,
+        ) {
             setVisibility(product)
             binding.product = product
             binding.count.count = product.count
@@ -40,11 +44,13 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 product.count++
                 binding.count.count = product.count
                 setVisibility(product)
+                showCartItemsCountInMenu()
             }
             binding.count.plusClickListener = {
                 cartRepository.plusCount(product.id)
                 product.count++
                 setVisibility(product)
+                showCartItemsCountInMenu()
             }
             binding.count.minusClickListener = {
                 if (product.count <= 1) {
@@ -54,6 +60,7 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     cartRepository.subCount(product.id)
                     product.count--
                 }
+                showCartItemsCountInMenu()
                 setVisibility(product)
             }
         }

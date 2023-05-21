@@ -4,7 +4,9 @@
 
     <item
         android:id="@+id/cart"
-        android:icon="@drawable/cart"
+        app:actionLayout="@layout/cart_menu_action"
+        android:enabled="true"
         android:title="@string/shopping_cart"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always" />
+
 </menu>

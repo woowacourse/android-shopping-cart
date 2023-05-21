@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -18,6 +20,8 @@ import woowacourse.shopping.view.productdetail.ProductDetailActivity
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var presenter: ProductListContract.Presenter
+
+    private var menuCount: TextView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
@@ -25,13 +29,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         setPresenter()
         setActionBar()
     }
-
-    // + 버튼을 달아줘야함
-    // + 누르면 개수 선택 뷰 나와야함
-    // 근데 장바구니에 담겨 있으면 해당 개수 이미 개수 선택 뷰로 보여주고 있어야함
-    // 개수 선택 뷰 누를때마다 찐으로 디비까지 개수 담겨야함
-    // 툴바까지 해줘야
-    //
 
     override fun onResume() {
         super.onResume()
@@ -48,6 +45,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun setActionBar() {
+        setSupportActionBar(binding.listToolbar)
         supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 
@@ -68,6 +66,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             CartDbRepository(this),
             fun(product: ProductModel) { showProductDetail(product) },
             fun() { presenter.showMoreProducts() },
+            ::showCartItemsCountInMenu,
         )
     }
 
@@ -80,9 +79,23 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         startActivity(intent)
     }
 
+    private fun showCartItemsCountInMenu() {
+        if (presenter.getCartItemsCount() <= 0) {
+            menuCount?.visibility = View.GONE
+        } else {
+            menuCount?.visibility = View.VISIBLE
+            menuCount?.text = presenter.getCartItemsCount().toString()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_item, menu)
+        menu?.findItem(R.id.cart)?.actionView?.let { view ->
+            view.setOnClickListener { handleCartMenuClicked() }
+            view.findViewById<TextView>(R.id.cart_icon_count)?.let { menuCount = it }
+        }
+        showCartItemsCountInMenu()
         return true
     }
 

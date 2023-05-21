@@ -23,13 +23,25 @@
         android:layout_height="match_parent"
         tools:context=".view.productdetail.ProductDetailActivity">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/detail_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:titleTextColor="@color/white"
+            app:title=" "
+            app:menu="@menu/menu_close" />
+
         <ImageView
             android:id="@+id/img_product"
             setImage="@{product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_toolbar"
             tools:src="@drawable/cart" />
 
         <TextView

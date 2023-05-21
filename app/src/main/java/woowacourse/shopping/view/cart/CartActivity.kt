@@ -36,8 +36,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun setActionBar() {
+        setSupportActionBar(binding.CartToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = ACTION_BAR_TITLE
     }
 
     private fun setPresenter() {
@@ -135,8 +135,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     companion object {
-        private const val ACTION_BAR_TITLE = "Cart"
-
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

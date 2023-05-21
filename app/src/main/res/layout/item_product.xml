@@ -83,7 +83,7 @@
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/img_product"
             app:layout_constraintEnd_toEndOf="@+id/img_product"
-            app:srcCompat="@drawable/img" />
+            app:srcCompat="@drawable/ic_count_open" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

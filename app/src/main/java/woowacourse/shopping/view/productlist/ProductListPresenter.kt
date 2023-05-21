@@ -51,6 +51,10 @@ class ProductListPresenter(
         }
     }
 
+    override fun getCartItemsCount(): Int {
+        return cartRepository.findAll().sumOf { it.count }
+    }
+
     override fun handleNextStep(itemId: Int) {
         when (itemId) {
             R.id.cart -> {

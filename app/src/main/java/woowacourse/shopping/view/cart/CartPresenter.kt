@@ -98,7 +98,6 @@ class CartPresenter(
         currentCartProducts.forEach {
             if (it.check) count++
         }
-        println("hih $count")
         if (count == currentCartProducts.size) return true
         return false
     }

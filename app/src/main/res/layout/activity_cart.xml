@@ -15,6 +15,17 @@
         android:layout_height="match_parent"
         tools:context=".view.cart.CartActivity">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/Cart_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="Cart"
+            app:titleTextColor="@color/white" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_cart"
             android:layout_width="match_parent"
@@ -23,7 +34,7 @@
             app:layout_constraintBottom_toTopOf="@+id/cart_price_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/Cart_toolbar">
 
         </androidx.recyclerview.widget.RecyclerView>
 
@@ -51,8 +62,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="35dp"
                 android:text="@string/whole_check"
-                android:textSize="12sp"
                 android:textColor="@color/white"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/all_check" />
 
@@ -61,13 +72,13 @@
                 android:layout_width="140dp"
                 android:layout_height="match_parent"
                 android:background="#04C09E"
-                tools:text="주문하기(1)"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="주문하기(1)" />
 
             <TextView
                 android:id="@+id/total_price"

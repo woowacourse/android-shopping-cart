@@ -11,6 +11,7 @@ class ProductListAdapter(
     private val cartRepository: CartDbRepository,
     private val onProductClick: (ProductModel) -> Unit,
     private val onShowMoreClick: () -> Unit,
+    private val showCartItemsCountInMenu: () -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder.of(
@@ -42,7 +43,7 @@ class ProductListAdapter(
 
             is ProductViewHolder.ProductItemViewHolder -> {
                 val convertPosition = if (isRecentViewedExist()) position - 1 else position
-                holder.bind(products[convertPosition], cartRepository)
+                holder.bind(products[convertPosition], cartRepository, showCartItemsCountInMenu)
             }
 
             is ProductViewHolder.ShowMoreViewHolder -> {

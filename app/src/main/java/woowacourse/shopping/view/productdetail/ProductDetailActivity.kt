@@ -26,6 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setBinding()
         setContentView(binding.root)
         setPresenter()
+        setActionBar()
         getData()
         bindView()
         showDialog()
@@ -40,6 +41,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun setPresenter() {
         presenter =
             ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this), ProductMockRepository)
+    }
+
+    private fun setActionBar() {
+        setSupportActionBar(binding.detailToolbar)
+        supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 
     override fun getData() {
@@ -87,6 +93,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         presenter.navigateNextStep(item.itemId)
+        println("onOptionsItemSelected")
         return super.onOptionsItemSelected(item)
     }
 
