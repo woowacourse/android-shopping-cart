@@ -13,8 +13,6 @@ import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
-import woowacourse.shopping.productdetail.ProductDetailActivity
-import woowacourse.shopping.shoppingcart.CartActivity
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
@@ -27,6 +25,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 shoppingDao = ShoppingDao(this)
             )
         )
+    }
+    override val shoppingNavigator: ShoppingNavigator by lazy {
+        ShoppingNavigatorImpl(this)
     }
 
     override fun onResume() {
@@ -51,11 +52,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.shopping_cart -> {
-                startActivity(
-                    CartActivity.getIntent(this)
-                )
-            }
+            R.id.shopping_cart -> shoppingNavigator.navigateToCartView()
         }
 
         return super.onOptionsItemSelected(item)
@@ -107,30 +104,20 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {
         if (toAdd.isEmpty()) {
-            return Toast.makeText(
-                this,
-                getString(R.string.message_last_product),
-                Toast.LENGTH_SHORT
-            ).show()
+            return showMessageNothingToAdd()
         }
         shoppingRecyclerAdapter.refreshShoppingItems(toAdd = toAdd)
     }
 
-    override fun refreshProductCount(count: Int) {
-        binding.textShoppingCartProductsCount.text = count.toString()
+    private fun showMessageNothingToAdd() {
+        Toast.makeText(
+            this,
+            getString(R.string.message_last_product),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
-    override fun navigateToProductDetailView(
-        product: ProductUiModel,
-        latestViewedProduct: ProductUiModel?,
-    ) {
-        presenter.addToRecentViewedProduct(product.id)
-        val intent = ProductDetailActivity.getIntent(
-            context = this,
-            product = product,
-            latestViewedProduct = latestViewedProduct
-        )
-
-        startActivity(intent)
+    override fun refreshProductCount(count: Int) {
+        binding.textShoppingCartProductsCount.text = count.toString()
     }
 }

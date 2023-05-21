@@ -7,6 +7,8 @@ interface ShoppingContract {
 
     interface View {
 
+        val shoppingNavigator: ShoppingNavigator
+
         fun setUpShoppingView(
             products: List<ProductUiModel>,
             recentViewedProducts: List<RecentViewedProductUiModel>,
@@ -21,11 +23,6 @@ interface ShoppingContract {
         )
 
         fun refreshProductCount(count: Int)
-
-        fun navigateToProductDetailView(
-            product: ProductUiModel,
-            latestViewedProduct: ProductUiModel?,
-        )
     }
 
     interface Presenter {

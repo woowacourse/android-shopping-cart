@@ -41,7 +41,8 @@ class ShoppingPresenter(
     }
 
     override fun loadProductDetail(product: ProductUiModel) {
-        view.navigateToProductDetailView(
+        addToRecentViewedProduct(product.id)
+        view.shoppingNavigator.navigateToProductDetailView(
             product = product,
             latestViewedProduct = shoppingCache.selectLatestViewedProduct()?.toProductUiModel()
         )
