@@ -29,5 +29,7 @@ interface ShoppingCartContract {
         fun updateCartProductChecked(cartProductUIModel: CartProductUIModel)
         fun getTotalPrice(): Int
         fun getTotalCount(): Int
+        fun changeProductsCheckedState(isSelected: Boolean)
+        fun updateSelectedTotal()
     }
 }

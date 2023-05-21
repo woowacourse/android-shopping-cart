@@ -29,6 +29,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         setPresenter()
         setViewSettings()
         setPageMoveClick()
+        setTotalCheckBoxClick()
     }
 
     private fun setToolBar() {
@@ -52,6 +53,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         binding.tvTotalPrice.text = getText(R.string.price_format).toString().format(0)
         binding.btnOrder.text = getText(R.string.order_format).toString().format(0)
         updatePageCounter(INIT_PAGE_COUNTER_VIEW)
+        presenter.updateSelectedTotal()
     }
 
     private fun setPageMoveClick() {
@@ -115,6 +117,13 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun updateTotalCount(totalCount: Int) {
         binding.btnOrder.text = getText(R.string.order_format).toString().format(totalCount)
+    }
+
+    private fun setTotalCheckBoxClick() {
+        binding.checkBoxAll.setOnClickListener {
+            presenter.changeProductsCheckedState(binding.checkBoxAll.isChecked)
+            adapter.update(presenter.loadCartProducts())
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

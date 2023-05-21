@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.shoppingcart
 
 import android.widget.TextView
+import com.shopping.domain.CartProduct
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
@@ -37,9 +38,7 @@ class ShoppingCartPresenter(
             return
         }
         paging.addPage()
-        setButtonViews()
-        view.updateCartProduct(loadCartProducts())
-        view.updatePageCounter(paging.getPageCount())
+        updatePageMove()
     }
 
     override fun loadPreviousPage(isActivated: Boolean) {
@@ -47,9 +46,14 @@ class ShoppingCartPresenter(
             return
         }
         paging.subPage()
+        updatePageMove()
+    }
+
+    private fun updatePageMove() {
         setButtonViews()
         view.updateCartProduct(loadCartProducts())
         view.updatePageCounter(paging.getPageCount())
+        view.updateTotalCheckbox(paging.isAllItemProductSelected())
     }
 
     override fun updateCartProductCount(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {
@@ -60,11 +64,20 @@ class ShoppingCartPresenter(
 
     override fun updateCartProductChecked(cartProductUIModel: CartProductUIModel) {
         cartProductRepository.update(cartProductUIModel.toDomain())
-        view.updateTotalCheckbox(paging.isAllItemProductSelected())
         updateSelectedTotal()
     }
 
-    private fun updateSelectedTotal() {
+    override fun changeProductsCheckedState(isSelected: Boolean) {
+        paging.loadPageProducts().forEach { product ->
+            cartProductRepository.update(
+                CartProduct(product.productUIModel.toDomain(), product.count, isSelected)
+            )
+        }
+        updateSelectedTotal()
+    }
+
+    override fun updateSelectedTotal() {
+        view.updateTotalCheckbox(paging.isAllItemProductSelected())
         view.updateTotalPrice(getTotalPrice())
         view.updateTotalCount(getTotalCount())
     }
