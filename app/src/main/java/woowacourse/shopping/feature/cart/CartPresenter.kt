@@ -22,14 +22,12 @@ class CartPresenter(
         val startIndex = pageNumber * maxProductsPerPage - maxProductsPerPage
         val endIndex = pageNumber * maxProductsPerPage - 1
 
+        val cartProducts: List<CartProductState> = cartRepository.getAll().map(CartProduct::toUi)
         val items: List<CartProductState> =
-            cartRepository.getAll().filterIndexed { index, _ ->
-                index in startIndex..endIndex
-            }.map(CartProduct::toUi)
+            cartProducts.filterIndexed { index, _ -> index in startIndex..endIndex }
 
         view.setCartPageNumber(pageNumber)
         view.setCartProducts(items)
-
         view.hidePageSelectorView()
         if (minPageNumber < maxPageNumber) view.showPageSelectorView()
     }

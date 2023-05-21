@@ -33,19 +33,28 @@ class MainPresenter(
             view.showEmptyProducts()
             return
         }
-        if (loadItemFromIndex == 0) view.setProducts(listOf())
+        if (loadItemFromIndex == 0) {
+            view.setProducts(listOf())
+        }
 
         view.addProductItems(getAddProductsUnit())
         loadItemFromIndex = loadItemToIndex
     }
 
-    override fun addRecentProduct(product: Product) {
-        val nowDateTime: LocalDateTime = LocalDateTime.now()
-        storeRecentProduct(product.id, nowDateTime)
+    override fun loadRecentProducts() {
         view.setRecentProducts(recentProductRepository.getAll())
     }
 
-    override fun loadRecentProducts() {
+    override fun loadCartProductCount() {
+        val cartProductCount = cartRepository.getAll().size
+        view.showCartProductCount()
+        if (cartProductCount >= MIN_COUNT_VALUE) view.setCartProductCount(cartProductCount)
+        else view.hideCartProductCount()
+    }
+
+    override fun addRecentProduct(product: Product) {
+        val nowDateTime: LocalDateTime = LocalDateTime.now()
+        storeRecentProduct(product.id, nowDateTime)
         view.setRecentProducts(recentProductRepository.getAll())
     }
 
@@ -56,12 +65,14 @@ class MainPresenter(
 
     override fun storeCartProduct(productState: ProductState) {
         cartRepository.addProduct(productState.id, MIN_COUNT_VALUE)
+        loadCartProductCount()
     }
 
     override fun minusCartProductCount(productState: ProductState) {
         val cartProduct: CartProduct? = cartRepository.getCartProduct(productState.id)
         val cartProductCount: Int = (cartProduct?.count ?: MIN_COUNT_VALUE) - 1
         cartRepository.updateCartProductCount(productState.id, cartProductCount)
+        loadCartProductCount()
     }
 
     override fun plusCartProductCount(productState: ProductState) {

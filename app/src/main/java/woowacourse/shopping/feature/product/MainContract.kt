@@ -9,14 +9,18 @@ interface MainContract {
     interface View {
         fun setProducts(products: List<Product>)
         fun setRecentProducts(recentProducts: List<RecentProduct>)
+        fun setCartProductCount(count: Int)
         fun addProductItems(products: List<ProductState>)
         fun showProductDetail(productState: ProductState)
         fun showEmptyProducts()
+        fun showCartProductCount()
+        fun hideCartProductCount()
     }
 
     interface Presenter {
         fun loadRecentProducts()
         fun loadMoreProducts()
+        fun loadCartProductCount()
         fun addRecentProduct(product: Product)
         fun showProductDetail(productState: ProductState)
         fun storeCartProduct(productState: ProductState)

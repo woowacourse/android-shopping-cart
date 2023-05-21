@@ -3,6 +3,9 @@ package woowacourse.shopping.feature.product
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
@@ -63,13 +66,20 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         ConcatAdapter(config, recentProductListWrapperAdapter, productListAdapter, loadMoreAdapter)
     }
 
+    private var cartCountBadge: TextView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initList()
-        presenter.loadRecentProducts()
         presenter.loadMoreProducts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.loadRecentProducts()
+        presenter.loadCartProductCount()
     }
 
     override fun onDestroy() {
@@ -79,6 +89,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.actionbar_menu, menu)
+        cartCountBadge =
+            menu?.findItem(R.id.cart_count_badge)?.actionView?.findViewById(R.id.badge)
+        presenter.loadCartProductCount()
         return true
     }
 
@@ -101,12 +114,22 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         recentProductListAdapter.setItems(recentProducts.map(RecentProduct::toUi))
     }
 
+    override fun setCartProductCount(count: Int) {
+        cartCountBadge?.text = count.toString()
+    }
+
     override fun showProductDetail(productState: ProductState) {
         ProductDetailActivity.startActivity(this, productState)
     }
 
-    override fun showEmptyProducts() {
-        showToast("제품이 없습니다.")
+    override fun showEmptyProducts() = showToast("제품이 없습니다.")
+
+    override fun showCartProductCount() {
+        cartCountBadge?.visibility = VISIBLE
+    }
+
+    override fun hideCartProductCount() {
+        cartCountBadge?.visibility = GONE
     }
 
     private fun initList() {
