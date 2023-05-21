@@ -10,8 +10,23 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:padding="@dimen/margin_large"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/start_guideline"
+            app:layout_constraintGuide_begin="@dimen/margin_large"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/end_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/margin_large" />
 
         <ImageView
             android:id="@+id/product_image"
@@ -33,10 +48,10 @@
             android:maxLines="1"
             android:textColor="@color/black"
             android:textSize="@dimen/product_main_item_text_size"
-            app:layout_constraintEnd_toEndOf="@id/product_image"
-            app:layout_constraintStart_toStartOf="@id/product_image"
+            app:layout_constraintStart_toEndOf="@id/start_guideline"
+            app:layout_constraintEnd_toStartOf="@id/end_guideline"
             app:layout_constraintTop_toBottomOf="@id/product_image"
-            tools:text="PET보틀-"
+            tools:text="PET보틀-너오ㅓㄴ오ㅓ노어노ㅓ오너오ㅓ농"
             android:text="@{product.name}"/>
 
         <TextView
