@@ -45,21 +45,21 @@ class CartDatabase(
     }
 
     override fun insert(product: Product, count: Int) {
-        val values = ContentValues().apply {
-            put(TABLE_COLUMN_PRODUCT_ID, product.id)
-            put(TABLE_COLUMN_PRODUCT_NAME, product.name)
-            put(TABLE_COLUMN_PRODUCT_PRICE, product.price)
-            put(TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
-            put(TABLE_COLUMN_PRODUCT_COUNT, count)
-            put(TABLE_COLUMN_PRODUCT_CHECKED, false)
-            put(TABLE_COLUMN_PRODUCT_SAVE_TIME, System.currentTimeMillis())
+        val existProduct = findById(product.id)
+        if (existProduct != null) {
+            updateCount(product.id, existProduct.count + count)
+        } else {
+            val values = ContentValues().apply {
+                put(TABLE_COLUMN_PRODUCT_ID, product.id)
+                put(TABLE_COLUMN_PRODUCT_NAME, product.name)
+                put(TABLE_COLUMN_PRODUCT_PRICE, product.price)
+                put(TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
+                put(TABLE_COLUMN_PRODUCT_COUNT, count)
+                put(TABLE_COLUMN_PRODUCT_CHECKED, false)
+                put(TABLE_COLUMN_PRODUCT_SAVE_TIME, System.currentTimeMillis())
+            }
+            shoppingDb.insert(TABLE_NAME, null, values)
         }
-        shoppingDb.insertWithOnConflict(
-            TABLE_NAME,
-            null,
-            values,
-            SQLiteDatabase.CONFLICT_REPLACE,
-        )
     }
 
     override fun getSubList(offset: Int, size: Int): List<CartProduct> {
