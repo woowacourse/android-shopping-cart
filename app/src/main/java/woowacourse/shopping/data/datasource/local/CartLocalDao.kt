@@ -4,7 +4,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.data.database.selectRowId
 import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.CartDataSource
@@ -17,43 +16,19 @@ class CartLocalDao(context: Context) : CartDataSource {
     private val db: SQLiteDatabase = ShoppingDBOpenHelper(context).writableDatabase
 
     override fun addCartProduct(cartProduct: CartProduct) {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = cartProduct.product.picture.value
-        productRow[SqlProduct.TITLE] = cartProduct.product.title
-        productRow[SqlProduct.PRICE] = cartProduct.product.price
-
-        val productId = SqlProduct.selectRowId(db, productRow)
-        insertOrUpdateCartProduct(productId, cartProduct.amount)
+        insertOrUpdateCartProduct(cartProduct.product.id, cartProduct.amount)
     }
 
     override fun plusCartProduct(product: Product) {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = product.picture.value
-        productRow[SqlProduct.TITLE] = product.title
-        productRow[SqlProduct.PRICE] = product.price
-
-        val productId = SqlProduct.selectRowId(db, productRow)
-        insertOrUpdateCartProduct(productId, 1)
+        insertOrUpdateCartProduct(product.id, 1)
     }
 
     override fun minusCartProduct(product: Product) {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = product.picture.value
-        productRow[SqlProduct.TITLE] = product.title
-        productRow[SqlProduct.PRICE] = product.price
-
-        val productId = SqlProduct.selectRowId(db, productRow)
-        updateOrDeleteCartProduct(productId)
+        updateOrDeleteCartProduct(product.id)
     }
 
     override fun deleteCartProduct(product: Product) {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = product.picture.value
-        productRow[SqlProduct.TITLE] = product.title
-        productRow[SqlProduct.PRICE] = product.price
-
-        val productId = SqlProduct.selectRowId(db, productRow)
-        deleteCartProduct(productId)
+        deleteCartProduct(product.id)
     }
 
     override fun selectAllCount(): Int {
@@ -112,11 +87,11 @@ class CartLocalDao(context: Context) : CartDataSource {
     )
 
     private fun makeCartProduct(it: Cursor) = CartProduct(
-        it.getInt(it.getColumnIndexOrThrow(SqlCart.AMOUNT)),
-        makeProduct(it)
+        it.getInt(it.getColumnIndexOrThrow(SqlCart.AMOUNT)), makeProduct(it)
     )
 
     private fun makeProduct(it: Cursor) = Product(
+        it.getInt(it.getColumnIndexOrThrow(SqlProduct.ID)),
         URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
         it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
         it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),

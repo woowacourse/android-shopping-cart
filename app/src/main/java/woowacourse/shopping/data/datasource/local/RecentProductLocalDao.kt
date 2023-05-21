@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.data.database.selectRowId
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.database.table.SqlRecentProduct
 import woowacourse.shopping.data.datasource.RecentProductDataSource
@@ -17,14 +16,9 @@ import woowacourse.shopping.domain.URL
 class RecentProductLocalDao(context: Context) : RecentProductDataSource {
     private val db: SQLiteDatabase = ShoppingDBOpenHelper(context).writableDatabase
     override fun insertRecentProduct(recentProduct: RecentProduct) {
-        val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = recentProduct.product.picture.value
-        productRow[SqlProduct.TITLE] = recentProduct.product.title
-        productRow[SqlProduct.PRICE] = recentProduct.product.price
-
         val row = ContentValues()
         row.put(SqlRecentProduct.ORDINAL, recentProduct.ordinal)
-        row.put(SqlRecentProduct.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
+        row.put(SqlRecentProduct.PRODUCT_ID, recentProduct.product.id)
         db.insert(SqlRecentProduct.name, null, row)
     }
 
@@ -51,6 +45,7 @@ class RecentProductLocalDao(context: Context) : RecentProductDataSource {
     )
 
     private fun makeProduct(it: Cursor) = Product(
+        it.getInt(it.getColumnIndexOrThrow(SqlProduct.ID)),
         URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
         it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
         it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),

@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.ProductDataSource
-import woowacourse.shopping.data.datasource.entity.ProductEntity
 import woowacourse.shopping.data.mock.ProductMock
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
@@ -15,12 +14,12 @@ import woowacourse.shopping.domain.URL
 class ProductLocalDao(context: Context) : ProductDataSource {
     private val db: SQLiteDatabase = ShoppingDBOpenHelper(context).writableDatabase
 
-    override fun selectByRange(start: Int, range: Int): List<ProductEntity> {
+    override fun selectByRange(start: Int, range: Int): List<Product> {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlProduct.name} LIMIT $start, $range", null
         )
         return cursor.use {
-            val products = mutableListOf<ProductEntity>()
+            val products = mutableListOf<Product>()
             while (cursor.moveToNext()) products.add(makeProduct(it))
             products
         }
@@ -29,7 +28,7 @@ class ProductLocalDao(context: Context) : ProductDataSource {
     override fun initMockData() {
         if (selectAllCount() != 0) return
         repeat(100) {
-            insertProduct(ProductMock.make())
+            insertProduct(ProductMock.make(it))
         }
     }
 
@@ -51,12 +50,10 @@ class ProductLocalDao(context: Context) : ProductDataSource {
         }
     }
 
-    private fun makeProduct(it: Cursor) = ProductEntity(
+    private fun makeProduct(it: Cursor) = Product(
         it.getInt(it.getColumnIndexOrThrow(SqlProduct.ID)),
-        Product(
-            URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-            it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-            it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE))
-        ),
+        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
+        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE))
     )
 }
