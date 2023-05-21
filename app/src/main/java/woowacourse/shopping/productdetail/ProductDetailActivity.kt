@@ -13,7 +13,9 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.utils.getSerializable
 import woowacourse.shopping.data.datasource.local.CartLocalDao
 import woowacourse.shopping.data.datasource.local.RecentProductLocalDao
+import woowacourse.shopping.data.datasource.remote.ProductRemoteDao
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.databinding.DialogAddCartBinding
@@ -113,6 +115,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             product = product,
             recentProduct = recentProduct,
             recentProductRepository = RecentProductRepository(RecentProductLocalDao(this)),
+            productRepository = ProductRepository(ProductRemoteDao()),
             cartRepository = CartRepository(CartLocalDao(this))
         )
     }

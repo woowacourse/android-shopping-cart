@@ -10,6 +10,5 @@ interface CartDataSource {
     fun minusCartProduct(product: Product)
     fun deleteCartProduct(product: Product)
     fun selectAllCount(): Int
-    fun selectAll(): Shop
-    fun selectPage(page: Int, countPerPage: Int): Shop
+    fun selectAll(products: List<Product>): Shop
 }

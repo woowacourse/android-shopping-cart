@@ -38,6 +38,25 @@ class ProductRemoteDao : ProductDataSource {
         return products
     }
 
+    override fun selectAll(): List<Product> {
+        var products: List<Product> = emptyList()
+        val thread = Thread {
+            val client = OkHttpClient()
+            val host = "http://localhost:$PORT/"
+            val path = "products"
+            val request = Request.Builder().url(host + path).build()
+            val response = client.newCall(request).execute()
+            val body = response.body?.string() ?: return@Thread
+            val json = JSONArray(body)
+            products = (0 until json.length()).map {
+                makeProduct(json.getJSONObject(it))
+            }
+        }
+        thread.start()
+        thread.join()
+        return products
+    }
+
     override fun initMockData() {
         Thread {
             if (::mockWebServer.isInitialized) return@Thread
@@ -62,6 +81,10 @@ class ProductRemoteDao : ProductDataSource {
             val path = request.path ?: return MockResponse().setResponseCode(404)
             return when {
                 path.contains("/products") -> {
+                    MockResponse().setHeader("Content-Type", "application/json")
+                        .setResponseCode(200).setBody(makeProductsBody())
+                }
+                path.contains("/products?") -> {
                     val start = findParameterValue(path, "start").toInt()
                     val range = findParameterValue(path, "range").toInt()
                     MockResponse().setHeader("Content-Type", "application/json")
@@ -79,6 +102,14 @@ class ProductRemoteDao : ProductDataSource {
 
     private fun makeRangedProductsBody(start: Int, range: Int): String {
         return products.subList(start, range).joinToString(", ") {
+            makeProductJson(it)
+        }.let {
+            "[$it]"
+        }
+    }
+
+    private fun makeProductsBody(): String {
+        return products.joinToString(", ") {
             makeProductJson(it)
         }.let {
             "[$it]"

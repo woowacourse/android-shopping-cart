@@ -27,7 +27,7 @@ class CartRepository(private val dataSource: CartDataSource) {
         return dataSource.selectAllCount()
     }
 
-    fun selectAll(): Shop {
-        return dataSource.selectAll()
+    fun selectAll(products: List<Product>): Shop {
+        return dataSource.selectAll(products)
     }
 }

@@ -8,6 +8,10 @@ class ProductRepository(private val dataSource: ProductDataSource) {
         return dataSource.selectByRange(start, range)
     }
 
+    fun selectAll(): List<Product> {
+        return dataSource.selectAll()
+    }
+
     fun initMockData() {
         dataSource.initMockData()
     }

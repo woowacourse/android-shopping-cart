@@ -18,11 +18,14 @@ class ProductLocalDao(context: Context) : ProductDataSource {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlProduct.name} LIMIT $start, $range", null
         )
-        return cursor.use {
-            val products = mutableListOf<Product>()
-            while (cursor.moveToNext()) products.add(makeProduct(it))
-            products
-        }
+        return makeProducts(cursor)
+    }
+
+    override fun selectAll(): List<Product> {
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${SqlProduct.name}", null
+        )
+        return makeProducts(cursor)
     }
 
     override fun initMockData() {
@@ -50,10 +53,18 @@ class ProductLocalDao(context: Context) : ProductDataSource {
         }
     }
 
-    private fun makeProduct(it: Cursor) = Product(
-        it.getInt(it.getColumnIndexOrThrow(SqlProduct.ID)),
-        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE))
+    private fun makeProducts(cursor: Cursor): List<Product> {
+        return cursor.use {
+            val products = mutableListOf<Product>()
+            while (cursor.moveToNext()) products.add(makeProduct(it))
+            products
+        }
+    }
+
+    private fun makeProduct(cursor: Cursor) = Product(
+        cursor.getInt(cursor.getColumnIndexOrThrow(SqlProduct.ID)),
+        URL(cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.PICTURE))),
+        cursor.getString(cursor.getColumnIndexOrThrow(SqlProduct.TITLE)),
+        cursor.getInt(cursor.getColumnIndexOrThrow(SqlProduct.PRICE))
     )
 }

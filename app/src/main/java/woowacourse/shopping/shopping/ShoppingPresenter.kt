@@ -35,7 +35,8 @@ class ShoppingPresenter(
     }
 
     override fun showProductDetail(cartProduct: CartProductModel) {
-        val recentProducts = recentProductRepository.selectAll()
+        val products = productRepository.selectAll()
+        val recentProducts = recentProductRepository.selectAll(products)
         val recentProduct = recentProducts.makeRecentProduct(cartProduct.product.toDomainModel())
 
         recentProductRepository.insertRecentProduct(recentProduct)
@@ -78,7 +79,8 @@ class ShoppingPresenter(
     }
 
     private fun updateRecentProducts() {
-        val recentProducts = recentProductRepository.selectAll()
+        val products = productRepository.selectAll()
+        val recentProducts = recentProductRepository.selectAll(products)
         val sortedRecentProducts =
             recentProducts.getRecentProducts(recentProductSize).value.sortedByDescending(
                 RecentProduct::ordinal

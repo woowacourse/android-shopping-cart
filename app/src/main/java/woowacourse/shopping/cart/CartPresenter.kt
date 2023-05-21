@@ -8,6 +8,7 @@ import woowacourse.shopping.common.model.mapper.CheckableCartProductMapper.toDom
 import woowacourse.shopping.common.model.mapper.CheckableCartProductMapper.toViewModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CheckableCartProduct
@@ -17,6 +18,7 @@ class CartPresenter(
     private val view: CartContract.View,
     private var cart: Cart = Cart(emptyList()),
     private val cartRepository: CartRepository,
+    private val productRepository: ProductRepository,
     private var currentPage: Int = 0,
     private val countPerPage: Int
 ) : CartContract.Presenter {
@@ -109,8 +111,9 @@ class CartPresenter(
     }
 
     private fun loadCart(): Cart {
+        val products = productRepository.selectAll()
         return Cart(
-            cartRepository.selectAll().products.map {
+            cartRepository.selectAll(products).products.map {
                 CheckableCartProduct(
                     findChecked(it), it
                 )

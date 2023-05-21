@@ -5,13 +5,12 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.data.database.table.SqlProduct
+import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlRecentProduct
 import woowacourse.shopping.data.datasource.RecentProductDataSource
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.RecentProducts
-import woowacourse.shopping.domain.URL
 
 class RecentProductLocalDao(context: Context) : RecentProductDataSource {
     private val db: SQLiteDatabase = ShoppingDBOpenHelper(context).writableDatabase
@@ -22,32 +21,27 @@ class RecentProductLocalDao(context: Context) : RecentProductDataSource {
         db.insert(SqlRecentProduct.name, null, row)
     }
 
-    override fun selectAll(): RecentProducts {
+    override fun selectAll(products: List<Product>): RecentProducts {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlRecentProduct.name}, ${SqlProduct.name} on ${SqlRecentProduct.name}.${SqlRecentProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
-            null
+            "SELECT * FROM ${SqlRecentProduct.name}", null
         )
-        return makeRecentProducts(cursor)
+        return makeRecentProducts(cursor, products)
     }
 
-    private fun makeRecentProducts(cursor: Cursor) = RecentProducts(
-        cursor.use {
-            val recentProducts = mutableListOf<RecentProduct>()
-            while (it.moveToNext()) recentProducts.add(
-                makeRecentProduct(it)
-            )
-            recentProducts
-        }
-    )
+    private fun makeRecentProducts(cursor: Cursor, products: List<Product>) =
+        RecentProducts(
+            cursor.use {
+                val recentProducts = mutableListOf<RecentProduct>()
+                while (it.moveToNext()) recentProducts.add(
+                    makeRecentProduct(it, products)
+                )
+                recentProducts
+            }
+        )
 
-    private fun makeRecentProduct(it: Cursor) = RecentProduct(
-        it.getInt(it.getColumnIndexOrThrow(SqlRecentProduct.ORDINAL)), makeProduct(it)
-    )
-
-    private fun makeProduct(it: Cursor) = Product(
-        it.getInt(it.getColumnIndexOrThrow(SqlProduct.ID)),
-        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-    )
+    private fun makeRecentProduct(cursor: Cursor, products: List<Product>) =
+        RecentProduct(
+            cursor.getInt(cursor.getColumnIndexOrThrow(SqlRecentProduct.ORDINAL)),
+            products.first { it.id == cursor.getInt(cursor.getColumnIndexOrThrow(SqlCart.PRODUCT_ID)) }
+        )
 }

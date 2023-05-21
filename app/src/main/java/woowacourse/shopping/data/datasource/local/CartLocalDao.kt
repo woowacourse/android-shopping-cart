@@ -5,12 +5,10 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.table.SqlCart
-import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.CartDataSource
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Shop
-import woowacourse.shopping.domain.URL
 
 class CartLocalDao(context: Context) : CartDataSource {
     private val db: SQLiteDatabase = ShoppingDBOpenHelper(context).writableDatabase
@@ -41,20 +39,11 @@ class CartLocalDao(context: Context) : CartDataSource {
         }
     }
 
-    override fun selectAll(): Shop {
+    override fun selectAll(products: List<Product>): Shop {
         val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID}",
-            null
+            "SELECT * FROM ${SqlCart.name}", null
         )
-        return makeCart(cursor)
-    }
-
-    override fun selectPage(page: Int, countPerPage: Int): Shop {
-        val cursor = db.rawQuery(
-            "SELECT * FROM ${SqlCart.name}, ${SqlProduct.name} on ${SqlCart.name}.${SqlCart.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} LIMIT ${page * countPerPage}, $countPerPage",
-            null
-        )
-        return makeCart(cursor)
+        return makeShop(cursor, products)
     }
 
     private fun insertOrUpdateCartProduct(productId: Int, amount: Int) {
@@ -73,27 +62,16 @@ class CartLocalDao(context: Context) : CartDataSource {
         db.execSQL("DELETE FROM ${SqlCart.name} WHERE ${SqlCart.PRODUCT_ID} = $productId")
     }
 
-    private fun makeCart(cursor: Cursor) = Shop(
-        cursor.use {
-            val cart = mutableListOf<CartProduct>()
-
-            while (it.moveToNext()) {
-                cart.add(
-                    makeCartProduct(it)
+    private fun makeShop(cursor: Cursor, products: List<Product>): Shop {
+        val cartProducts = mutableListOf<CartProduct>()
+        while (cursor.moveToNext()) {
+            cartProducts.add(
+                CartProduct(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(SqlCart.AMOUNT)),
+                    products.first { it.id == cursor.getInt(cursor.getColumnIndexOrThrow(SqlCart.PRODUCT_ID)) }
                 )
-            }
-            cart
+            )
         }
-    )
-
-    private fun makeCartProduct(it: Cursor) = CartProduct(
-        it.getInt(it.getColumnIndexOrThrow(SqlCart.AMOUNT)), makeProduct(it)
-    )
-
-    private fun makeProduct(it: Cursor) = Product(
-        it.getInt(it.getColumnIndexOrThrow(SqlProduct.ID)),
-        URL(it.getString(it.getColumnIndexOrThrow(SqlProduct.PICTURE))),
-        it.getString(it.getColumnIndexOrThrow(SqlProduct.TITLE)),
-        it.getInt(it.getColumnIndexOrThrow(SqlProduct.PRICE)),
-    )
+        return Shop(cartProducts)
+    }
 }

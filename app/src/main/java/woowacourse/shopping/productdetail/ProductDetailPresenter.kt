@@ -5,6 +5,7 @@ import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomainModel
 import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
 
 class ProductDetailPresenter(
@@ -12,6 +13,7 @@ class ProductDetailPresenter(
     private val product: ProductModel,
     private val recentProduct: ProductModel?,
     private val recentProductRepository: RecentProductRepository,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository
 ) : ProductDetailContract.Presenter {
     init {
@@ -22,7 +24,8 @@ class ProductDetailPresenter(
     override fun showRecentProductDetail() {
         if (recentProduct == null) return
 
-        val recentProducts = recentProductRepository.selectAll()
+        val products = productRepository.selectAll()
+        val recentProducts = recentProductRepository.selectAll(products)
         val madeRecentProduct = recentProducts.makeRecentProduct(product.toDomainModel())
 
         recentProductRepository.insertRecentProduct(madeRecentProduct)
