@@ -80,6 +80,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:padding="18dp"
+            android:visibility="gone"
             android:layout_marginHorizontal="20dp"
             android:layout_marginVertical="30dp"
             android:background="@drawable/item_card_background"

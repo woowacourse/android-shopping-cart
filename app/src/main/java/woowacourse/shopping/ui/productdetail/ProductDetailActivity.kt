@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
@@ -30,6 +29,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             RecentlyViewedProductRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl)
         )
     }
+    private val lastViewedProductViewHolder: LastViewedProductViewHolder by lazy {
+        LastViewedProductViewHolder(binding) { startActivityFromProductDetailActivity(this, it) }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +39,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setActionBar()
 
         presenter.onLoadProduct(intent.getLongExtra(PRODUCT_ID, -1))
-        initLastViewedProduct()
+        if (intent.getBooleanExtra(FROM_PRODUCT_DETAIL_ACTIVITY, false).not()) {
+            initLastViewedProduct()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -80,15 +84,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setLastViewedProduct(product: ProductDetailUIState?) {
-        if (product == null) {
-            binding.layoutLastViewedProduct.isVisible = false
-            return
-        }
-        binding.layoutLastViewedProduct.isVisible = true
-        binding.tvLastViewedProductName.text = product.name
-        binding.tvLastViewedProductPrice.text = getString(R.string.product_price).format(
-            PRICE_FORMAT.format(product.price)
-        )
+        lastViewedProductViewHolder.bind(product)
     }
 
     private fun moveToCartActivity() {
@@ -98,10 +94,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val PRODUCT_ID = "PRODUCT_ID"
+        private const val FROM_PRODUCT_DETAIL_ACTIVITY = "FROM_PRODUCT_DETAIL_ACTIVITY"
 
         fun startActivity(context: Context, productId: Long) {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, productId)
+            }
+            context.startActivity(intent)
+        }
+
+        fun startActivityFromProductDetailActivity(context: Context, productId: Long) {
+            val intent = Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(PRODUCT_ID, productId)
+                putExtra(FROM_PRODUCT_DETAIL_ACTIVITY, true)
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
             context.startActivity(intent)
         }
