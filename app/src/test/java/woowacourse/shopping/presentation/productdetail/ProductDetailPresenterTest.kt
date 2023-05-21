@@ -13,6 +13,7 @@ import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.presentation.ProductFixture
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.model.RecentProductModel
 import woowacourse.shopping.presentation.view.productdetail.ProductDetailContract
 import woowacourse.shopping.presentation.view.productdetail.ProductDetailPresenter
 
@@ -49,6 +50,50 @@ class ProductDetailPresenterTest {
         assertEquals(expected, actual)
         verify { productRepository.getDataById(actual.id) }
         verify { view.setProductInfoView(actual) }
+    }
+
+    @Test
+    fun `장바구니 담기를 누르면 상품의 개수를 정하는 다이얼로그가 보여진다`() {
+        // given
+        val product = ProductFixture.getData().toUIModel()
+        justRun { view.showCountView(product) }
+
+        // when
+        presenter.showCount()
+
+        // then
+        verify { view.showCountView(product) }
+    }
+
+    @Test
+    fun `마지막으로 본 상품을 보여준다`() {
+        // given
+        val product = ProductFixture.getData().toUIModel()
+        val lastRecentProduct = RecentProductModel(1L, product)
+        val slot = slot<RecentProductModel>()
+        justRun { view.setVisibleOfLastRecentProductInfoView(capture(slot)) }
+
+        // when
+        presenter.loadLastRecentProductInfo(lastRecentProduct)
+
+        // then
+        val actual = slot.captured
+        assertEquals(lastRecentProduct, actual)
+        verify { view.setVisibleOfLastRecentProductInfoView(actual) }
+    }
+
+    @Test
+    fun `마지막으로 본 상품이 존재하지 않으면 보여지지 않는다`() {
+        // given
+        val product = ProductModel(-1L, "", 0, "")
+        val lastRecentProduct = RecentProductModel(-1L, product)
+        justRun { view.setGoneOfLastRecentProductInfoView() }
+
+        // when
+        presenter.loadLastRecentProductInfo(lastRecentProduct)
+
+        // then
+        verify { view.setGoneOfLastRecentProductInfoView() }
     }
 
     @Test
