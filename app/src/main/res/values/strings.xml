@@ -13,4 +13,5 @@
     <string name="plus_button_text">+</string>
     <string name="total_checkout_description">전체</string>
     <string name="order_button_text">주문하기(%d)</string>
+    <string name="detail_recent_description">마지막으로 본 상품</string>
 </resources>
