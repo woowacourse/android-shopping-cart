@@ -21,7 +21,7 @@
         android:padding="6dp">
 
         <ImageView
-            android:id="@+id/product_img"
+            android:id="@+id/recent_product_img"
             imgUrl="@{recentProduct.productUiModel.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -44,7 +44,7 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/product_img"
+            app:layout_constraintTop_toBottomOf="@id/recent_product_img"
             tools:text="상품이름" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

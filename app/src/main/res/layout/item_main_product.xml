@@ -19,7 +19,7 @@
         android:onClick="@{()->listener.onClick(product.id)}">
 
         <ImageView
-            android:id="@+id/product_img"
+            android:id="@+id/main_product_img"
             imgUrl="@{product.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -41,7 +41,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             android:text="@{product.name}"
-            app:layout_constraintTop_toBottomOf="@id/product_img"
+            app:layout_constraintTop_toBottomOf="@id/main_product_img"
             tools:text="상품이름" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            app:layout_constraintBottom_toBottomOf="@id/product_img"
+            app:layout_constraintBottom_toBottomOf="@id/main_product_img"
             android:layout_marginBottom="8dp"/>
 
 

@@ -83,7 +83,7 @@
             app:tint="@color/gray_dark" />
 
         <ImageView
-            android:id="@+id/product_img"
+            android:id="@+id/cart_product_img"
             imgUrl="@{cartProduct.productUiModel.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
