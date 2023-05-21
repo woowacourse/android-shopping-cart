@@ -17,11 +17,15 @@ import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
-class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListener, OnCheckedChangedListener {
+class CartActivity :
+    AppCompatActivity(),
+    CartContract.View,
+    ProductClickListener,
+    OnCheckedChangedListener {
     private lateinit var binding: ActivityCartBinding
     private val adapter: CartRecyclerViewAdapter =
         CartRecyclerViewAdapter(this, ::clickDeleteButton, this)
-    private lateinit var presenter: CartContract.Presenter
+    private lateinit var presenter: CartPresenter
     private val repository: CartDBRepository by lazy { CartDBRepository(CartDBHelper(this).writableDatabase) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +35,21 @@ class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListene
         initPresenter()
         initCartList()
         initSetOnClickListener()
+        showTotalPrice()
+        showTotalPickedProductsCount()
         initAdapter()
+        setOnAllCheckedChangeListener()
+    }
+
+    private fun showTotalPickedProductsCount() {
+        presenter.totalPickedProductsCount.observe(this) {
+            binding.btOrder.text = getString(R.string.cart_order_button_text, it)
+        }
+    }
+
+    private fun setOnAllCheckedChangeListener() {
+        val onAllCheckedChange = ::onChangedIsAllPicked
+        binding.onCheckedChangedListener = onAllCheckedChange
     }
 
     private fun initBinding() {
@@ -92,6 +110,16 @@ class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListene
         adapter.notifyItemRemoved(position)
     }
 
+    override fun refreshAllChecked(isChecked: Boolean) {
+        binding.cbAllChecked.isChecked = isChecked
+    }
+
+    private fun showTotalPrice() {
+        presenter.totalPrice.observe(this) {
+            binding.tvTotalPrice.text = getString(R.string.formatted_price, it)
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) finish()
         return super.onOptionsItemSelected(item)
@@ -103,13 +131,18 @@ class CartActivity : AppCompatActivity(), CartContract.View, ProductClickListene
         startActivity(intent)
     }
 
+    override fun onChangedIsPicked(cartProductUIModel: CartProductUIModel, isPicked: Boolean) {
+        presenter.updateProductIsPicked(cartProductUIModel, isPicked)
+    }
+
+    private fun onChangedIsAllPicked(isAllChecked: Boolean) {
+        presenter.updateIsPickAllProduct(isAllChecked)
+        presenter.getCartProducts()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         repository.close()
-    }
-
-    override fun onChangedIsPicked(cartProductUIModel: CartProductUIModel, isPicked: Boolean) {
-        presenter.updateProductIsPicked(cartProductUIModel, isPicked)
     }
 
     companion object {

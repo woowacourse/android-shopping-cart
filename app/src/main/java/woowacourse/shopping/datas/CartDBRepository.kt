@@ -38,7 +38,7 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
     override fun getUnitData(unitSize: Int, pageNumber: Int): List<CartProduct> {
         val products = mutableListOf<CartProduct>()
         database.rawQuery(
-            "SELECT * FROM $TABLE_NAME LIMIT $unitSize OFFSET '${unitSize * (pageNumber - 1)}'",
+            "SELECT * FROM $TABLE_NAME LIMIT $unitSize OFFSET '${5 * (pageNumber - 1)}'",
             null
         ).use {
             while (it.moveToNext()) {

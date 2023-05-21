@@ -99,6 +99,7 @@
             android:layout_height="42dp"
             android:gravity="center"
             android:textSize="22sp"
+            android:text="@{String.valueOf(cartProduct.count)}"
             app:layout_constraintBottom_toBottomOf="@+id/bt_plus"
             app:layout_constraintEnd_toStartOf="@+id/bt_plus"
             tools:text="1" />

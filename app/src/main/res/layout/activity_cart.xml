@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="onCheckedChangedListener"
+            type="kotlin.jvm.functions.Function1" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -87,20 +94,22 @@
                 android:layout_marginTop="-15dp"
                 android:text="@string/cart_total_check_box_description"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/checkBox2"
-                app:layout_constraintStart_toStartOf="@+id/checkBox2"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
+                app:layout_constraintEnd_toEndOf="@+id/cb_all_checked"
+                app:layout_constraintStart_toStartOf="@+id/cb_all_checked"
+                app:layout_constraintTop_toBottomOf="@+id/cb_all_checked" />
 
             <CheckBox
-                android:id="@+id/checkBox2"
+                android:id="@+id/cb_all_checked"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:onCheckedChanged="@{(_, isChecked)-> onCheckedChangedListener.invoke(isChecked)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/tv_totalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
@@ -115,6 +124,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/bt_order"
             android:layout_width="0dp"
             android:layout_height="78dp"
             android:background="@color/cart_order_button"
