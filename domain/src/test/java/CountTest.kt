@@ -35,12 +35,15 @@ class CountTest {
         assertEquals(expected, actual)
     }
 
-    @Test(expected = IllegalArgumentException::class)
     fun `개수가 1일때 개수를 감소시킨 경우 개수가 1인 인스턴스를 반환한다`() {
         // given
         val count = Count(1)
 
         // when
-        count.minus()
+        val actual = count.minus()
+
+        // then
+        val expected = Count(1)
+        assertEquals(expected, actual)
     }
 }

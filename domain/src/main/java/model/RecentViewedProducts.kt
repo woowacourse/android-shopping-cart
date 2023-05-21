@@ -13,15 +13,12 @@ class RecentViewedProducts(
         product: RecentViewedProduct,
         handleOldestViewedProduct: () -> Unit,
     ) {
-        refreshLatestProduct(product)
+        _values.remove(product)
+        _values.add(0, product)
 
         if (_values.size > maxSize) {
             handleOldestViewedProduct()
+            _values.removeLast()
         }
-    }
-
-    private fun refreshLatestProduct(product: RecentViewedProduct) {
-        _values.remove(product)
-        _values.add(0, product)
     }
 }

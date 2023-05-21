@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import woowacourse.shopping.common.CountPickerListener
+import woowacourse.shopping.common.ZeroCountHandler
 import woowacourse.shopping.databinding.ItemShoppingProductBinding
 import woowacourse.shopping.model.ProductUiModel
 
@@ -12,9 +13,9 @@ class ShoppingProductViewHolder private constructor(
     private val onProductImageClicked: (product: ProductUiModel) -> Unit,
     private val onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
     private val getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
-) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ShoppingProduct, ItemShoppingProductBinding>(binding) {
-
-    private lateinit var getlistener: (product: ProductUiModel) -> CountPickerListener
+) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ShoppingProduct, ItemShoppingProductBinding>(
+    binding
+) {
 
     init {
         setOnClicked()
@@ -30,7 +31,14 @@ class ShoppingProductViewHolder private constructor(
                 countPicker.isVisible = true
                 onAddToCartButtonClicked(product ?: return@setOnClickListener)
             }
-            getlistener = getCountPickerListener
+        }
+    }
+
+    private fun getZeroCountHandler(): ZeroCountHandler {
+
+        return ZeroCountHandler {
+            binding.imageAddToCart.isVisible = true
+            binding.countPicker.isVisible = false
         }
     }
 
@@ -39,7 +47,8 @@ class ShoppingProductViewHolder private constructor(
     ) {
         binding.product = itemData.value
         binding.countPicker.setListener(
-            listener = getlistener(itemData.value)
+            countPickerListener = getCountPickerListener(itemData.value),
+            zeroCountHandler = getZeroCountHandler()
         )
     }
 

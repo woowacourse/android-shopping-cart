@@ -1,3 +1,4 @@
+import model.RecentViewedProduct
 import model.RecentViewedProducts
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -5,7 +6,7 @@ import org.junit.Test
 class RecentViewedProductsTest {
 
     @Test
-    fun `최대 개수보다 많은 상품이 저장될 경우 상품이 삭제되고 삭제된 상품을 반환한다`() {
+    fun `최대 개수보다 많은 상품이 저장될 경우 상품이 삭제된다`() {
         // given
         val recentViewedProducts = RecentViewedProducts(
             products = listOf(RecentViewedProduct(name = "아메리카노")),
@@ -13,15 +14,15 @@ class RecentViewedProductsTest {
         )
 
         // when
-        val removedProducts = recentViewedProducts.add(RecentViewedProduct(name = "카페라떼"))
+        recentViewedProducts.add(RecentViewedProduct(name = "카페라떼")) {}
 
         // then
-        val expected = RecentViewedProduct(name = "아메리카노")
-        assertEquals(expected, removedProducts)
+        val expected: List<RecentViewedProduct> = listOf(RecentViewedProduct(name = "카페라떼"))
+        assertEquals(expected, recentViewedProducts.values)
     }
 
     @Test
-    fun `최대 개수보다 상품이 적은 경우 상품을 추가하고 null을 반환한다`() {
+    fun `최대 개수보다 상품이 적은 경우 상품을 추가한다`() {
         // given
         val recentViewedProducts = RecentViewedProducts(
             products = listOf(
@@ -31,17 +32,15 @@ class RecentViewedProductsTest {
         )
 
         // when
-        val removedProducts = recentViewedProducts.add(
+        recentViewedProducts.add(
             RecentViewedProduct(name = "카페라떼")
-        )
+        ) {}
 
         // then
-        val expectedValues = listOf(
-            RecentViewedProduct(name = "아메리카노"),
-            RecentViewedProduct(name = "카페라떼")
+        val expected = listOf(
+            RecentViewedProduct(name = "카페라떼"),
+            RecentViewedProduct(name = "아메리카노")
         )
-        val expected = null
-        assertEquals(expected, removedProducts)
-        assertEquals(expectedValues, recentViewedProducts.values)
+        assertEquals(expected, recentViewedProducts.values)
     }
 }

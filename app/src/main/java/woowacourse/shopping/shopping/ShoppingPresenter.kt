@@ -89,12 +89,13 @@ class ShoppingPresenter(
         val cartProduct = cartRepository.getCartProductById(product.id)
             .minusCount(handleZeroCount = ::removeCartProduct)
 
-        cartRepository.addToCart(
-            id = product.id,
-            count = cartProduct.minusCount()
-                .count
-                .value
-        )
+        cartProduct?.let {
+            cartRepository.addToCart(
+                id = product.id,
+                count = it.count
+                    .value
+            )
+        }
     }
 
     private fun removeCartProduct(cartProduct: CartProduct) {

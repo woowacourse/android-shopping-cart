@@ -21,6 +21,7 @@ class CountPickerView @JvmOverloads constructor(
         true
     )
     private var listener: CountPickerListener? = null
+    private var zeroCountHandler: ZeroCountHandler? = null
 
     init {
         plusCount()
@@ -45,8 +46,12 @@ class CountPickerView @JvmOverloads constructor(
         binding.textProductCount.text = count.toString()
     }
 
-    fun setListener(listener: CountPickerListener) {
-        this.listener = listener
+    fun setListener(
+        countPickerListener: CountPickerListener,
+        zeroCountHandler: ZeroCountHandler? = null,
+    ) {
+        this.listener = countPickerListener
+        this.zeroCountHandler = zeroCountHandler
     }
 
     private fun TextView.plusCount() {
@@ -57,8 +62,11 @@ class CountPickerView @JvmOverloads constructor(
 
     private fun TextView.minusCount() {
         val count = text.toString().toInt() - 1
-        if (count != 0) {
-            text = count.toString()
+        if (count == 0) {
+            return zeroCountHandler?.handle() ?: run {
+                text = 1.toString()
+            }
         }
+        text = count.toString()
     }
 }

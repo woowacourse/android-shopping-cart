@@ -4,7 +4,7 @@ package model
 value class Price(val value: Int) {
 
     init {
-        require(value >= 0) {
+        require(value > 0) {
             PRICE_AMOUNT_ERROR
         }
     }
