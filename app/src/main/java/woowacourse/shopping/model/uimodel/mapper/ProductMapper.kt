@@ -20,10 +20,10 @@ fun RecentProduct.toUIModel() =
     RecentProductUIModel(product.toUIModel())
 
 fun CartProductUIModel.toDomain() =
-    CartProduct(productUIModel.toDomain(), count)
+    CartProduct(productUIModel.toDomain(), count, isSelected)
 
 fun CartProduct.toUIModel() =
-    CartProductUIModel(product.toUIModel(), count)
+    CartProductUIModel(product.toUIModel(), count, isSelected)
 
 fun List<ProductUIModel>.toDomain() = this.map { Product(it.id, it.name, it.url, it.price) }
 

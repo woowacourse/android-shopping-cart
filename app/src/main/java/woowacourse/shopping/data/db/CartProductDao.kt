@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.core.database.getIntOrNull
 import com.shopping.domain.CartProduct
 import com.shopping.domain.Count
 import com.shopping.domain.Product
@@ -30,7 +31,8 @@ class CartProductDao(context: Context) :
                         url = it.getString(it.getColumnIndexOrThrow(KEY_IMAGE)),
                         price = it.getInt(it.getColumnIndexOrThrow(KEY_PRICE)),
                     ),
-                    count = Count(it.getInt(it.getColumnIndexOrThrow(KEY_COUNT)))
+                    count = Count(it.getInt(it.getColumnIndexOrThrow(KEY_COUNT))),
+                    isSelected = (it.getIntOrNull(it.getColumnIndexOrThrow(KEY_SELECTED)) == SELECTED_STANDARD)
                 )
                 cartProducts.add(cartProduct)
             }
@@ -45,6 +47,7 @@ class CartProductDao(context: Context) :
             put(KEY_IMAGE, cartProduct.product.url)
             put(KEY_PRICE, cartProduct.product.price)
             put(KEY_COUNT, cartProduct.count.value)
+            put(KEY_SELECTED, cartProduct.isSelected)
         }
         writableDatabase.insert(TABLE_NAME, null, record)
     }
@@ -72,6 +75,8 @@ class CartProductDao(context: Context) :
     fun update(cartProduct: CartProduct) {
         val contextValues = ContentValues().apply {
             put(KEY_COUNT, cartProduct.count.value)
+
+            put(KEY_SELECTED, cartProduct.isSelected)
         }
         val whereClause = "$KEY_ID=?"
         val whereArgs = arrayOf(cartProduct.product.id.toString())
@@ -114,13 +119,16 @@ class CartProductDao(context: Context) :
         const val KEY_IMAGE = "image"
         const val KEY_PRICE = "price"
         const val KEY_COUNT = "count"
+        const val KEY_SELECTED = "isSelected"
+        private const val SELECTED_STANDARD = 1
 
         private const val CREATE_TABLE_QUERY = "CREATE TABLE $TABLE_NAME (" +
             "$KEY_ID int," +
             "$KEY_NAME text," +
             "$KEY_IMAGE text," +
             "$KEY_PRICE text," +
-            "$KEY_COUNT text" +
+            "$KEY_COUNT text," +
+            "$KEY_SELECTED int" +
             ");"
         private const val DROP_TABLE_QUERY = "DROP TABLE IF EXISTS $TABLE_NAME"
     }

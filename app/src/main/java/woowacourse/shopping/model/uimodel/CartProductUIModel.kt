@@ -4,5 +4,6 @@ import com.shopping.domain.Count
 
 class CartProductUIModel(
     val productUIModel: ProductUIModel,
-    val count: Count
+    val count: Count,
+    val isSelected: Boolean
 )
