@@ -4,7 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import woowacourse.shopping.domain.model.Cart
-import woowacourse.shopping.domain.model.Page
+import woowacourse.shopping.domain.model.page.Page
+import woowacourse.shopping.domain.model.page.Pagination
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUi
@@ -18,21 +19,21 @@ class CartPresenter(
     cartSize: Int = 5,
 ) : Presenter(view) {
     private var cart: Cart = Cart(loadUnit = cartSize, minProductSize = 1)
-    private var currentPage: Page = Page()
+    private var currentPage: Page = Pagination()
 
     private val _totalCheckSize = MutableLiveData(cartRepository.getCheckedProductCount())
     val totalCheckSize: LiveData<Int> get() = _totalCheckSize
 
-    private val _pageCheckSize = MutableLiveData(cart.getCheckedSize(currentPage))
+    private val _pageCheckSize = MutableLiveData(currentPage.getCheckedProductSize(cart))
     val isAllChecked: LiveData<Boolean> = Transformations.map(_pageCheckSize) { pageCheckSize ->
-        pageCheckSize == cart.takeItemsUpToPage(currentPage).size
+        pageCheckSize == currentPage.takeItems(cart).size
     }
 
     override fun fetchCart(page: Int) {
-        currentPage = currentPage.copy(page)
+        currentPage = currentPage.update(page)
         cart = cart.update(cartRepository.getProductInCartByPage(currentPage))
 
-        view.updateNavigatorEnabled(currentPage.hasPrevious(), cart.canLoadNextPage(currentPage))
+        view.updateNavigatorEnabled(currentPage.hasPrevious(), currentPage.hasNext(cart))
         view.updatePageNumber(currentPage.toUi())
         fetchView()
     }
@@ -76,14 +77,14 @@ class CartPresenter(
 
     private fun updateCart(newCart: Cart) {
         cart = cart.update(newCart)
-        cartRepository.update(cart.takeCartUpToPage(currentPage))
+        cartRepository.update(currentPage.takeItems(cart))
         fetchView()
     }
 
     private fun fetchView() {
         _totalCheckSize.value = cartRepository.getCheckedProductCount()
-        _pageCheckSize.value = cart.getCheckedSize(currentPage)
+        _pageCheckSize.value = currentPage.getCheckedProductSize(cart)
         view.updateTotalPrice(cartRepository.getTotalPrice())
-        view.updateCart(cart.takeItemsUpToPage(currentPage).toUi())
+        view.updateCart(currentPage.takeItems(cart).toUi())
     }
 }

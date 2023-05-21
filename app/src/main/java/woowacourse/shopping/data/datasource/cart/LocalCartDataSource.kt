@@ -2,6 +2,7 @@ package woowacourse.shopping.data.datasource.cart
 
 import woowacourse.shopping.data.database.dao.cart.CartDao
 import woowacourse.shopping.data.model.DataCart
+import woowacourse.shopping.data.model.DataCartProduct
 import woowacourse.shopping.data.model.DataPage
 import woowacourse.shopping.data.model.Product
 
@@ -18,8 +19,8 @@ class LocalCartDataSource(private val dao: CartDao) : CartDataSource.Local {
 
     override fun getProductInCartSize(): Int = dao.getProductInCartSize()
 
-    override fun update(cart: DataCart) {
-        cart.cartProducts.forEach(dao::update)
+    override fun update(cartProducts: List<DataCartProduct>) {
+        cartProducts.forEach(dao::update)
     }
 
     override fun getTotalPrice(): Int = dao.getTotalPrice()

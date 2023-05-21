@@ -4,7 +4,8 @@ import woowacourse.shopping.data.datasource.cart.CartDataSource
 import woowacourse.shopping.data.mapper.toData
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.Cart
-import woowacourse.shopping.domain.model.Page
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.page.Page
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
@@ -26,8 +27,8 @@ class CartRepositoryImpl(private val localCartDataSource: CartDataSource.Local) 
         localCartDataSource.increaseCartCount(product.toData(), count)
     }
 
-    override fun update(cart: Cart) {
-        localCartDataSource.update(cart.toData())
+    override fun update(cartProducts: List<CartProduct>) {
+        localCartDataSource.update(cartProducts.toData())
     }
 
     override fun getTotalPrice(): Int =

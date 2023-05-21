@@ -7,7 +7,7 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.domain.model.Page
+import woowacourse.shopping.domain.model.page.Page
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.Product
