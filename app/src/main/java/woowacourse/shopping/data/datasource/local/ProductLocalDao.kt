@@ -1,8 +1,10 @@
 package woowacourse.shopping.data.datasource.local
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.datasource.ProductDataSource
 import woowacourse.shopping.data.datasource.entity.ProductEntity
@@ -10,7 +12,9 @@ import woowacourse.shopping.data.mock.ProductMock
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.URL
 
-class ProductLocalDao(private val db: SQLiteDatabase) : ProductDataSource {
+class ProductLocalDao(context: Context) : ProductDataSource {
+    private val db: SQLiteDatabase = ShoppingDBOpenHelper(context).writableDatabase
+
     override fun selectByRange(start: Int, range: Int): List<ProductEntity> {
         val cursor = db.rawQuery(
             "SELECT * FROM ${SqlProduct.name} LIMIT $start, $range", null

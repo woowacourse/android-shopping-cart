@@ -11,7 +11,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.utils.getSerializable
-import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.datasource.local.CartLocalDao
 import woowacourse.shopping.data.datasource.local.RecentProductLocalDao
 import woowacourse.shopping.data.repository.CartRepository
@@ -23,9 +22,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var addCartDialogBinding: DialogAddCartBinding
     private lateinit var presenter: ProductDetailContract.Presenter
-    private val shoppingDBOpenHelper: ShoppingDBOpenHelper by lazy {
-        ShoppingDBOpenHelper(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,8 +112,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             this,
             product = product,
             recentProduct = recentProduct,
-            recentProductRepository = RecentProductRepository(RecentProductLocalDao(shoppingDBOpenHelper.writableDatabase)),
-            cartRepository = CartRepository(CartLocalDao(shoppingDBOpenHelper.writableDatabase))
+            recentProductRepository = RecentProductRepository(RecentProductLocalDao(this)),
+            cartRepository = CartRepository(CartLocalDao(this))
         )
     }
 

@@ -10,11 +10,10 @@ import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.RecentProductModel
-import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.datasource.local.CartLocalDao
-import woowacourse.shopping.data.datasource.local.ProductLocalDao
 import woowacourse.shopping.data.datasource.local.RecentProductLocalDao
 import woowacourse.shopping.data.datasource.local.ShopLocalDao
+import woowacourse.shopping.data.datasource.remote.ProductRemoteDao
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.data.repository.RecentProductRepository
@@ -28,10 +27,6 @@ import woowacourse.shopping.shopping.recyclerview.RecentProductWrapperAdapter
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
-
-    private val shoppingDBOpenHelper: ShoppingDBOpenHelper by lazy {
-        ShoppingDBOpenHelper(this)
-    }
 
     private val productAdapter: ProductAdapter by lazy {
         ProductAdapter(
@@ -128,14 +123,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initPresenter() {
         presenter = ShoppingPresenter(
             this,
-            productRepository = ProductRepository(ProductLocalDao(shoppingDBOpenHelper.writableDatabase)),
-            shopRepository = ShopRepository(ShopLocalDao(shoppingDBOpenHelper.writableDatabase)),
-            cartRepository = CartRepository(CartLocalDao(shoppingDBOpenHelper.writableDatabase)),
-            recentProductRepository = RecentProductRepository(
-                RecentProductLocalDao(
-                    shoppingDBOpenHelper.writableDatabase
-                )
-            ),
+            productRepository = ProductRepository(ProductRemoteDao()),
+            shopRepository = ShopRepository(ShopLocalDao(this)),
+            cartRepository = CartRepository(CartLocalDao(this)),
+            recentProductRepository = RecentProductRepository(RecentProductLocalDao(this)),
             recentProductSize = 10,
             productLoadSize = 20
         )

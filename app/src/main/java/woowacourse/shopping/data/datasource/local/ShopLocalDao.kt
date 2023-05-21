@@ -1,14 +1,18 @@
 package woowacourse.shopping.data.datasource.local
 
+import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.datasource.ShopDataSource
 import woowacourse.shopping.data.datasource.entity.ProductEntity
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Shop
 
-class ShopLocalDao(private val db: SQLiteDatabase) : ShopDataSource {
+class ShopLocalDao(context: Context) : ShopDataSource {
+    private val db: SQLiteDatabase = ShoppingDBOpenHelper(context).writableDatabase
+
     override fun selectByRange(products: List<ProductEntity>): Shop {
         return Shop(
             products.map {

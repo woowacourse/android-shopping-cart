@@ -1,7 +1,9 @@
 package woowacourse.shopping.data.datasource.local
 
+import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.selectRowId
 import woowacourse.shopping.data.database.table.SqlCart
 import woowacourse.shopping.data.database.table.SqlProduct
@@ -11,7 +13,9 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.Shop
 import woowacourse.shopping.domain.URL
 
-class CartLocalDao(private val db: SQLiteDatabase) : CartDataSource {
+class CartLocalDao(context: Context) : CartDataSource {
+    private val db: SQLiteDatabase = ShoppingDBOpenHelper(context).writableDatabase
+
     override fun addCartProduct(cartProduct: CartProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
         productRow[SqlProduct.PICTURE] = cartProduct.product.picture.value

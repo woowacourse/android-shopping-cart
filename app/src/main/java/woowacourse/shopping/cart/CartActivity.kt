@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.common.model.CheckableCartProductModel
 import woowacourse.shopping.common.model.PageNavigatorModel
-import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.datasource.local.CartLocalDao
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -17,10 +16,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
     private lateinit var cartAdapter: CartAdapter
-
-    private val shoppingDBOpenHelper: ShoppingDBOpenHelper by lazy {
-        ShoppingDBOpenHelper(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,7 +99,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initPresenter() {
         presenter = CartPresenter(
             this,
-            cartRepository = CartRepository(CartLocalDao(shoppingDBOpenHelper.writableDatabase)),
+            cartRepository = CartRepository(CartLocalDao(this)),
             countPerPage = SIZE_PER_PAGE
         )
     }
