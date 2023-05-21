@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="productModel"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.presentation.productdetail.ProductDetailContract.Presenter" />
+
+        <variable
+            name="onMinusClick"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="onPlusClick"
+            type="kotlin.jvm.functions.Function1" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_dialog_cart_product_name"
+            android:layout_width="266dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="10dp"
+            android:text="@{productModel.name}"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            tools:text="[든든] 동원 스위트콘" />
+
+        <TextView
+            android:id="@+id/text_dialog_cart_product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/price_format(presenter.productInfo.totalPrice)}"
+            tools:text="99000원"
+            app:layout_constraintStart_toStartOf="@+id/text_dialog_cart_product_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_dialog_cart_product_name" />
+
+        <woowacourse.shopping.presentation.common.CounterView
+            android:id="@+id/counter_dialog_cart_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="13dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_dialog_put_cart" />
+
+        <Button
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:layout_width="290dp"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="23dp"
+            android:text="@string/put_in_cart_button_text"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/text_dialog_cart_product_price"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/button_dialog_put_cart" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

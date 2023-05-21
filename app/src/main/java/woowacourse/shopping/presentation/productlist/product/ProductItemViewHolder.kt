@@ -69,8 +69,6 @@ class ProductItemViewHolder(
 
     private fun itemViewClick() {
         itemView.setOnClickListener {
-            presenter.saveRecentProduct(productModel.id)
-            presenter.updateRecentProductItems()
             showProductDetail(productModel)
         }
     }
