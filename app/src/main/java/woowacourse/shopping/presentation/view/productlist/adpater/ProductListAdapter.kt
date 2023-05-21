@@ -35,14 +35,8 @@ class ProductListAdapter(
         notifyItemRangeInserted(itemCount, newProducts.size)
     }
 
-    fun updateCartCount(position: Int, count: Int) {
-        _products[position] = ProductModel(
-            _products[position].id,
-            _products[position].title,
-            _products[position].price,
-            _products[position].imageUrl,
-            count
-        )
+    private fun updateCartCount(position: Int, count: Int) {
+        _products[position] = _products[position].copy(count = count)
         notifyItemChanged(position)
     }
 
