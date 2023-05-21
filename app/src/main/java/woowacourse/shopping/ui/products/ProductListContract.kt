@@ -13,6 +13,7 @@ interface ProductListContract {
         fun onRefreshProducts()
         fun onPlusCount(cartItemId: Long)
         fun onMinusCount(cartItemId: Long)
+        fun onLoadCartItemCount()
     }
 
     interface View {
@@ -21,5 +22,6 @@ interface ProductListContract {
         fun replaceProduct(product: ProductUIState)
         fun setProducts(products: List<ProductUIState>)
         fun setCanLoadMore(canLoadMore: Boolean)
+        fun setCartItemCount(count: Int)
     }
 }

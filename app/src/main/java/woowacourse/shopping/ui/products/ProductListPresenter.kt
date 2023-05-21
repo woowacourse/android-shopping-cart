@@ -78,6 +78,7 @@ class ProductListPresenter(
         val cartItem = CartItem(product, LocalDateTime.now(), 1)
         cartItemRepository.save(cartItem)
         view.replaceProduct(ProductUIState.from(cartItem))
+        onLoadCartItemCount()
     }
 
     override fun onPlusCount(cartItemId: Long) {
@@ -92,11 +93,17 @@ class ProductListPresenter(
         if (cartItem.count == 1) {
             cartItemRepository.deleteById(cartItemId)
             view.replaceProduct(ProductUIState.from(cartItem.product))
+            onLoadCartItemCount()
             return
         }
         cartItem.minusCount()
         cartItemRepository.updateCountById(cartItemId, cartItem.count)
         view.replaceProduct(ProductUIState.from(cartItem))
+    }
+
+    override fun onLoadCartItemCount() {
+        val count = cartItemRepository.countAll()
+        view.setCartItemCount(count)
     }
 
     companion object {

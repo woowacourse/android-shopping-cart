@@ -17,6 +17,8 @@ import woowacourse.shopping.ui.products.adapter.ProductListAdapter
 import woowacourse.shopping.ui.products.adapter.RecentlyViewedProductListAdapter
 import woowacourse.shopping.ui.products.uistate.ProductUIState
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
+import woowacourse.shopping.utils.customview.CountBadge
+import java.lang.IllegalStateException
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
@@ -27,11 +29,16 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private val presenter: ProductListContract.Presenter by lazy {
         ProductListPresenter(
             this,
-            RecentlyViewedProductRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl),
+            RecentlyViewedProductRepositoryImpl(
+                DbHelper.getDbInstance(this),
+                ProductRepositoryImpl
+            ),
             ProductRepositoryImpl,
             CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl)
         )
     }
+
+    private var cartCountBadge: CountBadge? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +57,18 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         super.onStart()
         presenter.onLoadRecentlyViewedProducts()
         presenter.onRefreshProducts()
+        presenter.onLoadCartItemCount()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_product_list, menu)
+
+        cartCountBadge =
+            menu.findItem(R.id.cart_count_badge).actionView?.findViewById(R.id.cart_count_badge)
+                ?: throw IllegalStateException("장바구니 아이템 개수 배지가 메뉴에 없으면 메뉴를 다시 보세요.")
+
+        presenter.onLoadCartItemCount()
+
         return true
     }
 
@@ -63,6 +78,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
                 CartActivity.startActivity(this)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -128,6 +144,15 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     override fun replaceProduct(product: ProductUIState) {
         (binding.recyclerViewMainProduct.adapter as ProductListAdapter).replaceItem(product)
+    }
+
+    override fun setCartItemCount(count: Int) {
+        if (count == 0) {
+            cartCountBadge?.isVisible = false
+            return
+        }
+        cartCountBadge?.isVisible = true
+        cartCountBadge?.count = count
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

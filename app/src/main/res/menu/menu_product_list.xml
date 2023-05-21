@@ -6,6 +6,13 @@
         android:id="@+id/action_cart"
         android:icon="@drawable/icon_cart"
         android:title=""
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/cart_count_badge"
+        android:title=""
+        app:actionLayout="@layout/layout_cart_count_badge"
+        app:showAsAction="always" />
+
 
 </menu>
