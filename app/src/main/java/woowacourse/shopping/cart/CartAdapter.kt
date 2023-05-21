@@ -22,6 +22,8 @@ class CartAdapter(
     private val onCartItemRemoveButtonViewClick: (Int) -> Unit =
         { onCartItemRemoveButtonClick(cartProducts[it]) }
     private val onCheckBoxViewClick: (Int) -> Unit = { onCheckBoxClick(cartProducts[it]) }
+    private val onMinusAmountButtonViewClick: (Int) -> Unit = { onMinusAmountButtonClick(cartProducts[it]) }
+    private val onPlusAmountButtonViewClick: (Int) -> Unit = { onPlusAmountButtonClick(cartProducts[it]) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (CartViewType.values()[viewType]) {
@@ -31,8 +33,8 @@ class CartAdapter(
                 ),
                 onCartItemRemoveButtonViewClick,
                 onCheckBoxViewClick,
-                onMinusAmountButtonClick,
-                onPlusAmountButtonClick
+                onMinusAmountButtonViewClick,
+                onPlusAmountButtonViewClick
             )
             CartViewType.NAVIGATION -> NavigationViewHolder(
                 ItemCartNavigatorBinding.inflate(
