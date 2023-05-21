@@ -13,6 +13,8 @@
     <string name="btn_basket">장바구니 담기</string>
     <string name="tv_cart">Cart</string>
     <string name="tv_previous_explain">마지막으로 본 상품</string>
+    <string name="btn_dialog_add_basket">담기</string>
+
 
     <!-- item_recent_products -->
     <string name="tv_recent_product_title">최근 본 상품</string>
