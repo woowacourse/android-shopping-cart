@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.main
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -26,8 +25,6 @@ import woowacourse.shopping.feature.main.product.ProductClickListener
 import woowacourse.shopping.feature.main.recent.RecentAdapter
 import woowacourse.shopping.feature.main.recent.RecentProductClickListener
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
-import woowacourse.shopping.model.ProductUiModel
-import woowacourse.shopping.model.RecentProductUiModel
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var binding: ActivityMainBinding
@@ -72,21 +69,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding.productRecyclerView.adapter = concatAdapter
 
         initPresenter()
-    }
-
-    private fun initPresenter() {
-        presenter = MainPresenter(
-            this,
-            MockRemoteProductRepositoryImpl(MockProductRemoteService()),
-            CartRepositoryImpl(CartDao(this)),
-            RecentProductRepositoryImpl(RecentDao(this))
-        )
-    }
-
-    override fun onStart() {
-        super.onStart()
-        presenter.loadProducts()
-        presenter.loadRecent()
+        observePresenter()
     }
 
     private fun initAdapters() {
@@ -110,42 +93,48 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding.productRecyclerView.layoutManager = layoutManager
     }
 
-    override fun showCartScreen() {
-        startActivity(CartActivity.getIntent(this))
+    private fun initPresenter() {
+        presenter = MainPresenter(
+            MockRemoteProductRepositoryImpl(MockProductRemoteService()),
+            CartRepositoryImpl(CartDao(this)),
+            RecentProductRepositoryImpl(RecentDao(this))
+        )
     }
 
-    override fun showProductDetailScreen(
-        productUiModel: ProductUiModel,
-        recentProductUiModel: RecentProductUiModel?
-    ) {
-        startActivity(DetailActivity.getIntent(this, productUiModel, recentProductUiModel))
-    }
-
-    override fun setProducts(products: List<ProductUiModel>) {
-        runOnUiThread { mainProductAdapter.setItems(products) }
-    }
-
-    override fun updateRecent(recent: List<RecentProductUiModel>) {
-        runOnUiThread { recentAdapter.setItems(recent) }
-    }
-
-    override fun showCartCountBadge() {
-        runOnUiThread { cartCountBadge?.visibility = View.VISIBLE }
-    }
-
-    override fun hideCartCountBadge() {
-        runOnUiThread { cartCountBadge?.visibility = View.GONE }
-    }
-
-    override fun updateCartCount(count: Int) {
-        runOnUiThread { cartCountBadge?.count = count }
-    }
-
-    override fun hideLoadMore() {
-        runOnUiThread {
-            Toast.makeText(this, getString(R.string.load_more_end), Toast.LENGTH_SHORT).show()
-            loadAdapter.hide()
+    private fun observePresenter() {
+        presenter.badgeCount.observe(this) { cartCountBadge?.count = it }
+        presenter.products.observe(this) {
+            mainProductAdapter.setItems(it)
         }
+        presenter.recentProducts.observe(this) { recentAdapter.setItems(it) }
+        presenter.mainScreenEvent.observe(this) {
+            handleMainScreenEvent(it)
+        }
+    }
+
+    private fun handleMainScreenEvent(event: MainContract.View.MainScreenEvent) {
+        when (event) {
+            is MainContract.View.MainScreenEvent.ShowCartScreen -> {
+                startActivity(CartActivity.getIntent(this))
+            }
+            is MainContract.View.MainScreenEvent.ShowProductDetailScreen -> {
+                startActivity(DetailActivity.getIntent(this, event.product, event.recentProduct))
+            }
+            is MainContract.View.MainScreenEvent.HideLoadMore -> {
+                hideLoadMore()
+            }
+        }
+    }
+
+    private fun hideLoadMore() {
+        Toast.makeText(this, getString(R.string.load_more_end), Toast.LENGTH_SHORT).show()
+        loadAdapter.hide()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.loadProducts()
+        presenter.loadRecent()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

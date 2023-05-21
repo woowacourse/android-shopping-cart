@@ -33,6 +33,9 @@ class CartCounterBadge @JvmOverloads constructor(
         if (count > COUNT_THRESHOLD) {
             binding.badge.visibility = View.GONE
             binding.badgePlusView.visibility = View.VISIBLE
+        } else if (count == ZERO) {
+            binding.badge.visibility = View.GONE
+            binding.badgePlusView.visibility = View.GONE
         } else {
             binding.badge.visibility = View.VISIBLE
             binding.badgePlusView.visibility = View.GONE

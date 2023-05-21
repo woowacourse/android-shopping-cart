@@ -13,7 +13,7 @@ class CartProducts(
         get() = list.filter { it.checked }.sumOf { it.count * it.product.price.value }
 
     init {
-        require(list.all { it.count >= 1 }) { }
+        require(list.all { it.count >= 1 }) { ERROR_CART_PRODUCT_COUNT_MIN_OVER_ZERO }
     }
 
     fun changeCount(cartId: Long, count: Int): CartProducts {
@@ -45,5 +45,10 @@ class CartProducts(
             else it
         }
         return CartProducts(newList)
+    }
+
+    companion object {
+        private const val ERROR_CART_PRODUCT_COUNT_MIN_OVER_ZERO =
+            "[ERROR] 장바구니 상품의 갯수는 종류별로 각 1개 이상이여야 합니다"
     }
 }

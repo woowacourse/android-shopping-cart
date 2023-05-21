@@ -1,24 +1,27 @@
 package woowacourse.shopping.feature.main
 
+import androidx.lifecycle.LiveData
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentProductUiModel
 
 interface MainContract {
     interface View {
-        fun showCartScreen()
-        fun showProductDetailScreen(
-            productUiModel: ProductUiModel,
-            recentProductUiModel: RecentProductUiModel?
-        )
-        fun setProducts(products: List<ProductUiModel>)
-        fun updateRecent(recent: List<RecentProductUiModel>)
-        fun showCartCountBadge()
-        fun hideCartCountBadge()
-        fun updateCartCount(count: Int)
-        fun hideLoadMore()
+        sealed class MainScreenEvent {
+            object ShowCartScreen : MainScreenEvent()
+            class ShowProductDetailScreen(
+                val product: ProductUiModel,
+                val recentProduct: RecentProductUiModel?
+            ) : MainScreenEvent()
+
+            object HideLoadMore : MainScreenEvent()
+        }
     }
 
     interface Presenter {
+        val products: LiveData<List<ProductUiModel>>
+        val recentProducts: LiveData<List<RecentProductUiModel>>
+        val badgeCount: LiveData<Int>
+        val mainScreenEvent: LiveData<View.MainScreenEvent>
         fun loadProducts()
         fun loadRecent()
         fun loadCartCountSize()
