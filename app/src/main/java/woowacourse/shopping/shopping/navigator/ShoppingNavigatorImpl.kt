@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.navigator
 
 import android.content.Context
 import woowacourse.shopping.model.ProductUiModel

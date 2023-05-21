@@ -1,6 +1,7 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.adapter
 
 import androidx.recyclerview.widget.GridLayoutManager
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemViewType
 
 class ShoppingRecyclerSpanSizeManager(
     private val getViewType: (position: Int) -> Int

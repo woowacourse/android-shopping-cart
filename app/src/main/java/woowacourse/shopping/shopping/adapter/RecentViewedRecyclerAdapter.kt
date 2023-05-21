@@ -1,8 +1,9 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.RecentViewedProductUiModel
+import woowacourse.shopping.shopping.adapter.viewholder.RecentViewedProductViewHolder
 
 class RecentViewedRecyclerAdapter(private val products: List<RecentViewedProductUiModel>) :
     RecyclerView.Adapter<RecentViewedProductViewHolder>() {

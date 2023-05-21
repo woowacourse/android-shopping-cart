@@ -13,6 +13,12 @@ import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
+import woowacourse.shopping.shopping.adapter.ShoppingProductCountPicker
+import woowacourse.shopping.shopping.adapter.ShoppingRecyclerAdapter
+import woowacourse.shopping.shopping.adapter.ShoppingRecyclerSpanSizeManager
+import woowacourse.shopping.shopping.adapter.viewholder.ProductItemDecoration
+import woowacourse.shopping.shopping.navigator.ShoppingNavigator
+import woowacourse.shopping.shopping.navigator.ShoppingNavigatorImpl
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 

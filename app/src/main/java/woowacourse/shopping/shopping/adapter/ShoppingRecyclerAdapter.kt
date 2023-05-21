@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.adapter
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
@@ -7,12 +7,18 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.CountPickerListener
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
-import woowacourse.shopping.shopping.ShoppingRecyclerItem.ReadMoreDescription
-import woowacourse.shopping.shopping.ShoppingRecyclerItem.RecentViewedProducts
-import woowacourse.shopping.shopping.ShoppingRecyclerItem.ShoppingProduct
-import woowacourse.shopping.shopping.ShoppingRecyclerItemViewType.PRODUCT
-import woowacourse.shopping.shopping.ShoppingRecyclerItemViewType.READ_MORE
-import woowacourse.shopping.shopping.ShoppingRecyclerItemViewType.RECENT_VIEWED
+import woowacourse.shopping.shopping.adapter.viewholder.ReadMoreViewHolder
+import woowacourse.shopping.shopping.adapter.viewholder.RecentViewedViewHolder
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingProductViewHolder
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItem
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItem.ReadMoreDescription
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItem.RecentViewedProducts
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItem.ShoppingProduct
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemViewHolder
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemViewType
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemViewType.PRODUCT
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemViewType.READ_MORE
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemViewType.RECENT_VIEWED
 
 class ShoppingRecyclerAdapter(
     products: List<ProductUiModel>,

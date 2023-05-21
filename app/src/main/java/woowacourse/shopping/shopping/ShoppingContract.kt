@@ -2,6 +2,7 @@ package woowacourse.shopping.shopping
 
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
+import woowacourse.shopping.shopping.navigator.ShoppingNavigator
 
 interface ShoppingContract {
 

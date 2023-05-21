@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.adapter.viewholder
 
 import android.graphics.Rect
 import android.view.View

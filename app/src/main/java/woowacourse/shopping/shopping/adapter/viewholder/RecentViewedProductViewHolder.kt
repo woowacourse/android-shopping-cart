@@ -1,4 +1,4 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.adapter.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

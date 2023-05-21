@@ -1,8 +1,9 @@
-package woowacourse.shopping.shopping
+package woowacourse.shopping.shopping.adapter.viewholder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import woowacourse.shopping.databinding.RecentViewedLayoutBinding
+import woowacourse.shopping.shopping.adapter.RecentViewedRecyclerAdapter
 
 class RecentViewedViewHolder private constructor(
     binding: RecentViewedLayoutBinding
