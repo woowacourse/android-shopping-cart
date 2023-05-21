@@ -17,6 +17,8 @@ interface CartContract {
         fun decreaseCartProductAmount(cartProductModel: CartProductModel)
 
         fun increaseCartProductAmount(cartProductModel: CartProductModel)
+
+        fun updateCartProductCheckedInPage(isChecked: Boolean)
     }
 
     interface View {

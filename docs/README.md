@@ -1,6 +1,6 @@
 # 쇼핑 장바구니 기능 목록
 
-- [ ] MVP
+- [x] MVP
     - Presenter
     - [x] Shopping
         - CartRepository
@@ -71,7 +71,7 @@
             - [x] update amount to sum of prev cart product amount and current cart product
               amount
             - [x] cartRepository.modifyCartProduct(cartProduct)
-    - [ ] Cart
+    - [x] Cart
         - Cart
         - [x] init { }
             - [x] view.updateCartTotalPrice(price)
@@ -104,8 +104,11 @@
             - [x] cartRepository.modifyCartProduct(new)
             - [x] cartRepository.replaceCartProduct(prev, new)
             - [x] view.updateCartProduct(prev, new)
-        - [ ] updateCartProductCheckedInPage(List<CartProductModel>)
-            - [ ] if(!isChecked) updateCartProduct(cartProduct)
+        - [x] updateCartProductCheckedInPage(isChecked)
+            - [x] if(cartProduct.isChecked != isChecked)
+                - [x] change cartProduct.isChecked
+                - [x] update total price
+                - [x] update total amount
 - [x] SQLite
     - [x] Cart
         - [x] amount(Int)

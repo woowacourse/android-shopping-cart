@@ -10,10 +10,12 @@ import org.junit.Test
 import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.createCartProduct
 import woowacourse.shopping.createCartProductModel
+import woowacourse.shopping.createProduct
 import woowacourse.shopping.createProductModel
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import java.time.LocalDateTime
 
@@ -307,5 +309,31 @@ class CartPresenterTest {
             view.updateCartTotalPrice(any())
             view.updateCartTotalAmount(any())
         }
+    }
+
+    @Test
+    fun 체크된_상품_2개와_체크되지_않은_상품_3개가_있을_때_전체_체크를_하면_체크되지_않은_3개의_상품만큼만_업데이트_된다() {
+        // given
+        val cart = Cart(
+            listOf(
+                CartProduct(LocalDateTime.now(), 0, false, createProduct()),
+                CartProduct(LocalDateTime.now(), 0, true, createProduct()),
+                CartProduct(LocalDateTime.now(), 0, false, createProduct()),
+                CartProduct(LocalDateTime.now(), 0, true, createProduct()),
+                CartProduct(LocalDateTime.now(), 0, false, createProduct()),
+            )
+        )
+        val cartRepository = CartRepositoryImpl(mockk(relaxed = true), cart)
+        presenter = CartPresenter(
+            view, cartRepository, 0, 5
+        )
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        presenter.updateCartProductCheckedInPage(true)
+
+        // then
+        val expected = 3
+        verify(exactly = expected) { view.updateCartProduct(any(), any()) }
     }
 }

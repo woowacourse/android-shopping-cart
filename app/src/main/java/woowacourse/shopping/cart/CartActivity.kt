@@ -28,6 +28,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         initCartAdapter()
 
+        setupCartProductAllCheckbox()
+
         initPresenter()
     }
 
@@ -70,13 +72,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartProductAllCheckbox.isChecked = isAllChecked
     }
 
-    private fun initPresenter() {
-        val db = ShoppingDBOpenHelper(this).writableDatabase
-        presenter = CartPresenter(
-            this, cartRepository = CartRepositoryImpl(CartDao(db)), sizePerPage = SIZE_PER_PAGE
-        )
-    }
-
     private fun initCartAdapter() {
         cartAdapter = CartAdapter(
             onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) },
@@ -96,6 +91,19 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             }
         )
         binding.cartProductList.adapter = cartAdapter
+    }
+
+    private fun setupCartProductAllCheckbox() {
+        binding.cartProductAllCheckbox.setOnClickListener {
+            presenter.updateCartProductCheckedInPage(binding.cartProductAllCheckbox.isChecked)
+        }
+    }
+
+    private fun initPresenter() {
+        val db = ShoppingDBOpenHelper(this).writableDatabase
+        presenter = CartPresenter(
+            this, cartRepository = CartRepositoryImpl(CartDao(db)), sizePerPage = SIZE_PER_PAGE
+        )
     }
 
     companion object {

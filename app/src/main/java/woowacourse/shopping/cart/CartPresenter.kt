@@ -44,12 +44,7 @@ class CartPresenter(
 
     override fun changeCartProductChecked(cartProductModel: CartProductModel) {
         val isChecked = !cartProductModel.isChecked
-        val newCartProduct = cartProductModel.toDomain().changeChecked(isChecked)
-        cartRepository.replaceCartProduct(cartProductModel.toDomain(), newCartProduct)
-        view.updateCartProduct(cartProductModel, newCartProduct.toView())
-
-        applyProductTotalPriceToCartTotalPrice(newCartProduct)
-        applyProductAmountToCartTotalAmount(newCartProduct)
+        applyCartProductCheckedChange(cartProductModel.toDomain(), isChecked)
     }
 
     override fun updateAllChecked() {
@@ -78,6 +73,15 @@ class CartPresenter(
         if (cartProductModel.isChecked) {
             addProductPriceToCartTotalPrice(cartProductModel)
             increaseTotalAmount()
+        }
+    }
+
+    override fun updateCartProductCheckedInPage(isChecked: Boolean) {
+        val cart = cartRepository.getPage(currentPage, sizePerPage)
+        cart.cartProducts.forEach {
+            if (it.isChecked != isChecked) {
+                applyCartProductCheckedChange(it, isChecked)
+            }
         }
     }
 
@@ -113,6 +117,15 @@ class CartPresenter(
     private fun determineNavigationVisibility(): Boolean {
         val cartCount = cartRepository.getAllCount()
         return cartCount > sizePerPage || currentPage != 0
+    }
+
+    private fun applyCartProductCheckedChange(cartProduct: CartProduct, isChecked: Boolean) {
+        val newCartProduct = cartProduct.changeChecked(isChecked)
+        cartRepository.replaceCartProduct(cartProduct, newCartProduct)
+        view.updateCartProduct(cartProduct.toView(), newCartProduct.toView())
+
+        applyProductTotalPriceToCartTotalPrice(newCartProduct)
+        applyProductAmountToCartTotalAmount(newCartProduct)
     }
 
     private fun applyProductTotalPriceToCartTotalPrice(cartProduct: CartProduct) {
