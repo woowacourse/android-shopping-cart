@@ -7,7 +7,7 @@ interface ProductDetailContract {
 
         fun showBasket()
 
-        fun initBindingData(product: UiProduct)
+        fun initBindingData(product: UiProduct, previousProduct: UiProduct?)
     }
 
     interface Presenter {

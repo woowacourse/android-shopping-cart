@@ -47,8 +47,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return true
     }
 
-    override fun initBindingData(product: UiProduct) {
+    override fun initBindingData(product: UiProduct, previousProduct: UiProduct?) {
         binding.product = product
+        binding.previousProduct = previousProduct
         binding.addMarketClickListener = presenter::addBasketProduct
     }
 

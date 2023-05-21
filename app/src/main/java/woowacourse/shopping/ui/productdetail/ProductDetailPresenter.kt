@@ -14,7 +14,7 @@ class ProductDetailPresenter(
 ) : ProductDetailContract.Presenter {
 
     override fun initProductData() {
-        view.initBindingData(currentProduct)
+        view.initBindingData(currentProduct, previousProduct)
     }
 
     // 추후 basket pid 로 받아오는 로직 만들어서 넣어야함
