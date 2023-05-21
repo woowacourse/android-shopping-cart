@@ -22,4 +22,6 @@ interface BasketDao {
     fun overWriteUpdate(basketProduct: DataBasketProduct)
 
     fun remove(basketProduct: DataBasketProduct)
+
+    fun removeByProductId(productId: Int)
 }

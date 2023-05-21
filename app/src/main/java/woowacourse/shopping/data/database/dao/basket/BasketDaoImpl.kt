@@ -283,15 +283,19 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                     whereArgs
                 )
             if (count > 0) {
-                db.execSQL(
-                    UPDATE_BASKET_COUNT,
-                    arrayOf(
-                        basketProduct.count.value.toString(),
-                        basketProduct.product.id.toString()
+                if (basketProduct.count.value > 0) {
+                    db.execSQL(
+                        UPDATE_BASKET_COUNT,
+                        arrayOf(
+                            basketProduct.count.value.toString(),
+                            basketProduct.product.id.toString()
+                        )
                     )
-                )
+                } else removeByProductId(basketProduct.product.id)
             } else {
-                db.insert(BasketContract.TABLE_NAME, null, contentValues)
+                if (basketProduct.count.value > 0) {
+                    db.insert(BasketContract.TABLE_NAME, null, contentValues)
+                }
             }
         }
     }
@@ -302,6 +306,16 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
                 BasketContract.TABLE_NAME,
                 "${BaseColumns._ID} = ?",
                 arrayOf(basketProduct.id.toString())
+            )
+        }
+    }
+
+    override fun removeByProductId(productId: Int) {
+        database.writableDatabase.use { db ->
+            db.delete(
+                BasketContract.TABLE_NAME,
+                "${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?",
+                arrayOf(productId.toString())
             )
         }
     }
