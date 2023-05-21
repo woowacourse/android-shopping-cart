@@ -13,6 +13,10 @@
         <variable
             name="presenter"
             type="woowacourse.shopping.ui.basket.BasketPresenter" />
+
+        <variable
+            name="totalPrice"
+            type="woowacourse.shopping.model.Price" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -143,6 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
+                bind:price="@{presenter.totalPrice}"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -157,7 +162,6 @@
                 android:layout_height="wrap_content"
                 android:background="@color/color_order_button"
                 android:clickable="true"
-                tools:enabled="false"
                 android:enabled="@{presenter.totalCheckSize > 0}"
                 android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
@@ -172,6 +176,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_min="130dp"
+                tools:enabled="false"
                 tools:text="주문하기(2)" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

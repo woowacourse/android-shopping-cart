@@ -29,6 +29,9 @@ class BasketPresenter(
         pageCheckSize == basket.takeItemsUpToPage(currentPage).size
     }
 
+    private val _totalPrice = MutableLiveData(0)
+    val totalPrice: LiveData<Int> get() = _totalPrice
+
     override fun fetchBasket(page: Int) {
         currentPage = currentPage.copy(page)
         basket = basket.update(basketRepository.getProductInBasketByPage(currentPage))
@@ -36,7 +39,7 @@ class BasketPresenter(
         view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
         view.updateNavigatorEnabled(currentPage.hasPrevious(), basket.canLoadNextPage(currentPage))
         view.updatePageNumber(currentPage.toUi())
-        view.updateTotalPrice(basketRepository.getTotalPrice())
+        _totalPrice.value = basketRepository.getTotalPrice()
 
         _totalCheckSize.value = basketRepository.getCheckedProductCount()
         _pageCheckSize.value = basket.getCheckedSize(currentPage)
@@ -61,21 +64,21 @@ class BasketPresenter(
     override fun increaseProductCount(product: UiProduct) {
         basket = basket.increaseProductCount(product.toDomain())
         basketRepository.update(basket.takeBasketUpToPage(currentPage))
-        view.updateTotalPrice(basketRepository.getTotalPrice())
+        _totalPrice.value = basketRepository.getTotalPrice()
         _totalCheckSize.value = basketRepository.getCheckedProductCount()
     }
 
     override fun decreaseProductCount(product: UiProduct) {
         basket = basket.decreaseProductCount(product.toDomain())
         basketRepository.update(basket.takeBasketUpToPage(currentPage))
-        view.updateTotalPrice(basketRepository.getTotalPrice())
+        _totalPrice.value = basketRepository.getTotalPrice()
         _totalCheckSize.value = basketRepository.getCheckedProductCount()
     }
 
     fun selectProduct(product: UiProduct) {
         basket = basket.select(product.toDomain())
         basketRepository.update(basket.takeBasketUpToPage(currentPage))
-        view.updateTotalPrice(basketRepository.getTotalPrice())
+        _totalPrice.value = basketRepository.getTotalPrice()
         _totalCheckSize.value = basketRepository.getCheckedProductCount()
         _pageCheckSize.value = basket.getCheckedSize(currentPage)
         view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
@@ -84,7 +87,7 @@ class BasketPresenter(
     fun unselectProduct(product: UiProduct) {
         basket = basket.unselect(product.toDomain())
         basketRepository.update(basket.takeBasketUpToPage(currentPage))
-        view.updateTotalPrice(basketRepository.getTotalPrice())
+        _totalPrice.value = basketRepository.getTotalPrice()
         _totalCheckSize.value = basketRepository.getCheckedProductCount()
         _pageCheckSize.value = basket.getCheckedSize(currentPage)
         view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
@@ -97,7 +100,7 @@ class BasketPresenter(
         _totalCheckSize.value = basketRepository.getCheckedProductCount()
         _pageCheckSize.value = basket.getCheckedSize(currentPage)
         view.updateBasket(basket.takeItemsUpToPage(currentPage).toUi())
-        view.updateTotalPrice(basketRepository.getTotalPrice())
+        _totalPrice.value = basketRepository.getTotalPrice()
     }
 
     fun order() {

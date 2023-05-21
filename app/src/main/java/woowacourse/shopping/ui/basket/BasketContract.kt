@@ -10,7 +10,6 @@ interface BasketContract {
         fun updateNavigatorEnabled(previousEnabled: Boolean, nextEnabled: Boolean)
         fun navigateToHome()
         fun updatePageNumber(page: PageNumber)
-        fun updateTotalPrice(price: Int)
         fun showOrderFailed()
         fun showOrderComplete(productCount: Int)
     }

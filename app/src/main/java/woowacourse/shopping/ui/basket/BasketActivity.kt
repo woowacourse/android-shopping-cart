@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.basket
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityBasketBinding
@@ -12,6 +11,7 @@ import woowacourse.shopping.model.UiPageNumber
 import woowacourse.shopping.ui.basket.BasketContract.View
 import woowacourse.shopping.ui.basket.recyclerview.adapter.BasketAdapter
 import woowacourse.shopping.util.extension.setContentView
+import woowacourse.shopping.util.extension.showToast
 import woowacourse.shopping.util.inject.inject
 
 class BasketActivity : AppCompatActivity(), View {
@@ -46,20 +46,12 @@ class BasketActivity : AppCompatActivity(), View {
         binding.pageNumberTextView.text = page.toText()
     }
 
-    override fun updateTotalPrice(price: Int) {
-        binding.totalPriceTextView.text = getString(R.string.price_format, price)
-    }
-
     override fun showOrderComplete(productCount: Int) {
-        Toast.makeText(
-            this,
-            getString(R.string.order_success_message, productCount),
-            Toast.LENGTH_SHORT
-        ).show()
+        showToast(getString(R.string.order_success_message, productCount))
     }
 
     override fun showOrderFailed() {
-        Toast.makeText(this, getString(R.string.order_failed_message), Toast.LENGTH_SHORT).show()
+        showToast(getString(R.string.order_failed_message))
     }
 
     override fun navigateToHome() {
