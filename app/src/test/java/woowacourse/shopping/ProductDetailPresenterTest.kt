@@ -4,7 +4,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.database.cart.repository.CartRepository
+import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.util.toProductUiModel
 

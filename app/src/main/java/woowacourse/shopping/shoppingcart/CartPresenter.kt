@@ -3,7 +3,7 @@ package woowacourse.shopping.shoppingcart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import model.Cart
-import woowacourse.shopping.database.cart.repository.CartRepository
+import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.shoppingcart.pagination.CartPage
 import woowacourse.shopping.shoppingcart.pagination.CartPageHandler

@@ -2,9 +2,9 @@ package woowacourse.shopping.shopping
 
 import model.CartProduct
 import model.RecentViewedProducts
-import woowacourse.shopping.database.cart.repository.CartRepository
-import woowacourse.shopping.database.product.repository.ProductRepository
-import woowacourse.shopping.database.recentviewed.repository.RecentViewedProductRepository
+import woowacourse.shopping.data.cart.repository.CartRepository
+import woowacourse.shopping.data.product.repository.ProductRepository
+import woowacourse.shopping.data.recentviewed.repository.RecentViewedProductRepository
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toProductUiModel
 import woowacourse.shopping.util.toRecentViewedProductUiModel

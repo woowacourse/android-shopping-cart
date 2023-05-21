@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.database.cart.repository.CartRepositoryImpl
-import woowacourse.shopping.database.product.repository.ProductRepositoryImpl
-import woowacourse.shopping.database.recentviewed.repository.RecentViewedProductRepositoryImpl
+import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
+import woowacourse.shopping.data.product.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.recentviewed.repository.RecentViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel

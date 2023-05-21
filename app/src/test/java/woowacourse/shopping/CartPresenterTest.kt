@@ -9,7 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.database.cart.repository.CartRepository
+import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.shoppingcart.CartContract
 import woowacourse.shopping.shoppingcart.CartPresenter
 import woowacourse.shopping.shoppingcart.pagination.CartPage

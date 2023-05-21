@@ -7,9 +7,9 @@ import model.Product
 import model.RecentViewedProduct
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.database.cart.repository.CartRepository
-import woowacourse.shopping.database.product.repository.ProductRepository
-import woowacourse.shopping.database.recentviewed.repository.RecentViewedProductRepository
+import woowacourse.shopping.data.cart.repository.CartRepository
+import woowacourse.shopping.data.product.repository.ProductRepository
+import woowacourse.shopping.data.recentviewed.repository.RecentViewedProductRepository
 import woowacourse.shopping.shopping.ShoppingContract
 import woowacourse.shopping.shopping.ShoppingPresenter
 import woowacourse.shopping.util.toProductUiModel
