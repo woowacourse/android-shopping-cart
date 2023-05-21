@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.view.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -81,7 +80,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.tvCartListPageCount.text = formatPage(currentPage)
     }
 
-    private fun deleteCartItem(itemId: Long) {
+    private fun deleteCartItem(itemId: Long, itemCount: Int) {
+        if (itemCount == 1) {
+            binding.checkboxCartAll.isChecked = false
+        }
         presenter.deleteCartItem(itemId)
     }
 
@@ -94,9 +96,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         isSelected: Boolean,
         isCartsChecked: List<Boolean>
     ) {
-        isCartsChecked.forEachIndexed { index, it ->
-            Log.d("test", "$index and $it")
-        }
         if (isCartsChecked.all { it }) {
             binding.checkboxCartAll.isChecked = isSelected
         } else {
