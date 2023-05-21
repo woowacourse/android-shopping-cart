@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.view.productlist
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
@@ -75,8 +76,8 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         initLayoutManager()
         presenter.deleteNotTodayRecentProducts()
-        presenter.loadProductItems()
         presenter.loadRecentProductItems()
+        presenter.loadProductItems()
         setMoreProductListAdapter()
         setConcatAdapter()
     }
@@ -121,9 +122,13 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         binding.rvProductList.layoutManager = layoutManager
     }
 
-    override fun setProductItemsView(products: List<ProductModel>) {
+    override fun setProductItemsView(products: List<ProductModel>, recentProductId: Long) {
         productListAdapter =
-            ProductListAdapter(products, ::onProductClickEvent, ::onCountChangedEvent)
+            ProductListAdapter(
+                products,
+                { onProductClickEvent(it, recentProductId) },
+                ::onCountChangedEvent
+            )
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
@@ -147,10 +152,13 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         recentProductListAdapter.updateDataSet()
     }
 
-    private fun onProductClickEvent(product: ProductModel) {
+    private fun onProductClickEvent(product: ProductModel, recentProductId: Long) {
         presenter.saveRecentProduct(product.id)
         presenter.updateRecentProductItems()
-        moveToActivity(product.id)
+        Log.d("this", "onProductClickEvent: $recentProductId")
+        moveToActivityWithRecentProduct(
+            product.id, recentProductId
+        )
     }
 
     private fun onCountChangedEvent(id: Long, Count: Int, position: Int) {
@@ -159,6 +167,11 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     private fun moveToActivity(productId: Long) {
         val intent = ProductDetailActivity.createIntent(this, productId)
+        startActivity(intent)
+    }
+
+    private fun moveToActivityWithRecentProduct(productId: Long, recentProductId: Long) {
+        val intent = ProductDetailActivity.createIntent(this, productId, recentProductId)
         startActivity(intent)
     }
 

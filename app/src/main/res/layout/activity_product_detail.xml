@@ -8,6 +8,10 @@
         <variable
             name="productItem"
             type="woowacourse.shopping.presentation.model.ProductModel" />
+
+        <variable
+            name="recentProductItem"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,6 +76,7 @@
             tools:text="10,000원" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_recent_product"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
@@ -94,6 +99,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:text="@{recentProductItem != null ? recentProductItem.title : ``}"
                 android:id="@+id/tv_product_detail_last_product_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -109,6 +115,7 @@
                 tools:text="[든든] 동원 스위트콘" />
 
             <TextView
+                android:text="@{recentProductItem != null ? String.valueOf(recentProductItem.price) : ``}"
                 android:id="@+id/tv_product_detail_last_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

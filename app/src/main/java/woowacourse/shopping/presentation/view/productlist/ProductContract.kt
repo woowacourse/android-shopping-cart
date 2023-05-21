@@ -6,7 +6,7 @@ import woowacourse.shopping.presentation.model.RecentProductModel
 
 interface ProductContract {
     interface View {
-        fun setProductItemsView(products: List<ProductModel>)
+        fun setProductItemsView(products: List<ProductModel>, recentProductId: Long)
         fun setRecentProductItemsView(recentProducts: List<RecentProductModel>)
         fun updateRecentProductItemsView()
         fun updateMoreProductsView(newProducts: List<ProductModel>)

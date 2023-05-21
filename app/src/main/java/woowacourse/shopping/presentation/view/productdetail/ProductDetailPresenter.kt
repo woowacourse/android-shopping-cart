@@ -18,6 +18,11 @@ class ProductDetailPresenter(
         view.showProductInfoView(product)
     }
 
+    override fun loadRecentProductById(id: Long) {
+        val recentProduct = productRepository.getDataById(id)
+        view.showRecentProductById(recentProduct)
+    }
+
     override fun addCart(productId: Long) {
         cartRepository.insertCart(productId, 1)
         view.addCartSuccessView()

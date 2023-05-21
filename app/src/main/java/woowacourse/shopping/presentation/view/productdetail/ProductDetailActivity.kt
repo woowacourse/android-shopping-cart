@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -34,10 +35,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         supportActionBar?.title = ACTION_BAR_TITLE
 
         val productId = intent.getLongExtra(KEY_PRODUCT_ID, -1)
-
+        val recentProductId = intent.getLongExtra(KEY_RECENT_PRODUCT_ID, -1)
         presenter.loadProductInfoById(productId)
+        setRecentProductView(recentProductId)
+
 
         setAddCartClickListener(productId)
+    }
+
+    private fun setRecentProductView(recentProductId: Long) {
+        if (recentProductId == -1L) {
+            binding.clRecentProduct.visibility = View.GONE
+        } else {
+            presenter.loadRecentProductById(recentProductId)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -58,6 +69,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.productItem = productModel
     }
 
+    override fun showRecentProductById(productModel: ProductModel) {
+        binding.recentProductItem = productModel
+    }
+
     private fun setAddCartClickListener(productId: Long) {
         binding.btProductDetailAddToCart.setOnClickListener {
             presenter.addCart(productId)
@@ -76,11 +91,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val KEY_PRODUCT_ID = "KEY_PRODUCT_ID"
+        private const val KEY_RECENT_PRODUCT_ID = "KEY_RECENT_PRODUCT_ID"
         private const val ACTION_BAR_TITLE = ""
 
-        internal fun createIntent(context: Context, id: Long): Intent {
+        internal fun createIntent(
+            context: Context,
+            productId: Long,
+            recentProductId: Long = -1L
+        ): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
-            intent.putExtra(KEY_PRODUCT_ID, id)
+            intent.putExtra(KEY_PRODUCT_ID, productId)
+            intent.putExtra(KEY_RECENT_PRODUCT_ID, recentProductId)
 
             return intent
         }
