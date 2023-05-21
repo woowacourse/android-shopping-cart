@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import model.Cart
 import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.util.toUiModel
+import woowacourse.shopping.util.toCartProductUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
@@ -19,7 +19,7 @@ class CartPresenter(
         get() = cartPage.cart
 
     private val _showingProducts: MutableLiveData<List<CartProductUiModel>> = MutableLiveData(
-        cartPage.showingProducts.map { it.toUiModel() }
+        cartPage.showingProducts.map { it.toCartProductUiModel() }
     )
     val showingProducts: LiveData<List<CartProductUiModel>>
         get() = _showingProducts
@@ -62,7 +62,7 @@ class CartPresenter(
 
     override fun minusShoppingCartProductCount(id: Int) {
         cart.minusProductCount(id)
-        _showingProducts.value = cartPage.showingProducts.map { it.toUiModel() }
+        _showingProducts.value = cartPage.showingProducts.map { it.toCartProductUiModel() }
 
         shoppingCache.insertToShoppingCart(
             id = id,
@@ -101,7 +101,7 @@ class CartPresenter(
     }
 
     private fun updatePage(cartPage: CartPageNavigator) {
-        _showingProducts.value = cartPage.showingProducts.map { it.toUiModel() }
+        _showingProducts.value = cartPage.showingProducts.map { it.toCartProductUiModel() }
         _totalPrice.value = cartPage.totalPrice
         _currentPage.value = cartPage.currentPage.value
     }

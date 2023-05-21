@@ -13,7 +13,7 @@ import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.shoppingcart.CartContract
 import woowacourse.shopping.shoppingcart.CartPage
 import woowacourse.shopping.shoppingcart.CartPresenter
-import woowacourse.shopping.util.toUiModel
+import woowacourse.shopping.util.toCartProductUiModel
 
 class CartPresenterTest {
 
@@ -51,7 +51,7 @@ class CartPresenterTest {
 
         // then
         assertEquals(
-            products.map { it.toUiModel() },
+            products.map { it.toCartProductUiModel() },
             presenter.showingProducts.value
         )
     }
@@ -73,7 +73,7 @@ class CartPresenterTest {
         // then
         verify { shoppingCache.deleteFromShoppingCart(id = 1) }
 
-        val expected = listOf(CartProduct(id = 2).toUiModel())
+        val expected = listOf(CartProduct(id = 2).toCartProductUiModel())
         assertEquals(expected, presenter.showingProducts.value)
     }
 
@@ -96,7 +96,7 @@ class CartPresenterTest {
         val expected = listOf(
             CartProduct(id = 1, name = "아메리카노", count = 6),
             CartProduct(id = 2, name = "밀크티", count = 1)
-        ).map { it.toUiModel() }
+        ).map { it.toCartProductUiModel() }
 
         assertEquals(expected, presenter.showingProducts.value)
     }
@@ -120,7 +120,7 @@ class CartPresenterTest {
         val expected = listOf(
             CartProduct(id = 1, name = "아메리카노", count = 5),
             CartProduct(id = 2, name = "밀크티", count = 5)
-        ).map { it.toUiModel() }
+        ).map { it.toCartProductUiModel() }
 
         assertEquals(expected, presenter.showingProducts.value)
     }
@@ -161,7 +161,7 @@ class CartPresenterTest {
         val expected = listOf(
             CartProduct(id = 1, name = "아메리카노", isSelected = false),
             CartProduct(id = 2, name = "밀크티")
-        ).map { it.toUiModel() }
+        ).map { it.toCartProductUiModel() }
 
         assertEquals(expected, presenter.showingProducts.value)
     }

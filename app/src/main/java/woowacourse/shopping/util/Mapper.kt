@@ -10,27 +10,27 @@ import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
 
-fun ProductUiModel.toDomainModel() = Product(
+fun ProductUiModel.toProductDomainModel() = Product(
     id = id,
     name = Name(name),
     imageUrl = imageUrl,
     price = Price(price)
 )
 
-fun Product.toUiModel() = ProductUiModel(
+fun Product.toProductUiModel() = ProductUiModel(
     id = id,
     name = name.value,
     imageUrl = imageUrl,
     price = price.value
 )
 
-fun RecentViewedProduct.toUiModel() = RecentViewedProductUiModel(
+fun RecentViewedProduct.toRecentViewedProductUiModel() = RecentViewedProductUiModel(
     id = id,
     name = name.value,
     imageUrl = imageUrl
 )
 
-fun CartProduct.toUiModel() = CartProductUiModel(
+fun CartProduct.toCartProductUiModel() = CartProductUiModel(
     id = product.id,
     name = product.name.value,
     imageUrl = product.imageUrl,
@@ -39,7 +39,7 @@ fun CartProduct.toUiModel() = CartProductUiModel(
     selected = selected
 )
 
-fun CartProductUiModel.toDomainModel() = CartProduct(
+fun CartProductUiModel.toProductDomainModel() = CartProduct(
     product = Product(
         id = id,
         name = Name(name),

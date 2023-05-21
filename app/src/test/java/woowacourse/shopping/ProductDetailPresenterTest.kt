@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.productdetail.ProductDetailContract
-import woowacourse.shopping.util.toUiModel
+import woowacourse.shopping.util.toProductUiModel
 
 class ProductDetailPresenterTest {
 
@@ -23,7 +23,7 @@ class ProductDetailPresenterTest {
     @Test
     fun `프레젠터가 생성될 때 주입받은 상품에 대한 정보를 가지고 화면을 초기화한다`() {
         // given
-        val product = Product(id = 1).toUiModel()
+        val product = Product(id = 1).toProductUiModel()
 
         // when
         ProductDetailPresenter(
@@ -46,11 +46,11 @@ class ProductDetailPresenterTest {
         ProductDetailPresenter(
             view = view,
             repository = shoppingCache,
-            latestViewedProduct = latestViewedProduct.toUiModel()
+            latestViewedProduct = latestViewedProduct.toProductUiModel()
         )
 
         // then
-        val expected = Product(name = "아메리카노").toUiModel()
+        val expected = Product(name = "아메리카노").toProductUiModel()
         verify { view.setUpLatestViewedProductView(expected) }
     }
 
@@ -58,7 +58,7 @@ class ProductDetailPresenterTest {
     fun `장바구니에 상품을 추가하면 저장소를 통해서 상품 정보를 저장하고 장바구니 화면으로 이동한다`() {
         val presenter = ProductDetailPresenter(
             view = view,
-            product = Product().toUiModel(),
+            product = Product().toProductUiModel(),
             repository = shoppingCache
         )
 
@@ -66,14 +66,14 @@ class ProductDetailPresenterTest {
         presenter.addToCart()
 
         // then
-        val expected = Product().toUiModel()
+        val expected = Product().toProductUiModel()
         verify { shoppingCache.insertToShoppingCart(expected.id) }
         verify { view.navigateToCartView() }
     }
 
     @Test
     fun `장바구니에 담을 상품의 개수를 증가시키면 상품의 총 가격을 갱신한다`() {
-        val product = Product().toUiModel()
+        val product = Product().toProductUiModel()
         val presenter = ProductDetailPresenter(
             view = view,
             product = product,
@@ -91,7 +91,7 @@ class ProductDetailPresenterTest {
 
     @Test
     fun `장바구니에 담을 상품의 개수를 감소시키면 상품의 총 가격을 갱신한다`() {
-        val product = Product().toUiModel()
+        val product = Product().toProductUiModel()
         val presenter = ProductDetailPresenter(
             view = view,
             product = product,

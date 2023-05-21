@@ -10,7 +10,8 @@ import org.junit.Test
 import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.shopping.ShoppingContract
 import woowacourse.shopping.shopping.ShoppingPresenter
-import woowacourse.shopping.util.toUiModel
+import woowacourse.shopping.util.toProductUiModel
+import woowacourse.shopping.util.toRecentViewedProductUiModel
 
 class ShoppingPresenterTest {
 
@@ -50,7 +51,7 @@ class ShoppingPresenterTest {
         presenter.loadProducts()
 
         // then
-        val expectedProducts = products.map { it.toUiModel() }
+        val expectedProducts = products.map { it.toProductUiModel() }
         verify {
             view.setUpShoppingView(
                 products = expectedProducts,
@@ -73,7 +74,7 @@ class ShoppingPresenterTest {
         presenter.loadProducts()
 
         // then
-        val expected = recentViewedProducts.map { it.toUiModel() }
+        val expected = recentViewedProducts.map { it.toRecentViewedProductUiModel() }
 
         verify {
             view.setUpShoppingView(
@@ -110,8 +111,8 @@ class ShoppingPresenterTest {
         presenter.addToRecentViewedProduct(recentViewedProduct.id)
 
         // then
-        val expected = listOf(recentViewedProduct.toUiModel()) +
-            recentViewedProducts.map { it.toUiModel() }
+        val expected = listOf(recentViewedProduct.toRecentViewedProductUiModel()) +
+            recentViewedProducts.map { it.toRecentViewedProductUiModel() }
 
         verify { view.refreshRecentViewedProductsView(products = expected) }
     }
@@ -119,16 +120,16 @@ class ShoppingPresenterTest {
     @Test
     fun `상품의 상세 정보를 로드할때 저장소로부터 마지막으로 본 상품을 받아와서 뷰에 넘겨준다`() {
         // given
-        val product = Product(name = "밀크티").toUiModel()
+        val product = Product(name = "밀크티").toProductUiModel()
         every { shoppingCache.selectLatestViewedProduct() } returns Product(name = "밀크티")
 
         // when
-        presenter.loadProductDetail(Product(name = "아메리카노").toUiModel())
+        presenter.loadProductDetail(Product(name = "아메리카노").toProductUiModel())
 
         // then
         verify {
             view.navigateToProductDetailView(
-                product = Product(name = "아메리카노").toUiModel(),
+                product = Product(name = "아메리카노").toProductUiModel(),
                 latestViewedProduct = product
             )
         }
@@ -144,7 +145,7 @@ class ShoppingPresenterTest {
 
         // then
         verify {
-            view.refreshShoppingProductsView(products.map { it.toUiModel() })
+            view.refreshShoppingProductsView(products.map { it.toProductUiModel() })
         }
     }
 
@@ -155,7 +156,7 @@ class ShoppingPresenterTest {
         every { shoppingCache.getCountOfShoppingCartProducts() } returns 3
 
         // when
-        presenter.addProductToShoppingCart(product.toUiModel())
+        presenter.addProductToShoppingCart(product.toProductUiModel())
 
         // then
         verify { shoppingCache.insertToShoppingCart(product.id) }
@@ -170,7 +171,7 @@ class ShoppingPresenterTest {
         every { shoppingCache.selectShoppingCartProductById(product.id) } returns cartProduct
 
         // when
-        presenter.plusShoppingCartProductCount(product.toUiModel())
+        presenter.plusShoppingCartProductCount(product.toProductUiModel())
 
         // then
         verify {
@@ -189,7 +190,7 @@ class ShoppingPresenterTest {
         every { shoppingCache.selectShoppingCartProductById(product.id) } returns cartProduct
 
         // when
-        presenter.minusShoppingCartProductCount(product.toUiModel())
+        presenter.minusShoppingCartProductCount(product.toProductUiModel())
 
         // then
         verify {

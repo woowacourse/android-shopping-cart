@@ -4,7 +4,7 @@ import model.CartProduct
 import model.Count
 import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.model.ProductUiModel
-import woowacourse.shopping.util.toDomainModel
+import woowacourse.shopping.util.toProductDomainModel
 
 class ProductDetailPresenter(
     product: ProductUiModel,
@@ -14,7 +14,7 @@ class ProductDetailPresenter(
 ) : ProductDetailContract.Presenter {
 
     private var cartProduct: CartProduct = CartProduct(
-        product = product.toDomainModel(),
+        product = product.toProductDomainModel(),
         count = Count()
     )
 

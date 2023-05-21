@@ -4,7 +4,8 @@ import model.CartProduct
 import model.RecentViewedProducts
 import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.model.ProductUiModel
-import woowacourse.shopping.util.toUiModel
+import woowacourse.shopping.util.toProductUiModel
+import woowacourse.shopping.util.toRecentViewedProductUiModel
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
@@ -22,7 +23,9 @@ class ShoppingPresenter(
 
     override fun loadProducts() {
         val products = selectProducts()
-        val recentViewedProducts = recentViewedProducts.values.map { it.toUiModel() }
+        val recentViewedProducts = recentViewedProducts.values.map {
+            it.toRecentViewedProductUiModel()
+        }
 
         view.setUpShoppingView(
             products = products,
@@ -40,7 +43,7 @@ class ShoppingPresenter(
     override fun loadProductDetail(product: ProductUiModel) {
         view.navigateToProductDetailView(
             product = product,
-            latestViewedProduct = shoppingCache.selectLatestViewedProduct()?.toUiModel()
+            latestViewedProduct = shoppingCache.selectLatestViewedProduct()?.toProductUiModel()
         )
     }
 
@@ -54,7 +57,7 @@ class ShoppingPresenter(
         val products = shoppingCache.selectProducts(
             from = numberOfReadProduct,
             count = COUNT_TO_READ
-        ).map { it.toUiModel() }
+        ).map { it.toProductUiModel() }
 
         numberOfReadProduct += products.size
 
@@ -107,7 +110,7 @@ class ShoppingPresenter(
         )
         shoppingCache.insertToRecentViewedProducts(id)
         view.refreshRecentViewedProductsView(
-            products = recentViewedProducts.values.map { it.toUiModel() }
+            products = recentViewedProducts.values.map { it.toRecentViewedProductUiModel() }
         )
     }
 
