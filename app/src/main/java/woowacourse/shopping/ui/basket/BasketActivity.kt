@@ -15,6 +15,7 @@ import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.domain.Basket
 import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.shopping.ShoppingActivity
+import woowacourse.shopping.util.turnOffSupportChangeAnimation
 
 class BasketActivity : AppCompatActivity(), BasketContract.View {
     private lateinit var presenter: BasketContract.Presenter
@@ -26,6 +27,7 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         super.onCreate(savedInstanceState)
         initSetResult()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_basket)
+        binding.rvBasket.turnOffSupportChangeAnimation()
         initPresenter()
         initAdapter()
         initToolbarBackButton()

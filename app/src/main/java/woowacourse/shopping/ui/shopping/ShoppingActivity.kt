@@ -33,6 +33,7 @@ import woowacourse.shopping.ui.shopping.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductWrapperAdapter
 import woowacourse.shopping.util.setThrottleFirstOnClickListener
+import woowacourse.shopping.util.turnOffSupportChangeAnimation
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
@@ -60,6 +61,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
+        binding.rvShopping.turnOffSupportChangeAnimation()
         initPresenter()
         initAdapter()
         initProductData()
