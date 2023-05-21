@@ -50,7 +50,6 @@ class CartListAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cartItem: CartItemUIState) {
-            binding.cbCartItemSelected.isChecked = cartItem.isSelected
             binding.tvCartName.text = cartItem.name
             binding.tvCartPrice.text = itemView.context.getString(R.string.product_price).format(
                 PRICE_FORMAT.format(cartItem.price),
