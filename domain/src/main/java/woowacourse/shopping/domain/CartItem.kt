@@ -18,6 +18,14 @@ class CartItem(
         return product.price * count
     }
 
+    fun plusCount() {
+        count++
+    }
+
+    fun minusCount() {
+        if (count > 1) count--
+    }
+
     override fun equals(other: Any?): Boolean = if (other is CartItem) id == other.id else false
 
     override fun hashCode(): Int = id.hashCode()

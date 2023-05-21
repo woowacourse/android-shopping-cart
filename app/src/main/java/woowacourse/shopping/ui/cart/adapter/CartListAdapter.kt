@@ -13,6 +13,8 @@ import woowacourse.shopping.utils.PRICE_FORMAT
 class CartListAdapter(
     private val onClickCloseButton: (Long) -> Unit,
     private val onClickCheckBox: (Long, Boolean) -> Unit,
+    private val onClickPlus: (Long) -> Unit,
+    private val onClickMinus: (Long) -> Unit,
     private val cartItems: MutableList<CartItemUIState> = mutableListOf()
 ) : RecyclerView.Adapter<CartListAdapter.CartListViewHolder>() {
 
@@ -20,7 +22,9 @@ class CartListAdapter(
         return CartListViewHolder.create(
             parent,
             onClickCloseButton,
-            onClickCheckBox
+            onClickCheckBox,
+            onClickPlus,
+            onClickMinus
         )
     }
 
@@ -40,7 +44,9 @@ class CartListAdapter(
     class CartListViewHolder private constructor(
         private val binding: ItemCartBinding,
         private val onClickCloseButton: (Long) -> Unit,
-        private val onClickCheckBox: (Long, Boolean) -> Unit
+        private val onClickCheckBox: (Long, Boolean) -> Unit,
+        private val onClickPlus: (Long) -> Unit,
+        private val onClickMinus: (Long) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cartItem: CartItemUIState) {
@@ -59,13 +65,18 @@ class CartListAdapter(
             binding.btnCartClose.setOnClickListener {
                 onClickCloseButton(cartItem.id)
             }
+            binding.counter.tvPlus.setOnClickListener { onClickPlus(cartItem.id) }
+            binding.counter.tvMinus.setOnClickListener { onClickMinus(cartItem.id) }
+            binding.counter.count = cartItem.count
         }
 
         companion object {
             fun create(
                 parent: ViewGroup,
                 onClickCloseButton: (Long) -> Unit,
-                onClickCheckBox: (Long, Boolean) -> Unit
+                onClickCheckBox: (Long, Boolean) -> Unit,
+                onClickPlus: (Long) -> Unit,
+                onClickMinus: (Long) -> Unit
             ): CartListViewHolder {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_cart, parent, false)
@@ -73,7 +84,9 @@ class CartListAdapter(
                 return CartListViewHolder(
                     binding,
                     onClickCloseButton,
-                    onClickCheckBox
+                    onClickCheckBox,
+                    onClickPlus,
+                    onClickMinus
                 )
             }
         }

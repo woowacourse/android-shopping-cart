@@ -24,6 +24,10 @@ interface CartContract {
         fun onChangeSelectionOfCartItem(cartItemId: Long, isSelected: Boolean)
 
         fun onChangeSelectionOfAllCartItems(isSelected: Boolean)
+
+        fun onPlusCount(cartItemId: Long)
+
+        fun onMinusCount(cartItemId: Long)
     }
 
     interface View : PageableView, CartItemsView, AllSelectableItemView, OrderView

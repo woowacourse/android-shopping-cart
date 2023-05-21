@@ -93,7 +93,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             onClickCloseButton = { presenter.onDeleteCartItem(it) },
             onClickCheckBox = { id, isSelected ->
                 presenter.onChangeSelectionOfCartItem(id, isSelected)
-            }
+            },
+            onClickPlus = { presenter.onPlusCount(it) },
+            onClickMinus = { presenter.onMinusCount(it) }
         )
         presenter.onLoadCartItemsOfNextPage()
     }
@@ -114,6 +116,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 onClickCheckBox = { productId, isSelected ->
                     presenter.onChangeSelectionOfCartItem(productId, isSelected)
                 },
+                onClickPlus = { presenter.onPlusCount(it) },
+                onClickMinus = { presenter.onMinusCount(it) },
                 cartItems = cartItems.toMutableList()
             )
             return

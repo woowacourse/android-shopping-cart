@@ -89,6 +89,20 @@ class CartPresenter(
         }
     }
 
+    override fun onPlusCount(cartItemId: Long) {
+        val cartItem = cartItemRepository.findById(cartItemId) ?: return
+        cartItem.plusCount()
+        cartItemRepository.updateCountById(cartItemId, cartItem.count)
+        showCartItems(_currentPage, selectedCartItems, false)
+    }
+
+    override fun onMinusCount(cartItemId: Long) {
+        val cartItem = cartItemRepository.findById(cartItemId) ?: return
+        cartItem.minusCount()
+        cartItemRepository.updateCountById(cartItemId, cartItem.count)
+        showCartItems(_currentPage, selectedCartItems, false)
+    }
+
     companion object {
         private const val PAGE_SIZE = 5
     }
