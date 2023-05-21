@@ -17,4 +17,5 @@
     <string name="all_of_them">전체</string>
     <string name="minus_sign">-</string>
     <string name="plus_sign">+</string>
+    <string name="last_viewed_product">마지막으로 본 상품</string>
 </resources>
