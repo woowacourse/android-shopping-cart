@@ -34,6 +34,7 @@ class ProductDetailPresenterTest {
             product = mockk(relaxed = true),
             recentProduct = mockk(relaxed = true),
             recentProductRepository = mockk(relaxed = true),
+            productRepository = mockk(relaxed = true),
             cartRepository = mockk(relaxed = true)
         )
 
@@ -67,11 +68,12 @@ class ProductDetailPresenterTest {
             product = product,
             recentProduct = recentProduct,
             recentProductRepository = recentProductRepository,
+            productRepository = mockk(relaxed = true),
             mockk(),
         )
 
         every {
-            recentProductRepository.selectAll()
+            recentProductRepository.selectAll(any())
         } returns recentProducts
 
         every {
@@ -101,9 +103,10 @@ class ProductDetailPresenterTest {
         val presenter = ProductDetailPresenter(
             view = view,
             product = product,
-            mockk(),
-            mockk(),
-            mockk(),
+            recentProduct = mockk(),
+            recentProductRepository = mockk(),
+            productRepository = mockk(relaxed = true),
+            cartRepository = mockk()
         )
 
         every {
@@ -131,10 +134,11 @@ class ProductDetailPresenterTest {
 
         val presenter = ProductDetailPresenter(
             view = view,
-            mockk(),
-            mockk(),
-            mockk(),
-            cartRepository = cartRepository,
+            product = mockk(),
+            recentProduct = mockk(),
+            recentProductRepository = mockk(),
+            productRepository = mockk(relaxed = true),
+            cartRepository = cartRepository
         )
 
         every {
@@ -161,6 +165,6 @@ class ProductDetailPresenterTest {
     }
 
     private fun ProductModel(): ProductModel = ProductModel(
-        "", "", 0
+        0, "", "", 0
     )
 }

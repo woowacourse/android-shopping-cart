@@ -37,12 +37,12 @@ class CartPresenterTest {
 
         // when
         CartPresenter(
-            view = view, cart = cart, cartRepository = cartRepository, countPerPage = 1
+            view = view, cart = cart, cartRepository = cartRepository, productRepository = mockk(relaxed = true), countPerPage = 1
         )
 
         // then
         verify {
-            cartRepository.selectAll()
+            cartRepository.selectAll(any())
             view.updateCart(any())
             view.updateNavigator(any())
             view.updateTotalPrice(any())
@@ -60,7 +60,7 @@ class CartPresenterTest {
                 CheckableCartProduct(
                     true,
                     CartProduct(
-                        0, Product(URL(""), "", 0)
+                        0, Product(0, URL(""), "", 0)
                     )
                 )
             )
@@ -70,7 +70,7 @@ class CartPresenterTest {
         initAnswers()
 
         val presenter = CartPresenter(
-            view = view, cart = cart, cartRepository = cartRepository, countPerPage = 1
+            view = view, cart = cart, cartRepository = cartRepository, productRepository = mockk(relaxed = true), countPerPage = 1
         )
 
         every {
@@ -86,7 +86,7 @@ class CartPresenterTest {
         }
 
         verify {
-            cartRepository.selectAll()
+            cartRepository.selectAll(any())
             view.updateCart(any())
             view.updateNavigator(any())
             view.updateTotalPrice(any())
@@ -104,25 +104,25 @@ class CartPresenterTest {
         val cartProduct = CheckableCartProduct(
             true,
             CartProduct(
-                0, Product(URL(""), "", 0)
+                0, Product(0, URL(""), "", 0)
             )
         )
 
         initAnswers()
 
         every {
-            cartRepository.selectAll()
+            cartRepository.selectAll(any())
         } returns Shop(listOf(cartProduct.product))
 
         val presenter = CartPresenter(
-            view = view, cart = cart, cartRepository = cartRepository, countPerPage = 1
+            view = view, cart = cart, cartRepository = cartRepository, productRepository = mockk(relaxed = true), countPerPage = 1
         )
 
         // when
         val checkableCartProductModel = CheckableCartProductModel(
             true,
             CartProductModel(
-                0, ProductModel("", "", 0)
+                0, ProductModel(0, "", "", 0)
             )
         )
         presenter.checkCartProduct(checkableCartProductModel, false)
@@ -132,13 +132,13 @@ class CartPresenterTest {
             CheckableCartProductModel(
                 false,
                 CartProductModel(
-                    0, ProductModel("", "", 0)
+                    0, ProductModel(0, "", "", 0)
                 )
             )
         )
 
         verify {
-            cartRepository.selectAll()
+            cartRepository.selectAll(any())
             view.updateCart(expect)
             view.updateNavigator(any())
             view.updateTotalPrice(any())
@@ -153,7 +153,7 @@ class CartPresenterTest {
         } returns 1
 
         every {
-            cartRepository.selectAll()
+            cartRepository.selectAll(any())
         } returns Shop(emptyList())
 
         every {

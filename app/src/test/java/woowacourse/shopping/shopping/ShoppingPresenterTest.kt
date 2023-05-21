@@ -50,7 +50,7 @@ class ShoppingPresenterTest {
         // given
         val view: ShoppingContract.View = mockk()
         val productRepository: ProductRepository = mockk(relaxed = true)
-        val cartProductModel = CartProductModel(0, ProductModel("", "", 0))
+        val cartProductModel = CartProductModel(0, ProductModel(0, "", "", 0))
         val recentProductRepository: RecentProductRepository = mockk()
         val recentProducts = RecentProducts(
             listOf(
@@ -63,7 +63,7 @@ class ShoppingPresenterTest {
         initAnswers(productRepository)
 
         every {
-            recentProductRepository.selectAll()
+            recentProductRepository.selectAll(any())
         } returns recentProducts
 
         every {
@@ -272,6 +272,6 @@ class ShoppingPresenterTest {
     }
 
     private fun Product(): Product = Product(
-        URL(""), "", 0
+        0, URL(""), "", 0
     )
 }
