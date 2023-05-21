@@ -3,10 +3,12 @@ package woowacourse.shopping.feature.product
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.ViewType
+import woowacourse.shopping.model.CartProductState
 import woowacourse.shopping.model.ProductState
 
 class ProductListAdapter(
     private var productStates: List<ProductState> = listOf(),
+    private var cartProductStates: List<CartProductState> = listOf(),
     private val onProductClick: (ProductState) -> Unit,
     private val cartProductAddFab: (ProductState) -> Unit,
     private val cartProductCountMinus: (ProductState) -> Unit,
@@ -22,8 +24,11 @@ class ProductListAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+        val productState: ProductState = productStates[position]
+        val cartProduct: CartProductState? = cartProductStates.find { it.productId == productState.id }
+
         holder.bind(
-            productStates[position],
+            productState, cartProduct,
             onProductClick, cartProductAddFab, cartProductCountMinus, cartProductCountPlus
         )
     }

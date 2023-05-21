@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.model.CartProductState
 import woowacourse.shopping.model.CartProductState.Companion.MAX_COUNT_VALUE
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.model.ProductState
@@ -17,23 +18,29 @@ class ProductViewHolder(
 
     fun bind(
         productState: ProductState,
+        cartProductState: CartProductState?,
         onProductClick: (ProductState) -> Unit,
         cartProductAddFab: (ProductState) -> Unit,
         cartProductCountMinus: (ProductState) -> Unit,
         cartProductCountPlus: (ProductState) -> Unit
     ) {
         binding.product = productState
+        hideCounterView()
+
+        if (cartProductState != null) {
+            showCounterView()
+            binding.counterView.count = cartProductState.count
+        }
+
         binding.root.setOnClickListener { onProductClick(productState) }
         binding.productAddFab.setOnClickListener {
             cartProductAddFab(productState)
-            binding.productAddFab.visibility = View.INVISIBLE
-            binding.counterView.visibility = View.VISIBLE
+            showCounterView()
             binding.counterView.count = MIN_COUNT_VALUE
         }
         binding.counterView.minusClickListener = {
             if (binding.counterView.count <= MIN_COUNT_VALUE) {
-                binding.productAddFab.visibility = View.VISIBLE
-                binding.counterView.visibility = View.INVISIBLE
+                hideCounterView()
             } else {
                 binding.counterView.count--
                 cartProductCountMinus(productState)
@@ -45,6 +52,16 @@ class ProductViewHolder(
                 cartProductCountPlus(productState)
             }
         }
+    }
+
+    private fun showCounterView() {
+        binding.productAddFab.visibility = View.INVISIBLE
+        binding.counterView.visibility = View.VISIBLE
+    }
+
+    private fun hideCounterView() {
+        binding.productAddFab.visibility = View.VISIBLE
+        binding.counterView.visibility = View.INVISIBLE
     }
 
     companion object {

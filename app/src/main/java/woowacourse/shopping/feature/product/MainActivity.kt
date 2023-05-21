@@ -9,8 +9,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.domain.CartProduct
 import com.example.domain.Product
 import com.example.domain.RecentProduct
+import com.example.domain.repository.CartRepository
 import woowacourse.shopping.R
 import woowacourse.shopping.common.adapter.LoadMoreAdapter
 import woowacourse.shopping.data.cart.CartDao
@@ -35,14 +37,15 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private val binding: ActivityMainBinding
         get() = _binding!!
 
+    private val cartRepository: CartRepository by lazy { CartRepositoryImpl(CartDao(this)) }
     private val presenter: MainContract.Presenter by lazy {
         val productRepository = ProductRepositoryImpl(ProductDao(this))
         val recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this))
-        val cartRepository = CartRepositoryImpl(CartDao(this))
         MainPresenter(this, productRepository, recentProductRepository, cartRepository)
     }
     private val productListAdapter: ProductListAdapter by lazy {
         ProductListAdapter(
+            cartProductStates = cartRepository.getAll().map(CartProduct::toUi),
             onProductClick = { presenter.showProductDetail(it) },
             cartProductAddFab = { presenter.storeCartProduct(it) },
             cartProductCountMinus = { presenter.minusCartProductCount(it) },
