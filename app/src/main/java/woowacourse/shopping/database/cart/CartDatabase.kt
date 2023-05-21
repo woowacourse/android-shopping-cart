@@ -79,7 +79,6 @@ class CartDatabase(
             values,
             SQLiteDatabase.CONFLICT_REPLACE,
         )
-        shoppingDb.close()
     }
 
     override fun getSubList(offset: Int, size: Int): List<CartProduct> {

@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
@@ -12,6 +14,10 @@
         <variable
             name="listener"
             type="woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener" />
+
+        <variable
+            name="count"
+            type="int" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,23 +63,25 @@
             tools:text="10000원" />
 
         <ImageView
+            android:id="@+id/addCartBtn"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:onClick="@{()-> listener.onAddCart(product.id, 1)}"
             android:src="@drawable/add_cart_button"
+            android:visibility="@{count == 0 ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toBottomOf="@+id/productImg"
             app:layout_constraintEnd_toEndOf="parent" />
 
 
         <include
+            android:id="@+id/order_count_layout"
             layout="@layout/order_count"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="11dp"
-            android:visibility="gone"
+            android:visibility="@{count >= 1 ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toBottomOf="@+id/productImg"
             app:layout_constraintEnd_toEndOf="@+id/productImg"
             app:layout_constraintStart_toStartOf="parent" />
