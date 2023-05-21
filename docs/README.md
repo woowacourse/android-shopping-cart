@@ -89,8 +89,14 @@
             - [x] updateAllChecked()
         - [ ] decreaseCartProductAmount()
             - [ ] if(amount > 1) updateCartProduct(cartProduct)
-        - [ ] increaseCartProductAmount()
-            - [ ] updateCartProduct(cartProduct)
+        - [x] increaseCartProductAmount()
+            - [x] cartProduct.increaseAmount()
+            - [x] cartRepository.modifyCartProduct(cartProduct)
+            - [x] cartRepository.replaceCartProduct(prev, new)
+            - [x] view.updateCartProduct(prev, new)
+            - [x] if (isChecked)
+                - [x] add product price to cart total price and update view
+                - [x] increase total amount and update view
         - [ ] private updateCartProduct(cartProduct)
             - [ ] cartRepository.updateCartProduct(cartProduct)
             - [ ] view.updateCartProduct(cartProductModel)

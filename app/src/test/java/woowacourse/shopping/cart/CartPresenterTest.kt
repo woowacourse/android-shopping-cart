@@ -7,12 +7,15 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.createCartProduct
 import woowacourse.shopping.createCartProductModel
+import woowacourse.shopping.createProductModel
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.repository.CartRepository
+import java.time.LocalDateTime
 
 class CartPresenterTest {
     private lateinit var presenter: CartPresenter
@@ -177,6 +180,61 @@ class CartPresenterTest {
         verify(exactly = 2) {
             cartRepository.isAllCheckedInPage(any(), any())
             view.updateAllChecked(any())
+        }
+    }
+
+    @Test
+    fun 카트_상품_수량을_증가시키면_레포지토리의_카트_상품을_수정_및_교체하고_뷰의_카트_상품을_업데이트_한다() {
+        // given
+        every { cartRepository.modifyCartProduct(any()) } just runs
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, false, createProductModel())
+        presenter.increaseCartProductAmount(cartProductModel)
+
+        // then
+        verify {
+            cartRepository.modifyCartProduct(any())
+            cartRepository.replaceCartProduct(any(), any())
+            view.updateCartProduct(any(), any())
+        }
+    }
+
+    @Test
+    fun 카트_상품이_체크_상태가_아닐_때_카트_상품_수량을_증가시키면_총_가격과_수량이_업데이트_되지_않아_총_한_번_업데이트_한다() {
+        // given
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, false, createProductModel())
+        every { cartRepository.modifyCartProduct(any()) } just runs
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        presenter.increaseCartProductAmount(cartProductModel)
+
+        // then
+        verify(exactly = 1) {
+            view.updateCartTotalPrice(any())
+            view.updateCartTotalAmount(any())
+        }
+    }
+
+    @Test
+    fun 카트_상품이_체크_상태일_때_카트_상품_수량을_증가시키면_총_가격과_수량이_업데이트_되어_총_두_번_업데이트_된다() {
+        // given
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, true, createProductModel())
+        every { cartRepository.modifyCartProduct(any()) } just runs
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        presenter.increaseCartProductAmount(cartProductModel)
+
+        // then
+        verify(exactly = 2) {
+            view.updateCartTotalPrice(any())
+            view.updateCartTotalAmount(any())
         }
     }
 }

@@ -81,6 +81,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             onCheckBoxClick = { cartProductModel ->
                 presenter.changeCartProductChecked(cartProductModel)
                 presenter.updateAllChecked()
+            },
+            onPlusAmountButtonClick = {
+                setResult(RESULT_OK)
+                presenter.increaseCartProductAmount(it)
             }
         )
         binding.cartProductList.adapter = cartAdapter

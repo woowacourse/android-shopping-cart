@@ -13,6 +13,8 @@ interface CartContract {
         fun changeCartProductChecked(cartProductModel: CartProductModel)
 
         fun updateAllChecked()
+
+        fun increaseCartProductAmount(cartProductModel: CartProductModel)
     }
 
     interface View {
