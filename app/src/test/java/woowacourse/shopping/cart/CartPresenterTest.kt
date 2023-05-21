@@ -29,6 +29,8 @@ class CartPresenterTest {
         every { view.updateCart(any(), any(), any()) } just runs
         every { view.updateCartTotalPrice(any()) } just runs
         every { view.updateCartTotalAmount(any()) } just runs
+        every { cartRepository.isAllCheckedInPage(any(), any()) } returns true
+        every { view.updateAllChecked(any()) } just runs
 
         presenter = CartPresenter(
             view, cartRepository, 0, 0
@@ -86,7 +88,7 @@ class CartPresenterTest {
     }
 
     @Test
-    fun 최초로_다음_페이지로_넘기면_레포지토리에서_카트를_가져온다() {
+    fun 페이지를_넘기면_레포지토리에서_카트를_가져온다() {
         // given
 
         // when
@@ -162,5 +164,19 @@ class CartPresenterTest {
 
         // then
         verify(exactly = 2) { view.updateCartTotalAmount(any()) }
+    }
+
+    @Test
+    fun 전체_체크_상태를_업데이트_하면_페이지내의_모든_상품이_체크되어_있는지_확인하고_뷰의_전체_체크를_업데이트_한다() {
+        // given
+
+        // when
+        presenter.updateAllChecked()
+
+        // then
+        verify(exactly = 2) {
+            cartRepository.isAllCheckedInPage(any(), any())
+            view.updateAllChecked(any())
+        }
     }
 }

@@ -62,6 +62,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         cartAdapter.updateCartProduct(prev, new)
     }
 
+    override fun updateAllChecked(isAllChecked: Boolean) {
+        binding.cartProductAllCheckbox.isChecked = isAllChecked
+    }
+
     private fun initPresenter() {
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = CartPresenter(
@@ -76,6 +80,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             onNextButtonClick = { presenter.goToNextPage() },
             onCheckBoxClick = { cartProductModel ->
                 presenter.changeCartProductChecked(cartProductModel)
+                presenter.updateAllChecked()
             }
         )
         binding.cartProductList.adapter = cartAdapter

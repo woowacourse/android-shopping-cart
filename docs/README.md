@@ -77,11 +77,16 @@
             - [x] view.updateCartTotalPrice(price)
             - [x] view.updateCartTotalAmount(amount)
         - [x] changeCartProductChecked(cartProductModel)
-            - [x] cartProduct.changeChecked(!isChecked)   
-            - [x] cart.replaceCartProduct(prev, new) 
+            - [x] cartProduct.changeChecked(!isChecked)
+            - [x] cart.replaceCartProduct(prev, new)
             - [x] view.updateCartProduct(prev, new)
             - [x] apply price to total price
             - [x] apply amount to total amount
+        - [x] updateAllChecked()
+            - [x] cartRepository.isAllCheckedInPage(page, sizePerPage)
+            - [x] view.updateAllChecked(isAllChecked)
+        - [x] private updateCartPage()
+            - [x] updateAllChecked()
         - [ ] decreaseCartProductAmount()
             - [ ] if(amount > 1) updateCartProduct(cartProduct)
         - [ ] increaseCartProductAmount()

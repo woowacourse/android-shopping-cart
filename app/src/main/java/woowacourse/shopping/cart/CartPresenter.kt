@@ -52,24 +52,9 @@ class CartPresenter(
         applyAmountToTotalAmount(newCartProduct)
     }
 
-    private fun applyPriceToTotalPrice(cartProduct: CartProduct) {
-        if (cartProduct.isChecked) {
-            totalPrice += cartProduct.product.price * cartProduct.amount
-            view.updateCartTotalPrice(totalPrice)
-        } else {
-            totalPrice -= cartProduct.product.price * cartProduct.amount
-            view.updateCartTotalPrice(totalPrice)
-        }
-    }
-
-    private fun applyAmountToTotalAmount(cartProduct: CartProduct) {
-        if (cartProduct.isChecked) {
-            totalAmount += cartProduct.amount
-            view.updateCartTotalAmount(totalAmount)
-        } else {
-            totalAmount -= cartProduct.amount
-            view.updateCartTotalAmount(totalAmount)
-        }
+    override fun updateAllChecked() {
+        val isAllChecked = cartRepository.isAllCheckedInPage(currentPage, sizePerPage)
+        view.updateAllChecked(isAllChecked)
     }
 
     private fun updateCartPage() {
@@ -79,6 +64,7 @@ class CartPresenter(
             currentPage = currentPage + 1,
             isLastPage = isLastPageCart(newCart)
         )
+        updateAllChecked()
     }
 
     private fun getCartInPage(): Cart {
@@ -103,5 +89,25 @@ class CartPresenter(
     private fun determineNavigationVisibility(): Boolean {
         val cartCount = cartRepository.getAllCount()
         return cartCount > sizePerPage || currentPage != 0
+    }
+
+    private fun applyPriceToTotalPrice(cartProduct: CartProduct) {
+        if (cartProduct.isChecked) {
+            totalPrice += cartProduct.product.price * cartProduct.amount
+            view.updateCartTotalPrice(totalPrice)
+        } else {
+            totalPrice -= cartProduct.product.price * cartProduct.amount
+            view.updateCartTotalPrice(totalPrice)
+        }
+    }
+
+    private fun applyAmountToTotalAmount(cartProduct: CartProduct) {
+        if (cartProduct.isChecked) {
+            totalAmount += cartProduct.amount
+            view.updateCartTotalAmount(totalAmount)
+        } else {
+            totalAmount -= cartProduct.amount
+            view.updateCartTotalAmount(totalAmount)
+        }
     }
 }

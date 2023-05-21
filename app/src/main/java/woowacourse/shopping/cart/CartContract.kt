@@ -11,6 +11,8 @@ interface CartContract {
         fun goToNextPage()
 
         fun changeCartProductChecked(cartProductModel: CartProductModel)
+
+        fun updateAllChecked()
     }
 
     interface View {
@@ -25,5 +27,7 @@ interface CartContract {
         fun setResultForChange()
 
         fun updateCartProduct(prev: CartProductModel, new: CartProductModel)
+
+        fun updateAllChecked(isAllChecked: Boolean)
     }
 }
