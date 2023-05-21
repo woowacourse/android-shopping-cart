@@ -66,6 +66,14 @@ class ProductListPresenter(
         }
     }
 
+    override fun loadCartCount() {
+        val products = products.map {
+            productRepository.getProductCount(it.id)
+        }
+        view.updateProductsCount(products)
+        _cartCount.value = products.sum()
+    }
+
     companion object {
         private const val LOCAL_DATE_PATTERN = "yyyy-MM-dd"
         private const val LOAD_PRODUCT_COUNT = 20

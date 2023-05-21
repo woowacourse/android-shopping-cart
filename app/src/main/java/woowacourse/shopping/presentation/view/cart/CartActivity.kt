@@ -52,6 +52,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
+                setResult(RESULT_OK)
                 finish()
             }
         }

@@ -40,6 +40,13 @@ class ProductListAdapter(
         notifyItemChanged(position)
     }
 
+    fun updateProductCounts(counts: List<Int>) {
+        counts.forEachIndexed { index, count ->
+            _products[index] = _products[index].copy(count = count)
+        }
+        notifyItemRangeChanged(0, itemCount)
+    }
+
     companion object {
         internal const val VIEW_TYPE = 100
     }

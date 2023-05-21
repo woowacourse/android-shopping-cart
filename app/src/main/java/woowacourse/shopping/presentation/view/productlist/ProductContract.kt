@@ -10,6 +10,7 @@ interface ProductContract {
         fun setRecentProductItemsView(recentProducts: List<RecentProductModel>)
         fun updateRecentProductItemsView()
         fun updateMoreProductsView(newProducts: List<ProductModel>)
+        fun updateProductsCount(counts: List<Int>)
     }
 
     interface Presenter {
@@ -21,5 +22,6 @@ interface ProductContract {
         fun saveRecentProduct(productId: Long)
         fun loadMoreData(startPosition: Int)
         fun updateCartProduct(productId: Long, count: Int, position: Int)
+        fun loadCartCount()
     }
 }

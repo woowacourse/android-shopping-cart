@@ -14,6 +14,10 @@ class ProductRepositoryImpl(private val cartDao: CartDao) :
         return result
     }
 
+    override fun getProductCount(id: Long): Int {
+        return cartDao.getItemsWithProductCount(productId = id) ?: 0
+    }
+
     override fun getDataById(id: Long): ProductModel {
         return (ProductsDao.getDataById(id) ?: ProductsDao.getErrorData()).toUIModel()
     }

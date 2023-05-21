@@ -1,9 +1,11 @@
 package woowacourse.shopping.presentation.view.productlist
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -27,6 +29,14 @@ import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductW
 class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private lateinit var binding: ActivityProductListBinding
     private var cartCountTextView: TextView? = null
+
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            presenter.loadCartCount()
+        }
+    }
 
     private val presenter: ProductContract.Presenter by lazy {
         ProductListPresenter(
@@ -82,7 +92,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     private fun setMenuView(view: View) {
         view.setOnClickListener {
-            startActivity(CartActivity.createIntent(this))
+            activityResultLauncher.launch(CartActivity.createIntent(this))
         }
         view.findViewById<TextView>(R.id.tv_cart_badge)?.let {
             cartCountTextView = it
@@ -158,5 +168,9 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     override fun updateMoreProductsView(newProducts: List<ProductModel>) {
         productListAdapter.updateDataSet(newProducts)
+    }
+
+    override fun updateProductsCount(counts: List<Int>) {
+        productListAdapter.updateProductCounts(counts)
     }
 }
