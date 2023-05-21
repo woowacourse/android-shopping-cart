@@ -68,6 +68,10 @@ class MainPresenter(
         )
     }
 
+    private fun addRecentProduct(recentProduct: RecentProduct) {
+        recentProductRepository.addRecentProduct(recentProduct.copy(dateTime = LocalDateTime.now()))
+    }
+
     override fun refresh() {
         productRepository.clearCache()
     }
@@ -96,9 +100,5 @@ class MainPresenter(
         }
         view.updateProductsCount(products)
         view.updateCartProductCount(products.size)
-    }
-
-    private fun addRecentProduct(recentProduct: RecentProduct) {
-        recentProductRepository.addRecentProduct(recentProduct.copy(dateTime = LocalDateTime.now()))
     }
 }

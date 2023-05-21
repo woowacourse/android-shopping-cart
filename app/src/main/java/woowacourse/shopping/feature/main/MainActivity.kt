@@ -47,23 +47,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        presenter = MainPresenter(
-            this,
-            ProductRemoteMockRepositoryImpl(ProductMockWebServer(), ProductCacheImpl),
-            RecentProductRepositoryImpl(RecentDao(this)),
-            CartRepositoryImpl(CartDao(this))
-        )
-
         initAdapters()
         initLayoutManager()
-        binding.productRv.adapter = concatAdapter
+        initPresenter()
+
         presenter.loadProducts()
         presenter.loadRecent()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        presenter.updateProducts()
     }
 
     private fun initAdapters() {
@@ -90,6 +79,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         loadAdapter = LoadAdapter {
             presenter.loadMoreProduct()
         }
+        binding.productRv.adapter = concatAdapter
     }
 
     private fun initLayoutManager() {
@@ -104,6 +94,20 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             }
         }
         binding.productRv.layoutManager = layoutManager
+    }
+
+    private fun initPresenter() {
+        presenter = MainPresenter(
+            this,
+            ProductRemoteMockRepositoryImpl(ProductMockWebServer(), ProductCacheImpl),
+            RecentProductRepositoryImpl(RecentDao(this)),
+            CartRepositoryImpl(CartDao(this))
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.updateProducts()
     }
 
     override fun showCartScreen() {
