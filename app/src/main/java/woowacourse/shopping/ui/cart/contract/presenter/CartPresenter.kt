@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toUIModel
-import woowacourse.shopping.model.CartItemsUIModel
 import woowacourse.shopping.model.CartUIModel
 import woowacourse.shopping.ui.cart.CartActivity.Companion.KEY_OFFSET
 import woowacourse.shopping.ui.cart.CartOffset
@@ -16,8 +15,6 @@ class CartPresenter(
     offset: Int = 0,
 ) : CartContract.Presenter {
     private var cartOffset = CartOffset(offset, repository)
-    private var cartItems: CartItemsUIModel =
-        CartItemsUIModel(repository.getCheckCart().map { it.toUIModel() })
     private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
     val countLiveDatas: Map<Long, LiveData<Int>> get() = _countLiveDatas
 
@@ -88,7 +85,7 @@ class CartPresenter(
     }
 
     override fun setCartItemsPrice() {
-        view.setCartItemsPrice(cartItems.caculatePrice())
+        view.setCartItemsPrice(repository.getCartItemsPrice())
     }
 
     override fun onAllCheckboxClick(isChecked: Boolean) {
@@ -108,7 +105,7 @@ class CartPresenter(
     }
 
     override fun setAllOrderCount() {
-        view.setAllOrderCount(cartItems.products.size)
+        view.setAllOrderCount(repository.getCheckCart().size)
     }
 
     override fun increaseCount(id: Long) {
@@ -124,7 +121,6 @@ class CartPresenter(
     }
 
     private fun updateCartItems() {
-        cartItems = cartItems.updateCartItems(repository.getCheckCart().map { it.toUIModel() })
         setAllOrderCount()
         setCartItemsPrice()
     }

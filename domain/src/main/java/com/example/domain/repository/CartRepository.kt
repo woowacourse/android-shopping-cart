@@ -14,4 +14,5 @@ interface CartRepository {
 
     fun getFindById(id: Long): CartProduct?
     fun getCheckCart(): List<CartProduct>
+    fun getCartItemsPrice(): Int
 }

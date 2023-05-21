@@ -39,6 +39,9 @@ class CartDatabase(
         return cartProducts
     }
 
+    override fun getCartItemsPrice(): Int =
+        getCheckCart().fold(0) { total, product -> total + (product.count * product.product.price) }
+
     @SuppressLint("Range")
     private fun getCartProduct(cursor: Cursor): CartProduct {
         val productId = cursor.getLong(cursor.getColumnIndex(TABLE_COLUMN_PRODUCT_ID))
