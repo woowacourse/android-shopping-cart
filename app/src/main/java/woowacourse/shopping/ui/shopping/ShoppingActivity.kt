@@ -2,10 +2,10 @@ package woowacourse.shopping.ui.shopping
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,9 +24,15 @@ import woowacourse.shopping.ui.shopping.contract.presenter.ShoppingPresenter
 import woowacourse.shopping.ui.shopping.viewHolder.ProductsOnClickListener
 import woowacourse.shopping.utils.CustomViewOnClickListener
 
-class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnClickListener, CustomViewOnClickListener {
+class ShoppingActivity :
+    AppCompatActivity(),
+    ShoppingContract.View,
+    ProductsOnClickListener,
+    CustomViewOnClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
+
+    private var cartSize: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,21 +46,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnC
                 CartDBHelper(this).writableDatabase,
             ),
         )
-
         initLayoutManager()
         presenter.setUpProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.cart_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cart -> navigateToCart()
-            else -> super.onOptionsItemSelected(item)
-        }
+        val actionView = menu?.findItem(R.id.cart)?.actionView
+        actionView?.findViewById<ImageView>(R.id.cartBtn)?.setOnClickListener { navigateToCart() }
+        actionView?.findViewById<TextView>(R.id.cartSize)?.let { cartSize = it }
+        presenter.updateCountSize()
         return true
     }
 
@@ -119,6 +120,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View, ProductsOnC
                 it.updateData(data)
             }
         }
+    }
+
+    override fun showCountSize(size: Int) {
+        cartSize?.text = size.toString()
     }
 
     private fun navigateToCart() {

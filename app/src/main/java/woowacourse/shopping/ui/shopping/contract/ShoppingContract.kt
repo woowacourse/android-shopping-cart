@@ -9,6 +9,7 @@ interface ShoppingContract {
         fun navigateToProductDetail(product: ProductUIModel)
 
         fun addProducts(data: List<ProductsItemType>)
+        fun showCountSize(size: Int)
     }
 
     interface Presenter {
@@ -19,5 +20,6 @@ interface ShoppingContract {
         fun updateItemCount(id: Long, count: Int)
         fun inCreaseCount(id: Long)
         fun decreaseCount(id: Long)
+        fun updateCountSize()
     }
 }

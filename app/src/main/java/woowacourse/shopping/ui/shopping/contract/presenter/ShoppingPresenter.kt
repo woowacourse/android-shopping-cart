@@ -72,6 +72,10 @@ class ShoppingPresenter(
         _countLiveDatas[id]?.value?.let { cartRepository.updateCount(id, it) }
     }
 
+    override fun updateCountSize() {
+        view.showCountSize(cartRepository.getCheckCart().size)
+    }
+
     private fun getCount(id: Long): Int {
         cartRepository.getFindById(id)?.let {
             return it.count
