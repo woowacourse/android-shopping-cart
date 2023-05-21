@@ -81,17 +81,7 @@ class CartActivity : AppCompatActivity(), CartContract.View, OnCartClickListener
         binding.price = price
     }
 
-  /*  override fun updateCheckboxItem(id: Long, checked: Boolean) {
-        binding.cartRecyclerview.adapter?.let {
-            if (it is ConcatAdapter) {
-                val cartAdapter = it.adapters.filterIsInstance<CartAdapter>().firstOrNull()
-                cartAdapter?.updateItem(id, checked)
-            }
-        }
-    }*/
-
     override fun setAllCheckbox(isChecked: Boolean) {
-        /*binding.allCheckBox.isChecked = isChecked*/
         if (binding.allCheckBox.isChecked != isChecked) {
             binding.allCheckBox.isChecked = isChecked
         }

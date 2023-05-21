@@ -37,9 +37,4 @@ class CartAdapter(
     override fun getItemViewType(position: Int): Int {
         return position
     }
-
-    /* fun updateItem(id: Long, checked: Boolean) {
-         cartItems.find { it.product.id == id }?.isChecked?.set(checked)
-         notifyItemChanged(cartItems.size)
-     }*/
 }

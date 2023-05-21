@@ -19,18 +19,6 @@ class CartViewHolder private constructor(
         binding.listener = onCartClickListener
         binding.lifecycleOwner = lifecycleOwner
         binding.presenter = presenter as CartPresenter?
-        /*binding.orderCountLayout.minusBtn.setOnClickListener {
-            cart.count.set(cart.count.get() - 1)
-            onCountChanged(cart.product.id, cart.count.get())
-        }
-        binding.orderCountLayout.plusBtn.setOnClickListener {
-            cart.count.set(cart.count.get() + 1)
-            onCountChanged(cart.product.id, cart.count.get())
-        }
-        binding.checkBox.setOnClickListener {
-            cart.isChecked.set(cart.isChecked.get().not())
-            onCheckChanged(cart.product.id, cart.isChecked.get())
-        }*/
     }
 
     companion object {
