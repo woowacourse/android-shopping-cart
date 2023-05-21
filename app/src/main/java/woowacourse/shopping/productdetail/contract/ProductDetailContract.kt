@@ -10,6 +10,8 @@ interface ProductDetailContract {
         fun showCartDialog(product: ProductUIModel)
         fun setUpCountView()
         fun setCount(count: Int)
+        fun disappearRecent()
+        fun displayRecent(product: ProductUIModel)
     }
 
     interface Presenter {
@@ -21,5 +23,6 @@ interface ProductDetailContract {
 
         fun increaseCount()
         fun decreaseCount()
+        fun manageRecentView()
     }
 }

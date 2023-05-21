@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -22,6 +23,7 @@ import woowacourse.shopping.productdetail.contract.ProductDetailContract
 import woowacourse.shopping.productdetail.contract.presenter.ProductDetailPresenter
 import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.utils.keyError
+import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
@@ -37,7 +39,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             RecentProductDatabase(this),
         )
         presenter.setUp()
-
+        presenter.manageRecentView()
         binding.cartButton.setOnClickListener {
             presenter.onClickCart()
         }
@@ -84,6 +86,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun setCount(count: Int) {
         dialogBinding.customCount.count = presenter.count
+    }
+
+    override fun disappearRecent() {
+        binding.recentProduct.visibility = View.GONE
+    }
+
+    override fun displayRecent(product: ProductUIModel) {
+        binding.recentProduct.visibility = View.VISIBLE
+        binding.recentProductName.text = product.name
+        binding.recentProductPrice.text =
+            getString(R.string.product_price, DecimalFormat("#,###").format(product.price))
     }
 
     override fun onDestroy() {

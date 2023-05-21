@@ -3,6 +3,7 @@ package woowacourse.shopping.productdetail.contract.presenter
 import com.domain.model.CartRepository
 import com.domain.model.RecentRepository
 import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.productdetail.contract.ProductDetailContract
 
@@ -56,5 +57,14 @@ class ProductDetailPresenter(
 
     override fun decreaseCount() {
         _count--
+    }
+
+    override fun manageRecentView() {
+        val recentProducts = recentRepository.getRecent(10)
+        if (recentProducts.isEmpty()) {
+            view.disappearRecent()
+        } else {
+            view.displayRecent(recentProducts[0].toUIModel())
+        }
     }
 }
