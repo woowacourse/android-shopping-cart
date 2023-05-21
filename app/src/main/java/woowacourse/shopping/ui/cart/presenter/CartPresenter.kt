@@ -94,7 +94,9 @@ class CartPresenter(
         val cartItem = cartItemRepository.findById(cartItemId) ?: return
         cartItem.plusCount()
         cartItemRepository.updateCountById(cartItemId, cartItem.count)
-        selectedCartItems = selectedCartItems - cartItem + cartItem
+        if (cartItem in selectedCartItems) {
+            selectedCartItems = selectedCartItems - cartItem + cartItem
+        }
         showCartItems(_currentPage, selectedCartItems, false)
     }
 
@@ -102,7 +104,9 @@ class CartPresenter(
         val cartItem = cartItemRepository.findById(cartItemId) ?: return
         cartItem.minusCount()
         cartItemRepository.updateCountById(cartItemId, cartItem.count)
-        selectedCartItems = selectedCartItems - cartItem + cartItem
+        if (cartItem in selectedCartItems) {
+            selectedCartItems = selectedCartItems - cartItem + cartItem
+        }
         showCartItems(_currentPage, selectedCartItems, false)
     }
 
