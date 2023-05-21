@@ -86,13 +86,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     private fun initLayoutManager() {
-        val layoutManager = GridLayoutManager(this, 2)
+        val layoutManager = GridLayoutManager(this, TOTAL_SPAN)
         layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return when (concatAdapter.getItemViewType(position)) {
-                    LoadAdapter.VIEW_TYPE, RecentWrapperAdapter.VIEW_TYPE -> 2
-                    MainProductAdapter.VIEW_TYPE -> 1
-                    else -> 2
+                    LoadAdapter.VIEW_TYPE, RecentWrapperAdapter.VIEW_TYPE -> TOTAL_SPAN
+                    MainProductAdapter.VIEW_TYPE -> HALF_SPAN
+                    else -> TOTAL_SPAN
                 }
             }
         }
@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onSaveInstanceState(outState)
         recentWrapperAdapter.onSaveState(outState)
         outState.putParcelable(
-            "key",
+            RECYCLER_VIEW_STATE_KEY,
             binding.productRecyclerView.layoutManager?.onSaveInstanceState()
         )
     }
@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         recentWrapperAdapter.onRestoreState(savedInstanceState)
-        recyclerViewState = savedInstanceState.getParcelableCompat("key")
+        recyclerViewState = savedInstanceState.getParcelableCompat(RECYCLER_VIEW_STATE_KEY)
 
         // 혹시 비동기로 얻어오는게 리사이클러뷰 상태를 복구해서 얻어오는 것보다 빠를 경우를 위해
         if (isFirstLoad) restoreProductRecyclerViewState()
@@ -195,5 +195,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         if (isFinishing) {
             presenter.resetProducts()
         }
+    }
+
+    companion object {
+        private const val RECYCLER_VIEW_STATE_KEY = "recycler_view_state_key"
+
+        private const val TOTAL_SPAN = 2
+        private const val HALF_SPAN = TOTAL_SPAN / 2
     }
 }
