@@ -7,11 +7,13 @@ interface ProductDetailContract {
 
         fun showBasket()
 
-        fun initBindingData(product: UiProduct, previousProduct: UiProduct?)
+        fun updateBindingData(product: UiProduct, previousProduct: UiProduct?)
     }
 
     interface Presenter {
         val view: View
+
+        fun selectPreviousProduct()
 
         fun addBasketProduct(): Thread
 

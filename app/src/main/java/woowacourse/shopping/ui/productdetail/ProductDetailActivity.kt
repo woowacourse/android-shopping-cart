@@ -32,12 +32,22 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         if (!initExtraData()) return
         initPresenter()
+        initBasketButtonClickListener()
+        initPreviousProductClickListener()
         presenter.initProductData()
         initButtonCloseClickListener()
     }
 
     private fun initSetResult() {
         setResult(Activity.RESULT_OK, ShoppingActivity.getResultIntent())
+    }
+
+    private fun initBasketButtonClickListener() {
+        binding.addMarketClickListener = presenter::addBasketProduct
+    }
+
+    private fun initPreviousProductClickListener() {
+        binding.previousProductClickListener = presenter::selectPreviousProduct
     }
 
     private fun initExtraData(): Boolean {
@@ -47,10 +57,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return true
     }
 
-    override fun initBindingData(product: UiProduct, previousProduct: UiProduct?) {
+    override fun updateBindingData(product: UiProduct, previousProduct: UiProduct?) {
         binding.product = product
         binding.previousProduct = previousProduct
-        binding.addMarketClickListener = presenter::addBasketProduct
     }
 
     private fun initPresenter() {
