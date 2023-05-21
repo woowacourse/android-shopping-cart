@@ -1,8 +1,7 @@
 package woowacourse.shopping.productcatalogue
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,6 +10,9 @@ import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
+import woowacourse.shopping.datas.CartDBHelper
+import woowacourse.shopping.datas.CartDBRepository
+import woowacourse.shopping.datas.CartRepository
 import woowacourse.shopping.datas.ProductDataRepository
 import woowacourse.shopping.datas.RecentProductDBHelper
 import woowacourse.shopping.datas.RecentProductDBRepository
@@ -41,7 +43,15 @@ class ProductCatalogueActivity :
 
         val recentDataRepository: RecentRepository =
             RecentProductDBRepository(RecentProductDBHelper(this).writableDatabase)
-        presenter = ProductCataloguePresenter(this, ProductDataRepository, recentDataRepository)
+        val cartDBRepository: CartRepository =
+            CartDBRepository(CartDBHelper(this).writableDatabase)
+
+        presenter = ProductCataloguePresenter(
+            this,
+            ProductDataRepository,
+            recentDataRepository,
+            cartDBRepository
+        )
 
         presenter.getRecentProduct()
 
@@ -59,6 +69,12 @@ class ProductCatalogueActivity :
         binding.rvProductCatalogue.layoutManager = gridLayoutManager
 
         notifyDataChanged()
+
+        presenter.updateCartCount()
+
+        binding.ivCart.setOnClickListener {
+            startActivity(CartActivity.intent(this))
+        }
     }
 
     private fun readMore(unitSize: Int, page: Int) {
@@ -73,35 +89,25 @@ class ProductCatalogueActivity :
         adapter.initRecentAdapterData(recentProducts)
     }
 
+    override fun setCartCountCircle(count: Int) {
+        binding.tvCartCount.text = count.toString()
+    }
+
     override fun notifyDataChanged() {
         adapter.notifyDataSetChanged()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.tool_bar_product_catalogue, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_cart -> {
-                startActivity(CartActivity.intent(this))
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onResume() {
-        presenter.getRecentProduct()
-        adapter.recentAdapter.notifyDataSetChanged()
-        adapter.setRecentProductsVisibility(binding.clProductCatalogue)
-        super.onResume()
     }
 
     override fun onProductClick(productUIModel: ProductUIModel) {
         val intent = ProductDetailActivity.intent(this)
         intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        presenter.getRecentProduct()
+        adapter.recentAdapter.notifyDataSetChanged()
+        adapter.setRecentProductsVisibility(binding.clProductCatalogue)
+        presenter.updateCartCount()
+        super.onResume()
     }
 }
