@@ -18,12 +18,13 @@ class DetailedProductPresenter(
 ) : DetailedProductContract.Presenter {
     private var lastProduct: ProductUIModel? = null
 
-    init {
+    override fun setUpLastProduct() {
         sharedPreferenceUtils.getLastProductId()
             .takeIf { it != product.id }
             ?.let { runCatching { lastProduct = productRepository.findById(it).toUIModel() } }
         sharedPreferenceUtils.setLastProductId(product.id)
     }
+
     override fun setUpProductDetail() {
         view.setProductDetail(product, lastProduct)
     }

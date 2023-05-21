@@ -50,6 +50,7 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
             RecentProductDatabase(this)
         )
         binding.presenter = presenter
+        presenter.setUpLastProduct()
         presenter.setUpProductDetail()
         presenter.addProductToRecent()
     }

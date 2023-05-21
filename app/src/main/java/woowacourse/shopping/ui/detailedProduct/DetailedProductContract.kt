@@ -11,6 +11,7 @@ interface DetailedProductContract {
     }
 
     interface Presenter {
+        fun setUpLastProduct()
         fun setUpProductDetail()
         fun addProductToCart(count: Int)
         fun addProductToRecent()
