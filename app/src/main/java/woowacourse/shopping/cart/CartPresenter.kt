@@ -35,7 +35,7 @@ class CartPresenter(
     override fun removeProduct(cartProductUIModel: CartProductUIModel, position: Int) {
         cartRepository.remove(cartProductUIModel.product.id)
         cart = cart.remove(cartProductUIModel.toDomain())
-        recentPageProducts = Cart(recentPageProducts.products - cartProductUIModel.toDomain())
+        recentPageProducts = recentPageProducts.remove(cartProductUIModel.toDomain())
         view.removeAdapterData(cartProductUIModel, position)
         updateAllChecked()
         updateCountOfProductType()
@@ -91,6 +91,7 @@ class CartPresenter(
         cart = cart.addAll(recentPageProducts)
         updateAllChecked()
         updateCountOfProductType()
+        calculateTotalPrice()
     }
 
     override fun updateAllChecked() {
@@ -104,7 +105,9 @@ class CartPresenter(
     override fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int) {
         if (count <= 0) return
         cart = cart.updateProductCount(cartProduct.toDomain(), count)
+        recentPageProducts = recentPageProducts.updateProductCount(cartProduct.toDomain(), count)
         cartRepository.updateProductCount(cartProduct.product.id, count)
+        calculateTotalPrice()
     }
 
     companion object {

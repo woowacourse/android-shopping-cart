@@ -19,7 +19,9 @@
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/tool_bar_product_catalogue"
             app:title="Shopping"
-            app:titleTextColor="@color/white" />
+            app:titleTextColor="@color/white" >
+
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_product_catalogue"
