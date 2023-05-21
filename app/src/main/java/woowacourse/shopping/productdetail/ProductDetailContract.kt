@@ -9,6 +9,8 @@ interface ProductDetailContract {
         fun navigateToShoppingCartView()
 
         fun setUpRecentViewedProduct(product: ProductUiModel?)
+
+        fun showCountProductView()
     }
 
     interface Presenter {
@@ -16,6 +18,10 @@ interface ProductDetailContract {
         val product: ProductUiModel
 
         fun setUpView()
+
+        fun onClickShoppingCartBtn()
+
+        fun changeCount(isAdd: Boolean)
 
         fun addToShoppingCart()
     }

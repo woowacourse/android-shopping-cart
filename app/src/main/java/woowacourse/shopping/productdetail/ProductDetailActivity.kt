@@ -3,13 +3,16 @@ package woowacourse.shopping.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.databinding.DialogCountViewBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.generateProductDetailPresenter
@@ -76,6 +79,26 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             }
         }
     }
+
+    override fun showCountProductView() {
+        val binding = DialogCountViewBinding.inflate(LayoutInflater.from(this))
+        binding.presenter = presenter
+        val dialog: AlertDialog = createCountDialog(binding)
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
+    private fun createCountDialog(binding: DialogCountViewBinding) =
+        AlertDialog.Builder(this).apply {
+            setView(binding.root)
+            binding.countView.count = presenter.count
+            binding.countView.plusClickListener = {
+                presenter.changeCount(true)
+            }
+            binding.countView.minusClickListenerInCart = {
+                presenter.changeCount(false)
+            }
+        }.create()
 
     override fun navigateToShoppingCartView() {
         val intent = Intent(this, ShoppingCartActivity::class.java)

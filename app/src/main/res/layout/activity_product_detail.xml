@@ -135,7 +135,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/button_color"
-            android:onClick="@{()->presenter.addToShoppingCart()}"
+            android:onClick="@{()->presenter.onClickShoppingCartBtn()}"
             android:text="@string/put_to_shopping_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
