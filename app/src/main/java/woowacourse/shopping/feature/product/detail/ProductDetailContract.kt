@@ -13,6 +13,7 @@ interface ProductDetailContract {
         fun showCart()
         fun showAccessError()
         fun showSelectCountDialog()
+        fun showProductDetail(product: ProductState)
         fun closeProductDetail()
     }
 
@@ -26,5 +27,6 @@ interface ProductDetailContract {
         fun addCartProduct(count: Int)
         fun plusCount(selectCountDialogBinding: DialogSelectCountBinding)
         fun minusCount(selectCountDialogBinding: DialogSelectCountBinding)
+        fun navigateProductDetail()
     }
 }

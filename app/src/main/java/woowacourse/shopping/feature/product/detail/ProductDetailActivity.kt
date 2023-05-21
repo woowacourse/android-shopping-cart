@@ -39,6 +39,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter.loadProduct()
         presenter.loadRecentProduct()
         binding.addCartProductTv.setOnClickListener { presenter.selectCount() }
+        binding.mostRecentProductLayout.setOnClickListener { presenter.navigateProductDetail() }
     }
 
     override fun onDestroy() {
@@ -77,6 +78,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         dialog.show()
     }
 
+    override fun showProductDetail(product: ProductState) {
+        startActivity(this, product)
+    }
+
     override fun closeProductDetail() = finish()
 
     private fun createSelectCountDialog(selectCountDialogBinding: DialogSelectCountBinding): AlertDialog {
@@ -100,7 +105,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         fun startActivity(
             context: Context,
             product: ProductState,
-            recentProduct: RecentProductState?
+            recentProduct: RecentProductState? = null
         ) {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_KEY, product)

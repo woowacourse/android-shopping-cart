@@ -6,6 +6,8 @@ import woowacourse.shopping.model.CartProductState.Companion.MAX_COUNT_VALUE
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.model.ProductState
 import woowacourse.shopping.model.RecentProductState
+import woowacourse.shopping.model.mapper.toProduct
+import woowacourse.shopping.model.mapper.toUi
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
@@ -43,6 +45,10 @@ class ProductDetailPresenter(
         count--
         if (count < MIN_COUNT_VALUE) count++
         view.setCount(selectCountDialogBinding, count)
+    }
+
+    override fun navigateProductDetail() {
+        view.showProductDetail(recentProduct!!.toProduct().toUi())
     }
 
     override fun plusCount(selectCountDialogBinding: DialogSelectCountBinding) {
