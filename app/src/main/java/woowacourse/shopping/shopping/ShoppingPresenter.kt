@@ -50,7 +50,7 @@ class ShoppingPresenter(
 
     override fun loadMoreProduct() {
         val loadedProducts = productRepository.selectByRange(productLoadedCount, productLoadSize)
-        val loadedShop = shopRepository.selectByRange(loadedProducts)
+        val loadedShop = shopRepository.selectByProducts(loadedProducts)
         productLoadedCount += productLoadSize
         view.addProducts(loadedShop.products.map { it.toViewModel() })
     }
@@ -72,7 +72,7 @@ class ShoppingPresenter(
 
     private fun updateProducts() {
         val loadedProducts = productRepository.selectByRange(0, productLoadSize)
-        val loadedShop = shopRepository.selectByRange(loadedProducts)
+        val loadedShop = shopRepository.selectByProducts(loadedProducts)
         view.updateProducts(loadedShop.products.map { it.toViewModel() })
         view.updateCartProductsCount(cartRepository.selectAllCount())
     }
