@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.shoppingcart
 
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shopping.domain.Count
 import woowacourse.shopping.model.uimodel.CartProductUIModel
@@ -8,7 +9,7 @@ import woowacourse.shopping.model.uimodel.CartProductUIModel
 class ShoppingCartAdapter(
     private var cartProducts: List<CartProductUIModel>,
     private val onClickRemove: (CartProductUIModel) -> Unit,
-    private val onClickCountButton: (CartProductUIModel) -> Unit
+    private val onClickCountButton: (CartProductUIModel, TextView) -> Unit
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartViewHolder {
 

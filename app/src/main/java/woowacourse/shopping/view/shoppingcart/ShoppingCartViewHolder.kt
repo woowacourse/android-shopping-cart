@@ -2,6 +2,7 @@ package woowacourse.shopping.view.shoppingcart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shopping.domain.Count
 import woowacourse.shopping.R
@@ -13,7 +14,7 @@ import woowacourse.shopping.view.customview.CounterViewEventListener
 class ShoppingCartViewHolder(
     parent: ViewGroup,
     private val onClickRemove: (CartProductUIModel) -> Unit,
-    private val onClickCountButton: (CartProductUIModel) -> Unit
+    private val onClickCountButton: (CartProductUIModel, TextView) -> Unit
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_cart_product, parent, false)
 ) {
@@ -25,10 +26,13 @@ class ShoppingCartViewHolder(
             onClickRemove(cartProduct)
         }
 
-        binding.counterView.listener = object: CounterViewEventListener {
+        binding.counterView.listener = object : CounterViewEventListener {
             override fun updateCount(counterView: CounterView, count: Int) {
                 binding.counterView.updateCountView()
-                onClickCountButton(CartProductUIModel(cartProduct.productUIModel, Count(count)))
+                onClickCountButton(
+                    CartProductUIModel(cartProduct.productUIModel, Count(count)),
+                    binding.tvPrice
+                )
             }
         }
     }

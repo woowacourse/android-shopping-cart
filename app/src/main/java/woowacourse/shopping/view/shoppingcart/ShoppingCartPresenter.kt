@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
-import com.shopping.domain.Count
+import android.widget.TextView
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
@@ -51,8 +51,9 @@ class ShoppingCartPresenter(
         view.updatePageCounter(paging.getPageCount())
     }
 
-    override fun updateCartProductCount(cartProductUIModel: CartProductUIModel) {
+    override fun updateCartProductCount(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {
         cartProductRepository.update(cartProductUIModel.toDomain())
+        view.updatePrice(cartProductUIModel, tvPrice)
     }
 
     private fun setButtonViews() {

@@ -1,6 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
-import com.shopping.domain.Count
+import android.widget.TextView
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
 
@@ -13,6 +13,7 @@ interface ShoppingCartContract {
         fun activatePageDownCounter()
         fun deactivatePageDownCounter()
         fun updatePageCounter(count: Int)
+        fun updatePrice(cartProductUIModel: CartProductUIModel, tvPrice: TextView)
     }
 
     interface Presenter {
@@ -21,6 +22,6 @@ interface ShoppingCartContract {
         fun removeCartProduct(cartProductUIModel: CartProductUIModel)
         fun loadNextPage(isActivated: Boolean)
         fun loadPreviousPage(isActivated: Boolean)
-        fun updateCartProductCount(cartProductUIModel: CartProductUIModel)
+        fun updateCartProductCount(cartProductUIModel: CartProductUIModel, tvPrice: TextView)
     }
 }

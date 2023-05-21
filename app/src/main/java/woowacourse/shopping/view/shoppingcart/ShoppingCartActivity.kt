@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.shopping.domain.Count
 import woowacourse.shopping.R
 import woowacourse.shopping.data.db.CartProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
@@ -49,6 +49,8 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private fun setViewSettings() {
         binding.rvCartList.adapter = adapter
+        binding.tvTotalPrice.text = resources.getText(R.string.price_format).toString().format(0)
+        binding.btnOrder.text = resources.getText(R.string.order_format).toString().format(0)
         updatePageCounter(INIT_PAGE_COUNTER_VIEW)
     }
 
@@ -65,8 +67,14 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         presenter.removeCartProduct(product)
     }
 
-    private fun setOnClickCountButton(): (CartProductUIModel) -> Unit = { product ->
-        presenter.updateCartProductCount(product)
+    private fun setOnClickCountButton(): (CartProductUIModel, TextView) -> Unit = { product, tvPrice ->
+        presenter.updateCartProductCount(product, tvPrice)
+    }
+
+    override fun updatePrice(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {
+        tvPrice.text = resources.getText(R.string.price_format).toString().format(
+            cartProductUIModel.productUIModel.price * cartProductUIModel.count.value
+        )
     }
 
     override fun updateCartProduct(cartProducts: List<CartProductUIModel>) {
