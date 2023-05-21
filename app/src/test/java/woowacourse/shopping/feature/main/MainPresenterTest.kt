@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.main
 
 import com.example.domain.ProductCache
 import com.example.domain.datasource.productsDatasource
+import com.example.domain.model.Product
 import com.example.domain.model.RecentProduct
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
@@ -41,7 +42,13 @@ internal class MainPresenterTest {
 
     @Test
     fun `처음에 상품 목록을 불러와서 상품을 화면에 띄운다`() {
-        every { productRepository.getFirstProducts() } returns mockProducts
+
+        every {
+            productRepository.getFirstProducts(onSuccess = any())
+        } answers {
+            firstArg<(List<Product>) -> Unit>().invoke(mockProducts.take(20))
+        }
+
         val slot = slot<List<ProductUiModel>>()
         every { view.addProducts(capture(slot)) } just Runs
         every { cartRepository.getAll() } returns emptyList()
@@ -49,7 +56,7 @@ internal class MainPresenterTest {
         presenter.loadProducts()
 
         val actual = slot.captured.map { it.toDomain() }
-        val expected = mockProducts.toList()
+        val expected = mockProducts.take(20)
         assert(actual == expected)
         verify { view.addProducts(any()) }
     }
@@ -65,8 +72,10 @@ internal class MainPresenterTest {
 
     @Test
     fun `상품 목록을 이어서 더 불러와서 화면에 추가로 띄운다`() {
-        every { productRepository.getNextProducts() } answers {
-            mockProducts.subList(10, 15)
+        every {
+            productRepository.getNextProducts(onSuccess = any())
+        } answers {
+            firstArg<(List<Product>) -> Unit>().invoke(mockProducts.subList(10, 15))
         }
         val slot = slot<List<ProductUiModel>>()
         every { view.addProducts(capture(slot)) } just Runs
