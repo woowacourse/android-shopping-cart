@@ -17,6 +17,7 @@ fun inject(
     val database = createShoppingDatabase(context)
     return ShoppingPresenter(
         view,
+        inject(),
         inject(inject(injectRecentProductDao(database))),
         inject(inject(injectCartDao(database))),
     )

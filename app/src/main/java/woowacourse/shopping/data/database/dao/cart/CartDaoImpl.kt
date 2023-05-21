@@ -6,6 +6,7 @@ import android.provider.BaseColumns
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.contract.CartContract
 import woowacourse.shopping.data.database.contract.ProductContract
+import woowacourse.shopping.data.entity.CartEntity
 import woowacourse.shopping.data.model.CartProduct
 import woowacourse.shopping.data.model.DataCart
 import woowacourse.shopping.data.model.DataCartProduct
@@ -16,6 +17,45 @@ import woowacourse.shopping.data.model.ProductCount
 import woowacourse.shopping.util.extension.safeSubList
 
 class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
+    @SuppressLint("Range")
+    override fun getAllCartEntity(): List<CartEntity> {
+        val db = database.readableDatabase
+        val cartEntities = mutableListOf<CartEntity>()
+        val cursor = db.rawQuery(GET_ALL_CART_ENTITY_QUERY, null)
+        while (cursor.moveToNext()) {
+            val cartId: Int =
+                cursor.getInt(cursor.getColumnIndex(CartContract.CART_ID))
+            val productId: Int =
+                cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+            val count: Int =
+                cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_COUNT))
+            val isChecked: Int =
+                cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_CHECKED))
+            cartEntities.add(CartEntity(cartId, productId, count, isChecked))
+        }
+        cursor.close()
+        return cartEntities
+    }
+
+    @SuppressLint("Range")
+    override fun getCartEntity(productId: Int): CartEntity {
+        val db = database.readableDatabase
+        val cursor = db.rawQuery(GET_CART_ENTITY_QUERY, arrayOf(productId.toString()))
+        val cartEntity = if (cursor.moveToNext()) {
+            val cartId: Int =
+                cursor.getInt(cursor.getColumnIndex(CartContract.CART_ID))
+            val count: Int =
+                cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_COUNT))
+            val isChecked: Int =
+                cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_CHECKED))
+            CartEntity(cartId, productId, count, isChecked)
+        } else {
+            CartEntity(0, productId, 0, 0)
+        }
+        cursor.close()
+        return cartEntity
+    }
+
     @SuppressLint("Range")
     override fun getProductByPage(page: DataPage): DataCart {
         val cartProducts = mutableListOf<CartProduct>()
@@ -243,6 +283,15 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
     }
 
     companion object {
+        private val GET_ALL_CART_ENTITY_QUERY = """
+            SELECT * FROM ${CartContract.TABLE_NAME}
+        """.trimIndent()
+
+        private val GET_CART_ENTITY_QUERY = """
+            SELECT * FROM ${CartContract.TABLE_NAME}
+            WHERE ${CartContract.PRODUCT_ID} = ?
+        """.trimIndent()
+
         private val GET_ALL_CART_PRODUCT_QUERY = """
             SELECT * FROM ${ProductContract.TABLE_NAME} as product 
             LEFT JOIN ${CartContract.TABLE_NAME} as cart
@@ -257,9 +306,7 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
         """.trimIndent()
 
         private val GET_PRODUCT_IN_CART_SIZE = """
-            SELECT SUM(${CartContract.COLUMN_COUNT}) FROM ${ProductContract.TABLE_NAME} as product
-            LEFT JOIN ${CartContract.TABLE_NAME} as cart
-            ON cart.${CartContract.PRODUCT_ID} = product.${BaseColumns._ID}
+            SELECT SUM(${CartContract.COLUMN_COUNT}) FROM ${CartContract.TABLE_NAME}
             WHERE ${CartContract.COLUMN_COUNT} > 0
         """.trimIndent()
 

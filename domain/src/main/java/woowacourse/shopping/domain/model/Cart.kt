@@ -1,8 +1,5 @@
 package woowacourse.shopping.domain.model
 
-import woowacourse.shopping.domain.model.page.Page
-import woowacourse.shopping.domain.util.safeSubList
-
 typealias DomainCart = Cart
 
 data class Cart(
@@ -43,6 +40,12 @@ data class Cart(
     fun update(cart: Cart): Cart =
         copy(items = cart.items.distinctBy { it.product.id })
 
+    fun update(cartProducts: List<CartProduct>): Cart =
+        copy(items = cartProducts.distinctBy { it.product.id })
+
     operator fun plus(items: Cart): Cart =
         copy(items = (this.items + items.items).distinctBy { it.product.id })
+
+    operator fun plus(items: List<CartProduct>): Cart =
+        copy(items = (this.items + items).distinctBy { it.product.id })
 }

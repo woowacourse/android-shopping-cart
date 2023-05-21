@@ -1,12 +1,16 @@
 package woowacourse.shopping.data.datasource.cart
 
 import woowacourse.shopping.data.database.dao.cart.CartDao
+import woowacourse.shopping.data.entity.CartEntity
 import woowacourse.shopping.data.model.DataCart
 import woowacourse.shopping.data.model.DataCartProduct
 import woowacourse.shopping.data.model.DataPage
 import woowacourse.shopping.data.model.Product
 
 class LocalCartDataSource(private val dao: CartDao) : CartDataSource.Local {
+    override fun getAllCartEntity(): List<CartEntity> = dao.getAllCartEntity()
+    override fun getCartEntity(productId: Int): CartEntity = dao.getCartEntity(productId)
+
     override fun getProductByPage(page: DataPage): DataCart =
         dao.getProductByPage(page)
 

@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.datasource.cart
 
+import woowacourse.shopping.data.entity.CartEntity
 import woowacourse.shopping.data.model.DataCart
 import woowacourse.shopping.data.model.DataCartProduct
 import woowacourse.shopping.data.model.DataPage
@@ -7,6 +8,8 @@ import woowacourse.shopping.data.model.Product
 
 interface CartDataSource {
     interface Local {
+        fun getAllCartEntity(): List<CartEntity>
+        fun getCartEntity(productId: Int): CartEntity
         fun getProductByPage(page: DataPage): DataCart
         fun getProductInCartByPage(page: DataPage): DataCart
         fun increaseCartCount(product: Product, count: Int)

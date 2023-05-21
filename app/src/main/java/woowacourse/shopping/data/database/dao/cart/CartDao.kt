@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.database.dao.cart
 
+import woowacourse.shopping.data.entity.CartEntity
 import woowacourse.shopping.data.model.DataCart
 import woowacourse.shopping.data.model.DataCartProduct
 import woowacourse.shopping.data.model.DataPage
@@ -21,4 +22,6 @@ interface CartDao {
     fun getCheckedProductCount(): Int
     fun getProductInRange(start: DataPage, end: DataPage): DataCart
     fun deleteCheckedProducts()
+    fun getAllCartEntity(): List<CartEntity>
+    fun getCartEntity(productId: Int): CartEntity
 }

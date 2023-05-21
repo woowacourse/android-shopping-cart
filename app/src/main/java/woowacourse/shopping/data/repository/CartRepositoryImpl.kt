@@ -4,13 +4,20 @@ import woowacourse.shopping.data.datasource.cart.CartDataSource
 import woowacourse.shopping.data.mapper.toData
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.CartEntity
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.domain.model.page.Page
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.page.Page
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(private val localCartDataSource: CartDataSource.Local) :
     CartRepository {
+    override fun getAllCartEntities(): List<CartEntity> =
+        localCartDataSource.getAllCartEntity().map { it.toDomain() }
+
+    override fun getCartEntity(productId: Int): CartEntity =
+        localCartDataSource.getCartEntity(productId).toDomain()
+
     override fun getProductByPage(page: Page): Cart =
         localCartDataSource.getProductByPage(page.toData()).toDomain(page.sizePerPage)
 

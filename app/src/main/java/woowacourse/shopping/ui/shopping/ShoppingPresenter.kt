@@ -1,11 +1,15 @@
 package woowacourse.shopping.ui.shopping
 
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.DomainCartProduct
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductCount
 import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.domain.model.RecentProducts
 import woowacourse.shopping.domain.model.page.LoadMore
 import woowacourse.shopping.domain.model.page.Page
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUi
@@ -17,6 +21,7 @@ import woowacourse.shopping.ui.shopping.ShoppingContract.View
 
 class ShoppingPresenter(
     view: View,
+    private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductSize: Int = 10,
@@ -34,8 +39,22 @@ class ShoppingPresenter(
     }
 
     override fun fetchProducts() {
-        updateCart(cartRepository.getProductInRange(currentPage.getStartPage(), currentPage))
+        updateCart(cart.update(loadProducts(currentPage.getStartPage(), currentPage)))
         view.updateLoadMoreVisible()
+    }
+
+    private fun loadProducts(start: Page, end: Page): List<DomainCartProduct> = productRepository
+        .getProductInRange(start, end)
+        .map { convertToCartProduct(it) }
+
+    private fun convertToCartProduct(product: Product): DomainCartProduct {
+        val cartEntity = cartRepository.getCartEntity(product.id)
+        return DomainCartProduct(
+            cartEntity.id,
+            product,
+            ProductCount(cartEntity.count),
+            cartEntity.checked
+        )
     }
 
     override fun fetchRecentProducts() {
@@ -43,8 +62,9 @@ class ShoppingPresenter(
     }
 
     override fun loadMoreProducts() {
+        val originPage = currentPage
         currentPage = currentPage.next()
-        updateCart(cart + cartRepository.getProductByPage(currentPage))
+        updateCart(cart + loadProducts(originPage, currentPage))
         view.updateLoadMoreVisible()
     }
 

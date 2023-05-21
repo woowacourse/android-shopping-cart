@@ -1,11 +1,13 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.CartEntity
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.page.Page
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
+    fun getAllCartEntities(): List<CartEntity>
     fun getProductByPage(page: Page): Cart
     fun getProductInCartByPage(page: Page): Cart
     fun getProductInRange(startPage: Page, endPage: Page): Cart
@@ -17,4 +19,5 @@ interface CartRepository {
     fun getTotalPrice(): Int
     fun getCheckedProductCount(): Int
     fun removeCheckedProducts()
+    fun getCartEntity(productId: Int): CartEntity
 }
