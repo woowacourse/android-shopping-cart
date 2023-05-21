@@ -22,5 +22,6 @@ interface CartContract {
         fun updateIsPickAllProduct(isPicked: Boolean)
         fun updateAllChecked()
         fun updateCountOfProductType()
+        fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int)
     }
 }

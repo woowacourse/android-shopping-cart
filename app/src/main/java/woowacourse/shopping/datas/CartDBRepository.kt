@@ -81,6 +81,15 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
         database.update(TABLE_NAME, contentValues, whereClause, whereArgs)
     }
 
+    override fun updateProductCount(productId: Int, count: Int) {
+        val contentValues = ContentValues().apply {
+            put(KEY_COUNT, count)
+        }
+        val whereClause = "$KEY_ID = ?"
+        val whereArgs = arrayOf(productId.toString())
+        database.update(TABLE_NAME, contentValues, whereClause, whereArgs)
+    }
+
     override fun remove(productId: Int) {
         database.execSQL(
             "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '$productId' "

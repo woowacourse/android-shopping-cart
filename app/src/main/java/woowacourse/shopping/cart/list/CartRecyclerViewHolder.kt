@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.ProductClickListener
+import woowacourse.shopping.cart.ItemClickListener
 import woowacourse.shopping.cart.OnCheckedChangedListener
 import woowacourse.shopping.databinding.ItemProductInCartBinding
 import woowacourse.shopping.uimodel.CartProductUIModel
@@ -13,15 +14,20 @@ class CartRecyclerViewHolder(
     private val binding: ItemProductInCartBinding,
     cartProducts: CartUIModel,
     onClickProduct: ProductClickListener,
-    onClickRemove: (CartProductUIModel, Int) -> Unit,
+    itemClickListener: ItemClickListener,
     onCheckedChanged: OnCheckedChangedListener,
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.listener = onClickProduct
 
+        binding.cartItemListener = itemClickListener
+
         binding.ivCancel.setOnClickListener {
-            onClickRemove(cartProducts.products[adapterPosition], adapterPosition)
+            itemClickListener.clickDeleteButton(
+                cartProducts.products[adapterPosition],
+                adapterPosition
+            )
         }
 
         binding.onCheckedChangeListener = onCheckedChanged

@@ -101,6 +101,12 @@ class CartPresenter(
         _totalPickedProductsCount.value = cart.getTotalPickedProductsCount()
     }
 
+    override fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int) {
+        if (count <= 0) return
+        cart = cart.updateProductCount(cartProduct.toDomain(), count)
+        cartRepository.updateProductCount(cartProduct.product.id, count)
+    }
+
     companion object {
         private const val CART_UNIT_SIZE = 5
     }

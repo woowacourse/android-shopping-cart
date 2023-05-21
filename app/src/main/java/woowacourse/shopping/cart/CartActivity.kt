@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.BundleKeys
@@ -21,10 +22,11 @@ class CartActivity :
     AppCompatActivity(),
     CartContract.View,
     ProductClickListener,
+    ItemClickListener,
     OnCheckedChangedListener {
     private lateinit var binding: ActivityCartBinding
     private val adapter: CartRecyclerViewAdapter =
-        CartRecyclerViewAdapter(this, ::clickDeleteButton, this)
+        CartRecyclerViewAdapter(this, this, this)
     private lateinit var presenter: CartPresenter
     private val repository: CartDBRepository by lazy { CartDBRepository(CartDBHelper(this).writableDatabase) }
 
@@ -85,8 +87,19 @@ class CartActivity :
         adapter.notifyDataSetChanged()
     }
 
-    private fun clickDeleteButton(cartProduct: CartProductUIModel, position: Int) {
+    override fun clickDeleteButton(cartProduct: CartProductUIModel, position: Int) {
         presenter.removeProduct(cartProduct, position)
+    }
+
+    override fun onMinusClick(cartProduct: CartProductUIModel, count: Int, countView: TextView) {
+        presenter.updateCartProductCount(cartProduct, count)
+        if (count <= 0) return
+        countView.text = count.toString()
+    }
+
+    override fun onPlusClick(cartProduct: CartProductUIModel, count: Int, countView: TextView) {
+        presenter.updateCartProductCount(cartProduct, count)
+        countView.text = count.toString()
     }
 
     private fun setPageNextClickListener() {

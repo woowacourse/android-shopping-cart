@@ -9,6 +9,8 @@ interface CartRepository {
 
     fun updateProductIsPicked(productId: Int, isPicked: Boolean)
 
+    fun updateProductCount(productId: Int, count: Int)
+
     fun getSize(): Int
 
     fun insert(cartProduct: CartProduct)

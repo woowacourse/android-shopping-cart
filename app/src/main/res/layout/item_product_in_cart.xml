@@ -14,6 +14,10 @@
             type="woowacourse.shopping.ProductClickListener" />
 
         <variable
+            name="cartItemListener"
+            type="woowacourse.shopping.cart.ItemClickListener" />
+
+        <variable
             name="onCheckedChangeListener"
             type="woowacourse.shopping.cart.OnCheckedChangedListener" />
     </data>
@@ -88,18 +92,19 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
+            android:onClick="@{()-> cartItemListener.onMinusClick(cartProduct, Integer.parseInt(String.valueOf(tvProductCount.getText()))-1, tvProductCount)}"
             android:text="-"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_product_count"
-            app:layout_constraintEnd_toStartOf="@+id/tv_product_count" />
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_count"
+            app:layout_constraintEnd_toStartOf="@id/tv_product_count" />
 
         <TextView
             android:id="@+id/tv_product_count"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:textSize="22sp"
             android:text="@{String.valueOf(cartProduct.count)}"
+            android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="@+id/bt_plus"
             app:layout_constraintEnd_toStartOf="@+id/bt_plus"
             tools:text="1" />
@@ -111,6 +116,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:gravity="center"
+            android:onClick="@{()-> cartItemListener.onPlusClick(cartProduct, Integer.parseInt(String.valueOf(tvProductCount.getText()))+1, tvProductCount)}"
             android:text="+"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
