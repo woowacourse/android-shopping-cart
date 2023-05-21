@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.view.productlist
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.data.respository.cart.CartRepository
@@ -29,7 +28,6 @@ class ProductListPresenter(
     }
 
     override fun loadProductItems() {
-        Log.d("thisId","${recentProducts.last().id}")
         val recentProduct = recentProducts.lastOrNull()
         products.addAll(productRepository.getData(0, LOAD_PRODUCT_COUNT))
         view.setProductItemsView(products.toList(), recentProduct?.id ?: -1)
