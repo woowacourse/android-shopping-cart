@@ -205,12 +205,12 @@ class CartPresenterTest {
     @Test
     fun 카트_상품이_체크_상태가_아닐_때_카트_상품_수량을_증가시키면_총_가격과_수량이_업데이트_되지_않아_총_한_번_업데이트_한다() {
         // given
-        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, false, createProductModel())
         every { cartRepository.modifyCartProduct(any()) } just runs
         every { cartRepository.replaceCartProduct(any(), any()) } just runs
         every { view.updateCartProduct(any(), any()) } just runs
 
         // when
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, false, createProductModel())
         presenter.increaseCartProductAmount(cartProductModel)
 
         // then
@@ -223,13 +223,84 @@ class CartPresenterTest {
     @Test
     fun 카트_상품이_체크_상태일_때_카트_상품_수량을_증가시키면_총_가격과_수량이_업데이트_되어_총_두_번_업데이트_된다() {
         // given
-        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, true, createProductModel())
         every { cartRepository.modifyCartProduct(any()) } just runs
         every { cartRepository.replaceCartProduct(any(), any()) } just runs
         every { view.updateCartProduct(any(), any()) } just runs
 
         // when
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, true, createProductModel())
         presenter.increaseCartProductAmount(cartProductModel)
+
+        // then
+        verify(exactly = 2) {
+            view.updateCartTotalPrice(any())
+            view.updateCartTotalAmount(any())
+        }
+    }
+
+    @Test
+    fun 카트_상품_수량이_1_보다_작거나_같으면_수량을_감소시켜도_레포지토리의_카트_상품을_수정_및_교체하지_않고_뷰의_카트_상품을_업데이트_하지_않는다() {
+        // given
+
+        // when
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 1, false, createProductModel())
+        presenter.decreaseCartProductAmount(cartProductModel)
+
+        // then
+        verify(exactly = 0) {
+            cartRepository.modifyCartProduct(any())
+            cartRepository.replaceCartProduct(any(), any())
+            view.updateCartProduct(any(), any())
+        }
+    }
+
+    @Test
+    fun 카트_상품_수량을_감소시키면_레포지토리의_카트_상품을_수정_및_교체하고_뷰의_카트_상품을_업데이트_한다() {
+        // given
+        every { cartRepository.modifyCartProduct(any()) } just runs
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 2, false, createProductModel())
+        presenter.decreaseCartProductAmount(cartProductModel)
+
+        // then
+        verify {
+            cartRepository.modifyCartProduct(any())
+            cartRepository.replaceCartProduct(any(), any())
+            view.updateCartProduct(any(), any())
+        }
+    }
+
+    @Test
+    fun 카트_상품이_체크_상태가_아닐_때_카트_상품_수량을_감소시키면_총_가격과_수량이_업데이트_되지_않아_총_한_번_업데이트_한다() {
+        // given
+        every { cartRepository.modifyCartProduct(any()) } just runs
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 2, false, createProductModel())
+        presenter.decreaseCartProductAmount(cartProductModel)
+
+        // then
+        verify(exactly = 1) {
+            view.updateCartTotalPrice(any())
+            view.updateCartTotalAmount(any())
+        }
+    }
+
+    @Test
+    fun 카트_상품이_체크_상태일_때_카트_상품_수량을_감소시키면_총_가격과_수량이_업데이트_되어_총_두_번_업데이트_된다() {
+        // given
+        every { cartRepository.modifyCartProduct(any()) } just runs
+        every { cartRepository.replaceCartProduct(any(), any()) } just runs
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 2, true, createProductModel())
+        presenter.decreaseCartProductAmount(cartProductModel)
 
         // then
         verify(exactly = 2) {

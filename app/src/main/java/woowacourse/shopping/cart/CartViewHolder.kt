@@ -8,6 +8,7 @@ class CartViewHolder(
     private val binding: ItemCartProductListBinding,
     onCartItemRemoveButtonViewClick: (Int) -> Unit,
     onCheckBoxViewClick: (Int) -> Unit,
+    onMinusAmountButtonClick: (CartProductModel) -> Unit,
     onPlusAmountButtonClick: (CartProductModel) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
@@ -15,6 +16,7 @@ class CartViewHolder(
 
         binding.cartProductCheckbox.setOnClickListener { onCheckBoxViewClick(bindingAdapterPosition) }
 
+        binding.cartProductAmountMinusButton.setOnClickListener { onMinusAmountButtonClick(binding.cartProduct!!) }
         binding.cartProductAmountPlusButton.setOnClickListener { onPlusAmountButtonClick(binding.cartProduct!!) }
     }
 

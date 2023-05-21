@@ -87,6 +87,8 @@
             android:layout_height="42dp"
             android:background="@drawable/cart_product_amount_bar_minus_background"
             android:text="@string/minus"
+            android:textColor="#555555"
+            android:textSize="22sp"
             app:layout_constraintEnd_toStartOf="@id/cart_product_amount"
             app:layout_constraintTop_toTopOf="@id/cart_product_amount" />
 
@@ -109,6 +111,8 @@
             android:layout_height="42dp"
             android:background="@drawable/cart_product_amount_bar_plus_background"
             android:text="@string/plus"
+            android:textColor="#555555"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/cart_product_amount" />
 

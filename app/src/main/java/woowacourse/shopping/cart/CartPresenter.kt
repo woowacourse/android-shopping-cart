@@ -57,14 +57,26 @@ class CartPresenter(
         view.updateAllChecked(isAllChecked)
     }
 
+    override fun decreaseCartProductAmount(cartProductModel: CartProductModel) {
+        if (cartProductModel.amount > 1) {
+            val prevCartProduct = cartProductModel.toDomain()
+            val newCartProduct = prevCartProduct.decreaseAmount()
+            updateCartProduct(prevCartProduct, newCartProduct)
+
+            if (cartProductModel.isChecked) {
+                subtractProductPriceToCartTotalPrice(cartProductModel)
+                decreaseTotalAmount()
+            }
+        }
+    }
+
     override fun increaseCartProductAmount(cartProductModel: CartProductModel) {
-        val cartProduct = cartProductModel.toDomain().increaseAmount()
-        cartRepository.modifyCartProduct(cartProduct)
-        cartRepository.replaceCartProduct(cartProductModel.toDomain(), cartProduct)
-        view.updateCartProduct(cartProductModel, cartProduct.toView())
+        val prevCartProduct = cartProductModel.toDomain()
+        val newCartProduct = prevCartProduct.increaseAmount()
+        updateCartProduct(prevCartProduct, newCartProduct)
 
         if (cartProductModel.isChecked) {
-            addPrductPriceToCartTotalPrice(cartProductModel)
+            addProductPriceToCartTotalPrice(cartProductModel)
             increaseTotalAmount()
         }
     }
@@ -124,7 +136,23 @@ class CartPresenter(
         }
     }
 
-    private fun addPrductPriceToCartTotalPrice(cartProductModel: CartProductModel) {
+    private fun updateCartProduct(prev: CartProduct, new: CartProduct) {
+        cartRepository.modifyCartProduct(new)
+        cartRepository.replaceCartProduct(prev, new)
+        view.updateCartProduct(prev.toView(), new.toView())
+    }
+
+    private fun subtractProductPriceToCartTotalPrice(cartProductModel: CartProductModel) {
+        cartTotalPrice -= cartProductModel.product.price
+        view.updateCartTotalPrice(cartTotalPrice)
+    }
+
+    private fun decreaseTotalAmount() {
+        cartTotalAmount -= 1
+        view.updateCartTotalAmount(cartTotalAmount)
+    }
+
+    private fun addProductPriceToCartTotalPrice(cartProductModel: CartProductModel) {
         cartTotalPrice += cartProductModel.product.price
         view.updateCartTotalPrice(cartTotalPrice)
     }

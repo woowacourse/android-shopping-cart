@@ -38,7 +38,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateCart(cartProducts: List<CartProductModel>, currentPage: Int, isLastPage: Boolean) {
+    override fun updateCart(
+        cartProducts: List<CartProductModel>,
+        currentPage: Int,
+        isLastPage: Boolean
+    ) {
         cartAdapter.updateCartProducts(cartProducts, currentPage, isLastPage)
     }
 
@@ -81,6 +85,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             onCheckBoxClick = { cartProductModel ->
                 presenter.changeCartProductChecked(cartProductModel)
                 presenter.updateAllChecked()
+            },
+            onMinusAmountButtonClick = {
+                setResult(RESULT_OK)
+                presenter.decreaseCartProductAmount(it)
             },
             onPlusAmountButtonClick = {
                 setResult(RESULT_OK)

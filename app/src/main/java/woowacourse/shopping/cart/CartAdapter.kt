@@ -12,6 +12,7 @@ class CartAdapter(
     private val onPreviousButtonClick: () -> Unit,
     private val onNextButtonClick: () -> Unit,
     private val onCheckBoxClick: (CartProductModel) -> Unit,
+    private val onMinusAmountButtonClick: (CartProductModel) -> Unit,
     private val onPlusAmountButtonClick: (CartProductModel) -> Unit,
     private var currentPage: Int = 1,
     private var isNavigationVisible: Boolean = false,
@@ -30,6 +31,7 @@ class CartAdapter(
                 ),
                 onCartItemRemoveButtonViewClick,
                 onCheckBoxViewClick,
+                onMinusAmountButtonClick,
                 onPlusAmountButtonClick
             )
             CartViewType.NAVIGATION -> NavigationViewHolder(
