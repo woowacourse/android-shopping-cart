@@ -10,16 +10,16 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.ProductMockRepository
-import woowacourse.shopping.data.RecentViewedDbRepository
+import woowacourse.shopping.data.*
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
+    private lateinit var mockWebServer: MockServer
     private lateinit var binding: ActivityProductListBinding
     private lateinit var presenter: ProductListContract.Presenter
     private lateinit var cartCountInAppBar: TextView
@@ -44,6 +44,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setUpMockServer()
         setUpBinding()
         setContentView(binding.root)
         setUpPresenter()
@@ -57,11 +58,17 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun setUpPresenter() {
         presenter =
-            ProductListPresenter(this, ProductMockRepository, RecentViewedDbRepository(this), CartDbRepository(this))
+            ProductListPresenter(this, ProductRemoteRepository(mockWebServer.url), RecentViewedDbRepository(this), CartDbRepository(this))
     }
 
     private fun setUpActionBar() {
         supportActionBar?.setDisplayShowCustomEnabled(true)
+    }
+
+    private fun setUpMockServer() {
+        val thread = Thread { mockWebServer = MockServer() }
+        thread.start()
+        thread.join()
     }
 
     override fun showProducts(items: List<ProductListViewItem>) {
@@ -113,7 +120,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.gridProducts.adapter?.notifyItemChanged(position)
     }
 
-    override fun onClickProductDetail(product: ProductModel, lastViewedProduct: ProductModel) {
+    override fun onClickProductDetail(product: ProductModel, lastViewedProduct: ProductModel?) {
         val intent = ProductDetailActivity.newIntent(binding.root.context, product, lastViewedProduct)
         resultLauncher.launch(intent)
     }

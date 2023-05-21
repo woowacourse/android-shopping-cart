@@ -16,7 +16,8 @@ class ProductListPresenter(
 
     override fun fetchProducts() {
         // 최근 본 항목
-        addViewedProductsItem(recentViewedRepository.findAll().reversed())
+        val viewedItems = recentViewedRepository.findAll().reversed()
+        if (viewedItems.isNotEmpty()) addViewedProductsItem(viewedItems)
         // 상품 리스트
         val currentProducts = productListPagination.nextItems()
         addProductsItem(convertProductsToModels(currentProducts))
@@ -36,8 +37,11 @@ class ProductListPresenter(
 
     override fun showProductDetail(product: ProductModel) {
         val recentViewedItem =
-            productsListItems.filterIsInstance<ProductListViewItem.RecentViewedItem>()[0]
-        val lastViewedProduct = recentViewedItem.products[0]
+            productsListItems.filterIsInstance<ProductListViewItem.RecentViewedItem>().getOrNull(0)
+        var lastViewedProduct: ProductModel? = null
+        if (recentViewedItem != null) {
+            lastViewedProduct = recentViewedItem.products[0]
+        }
         view.onClickProductDetail(product, lastViewedProduct)
     }
 

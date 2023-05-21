@@ -6,22 +6,32 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.CartDbRepository
+import woowacourse.shopping.data.MockServer
 import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.data.ProductRemoteRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.view.productlist.ProductListActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
+    private lateinit var mockWebServer: MockServer
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setUpMockServer()
         setUpPresenter()
         setUpBinding()
         setContentView(binding.root)
         setUpActionBar()
         presenter.fetchProducts()
+    }
+
+    private fun setUpMockServer() {
+        val thread = Thread { mockWebServer = MockServer() }
+        thread.start()
+        thread.join()
     }
 
     private fun setUpBinding() {
@@ -35,7 +45,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun setUpPresenter() {
-        presenter = CartPresenter(this, CartDbRepository(this), ProductMockRepository)
+        presenter = CartPresenter(this, CartDbRepository(this), ProductRemoteRepository(mockWebServer.url))
     }
 
     override fun showProducts(items: List<CartViewItem>) {

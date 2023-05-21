@@ -7,7 +7,7 @@ interface ProductListContract {
         fun showProducts(items: List<ProductListViewItem>)
         fun showCartCount(count: Int)
         fun showToastAddInCart()
-        fun onClickProductDetail(product: ProductModel, lastViewedProduct: ProductModel)
+        fun onClickProductDetail(product: ProductModel, lastViewedProduct: ProductModel?)
         fun notifyAddProducts(position: Int, size: Int)
         fun notifyRecentViewedChanged()
         fun notifyDataChanged(position: Int)
