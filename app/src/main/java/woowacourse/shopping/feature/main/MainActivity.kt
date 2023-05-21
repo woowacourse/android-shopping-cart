@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.main
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -25,6 +26,7 @@ import woowacourse.shopping.feature.main.product.ProductClickListener
 import woowacourse.shopping.feature.main.recent.RecentAdapter
 import woowacourse.shopping.feature.main.recent.RecentProductClickListener
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
+import woowacourse.shopping.util.getParcelableCompat
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     lateinit var binding: ActivityMainBinding
@@ -59,6 +61,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             presenter.changeProductCartCount(productId, count)
         }
     }
+
+    // 비동기적으로 아이템을 얻어오기 때문에 뷰시스템의 리사이클러뷰 스크롤 상태에 대한 자동 복구 기능이 정상 작동하지 않음
+    private var isFirstLoad: Boolean = false
+    private var recyclerViewState: Parcelable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,6 +110,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private fun observePresenter() {
         presenter.badgeCount.observe(this) { cartCountBadge?.count = it }
         presenter.products.observe(this) {
+            if (isFirstLoad.not()) {
+                restoreProductRecyclerViewState()
+                isFirstLoad = true
+            }
             mainProductAdapter.setItems(it)
         }
         presenter.recentProducts.observe(this) { recentAdapter.setItems(it) }
@@ -161,11 +171,23 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         recentWrapperAdapter.onSaveState(outState)
+        outState.putParcelable(
+            "key",
+            binding.productRecyclerView.layoutManager?.onSaveInstanceState()
+        )
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         recentWrapperAdapter.onRestoreState(savedInstanceState)
+        recyclerViewState = savedInstanceState.getParcelableCompat("key")
+
+        // 혹시 비동기로 얻어오는게 리사이클러뷰 상태를 복구해서 얻어오는 것보다 빠를 경우를 위해
+        if (isFirstLoad) restoreProductRecyclerViewState()
+    }
+
+    private fun restoreProductRecyclerViewState() {
+        binding.productRecyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
     override fun onDestroy() {
