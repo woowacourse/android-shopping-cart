@@ -100,6 +100,13 @@ internal class CartItemRepositoryImplTest {
     }
 
     @Test
+    fun 상품의_아이디로_장바구니_아이템을_찾을_수_있다() {
+        val cartItem = sut.findByProductId(1L)
+
+        assert(cartItem != null)
+    }
+
+    @Test
     fun 장바구니_아이템의_수량을_업데이트하면_변한다() {
         val cartItem = CartItem(Product(81L, "", "", 1), LocalDateTime.now(), 1)
         sut.save(cartItem)

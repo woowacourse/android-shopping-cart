@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
+import woowacourse.shopping.database.cart.CartItemRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -28,6 +29,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             this,
             RecentlyViewedProductRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl),
             ProductRepositoryImpl,
+            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl)
         )
     }
 
@@ -47,6 +49,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun onStart() {
         super.onStart()
         presenter.onLoadRecentlyViewedProducts()
+        presenter.onRefreshProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -70,9 +73,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initProductList() {
-        binding.recyclerViewMainProduct.adapter = ProductListAdapter(mutableListOf()) {
-            ProductDetailActivity.startActivity(this, it)
-        }
+        binding.recyclerViewMainProduct.adapter = ProductListAdapter(
+            mutableListOf(),
+            { ProductDetailActivity.startActivity(this, it) },
+            { presenter.onAddToCart(it) }
+        )
     }
 
     private fun initLoadingButton() {
@@ -105,8 +110,20 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         adapter.addItems(products)
     }
 
+    override fun setProducts(products: List<ProductUIState>) {
+        binding.recyclerViewMainProduct.adapter = ProductListAdapter(
+            products.toMutableList(),
+            { ProductDetailActivity.startActivity(this, it) },
+            { presenter.onAddToCart(it) }
+        )
+    }
+
     override fun setCanLoadMore(canLoadMore: Boolean) {
         binding.btnLoading.isVisible = canLoadMore
+    }
+
+    override fun replaceProduct(product: ProductUIState) {
+        (binding.recyclerViewMainProduct.adapter as ProductListAdapter).replaceItem(product)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -86,6 +86,20 @@ class CartItemRepositoryImpl(
         return cartItem
     }
 
+    override fun findByProductId(productId: Long): CartItem? {
+        var cartItem: CartItem? = null
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${CartItemEntry.TABLE_NAME} WHERE ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} = $productId",
+            null
+        )
+        if (cursor.moveToNext()) {
+            cartItem = createCartItemFrom(cursor)
+        }
+        cursor.close()
+        return cartItem
+    }
+
     private fun createCartItemFrom(cursor: Cursor): CartItem {
         val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
         val productId =

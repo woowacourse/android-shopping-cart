@@ -1,14 +1,18 @@
 package woowacourse.shopping.ui.products
 
+import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.repository.CartItemRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.ui.products.uistate.ProductUIState
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
+import java.time.LocalDateTime
 
 class ProductListPresenter(
     private val view: ProductListContract.View,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
     private val productRepository: ProductRepository,
+    private val cartItemRepository: CartItemRepository
 ) : ProductListContract.Presenter {
 
     private var currentPage = 0
@@ -38,13 +42,42 @@ class ProductListPresenter(
 
     override fun onLoadProductsNextPage() {
         currentPage++
-        view.addProducts(productRepository.findAll(PAGE_SIZE, offset).map(ProductUIState::from))
+        val products = productRepository.findAll(PAGE_SIZE, offset)
+        val productUIStates = products.map {
+            val cartItem = cartItemRepository.findByProductId(it.id)
+            if (cartItem != null) {
+                ProductUIState.from(cartItem)
+            } else {
+                ProductUIState.from(it)
+            }
+        }
+        view.addProducts(productUIStates)
         refreshCanLoadMore()
+    }
+
+    override fun onRefreshProducts() {
+        val products = productRepository.findAll(PAGE_SIZE, offset)
+        val productUIStates = products.map {
+            val cartItem = cartItemRepository.findByProductId(it.id)
+            if (cartItem != null) {
+                ProductUIState.from(cartItem)
+            } else {
+                ProductUIState.from(it)
+            }
+        }
+        view.setProducts(productUIStates)
     }
 
     private fun refreshCanLoadMore() {
         val maxPage = (productRepository.countAll() - 1) / PAGE_SIZE + 1
         if (currentPage >= maxPage) view.setCanLoadMore(false)
+    }
+
+    override fun onAddToCart(productId: Long) {
+        val product = productRepository.findById(productId) ?: return
+        val cartItem = CartItem(product, LocalDateTime.now(), 1)
+        cartItemRepository.save(cartItem)
+        view.replaceProduct(ProductUIState.from(cartItem))
     }
 
     companion object {

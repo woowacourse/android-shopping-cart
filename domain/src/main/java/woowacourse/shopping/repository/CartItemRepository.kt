@@ -12,6 +12,8 @@ interface CartItemRepository {
 
     fun findById(id: Long): CartItem?
 
+    fun findByProductId(productId: Long): CartItem?
+
     fun countAll(): Int
 
     fun updateCountById(id: Long, count: Int)
