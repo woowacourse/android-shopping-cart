@@ -8,8 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.database.ShoppingCacheImpl
-import woowacourse.shopping.database.product.ShoppingDao
+import woowacourse.shopping.database.cart.repository.CartRepositoryImpl
+import woowacourse.shopping.database.product.repository.ProductRepositoryImpl
+import woowacourse.shopping.database.recentviewed.repository.RecentViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
@@ -27,9 +28,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val presenter: ShoppingContract.Presenter by lazy {
         ShoppingPresenter(
             view = this,
-            shoppingCache = ShoppingCacheImpl(
-                shoppingDao = ShoppingDao(this)
-            )
+            productRepository = ProductRepositoryImpl(this),
+            cartRepository = CartRepositoryImpl(this),
+            recentViewedProductRepository = RecentViewedProductRepositoryImpl(this)
         )
     }
     override val shoppingNavigator: ShoppingNavigator by lazy {
@@ -110,12 +111,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {
         if (toAdd.isEmpty()) {
-            return showMessageNothingToAdd()
+            return showMessageNothingToRead()
         }
         shoppingRecyclerAdapter.refreshShoppingItems(toAdd = toAdd)
     }
 
-    private fun showMessageNothingToAdd() {
+    private fun showMessageNothingToRead() {
         Toast.makeText(
             this,
             getString(R.string.message_last_product),

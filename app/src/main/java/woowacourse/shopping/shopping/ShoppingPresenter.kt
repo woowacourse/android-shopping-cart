@@ -2,24 +2,25 @@ package woowacourse.shopping.shopping
 
 import model.CartProduct
 import model.RecentViewedProducts
-import woowacourse.shopping.database.ShoppingCache
+import woowacourse.shopping.database.cart.repository.CartRepository
+import woowacourse.shopping.database.product.repository.ProductRepository
+import woowacourse.shopping.database.recentviewed.repository.RecentViewedProductRepository
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toProductUiModel
 import woowacourse.shopping.util.toRecentViewedProductUiModel
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
-    private val shoppingCache: ShoppingCache,
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+    private val recentViewedProductRepository: RecentViewedProductRepository,
 ) : ShoppingContract.Presenter {
 
     private val recentViewedProducts = RecentViewedProducts(
-        products = shoppingCache.selectRecentViewedProducts()
+        products = recentViewedProductRepository.getRecentViewedProducts()
     )
-    private var numberOfReadProduct: Int = 0
 
-    init {
-        shoppingCache.setUpDB()
-    }
+    private var numberOfReadProduct: Int = 0
 
     override fun loadProducts() {
         val products = selectProducts()
@@ -36,7 +37,7 @@ class ShoppingPresenter(
 
     override fun loadCartProductsCount() {
         view.refreshProductCount(
-            count = shoppingCache.getCountOfShoppingCartProducts()
+            count = cartRepository.getCountOfCartProducts()
         )
     }
 
@@ -44,7 +45,8 @@ class ShoppingPresenter(
         addToRecentViewedProduct(product.id)
         view.shoppingNavigator.navigateToProductDetailView(
             product = product,
-            latestViewedProduct = shoppingCache.selectLatestViewedProduct()?.toProductUiModel()
+            latestViewedProduct = recentViewedProductRepository.getLatestViewedProduct()
+                ?.toProductUiModel()
         )
     }
 
@@ -55,7 +57,7 @@ class ShoppingPresenter(
     }
 
     private fun selectProducts(): List<ProductUiModel> {
-        val products = shoppingCache.selectProducts(
+        val products = productRepository.getProductInRange(
             from = numberOfReadProduct,
             count = COUNT_TO_READ
         ).map { it.toProductUiModel() }
@@ -66,50 +68,50 @@ class ShoppingPresenter(
     }
 
     override fun addProductToShoppingCart(product: ProductUiModel) {
-        shoppingCache.insertToShoppingCart(id = product.id)
+        cartRepository.addToCart(id = product.id)
 
         view.refreshProductCount(
-            count = shoppingCache.getCountOfShoppingCartProducts()
+            count = cartRepository.getCountOfCartProducts()
         )
     }
 
     override fun plusShoppingCartProductCount(product: ProductUiModel) {
-        val shoppingCartProduct = shoppingCache.selectShoppingCartProductById(product.id)
+        val shoppingCartProduct = cartRepository.getCartProductById(product.id)
             .plusCount()
 
-        shoppingCache.insertToShoppingCart(
+        cartRepository.addToCart(
             id = product.id,
             count = shoppingCartProduct.count.value
         )
     }
 
     override fun minusShoppingCartProductCount(product: ProductUiModel) {
-        val shoppingCartProduct = shoppingCache.selectShoppingCartProductById(product.id)
+        val cartProduct = cartRepository.getCartProductById(product.id)
             .minusCount(handleZeroCount = ::removeCartProduct)
 
-        shoppingCache.insertToShoppingCart(
+        cartRepository.addToCart(
             id = product.id,
-            count = shoppingCartProduct.minusCount()
+            count = cartProduct.minusCount()
                 .count
                 .value
         )
     }
 
     private fun removeCartProduct(cartProduct: CartProduct) {
-        shoppingCache.deleteFromShoppingCart(cartProduct.product.id)
+        cartRepository.removeCartProductById(cartProduct.product.id)
         view.refreshProductCount(
-            count = shoppingCache.getCountOfShoppingCartProducts()
+            count = cartRepository.getCountOfCartProducts()
         )
     }
 
     override fun addToRecentViewedProduct(id: Int) {
-        val product = shoppingCache.selectRecentViewedProductById(id)
+        val product = recentViewedProductRepository.getRecentViewedProductById(id)
 
         recentViewedProducts.add(
             product = product,
-            handleOldestViewedProduct = shoppingCache::deleteFromRecentViewedProducts
+            handleOldestViewedProduct = recentViewedProductRepository::removeRecentViewedProduct
         )
-        shoppingCache.insertToRecentViewedProducts(id)
+        recentViewedProductRepository.addToRecentViewedProduct(id)
         view.refreshRecentViewedProductsView(
             products = recentViewedProducts.values.map { it.toRecentViewedProductUiModel() }
         )
