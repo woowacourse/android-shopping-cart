@@ -107,6 +107,13 @@ internal class CartItemRepositoryImplTest {
     }
 
     @Test
+    fun 상품의_아이디를_가진_장바구니_아이템이_존재하는지_알_수_있다() {
+        val actual = sut.existByProductId(81)
+
+        assert(actual.not())
+    }
+
+    @Test
     fun 장바구니_아이템의_수량을_업데이트하면_변한다() {
         val cartItem = CartItem(Product(81L, "", "", 1), LocalDateTime.now(), 1)
         sut.save(cartItem)

@@ -116,11 +116,25 @@ class CartItemRepositoryImpl(
     }
 
     override fun countAll(): Int {
-        val cursor = db.rawQuery(" SELECT COUNT(*) FROM ${CartItemEntry.TABLE_NAME}", null)
+        val cursor = db.rawQuery("SELECT COUNT(*) FROM ${CartItemEntry.TABLE_NAME}", null)
         cursor.moveToNext()
         val count = cursor.getLong(0)
         cursor.close()
         return count.toInt()
+    }
+
+    override fun existByProductId(productId: Long): Boolean {
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${CartItemEntry.TABLE_NAME} WHERE ${CartItemEntry.COLUMN_NAME_PRODUCT_ID} = $productId",
+            null
+        )
+
+        if (cursor.moveToNext()) {
+            cursor.close()
+            return true
+        }
+        cursor.close()
+        return false
     }
 
     override fun updateCountById(id: Long, count: Int) {

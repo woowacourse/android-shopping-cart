@@ -16,6 +16,8 @@ interface CartItemRepository {
 
     fun countAll(): Int
 
+    fun existByProductId(productId: Long): Boolean
+
     fun updateCountById(id: Long, count: Int)
 
     fun deleteById(id: Long)

@@ -3,7 +3,7 @@ package woowacourse.shopping.ui.productdetail
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
+import woowacourse.shopping.ui.productdetail.uistate.LastViewedProductUIState
 import woowacourse.shopping.utils.PRICE_FORMAT
 
 class LastViewedProductViewHolder(
@@ -11,7 +11,7 @@ class LastViewedProductViewHolder(
     private val onClick: (Long) -> Unit
 ) {
 
-    fun bind(product: ProductDetailUIState?) {
+    fun bind(product: LastViewedProductUIState?) {
         if (product == null) {
             binding.layoutLastViewedProduct.isVisible = false
             return

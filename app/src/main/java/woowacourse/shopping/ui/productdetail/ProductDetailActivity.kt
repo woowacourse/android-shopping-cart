@@ -14,8 +14,10 @@ import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.productdetail.uistate.LastViewedProductUIState
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
 import woowacourse.shopping.utils.PRICE_FORMAT
+import woowacourse.shopping.utils.customview.AddToCartDialog
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private val binding: ActivityProductDetailBinding by lazy {
@@ -77,13 +79,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.tvProductDetailName.text = product.name
         binding.tvProductDetailPrice.text =
             getString(R.string.product_price).format(PRICE_FORMAT.format(product.price))
+        binding.btnProductDetailAdd.isEnabled = product.isInCart.not()
         binding.btnProductDetailAdd.setOnClickListener {
-            presenter.onAddProductToCart(product.id)
-            moveToCartActivity()
+            AddToCartDialog(product) { productId, count ->
+                presenter.onAddProductToCart(productId, count)
+                moveToCartActivity()
+            }.show(supportFragmentManager, TAG_ADD_TO_CART_DIALOG)
         }
+
     }
 
-    override fun setLastViewedProduct(product: ProductDetailUIState?) {
+    override fun setLastViewedProduct(product: LastViewedProductUIState?) {
         lastViewedProductViewHolder.bind(product)
     }
 
@@ -95,6 +101,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     companion object {
         private const val PRODUCT_ID = "PRODUCT_ID"
         private const val FROM_PRODUCT_DETAIL_ACTIVITY = "FROM_PRODUCT_DETAIL_ACTIVITY"
+        private const val TAG_ADD_TO_CART_DIALOG = "TAG_ADD_TO_CART_DIALOG"
 
         fun startActivity(context: Context, productId: Long) {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {
