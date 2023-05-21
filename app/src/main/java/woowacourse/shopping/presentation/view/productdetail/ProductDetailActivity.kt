@@ -14,9 +14,13 @@ import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.view.productdetail.dialog.ProductDetailDialog
 import woowacourse.shopping.presentation.view.util.showToast
 
-class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
+class ProductDetailActivity :
+    AppCompatActivity(),
+    ProductDetailContract.View,
+    ProductDetailDialog.ProductDetailDialogListener {
     private lateinit var binding: ActivityProductDetailBinding
 
     private val presenter: ProductDetailContract.Presenter by lazy {
@@ -38,9 +42,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val recentProductId = intent.getLongExtra(KEY_RECENT_PRODUCT_ID, -1)
         presenter.loadProductInfoById(productId)
         setRecentProductView(recentProductId)
+        binding.clRecentProduct.setOnClickListener {
 
-
-        setAddCartClickListener(productId)
+            val intent = createIntent(this, recentProductId)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            setResult(RESULT_OK, this.intent)
+            startActivity(intent)
+        }
     }
 
     private fun setRecentProductView(recentProductId: Long) {
@@ -65,28 +73,36 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun showProductInfoView(productModel: ProductModel) {
-        binding.productItem = productModel
+    override fun showProductInfoView(product: ProductModel) {
+        binding.productItem = product
+        setAddCartClickListener(product)
     }
 
-    override fun showRecentProductById(productModel: ProductModel) {
-        binding.recentProductItem = productModel
+    override fun showRecentProductById(product: ProductModel) {
+        binding.recentProductItem = product
     }
 
-    private fun setAddCartClickListener(productId: Long) {
+    private fun setAddCartClickListener(product: ProductModel) {
         binding.btProductDetailAddToCart.setOnClickListener {
-            presenter.addCart(productId)
+            val productDetailDialog = ProductDetailDialog.newInstance(product)
+            productDetailDialog.setEventListener(this)
+            productDetailDialog.show(supportFragmentManager, ProductDetailDialog.TAG)
         }
     }
 
     override fun addCartSuccessView() {
         showToast(getString(R.string.toast_message_success_add_cart))
+        setResult(RESULT_OK)
         finish()
     }
 
     override fun handleErrorView() {
         showToast(getString(R.string.toast_message_system_error))
         finish()
+    }
+
+    override fun onOrderClick(productId: Long, count: Int) {
+        presenter.addCart(productId, count)
     }
 
     companion object {
@@ -99,11 +115,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             productId: Long,
             recentProductId: Long = -1L
         ): Intent {
-            val intent = Intent(context, ProductDetailActivity::class.java)
-            intent.putExtra(KEY_PRODUCT_ID, productId)
-            intent.putExtra(KEY_RECENT_PRODUCT_ID, recentProductId)
-
-            return intent
+            return Intent(context, ProductDetailActivity::class.java)
+                .putExtra(KEY_PRODUCT_ID, productId)
+                .putExtra(KEY_RECENT_PRODUCT_ID, recentProductId)
         }
     }
 }

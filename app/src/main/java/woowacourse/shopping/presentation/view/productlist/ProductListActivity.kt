@@ -166,13 +166,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun moveToActivity(productId: Long) {
-        val intent = ProductDetailActivity.createIntent(this, productId)
-        startActivity(intent)
+        activityResultLauncher.launch(ProductDetailActivity.createIntent(this, productId))
     }
 
     private fun moveToActivityWithRecentProduct(productId: Long, recentProductId: Long) {
         val intent = ProductDetailActivity.createIntent(this, productId, recentProductId)
-        startActivity(intent)
+        activityResultLauncher.launch(intent)
     }
 
     private fun onMoreProductList() {

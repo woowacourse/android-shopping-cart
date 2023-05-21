@@ -4,15 +4,14 @@ import woowacourse.shopping.presentation.model.ProductModel
 
 interface ProductDetailContract {
     interface View {
-        fun showProductInfoView(productModel: ProductModel)
-        fun showRecentProductById(productModel: ProductModel)
+        fun showProductInfoView(product: ProductModel)
+        fun showRecentProductById(product: ProductModel)
         fun handleErrorView()
         fun addCartSuccessView()
     }
     interface Presenter {
         fun loadProductInfoById(id: Long)
         fun loadRecentProductById(id: Long)
-        fun addCart(productId: Long)
-
+        fun addCart(productId: Long, count: Int)
     }
 }
