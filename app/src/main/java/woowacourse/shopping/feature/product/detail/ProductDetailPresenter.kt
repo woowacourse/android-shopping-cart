@@ -5,10 +5,12 @@ import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.model.CartProductState.Companion.MAX_COUNT_VALUE
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.model.RecentProductState
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
     override val product: ProductState?,
+    override val recentProduct: RecentProductState?,
     private val cartRepository: CartRepository
 ) : ProductDetailContract.Presenter {
 
@@ -21,6 +23,10 @@ class ProductDetailPresenter(
         view.setViewContent(product)
     }
 
+    override fun loadRecentProduct() {
+        view.setMostRecentViewContent(recentProduct)
+    }
+
     override fun selectCount() {
         view.showSelectCountDialog()
     }
@@ -31,7 +37,6 @@ class ProductDetailPresenter(
 
         cartRepository.addProduct(product.id, count)
         view.showCart()
-        view.closeProductDetail()
     }
 
     override fun minusCount(selectCountDialogBinding: DialogSelectCountBinding) {

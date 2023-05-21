@@ -3,7 +3,9 @@ package woowacourse.shopping.feature.product.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View.GONE
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.domain.repository.CartRepository
@@ -15,6 +17,7 @@ import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.model.RecentProductState
 import woowacourse.shopping.util.extension.showToast
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
@@ -24,8 +27,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private val presenter: ProductDetailContract.Presenter by lazy {
         val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
+        val recentProduct: RecentProductState? by lazy { intent.getParcelableExtra(RECENT_PRODUCT_KEY) }
         val cartRepository: CartRepository = CartRepositoryImpl(CartDao(this))
-        ProductDetailPresenter(this, product, cartRepository)
+        ProductDetailPresenter(this, product, recentProduct, cartRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +37,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         _binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         presenter.loadProduct()
+        presenter.loadRecentProduct()
         binding.addCartProductTv.setOnClickListener { presenter.selectCount() }
     }
 
@@ -47,6 +52,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun setViewContent(product: ProductState) {
         binding.product = product
+    }
+
+    override fun setMostRecentViewContent(recentProductState: RecentProductState?) {
+        Log.d("debug_recent_product", "recentProductState: ${recentProductState?.productName}")
+        if (recentProductState == null) binding.mostRecentProductLayout.visibility = GONE
+        else binding.mostRecentProduct = recentProductState
     }
 
     override fun setCount(selectCountDialogBinding: DialogSelectCountBinding, count: Int) {
@@ -66,16 +77,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         dialog.show()
     }
 
-    override fun closeProductDetail() {
-        finish()
-    }
+    override fun closeProductDetail() = finish()
 
     private fun createSelectCountDialog(selectCountDialogBinding: DialogSelectCountBinding): AlertDialog {
         return AlertDialog.Builder(this).apply {
             setView(selectCountDialogBinding.root)
             selectCountDialogBinding.counterView.count = MIN_COUNT_VALUE
-            selectCountDialogBinding.counterView.plusClickListener = { presenter.plusCount(selectCountDialogBinding) }
-            selectCountDialogBinding.counterView.minusClickListener = { presenter.minusCount(selectCountDialogBinding) }
+            selectCountDialogBinding.counterView.plusClickListener =
+                { presenter.plusCount(selectCountDialogBinding) }
+            selectCountDialogBinding.counterView.minusClickListener =
+                { presenter.minusCount(selectCountDialogBinding) }
             selectCountDialogBinding.addToCartBtn.setOnClickListener {
                 presenter.addCartProduct(selectCountDialogBinding.counterView.count)
             }
@@ -84,10 +95,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val PRODUCT_KEY = "product"
+        private const val RECENT_PRODUCT_KEY = "recent_product"
 
-        fun startActivity(context: Context, product: ProductState) {
+        fun startActivity(
+            context: Context,
+            product: ProductState,
+            recentProduct: RecentProductState?
+        ) {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_KEY, product)
+                putExtra(RECENT_PRODUCT_KEY, recentProduct)
             }
             context.startActivity(intent)
         }

@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.product
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View.GONE
@@ -27,6 +28,7 @@ import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 import woowacourse.shopping.feature.product.recent.RecentProductListAdapter
 import woowacourse.shopping.feature.product.recent.RecentProductListWrapperAdapter
 import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.model.RecentProductState
 import woowacourse.shopping.model.mapper.toUi
 import woowacourse.shopping.util.SpanSizeLookUpManager
 import woowacourse.shopping.util.extension.showToast
@@ -121,8 +123,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         cartCountBadge?.text = count.toString()
     }
 
-    override fun showProductDetail(productState: ProductState) {
-        ProductDetailActivity.startActivity(this, productState)
+    override fun showProductDetail(productState: ProductState, recentProductState: RecentProductState?) {
+        Log.d("debug_recent_product", "recentProduct: ${recentProductState?.productName}")
+        ProductDetailActivity.startActivity(this, productState, recentProductState)
     }
 
     override fun showEmptyProducts() = showToast("제품이 없습니다.")

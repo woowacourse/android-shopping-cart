@@ -7,6 +7,7 @@ import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
 import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.model.RecentProductState
 import woowacourse.shopping.model.mapper.toDomain
 import woowacourse.shopping.model.mapper.toUi
 import java.time.LocalDateTime
@@ -59,8 +60,9 @@ class MainPresenter(
     }
 
     override fun showProductDetail(productState: ProductState) {
+        val recentProduct: RecentProductState? = recentProductRepository.getMostRecentProduct()?.toUi()
+        view.showProductDetail(productState, recentProduct)
         addRecentProduct(productState.toDomain())
-        view.showProductDetail(productState)
     }
 
     override fun storeCartProduct(productState: ProductState) {

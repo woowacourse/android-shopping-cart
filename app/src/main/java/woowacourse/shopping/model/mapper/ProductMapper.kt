@@ -10,7 +10,7 @@ fun Product.toUi(): ProductState {
 }
 
 fun Product.toRecentProduct(nowDateTime: LocalDateTime): RecentProduct {
-    return RecentProduct(id, imageUrl, name, nowDateTime)
+    return RecentProduct(id, imageUrl, name, price, nowDateTime)
 }
 
 fun ProductState.toDomain(): Product {

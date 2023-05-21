@@ -69,7 +69,7 @@ class RecentProductDao(context: Context) {
 
     fun getAll(): List<RecentProduct> {
         val cursor: Cursor = getCursor()
-        val recentProducts: MutableList<RecentProduct> = mutableListOf()
+        var recentProducts: MutableList<RecentProduct> = mutableListOf()
 
         with(cursor) {
             while (moveToNext()) {
@@ -101,7 +101,8 @@ class RecentProductDao(context: Context) {
         }
 
         cursor.close()
-        return recentProducts.sortedBy { it.viewedDateTime }.reversed().subList(0, SHOW_COUNT)
+        recentProducts = recentProducts.sortedBy { it.viewedDateTime }.reversed().toMutableList()
+        return if (recentProducts.size >= 10) recentProducts.subList(0, SHOW_COUNT) else recentProducts
     }
 
     fun addColumn(productId: Int, viewedDateTime: LocalDateTime) {
@@ -142,7 +143,8 @@ class RecentProductDao(context: Context) {
                     ${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
                     ${RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL} TEXT,
                     ${RecentProductContract.TABLE_COLUMN_PRODUCT_NAME} TEXT,
-                    ${RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME} INT
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_PRICE} INTEGER,
+                    ${RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME} LONG
                 )
             """.trimIndent()
         )
