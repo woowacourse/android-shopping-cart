@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart.contract.presenter
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
@@ -10,6 +11,7 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.CartUIModel
@@ -18,7 +20,7 @@ import woowacourse.shopping.ui.cart.contract.CartContract
 
 internal class CartPresenterTest {
     private lateinit var view: CartContract.View
-    private lateinit var presenter: CartContract.Presenter
+    private lateinit var presenter: CartPresenter
     private lateinit var cartRepository: CartRepository
 
     private val fakeProduct: Product = Product(
@@ -27,6 +29,9 @@ internal class CartPresenterTest {
         12000,
         "https://img-cf.kurly.com/cdn-cgi/image/quality=85,width=676/shop/data/goods/1648206780555l0.jpeg",
     )
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
@@ -103,14 +108,83 @@ internal class CartPresenterTest {
     }
 
     @Test
-    fun `offset 상태를 저장할 수 있다`() {
+    fun `장바구니에 선택된 아이템들의 가격을 알 수 있다`() {
         // given
         val slot = slot<Int>()
-        every { cartRepository.getSubList(any(), capture(slot)) } returns emptyList()
-        every { view.setCarts(any(), any()) } answers { nothing }
+        every { cartRepository.getCartItemsPrice() } returns 5000
+        every { view.setCartItemsPrice(capture(slot)) } answers { nothing }
+
         // when
+        presenter.setCartItemsPrice()
         // then
-        assertEquals(slot.captured, 1)
-        verify(exactly = 1) { cartRepository.getSubList(any(), 1) }
+        assertEquals(slot.captured, 5000)
+        verify { view.setCartItemsPrice(slot.captured) }
+    }
+
+    @Test
+    fun `전체 체크박스의 상태를 지정할 수 있다`() {
+        // given
+        val slot = slot<Boolean>()
+        every { cartRepository.getSubList(any(), any()) } returns listOf(
+            CartProduct(
+                fakeProduct,
+                1,
+                true,
+            ),
+        )
+        every { view.setAllCheckbox(capture(slot)) } answers { nothing }
+        // when
+        presenter.setAllCheckbox()
+        // then
+        Assert.assertEquals(slot.captured, true)
+        verify { view.setAllCheckbox(slot.captured) }
+    }
+
+    @Test
+    fun `총 주문한 상품의 수를 알 수 있다`() {
+        // given
+        val slot = slot<Int>()
+        every { cartRepository.getCheckCart() } returns listOf(CartProduct(fakeProduct, 1, true))
+        every { view.setAllOrderCount(capture(slot)) } answers { nothing }
+        // when
+        presenter.setAllOrderCount()
+        // then
+        Assert.assertEquals(slot.captured, 1)
+        verify { view.setAllOrderCount(slot.captured) }
+    }
+
+    @Test
+    fun `상품 수량이 증가한다`() {
+        // given
+        every { cartRepository.getSubList(0, 5) } returns listOf(
+            CartProduct(
+                fakeProduct,
+                1,
+                true,
+            ),
+        )
+        // when
+        presenter.setUpCarts()
+        presenter.increaseCount(fakeProduct.id)
+        // then
+        assertEquals(presenter.countLiveDatas[fakeProduct.id]?.value, 1)
+    }
+
+    @Test
+    fun `상품 수량이 감소한다`() {
+        // given
+        every { cartRepository.getSubList(0, 5) } returns listOf(
+            CartProduct(
+                fakeProduct,
+                1,
+                true,
+            ),
+        )
+        // when
+        presenter.setUpCarts()
+        presenter.increaseCount(fakeProduct.id)
+        presenter.decreaseCount(fakeProduct.id)
+        // then
+        assertEquals(presenter.countLiveDatas[fakeProduct.id]?.value, 0)
     }
 }
