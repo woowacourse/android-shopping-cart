@@ -32,18 +32,33 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         fun bind(product: ProductModel, cartRepository: CartDbRepository) {
+            setVisibility(product)
             binding.product = product
             binding.count.count = product.count
-            binding.countOpen.setOnClickListener { cartRepository.add(product.id, 1, true) }
-            binding.count.plusClickListener = { cartRepository.plusCount(product.id) }
+            binding.countOpen.setOnClickListener {
+                cartRepository.add(product.id, 1, true)
+                product.count++
+                binding.count.count = product.count
+                setVisibility(product)
+            }
+            binding.count.plusClickListener = {
+                cartRepository.plusCount(product.id)
+                product.count++
+                setVisibility(product)
+            }
             binding.count.minusClickListener = {
                 if (product.count <= 1) {
                     cartRepository.remove(product.id)
+                    product.count--
                 } else {
                     cartRepository.subCount(product.id)
+                    product.count--
                 }
+                setVisibility(product)
             }
+        }
 
+        private fun setVisibility(product: ProductModel) {
             if (product.count <= 0) {
                 binding.countOpen.visibility = View.VISIBLE
                 binding.count.visibility = View.GONE
