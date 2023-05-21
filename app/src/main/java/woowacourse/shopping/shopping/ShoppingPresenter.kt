@@ -62,15 +62,15 @@ class ShoppingPresenter(
     override fun changeShoppingCartProductCount(id: Int, isAdd: Boolean) {
         val cartProducts = repository.selectAllShoppingCartProducts()
         val productCount = cartProducts.find { it.product.id == id }?.count ?: 0
-        val amountToCalculate = if (isAdd) PLUS_AMOUNT else MINUS_AMOUNT
 
-        when (productCount + amountToCalculate) {
-            0 -> repository.deleteFromShoppingCart(id)
-            1 -> repository.insertToShoppingCart(id, 1, true)
-            else -> {
-                repository.updateShoppingCartCount(id, productCount + amountToCalculate)
-                repository.updateShoppingCartSelection(id, true)
-            }
+        if (productCount == 1 && !isAdd) {
+            repository.deleteFromShoppingCart(id)
+        } else if (productCount == 0 && isAdd) {
+            repository.insertToShoppingCart(id, 1, true)
+        } else {
+            val amountToCalculate = if (isAdd) PLUS_AMOUNT else MINUS_AMOUNT
+            repository.updateShoppingCartCount(id, productCount + amountToCalculate)
+            repository.updateShoppingCartSelection(id, true)
         }
         updateToolbar()
     }
