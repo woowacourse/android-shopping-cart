@@ -16,10 +16,6 @@ class CountView @JvmOverloads constructor(
 
     var countStateChangeListener: OnCountStateChangeListener? = null
 
-    init {
-        presenter.initCount()
-    }
-
     override fun setMinusButton() {
         binding.btCountMinus.setOnClickListener {
             presenter.updateMinusCount()

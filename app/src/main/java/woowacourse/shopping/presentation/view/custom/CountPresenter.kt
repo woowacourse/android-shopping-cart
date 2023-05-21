@@ -11,7 +11,7 @@ class CountPresenter(private val view: CountContract.View) : CountContract.Prese
             field = value.coerceAtMost(MAX_COUNT)
         }
 
-    override fun initCount() {
+    init {
         view.setMinusButton()
         view.setPlusButton()
         view.setCountTextView(count)

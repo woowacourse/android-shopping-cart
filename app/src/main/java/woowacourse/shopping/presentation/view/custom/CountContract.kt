@@ -9,7 +9,6 @@ interface CountContract {
         fun getCount(): Int
     }
     interface Presenter {
-        fun initCount()
         fun updateCount(count: Int)
         fun getCount(): Int
         fun updateMinusCount()
