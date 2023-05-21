@@ -29,6 +29,7 @@ class ShoppingCartPresenter(
         }
         setButtonViews()
         view.updateCartProduct(loadCartProducts())
+        updateSelectedTotal()
     }
 
     override fun loadNextPage(isActivated: Boolean) {
@@ -53,7 +54,31 @@ class ShoppingCartPresenter(
 
     override fun updateCartProductCount(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {
         cartProductRepository.update(cartProductUIModel.toDomain())
-        view.updatePrice(cartProductUIModel, tvPrice)
+        view.updateProductItemPrice(cartProductUIModel, tvPrice)
+        updateSelectedTotal()
+    }
+
+    override fun updateCartProductChecked(cartProductUIModel: CartProductUIModel) {
+        cartProductRepository.update(cartProductUIModel.toDomain())
+        view.updateTotalCheckbox(paging.isAllItemProductSelected())
+        updateSelectedTotal()
+    }
+
+    private fun updateSelectedTotal() {
+        view.updateTotalPrice(getTotalPrice())
+        view.updateTotalCount(getTotalCount())
+    }
+
+    override fun getTotalPrice(): Int {
+        return cartProductRepository.getAll()
+            .filter { product -> product.isSelected }
+            .sumOf { product -> product.product.price * product.count.value }
+    }
+
+    override fun getTotalCount(): Int {
+        return cartProductRepository.getAll()
+            .filter { product -> product.isSelected }
+            .sumOf { product -> product.count.value }
     }
 
     private fun setButtonViews() {

@@ -18,15 +18,26 @@
         android:background="@drawable/item_cart_background"
         android:padding="20dp">
 
+        <CheckBox
+            android:id="@+id/cb_product"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
         <TextView
             android:id="@+id/tv_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
+            android:textColor="@color/black"
             android:textStyle="bold"
             android:text="@{cartProduct.productUIModel.name}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cb_product"
+            app:layout_constraintTop_toTopOf="@id/cb_product"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/cb_product"
             tools:text="[든든] 동원 콘샐러드" />
 
         <ImageView
@@ -36,7 +47,7 @@
             imageSrc="@{cartProduct.productUIModel.url}"
             android:layout_marginTop="20dp"
             android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="@id/tv_product_name"
+            app:layout_constraintStart_toStartOf="@id/cb_product"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:src="@drawable/ic_launcher_background" />
 
@@ -54,9 +65,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:text="@{@string/price_format(cartProduct.productUIModel.price)}"
+            android:text="@{@string/price_format(cartProduct.productUIModel.price * cartProduct.count.value)}"
             app:layout_constraintBottom_toTopOf="@id/counter_view"
             android:layout_marginBottom="5dp"
+            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="10,000원" />
 

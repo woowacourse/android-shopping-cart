@@ -13,7 +13,10 @@ interface ShoppingCartContract {
         fun activatePageDownCounter()
         fun deactivatePageDownCounter()
         fun updatePageCounter(count: Int)
-        fun updatePrice(cartProductUIModel: CartProductUIModel, tvPrice: TextView)
+        fun updateProductItemPrice(cartProductUIModel: CartProductUIModel, tvPrice: TextView)
+        fun updateTotalCheckbox(totalCheckBoxState: Boolean)
+        fun updateTotalPrice(totalPrice: Int)
+        fun updateTotalCount(totalCount: Int)
     }
 
     interface Presenter {
@@ -23,5 +26,8 @@ interface ShoppingCartContract {
         fun loadNextPage(isActivated: Boolean)
         fun loadPreviousPage(isActivated: Boolean)
         fun updateCartProductCount(cartProductUIModel: CartProductUIModel, tvPrice: TextView)
+        fun updateCartProductChecked(cartProductUIModel: CartProductUIModel)
+        fun getTotalPrice(): Int
+        fun getTotalCount(): Int
     }
 }

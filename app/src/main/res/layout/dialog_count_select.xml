@@ -54,7 +54,7 @@
             android:id="@+id/btn_add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/item_dialog_add_to_cart"
+            android:background="@drawable/item_confirm"
             android:text="@string/add_to_cart"
             android:textColor="@color/white"
             android:textSize="18sp"

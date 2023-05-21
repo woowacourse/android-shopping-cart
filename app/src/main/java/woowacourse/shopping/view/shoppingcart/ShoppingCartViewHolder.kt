@@ -14,6 +14,7 @@ import woowacourse.shopping.view.customview.CounterViewEventListener
 class ShoppingCartViewHolder(
     parent: ViewGroup,
     private val onClickRemove: (CartProductUIModel) -> Unit,
+    private val onClickCheckBox: (CartProductUIModel) -> Unit,
     private val onClickCountButton: (CartProductUIModel, TextView) -> Unit
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_cart_product, parent, false)
@@ -26,13 +27,17 @@ class ShoppingCartViewHolder(
             onClickRemove(cartProduct)
         }
 
+        binding.cbProduct.setOnClickListener {
+            val changedState = binding.cbProduct.isChecked
+            cartProduct = CartProductUIModel(cartProduct.productUIModel, cartProduct.count, changedState)
+            onClickCheckBox(cartProduct)
+        }
+
         binding.counterView.listener = object : CounterViewEventListener {
             override fun updateCount(counterView: CounterView, count: Int) {
                 binding.counterView.updateCountView()
-                onClickCountButton(
-                    CartProductUIModel(cartProduct.productUIModel, Count(count)),
-                    binding.tvPrice
-                )
+                cartProduct = CartProductUIModel(cartProduct.productUIModel, Count(count), cartProduct.isSelected)
+                onClickCountButton(cartProduct, binding.tvPrice)
             }
         }
     }
@@ -42,5 +47,6 @@ class ShoppingCartViewHolder(
         binding.cartProduct = cartProduct
         binding.counterView.initCount(cartProduct.count.value)
         binding.counterView.updateCountView()
+        binding.cbProduct.isChecked = cartProduct.isSelected
     }
 }

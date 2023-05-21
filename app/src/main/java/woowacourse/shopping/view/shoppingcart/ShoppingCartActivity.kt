@@ -44,13 +44,13 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun setAdapter() {
-        adapter = ShoppingCartAdapter(emptyList(), setOnClickRemove(), setOnClickCountButton())
+        adapter = ShoppingCartAdapter(emptyList(), setOnClickRemove(), setOnClickCheckBox(), setOnClickCountButton())
     }
 
     private fun setViewSettings() {
         binding.rvCartList.adapter = adapter
-        binding.tvTotalPrice.text = resources.getText(R.string.price_format).toString().format(0)
-        binding.btnOrder.text = resources.getText(R.string.order_format).toString().format(0)
+        binding.tvTotalPrice.text = getText(R.string.price_format).toString().format(0)
+        binding.btnOrder.text = getText(R.string.order_format).toString().format(0)
         updatePageCounter(INIT_PAGE_COUNTER_VIEW)
     }
 
@@ -67,12 +67,16 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         presenter.removeCartProduct(product)
     }
 
+    private fun setOnClickCheckBox(): (CartProductUIModel) -> Unit = { product ->
+        presenter.updateCartProductChecked(product)
+    }
+
     private fun setOnClickCountButton(): (CartProductUIModel, TextView) -> Unit = { product, tvPrice ->
         presenter.updateCartProductCount(product, tvPrice)
     }
 
-    override fun updatePrice(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {
-        tvPrice.text = resources.getText(R.string.price_format).toString().format(
+    override fun updateProductItemPrice(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {
+        tvPrice.text = getText(R.string.price_format).toString().format(
             cartProductUIModel.productUIModel.price * cartProductUIModel.count.value
         )
     }
@@ -99,6 +103,18 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun updatePageCounter(count: Int) {
         binding.tvPageCounter.text = count.toString()
+    }
+
+    override fun updateTotalCheckbox(totalCheckBoxState: Boolean) {
+        binding.checkBoxAll.isChecked = totalCheckBoxState
+    }
+
+    override fun updateTotalPrice(totalPrice: Int) {
+        binding.tvTotalPrice.text = getText(R.string.price_format).toString().format(totalPrice)
+    }
+
+    override fun updateTotalCount(totalCount: Int) {
+        binding.btnOrder.text = getText(R.string.order_format).toString().format(totalCount)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

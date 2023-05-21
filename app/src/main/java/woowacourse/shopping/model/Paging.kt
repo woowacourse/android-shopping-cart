@@ -7,6 +7,8 @@ import woowacourse.shopping.model.uimodel.mapper.toUIModel
 class Paging(private val cartProductRepository: CartProductRepository) {
     private val cartProducts: List<CartProductUIModel>
         get() = cartProductRepository.getAll().map { it.toUIModel() }
+    private val presentPageProducts: List<CartProductUIModel>
+        get() = loadPageProducts()
 
     private var index: PageIndex = PageIndex()
 
@@ -33,7 +35,12 @@ class Paging(private val cartProductRepository: CartProductRepository) {
         index = index.add()
     }
 
+    fun isAllItemProductSelected(): Boolean {
+        return presentPageProducts.all { product -> product.isSelected }
+    }
+
     companion object {
+        private const val NOT_SELECTED_VALUE = 0
         private const val PAGE_STEP = 1
         private const val PAGE_PRODUCT_UNIT = 3
     }
