@@ -2,6 +2,7 @@ package woowacourse.shopping.shopping
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.data.ProductFakeRepository
 import woowacourse.shopping.data.ProductFakeRepository.KEY_PRODUCT_OFFSET
+import woowacourse.shopping.database.cart.CartDBHelper
+import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
@@ -39,9 +42,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             savedInstanceState?.getInt(KEY_PRODUCT_OFFSET) ?: 20,
             ProductFakeRepository,
             RecentProductDatabase(this),
+            CartDatabase(CartDBHelper(this).writableDatabase),
         )
         binding.cartIcon.setOnClickListener { navigateToCart() }
         initLayoutManager()
+        presenter.setUpProducts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.setUpCarts()
         presenter.setUpProducts()
     }
 
@@ -75,6 +85,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             data,
             presenter::navigateToItemDetail,
             presenter::fetchMoreProducts,
+            presenter::addCart,
+            presenter::addOneInCart,
+            presenter::removeOneInCart,
         )
     }
 
@@ -88,6 +101,17 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun updateRecentProducts(products: List<ProductsItemType>) {
         updateProductsAdapterItem { updateRecentProducts(products) }
+    }
+
+    override fun setUpCarts(count: Int) {
+        binding.ivCartCount.apply {
+            if (count == 0) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
+                text = count.toString()
+            }
+        }
     }
 
     private fun updateProductsAdapterItem(action: ProductsAdapter.() -> Unit) {

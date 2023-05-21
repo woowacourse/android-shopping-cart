@@ -12,6 +12,9 @@ class ProductsAdapter(
     productItemTypes: List<ProductsItemType>,
     private val onClickItem: (data: ProductUIModel) -> Unit,
     private val onReadMoreClick: () -> Unit,
+    private val onClickAdd: (ProductUIModel) -> Unit,
+    private val onClickPlus: (ProductUIModel) -> Unit,
+    private val onClickMinus: (ProductUIModel) -> Unit,
 ) : RecyclerView.Adapter<ItemViewHolder>() {
     private var productItemTypes: MutableList<ProductsItemType> = productItemTypes.toMutableList()
 
@@ -19,9 +22,15 @@ class ProductsAdapter(
         return when (viewType) {
             ProductsItemType.TYPE_HEADER -> RecentProductsViewHolder.from(parent, onClickItem)
             ProductsItemType.TYPE_FOOTER -> ReadMoreViewHolder.from(parent) { onReadMoreClick() }
-            ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(parent) {
-                onClickItem((productItemTypes[it] as ProductItem).product)
-            }
+            ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(
+                parent,
+                {
+                    onClickItem((productItemTypes[it] as ProductItem).product)
+                },
+                { onClickAdd((productItemTypes[it] as ProductItem).product) },
+                { onClickPlus((productItemTypes[it] as ProductItem).product) },
+                { onClickMinus((productItemTypes[it] as ProductItem).product) },
+            )
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }

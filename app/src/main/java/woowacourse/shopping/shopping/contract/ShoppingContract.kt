@@ -10,6 +10,7 @@ interface ShoppingContract {
 
         fun updateProducts(start: Int, products: List<ProductsItemType>)
         fun updateRecentProducts(products: List<ProductsItemType>)
+        fun setUpCarts(count: Int)
     }
 
     interface Presenter {
@@ -18,5 +19,9 @@ interface ShoppingContract {
         fun fetchMoreProducts()
         fun navigateToItemDetail(data: ProductUIModel)
         fun getOffset(): Int
+        fun setUpCarts()
+        fun addCart(product: ProductUIModel)
+        fun addOneInCart(product: ProductUIModel)
+        fun removeOneInCart(product: ProductUIModel)
     }
 }

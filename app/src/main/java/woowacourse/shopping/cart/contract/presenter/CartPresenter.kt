@@ -42,10 +42,17 @@ class CartPresenter(
     }
 
     override fun removeItem(id: Int) {
+        var price = 0
         repository.remove(id)
         if (offset == repository.getAll().size) {
             offset -= STEP
         }
+        val checkedProducts = repository.getChecked()
+        checkedProducts.forEach {
+            price += it.count * it.product.price
+        }
+        view.updatePrice(price)
+        view.updateOrderCount(checkedProducts.size)
         setUpCarts()
     }
 

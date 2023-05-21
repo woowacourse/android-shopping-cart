@@ -1,7 +1,9 @@
 package woowacourse.shopping.shopping.contract.presenter
 
+import com.domain.model.CartRepository
 import com.domain.model.ProductRepository
 import com.domain.model.RecentRepository
+import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.shopping.ProductItem
@@ -15,6 +17,7 @@ class ShoppingPresenter(
     private val productOffset: Int,
     private val repository: ProductRepository,
     private val recentRepository: RecentRepository,
+    private val cartRepository: CartRepository,
 ) : ShoppingContract.Presenter {
     private val productItemTypes = mutableListOf<ProductsItemType>()
     private val recentProductsData: RecentProductsItem
@@ -22,7 +25,13 @@ class ShoppingPresenter(
             recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() },
         )
 
+    override fun setUpCarts() {
+        val count = cartRepository.getAll().size
+        view.setUpCarts(count)
+    }
+
     override fun setUpProducts() {
+        productItemTypes.clear()
         productItemTypes.apply {
             recentProductsData.product.takeIf { it.isNotEmpty() }?.let { add(recentProductsData) }
             addAll(repository.getUntil(productOffset).map { ProductItem(it.toUIModel()) })
@@ -53,6 +62,21 @@ class ShoppingPresenter(
 
     override fun getOffset(): Int {
         return repository.getOffset()
+    }
+
+    override fun addCart(product: ProductUIModel) {
+        cartRepository.insert(product.toDomain(), 1)
+        setUpCarts()
+    }
+
+    override fun addOneInCart(product: ProductUIModel) {
+        val targetProduct = cartRepository.findById(product.id)
+        cartRepository.updateCount(product.id, targetProduct?.count?.plus(1) ?: 0)
+    }
+
+    override fun removeOneInCart(product: ProductUIModel) {
+        val targetProduct = cartRepository.findById(product.id)
+        cartRepository.updateCount(product.id, targetProduct?.count?.minus(1) ?: 0)
     }
 
     companion object {
