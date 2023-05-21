@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="product_detail_item_name_text_size">24sp</dimen>
+    <dimen name="product_detail_item_medium_text_size">20sp</dimen>
+    <dimen name="product_main_item_text_size">16sp</dimen>
+
+    <dimen name="product_cart_item_large_text_size">18sp</dimen>
+    <dimen name="product_cart_item_text_size">16sp</dimen>
+
+
+    <dimen name="margin_large">18dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_small">10dp</dimen>
+</resources>

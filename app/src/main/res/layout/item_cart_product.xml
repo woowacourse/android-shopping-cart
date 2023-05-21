@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.feature.list.item.CartProductItem" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_large"
+        app:cardCornerRadius="10dp"
+        app:strokeColor="@color/black"
+        app:strokeWidth="1dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/margin_large">
+
+            <TextView
+                android:id="@+id/cart_product_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{cartProduct.productName}"
+                android:textColor="@color/black"
+                android:textSize="@dimen/product_cart_item_large_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <ImageView
+                android:id="@+id/cart_clear_image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon_clear"
+                app:layout_constraintBottom_toBottomOf="@id/cart_product_name_tv"
+                app:layout_constraintEnd_toEndOf="@id/item_layout"
+                app:layout_constraintTop_toTopOf="@id/cart_product_name_tv" />
+
+            <ImageView
+                android:id="@+id/cart_product_image_view"
+                android:layout_width="136dp"
+                android:layout_height="72dp"
+                android:layout_marginTop="@dimen/margin_small"
+                imageUrl="@{cartProduct.productImageUrl}"
+                app:layout_constraintStart_toStartOf="@id/cart_product_name_tv"
+                app:layout_constraintTop_toBottomOf="@id/cart_product_name_tv"
+                tools:src="@drawable/ic_launcher_background" />
+
+            <TextView
+                android:id="@+id/cart_product_price_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/price_format(cartProduct.productPrice)}"
+                android:textSize="@dimen/product_cart_item_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/item_layout"
+                tools:text="99,800원" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>
