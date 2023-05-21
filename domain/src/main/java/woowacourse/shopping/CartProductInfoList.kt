@@ -69,4 +69,8 @@ class CartProductInfoList(cartProductInfos: List<CartProductInfo>) {
         newItemList.items.forEach { replaceItem(it) }
         return CartProductInfoList(items)
     }
+
+    fun findCountByProduct(id: Int): Int {
+        return _items.find { it.product.id == id }?.count ?: 0
+    }
 }
