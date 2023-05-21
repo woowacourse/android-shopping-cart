@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.model.CartProduct
 
 class CartDBHelper(context: Context) : SQLiteOpenHelper(context, "cart", null, 1) {
     override fun onCreate(db: SQLiteDatabase?) {

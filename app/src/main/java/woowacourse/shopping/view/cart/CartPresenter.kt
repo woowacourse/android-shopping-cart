@@ -2,13 +2,13 @@ package woowacourse.shopping.view.cart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.domain.CartPageStatus
-import woowacourse.shopping.domain.CartPagination
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.CartSystem
-import woowacourse.shopping.domain.CartSystemResult
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.cartsystem.CartPageStatus
+import woowacourse.shopping.domain.pagination.CartPagination
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.cartsystem.CartSystem
+import woowacourse.shopping.domain.cartsystem.CartSystemResult
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.toDomain
 import woowacourse.shopping.model.toUiModel

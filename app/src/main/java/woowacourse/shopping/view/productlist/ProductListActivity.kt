@@ -10,10 +10,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.R
-import woowacourse.shopping.data.*
+import woowacourse.shopping.data.repository.CartDbRepository
+import woowacourse.shopping.data.repository.RecentViewedDbRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.domain.data.MockServer
+import woowacourse.shopping.domain.repository.ProductRemoteRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity

@@ -5,11 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.MockServer
-import woowacourse.shopping.data.ProductMockRepository
-import woowacourse.shopping.data.ProductRemoteRepository
+import woowacourse.shopping.data.repository.CartDbRepository
+import woowacourse.shopping.domain.repository.ProductRemoteRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.domain.data.MockServer
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.view.productlist.ProductListActivity
 

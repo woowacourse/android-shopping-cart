@@ -2,8 +2,8 @@ package woowacourse.shopping.view.productdetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.RecentViewedRepository
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 
 class ProductDetailPresenter(

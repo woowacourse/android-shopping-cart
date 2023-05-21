@@ -1,6 +1,10 @@
 package woowacourse.shopping.view.productlist
 
-import woowacourse.shopping.domain.*
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.pagination.ProductListPagination
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 

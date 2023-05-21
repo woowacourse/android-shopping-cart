@@ -5,7 +5,12 @@ import junit.framework.Assert.assertNull
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.domain.*
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.Price
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.productlist.ProductListContract
 import woowacourse.shopping.view.productlist.ProductListPresenter

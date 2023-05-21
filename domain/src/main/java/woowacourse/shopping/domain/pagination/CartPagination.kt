@@ -1,10 +1,8 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.pagination
 
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.CartPageStatus
-import woowacourse.shopping.domain.NextPagination
-import woowacourse.shopping.domain.PrevPagination
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.cartsystem.CartPageStatus
 
 class CartPagination(private val rangeSize: Int, private val cartRepository: CartRepository) :
     NextPagination<CartProduct>, PrevPagination<CartProduct> {

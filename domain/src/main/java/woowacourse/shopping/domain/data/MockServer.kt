@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.domain.data
 
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -29,6 +29,13 @@ class MockServer {
                             .setResponseCode(200)
                             .setBody(getProducts(0, 100))
                     }
+                    path.startsWith("/products/") -> {
+                        val productId = path.substringAfterLast("/")
+                        MockResponse()
+                            .setHeader("Content-Type", "application/json")
+                            .setResponseCode(200)
+                            .setBody(getProductById(productId))
+                    }
                     path.startsWith("/products") -> {
                         val parameters = getParameters(path)
                         val offset = parameters["mark"]?.toIntOrNull()
@@ -38,13 +45,6 @@ class MockServer {
                             .setHeader("Content-Type", "application/json")
                             .setResponseCode(200)
                             .setBody(getProducts(offset, count))
-                    }
-                    path.startsWith("/products/") -> {
-                        val productId = path.substringAfterLast("/")
-                        MockResponse()
-                            .setHeader("Content-Type", "application/json")
-                            .setResponseCode(200)
-                            .setBody(getProductById(productId))
                     }
                     else -> {
                         MockResponse().setResponseCode(404)

@@ -53,7 +53,4 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
     testImplementation("io.mockk:mockk:1.13.5")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
-    implementation("com.squareup.okhttp3:mockwebserver:4.10.0")
-    implementation("org.json:json:20210307")
 }

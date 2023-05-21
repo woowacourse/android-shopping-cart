@@ -1,9 +1,9 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
 import android.content.Context
 import woowacourse.shopping.data.db.CartDBHelper
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.repository.CartRepository
 
 class CartDbRepository(context: Context) : CartRepository {
     private val dbHelper = CartDBHelper(context)

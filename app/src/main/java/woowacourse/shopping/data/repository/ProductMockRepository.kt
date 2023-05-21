@@ -1,8 +1,8 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.model.Price
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.ProductRepository
 
 object ProductMockRepository : ProductRepository {
     private val products = listOf(

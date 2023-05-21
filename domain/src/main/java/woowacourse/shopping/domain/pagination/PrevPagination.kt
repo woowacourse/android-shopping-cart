@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.pagination
 
 interface PrevPagination<T> {
     val isPrevEnabled: Boolean

@@ -1,8 +1,8 @@
 package woowacourse.shopping.view.cart
 
 import androidx.lifecycle.LiveData
-import woowacourse.shopping.domain.CartPageStatus
-import woowacourse.shopping.domain.CartSystemResult
+import woowacourse.shopping.domain.cartsystem.CartPageStatus
+import woowacourse.shopping.domain.cartsystem.CartSystemResult
 import woowacourse.shopping.model.CartProductModel
 
 interface CartContract {

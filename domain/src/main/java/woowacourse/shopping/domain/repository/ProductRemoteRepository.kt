@@ -1,14 +1,11 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.domain.repository
 
-import android.util.Log
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONObject
-import woowacourse.shopping.domain.Price
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
+import woowacourse.shopping.domain.model.Price
+import woowacourse.shopping.domain.model.Product
 import java.io.IOException
-import java.lang.Thread.sleep
 import java.util.concurrent.TimeUnit
 
 class ProductRemoteRepository(baseUrl: String) : ProductRepository {
@@ -56,7 +53,7 @@ class ProductRemoteRepository(baseUrl: String) : ProductRepository {
         )
 
         while (responseBody == null) {
-            sleep(1)
+            Thread.sleep(1)
         }
         return responseBody
     }

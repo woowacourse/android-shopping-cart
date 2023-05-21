@@ -1,4 +1,8 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.pagination
+
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.pagination.NextPagination
+import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductListPagination(
     private val rangeSize: Int,

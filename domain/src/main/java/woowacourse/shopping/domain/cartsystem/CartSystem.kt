@@ -1,4 +1,8 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.cartsystem
+
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.Price
 
 class CartSystem(
     private val productRepository: ProductRepository
@@ -17,7 +21,6 @@ class CartSystem(
             val price = productRepository.find(product.id).price
             _selectedProducts.add(CartSystemProduct(product, price))
             totalPrice += price * product.count
-            println("Add : $_selectedProducts | total: $totalPrice")
             return CartSystemResult(totalPrice.price, _selectedProducts.size)
         }
         return deselectProduct(product.id)
@@ -28,7 +31,6 @@ class CartSystem(
             ?: throw java.lang.IllegalArgumentException()
         totalPrice -= product.price * product.cartProduct.count
         _selectedProducts.remove(product)
-        println("Delete : $product | total: $totalPrice")
         return CartSystemResult(totalPrice.price, _selectedProducts.size)
     }
 
@@ -36,11 +38,9 @@ class CartSystem(
         val index = _selectedProducts.indexOfFirst { it.cartProduct.id == id }
         if (index == -1) return CartSystemResult(totalPrice.price, _selectedProducts.size)
 
-        println("Before : ${_selectedProducts[index]}")
         val diff = count - _selectedProducts[index].cartProduct.count
         totalPrice += _selectedProducts[index].price.price * diff
         _selectedProducts[index] = CartSystemProduct(CartProduct(id, count), _selectedProducts[index].price)
-        println("After : ${_selectedProducts[index]}")
 
         return CartSystemResult(totalPrice.price, _selectedProducts.size)
     }

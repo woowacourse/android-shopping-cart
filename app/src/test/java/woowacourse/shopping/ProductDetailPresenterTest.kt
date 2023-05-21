@@ -7,9 +7,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.RecentViewedRepository
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.productdetail.ProductDetailContract
 import woowacourse.shopping.view.productdetail.ProductDetailPresenter

@@ -11,8 +11,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.RecentViewedDbRepository
+import woowacourse.shopping.data.repository.CartDbRepository
+import woowacourse.shopping.data.repository.RecentViewedDbRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.databinding.DialogCountBinding
 import woowacourse.shopping.model.ProductModel
