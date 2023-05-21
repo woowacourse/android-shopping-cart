@@ -22,4 +22,8 @@ data class Cart(val cartProducts: List<CartProduct>) {
             }
         )
     }
+
+    fun removeCartProduct(cartProduct: CartProduct): Cart {
+        return Cart(cartProducts.filter { it != cartProduct })
+    }
 }

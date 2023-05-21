@@ -37,6 +37,7 @@ class CartRepositoryImpl(
 
     override fun deleteCartProduct(cartProduct: CartProduct) {
         cartDao.deleteCartProduct(cartProduct)
+        cart = cart.removeCartProduct(cartProduct)
     }
 
     override fun getTotalAmount(): Int {
