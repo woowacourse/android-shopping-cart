@@ -12,7 +12,8 @@ interface ProductDetailContract {
         fun showBasketDialog(
             currentProduct: UiProduct,
             minusClickListener: () -> Unit,
-            plusClickListener: () -> Unit
+            plusClickListener: () -> Unit,
+            updateBasketProduct: () -> Unit
         )
 
         fun updateProductCount(count: Int)
@@ -24,8 +25,6 @@ interface ProductDetailContract {
         fun setBasketDialog()
 
         fun selectPreviousProduct()
-
-        fun addBasketProduct(): Thread
 
         fun initProductData()
     }

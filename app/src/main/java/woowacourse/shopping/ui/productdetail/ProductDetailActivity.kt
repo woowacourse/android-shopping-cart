@@ -25,6 +25,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var dialogViewBinding: DialogProductDetailBinding
+    private lateinit var alertDialog: AlertDialog
     private lateinit var currentProduct: UiProduct
     private var previousProduct: UiProduct? = null
     private lateinit var presenter: ProductDetailContract.Presenter
@@ -52,16 +53,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun showBasketDialog(
         currentProduct: UiProduct,
         minusClickListener: () -> Unit,
-        plusClickListener: () -> Unit
+        plusClickListener: () -> Unit,
+        updateBasketProduct: () -> Unit
     ) {
         dialogViewBinding = DialogProductDetailBinding.inflate(layoutInflater)
-        val alertDialog = AlertDialog.Builder(this)
+        alertDialog = AlertDialog.Builder(this)
             .setView(dialogViewBinding.root)
             .create()
 
         dialogViewBinding.product = currentProduct
         dialogViewBinding.dialogCounter.minusClickListener = { _ -> minusClickListener() }
         dialogViewBinding.dialogCounter.plusClickListener = { _ -> plusClickListener() }
+        dialogViewBinding.addBasketClickListener = updateBasketProduct
 
         alertDialog.show()
     }
@@ -103,6 +106,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun showBasket() {
         startActivity(BasketActivity.getIntent(this))
+        alertDialog.dismiss()
         finish()
     }
 

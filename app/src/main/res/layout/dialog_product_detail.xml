@@ -8,6 +8,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.ui.model.Product" />
+
+        <variable
+            name="addBasketClickListener"
+            type="kotlin.jvm.functions.Function0" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,6 +64,7 @@
             android:layout_marginBottom="12dp"
             android:background="@color/woowa_button"
             android:includeFontPadding="false"
+            android:onClick="@{()-> addBasketClickListener.invoke()}"
             android:text="@string/btn_dialog_add_basket"
             android:textColor="@color/white"
             android:textSize="18sp"

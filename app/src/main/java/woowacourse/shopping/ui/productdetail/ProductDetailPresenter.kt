@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.productdetail
 
 import woowacourse.shopping.domain.BasketProduct
+import woowacourse.shopping.domain.Count
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.model.UiProduct
@@ -28,7 +29,12 @@ class ProductDetailPresenter(
     }
 
     override fun setBasketDialog() {
-        view.showBasketDialog(currentProduct, ::minusProductCount, ::plusProductCount)
+        view.showBasketDialog(
+            currentProduct,
+            ::minusProductCount,
+            ::plusProductCount,
+            ::updateBasketProduct
+        )
         view.updateProductCount(currentProduct.basketCount)
     }
 
@@ -42,18 +48,23 @@ class ProductDetailPresenter(
         view.updateProductCount(currentProduct.basketCount)
     }
 
+    private fun updateBasketProduct() {
+        thread {
+            basketRepository.overWriteUpdate(
+                BasketProduct(
+                    count = Count(currentProduct.basketCount),
+                    product = currentProduct.toDomain()
+                )
+            )
+            view.showBasket()
+        }
+    }
+
     override fun selectPreviousProduct() {
         currentProduct = previousProduct ?: throw IllegalStateException(NO_PREVIOUS_PRODUCT_ERROR)
         previousProduct = null
         view.updateBindingData(currentProduct, previousProduct)
     }
-
-    // 추후 basket pid 로 받아오는 로직 만들어서 넣어야함
-    override fun addBasketProduct(): Thread =
-        thread {
-            basketRepository.add(BasketProduct(product = currentProduct.toDomain()))
-            view.showBasket()
-        }
 
     companion object {
         private const val NO_PREVIOUS_PRODUCT_ERROR = "이전 아이템이 없는데 접근하고 있습니다."
