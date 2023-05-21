@@ -11,7 +11,7 @@ import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.model.UiBasketProduct
 
 class BasketAdapter(
-    private val onRemoveItemClick: (UiBasketProduct, List<UiBasketProduct>) -> Unit,
+    private val onRemoveItemClick: (UiBasketProduct) -> Unit,
     private val minusClickListener: (Product) -> Unit,
     private val plusClickListener: (Product) -> Unit,
     private val onCheckedChangeListener: (BasketProduct) -> Unit
@@ -23,7 +23,7 @@ class BasketAdapter(
             ItemBasketBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BasketViewHolder(
             binding,
-            { onRemoveItemClick(it, currentList) },
+            { onRemoveItemClick(it) },
             { minusClickListener(it.toDomain()) },
             { plusClickListener(it.toDomain()) },
             { basketProduct, isChecked ->

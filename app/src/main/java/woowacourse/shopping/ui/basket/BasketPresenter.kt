@@ -10,12 +10,12 @@ import woowacourse.shopping.ui.model.UiBasketProduct
 
 class BasketPresenter(
     override val view: BasketContract.View,
-    private val basketRepository: BasketRepository
+    private val basketRepository: BasketRepository,
+    private var currentPage: Int = 1,
+    private var basket: Basket = Basket(basketRepository.getAll()),
+    private var startId: Int = 0
 ) : BasketContract.Presenter {
     private val hasNext: Boolean get() = basket.products.lastIndex >= startId + BASKET_PAGING_SIZE
-    private var currentPage: Int = 1
-    private var basket: Basket = Basket(basketRepository.getAll())
-    private var startId: Int = 0
 
     override fun fetchTotalCheckToCurrentPage(totalIsChecked: Boolean) {
         basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE).toggleAllCheck(totalIsChecked)
@@ -77,9 +77,9 @@ class BasketPresenter(
         view.updateBasketProducts(basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE))
     }
 
+    // 요기
     override fun deleteBasketProduct(
-        product: UiBasketProduct,
-        currentProducts: List<UiBasketProduct>
+        product: UiBasketProduct
     ) {
         basketRepository.remove(product.toDomain())
         basket = basket.remove(product.toDomain())

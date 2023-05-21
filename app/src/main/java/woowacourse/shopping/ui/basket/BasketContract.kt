@@ -38,6 +38,6 @@ interface BasketContract {
 
         fun updateNextPage()
 
-        fun deleteBasketProduct(product: UiBasketProduct, currentProducts: List<UiBasketProduct>)
+        fun deleteBasketProduct(product: UiBasketProduct)
     }
 }
