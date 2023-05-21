@@ -8,7 +8,7 @@ import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 
 class CartProductViewHolder private constructor(
     private val binding: ItemCartBinding,
-    private val cartListener: CartListener
+    cartListener: CartListener
 ) : CartViewHolder(binding.root) {
     init {
         binding.listener = cartListener
@@ -16,9 +16,6 @@ class CartProductViewHolder private constructor(
     override fun bind(data: CartItemType) {
         if (data !is CartItemType.Cart) return
         binding.product = data.product
-        binding.cvProductCounter.setOnCountChangeListener {
-            cartListener.onItemUpdate(data.product.id, it)
-        }
     }
 
     companion object {

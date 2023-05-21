@@ -12,6 +12,7 @@
         <variable
             name="listener"
             type="woowacourse.shopping.ui.cart.cartAdapter.CartListener" />
+
     </data>
 
 
@@ -84,6 +85,8 @@
 
         <woowacourse.shopping.ui.customView.ProductCounter
             android:id="@+id/cv_product_counter"
+            listener="@{listener.onItemUpdate}"
+            productId="@{product.id}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="13dp"
