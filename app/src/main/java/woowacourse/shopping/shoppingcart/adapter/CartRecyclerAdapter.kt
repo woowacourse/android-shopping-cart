@@ -1,10 +1,11 @@
-package woowacourse.shopping.shoppingcart
+package woowacourse.shopping.shoppingcart.adapter
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.CountPickerListener
 import woowacourse.shopping.model.CartProductUiModel
+import woowacourse.shopping.shoppingcart.adapter.viewholder.CartItemViewHolder
 
 class CartRecyclerAdapter(
     private var shoppingCartProducts: List<CartProductUiModel>,

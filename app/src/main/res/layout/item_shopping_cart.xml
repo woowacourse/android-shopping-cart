@@ -11,7 +11,7 @@
 
         <variable
             name="listener"
-            type="woowacourse.shopping.shoppingcart.CartProductCountPickerListener" />
+            type="woowacourse.shopping.shoppingcart.adapter.CartProductCountPickerListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

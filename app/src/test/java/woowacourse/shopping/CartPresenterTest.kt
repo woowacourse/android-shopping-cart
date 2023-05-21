@@ -11,8 +11,8 @@ import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingCache
 import woowacourse.shopping.shoppingcart.CartContract
-import woowacourse.shopping.shoppingcart.CartPage
 import woowacourse.shopping.shoppingcart.CartPresenter
+import woowacourse.shopping.shoppingcart.pagination.CartPage
 import woowacourse.shopping.util.toCartProductUiModel
 
 class CartPresenterTest {
