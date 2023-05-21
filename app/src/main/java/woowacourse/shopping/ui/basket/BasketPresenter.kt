@@ -56,7 +56,7 @@ class BasketPresenter(
         _pageCheckSize.value = basket.getCheckedSize(currentPage)
     }
 
-    override fun deleteBasketProduct(basketProduct: UiBasketProduct) {
+    override fun removeFromCart(basketProduct: UiBasketProduct) {
         basketRepository.deleteByProductId(basketProduct.product.id)
         fetchBasket(currentPage.value)
     }

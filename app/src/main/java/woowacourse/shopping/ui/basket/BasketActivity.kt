@@ -24,7 +24,7 @@ class BasketActivity : AppCompatActivity(), View {
         binding.lifecycleOwner = this
         binding.presenter = presenter
         binding.adapter = BasketAdapter(
-            presenter::deleteBasketProduct,
+            presenter::removeFromCart,
             presenter::selectProduct,
             presenter::unselectProduct,
             presenter::increaseProductCount,
