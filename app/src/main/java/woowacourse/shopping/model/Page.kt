@@ -1,7 +1,7 @@
 package woowacourse.shopping.model
 
-typealias UiPageNumber = PageNumber
+typealias UiPage = Page
 
-data class PageNumber(val value: Int) {
+data class Page(val value: Int) {
     fun toText(): String = value.toString()
 }

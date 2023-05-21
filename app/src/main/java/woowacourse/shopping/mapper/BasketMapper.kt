@@ -1,6 +1,6 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.domain.DomainCart
+import woowacourse.shopping.domain.model.DomainCart
 import woowacourse.shopping.model.UiCart
 
 fun UiCart.toDomain(loadUnit: Int): DomainCart = DomainCart(

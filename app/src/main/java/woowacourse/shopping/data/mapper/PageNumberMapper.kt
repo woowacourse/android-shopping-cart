@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.mapper
 
-import woowacourse.shopping.data.model.DataPageNumber
-import woowacourse.shopping.domain.DomainPageNumber
+import woowacourse.shopping.data.model.DataPage
+import woowacourse.shopping.domain.model.DomainPage
 
-fun DataPageNumber.toDomain(): DomainPageNumber = DomainPageNumber(value = value)
+fun DataPage.toDomain(): DomainPage = DomainPage(value = value)
 
-fun DomainPageNumber.toData(extraSize: Int = 0): DataPageNumber =
-    DataPageNumber(value = value, sizePerPage = sizePerPage + extraSize)
+fun DomainPage.toData(extraSize: Int = 0): DataPage =
+    DataPage(value = value, sizePerPage = sizePerPage + extraSize)

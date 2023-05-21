@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.mapper
 
 import woowacourse.shopping.data.model.DataCartProduct
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.model.CartProduct
 
 fun DataCartProduct.toDomain(): CartProduct = CartProduct(
     id = id,

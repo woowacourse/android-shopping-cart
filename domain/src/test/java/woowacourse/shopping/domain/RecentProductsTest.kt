@@ -3,6 +3,10 @@ package woowacourse.shopping.domain
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import woowacourse.shopping.domain.model.Price
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.model.RecentProducts
 
 internal class RecentProductsTest {
     @ParameterizedTest

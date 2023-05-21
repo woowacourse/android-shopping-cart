@@ -9,7 +9,7 @@ import woowacourse.shopping.data.database.contract.ProductContract
 import woowacourse.shopping.data.model.CartProduct
 import woowacourse.shopping.data.model.DataCart
 import woowacourse.shopping.data.model.DataCartProduct
-import woowacourse.shopping.data.model.DataPageNumber
+import woowacourse.shopping.data.model.DataPage
 import woowacourse.shopping.data.model.DataPrice
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.data.model.ProductCount
@@ -17,7 +17,7 @@ import woowacourse.shopping.util.extension.safeSubList
 
 class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
     @SuppressLint("Range")
-    override fun getProductByPage(page: DataPageNumber): DataCart {
+    override fun getProductByPage(page: DataPage): DataCart {
         val cartProducts = mutableListOf<CartProduct>()
 
         val db = database.writableDatabase
@@ -46,7 +46,7 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
     }
 
     @SuppressLint("Range")
-    override fun getProductInCartByPage(page: DataPageNumber): DataCart {
+    override fun getProductInCartByPage(page: DataPage): DataCart {
         val cartProducts = mutableListOf<CartProduct>()
 
         val db = database.writableDatabase
@@ -169,7 +169,7 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
     }
 
     @SuppressLint("Range")
-    override fun getProductInRange(start: DataPageNumber, end: DataPageNumber): DataCart {
+    override fun getProductInRange(start: DataPage, end: DataPage): DataCart {
         val cartProducts = mutableListOf<CartProduct>()
 
         val db = database.writableDatabase

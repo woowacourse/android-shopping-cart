@@ -2,14 +2,14 @@ package woowacourse.shopping.data.datasource.cart
 
 import woowacourse.shopping.data.database.dao.cart.CartDao
 import woowacourse.shopping.data.model.DataCart
-import woowacourse.shopping.data.model.DataPageNumber
+import woowacourse.shopping.data.model.DataPage
 import woowacourse.shopping.data.model.Product
 
 class LocalCartDataSource(private val dao: CartDao) : CartDataSource.Local {
-    override fun getProductByPage(page: DataPageNumber): DataCart =
+    override fun getProductByPage(page: DataPage): DataCart =
         dao.getProductByPage(page)
 
-    override fun getProductInCartByPage(page: DataPageNumber): DataCart =
+    override fun getProductInCartByPage(page: DataPage): DataCart =
         dao.getProductInCartByPage(page)
 
     override fun increaseCartCount(product: Product, count: Int) {
@@ -26,7 +26,7 @@ class LocalCartDataSource(private val dao: CartDao) : CartDataSource.Local {
 
     override fun getCheckedProductCount(): Int = dao.getCheckedProductCount()
 
-    override fun getProductInRange(start: DataPageNumber, end: DataPageNumber): DataCart {
+    override fun getProductInRange(start: DataPage, end: DataPage): DataCart {
         return dao.getProductInRange(start, end)
     }
 

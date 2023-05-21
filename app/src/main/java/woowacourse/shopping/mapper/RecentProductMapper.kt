@@ -1,6 +1,6 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.model.UiRecentProduct
 
 fun UiRecentProduct.toDomain(): RecentProduct =

@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.model
 
 data class RecentProducts(
     private val items: List<RecentProduct> = emptyList(),

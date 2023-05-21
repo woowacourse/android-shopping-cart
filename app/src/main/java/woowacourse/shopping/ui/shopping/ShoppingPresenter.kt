@@ -1,9 +1,9 @@
 package woowacourse.shopping.ui.shopping
 
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.PageNumber
-import woowacourse.shopping.domain.RecentProduct
-import woowacourse.shopping.domain.RecentProducts
+import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.Page
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.model.RecentProducts
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.mapper.toDomain
@@ -22,8 +22,8 @@ ShoppingPresenter(
     private val recentProductSize: Int = 10,
     productLoadSizeAtOnce: Int = 20,
 ) : Presenter(view) {
-    private var currentPage: PageNumber =
-        PageNumber(sizePerPage = productLoadSizeAtOnce)
+    private var currentPage: Page =
+        Page(sizePerPage = productLoadSizeAtOnce)
     private var recentProducts = RecentProducts()
     private var cart = Cart(loadUnit = productLoadSizeAtOnce)
     private val cartProductCount: UiProductCount

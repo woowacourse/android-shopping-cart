@@ -1,7 +1,7 @@
 package woowacourse.shopping.model
 
-import woowacourse.shopping.domain.DomainPageNumber
+import woowacourse.shopping.domain.model.DomainPage
 
-fun UiPageNumber.toDomain(): DomainPageNumber = DomainPageNumber(value = value)
+fun UiPage.toDomain(): DomainPage = DomainPage(value = value)
 
-fun DomainPageNumber.toUi(): UiPageNumber = UiPageNumber(value = value)
+fun DomainPage.toUi(): UiPage = UiPage(value = value)

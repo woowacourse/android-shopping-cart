@@ -3,8 +3,8 @@ package woowacourse.shopping.data.repository
 import woowacourse.shopping.data.datasource.recentproduct.RecentProductDataSource
 import woowacourse.shopping.data.mapper.toData
 import woowacourse.shopping.data.mapper.toDomain
-import woowacourse.shopping.domain.RecentProduct
-import woowacourse.shopping.domain.RecentProducts
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.model.RecentProducts
 import woowacourse.shopping.domain.repository.RecentProductRepository
 
 class RecentProductRepositoryImpl(

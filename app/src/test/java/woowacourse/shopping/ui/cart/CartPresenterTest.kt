@@ -7,7 +7,7 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.domain.PageNumber
+import woowacourse.shopping.domain.model.Page
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.model.Product
@@ -47,7 +47,7 @@ internal class CartPresenterTest {
         val page = 2
         presenter = CartPresenter(view, cartRepository)
 
-        val currentPage = slot<PageNumber>()
+        val currentPage = slot<Page>()
         every { cartRepository.getProductInCartByPage(capture(currentPage)) } returns mockk(
             relaxed = true
         )
@@ -56,7 +56,7 @@ internal class CartPresenterTest {
         presenter.fetchCart(page - 1)
 
         // then
-        assertEquals(currentPage.captured, PageNumber(page - 1))
+        assertEquals(currentPage.captured, Page(page - 1))
         verify(exactly = 1) { view.updateCart(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
         verify(exactly = 1) { view.updatePageNumber(any()) }
@@ -68,7 +68,7 @@ internal class CartPresenterTest {
         val page = 1
         presenter = CartPresenter(view, cartRepository)
 
-        val currentPage = slot<PageNumber>()
+        val currentPage = slot<Page>()
         every { cartRepository.getProductInCartByPage(capture(currentPage)) } returns mockk(
             relaxed = true
         )
@@ -77,7 +77,7 @@ internal class CartPresenterTest {
         presenter.fetchCart(page + 1)
 
         // then
-        assertEquals(currentPage.captured, PageNumber(page + 1))
+        assertEquals(currentPage.captured, Page(page + 1))
         verify(exactly = 1) { view.updateCart(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
         verify(exactly = 1) { view.updatePageNumber(any()) }
@@ -102,7 +102,7 @@ internal class CartPresenterTest {
 
         // then
         verify(exactly = 1) { cartRepository.decreaseCartCount(product.toDomain()) }
-        verify(exactly = 1) { cartRepository.getProductInCartByPage(PageNumber(1)) }
+        verify(exactly = 1) { cartRepository.getProductInCartByPage(Page(1)) }
         verify(exactly = 1) { view.updateCart(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
         verify(exactly = 1) { view.updatePageNumber(any()) }

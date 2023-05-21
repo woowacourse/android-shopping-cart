@@ -1,10 +1,10 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.domain.DomainPageNumber
-import woowacourse.shopping.model.UiPageNumber
+import woowacourse.shopping.domain.model.DomainPage
+import woowacourse.shopping.model.UiPage
 
-fun UiPageNumber.toDomain(sizePerPage: Int): DomainPageNumber =
-    DomainPageNumber(value = value, sizePerPage = sizePerPage)
+fun UiPage.toDomain(sizePerPage: Int): DomainPage =
+    DomainPage(value = value, sizePerPage = sizePerPage)
 
-fun DomainPageNumber.toUi(): UiPageNumber =
-    UiPageNumber(value = value)
+fun DomainPage.toUi(): UiPage =
+    UiPage(value = value)

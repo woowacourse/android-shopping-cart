@@ -1,8 +1,8 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.model
 
-typealias DomainPageNumber = PageNumber
+typealias DomainPage = Page
 
-data class PageNumber(
+data class Page(
     val value: Int = DEFAULT_PAGE,
     val sizePerPage: Int = DEFAULT_SIZE_PER_PAGE,
 ) {
@@ -10,11 +10,11 @@ data class PageNumber(
         require(value >= DEFAULT_PAGE) { INVALID_PAGE_NUMBER_ERROR_MESSAGE }
     }
 
-    fun getStartPage(): PageNumber = copy(value = 1)
+    fun getStartPage(): Page = copy(value = 1)
 
     fun hasPrevious(): Boolean = value > MIN_PAGE
 
-    fun next(): PageNumber = copy(value = value + 1)
+    fun next(): Page = copy(value = value + 1)
 
     companion object {
         private const val DEFAULT_PAGE = 1

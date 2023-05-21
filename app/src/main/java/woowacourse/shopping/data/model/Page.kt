@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.model
 
-typealias DataPageNumber = PageNumber
+typealias DataPage = Page
 
-data class PageNumber(val value: Int, val sizePerPage: Int) {
+data class Page(val value: Int, val sizePerPage: Int) {
     val start = value * sizePerPage - sizePerPage
     val end = value * sizePerPage + 1
 }
