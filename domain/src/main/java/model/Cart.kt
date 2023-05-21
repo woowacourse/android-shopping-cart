@@ -31,8 +31,8 @@ class Cart(
     ) {
         val index = _products.indexOfFirst { it.product.id == id }
 
-        runCatching {
-            _products[index] = _products[index].minusCount()
+        _products[index].minusCount()?.let {
+            _products[index] = it
         }
     }
 

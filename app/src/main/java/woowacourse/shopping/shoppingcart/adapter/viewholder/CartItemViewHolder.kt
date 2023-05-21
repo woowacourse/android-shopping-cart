@@ -37,7 +37,7 @@ class CartItemViewHolder private constructor(
         with(binding) {
             this.product = product
             countPicker.setListener(
-                listener = getCountPickerListener(binding.product?.id ?: return)
+                countPickerListener = getCountPickerListener(binding.product?.id ?: return)
             )
             countPicker.setTextCount(product.count)
         }

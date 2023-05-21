@@ -11,6 +11,7 @@ interface CartPageHandler {
     val endPage: Page
     val isReachedEndPage: Boolean
     val showingProducts: List<CartProduct>
+    val totalPrice: Int
 
     fun moveToNextPage(
         onPageChanged: (cartPage: CartPageHandler) -> Unit,
@@ -18,5 +19,4 @@ interface CartPageHandler {
     )
 
     fun moveToPreviousPage(onPageChanged: (cartPage: CartPageHandler) -> Unit)
-    val totalPrice: Int
 }

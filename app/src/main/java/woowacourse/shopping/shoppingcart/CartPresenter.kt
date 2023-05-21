@@ -3,7 +3,7 @@ package woowacourse.shopping.shoppingcart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import model.Cart
-import woowacourse.shopping.database.ShoppingCache
+import woowacourse.shopping.database.cart.repository.CartRepository
 import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.shoppingcart.pagination.CartPage
 import woowacourse.shopping.shoppingcart.pagination.CartPageHandler
@@ -11,10 +11,10 @@ import woowacourse.shopping.util.toCartProductUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val shoppingCache: ShoppingCache,
+    private val cartRepository: CartRepository,
     private val cartPage: CartPageHandler = CartPage(
         cart = Cart()
-    )
+    ),
 ) : CartContract.Presenter {
 
     private val cart: Cart
@@ -39,13 +39,13 @@ class CartPresenter(
         get() = _currentPage
 
     override fun loadShoppingCartProducts() {
-        val products = shoppingCache.selectShoppingCartProducts()
+        val products = cartRepository.getCartProducts()
         cart.addAll(products)
         updatePage(cartPage)
     }
 
     override fun removeShoppingCartProduct(id: Int) {
-        shoppingCache.deleteFromShoppingCart(id)
+        cartRepository.removeCartProductById(id)
         cart.remove(id)
         updatePage(cartPage)
     }
@@ -53,7 +53,7 @@ class CartPresenter(
     override fun plusShoppingCartProductCount(id: Int) {
         cart.plusProductCount(id)
 
-        shoppingCache.insertToShoppingCart(
+        cartRepository.addToCart(
             id = id,
             count = cart.products.first { it.product.id == id }
                 .count
@@ -66,7 +66,7 @@ class CartPresenter(
         cart.minusProductCount(id)
         _showingProducts.value = cartPage.showingProducts.map { it.toCartProductUiModel() }
 
-        shoppingCache.insertToShoppingCart(
+        cartRepository.addToCart(
             id = id,
             count = cart.products.first { it.product.id == id }
                 .count

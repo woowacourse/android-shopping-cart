@@ -9,7 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import woowacourse.shopping.database.ShoppingCache
+import woowacourse.shopping.database.cart.repository.CartRepository
 import woowacourse.shopping.shoppingcart.CartContract
 import woowacourse.shopping.shoppingcart.CartPresenter
 import woowacourse.shopping.shoppingcart.pagination.CartPage
@@ -19,7 +19,7 @@ class CartPresenterTest {
 
     private lateinit var presenter: CartPresenter
     private lateinit var view: CartContract.View
-    private lateinit var shoppingCache: ShoppingCache
+    private lateinit var cartRepository: CartRepository
     private lateinit var cartPage: CartPage
 
     @get:Rule
@@ -28,11 +28,11 @@ class CartPresenterTest {
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        shoppingCache = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
         cartPage = CartPage(Cart())
         presenter = CartPresenter(
             view = view,
-            shoppingCache = shoppingCache,
+            cartRepository = cartRepository,
             cartPage = cartPage
         )
     }
@@ -44,7 +44,7 @@ class CartPresenterTest {
             CartProduct(name = "아메리카노", id = 1),
             CartProduct(name = "밀크티", id = 2),
         )
-        every { shoppingCache.selectShoppingCartProducts() } returns products
+        every { cartRepository.getCartProducts() } returns products
 
         // when
         presenter.loadShoppingCartProducts()
@@ -64,14 +64,14 @@ class CartPresenterTest {
             CartProduct(name = "아메리카노", id = 1),
             CartProduct(name = "밀크티", id = 2),
         )
-        every { shoppingCache.selectShoppingCartProducts() } returns products
+        every { cartRepository.getCartProducts() } returns products
         presenter.loadShoppingCartProducts()
 
         // when
         presenter.removeShoppingCartProduct(removingProduct.product.id)
 
         // then
-        verify { shoppingCache.deleteFromShoppingCart(id = 1) }
+        verify { cartRepository.removeCartProductById(id = 1) }
 
         val expected = listOf(CartProduct(id = 2).toCartProductUiModel())
         assertEquals(expected, presenter.showingProducts.value)
@@ -84,14 +84,14 @@ class CartPresenterTest {
             CartProduct(name = "아메리카노", id = 1, count = 5),
             CartProduct(name = "밀크티", id = 2, count = 1),
         )
-        every { shoppingCache.selectShoppingCartProducts() } returns products
+        every { cartRepository.getCartProducts() } returns products
         presenter.loadShoppingCartProducts()
 
         // when
         presenter.plusShoppingCartProductCount(id = 1)
 
         // then
-        verify { shoppingCache.insertToShoppingCart(id = 1, count = 6) }
+        verify { cartRepository.addToCart(id = 1, count = 6) }
 
         val expected = listOf(
             CartProduct(id = 1, name = "아메리카노", count = 6),
@@ -108,14 +108,14 @@ class CartPresenterTest {
             CartProduct(id = 1, name = "아메리카노", count = 5),
             CartProduct(id = 2, name = "밀크티", count = 6),
         )
-        every { shoppingCache.selectShoppingCartProducts() } returns products
+        every { cartRepository.getCartProducts() } returns products
         presenter.loadShoppingCartProducts()
 
         // when
         presenter.minusShoppingCartProductCount(id = 2)
 
         // then
-        verify { shoppingCache.insertToShoppingCart(id = 2, count = 5) }
+        verify { cartRepository.addToCart(id = 2, count = 5) }
 
         val expected = listOf(
             CartProduct(id = 1, name = "아메리카노", count = 5),
@@ -133,7 +133,7 @@ class CartPresenterTest {
             CartProduct(price = 1000),
             CartProduct(price = 2000),
         )
-        every { shoppingCache.selectShoppingCartProducts() } returns products
+        every { cartRepository.getCartProducts() } returns products
 
         // when
         presenter.loadShoppingCartProducts()
@@ -151,7 +151,7 @@ class CartPresenterTest {
             CartProduct(id = 1, name = "아메리카노"),
             CartProduct(id = 2, name = "밀크티"),
         )
-        every { shoppingCache.selectShoppingCartProducts() } returns products
+        every { cartRepository.getCartProducts() } returns products
         presenter.loadShoppingCartProducts()
 
         // when
