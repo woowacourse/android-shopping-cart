@@ -18,7 +18,7 @@ class CartPresenter(
         get() = _totalPrice
 
     override fun loadCartItems() {
-        var newCarts = getNewCarts()
+        var newCarts = getNewCarts(GET_CART_ITEM_COUNT)
         view.setEnableLeftButton(cartPage.currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 
@@ -31,14 +31,17 @@ class CartPresenter(
     private fun submitNewCarts(newCarts: List<CartProductModel>): List<CartProductModel> {
         var newCarts1 = newCarts
         val subToIndex =
-            if (newCarts1.size > DISPLAY_CART_COUNT_CONDITION) newCarts1.lastIndex else newCarts1.size
+            getCurrentPageLastCartIndex(newCarts1)
         newCarts1 = newCarts1.subList(CART_LIST_FIRST_INDEX, subToIndex)
         return newCarts1
     }
 
-    private fun getNewCarts(): List<CartProductModel> {
+    private fun getCurrentPageLastCartIndex(newCarts1: List<CartProductModel>) =
+        if (newCarts1.size > DISPLAY_CART_COUNT_CONDITION) newCarts1.lastIndex else newCarts1.size
+
+    private fun getNewCarts(itemCount: Int): List<CartProductModel> {
         val startPosition = cartPage.getStartItemPosition()
-        return cartRepository.getCarts(startPosition, GET_CART_ITEM_COUNT)
+        return cartRepository.getCarts(startPosition, itemCount)
     }
 
     override fun deleteCartItem(itemId: Long) {
@@ -56,8 +59,9 @@ class CartPresenter(
         loadCartItems()
     }
 
-    override fun changeAllCartSelectedStatus(isSelected: Boolean) {
-//         cartRepository.changeAllCartSelectedStatus(isSelected)
+    override fun changeAllCartSelectedStatus(cartsId: List<Long>, isSelected: Boolean) {
+        cartRepository.updateCartsSelected(cartsId, isSelected)
+        _totalPrice.value = cartTotalPriceRepository.getTotalPrice()
     }
 
     override fun changeCartSelectedStatus(productId: Long, isSelected: Boolean) {

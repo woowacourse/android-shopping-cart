@@ -8,7 +8,7 @@ import woowacourse.shopping.presentation.view.cart.viewholder.CartViewHolder
 class CartAdapter(
     items: List<CartProductModel>,
     private val onCloseClick: (Long) -> Unit,
-    private val onCheckedChangeListener: (Long, Boolean) -> Unit,
+    private val onCheckedChangeListener: (Long, Boolean, List<Boolean>) -> Unit,
     private val onCountChanged: (Long, Int) -> Unit
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val items = items.toMutableList()
@@ -16,14 +16,21 @@ class CartAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return CartViewHolder(
             parent,
-            onCloseClick = { onCloseClick(items[it].product.id) },
+            onCloseClick = {
+                onCloseClick(items[it].product.id)
+            },
             onCheckedChangeListener = { position, isChecked ->
+                items[position] = items[position].copy(isChecked = isChecked)
                 onCheckedChangeListener(
                     items[position].product.id,
-                    isChecked
+                    isChecked,
+                    items.map { it.isChecked }
                 )
             },
-            { position, count -> onCountChanged(items[position].product.id, count) }
+            { position, count ->
+                items[position] = items[position].copy(count = count)
+                onCountChanged(items[position].product.id, count)
+            }
         )
     }
 
@@ -32,4 +39,11 @@ class CartAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun updateItemsChecked(isChecked: Boolean) {
+        items.forEachIndexed { index, _ ->
+            items[index] = items[index].copy(isChecked = isChecked)
+        }
+        notifyItemRangeChanged(0, items.size)
+    }
 }

@@ -18,7 +18,7 @@ interface CartContract {
         fun deleteCartItem(itemId: Long)
         fun decrementPage()
         fun incrementPage()
-        fun changeAllCartSelectedStatus(isSelected: Boolean)
+        fun changeAllCartSelectedStatus(cartsId: List<Long>, isSelected: Boolean)
         fun changeCartSelectedStatus(productId: Long, isSelected: Boolean)
         fun updateProductCount(productId: Long, productCount: Int)
     }

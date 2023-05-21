@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.view.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -31,9 +32,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
-        binding.checkboxCartAll.setOnClickListener {
-            presenter.changeAllCartSelectedStatus(binding.checkboxCartAll.isChecked)
-        }
         setSupportActionBar()
         presenter.loadCartItems()
         setLeftButtonClick()
@@ -66,6 +64,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             carts, ::deleteCartItem, ::changeCartSelectedStatus, ::onProductCountChanged
         )
         binding.rvCart.adapter = cartAdapter
+        setCheckAllChangeListener(carts)
+    }
+
+    private fun setCheckAllChangeListener(carts: List<CartProductModel>) {
+        binding.checkboxCartAll.setOnClickListener {
+            presenter.changeAllCartSelectedStatus(
+                carts.map { it.product.id },
+                binding.checkboxCartAll.isChecked
+            )
+            cartAdapter.updateItemsChecked(binding.checkboxCartAll.isChecked)
+        }
     }
 
     override fun setCurrentPage(currentPage: Int) {
@@ -80,7 +89,19 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.updateProductCount(productId, productCount)
     }
 
-    private fun changeCartSelectedStatus(productId: Long, isSelected: Boolean) {
+    private fun changeCartSelectedStatus(
+        productId: Long,
+        isSelected: Boolean,
+        isCartsChecked: List<Boolean>
+    ) {
+        isCartsChecked.forEachIndexed { index, it ->
+            Log.d("test", "$index and $it")
+        }
+        if (isCartsChecked.all { it }) {
+            binding.checkboxCartAll.isChecked = isSelected
+        } else {
+            binding.checkboxCartAll.isChecked = false
+        }
         presenter.changeCartSelectedStatus(productId, isSelected)
     }
 

@@ -11,8 +11,8 @@ class CartDao(context: Context) {
 
     // TODO("가격 업데이트")
     // TODO("전체 선택")
-    // TODO("이전 화면 돌아갈 시 데이터")
-    // TODO("PRODUCTDETAIL")
+    // TODO("이전 화면 돌아갈 시 데이터") // 4시까지
+    // TODO("PRODUCTDETAIL") // 5시까지
     fun insertProduct(productId: Long, productCount: Int) {
         val value = ContentValues().apply {
             put(CartContract.Cart.PRODUCT_ID, productId)
@@ -129,5 +129,3 @@ class CartDao(context: Context) {
         return db.rawQuery(CartContract.getProductCount(productId), null)
     }
 }
-
-// https://hongal.tistory.com/50

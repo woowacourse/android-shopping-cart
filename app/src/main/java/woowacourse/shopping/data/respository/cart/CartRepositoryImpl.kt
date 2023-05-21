@@ -13,6 +13,12 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
         cartDao.updateCartSelected(productId, if (isSelected) "y" else "n")
     }
 
+    override fun updateCartsSelected(productsId: List<Long>, isSelected: Boolean) {
+        productsId.forEach {
+            cartDao.updateCartSelected(it, if (isSelected) "y" else "n")
+        }
+    }
+
     override fun deleteCartByProductId(productId: Long) {
         cartDao.deleteAllProduct(productId)
     }
