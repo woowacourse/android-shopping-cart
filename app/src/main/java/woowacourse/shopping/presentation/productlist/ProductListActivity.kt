@@ -28,7 +28,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
     private lateinit var cartMenuItem: MenuItem
-    private var cartBinding: BadgeCartBinding? = null
+    private var cartIconBinding: BadgeCartBinding? = null
     private val productRemoteDataSource: ProductRemoteDataSource by lazy { MockProductDao }
     private val presenter: ProductListPresenter by lazy {
         ProductListPresenter(
@@ -60,15 +60,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private fun updateView() {
         presenter.updateProductItems()
         presenter.updateRecentProductItems()
-        if (cartBinding != null) presenter.updateCartCount()
+        presenter.updateCartProductInfoList()
     }
 
     private fun initProductAdapter() {
         productListAdapter = ProductListAdapter(
-            showMoreProductItem = ::showMoreProductItems,
-            showProductDetail = ::productClick,
             recentProductAdapter = recentProductAdapter,
-            ::showCart,
+            presenter = presenter,
         )
 
         val layoutManager = GridLayoutManager(this, SPAN_COUNT)
@@ -91,34 +89,31 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         recentProductAdapter.submitList(productModels)
     }
 
-    override fun showCartCount(count: Int) {
-        cartBinding?.badgeCartCounter?.text = count.toString()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        cartBinding = BadgeCartBinding.inflate(layoutInflater, null, false)
-        initCartMenu(menu)
-        presenter.updateCartCount()
+        cartIconBinding = BadgeCartBinding.inflate(layoutInflater, null, false)
+        initCartIcon(menu)
         return true
     }
 
-    private fun initCartMenu(menu: Menu) {
+    private fun initCartIcon(menu: Menu) {
         menuInflater.inflate(R.menu.menu_product_list_toolbar, menu)
         cartMenuItem = menu.findItem(R.id.icon_cart)
-        cartBinding =
+        setUpCartIconBinding()
+    }
+
+    private fun setUpCartIconBinding() {
+        cartIconBinding =
             BadgeCartBinding.inflate(
                 LayoutInflater.from(this),
                 null,
                 false,
             )
-        cartMenuItem.actionView = cartBinding?.root
-        cartBinding?.iconCartMenu?.setOnClickListener {
+        cartMenuItem.actionView = cartIconBinding?.root
+        cartIconBinding?.presenter = presenter
+        cartIconBinding?.lifecycleOwner = this
+        cartIconBinding?.iconCartMenu?.setOnClickListener {
             startActivity(CartActivity.getIntent(this))
         }
-    }
-
-    private fun showMoreProductItems() {
-        presenter.updateProductItems()
     }
 
     private fun productClick(productModel: ProductModel) {
@@ -128,10 +123,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun showProductDetail(productModel: ProductModel) {
         startActivity(ProductDetailActivity.getIntent(this, productModel))
-    }
-
-    private fun showCart() {
-        presenter.updateCartCount()
     }
 
     companion object {

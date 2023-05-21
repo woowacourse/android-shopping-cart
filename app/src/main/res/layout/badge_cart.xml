@@ -4,6 +4,9 @@
 
     <data>
 
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.presentation.productlist.ProductListContract.Presenter" />
     </data>
 
     <FrameLayout
@@ -30,6 +33,7 @@
             android:layout_gravity="center"
             android:gravity="center"
             tools:text="10"
+            android:text="@{String.valueOf(presenter.cartProductInfoList.count)}"
             android:textAlignment="center"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="6dp" />

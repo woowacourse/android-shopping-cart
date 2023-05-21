@@ -10,7 +10,7 @@ class RecentProductDao(db: RecentProductDbHelper) : RecentProductRepository {
 
     private val writableDb: SQLiteDatabase = db.writableDatabase
 
-    override fun getRecentProductIds(size: Int): List<Int> {
+    override fun getRecentProductIdList(size: Int): List<Int> {
         val productIds = mutableListOf<Int>()
 
         val cursor = writableDb.query(

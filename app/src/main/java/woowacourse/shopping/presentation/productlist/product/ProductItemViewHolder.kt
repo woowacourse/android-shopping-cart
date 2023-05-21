@@ -1,68 +1,86 @@
 package woowacourse.shopping.presentation.productlist.product
 
-import android.view.View
+import androidx.core.view.doOnAttach
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.cart.CartDao
-import woowacourse.shopping.data.cart.CartDbHelper
-import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.MockProductDao
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.common.CounterContract
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.productlist.ProductListContract
 
 class ProductItemViewHolder(
     private val binding: ItemProductBinding,
-    private val showProductDetail: (ProductModel) -> Unit,
-    private val showCartCount: () -> Unit,
-) : RecyclerView.ViewHolder(binding.root), ProductItemContract.View {
+    private val presenter: ProductListContract.Presenter,
+) : RecyclerView.ViewHolder(binding.root) {
 
     private val context = binding.root.context
     private lateinit var productModel: ProductModel
     private val counterPresenter: CounterContract.Presenter = binding.counterProductList.presenter
-    private val productItemPresenter: ProductItemContract.Presenter by lazy {
-        ProductItemPresenter(
-            this,
-            CartRepositoryImpl(CartDao(CartDbHelper(context)), MockProductDao),
-        )
-    }
 
     init {
-        itemView.setOnClickListener { showProductDetail(productModel) }
+        itemViewClick()
+        setAddButtonClick()
+        setCounterMinusCLick()
+        setCounterPlusCLick()
     }
 
     fun bind(product: ProductModel) {
         productModel = product
-        binding.productModel = product
-        productItemPresenter.loadProductCount(product)
+        setUpBinding(productModel)
+        counterPresenter.updateCount(
+            presenter.cartProductInfoList.value.findCountByProduct(
+                productModel.id,
+            ),
+        )
+    }
+
+    private fun setUpBinding(product: ProductModel) {
+        itemView.doOnAttach {
+            binding.productModel = product
+            binding.presenter = presenter
+            binding.lifecycleOwner = itemView.findViewTreeLifecycleOwner()
+        }
+    }
+
+    private fun setCounterPlusCLick() {
         binding.counterProductList.plusButton.setOnClickListener {
             counterPresenter.plusCount()
-            productItemPresenter.changeProductCount(product, counterPresenter.counter.value!!.value)
-            showCartCount()
+            presenter.updateCartProductCount(productModel, counterPresenter.counter.value.value)
+            presenter.updateCartProductInfoList()
         }
+    }
+
+    private fun setCounterMinusCLick() {
         binding.counterProductList.minusButton.setOnClickListener {
             counterPresenter.minusCount()
-            counterPresenter.checkCounterVisibility()
-            productItemPresenter.changeProductCount(product, counterPresenter.counter.value!!.value)
-            showCartCount()
+            presenter.updateCartProductCount(productModel, counterPresenter.counter.value.value)
+            presenter.updateCartProductInfoList()
         }
+    }
+
+    private fun setAddButtonClick() {
         binding.buttonProductListAddCart.setOnClickListener {
-            productItemPresenter.putProductInCart(product)
+            presenter.putProductInCart(productModel)
+            presenter.updateCartProductInfoList()
             counterPresenter.updateCount(1)
-            counterPresenter.checkCounterVisibility()
-            showCartCount()
         }
     }
 
-    override fun setAddCartEnable(isEnabled: Boolean) {
-        if (isEnabled) {
-            binding.buttonProductListAddCart.visibility = View.VISIBLE
-        } else {
-            binding.buttonProductListAddCart.visibility = View.GONE
+    private fun itemViewClick() {
+        itemView.setOnClickListener {
+            presenter.saveRecentProduct(productModel.id)
+            presenter.updateRecentProductItems()
+            showProductDetail(productModel)
         }
     }
 
-    override fun setProductCount(count: Int) {
-        counterPresenter.updateCount(count)
-        counterPresenter.checkCounterVisibility()
+    private fun showProductDetail(productModel: ProductModel) {
+        context.startActivity(
+            ProductDetailActivity.getIntent(
+                context,
+                productModel,
+            ),
+        )
     }
 }

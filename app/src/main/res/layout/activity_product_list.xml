@@ -3,6 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="adapter"
+            type="woowacourse.shopping.presentation.common.NotifyAdapter" />
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.presentation.productlist.ProductListContract.Presenter" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

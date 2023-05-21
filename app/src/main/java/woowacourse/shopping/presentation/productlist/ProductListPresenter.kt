@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.productlist
 
+import woowacourse.shopping.CartProductInfoList
 import woowacourse.shopping.Product
 import woowacourse.shopping.Products
 import woowacourse.shopping.presentation.mapper.toPresentation
@@ -7,30 +8,32 @@ import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
+import woowacourse.shopping.util.SafeLiveData
+import woowacourse.shopping.util.SafeMutableLiveData
 
 class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
+    initProducts: Products = Products(listOf()),
+    initCartProducts: CartProductInfoList = CartProductInfoList(listOf()),
 ) : ProductListContract.Presenter {
 
-    private val products = Products()
+    private var products = initProducts
 
-    init {
-        updateProductItems()
-        updateRecentProductItems()
-    }
-
+    private val _cartProductInfoList = SafeMutableLiveData(initCartProducts)
+    override val cartProductInfoList: SafeLiveData<CartProductInfoList> get() = _cartProductInfoList
     override fun updateProductItems() {
-        val receivedProducts = productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
-        products.addProducts(receivedProducts)
+        val receivedProducts =
+            productRepository.getProductsWithRange(products.size, PRODUCTS_SIZE)
+        products = products.addProducts(receivedProducts)
         view.loadProductModels(products.toPresentation())
     }
 
     override fun updateRecentProductItems() {
-        val recentProductModels = getRecentProductModels()
-        view.loadRecentProductModels(recentProductModels)
+        val recentProducts = getRecentProducts()
+        view.loadRecentProductModels(recentProducts.toPresentation())
     }
 
     override fun saveRecentProduct(productId: Int) {
@@ -38,22 +41,31 @@ class ProductListPresenter(
         recentProductRepository.addRecentProductId(productId)
     }
 
-    override fun updateCartCount() {
-        val cartProductType = cartRepository.getAllCartProductsInfo()
-        val cartCount = cartProductType.count
-        view.showCartCount(cartCount)
+    override fun putProductInCart(productModel: ProductModel) {
+        cartRepository.putProductInCart(productModel.id)
     }
 
-    private fun getRecentProductModels(): List<ProductModel> {
-        val recentProductIds = recentProductRepository.getRecentProductIds(RECENT_PRODUCTS_SIZE)
-        return findProductsById(recentProductIds)
+    override fun updateCartProductCount(productModel: ProductModel, count: Int) {
+        if (count == 0) cartRepository.deleteCartProductId(productModel.id)
+        cartRepository.updateCartProductCount(productModel.id, count)
     }
 
-    private fun findProductsById(productIds: List<Int>): List<ProductModel> {
-        return productIds.map {
-            val product = productRepository.findProductById(it) ?: Product.defaultProduct
-            product.toPresentation()
-        }
+    override fun updateCartProductInfoList() {
+        val cartProductInfoList = cartRepository.getAllCartProductsInfo()
+        _cartProductInfoList.value = cartProductInfoList
+    }
+
+    private fun getRecentProducts(): Products {
+        val recentProductIds = recentProductRepository.getRecentProductIdList(RECENT_PRODUCTS_SIZE)
+        return findProductsByIdList(recentProductIds)
+    }
+
+    private fun findProductsByIdList(productIds: List<Int>): Products {
+        return Products(
+            productIds.map {
+                productRepository.findProductById(it) ?: Product.defaultProduct
+            },
+        )
     }
 
     private fun Products.toPresentation(): List<ProductModel> {
