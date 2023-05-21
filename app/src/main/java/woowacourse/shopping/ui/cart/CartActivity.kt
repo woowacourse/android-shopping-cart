@@ -69,7 +69,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartList() {
-        presenter.loadCartItems()
+        presenter.loadCartItemsOfCurrentPage()
     }
 
     private fun initPageControlField() {
@@ -80,6 +80,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initCartTotalItemControlField() {
         binding.tvCartTotalPrice.text = getString(R.string.product_price).format(0)
         binding.btnCartPurchase.text = getString(R.string.button_purchase).format(0)
+        setCartTotalCheckboxListener()
     }
 
     override fun initPageButtonClickListener() {
@@ -111,8 +112,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.btnCartPurchase.text = getString(R.string.button_purchase).format(amount)
     }
 
+    override fun updateTotalCheckbox(isAllChecked: Boolean) {
+        binding.cbCartTotal.setOnCheckedChangeListener(null)
+        binding.cbCartTotal.isChecked = isAllChecked
+        setCartTotalCheckboxListener()
+    }
+
+    private fun setCartTotalCheckboxListener() {
+        binding.cbCartTotal.setOnCheckedChangeListener { _, isChecked ->
+            presenter.setTotalItemsStateAtOnce(isChecked)
+        }
+    }
+
     override fun updatePage(page: Int) {
-        presenter.loadCartItems()
+        presenter.loadCartItemsOfCurrentPage()
         binding.tvCartPage.text = "$page"
     }
 

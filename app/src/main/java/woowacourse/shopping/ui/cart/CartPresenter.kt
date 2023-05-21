@@ -17,7 +17,7 @@ class CartPresenter(
             return (size - 1) / PAGE_SIZE + 1
         }
 
-    override fun loadCartItems() {
+    override fun loadCartItemsOfCurrentPage() {
         val offset = (currentPage - 1) * PAGE_SIZE
         view.setCartItems(
             cartRepository.findAll(limit = PAGE_SIZE, offset = offset).map(CartUIState::from)
@@ -30,22 +30,19 @@ class CartPresenter(
         checkedItems.removeIf { it.id == productId }
         setTotalInfo()
         view.updatePage(currentPage)
-        view.updateLeftButtonsEnabled(currentPage > 1)
-        view.updateRightButtonsEnabled(currentPage < maxOffset)
+        updatePageButtons()
     }
 
     override fun setPageButtons() {
         view.initPageButtonClickListener()
-        view.updateLeftButtonsEnabled(currentPage > 1)
-        view.updateRightButtonsEnabled(currentPage < maxOffset)
+        updatePageButtons()
     }
 
     override fun goLeftPage() {
         if (currentPage > 1) {
             currentPage--
             view.updatePage(currentPage)
-            view.updateLeftButtonsEnabled(currentPage > 1)
-            view.updateRightButtonsEnabled(currentPage < maxOffset)
+            updatePageButtons()
         }
     }
 
@@ -53,9 +50,13 @@ class CartPresenter(
         if (currentPage < maxOffset) {
             currentPage++
             view.updatePage(currentPage)
-            view.updateLeftButtonsEnabled(currentPage > 1)
-            view.updateRightButtonsEnabled(currentPage < maxOffset)
+            updatePageButtons()
         }
+    }
+
+    private fun updatePageButtons() {
+        view.updateLeftButtonsEnabled(currentPage > 1)
+        view.updateRightButtonsEnabled(currentPage < maxOffset)
     }
 
     override fun minusItemCount(productId: Long, oldCount: Int) {
@@ -89,6 +90,21 @@ class CartPresenter(
         }
 
         setTotalInfo()
+        view.updateTotalCheckbox(
+            (checkedItems.containsAll(cartRepository.findAll(PAGE_SIZE, (currentPage - 1) * PAGE_SIZE).map(CartUIState::from))),
+        )
+    }
+
+    override fun setTotalItemsStateAtOnce(isChecked: Boolean) {
+        val offset = (currentPage - 1) * PAGE_SIZE
+
+        cartRepository.findAll(limit = PAGE_SIZE, offset = offset).map(CartUIState::from)
+            .forEach {
+                if (isChecked) { checkedItems.add(it) } else { checkedItems.remove(it) }
+            }
+
+        setTotalInfo()
+        view.updatePage(currentPage)
     }
 
     private fun setTotalInfo() {
