@@ -15,7 +15,7 @@ inline fun <reified T : Parcelable> Intent.getParcelableExtraCompat(key: String)
     }
 }
 
-fun Activity.noIntentExceptionHandler(errorMessage: String) {
+fun Activity.executeExceptionHandler(errorMessage: String) {
     Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
     finish()
 }
