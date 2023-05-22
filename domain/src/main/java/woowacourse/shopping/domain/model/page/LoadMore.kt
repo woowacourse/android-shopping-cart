@@ -14,14 +14,14 @@ class LoadMore(
 
     override fun hasPrevious(): Boolean = value > 1
 
-    override fun hasNext(cart: Cart): Boolean = cart.items.size >= value * cart.loadUnit
+    override fun hasNext(cart: Cart): Boolean = cart.items.size >= value * sizePerPage
 
     override fun next(): Page = LoadMore(value + 1, sizePerPage)
 
     override fun update(value: Int): Page = LoadMore(value, sizePerPage)
 
     override fun takeItems(cart: Cart): List<CartProduct> =
-        cart.items.take(value * cart.loadUnit)
+        cart.items.take(value * sizePerPage)
 
     override fun getCheckedProductSize(cart: Cart): Int = cart.items
         .safeSubList(0, sizePerPage)

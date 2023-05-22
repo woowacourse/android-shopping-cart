@@ -6,7 +6,6 @@ typealias DomainCart = Cart
 
 data class Cart(
     val items: List<CartProduct> = emptyList(),
-    val loadUnit: Int,
     val minProductSize: Int = 0,
 ) {
     fun increaseProductCount(product: Product, count: Int = 1): Cart =

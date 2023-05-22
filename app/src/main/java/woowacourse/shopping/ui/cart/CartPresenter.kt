@@ -23,8 +23,8 @@ class CartPresenter(
     private val cartRepository: CartRepository,
     cartSize: Int = 5,
 ) : Presenter(view) {
-    private var cart: Cart = Cart(loadUnit = cartSize, minProductSize = 1)
-    private var currentPage: Page = Pagination()
+    private var cart: Cart = Cart(minProductSize = 1)
+    private var currentPage: Page = Pagination(sizePerPage = cartSize)
 
     private val _totalCheckSize = MutableLiveData(cartRepository.getCheckedProductCount())
     val totalCheckSize: LiveData<Int> get() = _totalCheckSize
