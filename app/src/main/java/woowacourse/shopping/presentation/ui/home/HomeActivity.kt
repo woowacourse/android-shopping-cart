@@ -92,9 +92,12 @@ class HomeActivity :
             setEventOnShowMoreButton()
         }
 
-        override fun setClickEventOnOperatorButton(operator: Boolean, productInCart: Product) {
+        override fun setClickEventOnOperatorButton(
+            operator: Boolean,
+            productInCart: ProductInCartUiState,
+        ) {
             val request = if (operator) PLUS else MINUS
-            presenter.addCountOfProductInCart(request, productInCart)
+            presenter.addCountOfProductInCart(request, productInCart.product)
         }
     }
 

@@ -111,6 +111,7 @@
             android:layout_height="wrap_content"
             android:background="@color/woowa_dealer_gray_700"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_shoppingCart_order_button"
             app:layout_constraintStart_toStartOf="parent">
 
             <CheckBox
@@ -154,13 +155,14 @@
 
         <TextView
             android:id="@+id/tv_shoppingCart_order_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:background="@color/woowa_dealer_mint_400"
             android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:text="@{@string/amount_format(presenter.totalAmount)}"
             android:textAppearance="@style/Woowa_pro_20"
             android:textColor="@color/white"
-            android:text="@{@string/amount_format(presenter.totalAmount)}"
             app:layout_constraintBottom_toBottomOf="@+id/cl_shoppingCart_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cl_shoppingCart_bottom"

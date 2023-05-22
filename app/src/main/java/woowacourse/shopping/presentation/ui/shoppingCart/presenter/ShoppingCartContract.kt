@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.shoppingCart.presenter
 
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 
@@ -22,6 +21,6 @@ interface ShoppingCartContract {
         fun goPreviousPage()
         fun checkPageMovement()
         fun deleteProductInCart(productId: Long): Boolean
-        fun addCountOfProductInCart(request: Operator, productInCart: Product)
+        fun addCountOfProductInCart(request: Operator, productInCart: ProductInCartUiState)
     }
 }

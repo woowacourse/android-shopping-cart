@@ -8,7 +8,6 @@ import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
@@ -92,8 +91,16 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             setEventOnDelete(productInCart)
         }
 
-        override fun setClickEventOnOperatorButton(operator: Boolean, productInCart: Product) {
+        override fun setClickEventOnOperatorButton(
+            operator: Boolean,
+            productInCart: ProductInCartUiState,
+        ) {
             val request = if (operator) Operator.PLUS else Operator.MINUS
+            if (productInCart.quantity == 1 && !operator) {
+                setEventOnDelete(productInCart)
+                return
+            }
+
             presenter.addCountOfProductInCart(request, productInCart)
         }
     }

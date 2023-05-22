@@ -3,7 +3,6 @@ package woowacourse.shopping.data.shoppingCart
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
-import android.util.Log
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_COLUMN_QUANTITY
 import woowacourse.shopping.data.WoowaShoppingContract.ShoppingCart.TABLE_NAME
@@ -30,7 +29,6 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
         while (cursor.moveToNext()) {
             itemContainer.add(readProductInCart(cursor))
         }
-        Log.d("1243", itemContainer.toString())
         return itemContainer
     }
 
@@ -41,14 +39,6 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
         if (deletedRows == 0) return false
         return true
     }
-
-//    override fun addProductInShoppingCart2(productId: Long, productQuantity: Int): Long {
-//        val data = ContentValues()
-//        data.put(TABLE_COLUMN_PRODUCT_ID, productId)
-//        data.put(TABLE_COLUMN_QUANTITY, productQuantity)
-//        Log.d("1243", data.toString())
-//        return shoppingDb.insert(TABLE_NAME, null, data)
-//    }
 
     override fun addProductInShoppingCart(productId: Long, productQuantity: Int): Long {
         val existingQuantity = getQuantityFromShoppingCart(productId)
@@ -68,7 +58,6 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
             }
             return shoppingDb.insert(TABLE_NAME, null, contentValues)
         }
-        Log.d("1243", rowsAffected.toString())
         return rowsAffected.toLong()
     }
 

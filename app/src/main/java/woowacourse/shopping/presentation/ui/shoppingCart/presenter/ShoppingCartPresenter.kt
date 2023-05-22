@@ -4,17 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.PageNumber
 import woowacourse.shopping.domain.Quantity
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.MINUS
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.PLUS
 import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ShoppingCartContract.Presenter {
-    lateinit var shoppingCart: List<ProductInCart>
     private var pageNumber = PageNumber()
 
     private val _isChecked: MutableLiveData<Boolean> = MutableLiveData(true)
@@ -25,12 +25,14 @@ class ShoppingCartPresenter(
     val totalAmount: LiveData<Int> get() = _totalAmount
 
     override fun getShoppingCart(page: Int) {
-        val shoppingCart =
+        val shoppingCart = shoppingCartRepository.getShoppingCart()
+        val shoppingCartByPage =
             shoppingCartRepository.getShoppingCartByPage(SHOPPING_CART_ITEM_COUNT, page)
 
         _totalAmount.value = shoppingCart.sumOf { it.quantity }
         _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
-        view.setShoppingCart(shoppingCart.map { it.toUiState() })
+
+        view.setShoppingCart(shoppingCartByPage.map { it.toUiState() })
     }
 
     override fun setPageNumber() {
@@ -67,20 +69,24 @@ class ShoppingCartPresenter(
         view.setPageButtonEnable(previousEnable, nextEnable)
     }
 
-    override fun addCountOfProductInCart(request: Operator, productInCart: Product) {
+    override fun addCountOfProductInCart(request: Operator, productInCart: ProductInCartUiState) {
         val quantity = Quantity()
         when (request) {
-            Operator.PLUS -> quantity.add()
-            Operator.MINUS -> quantity.subtract()
+            PLUS -> quantity.add()
+            MINUS -> quantity.subtract()
         }
 
-        shoppingCartRepository.addProductInCart(ProductInCart(productInCart, quantity.amount))
-
-        val shoppingCart = shoppingCartRepository.getShoppingCart().map { it.toUiState() }
+        shoppingCartRepository.addProductInCart(
+            ProductInCart(
+                productInCart.product,
+                quantity.amount,
+            ),
+        )
+        val shoppingCart = shoppingCartRepository.getShoppingCart()
 
         _totalAmount.value = shoppingCart.sumOf { it.quantity }
         _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
-        view.setShoppingCart(shoppingCart)
+        view.setShoppingCart(shoppingCart.map { it.toUiState() })
     }
 
     override fun deleteProductInCart(productId: Long): Boolean {
@@ -97,7 +103,7 @@ class ShoppingCartPresenter(
     private fun ProductInCart.toUiState(): ProductInCartUiState = ProductInCartUiState(
         product = this.product,
         quantity = this.quantity,
-        isChecked = isChecked.value ?: true,
+        isChecked = true,
     )
 
     companion object {
