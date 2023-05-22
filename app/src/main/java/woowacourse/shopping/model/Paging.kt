@@ -36,11 +36,13 @@ class Paging(private val cartProductRepository: CartProductRepository) {
     }
 
     fun isAllItemProductSelected(): Boolean {
+        if (presentPageProducts.isEmpty()) {
+            return false
+        }
         return presentPageProducts.all { product -> product.isSelected }
     }
 
     companion object {
-        private const val NOT_SELECTED_VALUE = 0
         private const val PAGE_STEP = 1
         private const val PAGE_PRODUCT_UNIT = 3
     }

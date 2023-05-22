@@ -32,11 +32,13 @@ class CounterView @JvmOverloads constructor(
         binding.btnPlus.setOnClickListener {
             count = count.inc()
             listener?.updateCount(this, count.value)
+            updateCountView()
         }
 
         binding.btnMinus.setOnClickListener {
             count = count.dec()
-            listener?.updateCount(this, count.value)
+            count = Count(listener?.updateCount(this, count.value)!!)
+            updateCountView()
         }
     }
 

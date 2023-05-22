@@ -34,10 +34,13 @@ class ShoppingCartViewHolder(
         }
 
         binding.counterView.listener = object : CounterViewEventListener {
-            override fun updateCount(counterView: CounterView, count: Int) {
-                binding.counterView.updateCountView()
+            override fun updateCount(counterView: CounterView, count: Int): Int {
+                if (count == IMPOSSIBLE_COUNT_VALUE) {
+                    return MINIMUM_COUNT_VALUE
+                }
                 cartProduct = CartProductUIModel(cartProduct.productUIModel, Count(count), cartProduct.isSelected)
                 onClickCountButton(cartProduct, binding.tvPrice)
+                return count
             }
         }
     }
@@ -48,5 +51,10 @@ class ShoppingCartViewHolder(
         binding.counterView.initCount(cartProduct.count.value)
         binding.counterView.updateCountView()
         binding.cbProduct.isChecked = cartProduct.isSelected
+    }
+
+    companion object {
+        private const val IMPOSSIBLE_COUNT_VALUE = 0
+        private const val MINIMUM_COUNT_VALUE = 1
     }
 }

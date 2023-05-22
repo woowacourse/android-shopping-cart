@@ -27,13 +27,14 @@ class ProductViewHolder(
             productOnClick(product)
         }
 
-        binding.counterMainProduct.counterListener = object: CounterViewEventListener {
-            override fun updateCount(counterView: CounterView, count: Int) {
+        binding.counterMainProduct.counterListener = object : CounterViewEventListener {
+            override fun updateCount(counterView: CounterView, count: Int): Int {
                 saveCartProductCount(product, count)
+                return count
             }
         }
 
-        binding.counterMainProduct.productCounterListener = object: ProductCounterViewEventListener {
+        binding.counterMainProduct.productCounterListener = object : ProductCounterViewEventListener {
             override fun onAddToCartButtonClick() {
                 addToCartOnClick(product)
             }

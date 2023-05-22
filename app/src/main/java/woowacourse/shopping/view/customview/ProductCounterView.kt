@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.shopping.domain.Count
 import woowacourse.shopping.databinding.ItemProductCounterBinding
 
 class ProductCounterView @JvmOverloads constructor(
@@ -24,11 +23,11 @@ class ProductCounterView @JvmOverloads constructor(
     }
 
     private fun setOnButtonClick() {
-        binding.productCounter.listener = object: CounterViewEventListener {
-            override fun updateCount(counterView: CounterView, count: Int) {
+        binding.productCounter.listener = object : CounterViewEventListener {
+            override fun updateCount(counterView: CounterView, count: Int): Int? {
                 binding.productCounter.updateCountView()
                 setViewVisibility(count)
-                counterListener?.updateCount(counterView, count)
+                return counterListener?.updateCount(counterView, count)
             }
         }
 
@@ -44,7 +43,7 @@ class ProductCounterView @JvmOverloads constructor(
     }
 
     fun setViewVisibility(count: Int) {
-        if (count == 0) {
+        if (count == INVISIBLE_COUNTER_VIEW_STANDARD) {
             binding.productToCart.visibility = VISIBLE
             binding.productCounter.visibility = GONE
         } else {
@@ -54,6 +53,7 @@ class ProductCounterView @JvmOverloads constructor(
     }
 
     companion object {
+        private const val INVISIBLE_COUNTER_VIEW_STANDARD = 0
         private const val INIT_COUNT_VALUE = 1
     }
 }

@@ -84,7 +84,7 @@ class CartProductDao(context: Context) :
     }
 
     fun updateCount(product: Product, count: Int) {
-        if(count == 0) {
+        if (count == 0) {
             remove(CartProduct(product, Count(0), false))
             return
         }

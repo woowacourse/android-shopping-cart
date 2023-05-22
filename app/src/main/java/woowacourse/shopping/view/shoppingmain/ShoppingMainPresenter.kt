@@ -56,6 +56,7 @@ class ShoppingMainPresenter(
 
     override fun addToCart(): (ProductUIModel) -> Unit = { product ->
         cartProductRepository.add(CartProduct(product.toDomain(), Count(1), false))
+        updateCartBadge()
     }
 
     override fun updateCart(): (ProductUIModel, Int) -> Unit = { product, count ->

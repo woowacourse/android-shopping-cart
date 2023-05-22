@@ -22,7 +22,7 @@ class CountSelectDialog(
 
     private lateinit var binding: DialogCountSelectBinding
     private val dialog = Dialog(context)
-    private var productCount = Count(1)
+    private var productCount = Count(INTI_COUNT_VALUE)
 
     fun show(product: ProductUIModel) {
         binding = DialogCountSelectBinding.inflate(context.layoutInflater)
@@ -34,9 +34,10 @@ class CountSelectDialog(
         setDialogSize(dialog.window)
 
         binding.counterView.listener = object : CounterViewEventListener {
-            override fun updateCount(counterView: CounterView, count: Int) {
-                binding.counterView.updateCountView()
-                productCount = Count(count)
+            override fun updateCount(counterView: CounterView, count: Int): Int {
+                val changedCount = if (count == 0) 1 else count
+                productCount = Count(changedCount)
+                return changedCount
             }
         }
 
@@ -67,5 +68,9 @@ class CountSelectDialog(
     private fun showCartPage() {
         context.startActivity(ShoppingCartActivity.intent(binding.root.context))
         context.finish()
+    }
+
+    companion object {
+        private const val INTI_COUNT_VALUE = 1
     }
 }
