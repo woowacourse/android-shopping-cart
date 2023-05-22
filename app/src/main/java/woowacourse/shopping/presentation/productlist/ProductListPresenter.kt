@@ -23,9 +23,10 @@ class ProductListPresenter(
         val receivedProducts = receiveProducts()
         val cartProductModels = receivedProducts.map { getCartProductModel(it) }
         view.setProductModels(cartProductModels)
+        loadCartCount()
     }
 
-    override fun loadCartCount() {
+    private fun loadCartCount() {
         val cartCount = cartRepository.getCartEntities().sumOf { it.count }
         view.setCartCount(cartCount)
     }
@@ -62,6 +63,7 @@ class ProductListPresenter(
         view.replaceProductModel(
             UnCheckableCartProductModel(cartProductModel.productModel, nextCount),
         )
+        loadCartCount()
     }
 
     override fun subCartProductCount(cartProductModel: CartProductModel) {
@@ -70,6 +72,7 @@ class ProductListPresenter(
         view.replaceProductModel(
             UnCheckableCartProductModel(cartProductModel.productModel, nextCount),
         )
+        loadCartCount()
     }
 
     private fun getRecentProductModels(): List<ProductModel> {
