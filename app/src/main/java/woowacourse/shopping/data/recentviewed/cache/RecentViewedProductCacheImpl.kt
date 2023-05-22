@@ -36,19 +36,16 @@ class RecentViewedProductCacheImpl(
         )
         val recentViewedProducts = mutableListOf<RecentViewedProductEntity>()
 
-        with(recentViewedCursor) {
-            while (moveToNext()) {
-                val id =
-                    getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
-
-                recentViewedProducts.add(
-                    RecentViewedProductEntity(id)
-                )
-            }
+        return with(recentViewedCursor) {
+            buildList {
+                while (moveToNext()) {
+                    val id =
+                        getInt(getColumnIndexOrThrow(RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID))
+                    add(RecentViewedProductEntity(id))
+                }
+                close()
+            }.reversed()
         }
-        recentViewedCursor.close()
-
-        return recentViewedProducts.toList().reversed()
     }
 
     override fun removeRecentViewedProduct() {

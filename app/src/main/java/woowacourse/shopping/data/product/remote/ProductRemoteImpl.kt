@@ -281,7 +281,6 @@ class ProductRemoteImpl : ProductRemote {
         }
     }
 
-
     private fun JSONObject.toProductEntity(): ProductEntity {
 
         return ProductEntity(
