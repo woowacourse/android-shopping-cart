@@ -29,7 +29,7 @@ class ProductDetailPresenterTest {
     fun setUp() {
         view = mockk()
         productRepository = mockk()
-        cartItemRepository = mockk()
+        cartItemRepository = mockk(relaxed = true)
         recentlyViewedProductRepository = mockk()
         sut = ProductDetailPresenter(
             view,
@@ -43,13 +43,13 @@ class ProductDetailPresenterTest {
     fun `특정 상품을 로드하면 뷰에 상품을 보여주고 최근 본 상품 저장소에 그 상품을 추가한다`() {
         val productId = 1L
         every { productRepository.findById(productId) } returns dummyProduct
-        every { view.setProduct(ProductDetailUIState.from(dummyProduct)) } just runs
+        every { view.setProduct(ProductDetailUIState.create(dummyProduct, false)) } just runs
         val recentlyViewedProduct = RecentlyViewedProduct(dummyProduct, LocalDateTime.now())
         every { recentlyViewedProductRepository.save(recentlyViewedProduct) } just runs
 
         sut.onLoadProduct(productId)
 
-        verify { view.setProduct(ProductDetailUIState.from(dummyProduct)) }
+        verify { view.setProduct(ProductDetailUIState.create(dummyProduct, false)) }
         verify { recentlyViewedProductRepository.save(recentlyViewedProduct) }
     }
 
@@ -60,7 +60,7 @@ class ProductDetailPresenterTest {
         val cartItem = CartItem(dummyProduct, LocalDateTime.now(), 1)
         every { cartItemRepository.save(cartItem) } just runs
 
-        sut.onAddProductToCart(productId)
+        sut.onAddProductToCart(productId, 1)
 
         verify { cartItemRepository.save(cartItem) }
     }

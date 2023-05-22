@@ -4,7 +4,7 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.utils.MockData
 
-object ProductRepositoryImpl : ProductRepository {
+object MemoryProductRepository : ProductRepository {
 
     private val products: Map<Long, Product> = MockData.getProductList().associateBy { it.id }
     override fun findAll(limit: Int, offset: Int): List<Product> {

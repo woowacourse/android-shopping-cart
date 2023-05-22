@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartItemRepositoryImpl
-import woowacourse.shopping.database.product.ProductRepositoryImpl
+import woowacourse.shopping.database.product.ServerProductRepository
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
@@ -26,9 +26,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private val presenter: ProductDetailContract.Presenter by lazy {
         ProductDetailPresenter(
             this,
-            ProductRepositoryImpl,
-            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl),
-            RecentlyViewedProductRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl)
+            ServerProductRepository,
+            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ServerProductRepository),
+            RecentlyViewedProductRepositoryImpl(DbHelper.getDbInstance(this), ServerProductRepository)
         )
     }
     private val lastViewedProductViewHolder: LastViewedProductViewHolder by lazy {

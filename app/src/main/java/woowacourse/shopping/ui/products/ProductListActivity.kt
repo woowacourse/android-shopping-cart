@@ -8,7 +8,7 @@ import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartItemRepositoryImpl
-import woowacourse.shopping.database.product.ProductRepositoryImpl
+import woowacourse.shopping.database.product.ServerProductRepository
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.ui.cart.CartActivity
@@ -31,10 +31,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             this,
             RecentlyViewedProductRepositoryImpl(
                 DbHelper.getDbInstance(this),
-                ProductRepositoryImpl
+                ServerProductRepository
             ),
-            ProductRepositoryImpl,
-            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ProductRepositoryImpl)
+            ServerProductRepository,
+            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ServerProductRepository)
         )
     }
 
