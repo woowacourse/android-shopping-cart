@@ -1,13 +1,11 @@
 package woowacourse.shopping.presentation.cart
 
-import woowacourse.shopping.data.cart.CartEntity
+import woowacourse.shopping.data.CartProductDataAdapter
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartPages
-import woowacourse.shopping.model.CartProduct
 import woowacourse.shopping.model.CartProducts
 import woowacourse.shopping.model.Counter
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.presentation.mapper.toDomain
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.CartProductModel
@@ -27,22 +25,9 @@ class CartPresenter(
     }
 
     private fun initCartPages() {
-        val productItems = loadCartProducts()
+        val productItems =
+            CartProductDataAdapter(cartRepository, productRepository).getCartProducts()
         cartPages = CartPages(CartProducts(productItems), initialPage)
-    }
-
-    private fun loadCartProducts(): List<CartProduct> {
-        val cartEntities = cartRepository.getCartEntities()
-        val productItems = cartEntities.map { cart ->
-            cartToProductItem(cart)
-        }
-        return productItems
-    }
-
-    private fun cartToProductItem(cart: CartEntity): CartProduct {
-        val cartProduct =
-            productRepository.findProductById(cart.productId) ?: Product.defaultProduct
-        return CartProduct(cartProduct, cart.count, true)
     }
 
     private fun updateProductsInCurrentPage() {
