@@ -13,10 +13,11 @@ class ProductCounter @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
     val binding = LayoutProductCounterBinding.inflate(LayoutInflater.from(context), this, true)
 
-    private var onCountChangeListener: (Int) -> Unit = {}
+    private var onCountChangeListener: (Int, Int) -> Unit = { _, _ -> }
 
     var minCount: Int = 0
     var maxCount: Int = 99
+    var productId: Int = 0
     var count: Int
         get() = binding.tvCount.text.toString().toInt()
         set(value) {
@@ -24,7 +25,7 @@ class ProductCounter @JvmOverloads constructor(
                 value < minCount -> minCount.toString()
                 value > maxCount -> maxCount.toString()
                 else -> {
-                    onCountChangeListener(value)
+                    onCountChangeListener(productId, value)
                     value.toString()
                 }
             }
@@ -34,7 +35,7 @@ class ProductCounter @JvmOverloads constructor(
         initView()
     }
 
-    fun setOnCountChangeListener(listener: (Int) -> Unit) {
+    fun setOnCountChangeListener(listener: (Int, Int) -> Unit) {
         onCountChangeListener = listener
     }
 
