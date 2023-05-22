@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import woowacourse.shopping.domain.model.Cart
-import woowacourse.shopping.domain.model.CartEntity
 import woowacourse.shopping.domain.model.CartProduct
 import woowacourse.shopping.domain.model.ProductCount
 import woowacourse.shopping.domain.model.page.Page
@@ -34,21 +33,17 @@ class CartPresenter(
         pageCheckSize == currentPage.takeItems(cart).size
     }
 
-    init {
-        val cartEntities = cartRepository.getAllCartEntities()
-        val loadedCart = loadCartProducts(cartEntities)
-        cart = cart.update(loadedCart)
-    }
-
     override fun fetchCart(page: Int) {
         currentPage = currentPage.update(page)
+        cart = cart.update(loadCartProducts())
+
         view.updateNavigatorEnabled(currentPage.hasPrevious(), currentPage.hasNext(cart))
         view.updatePageNumber(currentPage.toUi())
         fetchView()
     }
 
-    private fun loadCartProducts(cartEntities: List<CartEntity>): List<CartProduct> =
-        cartEntities.mapNotNull {
+    private fun loadCartProducts(): List<CartProduct> =
+        cartRepository.getAllCartEntities().mapNotNull {
             val product = productRepository.findProductById(it.productId)
             product?.run { CartProduct(it.id, this, ProductCount(it.count), it.checked) }
         }
