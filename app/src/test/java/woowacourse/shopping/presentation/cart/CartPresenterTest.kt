@@ -204,7 +204,7 @@ class CartPresenterTest {
         // then
         val cartProduct = cartProductsSlot.captured.find { it.productModel.id == 1 }
 
-        assertThat(cartProduct).isEqualTo(1)
+        assertThat(cartProduct?.count).isEqualTo(1)
     }
 
     @Test

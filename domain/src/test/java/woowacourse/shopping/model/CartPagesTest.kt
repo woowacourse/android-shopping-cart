@@ -16,26 +16,27 @@ class CartPagesTest {
     }
 
     @Test
-    fun `카트페이지 생성 시 처음 페이지는 0이다`() {
+    fun `카트페이지 생성 시 처음 페이지는 1이다`() {
         // given
         val cartPages = CartPages(cartProducts = CartProducts())
 
         // when & then
-        val expected = 0
+        val expected = 1
         assertThat(cartPages.pageNumber.value).isEqualTo(expected)
     }
 
     @Test
-    fun `페이지가 0일 떄 다음 페이지 상품을 요청하면 1 페이지의 상품을 얻는다`() {
+    fun `페이지가 1일 떄 다음 페이지 상품을 요청하면 2 페이지의 상품을 얻는다`() {
         // given
         val cartPages = CartPages(CartProducts(fakeCartProducts))
 
         // when 다음 페이지 상품 요청
-        val actualProducts = cartPages.getNextPageProducts()
+        cartPages.goNextPageProducts()
+        val actualProducts = cartPages.getCurrentProducts()
 
         // then 반환 1 부터 5 상품 & 페이지 번호 1
-        val expectedPage = 1
-        val expectedProducts = (1..5).map {
+        val expectedPage = 2
+        val expectedProducts = (6..10).map {
             CartProduct(
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
@@ -55,7 +56,8 @@ class CartPagesTest {
         val cartPages = CartPages(CartProducts(fakeCartProducts), Counter(2))
 
         // when 이전 페이지 상품 요청
-        val actualProducts = cartPages.getPreviousPageProducts()
+        cartPages.goPreviousPageProducts()
+        val actualProducts = cartPages.getCurrentProducts()
 
         // then 반환 1 부터 5 상품 & 페이지 번호 1
         val expectedPage = 1
@@ -79,9 +81,10 @@ class CartPagesTest {
         val cartPages = CartPages(CartProducts(fakeCartProducts), Counter(1))
 
         // when 삭제된 페이지 상품 요청
-        val actualProducts = cartPages.getDeletedProducts(
+        cartPages.deleteProducts(
             Product(4, "test.com", "햄버거", Price(10000)),
         )
+        val actualProducts = cartPages.getCurrentProducts()
 
         // then 반환 1, 2, 3, 5, 6 상품 & 페이지 번호 1
         val expectedProducts = listOf(1, 2, 3, 5, 6).map {
@@ -101,9 +104,11 @@ class CartPagesTest {
         val cartPages = CartPages(CartProducts(fakeCartProducts), Counter(1))
 
         // when 줄어든 페이지 상품 요청
-        val actualProducts = cartPages.getSubCountProducts(
+        cartPages.subCountProducts(
             Product(5, "test.com", "햄버거", Price(10000)),
         )
+
+        val actualProducts = cartPages.getCurrentProducts()
 
         // then 반환 1, 2, 3, 4, 5 상품 5번 개수 -1 & 페이지 번호 1
         val expectedProducts = listOf(1, 2, 3, 4).map {
@@ -127,9 +132,10 @@ class CartPagesTest {
         val cartPages = CartPages(CartProducts(fakeCartProducts), Counter(1))
 
         // when 삭제된 페이지 상품 요청
-        val actualProducts = cartPages.getAddCountProducts(
+        cartPages.addCountProducts(
             Product(1, "test.com", "햄버거", Price(10000)),
         )
+        val actualProducts = cartPages.getCurrentProducts()
 
         // then 반환 1, 2, 3, 4, 5 상품 1번 개수 +1 & 페이지 번호 1
         val expectedProducts = listOf(
