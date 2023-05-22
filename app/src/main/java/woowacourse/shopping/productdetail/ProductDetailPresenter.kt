@@ -30,7 +30,13 @@ class ProductDetailPresenter(
     }
 
     override fun addToCart() {
-        cartRepository.insert(CartProduct(count = 1, product = product.toDomain()))
+        val productCount = cartRepository.getProductCount(product.id)
+        if (productCount == 0) {
+            cartRepository.insert(CartProduct(count = 1, product = product.toDomain()))
+            view.showCartPage()
+            return
+        }
+        cartRepository.updateProductCount(product.id, productCount + 1)
         view.showCartPage()
     }
 }
