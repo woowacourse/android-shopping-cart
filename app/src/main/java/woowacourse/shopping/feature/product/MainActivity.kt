@@ -39,7 +39,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private val binding: ActivityMainBinding
         get() = _binding!!
 
-    private val cartRepository: CartRepository by lazy { CartRepositoryImpl(CartDao(this)) }
+    private val cartRepository: CartRepository by lazy {
+        CartRepositoryImpl(
+            MockProductRemoteService(),
+            CartDao(this)
+        )
+    }
     private val presenter: MainContract.Presenter by lazy {
         val productRepository: ProductRepository =
             MockRemoteProductRepositoryImpl(MockProductRemoteService())
@@ -50,7 +55,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         ProductListAdapter(
             cartProductStates = cartRepository.getAll().map(CartProduct::toUi),
             onProductClick = presenter::showProductDetail,
-            cartProductAddFab = presenter::storeCartProduct,
+            cartProductAddFab = { Thread { presenter.storeCartProduct(it) }.start() },
             cartProductCountMinus = presenter::minusCartProductCount,
             cartProductCountPlus = presenter::plusCartProductCount,
         )
@@ -136,11 +141,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun showEmptyProducts() = showToast("제품이 없습니다.")
 
     override fun showCartProductCount() {
-        cartCountBadge?.visibility = VISIBLE
+        runOnUiThread { cartCountBadge?.visibility = VISIBLE }
     }
 
     override fun hideCartProductCount() {
-        cartCountBadge?.visibility = GONE
+        runOnUiThread { cartCountBadge?.visibility = GONE }
     }
 
     private fun initList() {

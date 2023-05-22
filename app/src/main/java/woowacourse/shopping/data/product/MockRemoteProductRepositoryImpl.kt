@@ -13,7 +13,7 @@ class MockRemoteProductRepositoryImpl(
         onFailure: () -> Unit
     ) {
         Thread {
-            service.request(
+            service.requestProductsUnit(
                 lastProductId = lastProductId.toLong(),
                 onSuccess = onSuccess,
                 onFailure = onFailure

@@ -12,6 +12,7 @@ import com.example.domain.repository.CartRepository
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.MockProductRemoteService
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.feature.cart.CartActivity
@@ -28,7 +29,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private val presenter: ProductDetailContract.Presenter by lazy {
         val product: ProductState? by lazy { intent.getParcelableExtra(PRODUCT_KEY) }
         val recentProduct: RecentProductState? by lazy { intent.getParcelableExtra(RECENT_PRODUCT_KEY) }
-        val cartRepository: CartRepository = CartRepositoryImpl(CartDao(this))
+        val cartRepository: CartRepository = CartRepositoryImpl(MockProductRemoteService(), CartDao(this))
         ProductDetailPresenter(this, product, recentProduct, cartRepository)
     }
 
@@ -93,7 +94,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             selectCountDialogBinding.counterView.minusClickListener =
                 { presenter.minusCount(selectCountDialogBinding) }
             selectCountDialogBinding.addToCartBtn.setOnClickListener {
-                presenter.addCartProduct(selectCountDialogBinding.counterView.count)
+                runOnUiThread { presenter.addCartProduct(selectCountDialogBinding.counterView.count) }
             }
         }.create()
     }

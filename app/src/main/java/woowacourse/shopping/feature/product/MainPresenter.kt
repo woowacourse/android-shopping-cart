@@ -43,7 +43,7 @@ class MainPresenter(
 //        }
 
 //        view.addProductItems(getAddProductsUnit())
-//        loadItemFromIndex = loadItemToIndex
+        loadItemFromIndex += loadItemCountUnit
     }
 
     override fun loadRecentProducts() {
