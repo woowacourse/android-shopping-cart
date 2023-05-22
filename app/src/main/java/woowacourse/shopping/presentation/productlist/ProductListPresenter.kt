@@ -20,8 +20,8 @@ class ProductListPresenter(
     private var itemCount = Counter(FIRST_SIZE)
 
     override fun loadProducts() {
-        val receivedProducts = receiveProducts()
-        val cartProductModels = receivedProducts.map { getCartProductModel(it) }
+        val products = loadProductsWithSize(PRODUCTS_SIZE)
+        val cartProductModels = products.map { getCartProductModel(it) }
         view.setProductModels(cartProductModels)
         loadCartCount()
     }
@@ -37,12 +37,10 @@ class ProductListPresenter(
             cartRepository.getCartEntity(product.id).count,
         )
 
-    private fun receiveProducts(): List<Product> {
-        val receivedProducts =
-            productRepository.getProductsWithRange(itemCount.value, PRODUCTS_SIZE)
-        itemCount += PRODUCTS_SIZE
-
-        return receivedProducts
+    private fun loadProductsWithSize(size: Int): List<Product> {
+        val products = productRepository.getProductsWithRange(itemCount.value, size)
+        itemCount += size
+        return products
     }
 
     override fun loadRecentProducts() {
