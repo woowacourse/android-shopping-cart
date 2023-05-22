@@ -24,6 +24,6 @@ class LoadMore(
         cart.items.take(value * sizePerPage)
 
     override fun getCheckedProductSize(cart: Cart): Int = cart.items
-        .safeSubList(0, sizePerPage)
+        .safeSubList(0, value * sizePerPage)
         .count { item -> item.isChecked }
 }
