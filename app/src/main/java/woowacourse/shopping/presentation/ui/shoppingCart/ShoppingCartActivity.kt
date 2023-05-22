@@ -62,7 +62,7 @@ class ShoppingCartActivity :
     }
 
     private fun initView() {
-        presenter.getShoppingCart()
+        presenter.fetchShoppingCart()
         presenter.setPageNumber()
         presenter.checkPageMovement()
         presenter.setOrderCount()

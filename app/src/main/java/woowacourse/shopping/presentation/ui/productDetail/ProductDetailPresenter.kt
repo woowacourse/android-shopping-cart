@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.productDetail
 
-import android.util.Log
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
@@ -21,12 +20,10 @@ class ProductDetailPresenter(
     private lateinit var product: Product
 
     init {
-        when (val woowaResult = productRepository.getProduct(productId)) {
+        val woowaResult = productRepository.getProduct(productId)
+        when (woowaResult) {
             is SUCCESS -> product = woowaResult.data
-            is FAIL -> {
-                view.handleNoSuchProductError()
-                Log.d("ERROR", woowaResult.error.errorMessage)
-            }
+            is FAIL -> view.handleNoSuchProductError()
         }
         fetchLastViewedProduct(view, recentlyViewedRepository)
         recentlyViewedRepository.addRecentlyViewedProduct(productId)
@@ -38,13 +35,9 @@ class ProductDetailPresenter(
     ) {
         val result: WoowaResult<RecentlyViewedProduct> =
             recentlyViewedRepository.getLastViewedProduct()
-        Log.d("[ERROR]", "result: $result")
         when (result) {
             is SUCCESS -> view.setBindingData(product, result.data)
-            is FAIL -> {
-                view.handleNoSuchProductError()
-                Log.d("[ERROR]", result.error.errorMessage)
-            }
+            is FAIL -> view.handleNoSuchProductError()
         }
     }
 

@@ -27,7 +27,7 @@ class ShoppingCartPresenter(
         return (pageNumber.value - 1) * PAGE_UNIT + index
     }
 
-    override fun getShoppingCart() {
+    override fun fetchShoppingCart() {
         val pagedShoppingCart =
             if (shoppingCart.isEmpty()) {
                 emptyList()
@@ -50,7 +50,7 @@ class ShoppingCartPresenter(
     private fun goOtherPage() {
         checkPageMovement()
         setPageNumber()
-        getShoppingCart()
+        fetchShoppingCart()
     }
 
     override fun setPageNumber() {
@@ -70,7 +70,7 @@ class ShoppingCartPresenter(
         if (result) {
             shoppingCart.removeAt(position)
             updatePageNumber()
-            getShoppingCart()
+            fetchShoppingCart()
             setOrderCount()
             setPayment()
         }
@@ -112,7 +112,7 @@ class ShoppingCartPresenter(
     }
 
     private fun updateView() {
-        getShoppingCart()
+        fetchShoppingCart()
         setOrderCount()
         setPayment()
         setAllCheck()
