@@ -40,8 +40,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun setPresenter() {
-//        presenter =
-//            ProductListPresenter(this, ProductMockRepository, RecentViewedDbRepository(this), CartDbRepository(this))
         presenter =
             ProductListPresenter(this, ProductMockWebRepository(), RecentViewedDbRepository(this), CartDbRepository(this))
     }
