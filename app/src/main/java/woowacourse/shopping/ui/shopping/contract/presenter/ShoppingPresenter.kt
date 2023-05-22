@@ -72,6 +72,7 @@ class ShoppingPresenter(
         repository.findById(id).let {
             cartRepository.insert(CartProduct(it, count, true))
         }
+        updateItemCounts()
         updateCountSize()
     }
 
