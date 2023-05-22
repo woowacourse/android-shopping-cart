@@ -7,16 +7,20 @@ import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.databinding.RecentProductCatalogueBinding
 import woowacourse.shopping.datas.ProductDataRepository
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.productcatalogue.ProductCountClickListener
 import woowacourse.shopping.productcatalogue.list.ProductViewType.MAIN_PRODUCTS
 import woowacourse.shopping.productcatalogue.list.ProductViewType.READ_MORE
 import woowacourse.shopping.productcatalogue.list.ProductViewType.RECENT_PRODUCTS
 import woowacourse.shopping.productcatalogue.recent.RecentProductCatalogueAdapter
 import woowacourse.shopping.productcatalogue.recent.RecentProductCatalogueViewHolder
+import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
 class MainProductCatalogueAdapter(
     private val productOnClick: ProductClickListener,
+    private val productCountOnClick: ProductCountClickListener,
     private val readMoreOnClick: (Int, Int) -> Unit,
+    private val getProductCount: (ProductUIModel) -> Int,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val recentProducts = mutableListOf<RecentProductUIModel>()
 
@@ -47,6 +51,7 @@ class MainProductCatalogueAdapter(
             MAIN_PRODUCTS.ordinal -> {
                 MainProductCatalogueViewHolder(
                     MainProductCatalogueViewHolder.getView(parent),
+                    productCountOnClick,
                     productOnClick
                 )
             }
@@ -59,7 +64,8 @@ class MainProductCatalogueAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             MAIN_PRODUCTS.ordinal -> (holder as MainProductCatalogueViewHolder).bind(
-                ProductDataRepository.products[position - FIRST_PAGE].toUIModel()
+                ProductDataRepository.products[position - 1].toUIModel(),
+                getProductCount(ProductDataRepository.products[position - 1].toUIModel())
             )
         }
     }

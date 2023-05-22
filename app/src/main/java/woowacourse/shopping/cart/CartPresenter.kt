@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.shopping.domain.Cart
@@ -80,6 +81,9 @@ class CartPresenter(
 
     override fun calculateTotalPrice() {
         _totalPrice.value = cart.getPickedProductsTotalPrice()
+        Log.d("bandal", "${_totalPrice.value}")
+        Log.d("bandal", "${cart.products.map { it.product.name to it.isPicked }}")
+        Log.d("bandal", "${recentPageProducts.products.map {it.product.name to it.isPicked }}")
     }
 
     override fun updateIsPickAllProduct(isPicked: Boolean) {

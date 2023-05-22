@@ -60,6 +60,7 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
     }
 
     override fun insert(cartProduct: CartProduct) {
+        if (getProductCount(cartProduct.product.id) != 0) return
         val record = ContentValues().apply {
             put(KEY_IS_CHECKED, if (cartProduct.isPicked) TRUE else FALSE)
             put(KEY_COUNT, 1)
@@ -88,6 +89,16 @@ class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
         val whereClause = "$KEY_ID = ?"
         val whereArgs = arrayOf(productId.toString())
         database.update(TABLE_NAME, contentValues, whereClause, whereArgs)
+    }
+
+    override fun getProductCount(productId: Int): Int {
+        val query = "SELECT $KEY_COUNT FROM $TABLE_NAME WHERE $KEY_ID = $productId"
+        database.rawQuery(query, null).use {
+            if (it.moveToFirst()) {
+                return it.getInt(it.getColumnIndexOrThrow(KEY_COUNT))
+            }
+        }
+        return 0
     }
 
     override fun remove(productId: Int) {

@@ -11,6 +11,8 @@ interface CartRepository {
 
     fun updateProductCount(productId: Int, count: Int)
 
+    fun getProductCount(productId: Int): Int
+
     fun getSize(): Int
 
     fun insert(cartProduct: CartProduct)

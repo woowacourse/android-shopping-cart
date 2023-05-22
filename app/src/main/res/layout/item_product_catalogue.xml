@@ -8,16 +8,21 @@
         <variable
             name="product"
             type="woowacourse.shopping.uimodel.ProductUIModel" />
+
         <variable
             name="listener"
             type="woowacourse.shopping.ProductClickListener" />
+
+        <variable
+            name="countClickListener"
+            type="woowacourse.shopping.productcatalogue.ProductCountClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="180dp"
-        android:layout_height="220dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:onClick="@{()->listener.onProductClick(product)}"
-        android:paddingHorizontal="20dp">
+        android:padding="20dp">
 
         <ImageView
             android:id="@+id/iv_product_image"
@@ -55,5 +60,66 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10,000원" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_show"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="@{()-> countClickListener.onShowClicked(btCountDown,btCountUp,tvProductCount,fabShow)}"
+            android:src="@drawable/baseline_add_24"
+            app:backgroundTint="@color/white"
+            app:fabCustomSize="48dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
+
+        <TextView
+            android:id="@+id/bt_count_down"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_product_count_down"
+            android:gravity="center"
+            android:onClick="@{()-> countClickListener.onDownClicked(product,tvProductCount)}"
+            android:text="@string/minus"
+            android:textSize="22sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_count"
+            app:layout_constraintEnd_toStartOf="@+id/tv_product_count"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_product_count" />
+
+        <TextView
+            android:id="@+id/tv_product_count"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textSize="22sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/bt_count_up"
+            app:layout_constraintEnd_toStartOf="@+id/bt_count_up"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/bt_count_down"
+            app:layout_constraintTop_toTopOf="@+id/bt_count_up"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/bt_count_up"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bg_product_count_up"
+            android:gravity="center"
+            android:onClick="@{()-> countClickListener.onUpClicked(product,tvProductCount)}"
+            android:text="@string/plus"
+            android:textSize="22sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_product_count" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

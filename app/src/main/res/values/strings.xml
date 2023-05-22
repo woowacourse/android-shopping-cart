@@ -9,4 +9,6 @@
     <string name="first_page">1</string>
     <string name="cart_total_check_box_description">전체</string>
     <string name="cart_order_button_text">주문하기(%d)</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
 </resources>

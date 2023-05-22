@@ -2,9 +2,11 @@ package woowacourse.shopping.productcatalogue
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import woowacourse.shopping.BundleKeys
 import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.R
@@ -25,13 +27,16 @@ import woowacourse.shopping.uimodel.RecentProductUIModel
 class ProductCatalogueActivity :
     AppCompatActivity(),
     ProductCatalogueContract.View,
-    ProductClickListener {
+    ProductClickListener,
+    ProductCountClickListener {
     private lateinit var binding: ActivityProductCatalogueBinding
     private lateinit var presenter: ProductCatalogueContract.Presenter
     private val adapter: MainProductCatalogueAdapter by lazy {
         MainProductCatalogueAdapter(
             this,
+            this,
             ::readMore,
+            ::getProductCount,
         )
     }
 
@@ -101,6 +106,38 @@ class ProductCatalogueActivity :
         val intent = ProductDetailActivity.intent(this)
         intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
         startActivity(intent)
+    }
+
+    override fun onDownClicked(product: ProductUIModel, countView: TextView) {
+        val count = countView.text.toString().toInt() - 1
+        if (count <= 0) return
+        if (count == 1) presenter
+        presenter.updateCartProductCount(product, count)
+        countView.text = count.toString()
+        presenter.updateCartCount()
+    }
+
+    override fun onUpClicked(product: ProductUIModel, countView: TextView) {
+        val count = countView.text.toString().toInt() + 1
+        presenter.updateCartProductCount(product, count)
+        countView.text = count.toString()
+        presenter.updateCartCount()
+    }
+
+    override fun onShowClicked(
+        down: TextView,
+        up: TextView,
+        count: TextView,
+        show: FloatingActionButton
+    ) {
+        down.visibility = View.VISIBLE
+        up.visibility = View.VISIBLE
+        count.visibility = View.VISIBLE
+        show.visibility = View.GONE
+    }
+
+    private fun getProductCount(product: ProductUIModel): Int {
+        return presenter.getProductCount(product)
     }
 
     override fun onResume() {

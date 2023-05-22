@@ -1,10 +1,13 @@
 package woowacourse.shopping.productcatalogue
 
 import android.util.Log
+import com.shopping.domain.CartProduct
 import woowacourse.shopping.datas.CartRepository
 import woowacourse.shopping.datas.ProductRepository
 import woowacourse.shopping.datas.RecentRepository
+import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductCataloguePresenter(
     private val view: ProductCatalogueContract.View,
@@ -30,6 +33,18 @@ class ProductCataloguePresenter(
     override fun updateCartCount() {
         Log.d("cart", "updated")
         view.setCartCountCircle(cartRepository.getSize())
+    }
+
+    override fun updateCartProductCount(product: ProductUIModel, count: Int) {
+        if (count <= 0) return
+        if (count == 1) cartRepository.insert(CartProduct(true, 1, product.toDomain()))
+        cartRepository.updateProductCount(product.id, count)
+    }
+
+    override fun getProductCount(product: ProductUIModel): Int {
+        val count = cartRepository.getProductCount(product.id)
+        if (count == 1) cartRepository.insert(CartProduct(true, 1, product.toDomain()))
+        return count
     }
 
     companion object {

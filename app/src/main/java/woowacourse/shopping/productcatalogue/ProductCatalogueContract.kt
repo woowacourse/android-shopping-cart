@@ -1,5 +1,6 @@
 package woowacourse.shopping.productcatalogue
 
+import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
 interface ProductCatalogueContract {
@@ -14,5 +15,7 @@ interface ProductCatalogueContract {
         fun getRecentProduct()
         fun readMoreOnClick(unitSize: Int, page: Int)
         fun updateCartCount()
+        fun updateCartProductCount(product: ProductUIModel, count: Int)
+        fun getProductCount(product: ProductUIModel): Int
     }
 }
