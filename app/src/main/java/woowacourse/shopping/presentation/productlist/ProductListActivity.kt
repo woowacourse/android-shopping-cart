@@ -67,6 +67,18 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         presenter.updateCartProductInfoList()
     }
 
+    private fun initRecentProductAdapter() {
+        recentProductAdapter = RecentProductAdapter(::productClick)
+    }
+
+    private fun productClick(productModel: ProductModel) {
+        showProductDetail(productModel)
+    }
+
+    private fun showProductDetail(productModel: ProductModel) {
+        startActivity(ProductDetailActivity.getIntent(this, productModel))
+    }
+
     private fun initProductAdapter() {
         productListAdapter = ProductListAdapter(
             recentProductAdapter = recentProductAdapter,
@@ -79,10 +91,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
 
         activityBinding.recyclerProduct.adapter = productListAdapter
-    }
-
-    private fun initRecentProductAdapter() {
-        recentProductAdapter = RecentProductAdapter(::productClick)
     }
 
     override fun loadProductModels(productModels: List<ProductModel>) {
@@ -118,14 +126,6 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         cartIconBinding?.iconCartMenu?.setOnClickListener {
             startActivity(CartActivity.getIntent(this))
         }
-    }
-
-    private fun productClick(productModel: ProductModel) {
-        showProductDetail(productModel)
-    }
-
-    private fun showProductDetail(productModel: ProductModel) {
-        startActivity(ProductDetailActivity.getIntent(this, productModel))
     }
 
     companion object {

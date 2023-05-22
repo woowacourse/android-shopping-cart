@@ -15,24 +15,24 @@ import woowacourse.shopping.presentation.model.CartProductInfoModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
+    private lateinit var cartAdapter: CartAdapter
     private val presenter: CartContract.Presenter by lazy {
         CartPresenter(
             this,
             CartRepositoryImpl(CartDao(CartDbHelper(this)), ProductService),
         )
     }
-    private lateinit var cartAdapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setBinding()
+        setUpBinding()
         initView()
-        setContentView(binding.root)
         managePaging()
     }
 
-    private fun setBinding() {
+    private fun setUpBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         binding.lifecycleOwner = this
     }
 
@@ -56,6 +56,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.arrow_back_24)
     }
 
+    private fun updateView() {
+        presenter.loadCurrentPageProducts()
+        presenter.updateCurrentPageCartView()
+        presenter.checkPlusPageAble()
+        presenter.checkMinusPageAble()
+    }
+
     private fun managePaging() {
         onPlusPage()
         onMinusPage()
@@ -73,13 +80,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             presenter.minusPage()
             updateView()
         }
-    }
-
-    private fun updateView() {
-        presenter.loadCurrentPageProducts()
-        presenter.updateCurrentPageCartView()
-        presenter.checkPlusPageAble()
-        presenter.checkMinusPageAble()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -29,11 +29,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var productModel: ProductModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activityBinding = ActivityProductDetailBinding.inflate(layoutInflater)
-        setContentView(activityBinding.root)
+        setUpBinding()
         initProductModel()
         initPresenter()
         initView()
+    }
+
+    private fun setUpBinding() {
+        activityBinding = ActivityProductDetailBinding.inflate(layoutInflater)
+        setContentView(activityBinding.root)
+        activityBinding.onClickButton = showProductQuantitySelectionView
+        activityBinding.productModel = productModel
+        activityBinding.presenter = presenter
     }
 
     private val showProductQuantitySelectionView = { it: Int ->
@@ -41,36 +48,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             productModel = productModel,
             presenter = presenter,
         ).show(supportFragmentManager, "ProductDetailDialog")
-    }
-
-    private fun initView() {
-        setToolbar()
-        activityBinding.onClickButton = showProductQuantitySelectionView
-        activityBinding.productModel = productModel
-        activityBinding.presenter = presenter
-        presenter.checkMostRecentProduct()
-        presenter.saveRecentProduct()
-        mostRecentProductClick()
-    }
-
-    private fun setToolbar() {
-        setSupportActionBar(activityBinding.toolbarProductDetail.toolbar)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_product_detail_toolbar, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.icon_close -> {
-                finish()
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-        return true
     }
 
     private fun initProductModel() {
@@ -93,16 +70,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         )
     }
 
-    override fun showCompleteMessage(productName: String) {
-        Toast.makeText(
-            this,
-            getString(R.string.put_in_cart_complete_message, productName),
-            Toast.LENGTH_SHORT,
-        ).show()
+    private fun initView() {
+        setToolbar()
+        presenter.checkCurrentProductIsMostRecent()
+        presenter.saveRecentProduct()
+        mostRecentProductClick()
     }
 
-    override fun hideMostRecentProduct() {
-        activityBinding.cardProductDetailMostRecent.visibility = View.GONE
+    private fun setToolbar() {
+        setSupportActionBar(activityBinding.toolbarProductDetail.toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     private fun mostRecentProductClick() {
@@ -114,6 +91,33 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         activityBinding.cardProductDetailMostRecent.setOnClickListener {
             startActivity(intent)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_product_detail_toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.icon_close -> {
+                finish()
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+        return true
+    }
+
+    override fun showCompleteMessage(productName: String) {
+        Toast.makeText(
+            this,
+            getString(R.string.put_in_cart_complete_message, productName),
+            Toast.LENGTH_SHORT,
+        ).show()
+    }
+
+    override fun hideMostRecentProduct() {
+        activityBinding.cardProductDetailMostRecent.visibility = View.GONE
     }
 
     companion object {

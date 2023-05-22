@@ -21,18 +21,18 @@ class CartItemViewHolder(
         }
     }
 
+    private fun setUpBinding() {
+        binding.lifecycleOwner = itemView.findViewTreeLifecycleOwner()
+        binding.presenter = presenter
+        binding.position = adapterPosition
+    }
+
     private fun setUpView() {
         counterPresenter.updateCount(presenter.pageProducts.value.items[adapterPosition].count)
         setDeleteButtonClick()
         setPlusButtonClick()
         setMinusButtonClick()
         setCheckBoxCheckedChange()
-    }
-
-    private fun setUpBinding() {
-        binding.lifecycleOwner = itemView.findViewTreeLifecycleOwner()
-        binding.presenter = presenter
-        binding.position = adapterPosition
     }
 
     private fun setDeleteButtonClick() {

@@ -29,7 +29,7 @@ class ProductDetailPresenter(
             cartRepository.getCartProductInfoById(productModel.id) ?: _productInfo.value
     }
 
-    override fun checkMostRecentProduct() {
+    override fun checkCurrentProductIsMostRecent() {
         _mostRecentProduct.value = recentProductRepository.getMostRecentProduct()
         if (mostRecentProduct.value == productInfo.value.product) view.hideMostRecentProduct()
     }

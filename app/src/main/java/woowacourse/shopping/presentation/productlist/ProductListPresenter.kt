@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.productlist
 
 import woowacourse.shopping.CartProductInfoList
-import woowacourse.shopping.Product
 import woowacourse.shopping.Products
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.ProductModel
@@ -52,14 +51,6 @@ class ProductListPresenter(
 
     private fun getRecentProducts(): Products {
         return Products(recentProductRepository.getRecentProducts(RECENT_PRODUCTS_SIZE))
-    }
-
-    private fun findProductsByIdList(productIds: List<Int>): Products {
-        return Products(
-            productIds.map {
-                productRepository.findProductById(it) ?: Product.defaultProduct
-            },
-        )
     }
 
     private fun Products.toPresentation(): List<ProductModel> {

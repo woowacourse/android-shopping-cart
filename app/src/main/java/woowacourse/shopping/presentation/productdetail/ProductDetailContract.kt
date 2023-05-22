@@ -11,7 +11,7 @@ interface ProductDetailContract {
         fun saveProductInRepository(count: Int)
         fun updateProductCount(count: Int)
         fun saveRecentProduct()
-        fun checkMostRecentProduct()
+        fun checkCurrentProductIsMostRecent()
     }
 
     interface View {

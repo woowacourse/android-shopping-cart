@@ -48,7 +48,7 @@ class ProductDetailPresenterTest {
         // given
         every { recentProductRepository.getMostRecentProduct() } returns initProductModel.toDomain()
         // when
-        presenter.checkMostRecentProduct()
+        presenter.checkCurrentProductIsMostRecent()
         // then
         verify { view.hideMostRecentProduct() }
     }

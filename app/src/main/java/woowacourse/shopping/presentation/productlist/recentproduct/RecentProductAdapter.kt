@@ -10,11 +10,8 @@ import woowacourse.shopping.presentation.model.ProductModel
 class RecentProductAdapter(
     private val showProductDetail: (ProductModel) -> Unit,
 ) : ListAdapter<ProductModel, RecentProductItemViewHolder>(diffCallback()) {
-
-    private lateinit var binding: ItemRecentProductBinding
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductItemViewHolder {
-        binding =
+        val binding =
             ItemRecentProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecentProductItemViewHolder(binding, showProductDetail)
     }

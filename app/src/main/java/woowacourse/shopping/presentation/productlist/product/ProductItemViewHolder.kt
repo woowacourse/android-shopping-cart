@@ -25,6 +25,45 @@ class ProductItemViewHolder(
         setCounterPlusCLick()
     }
 
+    private fun itemViewClick() {
+        itemView.setOnClickListener {
+            showProductDetail(productModel)
+        }
+    }
+
+    private fun showProductDetail(productModel: ProductModel) {
+        context.startActivity(
+            ProductDetailActivity.getIntent(
+                context,
+                productModel,
+            ),
+        )
+    }
+
+    private fun setAddButtonClick() {
+        binding.buttonProductListAddCart.setOnClickListener {
+            presenter.putProductInCart(productModel)
+            presenter.updateCartProductInfoList()
+            counterPresenter.updateCount(1)
+        }
+    }
+
+    private fun setCounterMinusCLick() {
+        binding.counterProductList.minusButton.setOnClickListener {
+            counterPresenter.minusCount()
+            presenter.updateCartProductCount(productModel, counterPresenter.counter.value.value)
+            presenter.updateCartProductInfoList()
+        }
+    }
+
+    private fun setCounterPlusCLick() {
+        binding.counterProductList.plusButton.setOnClickListener {
+            counterPresenter.plusCount()
+            presenter.updateCartProductCount(productModel, counterPresenter.counter.value.value)
+            presenter.updateCartProductInfoList()
+        }
+    }
+
     fun bind(product: ProductModel) {
         productModel = product
         setUpBinding(productModel)
@@ -41,44 +80,5 @@ class ProductItemViewHolder(
             binding.presenter = presenter
             binding.lifecycleOwner = itemView.findViewTreeLifecycleOwner()
         }
-    }
-
-    private fun setCounterPlusCLick() {
-        binding.counterProductList.plusButton.setOnClickListener {
-            counterPresenter.plusCount()
-            presenter.updateCartProductCount(productModel, counterPresenter.counter.value.value)
-            presenter.updateCartProductInfoList()
-        }
-    }
-
-    private fun setCounterMinusCLick() {
-        binding.counterProductList.minusButton.setOnClickListener {
-            counterPresenter.minusCount()
-            presenter.updateCartProductCount(productModel, counterPresenter.counter.value.value)
-            presenter.updateCartProductInfoList()
-        }
-    }
-
-    private fun setAddButtonClick() {
-        binding.buttonProductListAddCart.setOnClickListener {
-            presenter.putProductInCart(productModel)
-            presenter.updateCartProductInfoList()
-            counterPresenter.updateCount(1)
-        }
-    }
-
-    private fun itemViewClick() {
-        itemView.setOnClickListener {
-            showProductDetail(productModel)
-        }
-    }
-
-    private fun showProductDetail(productModel: ProductModel) {
-        context.startActivity(
-            ProductDetailActivity.getIntent(
-                context,
-                productModel,
-            ),
-        )
     }
 }

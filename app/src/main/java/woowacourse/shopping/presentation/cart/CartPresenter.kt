@@ -26,12 +26,33 @@ class CartPresenter(
         initView()
     }
 
+    private fun initView() {
+        checkPlusPageAble()
+        checkMinusPageAble()
+    }
+
+    override fun checkPlusPageAble() {
+        view.setUpPlusPageState(paging.isPlusPageAble())
+    }
+
+    override fun checkMinusPageAble() {
+        view.setUpMinusPageState(paging.isMinusPageAble())
+    }
+
     override fun addProductInOrder(position: Int) {
         if (position == PREVIOUS_PAGE_POSITION) return
         val index = offset + position
         _loadedCartProducts.value =
             _loadedCartProducts.value.updateItemOrdered(index, true)
         updateCurrentPageProducts()
+    }
+
+    private fun updateCurrentPageProducts() {
+        _pageProducts.value =
+            loadedCartProducts.value.getItemsInRange(
+                offset,
+                paging.limit,
+            )
     }
 
     override fun deleteProductInOrder(position: Int) {
@@ -82,31 +103,10 @@ class CartPresenter(
             _loadedCartProducts.value.addAll(paging.loadPageItems(currentPage))
     }
 
-    override fun checkPlusPageAble() {
-        view.setUpPlusPageState(paging.isPlusPageAble())
-    }
-
-    override fun checkMinusPageAble() {
-        view.setUpMinusPageState(paging.isMinusPageAble())
-    }
-
     override fun updateCurrentPageCartView() {
         updateCurrentPageProducts()
         val cartProductInfoModels = pageProducts.value.items.map { it.toPresentation() }
         view.setCartItems(cartProductInfoModels)
-    }
-
-    private fun updateCurrentPageProducts() {
-        _pageProducts.value =
-            loadedCartProducts.value.getItemsInRange(
-                offset,
-                paging.limit,
-            )
-    }
-
-    private fun initView() {
-        checkPlusPageAble()
-        checkMinusPageAble()
     }
 
     companion object {
