@@ -70,4 +70,28 @@ class ProductDetailPresenterTest {
         // then
         verify(exactly = 1) { recentRepository.insert(fakeProduct) }
     }
+
+    @Test
+    fun `최근_본_상품이_없으면_최근_상품을_띄우지_않는다`() {
+        // given
+        every { recentRepository.getRecent(10) } answers { listOf() }
+
+        // when
+        presenter.manageRecentView()
+
+        // then
+        verify(exactly = 1) { view.disappearRecent() }
+    }
+
+    @Test
+    fun `최근_본_상품이_있으면_최근_상품을_띄운다`() {
+        // given
+        every { recentRepository.getRecent(10) } answers { List(10) { fakeProduct } }
+
+        // when
+        presenter.manageRecentView()
+
+        // then
+        verify(exactly = 1) { view.displayRecent(any()) }
+    }
 }
