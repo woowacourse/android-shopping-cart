@@ -11,6 +11,8 @@ import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_NAME
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_PRICE
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_TIME
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.TABLE_NAME
+import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class RecentProductDBRepository(private val database: SQLiteDatabase) : RecentRepository {
     override fun getAll(): List<RecentProduct> {
@@ -33,6 +35,23 @@ class RecentProductDBRepository(private val database: SQLiteDatabase) : RecentRe
         return products.distinctBy { it.product }.sortedBy { it.time }.takeLast(
             MAX_RECENT_PRODUCTS_SIZE
         ).reversed()
+    }
+
+    override fun getLatestProduct(): RecentProduct {
+        database.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $KEY_TIME DESC LIMIT 1", null).use {
+            if (it.moveToFirst()) {
+                return RecentProduct(
+                    time = it.getLong(it.getColumnIndexOrThrow(KEY_TIME)),
+                    Product(
+                        id = it.getInt(it.getColumnIndexOrThrow(KEY_ID)),
+                        name = it.getString(it.getColumnIndexOrThrow(KEY_NAME)),
+                        imageUrl = it.getString(it.getColumnIndexOrThrow(KEY_IMAGE)),
+                        price = Price(it.getInt(it.getColumnIndexOrThrow(KEY_PRICE))),
+                    )
+                )
+            }
+            return RecentProduct(0L, ProductUIModel.dummy.toDomain())
+        }
     }
 
     override fun insert(recentProduct: RecentProduct) {

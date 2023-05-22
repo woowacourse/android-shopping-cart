@@ -5,6 +5,7 @@ import com.shopping.domain.RecentProduct
 import woowacourse.shopping.datas.CartRepository
 import woowacourse.shopping.datas.RecentRepository
 import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductDetailPresenter(
@@ -18,6 +19,14 @@ class ProductDetailPresenter(
 
     override fun insertRecentRepository(currentTime: Long) {
         recentRepository.insert(RecentProduct(currentTime, product.toDomain()))
+    }
+
+    override fun getMostRecentProduct() {
+        val recentProduct = recentRepository.getLatestProduct().toUIModel()
+        if (product.id != recentProduct.product.id) {
+            view.setLatestProductVisibility()
+        }
+        view.showRecentProduct(recentProduct)
     }
 
     override fun addToCart() {

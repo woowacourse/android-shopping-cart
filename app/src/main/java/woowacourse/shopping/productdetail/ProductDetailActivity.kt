@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.BundleKeys
@@ -17,6 +18,7 @@ import woowacourse.shopping.datas.RecentProductDBHelper
 import woowacourse.shopping.datas.RecentProductDBRepository
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.RecentProductUIModel
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var presenter: ProductDetailContract.Presenter
@@ -36,11 +38,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         presenter = ProductDetailPresenter(this, productData, recentRepository, cartRepository)
         binding.presenter = presenter
+        presenter.getMostRecentProduct()
         presenter.insertRecentRepository(System.currentTimeMillis())
     }
 
     override fun showCartPage() {
         startActivity(CartActivity.intent(binding.root.context))
+    }
+
+    override fun setLatestProductVisibility() {
+        binding.clRecentProductBox.visibility = View.VISIBLE
+    }
+
+    override fun showRecentProduct(recentProduct: RecentProductUIModel) {
+        binding.recentProduct = recentProduct
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

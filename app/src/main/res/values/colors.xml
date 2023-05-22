@@ -14,5 +14,6 @@
     <color name="cart_info_box_color">#555555</color>
     <color name="checkbox_selected_color">#04C09E</color>
     <color name="cart_count_circle">#04C09E</color>
+    <color name="product_detail_last_product_title">#04C09E</color>
 
 </resources>

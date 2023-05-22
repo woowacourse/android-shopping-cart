@@ -8,6 +8,10 @@
         <variable
             name="presenter"
             type="woowacourse.shopping.productdetail.ProductDetailContract.Presenter" />
+
+        <variable
+            name="recentProduct"
+            type="woowacourse.shopping.uimodel.RecentProductUIModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -92,14 +96,59 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="@color/add_to_cart_button_color"
+            android:onClick="@{()->presenter.addToCart()}"
             android:text="@string/add_to_cart_button_name"
             android:textColor="@color/white"
-            android:onClick="@{()->presenter.addToCart()}"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_recent_product_box"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="33dp"
+            android:background="@drawable/solid_box"
+            android:padding="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/bt_add_to_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tv_last_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_product"
+                android:textColor="@color/product_detail_last_product_title"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/cl_recent_product_box" />
+
+            <TextView
+                android:id="@+id/tv_recent_product_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{recentProduct.product.name}"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_last_product"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <TextView
+                android:id="@+id/tv_recent_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/formatted_price(recentProduct.product.price)}"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_last_product"
+                tools:text="99,000원" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
