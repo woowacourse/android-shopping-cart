@@ -11,4 +11,6 @@ interface ShoppingCartSetClickListener : QuantityControlClickListener {
         operator: Boolean,
         productInCart: ProductInCartUiState,
     )
+
+    fun setClickEventOnCheckBox(isChecked: Boolean, productInCart: ProductInCartUiState)
 }

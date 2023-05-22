@@ -107,19 +107,21 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_shoppingCart_bottom"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="100dp"
             android:background="@color/woowa_dealer_gray_700"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tv_shoppingCart_order_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <CheckBox
-                android:id="@+id/checkBox"
+                android:id="@+id/cb_shoppingCart_all_check"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
+                android:checked="@={presenter._isChecked}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -131,9 +133,9 @@
                 android:text="@string/tv_shoppingCart_all_sellect"
                 android:textAppearance="@style/Woowa_air_16"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/checkBox"
-                app:layout_constraintStart_toStartOf="@+id/checkBox"
-                app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+                app:layout_constraintEnd_toEndOf="@+id/cb_shoppingCart_all_check"
+                app:layout_constraintStart_toStartOf="@+id/cb_shoppingCart_all_check"
+                app:layout_constraintTop_toBottomOf="@+id/cb_shoppingCart_all_check" />
 
             <TextView
                 android:id="@+id/tv_shoppingCart_total"
@@ -148,18 +150,18 @@
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/checkBox"
+                app:layout_constraintStart_toEndOf="@+id/cb_shoppingCart_all_check"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="154,222만원" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_shoppingCart_order_button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/woowa_dealer_mint_400"
             android:gravity="center"
-            android:paddingHorizontal="16dp"
+
             android:text="@{@string/amount_format(presenter.totalAmount)}"
             android:textAppearance="@style/Woowa_pro_20"
             android:textColor="@color/white"

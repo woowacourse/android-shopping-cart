@@ -22,5 +22,6 @@ interface ShoppingCartContract {
         fun checkPageMovement()
         fun deleteProductInCart(productId: Long): Boolean
         fun addCountOfProductInCart(request: Operator, productInCart: ProductInCartUiState)
+        fun calculateTotalWithCheck(isChecked: Boolean, productInCart: ProductInCartUiState)
     }
 }

@@ -103,6 +103,13 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
             presenter.addCountOfProductInCart(request, productInCart)
         }
+
+        override fun setClickEventOnCheckBox(
+            isChecked: Boolean,
+            productInCart: ProductInCartUiState,
+        ) {
+            presenter.calculateTotalWithCheck(isChecked, productInCart)
+        }
     }
 
     private fun setEventOnItem(productInCart: ProductInCartUiState) {

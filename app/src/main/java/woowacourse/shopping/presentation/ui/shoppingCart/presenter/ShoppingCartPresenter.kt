@@ -17,8 +17,9 @@ class ShoppingCartPresenter(
 ) : ShoppingCartContract.Presenter {
     private var pageNumber = PageNumber()
 
-    private val _isChecked: MutableLiveData<Boolean> = MutableLiveData(true)
-    val isChecked: LiveData<Boolean> get() = _isChecked
+    val _isChecked: MutableLiveData<Boolean> = MutableLiveData(true)
+
+    // val isChecked: LiveData<Boolean> get() = _isChecked
     private val _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
     val totalPrice: LiveData<Int> get() = _totalPrice
     private val _totalAmount: MutableLiveData<Int> = MutableLiveData(0)
@@ -91,19 +92,39 @@ class ShoppingCartPresenter(
 
     override fun deleteProductInCart(productId: Long): Boolean {
         val result = shoppingCartRepository.deleteProductInCart(productId)
-        val shoppingCart =
-            shoppingCartRepository.getShoppingCartByPage(SHOPPING_CART_ITEM_COUNT, pageNumber.value)
-
+        val shoppingCart = shoppingCartRepository.getShoppingCart()
         _totalAmount.value = shoppingCart.sumOf { it.quantity }
         _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
 
         return result
     }
 
+    override fun calculateTotalWithCheck(isChecked: Boolean, productInCart: ProductInCartUiState) {
+        val shoppingCart = shoppingCartRepository.getShoppingCart()
+
+        when (isChecked) {
+            false -> calculateUnChecked(shoppingCart)
+            true -> calculateChecked(shoppingCart)
+        }
+    }
+
+    private fun calculateUnChecked(shoppingCart: List<ProductInCart>) {
+        _isChecked.value = false
+        _totalAmount.value = _totalAmount.value?.minus(shoppingCart.sumOf { it.quantity })
+        _totalPrice.value =
+            _totalPrice.value?.minus(shoppingCart.sumOf { it.getTotalPriceOfProduct() })
+    }
+
+    private fun calculateChecked(shoppingCart: List<ProductInCart>) {
+        _totalAmount.value = _totalAmount.value?.plus(shoppingCart.sumOf { it.quantity })
+        _totalPrice.value =
+            _totalPrice.value?.plus(shoppingCart.sumOf { it.getTotalPriceOfProduct() })
+    }
+
     private fun ProductInCart.toUiState(): ProductInCartUiState = ProductInCartUiState(
         product = this.product,
         quantity = this.quantity,
-        isChecked = true,
+        isChecked = _isChecked.value ?: true,
     )
 
     companion object {
