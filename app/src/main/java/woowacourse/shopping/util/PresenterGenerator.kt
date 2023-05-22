@@ -1,6 +1,8 @@
 package woowacourse.shopping.util
 
 import android.content.Context
+import woowacourse.shopping.database.MockProductRemoteService
+import woowacourse.shopping.database.MockRemoteProductRepositoryImpl
 import woowacourse.shopping.database.ShoppingDBRepository
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.model.ProductUiModel
@@ -29,6 +31,7 @@ fun generateShoppingPresenter(
     ShoppingDBRepository(
         ShoppingDao(context),
     ),
+    MockRemoteProductRepositoryImpl(MockProductRemoteService()),
 )
 
 fun generateShoppingCartPresenter(

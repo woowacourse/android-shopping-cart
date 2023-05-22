@@ -2,15 +2,17 @@ package woowacourse.shopping.shopping
 
 import model.Product
 import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.database.product.ProductRepository
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toUiModel
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
     private val repository: ShoppingRepository,
+    private val productRepository: ProductRepository,
 ) : ShoppingContract.Presenter {
 
-    private var numberOfReadProduct: Int = 0
+    private var numberOfReadProduct: Long = 0
     private var readCount: Int = 0
 
     override fun loadProducts() {
@@ -31,10 +33,19 @@ class ShoppingPresenter(
     }
 
     private fun selectProducts(): List<ProductUiModel> {
+        var products = listOf<Product>()
+        productRepository.loadProducts(
+            numberOfReadProduct,
+            { products = it },
+            { products = listOf() },
+        )
+/*
+    SQLite를 사용했을 때 코드
         val products = repository.selectProducts(
             from = numberOfReadProduct,
             count = COUNT_TO_READ,
         )
+*/
 
         numberOfReadProduct += products.size
         readCount++
@@ -83,15 +94,25 @@ class ShoppingPresenter(
     }
 
     override fun refreshView() {
+        productRepository.loadProducts(
+            0,
+            { view.refreshShoppingProductsView(synchronizeWithCartProducts(it)) },
+            {},
+        )
+        Thread.sleep(1000)
+
+/*
+    SQLite를 사용했을 때 코드
         val products = repository.selectProducts(
             from = 0,
             count = COUNT_TO_READ * readCount,
         )
         view.refreshShoppingProductsView(synchronizeWithCartProducts(products))
+*/
     }
 
     companion object {
-        private const val COUNT_TO_READ = 20
+//        private const val COUNT_TO_READ = 20
         private const val PLUS_AMOUNT = 1
         private const val MINUS_AMOUNT = -1
     }

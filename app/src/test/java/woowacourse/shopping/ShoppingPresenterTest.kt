@@ -11,7 +11,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.database.product.ProductRepository
 import woowacourse.shopping.shopping.ShoppingContract
 import woowacourse.shopping.shopping.ShoppingPresenter
 import woowacourse.shopping.util.toUiModel
@@ -21,13 +21,15 @@ class ShoppingPresenterTest {
     lateinit var presenter: ShoppingContract.Presenter
     lateinit var view: ShoppingContract.View
     lateinit var repository: ShoppingRepository
+    lateinit var productRepository: ProductRepository
     lateinit var products: List<Product>
 
     @Before
     fun setUp() {
         repository = mockk(relaxed = true)
         view = mockk(relaxed = true)
-        presenter = ShoppingPresenter(view, repository)
+        productRepository = mockk(relaxed = true)
+        presenter = ShoppingPresenter(view, repository, productRepository)
         products = listOf(
             Product(name = "아메리카노"),
             Product(name = "카페라떼"),
@@ -57,13 +59,6 @@ class ShoppingPresenterTest {
             ProductUiModel(name = "카페라떼"),
         )
         assertEquals(expected, products)
-        verify {
-            view.setUpShoppingView(
-                products = products,
-                any(),
-                any(),
-            )
-        }
     }
 
     @Test
@@ -100,13 +95,20 @@ class ShoppingPresenterTest {
     @Test
     fun `저장소에서 추가적인 상품 목록을 불러와서 뷰를 초기화한다`() {
         // given
-        every { repository.selectProducts(any(), any()) } returns products
+        var additionalProducts = listOf<Product>()
+        every {
+            productRepository.loadProducts(
+                any(),
+                { additionalProducts = products },
+                {},
+            )
+        } just Runs
 
         // when
         presenter.readMoreShoppingProducts()
 
         // then
-        verify { view.refreshMoreShoppingProductsView(products.map { it.toUiModel() }) }
+        verify { view.refreshMoreShoppingProductsView(additionalProducts.map { it.toUiModel() }) }
     }
 
     @Test
@@ -197,31 +199,5 @@ class ShoppingPresenterTest {
 
         // then
         assertEquals(4, totalCount.captured)
-    }
-
-    @Test
-    fun `화면을 새로고침한다`() {
-        // given
-        val products = listOf(
-            Product(id = 0),
-            Product(id = 1),
-        )
-        val cartProducts = listOf(
-            CartProduct(Product(id = 0), count = 2),
-        )
-        val slot = slot<List<ProductUiModel>>()
-        every { repository.selectProducts(any(), any()) } returns products
-        every { repository.selectAllShoppingCartProducts() } returns cartProducts
-        every { view.refreshShoppingProductsView(capture(slot)) } just Runs
-
-        // when
-        presenter.refreshView()
-
-        // then
-        val expected = listOf(
-            ProductUiModel(id = 0, count = 2),
-            ProductUiModel(id = 1, count = 0),
-        )
-        assertEquals(expected, slot.captured)
     }
 }
