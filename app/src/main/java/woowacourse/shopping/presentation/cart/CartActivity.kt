@@ -9,7 +9,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.MockProductDao
+import woowacourse.shopping.data.product.ProductService
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.model.CartProductInfoModel
 
@@ -18,7 +18,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val presenter: CartContract.Presenter by lazy {
         CartPresenter(
             this,
-            CartRepositoryImpl(CartDao(CartDbHelper(this)), MockProductDao),
+            CartRepositoryImpl(CartDao(CartDbHelper(this)), ProductService),
         )
     }
     private lateinit var cartAdapter: CartAdapter

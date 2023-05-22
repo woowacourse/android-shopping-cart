@@ -6,8 +6,6 @@ import woowacourse.shopping.repository.ProductRepository
 class ProductRepositoryImpl constructor(
     private val productRemoteDataSource: ProductRemoteDataSource,
 ) : ProductRepository {
-    override val products: List<Product> = productRemoteDataSource.products
-
     override fun findProductById(id: Int): Product {
         return productRemoteDataSource.findProductById(id)
     }

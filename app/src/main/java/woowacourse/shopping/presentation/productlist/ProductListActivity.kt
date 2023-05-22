@@ -10,9 +10,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.MockProductDao
 import woowacourse.shopping.data.product.ProductRemoteDataSource
 import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.product.ProductService
 import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
@@ -30,14 +30,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var recentProductAdapter: RecentProductAdapter
     private lateinit var cartMenuItem: MenuItem
     private var cartIconBinding: BadgeCartBinding? = null
-    private val productRemoteDataSource: ProductRemoteDataSource by lazy { MockProductDao }
+    private val productRemoteDataSource: ProductRemoteDataSource by lazy { ProductService }
     private val presenter: ProductListPresenter by lazy {
         ProductListPresenter(
             this,
             ProductRepositoryImpl(productRemoteDataSource),
             RecentProductRepositoryImpl(
                 RecentProductDao(RecentProductDbHelper(this)),
-                MockProductDao,
+                ProductService,
             ),
             CartRepositoryImpl(CartDao(CartDbHelper(this)), productRemoteDataSource),
         )
