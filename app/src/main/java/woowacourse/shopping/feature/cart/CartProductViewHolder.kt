@@ -27,14 +27,12 @@ class CartProductViewHolder(
             onCartProductDeleteClick(cartProductState)
         }
         binding.counterView.plusClickListener = {
-            binding.counterView.count++
-            if (MAX_COUNT_VALUE < binding.counterView.count) binding.counterView.count--
+            binding.counterView.count = (++binding.counterView.count).coerceAtMost(MAX_COUNT_VALUE)
             cartProductState.count = binding.counterView.count
             updateCount(cartProductState.productId, binding.counterView.count)
         }
         binding.counterView.minusClickListener = {
-            binding.counterView.count--
-            if (binding.counterView.count < MIN_COUNT_VALUE) binding.counterView.count++
+            binding.counterView.count = (--binding.counterView.count).coerceAtLeast(MIN_COUNT_VALUE)
             cartProductState.count = binding.counterView.count
             updateCount(cartProductState.productId, binding.counterView.count)
         }

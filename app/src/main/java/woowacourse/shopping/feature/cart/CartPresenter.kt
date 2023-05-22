@@ -38,26 +38,22 @@ class CartPresenter(
     }
 
     override fun plusPageNumber() {
-        val nextPage: Int = pageNumber + 1
+        (++pageNumber).coerceAtMost(maxPageNumber)
 
         view.setCartPageNumberMinusEnable(true)
-        if (nextPage > maxPageNumber) return
-        if (nextPage < maxPageNumber) view.setCartPageNumberPlusEnable(true)
-        if (nextPage == maxPageNumber) view.setCartPageNumberPlusEnable(false)
-
-        pageNumber++
+        if (pageNumber > maxPageNumber) return
+        if (pageNumber < maxPageNumber) view.setCartPageNumberPlusEnable(true)
+        if (pageNumber == maxPageNumber) view.setCartPageNumberPlusEnable(false)
         loadCart()
     }
 
     override fun minusPageNumber() {
-        val nextPage: Int = pageNumber - 1
+        (--pageNumber).coerceAtLeast(minPageNumber)
 
         view.setCartPageNumberPlusEnable(true)
-        if (nextPage < minPageNumber) return
-        if (nextPage > minPageNumber) view.setCartPageNumberMinusEnable(true)
-        if (nextPage == minPageNumber) view.setCartPageNumberMinusEnable(false)
-
-        pageNumber--
+        if (pageNumber < minPageNumber) return
+        if (pageNumber > minPageNumber) view.setCartPageNumberMinusEnable(true)
+        if (pageNumber == minPageNumber) view.setCartPageNumberMinusEnable(false)
         loadCart()
     }
 

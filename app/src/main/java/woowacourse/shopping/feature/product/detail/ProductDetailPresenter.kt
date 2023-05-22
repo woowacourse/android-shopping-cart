@@ -42,8 +42,7 @@ class ProductDetailPresenter(
     }
 
     override fun minusCount(selectCountDialogBinding: DialogSelectCountBinding) {
-        count--
-        if (count < MIN_COUNT_VALUE) count++
+        count = (--count).coerceAtLeast(MIN_COUNT_VALUE)
         view.setCount(selectCountDialogBinding, count)
     }
 
@@ -52,8 +51,7 @@ class ProductDetailPresenter(
     }
 
     override fun plusCount(selectCountDialogBinding: DialogSelectCountBinding) {
-        count++
-        if (MAX_COUNT_VALUE < count) count--
+        count = (++count).coerceAtMost(MAX_COUNT_VALUE)
         view.setCount(selectCountDialogBinding, count)
     }
 

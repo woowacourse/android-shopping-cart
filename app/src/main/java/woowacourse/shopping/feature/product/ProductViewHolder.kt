@@ -39,18 +39,13 @@ class ProductViewHolder(
             binding.counterView.count = MIN_COUNT_VALUE
         }
         binding.counterView.minusClickListener = {
-            if (binding.counterView.count <= MIN_COUNT_VALUE) {
-                hideCounterView()
-            } else {
-                binding.counterView.count--
-                cartProductCountMinus(productState)
-            }
+            if (binding.counterView.count <= MIN_COUNT_VALUE) hideCounterView()
+            binding.counterView.count = (--binding.counterView.count).coerceAtLeast(MIN_COUNT_VALUE)
+            cartProductCountMinus(productState)
         }
         binding.counterView.plusClickListener = {
-            if (MAX_COUNT_VALUE > binding.counterView.count) {
-                binding.counterView.count++
-                cartProductCountPlus(productState)
-            }
+            binding.counterView.count = (++binding.counterView.count).coerceAtMost(MAX_COUNT_VALUE)
+            cartProductCountPlus(productState)
         }
     }
 
