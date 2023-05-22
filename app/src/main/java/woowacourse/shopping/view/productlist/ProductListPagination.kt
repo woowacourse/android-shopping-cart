@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.productlist
 
+import android.util.Log
 import woowacourse.shopping.common.Pagination
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
@@ -13,8 +14,10 @@ class ProductListPagination(
     override var isNextEnabled = nextItemExist()
 
     override fun nextItems(): List<Product> {
+        Log.d("HJHJ", "isNextEnabled")
         if (isNextEnabled) {
             val items = productRepository.findRange(mark, rangeSize)
+            Log.d("HJHJ", "dkssud d fdds $items")
             mark += rangeSize
             isNextEnabled = nextItemExist()
             return items

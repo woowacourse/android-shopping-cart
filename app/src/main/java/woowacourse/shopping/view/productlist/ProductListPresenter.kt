@@ -1,15 +1,16 @@
 package woowacourse.shopping.view.productlist
 
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ProductMockWebRepository
 import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 
 class ProductListPresenter(
     private val view: ProductListContract.View,
-    private val productRepository: ProductRepository,
+    private val productRepository: ProductMockWebRepository,
+    // private val productRepository: ProductRepository,
     private val recentViewedRepository: RecentViewedRepository,
     private val cartRepository: CartRepository,
 ) : ProductListContract.Presenter {
@@ -18,8 +19,10 @@ class ProductListPresenter(
 
     override fun fetchProducts() {
         val viewedProducts = recentViewedRepository.findAll()
+        productRepository.get()
         val viewedProductsUiModel =
             viewedProducts.map { productRepository.find(it).toUiModel() }.reversed()
+
         setCartProductCount()
         view.showProducts(viewedProductsUiModel, products)
     }
@@ -28,6 +31,7 @@ class ProductListPresenter(
         val viewedProducts = recentViewedRepository.findAll()
         val mark = if (viewedProducts.isNotEmpty()) products.size + 1 else products.size
         products.addAll(productListPagination.nextItems().map { it.toUiModel() })
+
         setCartProductCount()
         view.notifyAddProducts(mark, PAGINATION_SIZE)
     }

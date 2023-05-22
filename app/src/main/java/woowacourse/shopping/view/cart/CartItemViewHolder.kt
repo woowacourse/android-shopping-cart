@@ -21,7 +21,9 @@ sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     onItemClick.onPlusClick(product.id)
                 }
                 countView.minusClickListener = {
-                    onItemClick.onMinusClick(product.id)
+                    if (product.count > 1) {
+                        onItemClick.onMinusClick(product.id)
+                    }
                 }
             }
         }

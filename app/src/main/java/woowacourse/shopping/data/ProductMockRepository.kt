@@ -270,7 +270,7 @@ object ProductMockRepository : ProductRepository {
     }
 
     override fun find(id: Int): Product {
-        return products[id]
+        return products.getOrNull(id) ?: Product(-1, "", "", Price(0))
     }
 
     override fun findRange(mark: Int, rangeSize: Int): List<Product> {

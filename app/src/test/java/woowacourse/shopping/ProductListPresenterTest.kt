@@ -1,9 +1,15 @@
 package woowacourse.shopping
 
-import io.mockk.*
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
@@ -11,7 +17,6 @@ import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 import woowacourse.shopping.view.productlist.ProductListContract
-import woowacourse.shopping.view.productlist.ProductListPresenter
 
 class ProductListPresenterTest {
     private lateinit var presenter: ProductListContract.Presenter
@@ -38,7 +43,6 @@ class ProductListPresenterTest {
                 return mProducts.find { it.id == mark } != null
             }
         }
-
         val recentViewedRepository = object : RecentViewedRepository {
             private val mIds = mutableListOf(0, 1, 2)
             override fun findAll(): List<Int> {
@@ -54,19 +58,77 @@ class ProductListPresenterTest {
                     mIds.remove(it)
                 }
             }
-        }
 
-        presenter = ProductListPresenter(view, productRepository, recentViewedRepository)
+            override fun find(id: Int): Int? {
+                return id
+            }
+
+            override fun findMostRecent(): Int {
+                return 2
+            }
+        }
+        val cartRepository = object : CartRepository {
+            val myCart =
+                mutableListOf(
+                    CartProduct(1, 1, true),
+                    CartProduct(2, 2, true),
+                    CartProduct(3, 3, true),
+                )
+            var count = 1
+
+            override fun findAll(): List<CartProduct> {
+                return myCart
+            }
+
+            override fun add(id: Int, count: Int, check: Boolean) {
+                myCart.add(CartProduct(id, count, check))
+            }
+
+            override fun remove(id: Int) {
+                myCart.remove(CartProduct(id, id, true))
+            }
+
+            override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
+                return myCart
+            }
+
+            override fun isExistByMark(mark: Int): Boolean {
+                return myCart.size >= mark
+            }
+
+            override fun plusCount(id: Int) {
+                count++
+            }
+
+            override fun subCount(id: Int) {
+                count--
+            }
+
+            override fun findCheckedItem(): List<CartProduct> {
+                return myCart
+            }
+
+            override fun updateCheckState(id: Int, checked: Boolean) {
+            }
+        }
+        // presenter = ProductListPresenter(view, productRepository, recentViewedRepository, cartRepository)
     }
 
     @Test
     fun 최근_본_상품과_20개의_상품들을_띄울_수_있다() {
         val viewedProductsActual = slot<List<ProductModel>>()
         val productsActual = slot<List<ProductModel>>()
-        every { view.showProducts(capture(viewedProductsActual), capture(productsActual)) } just runs
+        every {
+            view.showProducts(
+                capture(viewedProductsActual),
+                capture(productsActual),
+            )
+        } just runs
         presenter.fetchProducts()
 
-        val viewedProductExpected = listOf(0, 1, 2).map { id -> products.find { it.id == id }?.toUiModel() }.sortedByDescending { it?.id }
+        val viewedProductExpected =
+            listOf(0, 1, 2).map { id -> products.find { it.id == id }?.toUiModel() }
+                .sortedByDescending { it?.id }
         val productsExpected = products.subList(0, 20).map { it.toUiModel() }
         assertEquals(viewedProductExpected, viewedProductsActual.captured)
         assertEquals(productsExpected, productsActual.captured)

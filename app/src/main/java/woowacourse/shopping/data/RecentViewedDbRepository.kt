@@ -27,7 +27,7 @@ class RecentViewedDbRepository(context: Context) :
     }
 
     override fun findMostRecent(): Int {
-        return dbHelper.selectMostRecent()!!
+        return dbHelper.selectMostRecent() ?: -1
     }
 
     override fun remove(id: Int) {
