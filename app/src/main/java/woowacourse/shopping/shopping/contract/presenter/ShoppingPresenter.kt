@@ -79,6 +79,11 @@ class ShoppingPresenter(
         cartRepository.updateCount(product.id, targetProduct?.count?.minus(1) ?: 0)
     }
 
+    override fun loadCartCount(id: Int): Int {
+        val cartProduct = cartRepository.findById(id)
+        return cartProduct?.count ?: 0
+    }
+
     companion object {
         private const val RECENT_PRODUCT_COUNT = 10
         private const val PRODUCT_COUNT = 20

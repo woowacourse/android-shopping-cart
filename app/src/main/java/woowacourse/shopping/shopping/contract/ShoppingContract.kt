@@ -23,5 +23,6 @@ interface ShoppingContract {
         fun addCart(product: ProductUIModel)
         fun addOneInCart(product: ProductUIModel)
         fun removeOneInCart(product: ProductUIModel)
+        fun loadCartCount(id: Int): Int
     }
 }

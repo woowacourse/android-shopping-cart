@@ -13,8 +13,8 @@ class ProductsViewHolder private constructor(
     val onClickAdd: (Int) -> Unit,
     private val onClickPlus: (Int) -> Unit,
     private val onClickMinus: (Int) -> Unit,
-) :
-    ItemViewHolder(binding.root) {
+    private val loadCartCount: (Int) -> Int,
+) : ItemViewHolder(binding.root) {
 
     init {
         binding.root.setOnClickListener {
@@ -36,7 +36,16 @@ class ProductsViewHolder private constructor(
     fun bind(productItemType: ProductsItemType) {
         val productItem = productItemType as? ProductItem ?: return
         binding.product = productItem.product
-        binding.customCountView.count = 1
+        val cartCount = loadCartCount(productItem.product.id)
+        if (cartCount == 0) {
+            binding.imgAddCart.visibility = View.VISIBLE
+            binding.customCountView.visibility = View.GONE
+            binding.customCountView.count = 1
+        } else {
+            binding.imgAddCart.visibility = View.GONE
+            binding.customCountView.visibility = View.VISIBLE
+            binding.customCountView.count = cartCount
+        }
     }
 
     companion object {
@@ -46,10 +55,18 @@ class ProductsViewHolder private constructor(
             onClickAdd: (Int) -> Unit,
             onClickPlus: (Int) -> Unit,
             onClickMinus: (Int) -> Unit,
+            loadCartCount: (Int) -> Int,
         ): ProductsViewHolder {
-            val binding = ProductItemBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
-            return ProductsViewHolder(binding, onClickItem, onClickAdd, onClickPlus, onClickMinus)
+            val binding =
+                ProductItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return ProductsViewHolder(
+                binding,
+                onClickItem,
+                onClickAdd,
+                onClickPlus,
+                onClickMinus,
+                loadCartCount,
+            )
         }
     }
 }

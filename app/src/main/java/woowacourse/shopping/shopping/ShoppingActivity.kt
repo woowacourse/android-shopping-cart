@@ -88,6 +88,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             presenter::addCart,
             presenter::addOneInCart,
             presenter::removeOneInCart,
+            presenter::loadCartCount,
         )
     }
 

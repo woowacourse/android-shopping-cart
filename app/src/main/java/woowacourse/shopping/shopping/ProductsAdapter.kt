@@ -15,6 +15,7 @@ class ProductsAdapter(
     private val onClickAdd: (ProductUIModel) -> Unit,
     private val onClickPlus: (ProductUIModel) -> Unit,
     private val onClickMinus: (ProductUIModel) -> Unit,
+    private val loadCartCount: (Int) -> Int,
 ) : RecyclerView.Adapter<ItemViewHolder>() {
     private var productItemTypes: MutableList<ProductsItemType> = productItemTypes.toMutableList()
 
@@ -30,6 +31,7 @@ class ProductsAdapter(
                 { onClickAdd((productItemTypes[it] as ProductItem).product) },
                 { onClickPlus((productItemTypes[it] as ProductItem).product) },
                 { onClickMinus((productItemTypes[it] as ProductItem).product) },
+                { loadCartCount(it) },
             )
             else -> throw IllegalArgumentException("Invalid view type")
         }
