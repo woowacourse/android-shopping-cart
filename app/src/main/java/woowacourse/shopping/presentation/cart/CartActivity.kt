@@ -25,11 +25,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         CartPresenter(this, cartRepository, productRepository)
     }
 
-    override fun setTotalPrice(price: Int) {
+    override fun showTotalPrice(price: Int) {
         binding.textOrderMoney.text = getString(R.string.price_format, price)
     }
 
-    override fun setTotalCount(count: Int) {
+    override fun showTotalCount(count: Int) {
         binding.textOrderCount.text = getString(R.string.order_count_format, count)
     }
 
@@ -69,7 +69,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         initCheckBoxClick()
     }
 
-    override fun setPage(count: Int) {
+    override fun showPageNumber(count: Int) {
         binding.textCartPage.text = count.toString()
     }
 
@@ -95,7 +95,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.loadCart()
     }
 
-    override fun setCartProductModels(cartProductModels: List<CartProductModel>) {
+    override fun showCartProductModels(cartProductModels: List<CartProductModel>) {
         cartAdapter.setItems(cartProductModels)
     }
 
@@ -111,7 +111,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setRightPageEnable(isEnable: Boolean) {
+    override fun showRightPageIsEnabled(isEnable: Boolean) {
         binding.buttonRightPage.isClickable = isEnable
         if (isEnable) {
             binding.buttonRightPage.setImageResource(R.drawable.icon_right_page_true)
@@ -120,7 +120,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setLeftPageEnable(isEnable: Boolean) {
+    override fun showLeftPageIsEnabled(isEnable: Boolean) {
         binding.buttonLeftPage.isClickable = isEnable
         if (isEnable) {
             binding.buttonLeftPage.setImageResource(R.drawable.icon_left_page_true)
@@ -139,7 +139,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setCheckBoxChecked(isChecked: Boolean) {
+    override fun showAllCheckBoxIsChecked(isChecked: Boolean) {
         binding.checkBoxSelectAll.isChecked = isChecked
     }
 

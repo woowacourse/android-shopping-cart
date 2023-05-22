@@ -39,8 +39,8 @@ class CartPresenterTest {
         val pageSlot = slot<Int>()
         val cartProductsSlot = slot<List<CheckableCartProductModel>>()
 
-        every { view.setPage(capture(pageSlot)) } just runs
-        every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
+        every { view.showPageNumber(capture(pageSlot)) } just runs
+        every { view.showCartProductModels(capture(cartProductsSlot)) } just runs
 
         every { cartRepository.getCartEntities() } returns (1..8).map { CartEntity(it, 1) }
         every { productRepository.findProductById(any()) } returns
@@ -70,8 +70,8 @@ class CartPresenterTest {
         // given
         val pageSlot = slot<Int>()
         val cartProductsSlot = slot<List<CheckableCartProductModel>>()
-        every { view.setPage(capture(pageSlot)) } just runs
-        every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
+        every { view.showPageNumber(capture(pageSlot)) } just runs
+        every { view.showCartProductModels(capture(cartProductsSlot)) } just runs
         every { cartRepository.getCartEntities() } returns (1..8).map { CartEntity(it, 1) }
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
@@ -102,8 +102,8 @@ class CartPresenterTest {
         // given
         val pageSlot = slot<Int>()
         val cartProductsSlot = slot<List<CheckableCartProductModel>>()
-        every { view.setPage(capture(pageSlot)) } just runs
-        every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
+        every { view.showPageNumber(capture(pageSlot)) } just runs
+        every { view.showCartProductModels(capture(cartProductsSlot)) } just runs
         every { cartRepository.getCartEntities() } returns (1..8).map { CartEntity(it, 1) }
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
@@ -136,8 +136,8 @@ class CartPresenterTest {
         val pageSlot = slot<Int>()
         val cartProductsSlot = slot<List<CheckableCartProductModel>>()
 
-        every { view.setPage(capture(pageSlot)) } just runs
-        every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
+        every { view.showPageNumber(capture(pageSlot)) } just runs
+        every { view.showCartProductModels(capture(cartProductsSlot)) } just runs
         every { cartRepository.getCartEntities() } returns listOf(CartEntity(1, 1))
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
@@ -159,7 +159,7 @@ class CartPresenterTest {
     fun `1번 상품이 2개일때 1 증가시키면 3이 된다`() {
         // given
         val cartProductsSlot = slot<List<CheckableCartProductModel>>()
-        every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
+        every { view.showCartProductModels(capture(cartProductsSlot)) } just runs
         every { cartRepository.getCartEntities() } returns listOf(CartEntity(1, 1))
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
@@ -185,7 +185,7 @@ class CartPresenterTest {
     fun `1번 상품이 2개일때 1 감소시키면 1이 된다`() {
         // given
         val cartProductsSlot = slot<List<CheckableCartProductModel>>()
-        every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
+        every { view.showCartProductModels(capture(cartProductsSlot)) } just runs
         every { cartRepository.getCartEntities() } returns listOf(CartEntity(1, 2))
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))
@@ -211,7 +211,7 @@ class CartPresenterTest {
     fun `1번 상품 선택이 변경된다`() {
         // given
         val cartProductsSlot = slot<List<CheckableCartProductModel>>()
-        every { view.setCartProductModels(capture(cartProductsSlot)) } just runs
+        every { view.showCartProductModels(capture(cartProductsSlot)) } just runs
         every { cartRepository.getCartEntities() } returns listOf(CartEntity(1, 1))
         every { productRepository.findProductById(any()) } returns
             Product(1, "test.com", "햄버거", Price(10000))

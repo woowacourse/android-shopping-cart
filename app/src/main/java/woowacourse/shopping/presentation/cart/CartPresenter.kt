@@ -87,9 +87,9 @@ class CartPresenter(
     }
 
     private fun updateCartSelectedInfo() {
-        view.setCheckBoxChecked(cartPages.isAllProductSelected())
-        view.setTotalPrice(cartPages.getSelectedProductsPrice())
-        view.setTotalCount(cartPages.getSelectedProductsCount())
+        view.showAllCheckBoxIsChecked(cartPages.isAllProductSelected())
+        view.showTotalPrice(cartPages.getSelectedProductsPrice())
+        view.showTotalCount(cartPages.getSelectedProductsCount())
     }
 
     override fun plusPage() {
@@ -113,16 +113,16 @@ class CartPresenter(
     }
 
     private fun updateCart(cartProducts: CartProducts) {
-        view.setPage(cartPages.pageNumber.value)
-        view.setCartProductModels(cartProducts.toPresentation())
+        view.showPageNumber(cartPages.pageNumber.value)
+        view.showCartProductModels(cartProducts.toPresentation())
     }
 
     private fun checkRightPageAble() {
-        view.setRightPageEnable(cartPages.isNextPageAble())
+        view.showRightPageIsEnabled(cartPages.isNextPageAble())
     }
 
     private fun checkLeftPageAble() {
-        view.setLeftPageEnable(cartPages.isPreviousPageAble())
+        view.showLeftPageIsEnabled(cartPages.isPreviousPageAble())
     }
 
     private fun CartProducts.toPresentation(): List<CartProductModel> {

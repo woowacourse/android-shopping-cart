@@ -17,12 +17,12 @@ interface CartContract {
     }
 
     interface View {
-        fun setCartProductModels(cartProductModels: List<CartProductModel>)
-        fun setPage(count: Int)
-        fun setRightPageEnable(isEnable: Boolean)
-        fun setLeftPageEnable(isEnable: Boolean)
-        fun setTotalPrice(price: Int)
-        fun setTotalCount(count: Int)
-        fun setCheckBoxChecked(isChecked: Boolean)
+        fun showCartProductModels(cartProductModels: List<CartProductModel>)
+        fun showPageNumber(count: Int)
+        fun showRightPageIsEnabled(isEnable: Boolean)
+        fun showLeftPageIsEnabled(isEnable: Boolean)
+        fun showTotalPrice(price: Int)
+        fun showTotalCount(count: Int)
+        fun showAllCheckBoxIsChecked(isChecked: Boolean)
     }
 }
