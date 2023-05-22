@@ -20,5 +20,8 @@ interface ShoppingMainContract {
         fun loadProductDetailPage()
         fun loadMoreScroll()
         fun updateCartBadge()
+        fun updateProductCartCount(): (ProductUIModel) -> Int
+        fun addToCart(): (ProductUIModel) -> Unit
+        fun updateCart(): (ProductUIModel, Int) -> Unit
     }
 }

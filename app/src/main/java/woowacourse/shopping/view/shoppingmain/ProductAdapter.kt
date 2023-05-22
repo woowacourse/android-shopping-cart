@@ -6,12 +6,15 @@ import woowacourse.shopping.model.uimodel.ProductUIModel
 
 class ProductAdapter(
     private var products: List<ProductUIModel>,
-    private val productOnClick: (ProductUIModel) -> Unit
+    private val productOnClick: (ProductUIModel) -> Unit,
+    private val findCartCountById: (ProductUIModel) -> Int,
+    private val addToCartOnClick: (ProductUIModel) -> Unit,
+    private val saveCartProductCount: (ProductUIModel, Int) -> Unit
 ) :
     RecyclerView.Adapter<ProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        return ProductViewHolder(parent, productOnClick)
+        return ProductViewHolder(parent, productOnClick, findCartCountById, addToCartOnClick, saveCartProductCount)
     }
 
     override fun getItemViewType(position: Int): Int {

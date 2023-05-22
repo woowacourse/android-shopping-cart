@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.repository
 
 import com.shopping.domain.CartProduct
+import com.shopping.domain.Product
 import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.data.db.CartProductDao
 
@@ -30,12 +31,20 @@ class CartProductRepositoryImpl(
         cartProductDao.update(cartProduct)
     }
 
+    override fun updateCount(product: Product, count: Int) {
+        cartProductDao.updateCount(product, count)
+    }
+
     override fun insert(cartProduct: CartProduct) {
         cartProductDao.insert(cartProduct)
     }
 
     override fun add(cartProduct: CartProduct) {
         cartProductDao.add(cartProduct)
+    }
+
+    override fun findCountById(id: Int): Int {
+        return cartProductDao.getCountById(id)
     }
 
     override fun remove(cartProduct: CartProduct) {

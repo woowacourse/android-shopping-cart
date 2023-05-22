@@ -75,11 +75,25 @@ class CartProductDao(context: Context) :
     fun update(cartProduct: CartProduct) {
         val contextValues = ContentValues().apply {
             put(KEY_COUNT, cartProduct.count.value)
-
             put(KEY_SELECTED, cartProduct.isSelected)
         }
         val whereClause = "$KEY_ID=?"
         val whereArgs = arrayOf(cartProduct.product.id.toString())
+
+        writableDatabase.update(TABLE_NAME, contextValues, whereClause, whereArgs)
+    }
+
+    fun updateCount(product: Product, count: Int) {
+        if(count == 0) {
+            remove(CartProduct(product, Count(0), false))
+            return
+        }
+
+        val contextValues = ContentValues().apply {
+            put(KEY_COUNT, count)
+        }
+        val whereClause = "$KEY_ID=?"
+        val whereArgs = arrayOf(product.id.toString())
 
         writableDatabase.update(TABLE_NAME, contextValues, whereClause, whereArgs)
     }

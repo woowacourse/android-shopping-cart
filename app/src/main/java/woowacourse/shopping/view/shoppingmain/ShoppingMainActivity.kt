@@ -67,7 +67,10 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     private fun setAdapters() {
         productAdapter = ProductAdapter(
             presenter.loadProducts(),
-            showProductDetailPage()
+            showProductDetailPage(),
+            presenter.updateProductCartCount(),
+            presenter.addToCart(),
+            presenter.updateCart()
         )
         recentProductAdapter = RecentProductAdapter(
             presenter.getRecentProducts(),

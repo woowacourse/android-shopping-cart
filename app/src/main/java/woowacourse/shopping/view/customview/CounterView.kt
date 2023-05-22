@@ -25,6 +25,7 @@ class CounterView @JvmOverloads constructor(
 
     fun initCount(initCount: Int) {
         count = Count(initCount)
+        binding.tvCount.text = count.value.toString()
     }
 
     private fun setOnButtonClick() {

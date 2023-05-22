@@ -1,10 +1,13 @@
 package woowacourse.shopping.view.shoppingmain
 
+import com.shopping.domain.CartProduct
+import com.shopping.domain.Count
 import com.shopping.repository.CartProductRepository
 import com.shopping.repository.ProductRepository
 import com.shopping.repository.RecentProductsRepository
 import woowacourse.shopping.model.uimodel.ProductUIModel
 import woowacourse.shopping.model.uimodel.RecentProductUIModel
+import woowacourse.shopping.model.uimodel.mapper.toDomain
 import woowacourse.shopping.model.uimodel.mapper.toUIModel
 
 class ShoppingMainPresenter(
@@ -45,6 +48,19 @@ class ShoppingMainPresenter(
 
     override fun updateCartBadge() {
         view.updateCartBadgeCount(cartProductRepository.getAllProductsCount())
+    }
+
+    override fun updateProductCartCount(): (ProductUIModel) -> Int = { product ->
+        cartProductRepository.findCountById(product.id)
+    }
+
+    override fun addToCart(): (ProductUIModel) -> Unit = { product ->
+        cartProductRepository.add(CartProduct(product.toDomain(), Count(1), false))
+    }
+
+    override fun updateCart(): (ProductUIModel, Int) -> Unit = { product, count ->
+        cartProductRepository.updateCount(product.toDomain(), count)
+        updateCartBadge()
     }
 
     companion object {
