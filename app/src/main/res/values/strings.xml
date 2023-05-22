@@ -12,5 +12,7 @@
     <string name="unexpected_error">예상치 못한 요류가 발생했습니다. 지속될 경우 앱을 재실행해주세요</string>
     <string name="all">전체</string>
     <string name="orderCount">주문하기(%d)</string>
+    <string name="lastViewedProduct">마지막으로 본 상품</string>
+    <string name="put">담기</string>
 
 </resources>

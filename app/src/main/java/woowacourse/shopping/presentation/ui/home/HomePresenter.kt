@@ -2,15 +2,13 @@ package woowacourse.shopping.presentation.ui.home
 
 import woowacourse.shopping.domain.model.Operator
 import woowacourse.shopping.domain.model.ProductInCart
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.util.WoowaResult
 import woowacourse.shopping.presentation.model.HomeData
-import woowacourse.shopping.presentation.model.HomeMapper.toProductItem
-import woowacourse.shopping.presentation.model.HomeMapper.toRecentlyViewedProduct
 import woowacourse.shopping.presentation.model.ProductItem
 import woowacourse.shopping.presentation.model.RecentlyViewedItem
-import woowacourse.shopping.presentation.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.model.ShowMoreItem
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.PRODUCT
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.SHOW_MORE
@@ -32,7 +30,6 @@ class HomePresenter(
     override fun fetchRecentlyViewed() {
         recentlyViewedItem = productRepository
             .getRecentlyViewedProducts(UNIT)
-            .map { it.toRecentlyViewedProduct() }
         if (recentlyViewedItem.isEmpty()) return
         checkRecentlyViewedInit()
         view.updateRecentlyViewedProducts(recentlyViewedItem.toList())
@@ -90,7 +87,8 @@ class HomePresenter(
     }
 
     private fun updateProductItem(position: Int, product: ProductInCart) {
-        val result = shoppingCartRepository.updateProductCount(product.product.id, product.quantity)
+        val result =
+            shoppingCartRepository.updateProductQuantity(product.product.id, product.quantity)
         when (result) {
             is WoowaResult.SUCCESS -> update(position, product)
             is WoowaResult.FAIL -> {

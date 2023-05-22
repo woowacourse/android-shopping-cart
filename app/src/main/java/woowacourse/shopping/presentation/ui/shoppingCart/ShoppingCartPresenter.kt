@@ -96,7 +96,7 @@ class ShoppingCartPresenter(
     override fun updateProductQuantity(index: Int, operator: Operator) {
         val position = getAbsolutePosition(index)
         val productInCart = operator.operate(shoppingCart[position])
-        val result = shoppingCartRepository.updateProductCount(
+        val result = shoppingCartRepository.updateProductQuantity(
             productInCart.product.id,
             productInCart.quantity,
         )

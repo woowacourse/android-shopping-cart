@@ -11,7 +11,8 @@ import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
@@ -38,8 +39,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setContentView(binding.root)
 
         presenter = initPresenter(intent.getLongExtra(PRODUCT_ID, DEFAULT_ID))
-        binding.presenter = presenter
         setClickEvent()
+    }
+
+    override fun setBindingData(product: Product, lastViewedProduct: RecentlyViewedProduct) {
+        binding.product = product
+        binding.lastViewedProduct = lastViewedProduct
     }
 
     override fun handleNoSuchProductError() {
@@ -50,6 +55,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun setClickEvent() {
         clickClose()
         clickShoppingCart()
+        clickLastViewedProduct()
     }
 
     private fun clickClose() {
@@ -58,8 +64,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun clickShoppingCart() {
         binding.buttonProductDetailPutInShoppingCart.setOnClickListener {
-            presenter.addProductInCart()
-            startActivity(Intent(this, ShoppingCartActivity::class.java))
+            /*presenter.addProductInCart()
+            startActivity(Intent(this, ShoppingCartActivity::class.java))*/
+            OrderDialog.makeDialog(binding.product?.id ?: -1).show(supportFragmentManager, "order")
+            // finish()
+        }
+    }
+
+    private fun clickLastViewedProduct() {
+        binding.layoutLastViewedProudct.setOnClickListener {
+            val id: Long = binding.lastViewedProduct?.id ?: return@setOnClickListener
+            val intent = getIntent(this, id)
+            startActivity(intent)
             finish()
         }
     }

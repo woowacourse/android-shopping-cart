@@ -45,7 +45,7 @@
 
         <woowacourse.shopping.presentation.ui.custom.QuantityCounter
             android:id="@+id/customItemProductCounter"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toBottomOf="@id/imageItemProductProduct"

@@ -72,7 +72,7 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
         return totalCount
     }
 
-    override fun updateProductCount(productId: Long, updatedQuantity: Int): WoowaResult<Int> {
+    override fun updateProductQuantity(productId: Long, updatedQuantity: Int): WoowaResult<Int> {
         val value = ContentValues()
         value.put(TABLE_COLUMN_QUANTITY, updatedQuantity)
         val whereClause = "$TABLE_COLUMN_PRODUCT_ID = ?"
@@ -83,6 +83,18 @@ class ShoppingCartDao(context: Context) : ShoppingCartDataSource {
             1 -> WoowaResult.SUCCESS(1)
             else -> WoowaResult.FAIL(Error.DataBaseError)
         }
+    }
+
+    override fun increaseProductQuantity(productId: Long, plusQuantity: Int): WoowaResult<Int> {
+        val productQuantity = (getProductInShoppingCart(productId)?.quantity ?: 0) + plusQuantity
+        return updateProductQuantity(productId, productQuantity)
+    }
+
+    private fun getProductInShoppingCart(productId: Long): ProductInCartEntity? {
+        val query: String = "SELECT * FROM $TABLE_NAME WHERE $TABLE_COLUMN_PRODUCT_ID = $productId"
+        val cursor: Cursor = shoppingDb.rawQuery(query, null)
+        if (!cursor.moveToFirst()) return null
+        return readProductInCart(cursor)
     }
 
     private fun readProductInCart(cursor: Cursor): ProductInCartEntity {

@@ -6,8 +6,14 @@
     <data>
 
         <variable
-            name="presenter"
-            type="woowacourse.shopping.presentation.ui.productDetail.ProductDetailPresenter" />
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
+            name="lastViewedProduct"
+            type="woowacourse.shopping.domain.model.RecentlyViewedProduct" />
+
+        <import type="android.view.View" />
 
     </data>
 
@@ -42,7 +48,7 @@
             android:id="@+id/imageProductDetailProduct"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:glideSrc="@{presenter.selectedProduct.itemImage}"
+            app:glideSrc="@{product.itemImage}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{presenter.selectedProduct.name}"
+            android:text="@{product.name}"
             android:textColor="@color/woowa_dealer_black_400"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageProductDetailProduct"
@@ -81,11 +87,59 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
-            android:text="@{String.format(@string/detailPriceFormat, presenter.selectedProduct.price)}"
+            android:text="@{String.format(@string/detailPriceFormat, product.price)}"
             android:textColor="@color/woowa_dealer_black_400"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textProductDetailPrice"
             tools:text="20,000원" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutLastViewedProudct"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/rectanlge_radius_4_border_gray"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="16dp"
+            android:visibility="@{(product.id == lastViewedProduct.id) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textProductDetailPrice">
+
+            <TextView
+                android:id="@+id/textLastViewedTitle"
+                style="@style/woowaPro16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lastViewedProduct"
+                android:textColor="@color/woowa_dealer_green_400"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textLastViewedProductName"
+                style="@style/woowaAir20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@{lastViewedProduct.name}"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textLastViewedTitle"
+                tools:text="람보르기니 우루스 S" />
+
+            <TextView
+                android:id="@+id/textLastViewedPrice"
+                style="@style/woowaAir20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{String.format(@string/detailPriceFormat, lastViewedProduct.price)}"
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="12,000만원" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/lineProductDetailDivider"

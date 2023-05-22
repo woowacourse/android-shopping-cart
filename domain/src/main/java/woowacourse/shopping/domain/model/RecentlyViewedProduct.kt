@@ -1,10 +1,9 @@
-package woowacourse.shopping.presentation.model
+package woowacourse.shopping.domain.model
 
-import woowacourse.shopping.domain.model.Product
 import java.time.LocalDateTime
 
 data class RecentlyViewedProduct(
-    val dateTime: LocalDateTime = LocalDateTime.now(),
+    val viewedDateTime: LocalDateTime,
     val product: Product,
 ) {
     val id: Long get() = product.id

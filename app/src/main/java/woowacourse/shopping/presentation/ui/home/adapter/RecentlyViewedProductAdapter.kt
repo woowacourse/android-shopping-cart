@@ -3,7 +3,7 @@ package woowacourse.shopping.presentation.ui.home.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import woowacourse.shopping.presentation.model.RecentlyViewedProduct
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.RecentlyViewedItemViewHolder
 
 class RecentlyViewedProductAdapter(private val productClickListener: ProductClickListener) :

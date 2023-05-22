@@ -50,7 +50,11 @@ class ShoppingCartRepositoryImpl(
         return shoppingCartDataSource.getTotalQuantity()
     }
 
-    override fun updateProductCount(productId: Long, count: Int): WoowaResult<Int> {
-        return shoppingCartDataSource.updateProductCount(productId, count)
+    override fun updateProductQuantity(productId: Long, count: Int): WoowaResult<Int> {
+        return shoppingCartDataSource.updateProductQuantity(productId, count)
+    }
+
+    override fun increaseProductQuantity(productId: Long, plusCount: Int) {
+        shoppingCartDataSource.increaseProductQuantity(productId, plusCount)
     }
 }

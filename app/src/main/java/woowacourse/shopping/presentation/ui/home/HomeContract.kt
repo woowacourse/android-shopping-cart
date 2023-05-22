@@ -1,8 +1,8 @@
 package woowacourse.shopping.presentation.ui.home
 
 import woowacourse.shopping.domain.model.Operator
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.model.HomeData
-import woowacourse.shopping.presentation.model.RecentlyViewedProduct
 
 interface HomeContract {
     interface View {

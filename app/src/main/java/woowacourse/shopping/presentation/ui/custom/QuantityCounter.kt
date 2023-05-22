@@ -11,6 +11,7 @@ class QuantityCounter(context: Context, attrs: AttributeSet) : ConstraintLayout(
     private lateinit var binding: CustomCounterQuantityBinding
     private var minValue: Int? = null
     private var maxValue: Int? = null
+    val currentQuantity: Int get() = binding.textCounterQuantity.text.toString().toInt()
 
     init {
         initView()
@@ -21,6 +22,7 @@ class QuantityCounter(context: Context, attrs: AttributeSet) : ConstraintLayout(
             layoutInflater = LayoutInflater.from(context)
             binding = CustomCounterQuantityBinding.inflate(layoutInflater!!, this, true)
         }
+        binding.textCounterQuantity.text = DEFAULT_VALUE.toString()
     }
 
     fun setIncreaseClickListener(action: () -> Unit) {
@@ -47,5 +49,15 @@ class QuantityCounter(context: Context, attrs: AttributeSet) : ConstraintLayout(
 
     fun setMaxValue(max: Int) {
         maxValue = max
+    }
+
+    fun setTextSize(size: Int) {
+        binding.textCounterQuantity.textSize = size.toFloat()
+        binding.buttonCounterDecrease.textSize = size.toFloat()
+        binding.buttoncounterIncrease.textSize = size.toFloat()
+    }
+
+    companion object {
+        private const val DEFAULT_VALUE = 1
     }
 }

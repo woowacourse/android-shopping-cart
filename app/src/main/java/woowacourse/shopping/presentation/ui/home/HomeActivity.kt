@@ -12,8 +12,8 @@ import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.model.HomeData
-import woowacourse.shopping.presentation.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.adapter.ProductClickListener
@@ -57,7 +57,8 @@ class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListene
         setContentView(binding.root)
         initAdapter()
         initLayoutManager()
-        // 목 데이터 추가 함수 : initProducts(this)
+        // 목 데이터 추가 함수 :
+        // initProducts(this)
         clickShoppingCart()
         presenter.setHome()
         presenter.fetchProducts()

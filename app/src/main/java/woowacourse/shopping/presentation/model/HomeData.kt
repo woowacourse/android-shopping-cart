@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.model
 
 import woowacourse.shopping.domain.model.ProductInCart
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType
 
 sealed interface HomeData {
