@@ -75,6 +75,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         initLayoutManager()
+
         presenter.deleteNotTodayRecentProducts()
         presenter.loadRecentProductItems()
         presenter.loadProductItems()
@@ -175,7 +176,9 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun onMoreProductList() {
-        presenter.loadMoreData(productListAdapter.itemCount - 1)
+        Thread {
+            presenter.loadMoreData(productListAdapter.itemCount - 1)
+        }.start()
     }
 
     override fun updateMoreProductsView(newProducts: List<ProductModel>) {

@@ -57,9 +57,10 @@ class ProductDetailPresenterTest {
         val slotItemCount = slot<Int>()
         justRun { cartRepository.insertCart(capture(slotProductId), capture(slotItemCount)) }
         justRun { view.addCartSuccessView() }
+        every { productRepository.getProductCount(1) } returns 1
 
         // when
-        presenter.addCart(1)
+        presenter.addCart(1, 1)
 
         // then
         val actualProductId = slotProductId.captured

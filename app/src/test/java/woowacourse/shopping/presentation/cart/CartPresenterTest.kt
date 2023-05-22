@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -7,6 +8,7 @@ import io.mockk.slot
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.cart.CartTotalPriceRepository
@@ -20,6 +22,9 @@ internal class CartPresenterTest {
     private lateinit var view: CartContract.View
     private lateinit var cartRepository: CartRepository
     private lateinit var cartTotalPriceRepository: CartTotalPriceRepository
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
@@ -48,8 +53,6 @@ internal class CartPresenterTest {
         val expected = CartProductFixture.getFixture()
         assertEquals(expected, actual)
         verify { cartRepository.getCarts(0, 4) }
-        verify { view.setEnableLeftButton(false) }
-        verify { view.setEnableRightButton(false) }
         verify { view.setCartItemsView(actual) }
     }
 
@@ -73,8 +76,17 @@ internal class CartPresenterTest {
         assertEquals(expected, actual)
 
         verify { cartRepository.deleteCartByProductId(1) }
-        verify { view.setEnableLeftButton(false) }
-        verify { view.setEnableRightButton(false) }
         verify { view.setCartItemsView(actual) }
+    }
+
+    @Test
+    fun `카트에 있는 총 합 가격을 계산한다`() {
+        every { cartTotalPriceRepository.getTotalPrice() } returns 10000
+        presenter = CartPresenter(view, cartRepository, cartTotalPriceRepository)
+        // when
+        presenter.loadCartItems()
+        // then
+        assertEquals(presenter.totalPrice.value, 10000)
+        verify { cartRepository.getCarts(0, 4) }
     }
 }

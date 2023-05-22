@@ -3,6 +3,9 @@ package woowacourse.shopping.presentation.view.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -36,6 +39,16 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setLeftButtonClick()
         setRightButtonClick()
         observeTotalPrice()
+//        Thread() {
+//            ProductMockRepositoryImpl().test()
+//        }.start()
+    }
+    private val handler = object : Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+            if (msg.what == 1000) {
+            }
+        }
     }
 
     private fun observeTotalPrice() {

@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.productlist
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -7,6 +8,7 @@ import io.mockk.slot
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
@@ -23,6 +25,9 @@ class ProductListPresenterTest {
     private lateinit var recentProductRepository: RecentProductRepository
     private lateinit var cartRepository: CartRepository
 
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
+
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
@@ -38,19 +43,21 @@ class ProductListPresenterTest {
     fun `데이터를 받아와 상품 목록 어댑터를 설정한다`() {
         // given
         every { productRepository.getData(0, 20) } returns dummyData
-        val slot = slot<List<ProductModel>>()
-        justRun { view.setProductItemsView(capture(slot)) }
+        val slotId = slot<Long>()
+        val slotProduct = slot<List<ProductModel>>()
+        justRun { view.setProductItemsView(capture(slotProduct), capture(slotId)) }
 
         // when
         presenter.loadProductItems()
 
         // then
-        val actual = slot.captured
+        val actualProduct = slotProduct.captured
+        val actualId = slotId.captured
         val expected = dummyData
 
-        assertEquals(expected, actual)
+        assertEquals(expected, actualProduct)
         verify { productRepository.getData(0, 20) }
-        verify { view.setProductItemsView(actual) }
+        verify { view.setProductItemsView(actualProduct, actualId) }
     }
 
     @Test
