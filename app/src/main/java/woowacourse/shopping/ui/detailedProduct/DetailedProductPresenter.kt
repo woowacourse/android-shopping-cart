@@ -20,7 +20,7 @@ class DetailedProductPresenter(
 
     override fun setUpLastProduct() {
         sharedPreferenceUtils.getLastProductId()
-            .takeIf { it != product.id }
+            .takeIf { it != product.id && it != -1 }
             ?.let { runCatching { lastProduct = productRepository.findById(it).toUIModel() } }
         sharedPreferenceUtils.setLastProductId(product.id)
     }
