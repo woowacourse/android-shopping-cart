@@ -45,6 +45,8 @@ dependencies {
     implementation("com.google.android.material:material:1.7.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation(project(":domain"))
+    implementation("com.squareup.okhttp3:mockwebserver:4.10.0")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.github.bumptech.glide:glide:4.11.0")
     testImplementation("io.mockk:mockk-android:1.13.5")
     testImplementation("junit:junit:4.13.2")
