@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartPresenter" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -104,7 +108,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_shoppingCart_bottom"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:background="@color/woowa_dealer_gray_700"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -138,6 +142,7 @@
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="12dp"
                 android:layout_marginBottom="28dp"
+                android:text="@{@string/price_format(presenter.totalPrice)}"
                 android:textAppearance="@style/Woowa_pro_20"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -155,6 +160,7 @@
             android:gravity="center"
             android:textAppearance="@style/Woowa_pro_20"
             android:textColor="@color/white"
+            android:text="@{@string/amount_format(presenter.totalAmount)}"
             app:layout_constraintBottom_toBottomOf="@+id/cl_shoppingCart_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cl_shoppingCart_bottom"

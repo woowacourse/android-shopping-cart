@@ -72,5 +72,6 @@ class HomePresenter(
     private fun ProductInCart.toUiState(): ProductInCartUiState = ProductInCartUiState(
         product = this.product,
         quantity = this.quantity,
+        isChecked = false
     )
 }

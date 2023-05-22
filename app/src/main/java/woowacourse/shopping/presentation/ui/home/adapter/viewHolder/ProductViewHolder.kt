@@ -31,6 +31,7 @@ class ProductViewHolder(
             ?: ProductInCartUiState(
                 product = data.product,
                 quantity = 0,
+                isChecked = false,
             )
     }
 

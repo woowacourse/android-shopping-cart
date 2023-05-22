@@ -18,17 +18,33 @@ import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartP
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private lateinit var binding: ActivityShoppingCartBinding
-    override val presenter: ShoppingCartContract.Presenter by lazy { initPresenter() }
+    override val presenter: ShoppingCartPresenter by lazy { initPresenter() }
     private val shoppingCartAdapter = ShoppingCartAdapter(setUpClickListener())
+
+    private fun initPresenter(): ShoppingCartPresenter {
+        return ShoppingCartPresenter(
+            this,
+            ShoppingCartRepositoryImpl(
+                shoppingCartDataSource = ShoppingCartDao(this),
+                productDataSource = ProductDao(this),
+            ),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initPresenterDataBinding()
         initView()
         initClickListeners()
         binding.rvShoppingCart.adapter = shoppingCartAdapter
+    }
+
+    private fun initPresenterDataBinding() {
+        binding.presenter = presenter
+        binding.lifecycleOwner = this
     }
 
     private fun initView() {
@@ -92,19 +108,8 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         if (result) shoppingCartAdapter.deleteItem(productInCart.product.id)
     }
 
-    private fun initPresenter(): ShoppingCartPresenter {
-        return ShoppingCartPresenter(
-            this,
-            ShoppingCartRepositoryImpl(
-                shoppingCartDataSource = ShoppingCartDao(this),
-                productDataSource = ProductDao(this),
-            ),
-        )
-    }
-
     companion object {
         private const val INIT_PAGE = 1
-
         fun getIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }
