@@ -9,6 +9,7 @@
     <string name="tv_home_title">Shopping</string>
     <string name="tv_quantity_plus">+</string>
     <string name="tv_quantity_minus">-</string>
+    <string name="tv_shoppingCart_all_sellect">전체</string>
 
 
 </resources>
