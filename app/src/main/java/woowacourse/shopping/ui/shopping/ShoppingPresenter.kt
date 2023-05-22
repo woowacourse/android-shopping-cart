@@ -25,11 +25,11 @@ class ShoppingPresenter(
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
     private val recentProductSize: Int = 10,
+    private var recentProducts: RecentProducts = RecentProducts(),
     cartSize: Int = 20,
 ) : Presenter(view) {
     private var cart = Cart()
     private var currentPage: Page = LoadMore(sizePerPage = cartSize)
-    private var recentProducts = RecentProducts()
     private val cartProductCount: UiProductCount
         get() = UiProductCount(cartRepository.getProductInCartSize())
 
