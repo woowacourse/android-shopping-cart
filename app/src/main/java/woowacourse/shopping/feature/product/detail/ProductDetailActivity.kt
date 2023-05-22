@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.product.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.GONE
 import androidx.appcompat.app.AlertDialog
@@ -57,7 +56,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setMostRecentViewContent(recentProductState: RecentProductState?) {
-        Log.d("debug_recent_product", "recentProductState: ${recentProductState?.productName}")
         if (recentProductState == null) binding.mostRecentProductLayout.visibility = GONE
         else binding.mostRecentProduct = recentProductState
     }
@@ -71,21 +69,22 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun showSelectCountDialog() {
-        val selectCountDialogBinding: DialogSelectCountBinding =
-            DialogSelectCountBinding.inflate(LayoutInflater.from(this))
-        selectCountDialogBinding.product = presenter.product
-        val dialog = createSelectCountDialog(selectCountDialogBinding)
-        dialog.dismiss()
-        dialog.show()
+        createSelectCountDialog().show()
     }
 
     override fun showProductDetail(product: ProductState) {
         startActivity(this, product)
     }
 
-    override fun closeProductDetail() = finish()
+    override fun closeProductDetail() {
+        finish()
+    }
 
-    private fun createSelectCountDialog(selectCountDialogBinding: DialogSelectCountBinding): AlertDialog {
+    private fun createSelectCountDialog(): AlertDialog {
+        val selectCountDialogBinding: DialogSelectCountBinding =
+            DialogSelectCountBinding.inflate(LayoutInflater.from(this))
+        selectCountDialogBinding.product = presenter.product
+
         return AlertDialog.Builder(this).apply {
             setView(selectCountDialogBinding.root)
             selectCountDialogBinding.counterView.count = MIN_COUNT_VALUE

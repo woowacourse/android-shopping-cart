@@ -30,6 +30,7 @@ class ProductDetailPresenter(
     }
 
     override fun selectCount() {
+        count = MIN_COUNT_VALUE
         view.showSelectCountDialog()
     }
 
