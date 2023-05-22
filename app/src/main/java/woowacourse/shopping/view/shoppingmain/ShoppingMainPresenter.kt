@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.shoppingmain
 
+import com.shopping.repository.CartProductRepository
 import com.shopping.repository.ProductRepository
 import com.shopping.repository.RecentProductsRepository
 import woowacourse.shopping.model.uimodel.ProductUIModel
@@ -9,6 +10,7 @@ import woowacourse.shopping.model.uimodel.mapper.toUIModel
 class ShoppingMainPresenter(
     private val view: ShoppingMainContract.View,
     private val productsRepository: ProductRepository,
+    private val cartProductRepository: CartProductRepository,
     private val recentProductsRepository: RecentProductsRepository
 ) : ShoppingMainContract.Presenter {
     private var index: Pair<Int, Int> = Pair(INIT_INDEX, PRODUCT_LOAD_UNIT)
@@ -39,6 +41,10 @@ class ShoppingMainPresenter(
     override fun loadMoreScroll() {
         view.showMoreProducts()
         view.deactivateButton()
+    }
+
+    override fun updateCartBadge() {
+        view.updateCartBadgeCount(cartProductRepository.getAllProductsCount())
     }
 
     companion object {

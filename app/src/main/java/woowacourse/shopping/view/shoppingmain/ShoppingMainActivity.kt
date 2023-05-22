@@ -2,9 +2,10 @@ package woowacourse.shopping.view.shoppingmain
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -12,7 +13,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
+import woowacourse.shopping.data.db.CartProductDao
 import woowacourse.shopping.data.db.RecentProductDao
+import woowacourse.shopping.data.repository.CartProductRepositoryImpl
 import woowacourse.shopping.data.repository.ProductMockRepository
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingMainBinding
@@ -26,6 +29,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
     private lateinit var recentProductWrapperAdapter: RecentProductWrapperAdapter
+    private var cartBadge: TextView? = null
 
     private lateinit var binding: ActivityShoppingMainBinding
 
@@ -48,12 +52,14 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         val recentProducts = presenter.getRecentProducts()
         recentProductAdapter.update(recentProducts)
         recentProductWrapperAdapter.update(recentProductAdapter.itemCount)
+        presenter.updateCartBadge()
     }
 
     private fun setPresenter() {
         presenter = ShoppingMainPresenter(
             view = this,
             productsRepository = ProductMockRepository,
+            cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
             recentProductsRepository = RecentProductRepositoryImpl(RecentProductDao(this))
         )
     }
@@ -135,19 +141,20 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         binding.btnLoadMore.visibility = VISIBLE
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.tool_bar_product_catalogue, menu)
-        return super.onCreateOptionsMenu(menu)
+    override fun updateCartBadgeCount(count: Int) {
+        cartBadge?.text = count.toString()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_cart -> {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.tool_bar_product_catalogue, menu)
+        menu.findItem(R.id.menu_cart).actionView?.findViewById<ImageView>(R.id.iv_shopping_cart)
+            ?.setOnClickListener {
                 startActivity(ShoppingCartActivity.intent(this))
-                true
             }
-            else -> super.onOptionsItemSelected(item)
-        }
+        cartBadge = menu.findItem(R.id.menu_cart).actionView?.findViewById(R.id.tv_badge_cart)
+        presenter.updateCartBadge()
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     companion object {

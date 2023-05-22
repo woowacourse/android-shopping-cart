@@ -14,6 +14,10 @@ class CartProductRepositoryImpl(
         return cartProductDao.getAll()
     }
 
+    override fun getAllProductsCount(): Int {
+        return cartProductDao.getAll().sumOf { product -> product.count.value }
+    }
+
     override fun loadCartProducts(index: Pair<Int, Int>): List<CartProduct> {
         if (index.first >= cartProducts.size) {
             return emptyList()

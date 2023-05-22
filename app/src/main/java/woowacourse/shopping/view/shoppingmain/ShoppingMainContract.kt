@@ -10,6 +10,7 @@ interface ShoppingMainContract {
         fun showMoreProducts()
         fun deactivateButton()
         fun activateButton()
+        fun updateCartBadgeCount(count: Int)
     }
 
     interface Presenter {
@@ -18,5 +19,6 @@ interface ShoppingMainContract {
         fun getRecentProducts(): List<RecentProductUIModel>
         fun loadProductDetailPage()
         fun loadMoreScroll()
+        fun updateCartBadge()
     }
 }
