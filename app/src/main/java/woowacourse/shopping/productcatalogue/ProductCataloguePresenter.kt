@@ -1,6 +1,5 @@
 package woowacourse.shopping.productcatalogue
 
-import android.util.Log
 import com.shopping.domain.CartProduct
 import woowacourse.shopping.datas.CartRepository
 import woowacourse.shopping.datas.ProductRepository
@@ -31,7 +30,6 @@ class ProductCataloguePresenter(
     }
 
     override fun updateCartCount() {
-        Log.d("cart", "updated")
         view.setCartCountCircle(cartRepository.getSize())
     }
 
