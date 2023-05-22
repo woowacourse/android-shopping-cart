@@ -10,7 +10,7 @@ interface CartContract {
 
         fun goToNextPage()
 
-        fun changeCartProductChecked(cartProductModel: CartProductModel)
+        fun reverseCartProductChecked(cartProductModel: CartProductModel)
 
         fun updateAllChecked()
 

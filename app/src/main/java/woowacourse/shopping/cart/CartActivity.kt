@@ -80,7 +80,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             onPreviousButtonClick = { presenter.goToPreviousPage() },
             onNextButtonClick = { presenter.goToNextPage() },
             onCheckBoxClick = { cartProductModel ->
-                presenter.changeCartProductChecked(cartProductModel)
+                presenter.reverseCartProductChecked(cartProductModel)
                 presenter.updateAllChecked()
             },
             onMinusAmountButtonClick = {

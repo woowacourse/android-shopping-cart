@@ -42,7 +42,7 @@ class CartPresenter(
         updateCartPage()
     }
 
-    override fun changeCartProductChecked(cartProductModel: CartProductModel) {
+    override fun reverseCartProductChecked(cartProductModel: CartProductModel) {
         val isChecked = !cartProductModel.isChecked
         applyCartProductCheckedChange(cartProductModel.toDomain(), isChecked)
     }

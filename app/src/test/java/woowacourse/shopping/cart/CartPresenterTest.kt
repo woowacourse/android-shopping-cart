@@ -134,7 +134,7 @@ class CartPresenterTest {
         every { view.updateCartProduct(any(), any()) } just runs
 
         // when
-        presenter.changeCartProductChecked(createCartProductModel())
+        presenter.reverseCartProductChecked(createCartProductModel())
 
         // then
         verify {
@@ -151,7 +151,7 @@ class CartPresenterTest {
         every { view.updateCartTotalPrice(any()) } just runs
 
         // when
-        presenter.changeCartProductChecked(createCartProductModel())
+        presenter.reverseCartProductChecked(createCartProductModel())
 
         // then
         verify(exactly = 2) { view.updateCartTotalPrice(any()) }
@@ -165,7 +165,7 @@ class CartPresenterTest {
         every { view.updateCartTotalAmount(any()) } just runs
 
         // when
-        presenter.changeCartProductChecked(createCartProductModel())
+        presenter.reverseCartProductChecked(createCartProductModel())
 
         // then
         verify(exactly = 2) { view.updateCartTotalAmount(any()) }
