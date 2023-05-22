@@ -79,7 +79,7 @@ class CartPresenterTest {
     fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
         // given
         every { cartRepository.deleteCartProduct(any()) } just runs
-        every { view.setResultForChange() } just runs
+        every { view.notifyAmountChanged() } just runs
 
         // when
         val cartProductModel = createCartProductModel()
@@ -88,7 +88,7 @@ class CartPresenterTest {
         // then
         verify {
             cartRepository.deleteCartProduct(any())
-            view.setResultForChange()
+            view.notifyAmountChanged()
         }
     }
 

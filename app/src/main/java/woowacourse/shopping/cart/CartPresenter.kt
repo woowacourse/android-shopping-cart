@@ -27,7 +27,7 @@ class CartPresenter(
         cartRepository.deleteCartProduct(cartProductModel.toDomain())
         view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
-        view.setResultForChange()
+        view.notifyAmountChanged()
     }
 
     override fun goToPreviousPage() {

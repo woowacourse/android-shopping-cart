@@ -30,7 +30,7 @@ interface CartContract {
 
         fun updateCartTotalAmount(amount: Int)
 
-        fun setResultForChange()
+        fun notifyAmountChanged()
 
         fun updateCartProduct(prev: CartProductModel, new: CartProductModel)
 
