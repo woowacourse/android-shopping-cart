@@ -31,8 +31,7 @@ class HomePresenter(
     }
 
     override fun fetchRecentlyViewed() {
-        recentlyViewedItem = recentlyViewedRepository
-            .getRecentlyViewedProducts(UNIT)
+        recentlyViewedItem = recentlyViewedRepository.getRecentlyViewedProducts(UNIT)
         if (recentlyViewedItem.isEmpty()) return
         checkRecentlyViewedInit()
         view.updateRecentlyViewedProducts(recentlyViewedItem.toList())
