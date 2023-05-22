@@ -6,10 +6,15 @@ import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import woowacourse.shopping.data.mockserver.product.ProductResponseJson
 
-object ShoppingCartMockServer {
+class ShoppingCartMockServer : Thread() {
     private val mockWebServer = MockWebServer()
+    lateinit var BASE_URL: String
 
-    const val BASE_URL = "http://localhost:55555/"
+    val dispatcher = object : Dispatcher() {
+        override fun dispatch(request: RecordedRequest): MockResponse {
+            return getMockResponse(ProductResponseJson().productResponseTable[request.path])
+        }
+    }
 
     fun getMockResponse(responseJson: String?): MockResponse = if (responseJson != null) {
         MockResponse()
@@ -20,14 +25,9 @@ object ShoppingCartMockServer {
         MockResponse().setResponseCode(404)
     }
 
-    val dispatcher = object : Dispatcher() {
-        override fun dispatch(request: RecordedRequest): MockResponse {
-            return getMockResponse(ProductResponseJson().productResponseTable[request.path])
-        }
-    }
-
-    init {
-        mockWebServer.start(55555)
+    override fun run() {
+        mockWebServer.url("/")
         mockWebServer.dispatcher = dispatcher
+        BASE_URL = String.format("http://localhost:%s", mockWebServer.port)
     }
 }

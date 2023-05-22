@@ -4,12 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
+import woowacourse.shopping.data.datasource.product.remote.RemoteProductDataSource
 import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.domain.Basket

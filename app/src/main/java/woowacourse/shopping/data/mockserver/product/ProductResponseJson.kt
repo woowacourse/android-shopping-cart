@@ -19,8 +19,8 @@ class ProductResponseJson {
     }
 
     init {
-        productResponseTable["product/-1"] = gson.toJson(totalProducts.subList(0, 21))
-        productResponseTable["product/20"] = gson.toJson(totalProducts.subList(20, 41))
-        productResponseTable["product/40"] = gson.toJson(totalProducts.subList(40, 49))
+        productResponseTable["/product/-1"] = gson.toJson(totalProducts.subList(0, 21))
+        productResponseTable["/product/19"] = gson.toJson(totalProducts.subList(20, 41))
+        productResponseTable["/product/39"] = gson.toJson(totalProducts.subList(40, 49))
     }
 }
