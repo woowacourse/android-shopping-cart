@@ -104,4 +104,30 @@ class CartPresenterTest {
         // then
         verify(exactly = 1) { view.navigateToItemDetail(fakeProduct.toUIModel()) }
     }
+
+    @Test
+    fun 아이템_수량을_증가시키면_장바구니_아이템_수량이_증가한다() {
+        // given
+        val slot = slot<Int>()
+        every { cartRepository.updateCount(any(), capture(slot)) } answers { nothing }
+
+        // when
+        presenter.increaseCount(3, fakeProduct.toUIModel())
+
+        // then
+        assertEquals(slot.captured, 4)
+    }
+
+    @Test
+    fun 아이템_수량을_감소시키면_장바구니_아이템_수량이_감소한다() {
+        // given
+        val slot = slot<Int>()
+        every { cartRepository.updateCount(any(), capture(slot)) } answers { nothing }
+
+        // when
+        presenter.decreaseCount(3, fakeProduct.toUIModel())
+
+        // then
+        assertEquals(slot.captured, 2)
+    }
 }
