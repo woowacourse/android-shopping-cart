@@ -10,8 +10,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
-import woowacourse.shopping.data.ProductFakeRepository
 import woowacourse.shopping.data.ProductFakeRepository.KEY_PRODUCT_OFFSET
+import woowacourse.shopping.data.ProductRepository
 import woowacourse.shopping.database.cart.CartDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
@@ -40,7 +40,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter = ShoppingPresenter(
             this,
             savedInstanceState?.getInt(KEY_PRODUCT_OFFSET) ?: 20,
-            ProductFakeRepository,
+            ProductRepository(),
             RecentProductDatabase(this),
             CartDatabase(CartDBHelper(this).writableDatabase),
         )
