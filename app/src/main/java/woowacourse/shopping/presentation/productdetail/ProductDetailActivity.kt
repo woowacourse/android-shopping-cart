@@ -29,9 +29,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var productModel: ProductModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setUpBinding()
         initProductModel()
         initPresenter()
+        setUpBinding()
         initView()
     }
 
