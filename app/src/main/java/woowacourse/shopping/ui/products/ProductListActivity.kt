@@ -113,13 +113,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun updateCartItem(productId: Long, count: Int) {
         val adapter = binding.rvMainProduct.adapter as ProductListAdapter
         adapter.updateCount(productId, count)
-        adapter.notifyDataSetChanged()
     }
 
     override fun deleteCartItem(productId: Long) {
         val adapter = binding.rvMainProduct.adapter as ProductListAdapter
         adapter.deleteCount(productId)
-        adapter.notifyDataSetChanged()
     }
 
     private fun moveToProductDetailActivity(productId: Long) {

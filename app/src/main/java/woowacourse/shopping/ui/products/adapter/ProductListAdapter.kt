@@ -11,7 +11,6 @@ import woowacourse.shopping.ui.products.uistate.ProductUIState
 
 class ProductListAdapter(
     private val products: MutableList<ProductUIState>,
-//    private val counts: MutableMap<Long, Int>,
     private val onItemClick: (Long) -> Unit,
     private val onPlusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
     private val onMinusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
@@ -20,19 +19,26 @@ class ProductListAdapter(
     private val buttonClickListener: (option: Int, position: Int) -> Unit = { option, position ->
         when (option) {
             CLICK_ITEM -> onItemClick(products[position].id)
-            CLICK_COUNT_PLUS -> onPlusCountButtonClick(
-                products[position].id,
-                products[position].count,
-            )
-            CLICK_COUNT_MINUS -> onMinusCountButtonClick(
-                products[position].id,
-                products[position].count,
-            )
-            CLICK_COUNT_START -> onStartCountButtonClick(products[position])
+            CLICK_COUNT_PLUS -> {
+                onPlusCountButtonClick(
+                    products[position].id,
+                    products[position].count,
+                )
+                notifyItemChanged(position)
+            }
+            CLICK_COUNT_MINUS -> {
+                onMinusCountButtonClick(
+                    products[position].id,
+                    products[position].count,
+                )
+                notifyItemChanged(position)
+            }
+            CLICK_COUNT_START -> {
+                onStartCountButtonClick(products[position])
+                notifyItemChanged(position)
+            }
         }
     }
-
-//    private var isCountChanging: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
