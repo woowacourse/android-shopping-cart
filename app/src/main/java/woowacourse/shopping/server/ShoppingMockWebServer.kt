@@ -8,13 +8,14 @@ import woowacourse.shopping.util.extension.parseQueryString
 
 class ShoppingMockWebServer : Thread() {
     private val mockWebServer: MockWebServer = MockWebServer()
-    lateinit var baseUrl: String
+    private lateinit var _baseUrl: String
+    val baseUrl: String get() = _baseUrl
 
     override fun run() {
         super.run()
         mockWebServer.url("/")
         mockWebServer.dispatcher = getDispatcher()
-        baseUrl = "http://localhost:${mockWebServer.port}"
+        _baseUrl = "http://localhost:${mockWebServer.port}"
     }
 
     private fun getDispatcher(): Dispatcher = object : Dispatcher() {
