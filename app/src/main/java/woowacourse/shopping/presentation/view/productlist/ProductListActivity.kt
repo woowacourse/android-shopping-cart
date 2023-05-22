@@ -154,14 +154,16 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
-        runOnUiThread {
-            recentProductListAdapter = RecentProductListAdapter(recentProducts, ::onProductClickEvent)
-            recentProductWrapperAdapter = RecentProductWrapperAdapter(
-                presenter::getRecentProductsLastScroll,
-                presenter::updateRecentProductsLastScroll,
-                recentProductListAdapter
-            )
-        }
+        recentProductListAdapter = RecentProductListAdapter(::onProductClickEvent)
+        recentProductListAdapter.setItems(recentProducts)
+
+        recentProductWrapperAdapter = RecentProductWrapperAdapter(
+            presenter::getRecentProductsLastScroll,
+            presenter::updateRecentProductsLastScroll,
+            recentProductListAdapter
+        )
+
+        addRecentWrapperAdapter()
     }
 
     private fun setMoreProductListAdapter() {
@@ -173,13 +175,17 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         binding.rvProductList.adapter = concatAdapter
     }
 
-    override fun updateRecentProductItemsView(preSize: Int, diffSize: Int) {
+    override fun updateRecentProductItemsView(recentProducts: List<RecentProductModel>) {
+        recentProductListAdapter.setItems(recentProducts)
+        addRecentWrapperAdapter()
+    }
+
+    private fun addRecentWrapperAdapter() {
         if (!concatAdapter.adapters.contains(recentProductWrapperAdapter)) {
             concatAdapter.addAdapter(RECENT_PRODUCT_ADAPTER_POSITION, recentProductWrapperAdapter)
             binding.rvProductList.scrollToPosition(SCROLL_TOP_POSITION)
             return
         }
-        recentProductListAdapter.updateItemChanged(preSize, diffSize)
     }
 
     private fun onProductClickEvent(productId: Long) {
@@ -205,7 +211,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     companion object {
-        private const val EMPTY = 0
         private const val SPAN_SIZE = 2
         private const val SPAN_SIZE_OF_ONE_COLUMN = 2
         private const val SPAN_SIZE_OF_TWO_COLUMN = 1

@@ -9,7 +9,7 @@ interface ProductContract {
         fun setRecentProductItemsView(recentProducts: List<RecentProductModel>)
         fun setVisibleToolbarCartCountView()
         fun setGoneToolbarCartCountView()
-        fun updateRecentProductItemsView(preSize: Int, diffSize: Int)
+        fun updateRecentProductItemsView(recentProducts: List<RecentProductModel>)
         fun updateToolbarCartCountView(count: Int)
         fun moveToCartView()
     }

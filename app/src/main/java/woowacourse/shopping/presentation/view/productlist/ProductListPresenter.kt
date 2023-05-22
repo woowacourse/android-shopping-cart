@@ -45,7 +45,7 @@ class ProductListPresenter(
                     )
                 }
         )
-        view.setRecentProductItemsView(recentProducts)
+        view.setRecentProductItemsView(recentProducts.toList())
     }
 
     override fun loadCartItems() {
@@ -73,11 +73,12 @@ class ProductListPresenter(
                 .map {
                     RecentProductModel(
                         it.id,
-                        products.find { product -> product.id == it.productId } ?: return
+                        products.find { product -> product.id == it.productId }
+                            ?: ProductEntity.errorData.toUIModel()
                     )
                 }
         )
-        view.updateRecentProductItemsView(0, recentProducts.size)
+        view.updateRecentProductItemsView(recentProducts.toList())
     }
 
     override fun saveRecentProduct(productId: Long) {
