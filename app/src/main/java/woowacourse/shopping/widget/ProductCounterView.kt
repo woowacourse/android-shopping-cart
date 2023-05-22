@@ -19,6 +19,12 @@ class ProductCounterView : ConstraintLayout {
     private var minCount: Int = DEFAULT_MIN_COUNT
     private var maxCount: Int = DEFAULT_MAX_COUNT
 
+    init {
+        binding.count = count
+        binding.counterPlusButton.setOnClickListener { plusCount() }
+        binding.counterMinusButton.setOnClickListener { minusCount() }
+    }
+
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
@@ -31,12 +37,6 @@ class ProductCounterView : ConstraintLayout {
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
         initTypedArrayValue(attrs)
-    }
-
-    init {
-        binding.count = count
-        binding.counterPlusButton.setOnClickListener { plusCount() }
-        binding.counterMinusButton.setOnClickListener { minusCount() }
     }
 
     private fun initTypedArrayValue(attrs: AttributeSet) {
