@@ -1,7 +1,6 @@
 package woowacourse.shopping.feature.product
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View.GONE
@@ -50,10 +49,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private val productListAdapter: ProductListAdapter by lazy {
         ProductListAdapter(
             cartProductStates = cartRepository.getAll().map(CartProduct::toUi),
-            onProductClick = { presenter.showProductDetail(it) },
-            cartProductAddFab = { presenter.storeCartProduct(it) },
-            cartProductCountMinus = { presenter.minusCartProductCount(it) },
-            cartProductCountPlus = { presenter.plusCartProductCount(it) },
+            onProductClick = presenter::showProductDetail,
+            cartProductAddFab = presenter::storeCartProduct,
+            cartProductCountMinus = presenter::minusCartProductCount,
+            cartProductCountPlus = presenter::plusCartProductCount,
         )
     }
     private val recentProductListAdapter by lazy {
@@ -131,7 +130,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         productState: ProductState,
         recentProductState: RecentProductState?
     ) {
-        Log.d("debug_recent_product", "recentProduct: ${recentProductState?.productName}")
         ProductDetailActivity.startActivity(this, productState, recentProductState)
     }
 

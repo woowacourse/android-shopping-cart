@@ -25,7 +25,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
     private val adapter: CartProductListAdapter by lazy {
         CartProductListAdapter(
-            onCartProductDeleteClick = { presenter.deleteCartProduct(it) },
+            onCartProductDeleteClick = presenter::deleteCartProduct,
             updateCount = { productId: Int, count: Int -> presenter.updateCount(productId, count) },
             updateChecked = { productId: Int, checked: Boolean ->
                 presenter.updateChecked(productId, checked)
