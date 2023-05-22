@@ -31,6 +31,8 @@ class CartPresenter(
         index + 1
     )
 
+    private var isChangingItemCheck = false
+
     private fun fetchCartProducts() {
         currentPage.clear()
         currentPage.addAll(cartRepository.getPage(index, STEP).toUIModel())
@@ -61,6 +63,7 @@ class CartPresenter(
     }
 
     override fun setUpProductsCheck(checked: Boolean) {
+        if (isChangingItemCheck) { return }
         currentPage.replaceAll {
             cartRepository.updateChecked(it.id, checked)
             it.copy(checked = checked)
@@ -85,18 +88,22 @@ class CartPresenter(
     override fun updateItemCount(productId: Int, count: Int) {
         cartRepository.updateCount(productId, count)
         currentPage.indexOfFirst { it.id == productId }
-            .let { currentPage[it] = currentPage[it].copy(count = count) }
+            .takeIf { it != -1 }
+            ?.let { currentPage[it] = currentPage[it].copy(count = count) }
         setUpCheckedCount()
         setUPTotalPrice()
     }
 
     override fun updateItemCheck(productId: Int, checked: Boolean) {
+        isChangingItemCheck = true
         cartRepository.updateChecked(productId, checked)
         currentPage.indexOfFirst { it.id == productId }
-            .let { currentPage[it] = currentPage[it].copy(checked = checked) }
+            .takeIf { it != -1 }
+            ?.let { currentPage[it] = currentPage[it].copy(checked = checked) }
         setUpCheckedCount()
         setUPTotalPrice()
         setUpAllButton()
+        isChangingItemCheck = false
     }
 
     override fun removeItem(productId: Int) {

@@ -120,9 +120,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             presenter.updateItemCount(productId, count)
         }
         override fun onItemCheckChanged(productId: Int, checked: Boolean) {
-            binding.cartBottom.onAllCheckClick = { }
             presenter.updateItemCheck(productId, checked)
-            binding.cartBottom.onAllCheckClick = presenter::setUpProductsCheck
         }
     }
 
