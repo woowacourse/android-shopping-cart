@@ -39,14 +39,12 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             presenter.updateRecentProductItems()
             presenter.loadCartItems()
-            productListAdapter.notifyDataSetChanged()
         }
 
     private val cartResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 presenter.loadCartItems()
-                productListAdapter.notifyDataSetChanged()
             }
         }
 
@@ -76,17 +74,22 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun ConcatAdapter.setConcatAdapter() {
-        if (recentProductListAdapter.itemCount != EMPTY) {
+        if (::recentProductListAdapter.isInitialized) {
             addAdapter(recentProductWrapperAdapter)
         }
-        addAdapter(productListAdapter)
-        addAdapter(moreProductListAdapter)
+        if (::productListAdapter.isInitialized) {
+            addAdapter(productListAdapter)
+        }
+        if (::moreProductListAdapter.isInitialized) {
+            addAdapter(moreProductListAdapter)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
         toolbarCartBinding = LayoutToolbarCartBinding.inflate(layoutInflater)
+
         initLayoutManager()
         presenter.initRecentProductItems()
         presenter.loadProductItems()
@@ -139,21 +142,31 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun setProductItemsView(products: List<ProductModel>) {
-        productListAdapter = ProductListAdapter(productListener)
-        productListAdapter.setItems(products)
+        runOnUiThread {
+            if (::productListAdapter.isInitialized) {
+                productListAdapter.setItems(products)
+                return@runOnUiThread
+            }
+            productListAdapter = ProductListAdapter(productListener)
+            productListAdapter.setItems(products)
+            concatAdapter.addAdapter(1, productListAdapter)
+        }
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
-        recentProductListAdapter = RecentProductListAdapter(recentProducts, ::onProductClickEvent)
-        recentProductWrapperAdapter = RecentProductWrapperAdapter(
-            presenter::getRecentProductsLastScroll,
-            presenter::updateRecentProductsLastScroll,
-            recentProductListAdapter
-        )
+        runOnUiThread {
+            recentProductListAdapter = RecentProductListAdapter(recentProducts, ::onProductClickEvent)
+            recentProductWrapperAdapter = RecentProductWrapperAdapter(
+                presenter::getRecentProductsLastScroll,
+                presenter::updateRecentProductsLastScroll,
+                recentProductListAdapter
+            )
+        }
     }
 
     private fun setMoreProductListAdapter() {
-        moreProductListAdapter = MoreProductListAdapter(::onMoreProductList)
+        moreProductListAdapter = MoreProductListAdapter(presenter::loadProductItems)
+        concatAdapter.addAdapter(moreProductListAdapter)
     }
 
     private fun setConcatAdapter() {
@@ -175,14 +188,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
         val intent = ProductDetailActivity.createIntent(this, productId, recentProduct)
         recentProductResultLauncher.launch(intent)
-    }
-
-    private fun onMoreProductList() {
-        presenter.loadMoreData()
-    }
-
-    override fun updateMoreProductsView(preSize: Int, diffSize: Int) {
-        productListAdapter.updateItemInserted(preSize, diffSize)
     }
 
     override fun moveToCartView() {

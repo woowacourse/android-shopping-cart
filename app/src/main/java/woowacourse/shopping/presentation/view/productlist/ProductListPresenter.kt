@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.view.productlist
 
 import woowacourse.shopping.data.mapper.toUIModel
+import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
@@ -26,28 +27,40 @@ class ProductListPresenter(
     }
 
     override fun loadProductItems() {
-        products.addAll(
-            productRepository.getData(LOAD_PRODUCT_START_POSITION, LOAD_PRODUCT_COUNT)
-                .map { it.toUIModel() }
-        )
-        view.setProductItemsView(products)
+        val newProducts =
+            productRepository.loadData().map { productEntity -> productEntity.toUIModel() }
+        products.addAll(newProducts)
+        view.setProductItemsView(products.toList())
     }
 
     override fun loadRecentProductItems() {
         recentProducts.addAll(
             recentProductRepository.getRecentProducts(LOAD_RECENT_PRODUCT_COUNT)
                 .filter { it.id != UNABLE_ID }
-                .map { it.toUIModel() }
+                .map {
+                    RecentProductModel(
+                        it.id,
+                        products.find { product -> product.id == it.productId }
+                            ?: ProductEntity.errorData.toUIModel()
+                    )
+                }
         )
         view.setRecentProductItemsView(recentProducts)
     }
 
     override fun loadCartItems() {
         val carts = cartRepository.getAllCarts()
-        products.forEach { product ->
-            product.count = carts.find { it.productId == product.id }?.count ?: 0
+
+        val newProducts = products.map { product ->
+            product.copy(count = carts.find { cart -> cart.productId == product.id }?.count ?: 0)
         }
+
+        products.clear()
+        products.addAll(newProducts)
+
         val allCount = carts.sumOf { it.count }
+
+        view.setProductItemsView(products.toList())
         view.updateToolbarCartCountView(allCount)
         updateVisibilityCartCount(allCount)
     }
@@ -57,7 +70,12 @@ class ProductListPresenter(
         recentProducts.addAll(
             recentProductRepository.getRecentProducts(LOAD_RECENT_PRODUCT_COUNT)
                 .filter { it.id != UNABLE_ID }
-                .map { it.toUIModel() }
+                .map {
+                    RecentProductModel(
+                        it.id,
+                        products.find { product -> product.id == it.productId } ?: return
+                    )
+                }
         )
         view.updateRecentProductItemsView(0, recentProducts.size)
     }
@@ -66,21 +84,20 @@ class ProductListPresenter(
         recentProductRepository.addCart(productId)
     }
 
-    override fun loadMoreData() {
-        val startPosition = products.size
-        val newProducts =
-            productRepository.getData(startPosition, LOAD_PRODUCT_COUNT).map { it.toUIModel() }
-        products.addAll(newProducts)
-        view.updateMoreProductsView(startPosition, newProducts.size)
-    }
-
     override fun actionOptionItem() {
         view.moveToCartView()
     }
 
     override fun getLastRecentProductItem(lastRecentIndex: Int): RecentProductModel {
-        val lastRecentProducts = recentProductRepository.getRecentProducts(LAST_RECENT_COUNT)
-        return lastRecentProducts[lastRecentIndex].toUIModel()
+        val lastRecentProducts = recentProductRepository.getRecentProducts(LAST_RECENT_COUNT).map {
+            RecentProductModel(
+                it.id,
+                products.find { product -> product.id == it.productId }
+                    ?: ProductEntity.errorData.toUIModel()
+            )
+        }
+
+        return lastRecentProducts[lastRecentIndex]
     }
 
     override fun getRecentProductsLastScroll(): Int = lastScroll
@@ -120,10 +137,8 @@ class ProductListPresenter(
     }
 
     companion object {
-        private const val LOAD_PRODUCT_START_POSITION = 0
         private const val LOCAL_DATE_PATTERN = "yyyy-MM-dd"
         private const val LOAD_RECENT_PRODUCT_COUNT = 10
-        private const val LOAD_PRODUCT_COUNT = 20
 
         private const val LAST_RECENT_COUNT = 2
 

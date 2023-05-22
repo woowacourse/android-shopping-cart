@@ -23,10 +23,6 @@ class ProductListAdapter(
 
     override fun getItemViewType(position: Int): Int = ViewType.PRODUCT_LIST.ordinal
 
-    fun updateItemInserted(positionStart: Int, itemCount: Int) {
-        notifyItemRangeInserted(positionStart, itemCount)
-    }
-
     fun setItems(newItems: List<ProductModel>) {
         submitList(newItems)
     }

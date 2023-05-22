@@ -2,19 +2,25 @@ package woowacourse.shopping.presentation.view.cart
 
 import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.respository.cart.CartRepository
+import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.presentation.model.CartModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
+    private val productRepository: ProductRepositoryImpl = ProductRepositoryImpl(),
     private var currentPage: Int = 1
 ) : CartContract.Presenter {
-    private val carts =
-        cartRepository.getAllCarts().map {
-            it.toUIModel().apply {
-                product.count = it.count
-                checked = it.checked == 1
-            }
+    private val carts: MutableList<CartModel> =
+        cartRepository.getAllCarts().map { cartEntity ->
+            val product = productRepository.loadDataById(cartEntity.productId).toUIModel()
+                .apply { count = cartEntity.count }
+
+            CartModel(
+                cartEntity.id,
+                product,
+                cartEntity.checked == 1
+            )
         }.toMutableList()
 
     private val startPosition: Int

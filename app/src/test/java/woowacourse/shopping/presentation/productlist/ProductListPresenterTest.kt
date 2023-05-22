@@ -34,13 +34,14 @@ class ProductListPresenterTest {
         cartRepository = mockk(relaxed = true)
         recentProductRepository = mockk()
 
-        presenter = ProductListPresenter(view, productRepository, cartRepository, recentProductRepository)
+        presenter =
+            ProductListPresenter(view, productRepository, cartRepository, recentProductRepository)
     }
 
     @Test
     fun `데이터를 받아와 상품 목록 어댑터를 설정한다`() {
         // given
-        every { productRepository.getData(0, 20) } returns dummyData
+        every { productRepository.loadData() } returns dummyData
         val slot = slot<List<ProductModel>>()
         justRun { view.setProductItemsView(capture(slot)) }
 
@@ -52,7 +53,7 @@ class ProductListPresenterTest {
         val expected = dummyData.map { it.toUIModel() }
 
         assertEquals(expected, actual)
-        verify { productRepository.getData(0, 20) }
+        verify { productRepository.loadData() }
         verify { view.setProductItemsView(actual) }
     }
 
@@ -102,21 +103,19 @@ class ProductListPresenterTest {
     @Test
     fun `데이터가 더 존재한다면 추가 데이터를 가져와 갱신한다`() {
         // given
-        every { productRepository.getData(0, 20) } returns dummyData
-        val slotPreSize = slot<Int>()
-        val slotDiffSize = slot<Int>()
-        justRun { view.updateMoreProductsView(capture(slotPreSize), capture(slotDiffSize)) }
+        every { productRepository.loadData() } returns dummyData
+        val slot = slot<List<ProductModel>>()
+        justRun { view.setProductItemsView(capture(slot)) }
 
         // when
-        presenter.loadMoreData()
+        presenter.loadProductItems()
 
         // then
-        val actualPreSize = slotPreSize.captured
-        val actualDiffSize = slotDiffSize.captured
-        assertEquals(0, actualPreSize)
-        assertEquals(1, actualDiffSize)
-        verify { productRepository.getData(0, 20) }
-        verify { view.updateMoreProductsView(actualPreSize, actualDiffSize) }
+        val actual = slot.captured
+        val expected = dummyData.map { it.toUIModel() }
+        assertEquals(expected, actual)
+        verify { productRepository.loadData() }
+        verify { view.setProductItemsView(actual) }
     }
 
     @Test

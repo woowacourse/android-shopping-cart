@@ -43,8 +43,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         supportActionBar?.title = ACTION_BAR_TITLE
 
         presenter.loadLastRecentProductInfo(recentProduct)
-        presenter.loadProductInfo()
-
         setAddCart()
         setLastRecentProduct()
     }
@@ -74,7 +72,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setProductInfoView(productModel: ProductModel) {
-        binding.product = productModel
+        runOnUiThread {
+            binding.product = productModel
+        }
     }
 
     private fun setLastRecentProduct() {

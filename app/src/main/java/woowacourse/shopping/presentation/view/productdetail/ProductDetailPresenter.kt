@@ -4,16 +4,21 @@ import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
+import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.RecentProductModel
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
-    private val productId: Long,
-    private val productRepository: ProductRepository = ProductRepositoryImpl(),
+    productId: Long,
+    productRepository: ProductRepository = ProductRepositoryImpl(),
     private val cartRepository: CartRepository
 ) :
     ProductDetailContract.Presenter {
-    private val product = productRepository.getDataById(productId).toUIModel()
+    private var product: ProductModel = productRepository.loadDataById(productId).toUIModel()
+
+    init {
+        loadProductInfo()
+    }
 
     override fun loadLastRecentProductInfo(recentProduct: RecentProductModel?) {
         if (recentProduct == null || recentProduct.id == UNABLE_ID) {

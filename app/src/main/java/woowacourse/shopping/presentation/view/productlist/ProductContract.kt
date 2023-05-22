@@ -10,7 +10,6 @@ interface ProductContract {
         fun setVisibleToolbarCartCountView()
         fun setGoneToolbarCartCountView()
         fun updateRecentProductItemsView(preSize: Int, diffSize: Int)
-        fun updateMoreProductsView(preSize: Int, diffSize: Int)
         fun updateToolbarCartCountView(count: Int)
         fun moveToCartView()
     }
@@ -22,7 +21,6 @@ interface ProductContract {
         fun loadCartItems()
         fun updateRecentProductItems()
         fun saveRecentProduct(productId: Long)
-        fun loadMoreData()
         fun actionOptionItem()
         fun getLastRecentProductItem(lastRecentIndex: Int): RecentProductModel
         fun getRecentProductsLastScroll(): Int

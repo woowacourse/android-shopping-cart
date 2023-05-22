@@ -29,7 +29,7 @@ class ProductDetailPresenterTest {
 
         cartRepository = mockk()
         productRepository = mockk()
-        every { productRepository.getDataById(0L) } returns ProductFixture.getData()
+        every { productRepository.loadDataById(0L) } returns ProductFixture.getData()
 
         presenter = ProductDetailPresenter(view, 0L, productRepository, cartRepository)
     }
@@ -48,7 +48,7 @@ class ProductDetailPresenterTest {
         val expected = ProductFixture.getData().toUIModel()
 
         assertEquals(expected, actual)
-        verify { productRepository.getDataById(actual.id) }
+        verify { productRepository.loadDataById(actual.id) }
         verify { view.setProductInfoView(actual) }
     }
 
