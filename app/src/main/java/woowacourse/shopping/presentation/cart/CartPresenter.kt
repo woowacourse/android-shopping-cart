@@ -48,7 +48,7 @@ class CartPresenter(
     private fun updateProductsInCurrentPage() {
         updateCart(cartPages.getCurrentProducts())
         checkPageAble()
-        setTotal()
+        updateCartSelectedInfo()
     }
 
     private fun checkPageAble() {
@@ -83,10 +83,10 @@ class CartPresenter(
 
     override fun changeProductSelected(productModel: ProductModel) {
         cartPages.changeSelectedProduct(productModel.toDomain())
-        setTotal()
+        updateCartSelectedInfo()
     }
 
-    private fun setTotal() {
+    private fun updateCartSelectedInfo() {
         view.setCheckBoxChecked(cartPages.isAllProductSelected())
         view.setTotalPrice(cartPages.getSelectedProductsPrice())
         view.setTotalCount(cartPages.getSelectedProductsCount())
