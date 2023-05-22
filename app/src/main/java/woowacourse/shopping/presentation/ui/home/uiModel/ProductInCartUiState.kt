@@ -8,4 +8,5 @@ data class ProductInCartUiState(
 ) {
     fun isContained(): Boolean = quantity > 0
     fun isDeleted(): Boolean = quantity < 1
+    fun getTotalPriceOfProduct(): Int = quantity * product.price
 }

@@ -144,7 +144,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/checkBox"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="154,222원" />
+                tools:text="154,222만원" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView

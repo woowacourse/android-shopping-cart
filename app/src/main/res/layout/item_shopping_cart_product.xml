@@ -92,7 +92,7 @@
                 style="@style/Woowa_air_16"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/price_format(shoppingCart.product.price)}"
+                android:text="@{@string/price_format(shoppingCart.getTotalPriceOfProduct())}"
                 android:textColor="@color/woowa_dealer_black_400"
                 app:layout_constraintBottom_toTopOf="@+id/layout_quantity"
                 app:layout_constraintEnd_toEndOf="@+id/layout_quantity"
