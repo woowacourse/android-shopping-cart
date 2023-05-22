@@ -9,13 +9,8 @@ import woowacourse.shopping.data.model.Product
 
 class LocalCartDataSource(private val dao: CartDao) : CartDataSource.Local {
     override fun getAllCartEntity(): List<CartEntity> = dao.getAllCartEntity()
+
     override fun getCartEntity(productId: Int): CartEntity = dao.getCartEntity(productId)
-
-    override fun getProductByPage(page: DataPage): DataCart =
-        dao.getProductByPage(page)
-
-    override fun getProductInCartByPage(page: DataPage): List<CartEntity> =
-        dao.getCartEntitiesByPage(page)
 
     override fun increaseCartCount(product: Product, count: Int) {
         dao.addProductCount(product, count)
@@ -27,13 +22,7 @@ class LocalCartDataSource(private val dao: CartDao) : CartDataSource.Local {
         cartProducts.forEach(dao::update)
     }
 
-    override fun getTotalPrice(): Int = dao.getTotalPrice()
-
     override fun getCheckedProductCount(): Int = dao.getCheckedProductCount()
-
-    override fun getProductInRange(start: DataPage, end: DataPage): DataCart {
-        return dao.getProductInRange(start, end)
-    }
 
     override fun removeCheckedProducts() {
         dao.deleteCheckedProducts()

@@ -58,35 +58,6 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
     }
 
     @SuppressLint("Range")
-    override fun getProductByPage(page: DataPage): DataCart {
-        val cartProducts = mutableListOf<CartProduct>()
-
-        val db = database.writableDatabase
-        val cursor = db.rawQuery(GET_ALL_CART_PRODUCT_QUERY, null)
-
-        while (cursor.moveToNext()) {
-            val cartId: Int =
-                cursor.getInt(cursor.getColumnIndex(CartContract.CART_ID))
-            val productId: Int =
-                cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val name: String =
-                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
-            val price: DataPrice =
-                DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
-            val imageUrl: String =
-                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-            val count: Int =
-                cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_COUNT))
-            val isChecked: Int =
-                cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_CHECKED))
-            val product = Product(productId, name, price, imageUrl)
-            cartProducts.add(CartProduct(cartId, product, ProductCount(count), isChecked))
-        }
-        cursor.close()
-        return DataCart(cartProducts = cartProducts.safeSubList(page.start, page.end))
-    }
-
-    @SuppressLint("Range")
     override fun getCartEntitiesByPage(page: DataPage): List<CartEntity> {
         val cartEntities = mutableListOf<CartEntity>()
 
@@ -127,16 +98,6 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
         val productInCartSize = cursor.getInt(0)
         cursor.close()
         return productInCartSize
-    }
-
-    override fun getTotalPrice(): Int {
-        val db = database.writableDatabase
-        val cursor = db.rawQuery(GET_TOTAL_PRICE, null)
-        cursor.moveToNext()
-
-        val totalPrice = cursor.getInt(0)
-        cursor.close()
-        return totalPrice
     }
 
     override fun deleteByProductId(id: Int) {
@@ -200,36 +161,6 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
         val checkedProductCount = cursor.getInt(0)
         cursor.close()
         return checkedProductCount
-    }
-
-    @SuppressLint("Range")
-    override fun getProductInRange(start: DataPage, end: DataPage): DataCart {
-        val cartProducts = mutableListOf<CartProduct>()
-
-        val db = database.writableDatabase
-        val cursor = db.rawQuery(GET_ALL_CART_PRODUCT_QUERY, null)
-
-        while (cursor.moveToNext()) {
-            val cartId: Int =
-                cursor.getInt(cursor.getColumnIndex(CartContract.CART_ID))
-            val productId: Int =
-                cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val name: String =
-                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
-            val price: DataPrice =
-                DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
-            val imageUrl: String =
-                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
-            val count: Int =
-                cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_COUNT))
-            val isChecked: Int =
-                cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_CHECKED))
-            val product = Product(productId, name, price, imageUrl)
-            cartProducts.add(CartProduct(cartId, product, ProductCount(count), isChecked))
-        }
-        cursor.close()
-
-        return DataCart(cartProducts = cartProducts.safeSubList(start.start, end.end))
     }
 
     override fun deleteCheckedProducts() {

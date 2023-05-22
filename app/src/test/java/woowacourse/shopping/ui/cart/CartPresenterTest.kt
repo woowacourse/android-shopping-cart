@@ -38,7 +38,6 @@ internal class CartPresenterTest {
         presenter.fetchCart(page)
 
         // then
-        verify(exactly = 1) { cartRepository.getProductInCartByPage(any()) }
         verify(exactly = 1) { view.updateCart(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
         verify(exactly = 1) { view.updatePageNumber(any()) }
@@ -51,9 +50,6 @@ internal class CartPresenterTest {
         presenter = CartPresenter(view, productRepository, cartRepository)
 
         val currentPage = slot<Page>()
-        every { cartRepository.getProductInCartByPage(capture(currentPage)) } returns mockk(
-            relaxed = true
-        )
 
         // when
         presenter.fetchCart(page - 1)
@@ -72,9 +68,6 @@ internal class CartPresenterTest {
         presenter = CartPresenter(view, productRepository, cartRepository)
 
         val currentPage = slot<Page>()
-        every { cartRepository.getProductInCartByPage(capture(currentPage)) } returns mockk(
-            relaxed = true
-        )
 
         // when
         presenter.fetchCart(page + 1)
@@ -102,7 +95,6 @@ internal class CartPresenterTest {
 
         // then
         verify(exactly = 1) { cartRepository.decreaseCartCount(product.toDomain(), 1) }
-        verify(exactly = 1) { cartRepository.getProductInCartByPage(Pagination(1)) }
         verify(exactly = 1) { view.updateCart(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
         verify(exactly = 1) { view.updatePageNumber(any()) }
