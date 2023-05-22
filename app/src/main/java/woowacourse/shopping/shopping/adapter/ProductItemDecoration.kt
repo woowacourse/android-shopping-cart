@@ -1,8 +1,9 @@
-package woowacourse.shopping.shopping.adapter.viewholder
+package woowacourse.shopping.shopping.adapter
 
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemViewType
 
 class ProductItemDecoration(
     private val getItemViewType: (position: Int) -> Int,

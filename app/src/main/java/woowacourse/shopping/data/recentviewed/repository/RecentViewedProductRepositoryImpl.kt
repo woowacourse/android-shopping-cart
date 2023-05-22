@@ -12,7 +12,7 @@ import woowacourse.shopping.data.recentviewed.datasource.RecentViewedProductData
 
 class RecentViewedProductRepositoryImpl(
     context: Context,
-    private val productDataSource: ProductDataSource = ProductDataSourceImpl(context),
+    private val productDataSource: ProductDataSource = ProductDataSourceImpl(),
     private val recentViewedProductDataSource: RecentViewedProductDataSource = RecentViewedProductDataSourceImpl(
         context
     ),

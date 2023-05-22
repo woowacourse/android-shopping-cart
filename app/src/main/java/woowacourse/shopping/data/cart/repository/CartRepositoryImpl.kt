@@ -13,7 +13,7 @@ import woowacourse.shopping.data.product.datasource.ProductDataSourceImpl
 
 class CartRepositoryImpl(
     context: Context,
-    private val productDataSource: ProductDataSource = ProductDataSourceImpl(context),
+    private val productDataSource: ProductDataSource = ProductDataSourceImpl(),
     private val cartDataSource: CartDataSource = CartDataSourceImpl(context),
 ) : CartRepository {
 

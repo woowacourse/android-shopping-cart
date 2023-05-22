@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.product.repository
 
-import android.content.Context
 import model.Name
 import model.Price
 import model.Product
@@ -8,8 +7,7 @@ import woowacourse.shopping.data.product.datasource.ProductDataSource
 import woowacourse.shopping.data.product.datasource.ProductDataSourceImpl
 
 class ProductRepositoryImpl(
-    context: Context,
-    private val productDataSource: ProductDataSource = ProductDataSourceImpl(context),
+    private val productDataSource: ProductDataSource = ProductDataSourceImpl(),
 ) : ProductRepository {
 
     override fun getProductById(id: Int): Product {
