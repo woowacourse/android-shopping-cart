@@ -1,5 +1,7 @@
 package woowacourse.shopping.data.mockserver
 
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -9,6 +11,8 @@ import woowacourse.shopping.data.mockserver.product.ProductResponseJson
 class ShoppingCartMockServer : Thread() {
     private val mockWebServer = MockWebServer()
     lateinit var BASE_URL: String
+    val okHttpClient = OkHttpClient()
+    val gson = Gson()
 
     val dispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
