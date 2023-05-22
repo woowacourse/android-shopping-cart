@@ -104,9 +104,20 @@ class ShoppingPresenterTest {
         presenter.fetchMoreProducts()
 
         // then
-
         val capturedProducts = slot.captured
         assertTrue(capturedProducts.size == 21)
         verify(exactly = 1) { view.setProducts(capturedProducts) }
+    }
+
+    @Test
+    fun 상품을_장바구니에_추가하면_장바구니에_저장된다() {
+        // given
+
+        // when
+        presenter.addCart(fakeProduct.toUIModel())
+
+        // then
+        verify(exactly = 1) { view.setUpCarts(any()) }
+        verify(exactly = 1) { cartRepository.insert(any(), 1) }
     }
 }
