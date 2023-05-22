@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedRepositoryImpl
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -23,8 +24,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             productId,
             ProductRepositoryImpl(
                 productDataSource = ProductDao(this),
-                recentlyViewedDataSource = RecentlyViewedDao(this),
                 shoppingCartDataSource = ShoppingCartDao(this),
+            ),
+            RecentlyViewedRepositoryImpl(
+                recentlyViewedDataSource = RecentlyViewedDao(this),
+                productDataSource = ProductDao(this),
             ),
             ShoppingCartRepositoryImpl(
                 shoppingCartDataSource = ShoppingCartDao(this),

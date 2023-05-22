@@ -6,9 +6,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ProductService
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedRepositoryImpl
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
@@ -40,9 +42,12 @@ class HomeActivity : AppCompatActivity(), HomeContract.View, ProductClickListene
         return HomePresenter(
             this,
             ProductRepositoryImpl(
+                productDataSource = ProductService(),
+                shoppingCartDataSource = ShoppingCartDao(this),
+            ),
+            RecentlyViewedRepositoryImpl(
                 productDataSource = ProductDao(this),
                 recentlyViewedDataSource = RecentlyViewedDao(this),
-                shoppingCartDataSource = ShoppingCartDao(this),
             ),
             ShoppingCartRepositoryImpl(
                 shoppingCartDataSource = ShoppingCartDao(this),

@@ -10,7 +10,6 @@ import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.DialogOrderBinding
@@ -24,7 +23,6 @@ class OrderDialog : DialogFragment() {
     private val productRepository: ProductRepository by lazy {
         ProductRepositoryImpl(
             ProductDao(requireContext()),
-            RecentlyViewedDao(requireContext()),
             ShoppingCartDao(requireContext()),
         )
     }

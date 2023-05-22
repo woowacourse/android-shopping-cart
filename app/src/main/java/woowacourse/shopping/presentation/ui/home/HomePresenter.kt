@@ -4,9 +4,11 @@ import woowacourse.shopping.domain.model.Operator
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentlyViewedRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.util.WoowaResult
 import woowacourse.shopping.presentation.model.HomeData
+import woowacourse.shopping.presentation.model.HomeMapper.toProductItem
 import woowacourse.shopping.presentation.model.ProductItem
 import woowacourse.shopping.presentation.model.RecentlyViewedItem
 import woowacourse.shopping.presentation.model.ShowMoreItem
@@ -16,6 +18,7 @@ import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.SHOW_MORE
 class HomePresenter(
     private val view: HomeContract.View,
     private val productRepository: ProductRepository,
+    private val recentlyViewedRepository: RecentlyViewedRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : HomeContract.Presenter {
     private var lastProductId: Long = 0
@@ -28,7 +31,7 @@ class HomePresenter(
     }
 
     override fun fetchRecentlyViewed() {
-        recentlyViewedItem = productRepository
+        recentlyViewedItem = recentlyViewedRepository
             .getRecentlyViewedProducts(UNIT)
         if (recentlyViewedItem.isEmpty()) return
         checkRecentlyViewedInit()

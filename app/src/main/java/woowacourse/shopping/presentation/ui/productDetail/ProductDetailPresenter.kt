@@ -5,6 +5,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentlyViewedRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.util.WoowaResult
 import woowacourse.shopping.domain.util.WoowaResult.FAIL
@@ -14,6 +15,7 @@ class ProductDetailPresenter(
     view: ProductDetailContract.View,
     productId: Long,
     productRepository: ProductRepository,
+    recentlyViewedRepository: RecentlyViewedRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ProductDetailContract.Presenter {
     private lateinit var product: Product
@@ -26,15 +28,16 @@ class ProductDetailPresenter(
                 Log.d("ERROR", woowaResult.error.errorMessage)
             }
         }
-        fetchLastViewedProduct(view, productRepository)
-        productRepository.addRecentlyViewedProduct(productId)
+        fetchLastViewedProduct(view, recentlyViewedRepository)
+        recentlyViewedRepository.addRecentlyViewedProduct(productId)
     }
 
     private fun fetchLastViewedProduct(
         view: ProductDetailContract.View,
-        productRepository: ProductRepository,
+        recentlyViewedRepository: RecentlyViewedRepository,
     ) {
-        val result: WoowaResult<RecentlyViewedProduct> = productRepository.getLastViewedProduct()
+        val result: WoowaResult<RecentlyViewedProduct> =
+            recentlyViewedRepository.getLastViewedProduct()
         Log.d("[ERROR]", "result: $result")
         when (result) {
             is SUCCESS -> view.setBindingData(product, result.data)
