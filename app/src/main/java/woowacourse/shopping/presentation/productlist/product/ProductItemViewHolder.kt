@@ -31,12 +31,8 @@ class ProductItemViewHolder(
     }
 
     private fun checkVisible(productCount: Int) {
-        if (productCount >= 1) {
-            binding.itemCountCart.root.isVisible = true
-            binding.imageCountPlusBack.isVisible = false
-            return
-        }
-        binding.itemCountCart.root.isVisible = false
-        binding.imageCountPlusBack.isVisible = true
+        val showCount = productCount >= 1
+        binding.itemCountCart.root.isVisible = showCount
+        binding.imageCountPlusBack.isVisible = !showCount
     }
 }
