@@ -23,7 +23,7 @@
 
 
             <ImageView
-                android:id="@+id/ButtonShoppingCartBack"
+                android:id="@+id/buttonShoppingCartBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="11dp"
@@ -43,10 +43,28 @@
                 android:text="@string/shoppingCart_title"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/ButtonShoppingCartBack"
+                app:layout_constraintStart_toEndOf="@+id/buttonShoppingCartBack"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listShoppingCart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:layout_marginBottom="16dp"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="64dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/textShoppingCartPageNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layoutDetailToolbar"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_shopping_cart_product" />
 
         <TextView
             android:id="@+id/textShoppingCartPageNumber"
@@ -55,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:textColor="@color/woowa_dealer_gray_700"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,23 +99,58 @@
             app:layout_constraintStart_toEndOf="@+id/textShoppingCartPageNumber"
             app:layout_constraintTop_toTopOf="@+id/textShoppingCartPageNumber" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listShoppingCart"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="18dp"
-            android:layout_marginEnd="18dp"
-            android:layout_marginBottom="16dp"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:paddingBottom="64dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/textShoppingCartPageNumber"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/woowa_dealer_blue_400"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutDetailToolbar"
-            tools:itemCount="3"
-            tools:listitem="@layout/item_shopping_cart_product" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <CheckBox
+                android:id="@+id/checkShoppingCartAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:button="@null"
+                android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
+                android:drawableTint="@color/white"
+                android:drawableTintMode="src_atop"
+                android:gravity="center"
+                android:text="@string/all"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textShoppingCartPayment"
+                style="@style/woowaPro20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="24dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/textShoppingCartOrder"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="184,200원" />
+
+            <TextView
+                android:id="@+id/textShoppingCartOrder"
+                style="@style/woowaPro20"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@color/woowa_dealer_green_400"
+                android:gravity="center"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="주문하기(2)" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

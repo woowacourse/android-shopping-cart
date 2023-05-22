@@ -1,10 +1,12 @@
 package woowacourse.shopping.presentation.ui.productDetail
 
-import android.util.Log
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
+import woowacourse.shopping.domain.model.RecentlyViewedProduct
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentlyViewedRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.util.WoowaResult
 import woowacourse.shopping.domain.util.WoowaResult.FAIL
 import woowacourse.shopping.domain.util.WoowaResult.SUCCESS
 
@@ -12,22 +14,34 @@ class ProductDetailPresenter(
     view: ProductDetailContract.View,
     productId: Long,
     productRepository: ProductRepository,
+    recentlyViewedRepository: RecentlyViewedRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ProductDetailContract.Presenter {
-    lateinit var selectedProduct: Product
+    private lateinit var product: Product
 
     init {
-        when (val woowaResult = productRepository.getProduct(productId)) {
-            is SUCCESS -> selectedProduct = woowaResult.data
-            is FAIL -> {
-                view.handleNoSuchProductError()
-                Log.d("ERROR", woowaResult.error.errorMessage)
-            }
+        val woowaResult = productRepository.getProduct(productId)
+        when (woowaResult) {
+            is SUCCESS -> product = woowaResult.data
+            is FAIL -> view.handleNoSuchProductError()
         }
-        productRepository.addRecentlyViewedProduct(productId)
+        fetchLastViewedProduct(view, recentlyViewedRepository)
+        recentlyViewedRepository.addRecentlyViewedProduct(productId)
+    }
+
+    private fun fetchLastViewedProduct(
+        view: ProductDetailContract.View,
+        recentlyViewedRepository: RecentlyViewedRepository,
+    ) {
+        val result: WoowaResult<RecentlyViewedProduct> =
+            recentlyViewedRepository.getLastViewedProduct()
+        when (result) {
+            is SUCCESS -> view.setBindingData(product, result.data)
+            is FAIL -> view.handleNoSuchProductError()
+        }
     }
 
     override fun addProductInCart() {
-        shoppingCartRepository.addProductInCart(ProductInCart(selectedProduct, 1))
+        shoppingCartRepository.insertProductInCart(ProductInCart(product, 1))
     }
 }

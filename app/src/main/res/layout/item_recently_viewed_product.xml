@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.presentation.model.RecentlyViewedProduct" />
+            type="woowacourse.shopping.domain.model.RecentlyViewedProduct" />
 
         <variable
             name="listener"
@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
             android:text="@{product.name}"
             android:textColor="@color/black"

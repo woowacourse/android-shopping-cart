@@ -6,16 +6,11 @@ import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.domain.model.ProductInCart
 
 class ShoppingCartAdapter(
-    private val onClick: (product: ProductInCart) -> Unit,
-    private val clickDelete: (position: Int) -> Unit,
+    private val listener: ShoppingCartClickListener,
 ) : ListAdapter<ProductInCart, ShoppingCartViewHolder>(ShoppingCartComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartViewHolder {
-        return ShoppingCartViewHolder(
-            { onClick(getItem(it)) },
-            { clickDelete(it) },
-            ShoppingCartViewHolder.getView(parent),
-        )
+        return ShoppingCartViewHolder(listener, ShoppingCartViewHolder.getView(parent))
     }
 
     override fun onBindViewHolder(holder: ShoppingCartViewHolder, position: Int) {

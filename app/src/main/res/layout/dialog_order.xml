@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="20dp">
+
+        <TextView
+            android:id="@+id/textOrderDialogName"
+            style="@style/woowaPro24"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="람보르기니 우루스 S" />
+
+        <TextView
+            android:id="@+id/textOrderDialogPrice"
+            style="@style/woowaAir20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{String.format(@string/detailPriceFormat, product.price)}"
+            android:textColor="@color/woowa_dealer_gray_700"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textOrderDialogName"
+            tools:text="12,000만원" />
+
+        <woowacourse.shopping.presentation.ui.custom.QuantityCounter
+            android:id="@+id/customOrderDialogCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textOrderDialogName">
+
+        </woowacourse.shopping.presentation.ui.custom.QuantityCounter>
+
+        <TextView
+            android:id="@+id/buttonOrderDialogPut"
+            style="@style/woowaPro24"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/woowa_dealer_green_400"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:paddingVertical="8dp"
+            android:text="@string/put"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/customOrderDialogCounter" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

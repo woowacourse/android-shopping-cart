@@ -1,35 +1,40 @@
 package woowacourse.shopping.presentation.ui.shoppingCart
 
 import woowacourse.shopping.domain.PageNumber
+import woowacourse.shopping.domain.model.Operator
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.util.WoowaResult
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ShoppingCartContract.Presenter {
-    private var shoppingCart = mutableListOf<ProductInCart>()
+    private val shoppingCart = mutableListOf<ProductInCart>()
     private var pageNumber = PageNumber()
+    private val pageStartIdx: Int get() = (pageNumber.value - 1) * PAGE_UNIT
+    private val pageEndIdx: Int
+        get() {
+            val toIndex = pageNumber.value * PAGE_UNIT - 1
+            return if (toIndex >= shoppingCart.size) (shoppingCart.size - 1) else toIndex
+        }
 
-    override fun getShoppingCart() {
-        shoppingCart.clear()
-        shoppingCart.addAll(
-            shoppingCartRepository.getShoppingCart(
-                SHOPPING_CART_ITEM_COUNT,
-                pageNumber.value,
-            ),
-        )
-        view.setShoppingCart(shoppingCart.deepCopy())
+    init {
+        shoppingCart.addAll(shoppingCartRepository.getAll())
     }
 
-    override fun setPageNumber() {
-        view.setPage(pageNumber.value)
+    private fun getAbsolutePosition(index: Int): Int {
+        return (pageNumber.value - 1) * PAGE_UNIT + index
     }
 
-    private fun goOtherPage() {
-        checkPageMovement()
-        setPageNumber()
-        getShoppingCart()
+    override fun fetchShoppingCart() {
+        val pagedShoppingCart =
+            if (shoppingCart.isEmpty()) {
+                emptyList()
+            } else {
+                shoppingCart.slice(IntRange(pageStartIdx, pageEndIdx))
+            }
+        view.setShoppingCart(pagedShoppingCart)
     }
 
     override fun goNextPage() {
@@ -42,26 +47,103 @@ class ShoppingCartPresenter(
         goOtherPage()
     }
 
+    private fun goOtherPage() {
+        checkPageMovement()
+        setPageNumber()
+        fetchShoppingCart()
+    }
+
+    override fun setPageNumber() {
+        view.setPage(pageNumber.value)
+    }
+
     override fun checkPageMovement() {
         val size = shoppingCartRepository.getShoppingCartSize()
-        val nextEnable = size > pageNumber.value * SHOPPING_CART_ITEM_COUNT
+        val nextEnable = size > pageNumber.value * PAGE_UNIT
         val previousEnable = pageNumber.value > 1
         view.setPageButtonEnable(previousEnable, nextEnable)
     }
 
     override fun deleteProductInCart(index: Int) {
-        val result = shoppingCartRepository.deleteProductInCart(shoppingCart[index].product.id)
+        val position = getAbsolutePosition(index)
+        val result = shoppingCartRepository.deleteProductInCart(shoppingCart[position].product.id)
         if (result) {
-            shoppingCart.removeAt(index)
-            view.setShoppingCart(shoppingCart.deepCopy())
+            shoppingCart.removeAt(position)
+            updatePageNumber()
+            fetchShoppingCart()
+            setOrderCount()
+            setPayment()
         }
     }
 
-    private fun MutableList<ProductInCart>.deepCopy(): List<ProductInCart> {
-        return this.map { it.copy() }.toList()
+    private fun updatePageNumber() {
+        if (shoppingCart.size < pageStartIdx) goPreviousPage()
+    }
+
+    override fun changeSelection(index: Int, isSelected: Boolean) {
+        val position = getAbsolutePosition(index)
+        shoppingCart[position] = shoppingCart[position].copy(isChecked = isSelected)
+        updateView()
+    }
+
+    override fun selectAll(isSelected: Boolean) {
+        for (idx in pageStartIdx..pageEndIdx) {
+            shoppingCart[idx] = shoppingCart[idx].copy(isChecked = isSelected)
+        }
+        updateView()
+    }
+
+    override fun updateProductQuantity(index: Int, operator: Operator) {
+        val position = getAbsolutePosition(index)
+        val productInCart = operator.operate(shoppingCart[position])
+        val result = shoppingCartRepository.updateProductQuantity(
+            productInCart.product.id,
+            productInCart.quantity,
+        )
+        when (result) {
+            is WoowaResult.SUCCESS -> {
+                shoppingCart[position] = productInCart
+                updateView()
+            }
+            is WoowaResult.FAIL -> {
+                view.showUnExpectedError()
+            }
+        }
+    }
+
+    private fun updateView() {
+        fetchShoppingCart()
+        setOrderCount()
+        setPayment()
+        setAllCheck()
+    }
+
+    override fun setAllCheck() {
+        val allChecked: Boolean = shoppingCart
+            .slice(IntRange(pageStartIdx, pageEndIdx))
+            .all { it.isChecked }
+        view.updateAllCheck(allChecked)
+    }
+
+    override fun setPayment() {
+        val payment = shoppingCart.asSequence()
+            .filter { it.isChecked }
+            .sumOf { it.quantity * it.product.price }
+        view.updatePayment(payment)
+    }
+
+    override fun showProductDetail(index: Int) {
+        view.goProductDetailActivity(shoppingCart[getAbsolutePosition(index)])
+    }
+
+    override fun setOrderCount() {
+        val orderCount = shoppingCart.asSequence()
+            .filter { it.isChecked }
+            .sumOf { it.quantity }
+        view.updateOrder(orderCount)
     }
 
     companion object {
-        private const val SHOPPING_CART_ITEM_COUNT = 5
+        private const val PAGE_UNIT = 5
     }
 }
