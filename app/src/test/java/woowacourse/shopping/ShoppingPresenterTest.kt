@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import com.domain.model.CartRepository
 import com.domain.model.Product
 import com.domain.model.ProductRepository
 import com.domain.model.RecentRepository
@@ -21,6 +22,7 @@ class ShoppingPresenterTest {
     private lateinit var presenter: ShoppingContract.Presenter
     private lateinit var productRepository: ProductRepository
     private lateinit var recentRepository: RecentRepository
+    private lateinit var cartRepository: CartRepository
 
     private val fakeProduct: Product = Product(
         1,
@@ -34,7 +36,8 @@ class ShoppingPresenterTest {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
         recentRepository = mockk(relaxed = true)
-        presenter = ShoppingPresenter(view, 0, productRepository, recentRepository)
+        cartRepository = mockk(relaxed = true)
+        presenter = ShoppingPresenter(view, 0, productRepository, recentRepository, cartRepository)
     }
 
     @Test
@@ -42,24 +45,25 @@ class ShoppingPresenterTest {
         // given
         every { productRepository.getUntil(any()) } returns List(10) { fakeProduct }
         every { recentRepository.getRecent(any()) } returns emptyList()
+        every { cartRepository.getAll() } returns emptyList()
         val slot = slot<List<ProductsItemType>>()
         every { view.setProducts(capture(slot)) } answers { nothing }
 
         // when
         presenter.setUpProducts()
-        presenter.updateRecentProducts()
 
         // then
         val capturedProducts = slot.captured
         assertTrue(capturedProducts.size == 11)
-        verify(exactly = 2) { view.setProducts(capturedProducts) }
+        verify(exactly = 1) { view.setProducts(capturedProducts) }
     }
 
     @Test
-    fun `최근 상품이 생가면 최근 상품을 세팅한다`() {
+    fun `최근 상품이 생기면 최근 상품을 세팅한다`() {
         // given
         every { productRepository.getUntil(any()) } returns List(10) { fakeProduct }
         every { recentRepository.getRecent(10) } returns List(10) { fakeProduct }
+        every { cartRepository.getAll() } returns emptyList()
         val slot = slot<List<ProductsItemType>>()
         every { view.setProducts(capture(slot)) } answers { nothing }
 
@@ -70,7 +74,7 @@ class ShoppingPresenterTest {
         // then
         val capturedProducts = slot.captured
         assertTrue(capturedProducts.size == 12)
-        verify(exactly = 2) { view.setProducts(capturedProducts) }
+        verify(exactly = 1) { view.updateRecentProducts(capturedProducts) }
     }
 
     @Test
@@ -93,7 +97,7 @@ class ShoppingPresenterTest {
         every { productRepository.getUntil(any()) } returns List(10) { fakeProduct }
         every { productRepository.getNext(any()) } returns List(10) { fakeProduct }
         val slot = slot<List<ProductsItemType>>()
-        every { view.addProducts(capture(slot)) } answers { nothing }
+        every { view.setProducts(capture(slot)) } answers { nothing }
 
         // when
         presenter.setUpProducts()
@@ -102,8 +106,7 @@ class ShoppingPresenterTest {
         // then
 
         val capturedProducts = slot.captured
-        println("dddddddd" + capturedProducts.size)
         assertTrue(capturedProducts.size == 21)
-        verify(exactly = 1) { view.addProducts(capturedProducts) }
+        verify(exactly = 1) { view.setProducts(capturedProducts) }
     }
 }

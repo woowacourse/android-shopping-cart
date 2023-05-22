@@ -44,7 +44,7 @@ class ProductDetailPresenterTest {
         val slot = slot<ProductUIModel>()
         every { view.setProductDetail(capture(slot)) } answers { nothing }
         // when
-        presenter.setUpProductDetail()
+        presenter.setUp()
 
         // then
         assertEquals(slot.captured, fakeProduct.toUIModel())
@@ -54,11 +54,11 @@ class ProductDetailPresenterTest {
     @Test
     fun `상품을 장바구니에 추가한다`() {
         // given
-        every { cartRepository.insert(any()) } answers { nothing }
+        every { cartRepository.insert(any(), 1) } answers { nothing }
         // when
-        presenter.addProductToCart()
+        presenter.addCart()
         // then
-        verify(exactly = 1) { cartRepository.insert(fakeProduct) }
+        verify(exactly = 1) { cartRepository.insert(fakeProduct, 1) }
     }
 
     @Test
@@ -66,7 +66,7 @@ class ProductDetailPresenterTest {
         // given
         every { recentRepository.insert(any()) } answers { nothing }
         // when
-        presenter.addProductToRecent()
+        presenter.setUp()
         // then
         verify(exactly = 1) { recentRepository.insert(fakeProduct) }
     }

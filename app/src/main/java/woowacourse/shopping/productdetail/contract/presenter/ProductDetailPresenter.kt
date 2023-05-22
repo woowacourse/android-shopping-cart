@@ -39,6 +39,10 @@ class ProductDetailPresenter(
         recentRepository.findById(product.id)?.let {
             recentRepository.delete(it.id)
         }
+        insertRecentProduct()
+    }
+
+    private fun insertRecentProduct() {
         recentRepository.insert(product.toDomain())
     }
 
