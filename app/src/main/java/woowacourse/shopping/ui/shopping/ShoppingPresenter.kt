@@ -34,13 +34,8 @@ class ShoppingPresenter(
         get() = UiProductCount(cartRepository.getProductInCartSize())
 
     override fun fetchAll() {
-        fetchProducts()
+        loadMoreProducts()
         fetchRecentProducts()
-    }
-
-    override fun fetchProducts() {
-        updateCart(cart + loadCartProducts(currentPage))
-        view.updateLoadMoreVisible()
     }
 
     private fun convertToCartProduct(product: Product): DomainCartProduct {
@@ -58,9 +53,9 @@ class ShoppingPresenter(
     }
 
     override fun loadMoreProducts() {
-        currentPage = currentPage.next()
         updateCart(cart + loadCartProducts(currentPage))
         view.updateLoadMoreVisible()
+        currentPage = currentPage.next()
     }
 
     override fun inquiryProductDetail(product: UiProduct) {

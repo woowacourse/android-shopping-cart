@@ -18,7 +18,6 @@ interface ShoppingContract {
 
     abstract class Presenter(protected val view: View) {
         abstract fun fetchAll()
-        abstract fun fetchProducts()
         abstract fun fetchRecentProducts()
         abstract fun loadMoreProducts()
         abstract fun inquiryProductDetail(product: UiProduct)

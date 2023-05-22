@@ -39,7 +39,7 @@ class ShoppingActivity : AppCompatActivity(), View, OnClickListener, ProductClic
     private val loadMoreAdapter = LoadMoreAdapter(presenter::loadMoreProducts)
 
     private val cartActivityLauncher = registerForActivityResult(StartActivityForResult()) {
-        presenter.fetchProducts()
+        presenter.fetchAll()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
