@@ -8,7 +8,16 @@ data class ProductUIState(
     val price: Int,
     val id: Long,
 ) {
+    var count: Int = NO_COUNT
+        private set
+
+    fun updateCount(count: Int = NO_COUNT) {
+        this.count = count
+    }
+
     companion object {
+        const val NO_COUNT = 0
+
         fun from(product: Product): ProductUIState =
             ProductUIState(product.imageUrl, product.name, product.price, product.id)
     }

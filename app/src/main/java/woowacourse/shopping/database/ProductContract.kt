@@ -4,7 +4,7 @@ import android.provider.BaseColumns
 
 object ProductContract {
     const val DATABASE_NAME = "product.db"
-    const val DATABASE_VERSION = 3
+    const val DATABASE_VERSION = 5
 
     object CartEntry : BaseColumns {
         const val TABLE_NAME = "cart"

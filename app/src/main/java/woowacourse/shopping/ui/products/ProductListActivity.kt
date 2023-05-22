@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
+import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -24,6 +25,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             this,
             RecentlyViewedProductRepositoryImpl(this, ProductRepositoryImpl),
             ProductRepositoryImpl,
+            CartRepositoryImpl(this, ProductRepositoryImpl),
         )
     }
     private var offset: Int = 0
@@ -68,9 +70,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initProductList() {
-        binding.rvMainProduct.adapter = ProductListAdapter(mutableListOf()) {
-            moveToProductDetailActivity(it)
-        }
+        binding.rvMainProduct.adapter = ProductListAdapter(
+            mutableListOf<ProductUIState>(),
+            { moveToProductDetailActivity(it) },
+            presenter::plusCount,
+            presenter::minusCount,
+            presenter::startCount,
+        )
         loadMorePage()
     }
 
@@ -102,6 +108,18 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         val adapter = binding.rvMainProduct.adapter as ProductListAdapter
         adapter.addItems(products)
         adapter.notifyItemRangeInserted(adapter.itemCount, products.size)
+    }
+
+    override fun updateCartItem(productId: Long, count: Int) {
+        val adapter = binding.rvMainProduct.adapter as ProductListAdapter
+        adapter.updateCount(productId, count)
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun deleteCartItem(productId: Long) {
+        val adapter = binding.rvMainProduct.adapter as ProductListAdapter
+        adapter.deleteCount(productId)
+        adapter.notifyDataSetChanged()
     }
 
     private fun moveToProductDetailActivity(productId: Long) {

@@ -23,8 +23,10 @@ class CartRepositoryImpl(
         )
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
+            val id =
+                cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID))
+            val count =
+                cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
             productRepository.findById(id)?.let {
                 products.add(CartProduct(it.id, it.imageUrl, it.name, it.price, count))
             }
@@ -42,8 +44,10 @@ class CartRepositoryImpl(
         )
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
+            val id =
+                cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID))
+            val count =
+                cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
             productRepository.findById(id)?.let {
                 products.add(CartProduct(it.id, it.imageUrl, it.name, it.price, count))
             }
@@ -51,6 +55,28 @@ class CartRepositoryImpl(
 
         cursor.close()
         return products
+    }
+
+    override fun findById(productId: Long): CartProduct? {
+        var product: CartProduct? = null
+        val cursor: Cursor = db.rawQuery(
+            """
+                SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME} 
+                WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = $productId
+            """.trimIndent(),
+            null,
+        )
+
+        while (cursor.moveToNext()) {
+            val count =
+                cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
+            productRepository.findById(productId)?.let {
+                product = CartProduct(it.id, it.imageUrl, it.name, it.price, count)
+            }
+        }
+
+        cursor.close()
+        return product
     }
 
     override fun save(product: CartProduct) {

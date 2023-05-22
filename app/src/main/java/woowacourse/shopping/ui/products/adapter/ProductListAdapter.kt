@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.products.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
@@ -10,8 +11,28 @@ import woowacourse.shopping.ui.products.uistate.ProductUIState
 
 class ProductListAdapter(
     private val products: MutableList<ProductUIState>,
-    private val onClick: (Long) -> Unit,
+//    private val counts: MutableMap<Long, Int>,
+    private val onItemClick: (Long) -> Unit,
+    private val onPlusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
+    private val onMinusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
+    private val onStartCountButtonClick: (product: ProductUIState) -> Unit,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
+    private val buttonClickListener: (option: Int, position: Int) -> Unit = { option, position ->
+        when (option) {
+            CLICK_ITEM -> onItemClick(products[position].id)
+            CLICK_COUNT_PLUS -> onPlusCountButtonClick(
+                products[position].id,
+                products[position].count,
+            )
+            CLICK_COUNT_MINUS -> onMinusCountButtonClick(
+                products[position].id,
+                products[position].count,
+            )
+            CLICK_COUNT_START -> onStartCountButtonClick(products[position])
+        }
+    }
+
+//    private var isCountChanging: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -20,7 +41,10 @@ class ProductListAdapter(
             false,
         )
 
-        return ProductListViewHolder(ItemProductBinding.bind(view)) { onClick(products[it].id) }
+        return ProductListViewHolder(
+            ItemProductBinding.bind(view),
+            buttonClickListener,
+        )
     }
 
     override fun getItemCount(): Int = products.size
@@ -33,13 +57,32 @@ class ProductListAdapter(
         products.addAll(newProducts)
     }
 
+    fun updateCount(productId: Long, count: Int) {
+        products.find { it.id == productId }?.updateCount(count)
+    }
+
+    fun deleteCount(productId: Long) {
+        products.find { it.id == productId }?.updateCount()
+    }
+
     class ProductListViewHolder(
         private val binding: ItemProductBinding,
-        private val onClick: (Int) -> Unit,
+        private val onButtonClick: (Int, Int) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-
         init {
-            binding.root.setOnClickListener { onClick(position) }
+            binding.root.setOnClickListener { onButtonClick(CLICK_ITEM, position) }
+
+            binding.btnProductAdd.setOnClickListener {
+                onButtonClick(CLICK_COUNT_START, position)
+            }
+
+            binding.btnProductPlusCount.setOnClickListener {
+                onButtonClick(CLICK_COUNT_PLUS, position)
+            }
+            binding.btnProductMinusCount.setOnClickListener {
+                onButtonClick(CLICK_COUNT_MINUS, position)
+            }
+            binding.tvProductCount.setOnClickListener { } // Nothing
         }
 
         fun bind(product: ProductUIState) {
@@ -48,6 +91,24 @@ class ProductListAdapter(
             Glide.with(itemView)
                 .load(product.imageUrl)
                 .into(binding.ivProduct)
+
+            binding.tvProductCount.text = product.count.toString()
+
+            setCountButtonVisibility(product.count != ProductUIState.NO_COUNT)
         }
+
+        private fun setCountButtonVisibility(isCountChanging: Boolean) {
+            binding.btnProductAdd.isVisible = !isCountChanging
+            binding.btnProductPlusCount.isVisible = isCountChanging
+            binding.btnProductMinusCount.isVisible = isCountChanging
+            binding.tvProductCount.isVisible = isCountChanging
+        }
+    }
+
+    companion object {
+        private const val CLICK_ITEM = 0
+        private const val CLICK_COUNT_PLUS = 1
+        private const val CLICK_COUNT_MINUS = 2
+        private const val CLICK_COUNT_START = 3
     }
 }
