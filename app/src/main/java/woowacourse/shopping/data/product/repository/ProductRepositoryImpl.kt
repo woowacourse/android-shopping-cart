@@ -26,7 +26,7 @@ class ProductRepositoryImpl(
 
     override fun getProductInRange(from: Int, count: Int): List<Product> {
 
-        return productDataSource.getProductInRange(from, from + count).run {
+        return productDataSource.getProductInRange(from, count).run {
             map {
                 Product(
                     id = it.id,
