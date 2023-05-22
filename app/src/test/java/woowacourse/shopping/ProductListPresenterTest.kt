@@ -8,114 +8,75 @@ import io.mockk.slot
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.data.ProductMockWebRepository
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
 import woowacourse.shopping.view.productlist.ProductListContract
+import woowacourse.shopping.view.productlist.ProductListPresenter
 
 class ProductListPresenterTest {
     private lateinit var presenter: ProductListContract.Presenter
     private lateinit var view: ProductListContract.View
 
+    private lateinit var productRepository: ProductMockWebRepository
+    private lateinit var cartRepository: CartRepository
+    private lateinit var recentViewedRepository: RecentViewedRepository
+
+    private val fakeRecentViewedData = listOf(0, 1, 2, 3)
+
+    private val fakeProducts = listOf(
+        Product(
+            0,
+            "락토핏",
+            "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+            Price(10000),
+        ),
+        Product(
+            1,
+            "락토핏",
+            "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+            Price(10000),
+        ),
+        Product(
+            2,
+            "락토핏",
+            "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+            Price(10000),
+        ),
+    )
+
+    val fakeProduct = Product(
+        0,
+        "락토핏",
+        "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+        Price(10000),
+    )
+
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        val productRepository = object : ProductRepository {
-            private val mProducts = products
-            override fun findAll(): List<Product> {
-                return mProducts
-            }
+        productRepository = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
+        recentViewedRepository = mockk(relaxed = true)
 
-            override fun find(id: Int): Product {
-                return mProducts[id]
-            }
-
-            override fun findRange(mark: Int, rangeSize: Int): List<Product> {
-                return mProducts.subList(mark, mark + rangeSize)
-            }
-
-            override fun isExistByMark(mark: Int): Boolean {
-                return mProducts.find { it.id == mark } != null
-            }
-        }
-        val recentViewedRepository = object : RecentViewedRepository {
-            private val mIds = mutableListOf(0, 1, 2)
-            override fun findAll(): List<Int> {
-                return mIds.toList()
-            }
-
-            override fun add(id: Int) {
-                mIds.add(id)
-            }
-
-            override fun remove(id: Int) {
-                mIds.find { it == id }?.let {
-                    mIds.remove(it)
-                }
-            }
-
-            override fun find(id: Int): Int? {
-                return id
-            }
-
-            override fun findMostRecent(): Int {
-                return 2
-            }
-        }
-        val cartRepository = object : CartRepository {
-            val myCart =
-                mutableListOf(
-                    CartProduct(1, 1, true),
-                    CartProduct(2, 2, true),
-                    CartProduct(3, 3, true),
-                )
-            var count = 1
-
-            override fun findAll(): List<CartProduct> {
-                return myCart
-            }
-
-            override fun add(id: Int, count: Int, check: Boolean) {
-                myCart.add(CartProduct(id, count, check))
-            }
-
-            override fun remove(id: Int) {
-                myCart.remove(CartProduct(id, id, true))
-            }
-
-            override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
-                return myCart
-            }
-
-            override fun isExistByMark(mark: Int): Boolean {
-                return myCart.size >= mark
-            }
-
-            override fun plusCount(id: Int) {
-                count++
-            }
-
-            override fun subCount(id: Int) {
-                count--
-            }
-
-            override fun findCheckedItem(): List<CartProduct> {
-                return myCart
-            }
-
-            override fun updateCheckState(id: Int, checked: Boolean) {
-            }
-        }
-        // presenter = ProductListPresenter(view, productRepository, recentViewedRepository, cartRepository)
+        presenter =
+            ProductListPresenter(
+                view,
+                productRepository,
+                recentViewedRepository,
+                cartRepository,
+            )
     }
 
     @Test
     fun 최근_본_상품과_20개의_상품들을_띄울_수_있다() {
+        every { recentViewedRepository.findAll() } returns fakeRecentViewedData
+        every { productRepository.get() } returns fakeProducts
+        every { productRepository.find(any()) } returns fakeProduct
         val viewedProductsActual = slot<List<ProductModel>>()
         val productsActual = slot<List<ProductModel>>()
         every {

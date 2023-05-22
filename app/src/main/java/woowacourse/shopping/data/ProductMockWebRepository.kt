@@ -19,7 +19,6 @@ class ProductMockWebRepository : ProductRepository {
     }
 
     fun get(): List<Product> {
-        // ProductMockWebServer().request({ products = it }, { })
         return products.toList()
     }
 
