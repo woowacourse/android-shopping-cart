@@ -21,8 +21,8 @@ class CartRepositoryImpl(private val localCartDataSource: CartDataSource.Local) 
     override fun getProductByPage(page: Page): Cart =
         localCartDataSource.getProductByPage(page.toData()).toDomain(page.sizePerPage)
 
-    override fun getProductInCartByPage(page: Page): Cart =
-        localCartDataSource.getProductInCartByPage(page.toData()).toDomain(page.sizePerPage)
+    override fun getProductInCartByPage(page: Page): List<CartEntity> =
+        localCartDataSource.getProductInCartByPage(page.toData()).map { it.toDomain() }
 
     override fun getProductInRange(startPage: Page, endPage: Page): Cart {
         val start = startPage.toData()

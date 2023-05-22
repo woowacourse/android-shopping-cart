@@ -8,6 +8,8 @@ data class CartProduct(
     val selectedCount: ProductCount = ProductCount(0),
     val isChecked: Boolean,
 ) {
+    val productId: Int = product.id
+
     fun plusCount(count: Int = 1): CartProduct =
         copy(selectedCount = selectedCount + count)
 
@@ -19,4 +21,11 @@ data class CartProduct(
 
     fun unselect(): CartProduct =
         copy(isChecked = false)
+
+    fun getTotalPrice(onlyChecked: Boolean): Int {
+        if (onlyChecked && isChecked) {
+            return product.price.value * selectedCount.value
+        }
+        return 0
+    }
 }

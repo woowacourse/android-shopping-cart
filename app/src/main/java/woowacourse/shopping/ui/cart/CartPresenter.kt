@@ -4,9 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.CartEntity
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.model.ProductCount
 import woowacourse.shopping.domain.model.page.Page
 import woowacourse.shopping.domain.model.page.Pagination
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUi
 import woowacourse.shopping.model.UiProduct
@@ -15,6 +19,7 @@ import woowacourse.shopping.ui.cart.CartContract.View
 
 class CartPresenter(
     view: View,
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     cartSize: Int = 5,
 ) : Presenter(view) {
@@ -29,14 +34,24 @@ class CartPresenter(
         pageCheckSize == currentPage.takeItems(cart).size
     }
 
+    init {
+        val cartEntities = cartRepository.getAllCartEntities()
+        val loadedCart = loadCartProducts(cartEntities)
+        cart = cart.update(loadedCart)
+    }
+
     override fun fetchCart(page: Int) {
         currentPage = currentPage.update(page)
-        cart = cart.update(cartRepository.getProductInCartByPage(currentPage))
-
         view.updateNavigatorEnabled(currentPage.hasPrevious(), currentPage.hasNext(cart))
         view.updatePageNumber(currentPage.toUi())
         fetchView()
     }
+
+    private fun loadCartProducts(cartEntities: List<CartEntity>): List<CartProduct> =
+        cartEntities.mapNotNull {
+            val product = productRepository.findProductById(it.productId)
+            product?.run { CartProduct(it.id, this, ProductCount(it.count), it.checked) }
+        }
 
     override fun changeProductCount(product: UiProduct, count: Int, increase: Boolean) {
         updateCart(changeCount(product, count, increase))
@@ -55,7 +70,13 @@ class CartPresenter(
         if (isSelect) cart.select(product.toDomain()) else cart.unselect(product.toDomain())
 
     override fun toggleAllCheckState() {
-        updateCart(if (isAllChecked.value == true) cart.unselectAll() else cart.selectAll())
+        updateCart(
+            if (isAllChecked.value == true) {
+                cart.unselectAll(currentPage)
+            } else cart.selectAll(
+                currentPage
+            )
+        )
     }
 
     override fun removeProduct(product: UiProduct) {
@@ -84,7 +105,7 @@ class CartPresenter(
     private fun fetchView() {
         _totalCheckSize.value = cartRepository.getCheckedProductCount()
         _pageCheckSize.value = currentPage.getCheckedProductSize(cart)
-        view.updateTotalPrice(cartRepository.getTotalPrice())
+        view.updateTotalPrice(cart.getCheckedProductTotalPrice())
         view.updateCart(currentPage.takeItems(cart).toUi())
     }
 }

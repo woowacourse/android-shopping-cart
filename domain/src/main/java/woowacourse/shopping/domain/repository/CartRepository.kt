@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.Product
 interface CartRepository {
     fun getAllCartEntities(): List<CartEntity>
     fun getProductByPage(page: Page): Cart
-    fun getProductInCartByPage(page: Page): Cart
+    fun getProductInCartByPage(page: Page): List<CartEntity>
     fun getProductInRange(startPage: Page, endPage: Page): Cart
     fun increaseCartCount(product: Product, count: Int)
     fun decreaseCartCount(product: Product, count: Int)

@@ -1,5 +1,7 @@
 package woowacourse.shopping.domain.model
 
+import woowacourse.shopping.domain.model.page.Page
+
 typealias DomainCart = Cart
 
 data class Cart(
@@ -31,17 +33,27 @@ data class Cart(
             if (item.product.id == product.id) item.unselect() else item
         })
 
-    fun selectAll(): Cart =
-        copy(items = items.map { it.select() })
+    fun selectAll(page: Page): Cart {
+        val cartProductsOfPage = page.takeItems(this)
+        return copy(items = items.map { item ->
+            cartProductsOfPage.find { it.id == item.id }?.select() ?: item
+        })
+    }
 
-    fun unselectAll(): Cart =
-        copy(items = items.map { it.unselect() })
+    fun unselectAll(page: Page): Cart {
+        val cartProductsOfPage = page.takeItems(this)
+        return copy(items = items.map { item ->
+            cartProductsOfPage.find { it.id == item.id }?.unselect() ?: item
+        })
+    }
 
     fun update(cart: Cart): Cart =
         copy(items = cart.items.distinctBy { it.product.id })
 
     fun update(cartProducts: List<CartProduct>): Cart =
         copy(items = cartProducts.distinctBy { it.product.id })
+
+    fun getCheckedProductTotalPrice(): Int = items.sumOf { it.getTotalPrice(true) }
 
     operator fun plus(items: Cart): Cart =
         copy(items = (this.items + items.items).distinctBy { it.product.id })

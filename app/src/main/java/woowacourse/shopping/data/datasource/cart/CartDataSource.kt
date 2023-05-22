@@ -11,7 +11,7 @@ interface CartDataSource {
         fun getAllCartEntity(): List<CartEntity>
         fun getCartEntity(productId: Int): CartEntity
         fun getProductByPage(page: DataPage): DataCart
-        fun getProductInCartByPage(page: DataPage): DataCart
+        fun getProductInCartByPage(page: DataPage): List<CartEntity>
         fun increaseCartCount(product: Product, count: Int)
         fun decreaseCartCount(product: Product, count: Int)
         fun deleteByProductId(productId: Int)

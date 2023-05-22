@@ -14,8 +14,8 @@ class LocalCartDataSource(private val dao: CartDao) : CartDataSource.Local {
     override fun getProductByPage(page: DataPage): DataCart =
         dao.getProductByPage(page)
 
-    override fun getProductInCartByPage(page: DataPage): DataCart =
-        dao.getProductInCartByPage(page)
+    override fun getProductInCartByPage(page: DataPage): List<CartEntity> =
+        dao.getCartEntitiesByPage(page)
 
     override fun increaseCartCount(product: Product, count: Int) {
         dao.addProductCount(product, count)

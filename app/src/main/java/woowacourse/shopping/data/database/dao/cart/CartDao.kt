@@ -8,7 +8,7 @@ import woowacourse.shopping.data.model.Product
 
 interface CartDao {
     fun getProductByPage(page: DataPage): DataCart
-    fun getProductInCartByPage(page: DataPage): DataCart
+    fun getCartEntitiesByPage(page: DataPage): List<CartEntity>
     fun insert(product: Product, count: Int)
     fun deleteByProductId(id: Int)
     fun contains(product: Product): Boolean

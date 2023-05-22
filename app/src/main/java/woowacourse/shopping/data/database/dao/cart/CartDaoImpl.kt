@@ -3,6 +3,7 @@ package woowacourse.shopping.data.database.dao.cart
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.provider.BaseColumns
+import android.util.Log
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.contract.CartContract
 import woowacourse.shopping.data.database.contract.ProductContract
@@ -26,7 +27,7 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
             val cartId: Int =
                 cursor.getInt(cursor.getColumnIndex(CartContract.CART_ID))
             val productId: Int =
-                cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
+                cursor.getInt(cursor.getColumnIndex(CartContract.PRODUCT_ID))
             val count: Int =
                 cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_COUNT))
             val isChecked: Int =
@@ -86,34 +87,27 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
     }
 
     @SuppressLint("Range")
-    override fun getProductInCartByPage(page: DataPage): DataCart {
-        val cartProducts = mutableListOf<CartProduct>()
+    override fun getCartEntitiesByPage(page: DataPage): List<CartEntity> {
+        val cartEntities = mutableListOf<CartEntity>()
 
-        val db = database.writableDatabase
-        val cursor = db.rawQuery(GET_ALL_CART_PRODUCT_IN_CART_QUERY, null)
+        val db = database.readableDatabase
+        val cursor = db.rawQuery(GET_ALL_CART_ENTITY_QUERY, null)
 
         while (cursor.moveToNext()) {
             val cartId: Int =
                 cursor.getInt(cursor.getColumnIndex(CartContract.CART_ID))
             val productId: Int =
-                cursor.getInt(cursor.getColumnIndex(BaseColumns._ID))
-            val name: String =
-                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_NAME))
-            val price: DataPrice =
-                DataPrice(cursor.getInt(cursor.getColumnIndex(ProductContract.COLUMN_PRICE)))
-            val imageUrl: String =
-                cursor.getString(cursor.getColumnIndex(ProductContract.COLUMN_IMAGE_URL))
+                cursor.getInt(cursor.getColumnIndex(CartContract.PRODUCT_ID))
             val count: Int =
                 cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_COUNT))
             val isChecked: Int =
                 cursor.getInt(cursor.getColumnIndex(CartContract.COLUMN_CHECKED))
-            val product = Product(productId, name, price, imageUrl)
-            cartProducts.add(CartProduct(cartId, product, ProductCount(count), isChecked))
+            cartEntities.add(CartEntity(cartId, productId, count, isChecked))
         }
         cursor.close()
-
-        return DataCart(cartProducts = cartProducts.safeSubList(page.start, page.end + 1))
+        return cartEntities.safeSubList(page.start, page.end + 1)
     }
+
 
     override fun insert(product: Product, count: Int) {
         val contentValues = ContentValues().apply {
@@ -318,9 +312,7 @@ class CartDaoImpl(private val database: ShoppingDatabase) : CartDao {
         """.trimIndent()
 
         private val GET_CHECKED_PRODUCT_COUNT = """
-            SELECT COUNT(*) FROM ${ProductContract.TABLE_NAME} as product
-            LEFT JOIN ${CartContract.TABLE_NAME} as cart
-            ON cart.${CartContract.PRODUCT_ID} = product.${BaseColumns._ID}
+            SELECT COUNT(*) FROM ${CartContract.TABLE_NAME}
             WHERE ${CartContract.COLUMN_COUNT} > 0 AND ${CartContract.COLUMN_CHECKED} = 1
         """.trimIndent()
     }

@@ -2,7 +2,6 @@ package woowacourse.shopping.domain.model.page
 
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.domain.util.safeSubList
 
 typealias DomainPage = Page
 
@@ -26,9 +25,7 @@ abstract class Page(
 
     abstract fun takeItems(cart: Cart): List<CartProduct>
 
-    fun getCheckedProductSize(cart: Cart): Int = cart.items
-        .safeSubList(0, sizePerPage)
-        .count { item -> item.isChecked }
+    abstract fun getCheckedProductSize(cart: Cart): Int
 
     companion object {
         private const val DEFAULT_PAGE = 1

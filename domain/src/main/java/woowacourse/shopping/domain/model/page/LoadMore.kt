@@ -2,6 +2,7 @@ package woowacourse.shopping.domain.model.page
 
 import woowacourse.shopping.domain.model.Cart
 import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.util.safeSubList
 
 typealias DomainLoadMore = LoadMore
 
@@ -21,4 +22,8 @@ class LoadMore(
 
     override fun takeItems(cart: Cart): List<CartProduct> =
         cart.items.take(value * cart.loadUnit)
+
+    override fun getCheckedProductSize(cart: Cart): Int = cart.items
+        .safeSubList(0, sizePerPage)
+        .count { item -> item.isChecked }
 }

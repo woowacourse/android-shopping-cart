@@ -40,6 +40,7 @@ fun inject(
     val database = createShoppingDatabase(context)
     return CartPresenter(
         view,
+        inject(),
         inject(inject(injectCartDao(database)))
     )
 }
