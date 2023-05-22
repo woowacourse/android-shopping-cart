@@ -12,7 +12,7 @@ class LoadMore(
 ) : Page(value, sizePerPage) {
     override fun getStartPage(): Page = LoadMore(1, sizePerPage)
 
-    override fun hasPrevious(): Boolean = true
+    override fun hasPrevious(): Boolean = value > 1
 
     override fun hasNext(cart: Cart): Boolean = cart.items.size >= value * cart.loadUnit
 

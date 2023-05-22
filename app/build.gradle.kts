@@ -66,5 +66,6 @@ dependencies {
 
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:mockwebserver:4.11.0")
     testImplementation("com.squareup.okhttp3:mock webserver:4.10.0")
 }

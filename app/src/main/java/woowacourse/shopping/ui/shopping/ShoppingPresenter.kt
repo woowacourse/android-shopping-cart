@@ -39,13 +39,9 @@ class ShoppingPresenter(
     }
 
     override fun fetchProducts() {
-        updateCart(cart.update(loadCartProducts(currentPage.getStartPage(), currentPage)))
+        updateCart(cart + loadCartProducts(currentPage))
         view.updateLoadMoreVisible()
     }
-
-    private fun loadCartProducts(start: Page, end: Page): List<DomainCartProduct> = productRepository
-        .getProductInRange(start, end)
-        .map { convertToCartProduct(it) }
 
     private fun convertToCartProduct(product: Product): DomainCartProduct {
         val cartEntity = cartRepository.getCartEntity(product.id)
@@ -62,9 +58,8 @@ class ShoppingPresenter(
     }
 
     override fun loadMoreProducts() {
-        val originPage = currentPage
         currentPage = currentPage.next()
-        updateCart(cart + loadCartProducts(originPage, currentPage))
+        updateCart(cart + loadCartProducts(currentPage))
         view.updateLoadMoreVisible()
     }
 
@@ -114,4 +109,8 @@ class ShoppingPresenter(
         recentProducts = recentProducts.update(newRecentProducts)
         view.updateRecentProducts(recentProducts.getItems().toUi())
     }
+
+    private fun loadCartProducts(page: Page): List<DomainCartProduct> = productRepository
+        .getProductByPage(page)
+        .map { convertToCartProduct(it) }
 }
