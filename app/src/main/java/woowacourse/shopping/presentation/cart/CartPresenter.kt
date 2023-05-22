@@ -17,13 +17,13 @@ class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-    private val initialPage: Counter = Counter(0),
+    private val initialPage: Counter = Counter(CartPages.FIRST_PAGE),
 ) : CartContract.Presenter {
 
     private lateinit var cartPages: CartPages
     override fun loadCart() {
         initCartPages()
-        handleLoadingCartProducts()
+        updateProductsInCurrentPage()
     }
 
     private fun initCartPages() {
@@ -45,7 +45,7 @@ class CartPresenter(
         return CartProduct(cartProduct, cart.count, true)
     }
 
-    private fun handleLoadingCartProducts() {
+    private fun updateProductsInCurrentPage() {
         updateCart(cartPages.getCurrentProducts())
         checkPageAble()
         setTotal()
@@ -64,21 +64,21 @@ class CartPresenter(
             minusPage()
             return
         }
-        handleLoadingCartProducts()
+        updateProductsInCurrentPage()
     }
 
     override fun addProductCartCount(cartProductModel: CartProductModel) {
         val nextCount = cartProductModel.count + CART_UNIT
         cartRepository.updateCartProductCount(cartProductModel.productModel.id, nextCount)
         cartPages.addCountProducts(cartProductModel.productModel.toDomain())
-        handleLoadingCartProducts()
+        updateProductsInCurrentPage()
     }
 
     override fun subProductCartCount(cartProductModel: CartProductModel) {
         val nextCount = cartProductModel.count - CART_UNIT
         cartRepository.updateCartProductCount(cartProductModel.productModel.id, nextCount)
         cartPages.subCountProducts(cartProductModel.productModel.toDomain())
-        handleLoadingCartProducts()
+        updateProductsInCurrentPage()
     }
 
     override fun changeProductSelected(productModel: ProductModel) {
@@ -94,22 +94,22 @@ class CartPresenter(
 
     override fun plusPage() {
         cartPages.goNextPageProducts()
-        handleLoadingCartProducts()
+        updateProductsInCurrentPage()
     }
 
     override fun minusPage() {
         cartPages.goPreviousPageProducts()
-        handleLoadingCartProducts()
+        updateProductsInCurrentPage()
     }
 
     override fun selectAllProduct() {
         cartPages.selectPageProducts()
-        handleLoadingCartProducts()
+        updateProductsInCurrentPage()
     }
 
     override fun unselectAllProduct() {
         cartPages.unselectPageProducts()
-        handleLoadingCartProducts()
+        updateProductsInCurrentPage()
     }
 
     private fun updateCart(cartProducts: CartProducts) {

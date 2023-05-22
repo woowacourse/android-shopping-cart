@@ -67,7 +67,7 @@ class CartPages(
     fun getSelectedProductsCount() = cartProducts.getSelectedProductsTotalCount()
 
     companion object {
-        private const val FIRST_PAGE = 1
+        const val FIRST_PAGE = 1
         private const val PAGE_UNIT = 1
         private const val PRODUCT_CART_SIZE = 5
         private const val COUNT_UNIT = 1
