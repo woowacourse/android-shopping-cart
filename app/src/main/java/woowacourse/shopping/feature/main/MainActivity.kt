@@ -72,9 +72,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                 }
             }
         )
-        recentAdapter = RecentAdapter(listOf()) { recentProduct ->
+        recentAdapter = RecentAdapter { recentProduct ->
             presenter.moveToDetail(recentProduct.productUiModel)
         }
+
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
         loadAdapter = LoadAdapter {
             presenter.loadMoreProduct()
@@ -126,7 +127,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun updateRecent(recent: List<RecentProductUiModel>) {
-        recentAdapter.setItems(recent)
+        recentAdapter.submitList(recent)
     }
 
     override fun showProductDetailScreenByRecent(recentProduct: RecentProductUiModel) {
