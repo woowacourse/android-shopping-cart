@@ -66,4 +66,15 @@ class MockWebProductRepository(baseUrl: String) : ProductRepository {
             products
         } ?: emptyList()
     }
+
+    companion object {
+        fun from(baseUrl: String): MockWebProductRepository {
+            var url: String? = null
+            val thread = Thread { url = baseUrl }
+            thread.start()
+            thread.join()
+
+            return MockWebProductRepository(url ?: "")
+        }
+    }
 }

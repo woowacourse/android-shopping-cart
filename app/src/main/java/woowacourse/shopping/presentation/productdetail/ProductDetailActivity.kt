@@ -24,13 +24,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private val presenter: ProductDetailContract.Presenter by lazy {
 
-        var url: String? = null
-        val thread = Thread { url = ProductMockServer().url }
-        thread.start()
-        thread.join()
-
+        val productRepository = MockWebProductRepository.from(ProductMockServer().url)
         val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
-        ProductDetailPresenter(this, cartRepository, MockWebProductRepository(url ?: ""))
+        ProductDetailPresenter(this, cartRepository, productRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

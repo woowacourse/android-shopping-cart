@@ -20,12 +20,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
 
     private val presenter: CartContract.Presenter by lazy {
-        var url: String? = null
-        val thread = Thread { url = ProductMockServer().url }
-        thread.start()
-        thread.join()
+        val productRepository = MockWebProductRepository.from(ProductMockServer().url)
         val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
-        CartPresenter(this, cartRepository, MockWebProductRepository(url ?: ""))
+        CartPresenter(this, cartRepository, productRepository)
     }
 
     override fun setTotalPrice(price: Int) {
