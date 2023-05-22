@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
+import woowacourse.shopping.data.cart.CartEntity
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartPages
@@ -22,7 +23,7 @@ class CartPresenter(
     private lateinit var cartPages: CartPages
     override fun loadCart() {
         initCartPages()
-        loadFirstCartPage()
+        handleLoadingCartProducts()
     }
 
     private fun initCartPages() {
@@ -33,17 +34,21 @@ class CartPresenter(
     private fun loadCartProducts(): List<CartProduct> {
         val cartEntities = cartRepository.getCartEntities()
         val productItems = cartEntities.map { cart ->
-            val cartProduct =
-                productRepository.findProductById(cart.productId) ?: Product.defaultProduct
-            CartProduct(cartProduct, cart.count, true)
+            cartToProductItem(cart)
         }
         return productItems
     }
 
-    private fun loadFirstCartPage() {
-        val nextProducts = cartPages.getNextPageProducts()
-        updateCart(nextProducts)
-        updateEvent()
+    private fun cartToProductItem(cart: CartEntity): CartProduct {
+        val cartProduct =
+            productRepository.findProductById(cart.productId) ?: Product.defaultProduct
+        return CartProduct(cartProduct, cart.count, true)
+    }
+
+    private fun handleLoadingCartProducts() {
+        updateCart(cartPages.getCurrentProducts())
+        checkPageAble()
+        setTotal()
     }
 
     private fun checkPageAble() {
@@ -53,35 +58,27 @@ class CartPresenter(
 
     override fun deleteProduct(productModel: ProductModel) {
         cartRepository.deleteCartProduct(productModel.id)
-        val deletedProducts = cartPages.getDeletedProducts(productModel.toDomain())
+        cartPages.deleteProducts(productModel.toDomain())
+        val deletedProducts = cartPages.getCurrentProducts()
         if (deletedProducts.size == 0) {
             minusPage()
             return
         }
-        updateCart(deletedProducts)
-        updateEvent()
+        handleLoadingCartProducts()
     }
 
     override fun addProductCartCount(cartProductModel: CartProductModel) {
         val nextCount = cartProductModel.count + CART_UNIT
         cartRepository.updateCartProductCount(cartProductModel.productModel.id, nextCount)
-        val addCountProducts =
-            cartPages.getAddCountProducts(cartProductModel.productModel.toDomain())
-        updateCart(addCountProducts)
-        updateEvent()
+        cartPages.addCountProducts(cartProductModel.productModel.toDomain())
+        handleLoadingCartProducts()
     }
 
     override fun subProductCartCount(cartProductModel: CartProductModel) {
         val nextCount = cartProductModel.count - CART_UNIT
         cartRepository.updateCartProductCount(cartProductModel.productModel.id, nextCount)
-        val subCountProducts =
-            cartPages.getSubCountProducts(cartProductModel.productModel.toDomain())
-        if (subCountProducts.size == 0) {
-            minusPage()
-            return
-        }
-        updateCart(subCountProducts)
-        updateEvent()
+        cartPages.subCountProducts(cartProductModel.productModel.toDomain())
+        handleLoadingCartProducts()
     }
 
     override fun changeProductSelected(productModel: ProductModel) {
@@ -96,41 +93,28 @@ class CartPresenter(
     }
 
     override fun plusPage() {
-        val nextProducts = cartPages.getNextPageProducts()
-        updateCart(nextProducts)
-        updateEvent()
+        cartPages.goNextPageProducts()
+        handleLoadingCartProducts()
     }
 
     override fun minusPage() {
-        val previousProducts = cartPages.getPreviousPageProducts()
-        updateCart(previousProducts)
-        updateEvent()
+        cartPages.goPreviousPageProducts()
+        handleLoadingCartProducts()
     }
 
     override fun selectAllProduct() {
         cartPages.selectPageProducts()
-        updateCart(cartPages.getCurrentProducts())
-        setTotal()
+        handleLoadingCartProducts()
     }
 
     override fun unselectAllProduct() {
         cartPages.unselectPageProducts()
-        updateCart(cartPages.getCurrentProducts())
-        setTotal()
-    }
-
-    private fun updateEvent() {
-        checkPageAble()
-        setTotal()
+        handleLoadingCartProducts()
     }
 
     private fun updateCart(cartProducts: CartProducts) {
         view.setPage(cartPages.pageNumber.value)
         view.setCartProductModels(cartProducts.toPresentation())
-    }
-
-    private fun CartProducts.toPresentation(): List<CartProductModel> {
-        return items.map { it.toPresentation() }
     }
 
     private fun checkRightPageAble() {
@@ -139,6 +123,10 @@ class CartPresenter(
 
     private fun checkLeftPageAble() {
         view.setLeftPageEnable(cartPages.isPreviousPageAble())
+    }
+
+    private fun CartProducts.toPresentation(): List<CartProductModel> {
+        return items.map { it.toPresentation() }
     }
 
     companion object {

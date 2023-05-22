@@ -2,35 +2,30 @@ package woowacourse.shopping.model
 
 class CartPages(
     private val cartProducts: CartProducts,
-    pageNumber: Counter = Counter(INITIAL_PAGE),
+    pageNumber: Counter = Counter(FIRST_PAGE),
 ) {
 
     var pageNumber = pageNumber
         private set
 
-    fun getNextPageProducts(): CartProducts {
+    fun goNextPageProducts() {
         pageNumber += PAGE_UNIT
-        return getCurrentProducts()
     }
 
-    fun getPreviousPageProducts(): CartProducts {
+    fun goPreviousPageProducts() {
         pageNumber -= PAGE_UNIT
-        return getCurrentProducts()
     }
 
-    fun getDeletedProducts(product: Product): CartProducts {
+    fun deleteProducts(product: Product) {
         cartProducts.deleteProduct(product)
-        return getCurrentProducts()
     }
 
-    fun getSubCountProducts(product: Product): CartProducts {
+    fun subCountProducts(product: Product) {
         cartProducts.subProductByCount(product, COUNT_UNIT)
-        return getCurrentProducts()
     }
 
-    fun getAddCountProducts(product: Product): CartProducts {
+    fun addCountProducts(product: Product) {
         cartProducts.addProductByCount(product, COUNT_UNIT)
-        return getCurrentProducts()
     }
 
     fun getCurrentProducts() = cartProducts.getProductsInRange(getStartIndex(), PRODUCT_CART_SIZE)
@@ -72,7 +67,6 @@ class CartPages(
     fun getSelectedProductsCount() = cartProducts.getSelectedProductsTotalCount()
 
     companion object {
-        private const val INITIAL_PAGE = 0
         private const val FIRST_PAGE = 1
         private const val PAGE_UNIT = 1
         private const val PRODUCT_CART_SIZE = 5
