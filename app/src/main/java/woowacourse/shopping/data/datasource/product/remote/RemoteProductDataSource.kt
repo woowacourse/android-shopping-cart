@@ -17,7 +17,7 @@ class RemoteProductDataSource(private val shoppingCartMockServer: ShoppingCartMo
 
     override fun getPartially(size: Int, lastId: Int): List<DataProduct> {
         shoppingCartMockServer.join()
-        val url = "${shoppingCartMockServer.BASE_URL}/product/$lastId"
+        val url = "${shoppingCartMockServer.BASE_URL}/product?lastId=${lastId}size=$size"
         val okHttpClient = OkHttpClient()
         val request = Request.Builder().url(url).build()
         val gson = Gson()
