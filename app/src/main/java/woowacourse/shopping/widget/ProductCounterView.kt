@@ -9,7 +9,7 @@ import woowacourse.shopping.databinding.ViewCounterBinding
 import woowacourse.shopping.model.UiProduct
 import kotlin.properties.Delegates
 
-class ProductCounterView(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
+class ProductCounterView : ConstraintLayout {
     private val binding by lazy {
         ViewCounterBinding.inflate(LayoutInflater.from(context), this, true)
     }
@@ -19,11 +19,24 @@ class ProductCounterView(context: Context, attrs: AttributeSet) : ConstraintLayo
     private var minCount: Int = DEFAULT_MIN_COUNT
     private var maxCount: Int = DEFAULT_MAX_COUNT
 
+    constructor(context: Context) : super(context)
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        initTypedArrayValue(attrs)
+    }
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+        initTypedArrayValue(attrs)
+    }
+
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
+        initTypedArrayValue(attrs)
+    }
+
     init {
         binding.count = count
         binding.counterPlusButton.setOnClickListener { plusCount() }
         binding.counterMinusButton.setOnClickListener { minusCount() }
-        initTypedArrayValue(attrs)
     }
 
     private fun initTypedArrayValue(attrs: AttributeSet) {
