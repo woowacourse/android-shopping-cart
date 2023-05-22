@@ -11,10 +11,7 @@ class ProductMockWebRepository : ProductRepository {
     init {
         Thread {
             ProductMockWebServer().request(
-                {
-                    products = it
-                    Log.d("HJHJ", "성공 $products")
-                },
+                { products = it },
                 { Log.d("HJHJ", "실패 ${it.message}") },
             )
         }.start()

@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.cart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.CartProduct
@@ -28,7 +27,6 @@ class CartPresenter(
         convertIdToModel(cartPagination.nextItems()).toMutableList()
 
     override fun fetchProducts() {
-        Log.d("HJHJ", "dksdfdfsud d fdds $currentCartProducts")
         view.showProducts(
             currentCartProducts,
             cartPagination.isUndoItemsEnabled,

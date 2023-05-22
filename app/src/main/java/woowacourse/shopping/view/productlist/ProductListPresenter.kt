@@ -10,7 +10,6 @@ import woowacourse.shopping.model.toUiModel
 class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductMockWebRepository,
-    // private val productRepository: ProductRepository,
     private val recentViewedRepository: RecentViewedRepository,
     private val cartRepository: CartRepository,
 ) : ProductListContract.Presenter {

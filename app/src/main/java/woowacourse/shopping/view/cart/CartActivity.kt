@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.common.PriceFormatter
 import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.data.ProductMockWebRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductModel
 
@@ -41,7 +41,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun setPresenter() {
-        presenter = CartPresenter(this, CartDbRepository(this), ProductMockRepository)
+        presenter = CartPresenter(this, CartDbRepository(this), ProductMockWebRepository())
     }
 
     override fun showProducts(

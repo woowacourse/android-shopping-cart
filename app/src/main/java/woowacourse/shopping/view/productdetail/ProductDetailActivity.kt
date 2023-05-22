@@ -10,7 +10,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.data.ProductMockWebRepository
 import woowacourse.shopping.data.RecentViewedDbRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductModel
@@ -40,7 +40,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setPresenter() {
         presenter =
-            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this), ProductMockRepository)
+            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this), ProductMockWebRepository())
     }
 
     private fun setActionBar() {
