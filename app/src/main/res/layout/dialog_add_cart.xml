@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="kotlin.Unit" />
+
+        <import type="woowacourse.shopping.common.model.CartProductModel" />
+
+        <variable
+            name="onMinusClick"
+            type="kotlin.jvm.functions.Function1&lt;CartProductModel, Unit>" />
+
+        <variable
+            name="onPlusClick"
+            type="kotlin.jvm.functions.Function1&lt;CartProductModel, Unit>" />
+
+        <variable
+            name="onClickAddCart"
+            type="kotlin.jvm.functions.Function1&lt;CartProductModel, Unit>" />
+
+        <variable
+            name="cartProduct"
+            type="CartProductModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="314dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_background">
+
+        <TextView
+            android:id="@+id/add_cart_title"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="@{cartProduct.product.title}"
+            android:textColor="#333333"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="[든든] 동원 스위트콘" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/product_price(cartProduct.product.price)}"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/add_cart_title"
+            app:layout_constraintTop_toBottomOf="@id/add_cart_title"
+            tools:text="99,800원" />
+
+        <woowacourse.shopping.common.view.Counter
+            android:id="@+id/add_cart_counter"
+            count="@{cartProduct.amount}"
+            onMinusClick="@{() -> onMinusClick.invoke(cartProduct)}"
+            onPlusClick="@{() -> onPlusClick.invoke(cartProduct)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_cart_title" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="14dp"
+            android:backgroundTint="#04C09E"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:onClick="@{() -> onClickAddCart.invoke(cartProduct)}"
+            android:padding="0dp"
+            android:text="@string/add_cart_button_text"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_cart_counter" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

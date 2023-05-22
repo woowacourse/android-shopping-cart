@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.URL
 object ProductMapper : Mapper<Product, ProductModel> {
     override fun Product.toViewModel(): ProductModel {
         return ProductModel(
+            id,
             picture.value,
             title,
             price
@@ -15,6 +16,7 @@ object ProductMapper : Mapper<Product, ProductModel> {
 
     override fun ProductModel.toDomainModel(): Product {
         return Product(
+            id,
             URL(picture),
             title,
             price

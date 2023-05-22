@@ -4,22 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.common.model.CartProductModel
-import woowacourse.shopping.data.database.ShoppingDBOpenHelper
-import woowacourse.shopping.data.datasource.dao.CartDao
+import woowacourse.shopping.R
+import woowacourse.shopping.common.model.CheckableCartProductModel
+import woowacourse.shopping.common.model.PageNavigatorModel
+import woowacourse.shopping.data.datasource.local.CartLocalDao
+import woowacourse.shopping.data.datasource.remote.ProductRemoteDao
 import woowacourse.shopping.data.repository.CartRepository
+import woowacourse.shopping.data.repository.ProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
     private lateinit var cartAdapter: CartAdapter
-
-    private val shoppingDBOpenHelper: ShoppingDBOpenHelper by lazy {
-        ShoppingDBOpenHelper(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +26,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         initToolbar()
         initCartAdapter()
         initNavigator()
+        initTotalCheckBox()
         initPresenter()
     }
 
@@ -38,24 +37,25 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun updateCart(
-        cartProductsModel: List<CartProductModel>
-    ) {
-        cartAdapter.updateCartProducts(cartProductsModel)
+    override fun updateCart(checkableCartProducts: List<CheckableCartProductModel>) {
+        cartAdapter.updateCartProducts(checkableCartProducts)
     }
 
-    override fun updateNavigator(currentPage: Int, maxPage: Int) {
-        binding.cartNavigatorLayout.visibility = isNavigatorVisible(maxPage)
-        binding.cartNavigatorPreviousButton.isEnabled = isFirstPage(currentPage)
-        binding.cartNavigatorNextButton.isEnabled = isLastPage(currentPage, maxPage)
-        binding.cartNavigatorPageText.text = currentPage.toString()
+    override fun updateNavigator(pageNavigatorModel: PageNavigatorModel) {
+        binding.pageNavigator = pageNavigatorModel
     }
 
-    private fun isLastPage(currentPage: Int, maxPage: Int) = currentPage == maxPage - 1
+    override fun updateTotalPrice(price: Int) {
+        binding.cartCheckedPriceText.text = getString(R.string.product_price, price)
+    }
 
-    private fun isFirstPage(currentPage: Int) = currentPage != 1
+    override fun updateOrderText(countOfCartProducts: Int) {
+        binding.cartOrderButton.text = getString(R.string.cart_order_text, countOfCartProducts)
+    }
 
-    private fun isNavigatorVisible(maxPage: Int) = if (maxPage <= 1) View.GONE else View.VISIBLE
+    override fun updateTotalCheck(isTotalChecked: Boolean) {
+        binding.cartTotalCheck.isChecked = isTotalChecked
+    }
 
     private fun initBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)
@@ -68,26 +68,41 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartAdapter() {
-        cartAdapter = CartAdapter(
-            emptyList(),
-            onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) }
-        )
+        cartAdapter = CartAdapter(emptyList(), {
+            presenter.deleteCartProduct(it)
+        }, {
+            presenter.minusCartProduct(it)
+        }, {
+            presenter.plusCartProduct(it)
+        }, { checkableCartProduct, isChecked ->
+            presenter.checkCartProduct(checkableCartProduct, isChecked)
+        })
+
+        binding.cartProductList.itemAnimator = null
         binding.cartProductList.adapter = cartAdapter
     }
 
     private fun initNavigator() {
         binding.cartNavigatorPreviousButton.setOnClickListener {
-            presenter.goToPreviousPage()
+            presenter.loadPreviousPage()
         }
         binding.cartNavigatorNextButton.setOnClickListener {
-            presenter.goToNextPage()
+            presenter.loadNextPage()
+        }
+    }
+
+    private fun initTotalCheckBox() {
+        binding.cartTotalCheck.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed)
+                presenter.checkWholeCartProduct(isChecked)
         }
     }
 
     private fun initPresenter() {
         presenter = CartPresenter(
             this,
-            cartRepository = CartRepository(CartDao(shoppingDBOpenHelper.writableDatabase)),
+            cartRepository = CartRepository(CartLocalDao(this)),
+            productRepository = ProductRepository(ProductRemoteDao()),
             countPerPage = SIZE_PER_PAGE
         )
     }

@@ -2,45 +2,47 @@ package woowacourse.shopping.shopping.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.CartProductModel
 import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductAdapter(
-    private var products: List<ProductModel>,
-    private val onProductItemClick: (ProductModel) -> Unit,
+    private var cartProducts: List<CartProductModel>,
+    private val onProductItemClick: (CartProductModel) -> Unit,
+    private val onMinusClick: (CartProductModel) -> Unit,
+    private val onPlusClick: (CartProductModel) -> Unit,
+    private val onCartAddClick: (CartProductModel) -> Unit
 ) : RecyclerView.Adapter<ProductViewHolder>() {
-    private val onProductItemViewClick: (Int) -> Unit = { onProductItemClick(products[it]) }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder(
             ItemProductListBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ),
-            onProductItemViewClick
+            onProductItemClick, onMinusClick, onPlusClick, onCartAddClick
         )
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = cartProducts.size
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(products[position])
+        holder.bind(cartProducts[position])
     }
 
-    fun updateProducts(products: List<ProductModel>) {
-        this.products = products
-        notifyDataSetChanged()
+    fun updateProducts(newCartProducts: List<CartProductModel>) {
+        val result = DiffUtil.calculateDiff(
+            ProductDiffUtilCallback(
+                cartProducts, newCartProducts
+            )
+        )
+
+        cartProducts = newCartProducts
+        result.dispatchUpdatesTo(this@ProductAdapter)
     }
 
-    fun addProducts(products: List<ProductModel>) {
+    fun addProducts(cartProducts: List<CartProductModel>) {
         val lastPosition = itemCount
-        this.products += products
-        notifyItemRangeInserted(lastPosition, products.size)
-    }
-
-    override fun getItemViewType(position: Int): Int = VIEW_TYPE
-
-    companion object {
-        const val VIEW_TYPE = 0
+        this.cartProducts += cartProducts
+        notifyItemRangeInserted(lastPosition, cartProducts.size)
     }
 }

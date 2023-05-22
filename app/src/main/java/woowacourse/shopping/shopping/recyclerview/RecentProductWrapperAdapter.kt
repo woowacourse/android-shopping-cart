@@ -25,13 +25,7 @@ class RecentProductWrapperAdapter(private val recentProductAdapter: RecentProduc
         holder.bind(recentProductAdapter)
     }
 
-    override fun getItemViewType(position: Int): Int = VIEW_TYPE
-
     fun updateRecentProduct() {
         notifyDataSetChanged()
-    }
-
-    companion object {
-        const val VIEW_TYPE = 1
     }
 }

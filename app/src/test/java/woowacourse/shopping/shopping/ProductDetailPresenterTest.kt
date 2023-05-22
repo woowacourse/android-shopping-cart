@@ -5,88 +5,166 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
-import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.common.model.mapper.ProductMapper.toViewModel
+import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.ProductModel
+import woowacourse.shopping.common.model.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.data.repository.CartRepository
-import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.data.repository.RecentProductRepository
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.URL
+import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.RecentProducts
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.productdetail.ProductDetailPresenter
 
 class ProductDetailPresenterTest {
-    private lateinit var presenter: ProductDetailPresenter
-    private lateinit var view: ProductDetailContract.View
-    private lateinit var product: Product
-    private lateinit var cartRepository: CartRepository
-
-    @Before
-    fun setUP() {
-        view = mockk()
-        product = makeProductMock()
-        cartRepository = mockk()
-
-        every {
-            view.updateProductDetail(any())
-        } just runs
-
-        presenter = ProductDetailPresenter(view, product, cartRepository)
-    }
-
     @Test
     fun 프레젠터가_생성되면_뷰의_상품_상세정보를_갱신한다() {
         // given
+        val view: ProductDetailContract.View = mockk()
+
+        every {
+            view.initRecentProduct(any())
+            view.updateProductDetail(any())
+        } just runs
 
         // when
+        ProductDetailPresenter(
+            view = view,
+            product = mockk(relaxed = true),
+            recentProduct = mockk(relaxed = true),
+            recentProductRepository = mockk(relaxed = true),
+            productRepository = mockk(relaxed = true),
+            cartRepository = mockk(relaxed = true)
+        )
 
         // then
         verify {
-            view.updateProductDetail(product.toViewModel())
+            view.initRecentProduct(any())
+            view.updateProductDetail(any())
         }
     }
 
     @Test
-    fun 카트에_상품을_담으면_카트에_상품을_추가하고_카트를_보여준다() {
+    fun 마지막에_본_상품을_클릭하면_현재_상품을_최근_본_상품에_등록하고_마지막에_본_상품을_표시한다() {
         // given
-        val cart: Cart = mockk()
-        val cartProduct = CartProduct(0, product)
-        val addedCart = Cart(
-            listOf(cartProduct)
+        val view: ProductDetailContract.View = mockk()
+        val product = ProductModel()
+        val recentProduct = ProductModel()
+        val recentProductRepository: RecentProductRepository = mockk()
+
+        val recentProducts = RecentProducts(
+            listOf(
+                RecentProduct(0, ProductModel().toDomainModel()),
+                RecentProduct(1, ProductModel().toDomainModel()),
+                RecentProduct(2, ProductModel().toDomainModel())
+            )
+        )
+
+        initAnswers(view)
+
+        val presenter = ProductDetailPresenter(
+            view = view,
+            product = product,
+            recentProduct = recentProduct,
+            recentProductRepository = recentProductRepository,
+            productRepository = mockk(relaxed = true),
+            mockk(),
         )
 
         every {
-            cartRepository.selectAll()
-        } returns cart
+            recentProductRepository.selectAll(any())
+        } returns recentProducts
 
         every {
-            cart.makeCartProduct(any())
-        } returns cartProduct
-
-        every {
-            cart.add(cartProduct)
-        } returns addedCart
-
-        every {
-            cartRepository.insertCartProduct(any())
-            view.showCart()
+            recentProductRepository.insertRecentProduct(any())
+            view.showProductDetail(any())
         } just runs
 
         // when
-        presenter.addToCart()
+        presenter.showRecentProductDetail()
 
         // then
+        val expect = RecentProduct(3, product.toDomainModel())
         verify {
-            cartRepository.selectAll()
-            cartRepository.insertCartProduct(cartProduct)
-            view.showCart()
+            recentProductRepository.insertRecentProduct(expect)
+            view.showProductDetail(recentProduct)
         }
     }
 
-    private fun makeProductMock(): Product = Product(
-        URL(""),
-        "",
-        0
+    @Test
+    fun 장바구니에_담을_상품_수량_뷰를_연다() {
+        // given
+        val view: ProductDetailContract.View = mockk()
+        val product = ProductModel()
+
+        initAnswers(view)
+
+        val presenter = ProductDetailPresenter(
+            view = view,
+            product = product,
+            recentProduct = mockk(),
+            recentProductRepository = mockk(),
+            productRepository = mockk(relaxed = true),
+            cartRepository = mockk()
+        )
+
+        every {
+            view.openCartCounter(any())
+        } just runs
+
+        // when
+        presenter.showCartCounter()
+
+        // then
+        val expect = CartProductModel(1, product)
+        verify {
+            view.openCartCounter(expect)
+        }
+    }
+
+    @Test
+    fun 카트에_상품을_담으면_카트에_상품을_추가하고_뷰를_종료한다() {
+        // given
+        val view: ProductDetailContract.View = mockk()
+        val cartProduct = CartProductModel(0, ProductModel())
+        val cartRepository: CartRepository = mockk()
+
+        initAnswers(view)
+
+        val presenter = ProductDetailPresenter(
+            view = view,
+            product = mockk(),
+            recentProduct = mockk(),
+            recentProductRepository = mockk(),
+            productRepository = mockk(relaxed = true),
+            cartRepository = cartRepository
+        )
+
+        every {
+            cartRepository.addCartProduct(any())
+            view.close()
+        } just runs
+
+        // when
+        presenter.addToCart(cartProduct)
+
+        // then
+        val expect = CartProduct(0, ProductModel().toDomainModel())
+        verify {
+            cartRepository.addCartProduct(expect)
+            view.close()
+        }
+    }
+
+    private fun initAnswers(view: ProductDetailContract.View) {
+        every {
+            view.initRecentProduct(any())
+            view.updateProductDetail(any())
+        } just runs
+    }
+
+    private fun ProductModel(): ProductModel = ProductModel(
+        0, "", "", 0
     )
 }

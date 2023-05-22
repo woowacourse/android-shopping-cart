@@ -5,103 +5,163 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
-import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.cart.CartContract
 import woowacourse.shopping.cart.CartPresenter
+import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.CheckableCartProductModel
+import woowacourse.shopping.common.model.ProductModel
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toViewModel
 import woowacourse.shopping.data.repository.CartRepository
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.CheckableCartProduct
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Shop
 import woowacourse.shopping.domain.URL
 
 class CartPresenterTest {
-    private lateinit var presenter: CartPresenter
+
     private lateinit var view: CartContract.View
     private lateinit var cart: Cart
     private lateinit var cartRepository: CartRepository
 
-    @Before
-    fun setUp() {
+    @Test
+    fun 프레젠터가_생성되면_뷰의_장바구니_네비게이터_푸터를_갱신한다() {
+        // given
         view = mockk()
-        cart = makeCartMock(0, 1, 2, 3, 4, 5, 6)
+        cart = mockk(relaxed = true)
         cartRepository = mockk()
 
-        every {
-            cartRepository.selectAll()
-        } returns cart
-
-        every {
-            cartRepository.selectPage(0, 5)
-        } returns makeCartMock(0, 1, 2, 3, 4)
-
-        every {
-            cartRepository.selectAllCount()
-        } returns 7
-
-        every {
-            view.updateCart(any())
-            view.updateNavigator(any(), any())
-        } just runs
-
-        presenter = CartPresenter(
-            view, cartRepository, 0, 5
-        )
-    }
-
-    @Test
-    fun 프레젠터가_생성되면_뷰의_장바구니를_갱신한다() {
-        // given
+        initAnswers()
 
         // when
+        CartPresenter(
+            view = view, cart = cart, cartRepository = cartRepository, productRepository = mockk(relaxed = true), countPerPage = 1
+        )
 
         // then
         verify {
-            cartRepository.selectPage(0, 5)
+            cartRepository.selectAll(any())
             view.updateCart(any())
-            view.updateNavigator(1, 2)
+            view.updateNavigator(any())
+            view.updateTotalPrice(any())
+            view.updateOrderText(any())
+            view.updateTotalCheck(any())
         }
     }
 
     @Test
     fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
         // given
+        view = mockk()
+        cart = Cart(
+            listOf(
+                CheckableCartProduct(
+                    true,
+                    CartProduct(
+                        0, Product(0, URL(""), "", 0)
+                    )
+                )
+            )
+        )
+        cartRepository = mockk()
+
+        initAnswers()
+
+        val presenter = CartPresenter(
+            view = view, cart = cart, cartRepository = cartRepository, productRepository = mockk(relaxed = true), countPerPage = 1
+        )
+
         every {
-            cartRepository.deleteCartProductByOrdinal(any())
+            cartRepository.deleteCartProduct(any())
         } just runs
 
         // when
-        val cartProductModel = makeCartProduct(0).toViewModel()
-        presenter.removeCartProduct(cartProductModel)
+        presenter.deleteCartProduct(cart.products[0].product.toViewModel())
 
         // then
         verify {
-            cartRepository.deleteCartProductByOrdinal(0)
+            cartRepository.deleteCartProduct(cart.products[0].product.product)
         }
 
         verify {
-            cartRepository.selectPage(0, 5)
+            cartRepository.selectAll(any())
             view.updateCart(any())
-            view.updateNavigator(1, 2)
+            view.updateNavigator(any())
+            view.updateTotalPrice(any())
+            view.updateOrderText(any())
+            view.updateTotalCheck(any())
         }
     }
 
-    private fun makeCartMock(vararg cartOrdinals: Int): Cart = Cart(
-        cartOrdinals.map {
+    @Test
+    fun 상품을_선택하면_체크하고_뷰에_업데이트한다() {
+        // given
+        view = mockk()
+        cart = Cart(emptyList())
+        cartRepository = mockk()
+        val cartProduct = CheckableCartProduct(
+            true,
             CartProduct(
-                it,
-                Product(
-                    URL(""), "", 0
+                0, Product(0, URL(""), "", 0)
+            )
+        )
+
+        initAnswers()
+
+        every {
+            cartRepository.selectAll(any())
+        } returns Shop(listOf(cartProduct.product))
+
+        val presenter = CartPresenter(
+            view = view, cart = cart, cartRepository = cartRepository, productRepository = mockk(relaxed = true), countPerPage = 1
+        )
+
+        // when
+        val checkableCartProductModel = CheckableCartProductModel(
+            true,
+            CartProductModel(
+                0, ProductModel(0, "", "", 0)
+            )
+        )
+        presenter.checkCartProduct(checkableCartProductModel, false)
+
+        // then
+        val expect = listOf(
+            CheckableCartProductModel(
+                false,
+                CartProductModel(
+                    0, ProductModel(0, "", "", 0)
                 )
             )
-        }
-    )
-
-    private fun makeCartProduct(ordinal: Int): CartProduct = CartProduct(
-        ordinal,
-        Product(
-            URL(""), "", 0
         )
-    )
+
+        verify {
+            cartRepository.selectAll(any())
+            view.updateCart(expect)
+            view.updateNavigator(any())
+            view.updateTotalPrice(any())
+            view.updateOrderText(any())
+            view.updateTotalCheck(any())
+        }
+    }
+
+    private fun initAnswers() {
+        every {
+            cartRepository.selectAllCount()
+        } returns 1
+
+        every {
+            cartRepository.selectAll(any())
+        } returns Shop(emptyList())
+
+        every {
+            view.updateCart(any())
+            view.updateNavigator(any())
+            view.updateTotalPrice(any())
+            view.updateOrderText(any())
+            view.updateTotalCheck(any())
+        } just runs
+    }
 }

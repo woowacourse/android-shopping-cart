@@ -1,11 +1,15 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="shopping_recent_text">최근 본 상품</string>
-    <string name="product_detail_price">금액</string>
+    <string name="product_detail_price_text">금액</string>
     <string name="product_detail_cart_button">장바구니 담기</string>
 
     <string name="product_price">%,d원</string>
     <string name="load_more_button_text">더보기</string>
     <string name="pagination_previous_button"><![CDATA[<]]></string>
     <string name="pagination_next_button"><![CDATA[>]]></string>
+
+    <string name="cart_order_text">주문하기(%d)</string>
+    <string name="product_detail_recent_product_text">마지막으로 본 상품</string>
+    <string name="add_cart_button_text">담기</string>
 </resources>

@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="pageNavigator"
+            type="woowacourse.shopping.common.model.PageNavigatorModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +29,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/cart_footer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cart_toolbar">
@@ -43,14 +50,16 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cart_navigator_layout"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:layout_height="wrap_content">
+                    android:visibility="@{pageNavigator.visibility}">
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/cart_navigator_previous_button"
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:background="@drawable/previous_button_background"
+                        android:enabled="@{pageNavigator.previousPageAvailable}"
                         android:text="@string/pagination_previous_button"
                         android:textColor="@color/white"
                         app:layout_constraintEnd_toStartOf="@id/cart_navigator_page_text"
@@ -63,6 +72,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="16dp"
+                        android:text="@{Integer.toString(pageNavigator.currentPage)}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/cart_navigator_next_button"
                         app:layout_constraintStart_toEndOf="@id/cart_navigator_previous_button"
@@ -74,6 +84,7 @@
                         android:layout_width="42dp"
                         android:layout_height="42dp"
                         android:background="@drawable/next_button_background"
+                        android:enabled="@{pageNavigator.nextPageAvailable}"
                         android:text="@string/pagination_next_button"
                         android:textColor="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -86,6 +97,54 @@
 
         </androidx.core.widget.NestedScrollView>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cart_footer"
+            android:layout_width="0dp"
+            android:layout_height="78dp"
+            android:background="#555555"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <CheckBox
+                android:id="@+id/cart_total_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="true"
+                android:drawableTop="?android:attr/listChoiceIndicatorMultiple"
+                android:text="전체"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/cart_checked_price_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cart_order_button"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="184,200원" />
+
+            <Button
+                android:id="@+id/cart_order_button"
+                android:layout_width="122dp"
+                android:layout_height="0dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="주문하기(0)" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

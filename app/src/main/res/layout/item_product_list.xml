@@ -5,9 +5,20 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="product"
-            type="woowacourse.shopping.common.model.ProductModel" />
+            name="onMinusClick"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="onPlusClick"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.common.model.CartProductModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,11 +31,35 @@
             android:id="@+id/product_list_picture"
             android:layout_width="154dp"
             android:layout_height="154dp"
-            android:urlSrc="@{product.picture}"
+            android:urlSrc="@{cartProduct.product.picture}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
+
+        <ImageButton
+            android:id="@+id/product_list_cart_add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/plus"
+            android:visibility="@{cartProduct.amount == 0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/product_list_picture"
+            app:layout_constraintEnd_toEndOf="@id/product_list_picture" />
+
+        <woowacourse.shopping.common.view.Counter
+            count="@{cartProduct.amount}"
+            onMinusClick="@{() -> onMinusClick.invoke(cartProduct)}"
+            onPlusClick="@{() -> onPlusClick.invoke(cartProduct)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="@{cartProduct.amount == 0 ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@id/product_list_picture"
+            app:layout_constraintEnd_toEndOf="@id/product_list_picture" />
 
         <TextView
             android:id="@+id/product_list_title"
@@ -33,7 +68,7 @@
             android:layout_marginHorizontal="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.title}"
+            android:text="@{cartProduct.product.title}"
             android:textColor="#333333"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -48,7 +83,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{@string/product_price(product.price)}"
+            android:text="@{@string/product_price(cartProduct.product.price)}"
             android:textColor="#333333"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/product_list_title"

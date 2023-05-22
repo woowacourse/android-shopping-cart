@@ -1,12 +1,14 @@
 package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.Shop
 
 interface CartDataSource {
-    fun insertCartProduct(cartProduct: CartProduct)
+    fun addCartProduct(cartProduct: CartProduct)
+    fun plusCartProduct(product: Product)
+    fun minusCartProduct(product: Product)
+    fun deleteCartProduct(product: Product)
     fun selectAllCount(): Int
-    fun selectAll(): Cart
-    fun selectPage(page: Int, countPerPage: Int): Cart
-    fun deleteCartProductByOrdinal(ordinal: Int)
+    fun selectAll(products: List<Product>): Shop
 }
