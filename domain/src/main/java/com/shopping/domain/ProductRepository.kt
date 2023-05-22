@@ -1,6 +1,4 @@
-package woowacourse.shopping.datas
-
-import com.shopping.domain.Product
+package com.shopping.domain
 
 interface ProductRepository {
     fun getUnitData(unitSize: Int, pageNumber: Int): List<Product>

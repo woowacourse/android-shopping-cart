@@ -1,5 +1,8 @@
 package woowacourse.shopping
 
+import com.shopping.domain.CartRepository
+import com.shopping.domain.ProductRepository
+import com.shopping.domain.RecentRepository
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -9,9 +12,6 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.datas.CartRepository
-import woowacourse.shopping.datas.ProductRepository
-import woowacourse.shopping.datas.RecentRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.productcatalogue.ProductCatalogueContract
 import woowacourse.shopping.productcatalogue.ProductCataloguePresenter

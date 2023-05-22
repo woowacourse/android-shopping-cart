@@ -1,6 +1,4 @@
-package woowacourse.shopping.datas
-
-import com.shopping.domain.CartProduct
+package com.shopping.domain
 
 interface CartRepository {
     fun getAll(): List<CartProduct>

@@ -1,8 +1,10 @@
 package woowacourse.shopping
 
 import com.shopping.domain.CartProduct
+import com.shopping.domain.CartRepository
 import com.shopping.domain.Product
 import com.shopping.domain.RecentProduct
+import com.shopping.domain.RecentRepository
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -10,8 +12,6 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.datas.CartRepository
-import woowacourse.shopping.datas.RecentRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.productdetail.ProductDetailContract

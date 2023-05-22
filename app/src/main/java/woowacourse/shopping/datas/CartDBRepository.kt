@@ -3,6 +3,7 @@ package woowacourse.shopping.datas
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import com.shopping.domain.CartProduct
+import com.shopping.domain.CartRepository
 import com.shopping.domain.Price
 import com.shopping.domain.Product
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_COUNT

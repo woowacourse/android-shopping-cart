@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.shopping.domain.Price
 import com.shopping.domain.Product
 import com.shopping.domain.RecentProduct
+import com.shopping.domain.RecentRepository
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_ID
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_IMAGE
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_NAME

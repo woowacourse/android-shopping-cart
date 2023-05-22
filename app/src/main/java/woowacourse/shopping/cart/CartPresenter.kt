@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.shopping.domain.Cart
+import com.shopping.domain.CartRepository
 import com.shopping.domain.PageNumber
-import woowacourse.shopping.datas.CartRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.uimodel.CartProductUIModel

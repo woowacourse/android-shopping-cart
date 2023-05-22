@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.shopping.domain.CartRepository
+import com.shopping.domain.RecentRepository
 import woowacourse.shopping.BundleKeys
 import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.R
@@ -14,11 +16,9 @@ import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
 import woowacourse.shopping.datas.CartDBHelper
 import woowacourse.shopping.datas.CartDBRepository
-import woowacourse.shopping.datas.CartRepository
 import woowacourse.shopping.datas.ProductDataRepository
 import woowacourse.shopping.datas.RecentProductDBHelper
 import woowacourse.shopping.datas.RecentProductDBRepository
-import woowacourse.shopping.datas.RecentRepository
 import woowacourse.shopping.productcatalogue.list.MainProductCatalogueAdapter
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.uimodel.ProductUIModel

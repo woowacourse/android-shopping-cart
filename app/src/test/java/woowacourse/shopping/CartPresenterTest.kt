@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import com.shopping.domain.CartRepository
 import com.shopping.domain.PageNumber
 import io.mockk.every
 import io.mockk.just
@@ -10,7 +11,6 @@ import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.cart.CartContract
 import woowacourse.shopping.cart.CartPresenter
-import woowacourse.shopping.datas.CartRepository
 import woowacourse.shopping.uimodel.CartProductUIModel
 
 class CartPresenterTest {

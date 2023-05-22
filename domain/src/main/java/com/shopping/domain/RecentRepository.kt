@@ -1,6 +1,4 @@
-package woowacourse.shopping.datas
-
-import com.shopping.domain.RecentProduct
+package com.shopping.domain
 
 interface RecentRepository {
     fun getAll(): List<RecentProduct>

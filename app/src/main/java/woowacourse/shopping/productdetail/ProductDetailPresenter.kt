@@ -1,9 +1,9 @@
 package woowacourse.shopping.productdetail
 
 import com.shopping.domain.CartProduct
+import com.shopping.domain.CartRepository
 import com.shopping.domain.RecentProduct
-import woowacourse.shopping.datas.CartRepository
-import woowacourse.shopping.datas.RecentRepository
+import com.shopping.domain.RecentRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
