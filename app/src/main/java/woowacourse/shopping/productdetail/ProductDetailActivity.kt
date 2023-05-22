@@ -2,6 +2,7 @@ package woowacourse.shopping.productdetail
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -32,9 +33,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val product: ProductUIModel =
+            intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT)
         presenter = ProductDetailPresenter(
             this,
-            intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
+            product,
             CartDatabase(CartDBHelper(this).writableDatabase),
             RecentProductDatabase(this),
         )
@@ -42,6 +45,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter.manageRecentView()
         binding.cartButton.setOnClickListener {
             presenter.onClickCart()
+        }
+        binding.recentProduct.setOnClickListener {
+            val intent = Intent(this, ProductDetailActivity::class.java)
+            intent.putExtra(KEY_PRODUCT, product)
+            intent.flags = FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
         }
     }
 
