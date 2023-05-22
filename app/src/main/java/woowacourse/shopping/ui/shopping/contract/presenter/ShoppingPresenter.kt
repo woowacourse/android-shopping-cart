@@ -38,9 +38,14 @@ class ShoppingPresenter(
         val recentProductsData = RecentProductsItem(
             recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() },
         )
-        when {
-            productsData[0] is RecentProductsItem -> productsData[0] = recentProductsData
-            recentProductsData.product.isNotEmpty() -> productsData.add(0, recentProductsData)
+        if (productsData.isEmpty()) {
+            productsData.add(recentProductsData)
+        } else {
+            if (productsData[0] is RecentProductsItem) {
+                productsData[0] = recentProductsData
+            } else {
+                productsData.add(0, recentProductsData)
+            }
         }
         view.setProducts(productsData.plus(ProductReadMore))
     }

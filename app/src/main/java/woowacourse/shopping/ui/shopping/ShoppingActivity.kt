@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.data.MockProductWebServer
 import woowacourse.shopping.data.ProductFakeRepository
 import woowacourse.shopping.database.cart.CartDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
@@ -29,6 +30,7 @@ class ShoppingActivity :
     ShoppingContract.View,
     ProductsOnClickListener,
     CustomViewOnClickListener {
+    private lateinit var mockWebServer: MockProductWebServer
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
@@ -36,18 +38,27 @@ class ShoppingActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setMockWebServer()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
         setSupportActionBar(binding.toolbar)
+
         presenter = ShoppingPresenter(
             this,
-            ProductFakeRepository,
+            ProductFakeRepository(mockWebServer.url),
             RecentProductDatabase(this),
             CartDatabase(
                 CartDBHelper(this).writableDatabase,
             ),
         )
+
         initLayoutManager()
         presenter.setUpProducts()
+    }
+
+    private fun setMockWebServer() {
+        val thread = Thread { mockWebServer = MockProductWebServer() }
+        thread.start()
+        thread.join()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
