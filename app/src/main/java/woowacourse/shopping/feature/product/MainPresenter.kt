@@ -34,15 +34,6 @@ class MainPresenter(
                 view.addProductItems(it.map(Product::toUi))
             }
         )
-//        if (products.isEmpty()) {
-//            view.showEmptyProducts()
-//            return
-//        }
-//        if (loadItemFromIndex == 0) {
-//            view.setProducts(listOf())
-//        }
-
-//        view.addProductItems(getAddProductsUnit())
         loadItemFromIndex += loadItemCountUnit
     }
 
@@ -87,11 +78,6 @@ class MainPresenter(
         val cartProductCount: Int = (cartProduct?.count ?: MIN_COUNT_VALUE) + 1
         cartRepository.updateCartProductCount(productState.id, cartProductCount)
     }
-
-//    private fun getAddProductsUnit(): List<ProductState> {
-//        val productsUnit: List<Product> = products.subList(loadItemFromIndex, loadItemToIndex)
-//        return productsUnit.map(Product::toUi)
-//    }
 
     private fun storeRecentProduct(productId: Int, viewedDateTime: LocalDateTime) {
         recentProductRepository.addRecentProduct(productId, viewedDateTime)
