@@ -17,10 +17,9 @@ class RecentViewHolder(
     init {
         binding.rvProducts.adapter = adapter
     }
-    override fun bind(productItemType: ProductsItemType) {
-        (productItemType as ProductsItemType.RecentProducts).let { recentProducts ->
-            adapter.submitList(recentProducts.product.map { RecentProductItem(it) })
-        }
+
+    fun bind(item: ProductsItemType.RecentProducts) {
+        adapter.submitList(item.product.map { RecentProductItem(it) })
     }
 
     companion object {

@@ -13,8 +13,7 @@ class CartProductViewHolder private constructor(
     init {
         binding.listener = cartListener
     }
-    override fun bind(data: CartItemType) {
-        if (data !is CartItemType.Cart) return
+    fun bind(data: CartItemType.Cart) {
         binding.product = data.product
     }
 

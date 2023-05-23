@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.PageUIModel
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType.Cart
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType.Navigation
 import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartProductViewHolder
 import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartViewHolder
 import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.NavigationViewHolder
@@ -23,7 +25,10 @@ class CartAdapter(private val cartListener: CartListener) :
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-        return holder.bind(cartItems[position])
+        when (holder) {
+            is CartProductViewHolder -> holder.bind(cartItems[position] as Cart)
+            is NavigationViewHolder -> holder.bind(cartItems[position] as Navigation)
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -32,8 +37,8 @@ class CartAdapter(private val cartListener: CartListener) :
 
     fun submitList(cartProducts: List<CartProductUIModel>, pageUIModel: PageUIModel) {
         cartItems.clear()
-        cartItems.addAll(cartProducts.map { CartItemType.Cart(it) })
-        cartItems.add(CartItemType.Navigation(pageUIModel))
+        cartItems.addAll(cartProducts.map { Cart(it) })
+        cartItems.add(Navigation(pageUIModel))
         submitList(cartItems.toList())
     }
 

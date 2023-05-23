@@ -4,6 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.model.RecentProductUIModel
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType.Product
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType.ReadMore
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType.RecentProducts
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ProductsViewHolder
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.ReadMoreViewHolder
 import woowacourse.shopping.ui.shopping.productAdapter.viewHolder.RecentViewHolder
@@ -23,7 +26,11 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
     }
 
     override fun onBindViewHolder(holder: ShoppingViewHolder, position: Int) {
-        holder.bind(productItems[position])
+        when (holder) {
+            is RecentViewHolder -> holder.bind(productItems[position] as RecentProducts)
+            is ProductsViewHolder -> holder.bind(productItems[position] as Product)
+            is ReadMoreViewHolder -> Unit
+        }
     }
 
     override fun getItemCount(): Int {
@@ -35,19 +42,19 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
     }
 
     fun addList(products: List<ProductUIModel>) {
-        productItems.removeIf { it is ProductsItemType.ReadMore }
-        productItems.addAll(products.map { ProductsItemType.Product(it, getCount(it.id)) })
-        productItems.add(ProductsItemType.ReadMore)
+        productItems.removeIf { it is ReadMore }
+        productItems.addAll(products.map { Product(it, getCount(it.id)) })
+        productItems.add(ReadMore)
         notifyItemChanged(0)
     }
 
     fun updateRecentProducts(recentProducts: List<RecentProductUIModel>) {
-        if (productItems.size > 0 && productItems[0] is ProductsItemType.RecentProducts) {
+        if (productItems.size > 0 && productItems[0] is RecentProducts) {
             productItems.removeAt(0)
         }
 
         if (recentProducts.isNotEmpty()) {
-            productItems.add(0, ProductsItemType.RecentProducts(recentProducts))
+            productItems.add(0, RecentProducts(recentProducts))
         }
 
         if (productItems.size > 0) {
@@ -56,7 +63,7 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
     }
 
     fun updateCartCounts(cartCounts: Map<Int, Int>) {
-        productItems.filterIsInstance<ProductsItemType.Product>()
+        productItems.filterIsInstance<Product>()
             .forEach { it.count = cartCounts[it.product.id] ?: 0 }
 
         notifyItemRangeChanged(0, productItems.size - 1)
@@ -65,8 +72,8 @@ class ProductsAdapter(private val listener: ProductsListener) : RecyclerView.Ada
     fun updateItemCount(productId: Int, count: Int) {
         cartCounts[productId] = count
         val index = productItems
-            .indexOfFirst { it is ProductsItemType.Product && it.product.id == productId }
-        productItems[index] = (productItems[index] as ProductsItemType.Product).copy(count = count)
+            .indexOfFirst { it is Product && it.product.id == productId }
+        productItems[index] = (productItems[index] as Product).copy(count = count)
     }
 
     private fun getCount(productId: Int): Int {

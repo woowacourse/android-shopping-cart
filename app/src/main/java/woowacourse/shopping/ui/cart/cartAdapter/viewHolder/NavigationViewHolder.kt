@@ -14,9 +14,7 @@ class NavigationViewHolder private constructor(
         binding.listener = cartListener
     }
 
-    override fun bind(data: CartItemType) {
-        if (data !is CartItemType.Navigation) return
-
+    fun bind(data: CartItemType.Navigation) {
         binding.cart = data.cart
     }
 
