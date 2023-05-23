@@ -14,8 +14,6 @@ import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.NavigationViewHolder
 class CartAdapter(private val cartListener: CartListener) :
     ListAdapter<CartItemType, CartViewHolder>(CartDiffCallback()) {
 
-    private val cartItems = mutableListOf<CartItemType>()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return when (viewType) {
             CartItemType.TYPE_ITEM -> CartProductViewHolder.from(parent, cartListener)
@@ -26,20 +24,19 @@ class CartAdapter(private val cartListener: CartListener) :
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         when (holder) {
-            is CartProductViewHolder -> holder.bind(cartItems[position] as Cart)
-            is NavigationViewHolder -> holder.bind(cartItems[position] as Navigation)
+            is CartProductViewHolder -> holder.bind(getItem(position) as Cart)
+            is NavigationViewHolder -> holder.bind(getItem(position) as Navigation)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return cartItems[position].viewType
+        return getItem(position).viewType
     }
 
     fun submitList(cartProducts: List<CartProductUIModel>, pageUIModel: PageUIModel) {
-        cartItems.clear()
-        cartItems.addAll(cartProducts.map { Cart(it) })
-        cartItems.add(Navigation(pageUIModel))
-        submitList(cartItems.toList())
+        submitList(
+            cartProducts.map(::Cart).toMutableList() + Navigation(pageUIModel)
+        )
     }
 
     companion object {
