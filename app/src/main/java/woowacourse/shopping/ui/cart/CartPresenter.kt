@@ -15,7 +15,8 @@ class CartPresenter(
     private var index: Int = 0
 ) : CartContract.Presenter {
     private val _totalPrice = NonNullMutableLiveData<Int>(0)
-    override val totalPrice: NonNullLiveData<Int> get() = _totalPrice
+    override val totalPrice: NonNullLiveData<Int>
+        get() = _totalPrice
 
     private val _checkedCount = NonNullMutableLiveData<Int>(0)
     override val checkedCount: NonNullLiveData<Int> get() = _checkedCount

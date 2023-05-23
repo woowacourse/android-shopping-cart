@@ -3,14 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
-            name="price"
-            type="int" />
-
-        <variable
-            name="totalCount"
-            type="int" />
+            name="presenter"
+            type="woowacourse.shopping.ui.cart.CartContract.Presenter" />
 
         <variable
             name="onAllCheckClick"
@@ -52,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:text="@{@string/product_price(price)}"
+            android:text="@{@string/product_price(presenter.totalPrice)}"
             android:textColor="@color/white"
             android:textSize="18sp"
             tools:text="345,600원" />
@@ -63,7 +58,7 @@
             android:layout_height="match_parent"
             android:background="@color/blue_green_04c09e"
             android:gravity="center"
-            android:text="@{@string/cart_order_btn(totalCount)}"
+            android:text="@{@string/cart_order_btn(presenter.checkedCount)}"
             android:textColor="@color/white"
             android:textSize="18sp"
             tools:text="주문하기(0)" />

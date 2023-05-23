@@ -71,27 +71,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initObserve() {
-        observeCheckedCount()
-        observeTotalPrice()
-        observeAllCheck()
-    }
-
-    private fun observeCheckedCount() {
-        presenter.checkedCount.observe(this) {
-            binding.cartBottom.totalCount = it
-        }
-    }
-
-    private fun observeTotalPrice() {
-        presenter.totalPrice.observe(this) {
-            binding.cartBottom.price = it
-        }
-    }
-
-    private fun observeAllCheck() {
-        presenter.allCheck.observe(this) {
-            binding.cartBottom.cbCheckAll.isChecked = it
-        }
+        binding.cartBottom.presenter = presenter
+        binding.cartBottom.lifecycleOwner = this
     }
 
     private fun getCartListener() = object : CartListener {
