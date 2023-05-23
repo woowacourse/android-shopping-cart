@@ -1,8 +1,8 @@
 package woowacourse.shopping.ui.shopping.productAdapter.viewHolder
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
@@ -23,11 +23,11 @@ class ProductsViewHolder private constructor(
         binding.btnProductCount.setOnCountChangeListener { _, count ->
             listener.onAddCartOrUpdateCount(productItem.product.id, count)
             if (count == 0) {
-                binding.btnAddToCart.visibility = View.VISIBLE
-                binding.btnProductCount.visibility = View.GONE
+                binding.btnAddToCart.isVisible = true
+                binding.btnProductCount.isVisible = false
             } else {
-                binding.btnAddToCart.visibility = View.GONE
-                binding.btnProductCount.visibility = View.VISIBLE
+                binding.btnAddToCart.isVisible = false
+                binding.btnProductCount.isVisible = true
             }
         }
         binding.btnAddToCart.setOnClickListener {
