@@ -1,22 +1,15 @@
-package woowacourse.shopping.database.product
+package woowacourse.shopping.datasource.product
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.repository.ProductRepository
 import java.lang.IllegalStateException
 
-object ServerProductRepository : ProductRepository {
+object ProductRemoteService : ProductDataSource {
 
-    private val mockServer = MockServer()
-
-    private val baseUrl by lazy { "http://localhost:${mockServer.port}" }
-
-    init {
-        mockServer.run()
-    }
+    private val baseUrl by lazy { "http://localhost" }
 
     override fun findAll(limit: Int, offset: Int): List<Product> {
         var products: List<Product> = emptyList()

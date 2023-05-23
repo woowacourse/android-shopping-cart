@@ -7,7 +7,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.DbHelper
-import woowacourse.shopping.database.product.MemoryProductRepository
+import woowacourse.shopping.database.product.ProductRepositoryImpl
+import woowacourse.shopping.datasource.cart.CartItemLocalDao
+import woowacourse.shopping.datasource.product.ProductMemoryDao
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.domain.Product
 import java.time.LocalDateTime
@@ -25,7 +27,7 @@ internal class CartItemRepositoryImplTest {
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         database = DbHelper.getDbInstance(context)
-        sut = CartItemRepositoryImpl(database, MemoryProductRepository)
+        sut = CartItemRepositoryImpl(CartItemLocalDao(database, ProductRepositoryImpl(ProductMemoryDao)))
         database.beginTransaction()
     }
 

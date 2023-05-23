@@ -10,8 +10,10 @@ import androidx.core.graphics.drawable.DrawableCompat
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartItemRepositoryImpl
-import woowacourse.shopping.database.product.ServerProductRepository
+import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.datasource.cart.CartItemLocalDao
+import woowacourse.shopping.datasource.product.ProductMemoryDao
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
 import woowacourse.shopping.ui.cart.presenter.CartPresenter
 import woowacourse.shopping.ui.cart.uistate.CartItemUIState
@@ -24,7 +26,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val presenter: CartPresenter by lazy {
         CartPresenter(
             this,
-            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ServerProductRepository)
+            CartItemRepositoryImpl(
+                CartItemLocalDao(
+                    DbHelper.getDbInstance(this),
+                    ProductRepositoryImpl(ProductMemoryDao)
+                )
+            )
         )
     }
 

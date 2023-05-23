@@ -10,9 +10,12 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartItemRepositoryImpl
-import woowacourse.shopping.database.product.ServerProductRepository
+import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.datasource.cart.CartItemLocalDao
+import woowacourse.shopping.datasource.product.ProductMemoryDao
+import woowacourse.shopping.datasource.recentlyviewedproduct.RecentlyViewedProductMemoryDao
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.uistate.LastViewedProductUIState
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
@@ -26,9 +29,19 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private val presenter: ProductDetailContract.Presenter by lazy {
         ProductDetailPresenter(
             this,
-            ServerProductRepository,
-            CartItemRepositoryImpl(DbHelper.getDbInstance(this), ServerProductRepository),
-            RecentlyViewedProductRepositoryImpl(DbHelper.getDbInstance(this), ServerProductRepository)
+            ProductRepositoryImpl(ProductMemoryDao),
+            CartItemRepositoryImpl(
+                CartItemLocalDao(
+                    DbHelper.getDbInstance(this),
+                    ProductRepositoryImpl(ProductMemoryDao)
+                )
+            ),
+            RecentlyViewedProductRepositoryImpl(
+                RecentlyViewedProductMemoryDao(
+                    DbHelper.getDbInstance(this),
+                    ProductRepositoryImpl(ProductMemoryDao)
+                )
+            )
         )
     }
     private val lastViewedProductViewHolder: LastViewedProductViewHolder by lazy {

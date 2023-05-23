@@ -1,11 +1,9 @@
-package woowacourse.shopping.database.product
+package woowacourse.shopping.datasource.product
 
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.utils.MockData
 
-object MemoryProductRepository : ProductRepository {
-
+object ProductMemoryDao : ProductDataSource {
     private val products: Map<Long, Product> = MockData.getProductList().associateBy { it.id }
     override fun findAll(limit: Int, offset: Int): List<Product> {
         return products.values.toList()
