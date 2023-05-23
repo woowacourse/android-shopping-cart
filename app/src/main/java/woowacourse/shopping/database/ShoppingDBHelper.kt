@@ -24,7 +24,7 @@ class ShoppingDBHelper(context: Context) :
         onCreate(db)
     }
     companion object {
-        private const val DATABASE_VERSION = 101
+        private const val DATABASE_VERSION = 107
         private const val DATABASE_NAME = "shopping_db"
     }
 }

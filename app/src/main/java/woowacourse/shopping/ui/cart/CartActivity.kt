@@ -22,13 +22,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
 
-    private lateinit var mockWeb: MockWeb
-
     private val adapter: CartAdapter = CartAdapter(getCartListener())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initMockWeb()
         initBinding()
         initToolbar()
         initPresenter(savedInstanceState)
@@ -50,12 +47,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    private fun initMockWeb() {
-        val thread = Thread { mockWeb = MockWeb() }
-        thread.start()
-        thread.join()
-    }
-
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.rvProducts.adapter = adapter
@@ -71,7 +62,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter = CartPresenter(
             this,
             CartDatabase(this),
-            RemoteProductRepository(mockWeb.url),
+            RemoteProductRepository(MockWeb.url),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0
         )
         presenter.setUpView()

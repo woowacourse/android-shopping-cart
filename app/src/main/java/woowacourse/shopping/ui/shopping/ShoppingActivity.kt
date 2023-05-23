@@ -25,8 +25,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
-    private lateinit var mockWeb: MockWeb
-
     private val adapter: ProductsAdapter = ProductsAdapter(getAdapterListener())
     private var tvCount: TextView? = null
 
@@ -66,7 +64,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initMockWeb() {
-        val thread = Thread { mockWeb = MockWeb() }
+        val thread = Thread { MockWeb.start() }
         thread.start()
         thread.join()
     }
@@ -74,7 +72,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initPresenter() {
         presenter = ShoppingPresenter(
             this,
-            RemoteProductRepository(mockWeb.url),
+            RemoteProductRepository(MockWeb.url),
             RecentProductDatabase(this),
             CartDatabase(this)
         )

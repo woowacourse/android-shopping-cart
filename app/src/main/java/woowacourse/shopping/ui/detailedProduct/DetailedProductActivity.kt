@@ -24,20 +24,12 @@ import woowacourse.shopping.utils.getSerializableExtraCompat
 class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.View {
     private lateinit var binding: ActivityDetailedProductBinding
     private lateinit var presenter: DetailedProductContract.Presenter
-    private lateinit var mockWeb: MockWeb
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initMockWeb()
         initBinding()
         initPresenter()
         initToolbar()
-    }
-
-    private fun initMockWeb() {
-        val thread = Thread { mockWeb = MockWeb() }
-        thread.start()
-        thread.join()
     }
 
     private fun initBinding() {
@@ -54,7 +46,7 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
             intent.getSerializableExtraCompat(KEY_PRODUCT)
                 ?: return ActivityUtils.keyError(this, KEY_PRODUCT),
             SharedPreferenceUtils(this),
-            RemoteProductRepository(mockWeb.url),
+            RemoteProductRepository(MockWeb.url),
             CartDatabase(this),
             RecentProductDatabase(this)
         )
