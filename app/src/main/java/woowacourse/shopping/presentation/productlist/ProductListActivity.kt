@@ -29,7 +29,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var productListAdapter: ProductListAdapter
 
     private val presenter: ProductListPresenter by lazy {
-        val productRepository = MockWebProductRepository.from(ProductMockServer().url)
+
+        var url: String? = null
+        val thread = Thread { url = ProductMockServer().url }
+        thread.start()
+        thread.join()
+
+        val productRepository = MockWebProductRepository(url ?: "")
         val recentProductRepository = RecentProductIdDbAdapter(RecentProductDbHelper(this))
         val cartProductRepository = CartDbAdapter(CartDbHelper(this))
 
