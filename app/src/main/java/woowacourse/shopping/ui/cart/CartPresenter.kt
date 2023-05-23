@@ -33,27 +33,6 @@ class CartPresenter(
 
     private var isChangingItemCheck = false
 
-    private fun fetchCartProducts() {
-        currentPage.clear()
-        currentPage.addAll(cartRepository.getPage(index, STEP).toUIModel())
-    }
-
-    private fun setUpCarts() {
-        view.setPage(currentPage, pageUIModel)
-    }
-
-    private fun setUPTotalPrice() {
-        _totalPrice.value = cartRepository.getTotalPrice()
-    }
-
-    private fun setUpCheckedCount() {
-        _checkedCount.value = cartRepository.getTotalSelectedCount()
-    }
-
-    private fun setUpAllButton() {
-        _allCheck.value = currentPage.all { it.checked }
-    }
-
     override fun setUpView() {
         fetchCartProducts()
         setUpCarts()
@@ -127,6 +106,27 @@ class CartPresenter(
         view.navigateToItemDetail(
             productRepository.findById(productId).toUIModel()
         )
+    }
+
+    private fun fetchCartProducts() {
+        currentPage.clear()
+        currentPage.addAll(cartRepository.getPage(index, STEP).toUIModel())
+    }
+
+    private fun setUpCarts() {
+        view.setPage(currentPage, pageUIModel)
+    }
+
+    private fun setUPTotalPrice() {
+        _totalPrice.value = cartRepository.getTotalPrice()
+    }
+
+    private fun setUpCheckedCount() {
+        _checkedCount.value = cartRepository.getTotalSelectedCount()
+    }
+
+    private fun setUpAllButton() {
+        _allCheck.value = currentPage.all { it.checked }
     }
 
     companion object {
