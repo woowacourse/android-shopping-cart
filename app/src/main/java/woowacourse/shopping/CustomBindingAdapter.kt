@@ -23,9 +23,9 @@ object CustomBindingAdapter {
         fun onCountChange(productId: Int, count: Int)
     }
 
-    @BindingAdapter("listener", requireAll = true)
+    @BindingAdapter("productCounterListener", requireAll = true)
     @JvmStatic
-    fun onCountChange(view: ProductCounter, listener: OnCountChangeListener) {
+    fun onProductCountChange(view: ProductCounter, listener: OnCountChangeListener) {
         view.setOnCountChangeListener { productId, it ->
             listener.onCountChange(productId, it)
         }
