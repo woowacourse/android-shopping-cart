@@ -1,9 +1,9 @@
 package woowacourse.shopping.ui.cart
 
+import androidx.lifecycle.LiveData
 import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.utils.NonNullLiveData
 
 interface CartContract {
 
@@ -13,9 +13,9 @@ interface CartContract {
     }
 
     interface Presenter {
-        val totalPrice: NonNullLiveData<Int>
-        val checkedCount: NonNullLiveData<Int>
-        val allCheck: NonNullLiveData<Boolean>
+        val totalPrice: LiveData<Int>
+        val checkedCount: LiveData<Int>
+        val allCheck: LiveData<Boolean>
         fun setUpView()
         fun setUpProductsCheck(checked: Boolean)
         fun moveToPageNext()
