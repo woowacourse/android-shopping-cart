@@ -28,7 +28,7 @@ class ProductListPresenter(
 
     override fun loadProductItems() {
         val newProducts =
-            productRepository.loadData().map { productEntity -> productEntity.toUIModel() }
+            productRepository.loadData(products.size).map { productEntity -> productEntity.toUIModel() }
         products.addAll(newProducts)
         view.setProductItemsView(products.toList())
     }

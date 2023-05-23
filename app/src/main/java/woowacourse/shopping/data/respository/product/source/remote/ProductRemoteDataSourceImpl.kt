@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.respository.product.source.remote
 
+import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
@@ -13,13 +14,13 @@ class ProductRemoteDataSourceImpl : ProductRemoteDataSource {
         startServer()
     }
 
-    override fun requestDatas(): List<ProductEntity> {
+    override fun requestDatas(startPosition: Int): List<ProductEntity> {
         var newProducts: List<ProductEntity> = emptyList()
 
         val thread = Thread {
             val client = OkHttpClient()
             val host = "http://localhost:$PORT"
-            val path = "/shopping/products"
+            val path = "/shopping/products?$startPosition"
             val request = Request.Builder().url(host + path).build()
             val response = client.newCall(request).execute()
             val body = response.body?.string() ?: return@Thread
@@ -51,6 +52,7 @@ class ProductRemoteDataSourceImpl : ProductRemoteDataSource {
 
     private fun parseProductList(response: String): List<ProductEntity> {
         val products = mutableListOf<ProductEntity>()
+        Log.d("test", response)
         val jsonArray = JSONArray(response)
 
         for (index in 0 until jsonArray.length()) {
