@@ -135,7 +135,7 @@ class CartPresenter(
     }
 
     override fun updateCartProductCount(id: Int, count: Int) {
-        if (count !in COUNT_MIN..COUNT_MAX) return
+        if (count < COUNT_MIN) return
         cartRepository.update(id, count)
         val cartProducts = convertItemsToCartProducts(cartItems)
         cartProducts.find { it.id == id }?.let {
