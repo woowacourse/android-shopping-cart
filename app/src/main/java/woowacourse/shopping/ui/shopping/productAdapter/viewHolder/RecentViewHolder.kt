@@ -12,14 +12,15 @@ class RecentViewHolder(
     binding: ItemProductRecentBinding,
     listener: ProductsListener
 ) : ShoppingViewHolder(binding.root) {
-    private val adapter = RecentProductsAdapter(mutableListOf(), listener::onClickItem)
+    private val adapter = RecentProductsAdapter(listener::onClickItem)
 
     init {
         binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
     }
 
     fun bind(item: ProductsItemType.RecentProducts) {
-        adapter.submitList(item.product.map { RecentProductItem(it) })
+        adapter.submitList(item.product.map(::RecentProductItem))
     }
 
     companion object {

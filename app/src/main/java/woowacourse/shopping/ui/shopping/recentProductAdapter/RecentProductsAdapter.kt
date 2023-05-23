@@ -1,34 +1,31 @@
 package woowacourse.shopping.ui.shopping.recentProductAdapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.ui.shopping.recentProductAdapter.viewHolder.RecentProductViewHolder
 
 class RecentProductsAdapter(
-    private val recentProducts: MutableList<RecentProductItem>,
     private val onClickListener: RecentProductsListener
-) : RecyclerView.Adapter<RecentProductViewHolder>() {
+) : ListAdapter<RecentProductItem, RecentProductViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
         return RecentProductViewHolder.from(parent, onClickListener)
     }
 
     override fun onBindViewHolder(holder: RecentProductViewHolder, position: Int) {
-        holder.bind(recentProducts[position])
+        holder.bind(getItem(position))
     }
 
-    override fun getItemCount(): Int {
-        return recentProducts.size
-    }
+    companion object {
+        private class DiffCallback : DiffUtil.ItemCallback<RecentProductItem>() {
+            override fun areItemsTheSame(oldItem: RecentProductItem, newItem: RecentProductItem): Boolean {
+                return oldItem === newItem
+            }
 
-    override fun getItemViewType(position: Int): Int {
-        return ProductsItemType.TYPE_ITEM
-    }
-
-    fun submitList(data: List<RecentProductItem>) {
-        recentProducts.clear()
-        recentProducts.addAll(data)
-        notifyItemRangeChanged(0, data.size)
+            override fun areContentsTheSame(oldItem: RecentProductItem, newItem: RecentProductItem): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }
