@@ -142,15 +142,13 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun setProductItemsView(products: List<ProductModel>) {
-        runOnUiThread {
-            if (::productListAdapter.isInitialized) {
-                productListAdapter.setItems(products)
-                return@runOnUiThread
-            }
-            productListAdapter = ProductListAdapter(productListener)
+        if (::productListAdapter.isInitialized) {
             productListAdapter.setItems(products)
-            concatAdapter.addAdapter(1, productListAdapter)
+            return
         }
+        productListAdapter = ProductListAdapter(productListener)
+        productListAdapter.setItems(products)
+        concatAdapter.addAdapter(1, productListAdapter)
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {

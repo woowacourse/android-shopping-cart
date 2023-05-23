@@ -72,9 +72,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setProductInfoView(productModel: ProductModel) {
-        runOnUiThread {
-            binding.product = productModel
-        }
+        binding.product = productModel
     }
 
     private fun setLastRecentProduct() {
