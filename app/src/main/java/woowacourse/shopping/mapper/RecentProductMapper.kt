@@ -1,6 +1,6 @@
 package woowacourse.shopping.mapper
 
-import woowacourse.shopping.domain.RecentProduct
+import woowacourse.shopping.domain.model.RecentProduct
 import woowacourse.shopping.model.UiRecentProduct
 
 fun UiRecentProduct.toDomain(): RecentProduct =
@@ -8,3 +8,6 @@ fun UiRecentProduct.toDomain(): RecentProduct =
 
 fun RecentProduct.toUi(): UiRecentProduct =
     UiRecentProduct(id = id, product = product.toUi())
+
+fun List<RecentProduct>.toUi(): List<UiRecentProduct> =
+    map { recentProduct -> recentProduct.toUi() }

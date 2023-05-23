@@ -6,14 +6,25 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="product"
-            type="woowacourse.shopping.model.Product" />
+            name="cartProduct"
+            type="woowacourse.shopping.model.CartProduct" />
+
+        <variable
+            name="productClickListener"
+            type="woowacourse.shopping.util.listener.ProductClickListener" />
+
+        <variable
+            name="counterClickListener"
+            type="woowacourse.shopping.widget.ProductCounterView.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> productClickListener.onClickProduct(cartProduct.product)}"
         android:paddingHorizontal="20dp"
         android:paddingVertical="20dp">
 
@@ -21,13 +32,47 @@
             android:id="@+id/product_image_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            bind:imageUrl="@{product.imageUrl}"
+            bind:imageUrl="@{cartProduct.product.imageUrl}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/plus_floating_button"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:onClick="@{() -> productClickListener.onClickProductPlus(cartProduct.product)}"
+            android:visibility="@{cartProduct.shouldShowCounter ? View.GONE : View.VISIBLE}"
+            app:backgroundTint="@color/white"
+            app:icon="@drawable/ic_plus"
+            app:iconTint="@color/woowa_dark_gray"
+            app:layout_constraintBottom_toBottomOf="@id/product_image_view"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="@id/product_image_view"
+            app:layout_constraintWidth_percent="0.3"
+            app:tint="@color/woowa_dark_gray" />
+
+        <woowacourse.shopping.widget.ProductCounterView
+            android:id="@+id/counter_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            bind:count="@{cartProduct.selectedCount.value}"
+            bind:onMinusClick="@{() -> counterClickListener.onClickCounterMinus(cartProduct.product)}"
+            bind:onPlusClick="@{() -> counterClickListener.onClickCounterPlus(cartProduct.product)}"
+            android:visibility="@{cartProduct.shouldShowCounter ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/product_image_view"
+            app:layout_constraintEnd_toEndOf="@id/product_image_view"
+            app:layout_constraintHeight_percent="0.2"
+            app:layout_constraintStart_toStartOf="@id/product_image_view"
+            app:max_count="99"
+            app:min_count="1" />
 
         <TextView
             android:id="@+id/product_name_text_view"
@@ -38,7 +83,7 @@
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{cartProduct.product.name}"
             android:textColor="@color/woowa_text_black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -51,11 +96,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:text="@{@string/price_format(product.price.value)}"
+            bind:price="@{cartProduct.product.price}"
             android:textColor="@color/woowa_text_black"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/product_name_text_view"
             app:layout_constraintTop_toBottomOf="@+id/product_name_text_view"
             tools:text="10,000원" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

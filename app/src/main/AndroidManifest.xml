@@ -12,12 +12,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shopping"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.basket.BasketActivity"
+            android:name=".ui.cart.CartActivity"
             android:exported="true" />
         <activity
-            android:name=".ui.productdetail.ProductDetailActivity"
+            android:name=".ui.detail.ProductDetailActivity"
             android:exported="false" />
         <activity
             android:name=".ui.shopping.ShoppingActivity"

@@ -1,27 +1,17 @@
 package woowacourse.shopping.ui.shopping.recyclerview.adapter.recentproduct
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import woowacourse.shopping.model.UiRecentProduct
+import woowacourse.shopping.util.diffutil.RecentProductDiffUtil
 
 class RecentProductAdapter(private val onItemClick: (UiRecentProduct) -> Unit) :
-    ListAdapter<UiRecentProduct, RecentProductViewHolder>(recentProductDiffUtil) {
+    ListAdapter<UiRecentProduct, RecentProductViewHolder>(RecentProductDiffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder =
         RecentProductViewHolder(parent) { pos -> onItemClick(currentList[pos]) }
 
     override fun onBindViewHolder(holder: RecentProductViewHolder, position: Int) {
         holder.bind(getItem(position))
-    }
-
-    companion object {
-        private val recentProductDiffUtil = object : DiffUtil.ItemCallback<UiRecentProduct>() {
-            override fun areItemsTheSame(oldItem: UiRecentProduct, newItem: UiRecentProduct):
-                    Boolean = oldItem.id == newItem.id
-
-            override fun areContentsTheSame(oldItem: UiRecentProduct, newItem: UiRecentProduct):
-                    Boolean = oldItem == newItem
-        }
     }
 }

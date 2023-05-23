@@ -1,77 +1,111 @@
 package woowacourse.shopping.ui.shopping
 
-import woowacourse.shopping.domain.Products
-import woowacourse.shopping.domain.RecentProduct
-import woowacourse.shopping.domain.RecentProducts
-import woowacourse.shopping.domain.repository.DomainProductRepository
-import woowacourse.shopping.domain.repository.DomainRecentProductRepository
+import woowacourse.shopping.domain.model.Cart
+import woowacourse.shopping.domain.model.DomainCartProduct
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductCount
+import woowacourse.shopping.domain.model.RecentProduct
+import woowacourse.shopping.domain.model.RecentProducts
+import woowacourse.shopping.domain.model.page.LoadMore
+import woowacourse.shopping.domain.model.page.Page
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUi
 import woowacourse.shopping.model.UiProduct
+import woowacourse.shopping.model.UiProductCount
 import woowacourse.shopping.model.UiRecentProduct
 import woowacourse.shopping.ui.shopping.ShoppingContract.Presenter
 import woowacourse.shopping.ui.shopping.ShoppingContract.View
 
 class ShoppingPresenter(
     view: View,
-    private val productRepository: DomainProductRepository,
-    private val recentProductRepository: DomainRecentProductRepository,
+    private val productRepository: ProductRepository,
+    private val recentProductRepository: RecentProductRepository,
+    private val cartRepository: CartRepository,
+    private val recentProductSize: Int = 10,
+    private var recentProducts: RecentProducts = RecentProducts(),
+    cartSize: Int = 20,
 ) : Presenter(view) {
-    private var products = Products()
-    private var recentProducts = RecentProducts()
-
+    private var cart = Cart()
+    private var currentPage: Page = LoadMore(sizePerPage = cartSize)
+    private val cartProductCount: UiProductCount
+        get() = UiProductCount(cartRepository.getProductInCartSize())
 
     override fun fetchAll() {
-        fetchProducts()
+        loadMoreProducts()
         fetchRecentProducts()
     }
 
-    override fun fetchProducts() {
-        val newProducts = productRepository
-            .getPartially(TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE, products.lastId)
-        products = products.addAll(newProducts)
-
-        view.updateProducts(products.getItemsByUnit().map { it.toUi() })
-        view.updateLoadMoreVisible()
+    private fun convertToCartProduct(product: Product): DomainCartProduct {
+        val cartEntity = cartRepository.getCartEntity(product.id)
+        return DomainCartProduct(
+            cartEntity.id,
+            product,
+            ProductCount(cartEntity.count),
+            cartEntity.checked
+        )
     }
 
-    private fun View.updateLoadMoreVisible() {
-        if (products.canLoadMore()) {
-            showLoadMoreButton()
-        } else {
-            hideLoadMoreButton()
-        }
+    override fun fetchRecentProducts() {
+        updateRecentProducts(recentProductRepository.getPartially(recentProductSize))
+    }
+
+    override fun loadMoreProducts() {
+        updateCart(cart + loadCartProducts(currentPage))
+        view.updateLoadMoreVisible()
+        currentPage = currentPage.next()
     }
 
     override fun inquiryProductDetail(product: UiProduct) {
         val recentProduct = RecentProduct(product = product.toDomain())
-        recentProducts += recentProduct
-
-        view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
-        view.showProductDetail(product)
-
+        view.navigateToProductDetail(product, recentProducts.getLatest()?.toUi())
         recentProductRepository.add(recentProduct)
-    }
-
-    override fun fetchRecentProducts() {
-        recentProducts = RecentProducts(recentProductRepository.getPartially(RECENT_PRODUCT_SIZE))
-        view.updateRecentProducts(recentProducts.getItems().map { it.toUi() })
+        updateRecentProducts(recentProducts + recentProduct)
     }
 
     override fun inquiryRecentProductDetail(recentProduct: UiRecentProduct) {
-        view.showProductDetail(recentProduct.product)
+        view.navigateToProductDetail(recentProduct.product, recentProducts.getLatest()?.toUi())
         recentProductRepository.add(recentProduct.toDomain())
     }
 
-    override fun openBasket() {
-        view.navigateToBasketScreen()
+    override fun navigateToCart() {
+        view.navigateToCart()
     }
 
-    companion object {
-        private const val RECENT_PRODUCT_SIZE = 10
-        private const val LOAD_PRODUCT_SIZE_AT_ONCE = 20
-        private const val PRODUCT_SIZE_FOR_HAS_NEXT = 1
-        private const val TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE =
-            LOAD_PRODUCT_SIZE_AT_ONCE + PRODUCT_SIZE_FOR_HAS_NEXT
+    override fun increaseCartCount(product: UiProduct, count: Int) {
+        val newProduct = product.toDomain()
+        cartRepository.increaseCartCount(newProduct, count)
+        updateCart(cart.increaseProductCount(newProduct, count))
     }
+
+    override fun decreaseCartCount(product: UiProduct, count: Int) {
+        val removingProduct = product.toDomain()
+        cartRepository.decreaseCartCount(removingProduct, count)
+        updateCart(cart.decreaseProductCount(removingProduct, count))
+    }
+
+    private fun View.updateLoadMoreVisible() {
+        if (currentPage.hasNext(cart)) showLoadMoreButton() else hideLoadMoreButton()
+    }
+
+    private fun updateCart(newCart: Cart) {
+        cart = cart.update(newCart)
+        updateCartView()
+    }
+
+    private fun updateCartView() {
+        view.updateCartBadge(cartProductCount)
+        view.updateProducts(currentPage.takeItems(cart).toUi())
+    }
+
+    private fun updateRecentProducts(newRecentProducts: RecentProducts) {
+        recentProducts = recentProducts.update(newRecentProducts)
+        view.updateRecentProducts(recentProducts.getItems().toUi())
+    }
+
+    private fun loadCartProducts(page: Page): List<DomainCartProduct> = productRepository
+        .getProductByPage(page)
+        .map { convertToCartProduct(it) }
 }

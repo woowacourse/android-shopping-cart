@@ -4,7 +4,7 @@ import woowacourse.shopping.data.model.DataRecentProduct
 
 interface RecentProductDao {
     fun getSize(): Int
-    fun getPartially(size: Int): List<DataRecentProduct>
-    fun add(recentProduct: DataRecentProduct)
+    fun getRecentProductsPartially(size: Int): List<DataRecentProduct>
+    fun addRecentProduct(item: DataRecentProduct)
     fun removeLast()
 }
