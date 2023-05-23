@@ -6,6 +6,7 @@ import woowacourse.shopping.domain.Count
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.ui.mapper.toDomain
+import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.model.UiBasketProduct
 
 class BasketPresenter(
@@ -74,7 +75,12 @@ class BasketPresenter(
     }
 
     private fun updateViewBasketProduct() {
-        view.updateBasketProducts(basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE))
+        view.updateBasketProducts(
+            basket.getSubBasketByStartId(
+                startId,
+                BASKET_PAGING_SIZE
+            ).products.map { it.toUi() }
+        )
     }
 
     // 요기

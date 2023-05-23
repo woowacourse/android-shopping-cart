@@ -4,18 +4,15 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
 import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
-import woowacourse.shopping.data.datasource.product.remote.RemoteProductDataSource
 import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.databinding.ActivityBasketBinding
-import woowacourse.shopping.domain.Basket
-import woowacourse.shopping.ui.mapper.toUi
+import woowacourse.shopping.ui.model.UiBasketProduct
 import woowacourse.shopping.ui.shopping.ShoppingActivity
 import woowacourse.shopping.util.turnOffSupportChangeAnimation
 
@@ -79,8 +76,8 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
         }
     }
 
-    override fun updateBasketProducts(basket: Basket) {
-        basketAdapter.submitList(basket.products.map { it.toUi() })
+    override fun updateBasketProducts(basketProducts: List<UiBasketProduct>) {
+        basketAdapter.submitList(basketProducts)
     }
 
     override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {
