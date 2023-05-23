@@ -12,11 +12,11 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.model.PageUIModel
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.repositoryImpl.MockWeb
 import woowacourse.shopping.repositoryImpl.RemoteProductRepository
 import woowacourse.shopping.ui.cart.cartAdapter.CartAdapter
 import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 import woowacourse.shopping.ui.detailedProduct.DetailedProductActivity
+import woowacourse.shopping.utils.ServerURLSingleton
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -62,7 +62,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter = CartPresenter(
             this,
             CartDatabase(this),
-            RemoteProductRepository(MockWeb.url),
+            RemoteProductRepository(ServerURLSingleton.serverURL),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0
         )
         presenter.setUpView()

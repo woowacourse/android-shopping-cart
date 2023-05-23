@@ -20,6 +20,7 @@ import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapter
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapterDecoration.getItemDecoration
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapterDecoration.getSpanSizeLookup
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
+import woowacourse.shopping.utils.ServerURLSingleton
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
@@ -64,7 +65,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun initMockWeb() {
-        val thread = Thread { MockWeb.start() }
+        val thread = Thread {
+            MockWeb.start()
+            ServerURLSingleton.serverURL = MockWeb.url
+        }
         thread.start()
         thread.join()
     }
@@ -72,7 +76,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private fun initPresenter() {
         presenter = ShoppingPresenter(
             this,
-            RemoteProductRepository(MockWeb.url),
+            RemoteProductRepository(ServerURLSingleton.serverURL),
             RecentProductDatabase(this),
             CartDatabase(this)
         )

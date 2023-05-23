@@ -13,11 +13,11 @@ import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityDetailedProductBinding
 import woowacourse.shopping.model.ProductUIModel
-import woowacourse.shopping.repositoryImpl.MockWeb
 import woowacourse.shopping.repositoryImpl.RemoteProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.cart.cartDialog.CartDialog
 import woowacourse.shopping.utils.ActivityUtils
+import woowacourse.shopping.utils.ServerURLSingleton
 import woowacourse.shopping.utils.SharedPreferenceUtils
 import woowacourse.shopping.utils.getSerializableExtraCompat
 
@@ -46,7 +46,7 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
             intent.getSerializableExtraCompat(KEY_PRODUCT)
                 ?: return ActivityUtils.keyError(this, KEY_PRODUCT),
             SharedPreferenceUtils(this),
-            RemoteProductRepository(MockWeb.url),
+            RemoteProductRepository(ServerURLSingleton.serverURL),
             CartDatabase(this),
             RecentProductDatabase(this)
         )
