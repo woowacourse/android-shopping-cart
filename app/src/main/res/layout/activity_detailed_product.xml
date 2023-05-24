@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -12,11 +13,16 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductUIModel" />
+
+        <variable
+            name="lastProduct"
+            type="woowacourse.shopping.model.ProductUIModel" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
@@ -46,11 +52,9 @@
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            tools:layout_editor_absoluteX="17dp"
             tools:text="TITLE" />
 
         <View
-            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="14dp"
@@ -87,6 +91,12 @@
                 tools:text="10000원" />
         </LinearLayout>
 
+        <include
+            android:id="@+id/layout_last_product"
+            layout="@layout/layout_detailed_product_last"
+            android:onClick="@{() -> presenter.navigateToDetailedProduct()}"
+            bind:product="@{lastProduct}" />
+
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -98,7 +108,7 @@
             android:layout_height="50dp"
             android:background="@color/blue_green_04c09e"
             android:gravity="center"
-            android:onClick="@{() -> presenter.addProductToCart()}"
+            android:onClick="@{() -> presenter.navigateToAddToCartDialog()}"
             android:text="@string/product_detail_add_to_cart_btn"
             android:textColor="@color/white"
             android:textSize="20sp"

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="item_spacing">20dp</dimen>
+    <dimen name="cart_dialog_width">314dp</dimen>
+    <dimen name="cart_dialog_height">150dp</dimen>
 </resources>

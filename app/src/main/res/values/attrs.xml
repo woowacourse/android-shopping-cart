@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ProductCounter">
+        <attr name="count" format="integer" />
+        <attr name="minCount" format="integer" />
+        <attr name="maxCount" format="integer" />
+        <attr name="productId" format="integer" />
+    </declare-styleable>
+</resources>

@@ -9,14 +9,12 @@ import woowacourse.shopping.ui.cart.cartAdapter.CartListener
 class NavigationViewHolder private constructor(
     private val binding: ItemCartNavigationBinding,
     cartListener: CartListener
-) : CartItemViewHolder(binding.root) {
+) : CartViewHolder(binding.root) {
     init {
         binding.listener = cartListener
     }
 
-    override fun bind(data: CartItemType) {
-        if (data !is CartItemType.Navigation) return
-
+    fun bind(data: CartItemType.Navigation) {
         binding.cart = data.cart
     }
 

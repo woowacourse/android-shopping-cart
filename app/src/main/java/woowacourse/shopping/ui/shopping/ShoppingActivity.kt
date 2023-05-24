@@ -1,125 +1,128 @@
 package woowacourse.shopping.ui.shopping
 
-import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductFakeRepository
-import woowacourse.shopping.database.product.ProductDatabase
+import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.RecentProductUIModel
+import woowacourse.shopping.repositoryImpl.MockWeb
+import woowacourse.shopping.repositoryImpl.RemoteProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detailedProduct.DetailedProductActivity
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapter
-import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapterDecoration.getItemDecoration
+import woowacourse.shopping.ui.shopping.productAdapter.ProductsAdapterDecoration.getSpanSizeLookup
 import woowacourse.shopping.ui.shopping.productAdapter.ProductsListener
+import woowacourse.shopping.utils.ServerURLSingleton
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var presenter: ShoppingContract.Presenter
 
+    private val adapter: ProductsAdapter = ProductsAdapter(getAdapterListener())
+    private var tvCount: TextView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initMockWeb()
         initBinding()
         initToolbar()
         initPresenter()
         initLayoutManager()
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.setUpRecentProducts()
+        presenter.setUpCartCounts()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.cart_menu, menu)
+        menu?.findItem(R.id.cart)?.actionView?.let { view ->
+            view.setOnClickListener { navigateToCart() }
+            view.findViewById<TextView>(R.id.tv_counter)?.let { tvCount = it }
+        }
+        presenter.setUpTotalCount()
+        return true
+    }
+
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
+        binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
     }
 
     private fun initToolbar() {
         setSupportActionBar(binding.toolbar)
     }
 
-    private fun initPresenter() {
-        ProductFakeRepository.getAll().forEach {
-            ProductDatabase(this).insert(it)
+    private fun initMockWeb() {
+        val thread = Thread {
+            MockWeb.start()
+            ServerURLSingleton.serverURL = MockWeb.url
         }
+        thread.start()
+        thread.join()
+    }
+
+    private fun initPresenter() {
         presenter = ShoppingPresenter(
             this,
-            ProductDatabase(this),
-            RecentProductDatabase(this)
+            RemoteProductRepository(ServerURLSingleton.serverURL),
+            RecentProductDatabase(this),
+            CartDatabase(this)
         )
-        presenter.setUpProducts()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.cart_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cart -> navigateToCart()
-            else -> super.onOptionsItemSelected(item)
-        }
-        return true
+        presenter.setUpRecentProducts()
+        presenter.setUpNextProducts()
+        presenter.setUpCartCounts()
     }
 
     private fun initLayoutManager() {
-        val layoutManager = GridLayoutManager(this@ShoppingActivity, 2)
-        val spacing = resources.getDimensionPixelSize(R.dimen.item_spacing)
-        val spanCount = 2
-
-        layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return when (binding.rvProducts.adapter?.getItemViewType(position)) {
-                    ProductsItemType.TYPE_FOOTER -> spanCount
-                    ProductsItemType.TYPE_ITEM -> 1
-                    else -> spanCount
-                }
-            }
-        }
-
-        binding.rvProducts.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                val position = parent.getChildAdapterPosition(view)
-                val spanSize = layoutManager.spanSizeLookup.getSpanSize(position)
-
-                if (spanSize != spanCount) {
-                    outRect.left = spacing
-                    outRect.right = spacing
-                }
-
-                outRect.top = spacing
-            }
-        })
-        binding.rvProducts.layoutManager = layoutManager
+        val layoutManager = binding.rvProducts.layoutManager as GridLayoutManager
+        layoutManager.spanSizeLookup = getSpanSizeLookup(layoutManager, adapter)
+        binding.rvProducts.addItemDecoration(getItemDecoration(layoutManager, resources))
     }
 
-    override fun setProducts(data: List<ProductsItemType>) {
-        val listener = object : ProductsListener {
-            override fun onClickItem(productId: Int) { presenter.navigateToItemDetail(productId) }
-            override fun onReadMoreClick() { presenter.fetchMoreProducts() }
+    private fun getAdapterListener() = object : ProductsListener {
+        override fun onClickItem(productId: Int) {
+            presenter.navigateToItemDetail(productId)
         }
-        binding.rvProducts.adapter = ProductsAdapter(data, listener)
+        override fun onReadMoreClick() {
+            presenter.setUpNextProducts()
+        }
+        override fun onAddCartOrUpdateCount(productId: Int, count: Int) {
+            adapter.updateItemCount(productId, count)
+            presenter.updateItemCount(productId, count)
+            presenter.setUpTotalCount()
+        }
+    }
+
+    override fun addMoreProducts(products: List<ProductUIModel>) {
+        adapter.addList(products)
+    }
+
+    override fun setRecentProducts(recentProductsData: List<RecentProductUIModel>) {
+        adapter.updateRecentProducts(recentProductsData)
+    }
+
+    override fun setCartProducts(cartCounts: Map<Int, Int>) {
+        adapter.updateCartCounts(cartCounts)
     }
 
     override fun navigateToProductDetail(product: ProductUIModel) {
         startActivity(DetailedProductActivity.getIntent(this, product))
     }
 
-    override fun addProducts(data: List<ProductsItemType>) {
-        binding.rvProducts.adapter?.let {
-            if (it is ProductsAdapter) {
-                it.submitList(data)
-            }
-        }
+    override fun setToolbar(totalCount: Int) {
+        tvCount?.text = totalCount.toString()
     }
 
     private fun navigateToCart() {

@@ -11,16 +11,16 @@ import woowacourse.shopping.ui.shopping.recentProductAdapter.RecentProductsAdapt
 class RecentViewHolder(
     binding: ItemProductRecentBinding,
     listener: ProductsListener
-) : ItemViewHolder(binding.root) {
-    private val adapter = RecentProductsAdapter(listOf(), listener::onClickItem)
+) : ShoppingViewHolder(binding.root) {
+    private val adapter = RecentProductsAdapter(listener::onClickItem)
 
     init {
         binding.rvProducts.adapter = adapter
+        binding.rvProducts.itemAnimator = null
     }
-    override fun bind(productItemType: ProductsItemType) {
-        (productItemType as ProductsItemType.RecentProducts).let { recentProducts ->
-            adapter.submitList(recentProducts.product.map { RecentProductItem(it) })
-        }
+
+    fun bind(item: ProductsItemType.RecentProducts) {
+        adapter.submitList(item.product.map(::RecentProductItem))
     }
 
     companion object {

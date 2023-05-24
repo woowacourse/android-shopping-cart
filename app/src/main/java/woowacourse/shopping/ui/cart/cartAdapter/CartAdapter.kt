@@ -1,33 +1,53 @@
 package woowacourse.shopping.ui.cart.cartAdapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartItemViewHolder
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import woowacourse.shopping.model.CartProductUIModel
+import woowacourse.shopping.model.PageUIModel
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType.Cart
+import woowacourse.shopping.ui.cart.cartAdapter.CartItemType.Navigation
+import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartProductViewHolder
 import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.CartViewHolder
 import woowacourse.shopping.ui.cart.cartAdapter.viewHolder.NavigationViewHolder
 
-class CartAdapter(
-    private val cartItems: List<CartItemType>,
-    private val cartListener: CartListener
-) : RecyclerView.Adapter<CartItemViewHolder>() {
+class CartAdapter(private val cartListener: CartListener) :
+    ListAdapter<CartItemType, CartViewHolder>(CartDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return when (viewType) {
-            CartItemType.TYPE_ITEM -> CartViewHolder.from(parent, cartListener)
+            CartItemType.TYPE_ITEM -> CartProductViewHolder.from(parent, cartListener)
             CartItemType.TYPE_FOOTER -> NavigationViewHolder.from(parent, cartListener)
             else -> throw IllegalArgumentException("Invalid viewType")
         }
     }
 
-    override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
-        return holder.bind(cartItems[position])
-    }
-
-    override fun getItemCount(): Int {
-        return cartItems.size
+    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
+        when (holder) {
+            is CartProductViewHolder -> holder.bind(getItem(position) as Cart)
+            is NavigationViewHolder -> holder.bind(getItem(position) as Navigation)
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return cartItems[position].viewType
+        return getItem(position).viewType
+    }
+
+    fun submitList(cartProducts: List<CartProductUIModel>, pageUIModel: PageUIModel) {
+        submitList(
+            cartProducts.map(::Cart).toMutableList() + Navigation(pageUIModel)
+        )
+    }
+
+    companion object {
+        class CartDiffCallback : DiffUtil.ItemCallback<CartItemType>() {
+            override fun areItemsTheSame(oldItem: CartItemType, newItem: CartItemType): Boolean {
+                return oldItem.viewType == newItem.viewType
+            }
+
+            override fun areContentsTheSame(oldItem: CartItemType, newItem: CartItemType): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }

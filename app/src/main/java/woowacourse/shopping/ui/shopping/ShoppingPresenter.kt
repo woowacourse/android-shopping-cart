@@ -1,46 +1,56 @@
 package woowacourse.shopping.ui.shopping
 
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentRepository
-import woowacourse.shopping.ui.shopping.productAdapter.ProductsItemType
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
     private val productRepository: ProductRepository,
-    private val recentRepository: RecentRepository
+    private val recentRepository: RecentRepository,
+    private val cartRepository: CartRepository
 ) : ShoppingContract.Presenter {
-    private var productsData: MutableList<ProductsItemType> = mutableListOf()
-
     override fun setUpProducts() {
-        setRecentProduct()
-
-        productsData += productRepository.getNext(PRODUCT_COUNT)
-            .map { ProductsItemType.Product(it.toUIModel()) }
-        view.setProducts(productsData.plus(ProductsItemType.ReadMore))
+        setUpCartCounts()
+        setUpNextProducts()
+        setUpRecentProducts()
     }
 
-    override fun fetchMoreProducts() {
-        productsData += productRepository.getNext(PRODUCT_COUNT)
-            .map { ProductsItemType.Product(it.toUIModel()) }
-        view.addProducts(productsData.plus(ProductsItemType.ReadMore))
+    override fun setUpCartCounts() {
+        cartRepository.getAll().toUIModel()
+            .associateBy { it.id }
+            .mapValues { it.value.count }
+            .let { view.setCartProducts(it) }
+    }
+
+    override fun setUpNextProducts() {
+        view.addMoreProducts(
+            productRepository.getNext(PRODUCT_COUNT).map { it.toUIModel() }
+        )
+    }
+
+    override fun setUpRecentProducts() {
+        view.setRecentProducts(
+            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
+        )
+    }
+
+    override fun setUpTotalCount() {
+        view.setToolbar(cartRepository.getTotalSelectedCount())
+    }
+
+    override fun updateItemCount(productId: Int, count: Int): Int {
+        cartRepository.insert(
+            productRepository.findById(productId)
+        )
+        return cartRepository.updateCount(productId, count)
     }
 
     override fun navigateToItemDetail(productId: Int) {
-        productRepository.findById(productId).let {
-            view.navigateToProductDetail(it.toUIModel())
-        }
-    }
-
-    private fun setRecentProduct() {
-        val recentProductsData = ProductsItemType.RecentProducts(
-            recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() }
+        view.navigateToProductDetail(
+            productRepository.findById(productId).toUIModel()
         )
-
-        when {
-            productsData.isNotEmpty() && productsData[0] is ProductsItemType.RecentProducts -> productsData[0] = recentProductsData
-            recentProductsData.product.isNotEmpty() -> productsData.add(0, recentProductsData)
-        }
     }
 
     companion object {

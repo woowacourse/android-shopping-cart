@@ -13,12 +13,14 @@ object RecentProductConstant : BaseColumns {
     private const val TABLE_COLUMN_SAVE_TIME = "time"
 
     fun getCreateTableQuery(): String {
-        return "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
-            "$TABLE_COLUMN_ID INTEGER PRIMARY KEY," +
-            "$TABLE_COLUMN_NAME TEXT," +
-            "$TABLE_COLUMN_PRICE INTEGER," +
-            "$TABLE_COLUMN_IMAGE_URL TEXT," +
-            "$TABLE_COLUMN_SAVE_TIME INTEGER)"
+        return """
+            CREATE TABLE IF NOT EXISTS $TABLE_NAME (
+                $TABLE_COLUMN_ID INTEGER PRIMARY KEY,
+                $TABLE_COLUMN_NAME TEXT,
+                $TABLE_COLUMN_PRICE INTEGER,
+                $TABLE_COLUMN_IMAGE_URL TEXT,
+                $TABLE_COLUMN_SAVE_TIME INTEGER)
+        """.trimIndent()
     }
 
     fun getUpdateTableQuery(): String {
@@ -26,17 +28,19 @@ object RecentProductConstant : BaseColumns {
     }
 
     fun getInsertQuery(product: RecentProduct): String {
-        return "INSERT OR REPLACE INTO $TABLE_NAME (" +
-            "$TABLE_COLUMN_ID," +
-            "$TABLE_COLUMN_NAME," +
-            "$TABLE_COLUMN_PRICE," +
-            "$TABLE_COLUMN_IMAGE_URL," +
-            "$TABLE_COLUMN_SAVE_TIME) VALUES (" +
-            "${product.id}," +
-            "'${product.name}'," +
-            "${product.price}," +
-            "'${product.imageUrl}'," +
-            "${System.currentTimeMillis()})"
+        return """
+            INSERT OR IGNORE INTO $TABLE_NAME (
+                $TABLE_COLUMN_ID,
+                $TABLE_COLUMN_NAME,
+                $TABLE_COLUMN_PRICE,
+                $TABLE_COLUMN_IMAGE_URL,
+                $TABLE_COLUMN_SAVE_TIME) VALUES (
+                ${product.id},
+                '${product.name}',
+                ${product.price},
+                '${product.imageUrl}',
+                ${System.currentTimeMillis()})
+        """.trimIndent()
     }
 
     fun getGetRecentProductQuery(limit: Int): String {

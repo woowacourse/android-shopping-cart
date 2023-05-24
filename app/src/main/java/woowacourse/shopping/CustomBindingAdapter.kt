@@ -4,6 +4,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import woowacourse.shopping.ui.customView.ProductCounter
 
 object CustomBindingAdapter {
 
@@ -16,5 +17,17 @@ object CustomBindingAdapter {
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view)
+    }
+
+    fun interface OnCountChangeListener {
+        fun onCountChange(productId: Int, count: Int)
+    }
+
+    @BindingAdapter("productCounterListener", requireAll = true)
+    @JvmStatic
+    fun onProductCountChange(view: ProductCounter, listener: OnCountChangeListener) {
+        view.setOnCountChangeListener { productId, it ->
+            listener.onCountChange(productId, it)
+        }
     }
 }

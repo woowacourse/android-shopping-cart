@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.detailedProduct
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,8 +13,12 @@ import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityDetailedProductBinding
 import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.repositoryImpl.RemoteProductRepository
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.cart.cartDialog.CartDialog
 import woowacourse.shopping.utils.ActivityUtils
+import woowacourse.shopping.utils.ServerURLSingleton
+import woowacourse.shopping.utils.SharedPreferenceUtils
 import woowacourse.shopping.utils.getSerializableExtraCompat
 
 class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.View {
@@ -40,10 +45,13 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT)
                 ?: return ActivityUtils.keyError(this, KEY_PRODUCT),
+            SharedPreferenceUtils(this),
+            RemoteProductRepository(ServerURLSingleton.serverURL),
             CartDatabase(this),
             RecentProductDatabase(this)
         )
         binding.presenter = presenter
+        presenter.setUpLastProduct()
         presenter.setUpProductDetail()
         presenter.addProductToRecent()
     }
@@ -61,12 +69,31 @@ class DetailedProductActivity : AppCompatActivity(), DetailedProductContract.Vie
         return true
     }
 
-    override fun setProductDetail(product: ProductUIModel) {
+    override fun setProductDetail(product: ProductUIModel, lastProduct: ProductUIModel?) {
         binding.product = product
+        binding.lastProduct = lastProduct
     }
 
     override fun navigateToCart() {
         startActivity(CartActivity.getIntent(this))
+    }
+
+    override fun navigateToDetailedProduct(product: ProductUIModel) {
+        startActivity(
+            getIntent(this, product).apply {
+                flags = FLAG_ACTIVITY_CLEAR_TOP
+            }
+        )
+    }
+
+    override fun navigateToAddToCartDialog(product: ProductUIModel) {
+        CartDialog(this, product.name, product.price) { count ->
+            presenter.addProductToCart(count)
+        }.apply {
+            val density = resources.displayMetrics.density * 1.2
+            window?.setLayout((314 * density).toInt(), (150 * density).toInt())
+            show()
+        }
     }
 
     companion object {

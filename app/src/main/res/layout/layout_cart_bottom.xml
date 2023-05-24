@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.ui.cart.CartContract.Presenter" />
+
+        <variable
+            name="onAllCheckClick"
+            type="kotlin.jvm.functions.Function1" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="76dp"
+        android:background="@color/gray_555555"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/cb_check_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onCheckedChanged="@{(compoundButton, checked) -> onAllCheckClick.invoke(checked)}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cart_select_all_of_page" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="@{@string/product_price(presenter.totalPrice)}"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            tools:text="345,600원" />
+
+        <TextView
+            android:id="@+id/tv_order_product"
+            android:layout_width="122dp"
+            android:layout_height="match_parent"
+            android:background="@color/blue_green_04c09e"
+            android:gravity="center"
+            android:text="@{@string/cart_order_btn(presenter.checkedCount)}"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            tools:text="주문하기(0)" />
+    </LinearLayout>
+
+</layout>

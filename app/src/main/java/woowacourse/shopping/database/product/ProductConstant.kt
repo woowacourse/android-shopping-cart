@@ -12,11 +12,13 @@ object ProductConstant : BaseColumns {
     private const val TABLE_COLUMN_IMAGE_URL = "product_img_url"
 
     fun getCreateTableQuery(): String {
-        return "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
-            "$TABLE_COLUMN_ID INTEGER PRIMARY KEY," +
-            "$TABLE_COLUMN_NAME TEXT," +
-            "$TABLE_COLUMN_PRICE INTEGER," +
-            "$TABLE_COLUMN_IMAGE_URL TEXT)"
+        return """
+            CREATE TABLE IF NOT EXISTS $TABLE_NAME (
+                $TABLE_COLUMN_ID INTEGER PRIMARY KEY,
+                $TABLE_COLUMN_NAME TEXT,
+                $TABLE_COLUMN_PRICE INTEGER,
+                $TABLE_COLUMN_IMAGE_URL TEXT)
+        """.trimIndent()
     }
 
     fun getUpdateTableQuery(): String {
@@ -31,20 +33,22 @@ object ProductConstant : BaseColumns {
         return "SELECT * FROM $TABLE_NAME"
     }
 
-    fun getGetNextQuery(limit: Int): String {
-        return "SELECT * FROM $TABLE_NAME DESC LIMIT $limit"
+    fun getGetNextQuery(limit: Int, offset: Int): String {
+        return "SELECT * FROM $TABLE_NAME DESC LIMIT $limit OFFSET $offset"
     }
 
     fun getInsertQuery(product: Product): String {
-        return "INSERT OR REPLACE INTO $TABLE_NAME (" +
-            "$TABLE_COLUMN_ID," +
-            "$TABLE_COLUMN_NAME," +
-            "$TABLE_COLUMN_PRICE," +
-            "$TABLE_COLUMN_IMAGE_URL) VALUES (" +
-            "${product.id}," +
-            "'${product.name}'," +
-            "${product.price}," +
-            "'${product.imageUrl}')"
+        return """
+            INSERT OR IGNORE INTO $TABLE_NAME (
+                $TABLE_COLUMN_ID,
+                $TABLE_COLUMN_NAME,
+                $TABLE_COLUMN_PRICE,
+                $TABLE_COLUMN_IMAGE_URL) VALUES (
+                ${product.id},
+                '${product.name}',
+                ${product.price},
+                '${product.imageUrl}')
+        """.trimIndent()
     }
 
     fun fromCursor(cursor: Cursor): Product {

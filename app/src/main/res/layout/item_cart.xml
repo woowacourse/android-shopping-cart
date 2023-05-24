@@ -12,6 +12,7 @@
         <variable
             name="listener"
             type="woowacourse.shopping.ui.cart.cartAdapter.CartListener" />
+
     </data>
 
 
@@ -22,26 +23,39 @@
         android:background="@drawable/layout_border_radius"
         android:onClick="@{() -> listener.onItemClick(product)}">
 
+        <CheckBox
+            android:id="@+id/cb_product_check"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="21dp"
+            android:checked="@{product.checked}"
+            android:onCheckedChanged="@{(_, isChecked) -> listener.onItemCheckChanged(product.id, isChecked)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/tv_product_title"
             android:layout_width="266dp"
             android:layout_height="40dp"
-            android:layout_marginStart="13dp"
+            android:layout_marginStart="11dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
             android:text="@{product.name}"
             android:textAppearance="@style/cart_item_title"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cb_product_check"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="PET보틀-정사각(370ml)" />
 
         <ImageView
+            android:id="@+id/iv_product_image"
             android:layout_width="136dp"
             android:layout_height="72dp"
+            android:layout_marginStart="13dp"
             android:layout_marginTop="13dp"
             android:contentDescription="@string/cart_item_product_image_description"
             app:imageUrl="@{product.imageUrl}"
-            app:layout_constraintStart_toStartOf="@id/tv_product_title"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_title"
             tools:src="@color/black" />
 
@@ -58,16 +72,29 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/tv_product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@{@string/product_price(product.price)}"
+            android:textColor="@color/gray_333333"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/cv_product_counter"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="99000원" />
+
+        <woowacourse.shopping.ui.customView.ProductCounter
+            android:id="@+id/cv_product_counter"
+            productCounterListener="@{listener.onItemUpdate}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="13dp"
             android:layout_marginBottom="18dp"
-            android:text="@{@string/product_price(product.price)}"
-            android:textColor="@color/gray_333333"
-            android:textSize="16sp"
+            app:count="@{product.count}"
+            app:productId="@{product.id}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:text="99000원" />
+            app:minCount="@{1}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

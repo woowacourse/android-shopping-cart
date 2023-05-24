@@ -8,6 +8,8 @@ import woowacourse.shopping.repository.ProductRepository
 
 class ProductDatabase(context: Context) : ProductRepository {
     private val db = ShoppingDBHelper(context).writableDatabase
+
+    private var offset = 0
     override fun getAll(): List<Product> {
         val products = mutableListOf<Product>()
         db.rawQuery(ProductConstant.getGetAllQuery(), null).use {
@@ -20,9 +22,10 @@ class ProductDatabase(context: Context) : ProductRepository {
 
     override fun getNext(count: Int): List<Product> {
         val products = mutableListOf<Product>()
-        db.rawQuery(ProductConstant.getGetNextQuery(count), null).use {
+        db.rawQuery(ProductConstant.getGetNextQuery(count, offset), null).use {
             while (it.moveToNext()) {
                 products.add(ProductConstant.fromCursor(it))
+                offset++
             }
         }
         return products
@@ -35,7 +38,8 @@ class ProductDatabase(context: Context) : ProductRepository {
         }
     }
 
-    override fun insert(product: Product) {
+    override fun insert(product: Product): Int {
         db.execSQL(ProductConstant.getInsertQuery(product))
+        return product.id
     }
 }
