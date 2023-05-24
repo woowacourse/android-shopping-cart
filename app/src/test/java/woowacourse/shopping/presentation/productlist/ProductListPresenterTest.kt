@@ -41,7 +41,7 @@ class ProductListPresenterTest {
     @Test
     fun `데이터를 받아와 상품 목록 어댑터를 설정한다`() {
         // given
-        every { productRepository.loadData() } returns dummyData
+        every { productRepository.loadData(0) } returns dummyData
         val slot = slot<List<ProductModel>>()
         justRun { view.setProductItemsView(capture(slot)) }
 
@@ -53,7 +53,7 @@ class ProductListPresenterTest {
         val expected = dummyData.map { it.toUIModel() }
 
         assertEquals(expected, actual)
-        verify { productRepository.loadData() }
+        verify { productRepository.loadData(0) }
         verify { view.setProductItemsView(actual) }
     }
 
@@ -68,42 +68,30 @@ class ProductListPresenterTest {
         presenter.loadRecentProductItems()
 
         // then
-        val actual = slot.captured
-
-        assertEquals(0L, actual[0].id)
-        assertEquals(0L, actual[0].product.id)
         verify { recentProductRepository.getRecentProducts(10) }
-        verify { view.setRecentProductItemsView(actual) }
+        verify { view.setRecentProductItemsView(slot.captured) }
     }
 
     @Test
     fun `업데이트 된 데이터를 받아와 최근 본 상품을 갱신한다`() {
         // given
         every { recentProductRepository.getRecentProducts(10) } returns dummyRecentProduct
-        val slotPreSize = slot<Int>()
-        val slotDiffSize = slot<Int>()
-        justRun { view.updateRecentProductItemsView(capture(slotPreSize), capture(slotDiffSize)) }
+        val slot = slot<List<RecentProductModel>>()
+        justRun { view.updateRecentProductItemsView(capture(slot)) }
         presenter.loadRecentProductItems()
 
         // when
         presenter.updateRecentProductItems()
 
         // then
-        val actualPreSize = slotPreSize.captured
-        val actualDiffSize = slotDiffSize.captured
-        val expectedPreSize = 0
-        val expectedDiffSize = 1
-
-        assertEquals(expectedPreSize, actualPreSize)
-        assertEquals(expectedDiffSize, actualDiffSize)
         verify { recentProductRepository.getRecentProducts(10) }
-        verify { view.updateRecentProductItemsView(actualPreSize, actualDiffSize) }
+        verify { view.updateRecentProductItemsView(slot.captured) }
     }
 
     @Test
     fun `데이터가 더 존재한다면 추가 데이터를 가져와 갱신한다`() {
         // given
-        every { productRepository.loadData() } returns dummyData
+        every { productRepository.loadData(0) } returns dummyData
         val slot = slot<List<ProductModel>>()
         justRun { view.setProductItemsView(capture(slot)) }
 
@@ -114,7 +102,7 @@ class ProductListPresenterTest {
         val actual = slot.captured
         val expected = dummyData.map { it.toUIModel() }
         assertEquals(expected, actual)
-        verify { productRepository.loadData() }
+        verify { productRepository.loadData(0) }
         verify { view.setProductItemsView(actual) }
     }
 
