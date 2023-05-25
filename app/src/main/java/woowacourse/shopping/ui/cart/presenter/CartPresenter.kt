@@ -69,12 +69,7 @@ class CartPresenter(
     }
 
     override fun onChangeSelectionOfAllCartItems(isSelected: Boolean) {
-        fun getCartItemsOfCurrentPage(): List<CartItem> {
-            val offset = (_currentPage - 1) * PAGE_SIZE
-            return cartItemRepository.findAllOrderByAddedTime(PAGE_SIZE, offset)
-        }
-
-        val cartItemsOfCurrentPage = getCartItemsOfCurrentPage()
+        val cartItemsOfCurrentPage = getCartItemsOf(_currentPage)
         if (isSelected) {
             selectedCartItems = selectedCartItems + cartItemsOfCurrentPage
             showCartItems(_currentPage, selectedCartItems, false)
