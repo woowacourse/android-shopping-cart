@@ -131,25 +131,9 @@ class CartPresenter(
     }
 
     private fun showPageUI(currentPage: Int) {
-        refreshStateThatCanRequestPreviousPage(currentPage)
-        refreshStateThatCanRequestNextPage(currentPage)
+        view.setStateThatCanRequestPreviousPage(currentPage > 1)
+        view.setStateThatCanRequestNextPage(currentPage < getMaxPage())
         view.setPage(currentPage)
-    }
-
-    private fun refreshStateThatCanRequestPreviousPage(currentPage: Int) {
-        if (currentPage <= 1) {
-            view.setStateThatCanRequestPreviousPage(false)
-        } else {
-            view.setStateThatCanRequestPreviousPage(true)
-        }
-    }
-
-    private fun refreshStateThatCanRequestNextPage(currentPage: Int) {
-        if (currentPage >= getMaxPage()) {
-            view.setStateThatCanRequestNextPage(false)
-        } else {
-            view.setStateThatCanRequestNextPage(true)
-        }
     }
 
     private fun getMaxPage(): Int = (cartItemRepository.countAll() - 1) / PAGE_SIZE + 1
