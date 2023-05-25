@@ -92,7 +92,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.tvProductDetailName.text = product.name
         binding.tvProductDetailPrice.text =
             getString(R.string.product_price).format(PRICE_FORMAT.format(product.price))
-        binding.btnProductDetailAdd.isEnabled = product.isInCart.not()
+
+        if (product.isInCart) {
+            binding.btnProductDetailAdd.isEnabled = false
+            binding.btnProductDetailAdd.setBackgroundColor(getColor(R.color.grey_aaa))
+        }
+
         binding.btnProductDetailAdd.setOnClickListener {
             AddToCartDialog(product) { productId, count ->
                 presenter.onAddProductToCart(productId, count)
