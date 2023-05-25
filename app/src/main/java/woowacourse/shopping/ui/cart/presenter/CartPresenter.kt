@@ -131,6 +131,11 @@ class CartPresenter(
     }
 
     private fun showPageUI(currentPage: Int) {
+        if (getMaxPage() <= 1) {
+            view.setPageUIVisibility(false)
+            return
+        }
+        view.setPageUIVisibility(true)
         view.setStateThatCanRequestPreviousPage(currentPage > 1)
         view.setStateThatCanRequestNextPage(currentPage < getMaxPage())
         view.setPage(currentPage)

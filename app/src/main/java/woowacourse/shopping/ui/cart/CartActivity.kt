@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.database.DbHelper
 import woowacourse.shopping.database.cart.CartItemRepositoryImpl
@@ -144,6 +145,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun setPage(page: Int) {
         binding.tvCartPage.text = page.toString()
+    }
+
+    override fun setPageUIVisibility(isVisible: Boolean) {
+        binding.layoutPage.isVisible = isVisible
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

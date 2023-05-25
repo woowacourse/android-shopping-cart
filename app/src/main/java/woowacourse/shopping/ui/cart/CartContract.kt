@@ -37,6 +37,8 @@ interface CartContract {
 
         fun setPage(page: Int)
 
+        fun setPageUIVisibility(isVisible: Boolean)
+
         fun setCartItems(cartItems: List<CartItemUIState>, initScroll: Boolean)
 
         fun setStateOfAllSelection(isAllSelected: Boolean)
