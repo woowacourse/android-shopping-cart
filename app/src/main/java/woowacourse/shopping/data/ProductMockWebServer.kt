@@ -55,35 +55,36 @@ class ProductMockWebServer {
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit
     ) {
-        synchronized(this) {
-            mockWebServer = MockWebServer()
-            mockWebServer.dispatcher = dispatcher
-            mockWebServer.url("/")
-
-            val baseUrl = String.format("http://localhost:%s", mockWebServer.port)
-            val url = "$baseUrl/products?page=$page"
-            val request = Request.Builder().url(url).build()
-
-            okHttpClient.newCall(request).enqueue(
-                object : Callback {
-                    override fun onFailure(call: Call, e: IOException) {
-                        onFailure()
-                    }
-
-                    override fun onResponse(call: Call, response: Response) {
-                        if (response.code >= 400) return onFailure()
-                        val responseBody = response.body?.string()
-                        response.close()
-
-                        val result = responseBody?.let {
-                            parseJsonToProducts(responseBody)
-                        } ?: emptyList()
-
-                        onSuccess(result)
-                    }
-                }
-            )
+        if (!::mockWebServer.isInitialized) {
+            synchronized(this) {
+                mockWebServer = MockWebServer()
+                mockWebServer.dispatcher = dispatcher
+                mockWebServer.url("/")
+            }
         }
+        val baseUrl = String.format("http://localhost:%s", mockWebServer.port)
+        val url = "$baseUrl/products?page=$page"
+        val request = Request.Builder().url(url).build()
+
+        okHttpClient.newCall(request).enqueue(
+            object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    onFailure()
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    if (response.code >= 400) return onFailure()
+                    val responseBody = response.body?.string()
+                    response.close()
+
+                    val result = responseBody?.let {
+                        parseJsonToProducts(responseBody)
+                    } ?: emptyList()
+
+                    onSuccess(result)
+                }
+            }
+        )
     }
 
     private fun parseJsonToProducts(json: String): List<Product> {
