@@ -7,9 +7,10 @@ data class ProductDetailUIState(
     val name: String,
     val price: Int,
     val id: Long,
+    val isInCart: Boolean
 ) {
     companion object {
-        fun from(product: Product): ProductDetailUIState =
-            ProductDetailUIState(product.imageUrl, product.name, product.price, product.id)
+        fun create(product: Product, isInCart: Boolean): ProductDetailUIState =
+            ProductDetailUIState(product.imageUrl, product.name, product.price, product.id, isInCart)
     }
 }

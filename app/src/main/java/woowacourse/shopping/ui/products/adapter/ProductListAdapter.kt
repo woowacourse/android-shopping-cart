@@ -1,21 +1,26 @@
 package woowacourse.shopping.ui.products.adapter
 
-import android.view.LayoutInflater
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.ui.products.uistate.ProductUIState
-import woowacourse.shopping.utils.PRICE_FORMAT
 
 class ProductListAdapter(
     private val products: MutableList<ProductUIState>,
     private val onClick: (Long) -> Unit,
-) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
+    private val onClickAddToCartButton: (Long) -> Unit,
+    private val onClickPlusCount: (Long) -> Unit,
+    private val onClickMinusCount: (Long) -> Unit
+) : RecyclerView.Adapter<ProductListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
-        return ProductListViewHolder.create(parent, onClick)
+        return ProductListViewHolder.create(
+            parent,
+            onClick,
+            onClickAddToCartButton,
+            onClickPlusCount,
+            onClickMinusCount
+        )
     }
 
     override fun getItemCount(): Int = products.size
@@ -24,32 +29,16 @@ class ProductListAdapter(
         holder.bind(products[position])
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun addItems(newProducts: List<ProductUIState>) {
         products.addAll(newProducts)
+        notifyDataSetChanged()
     }
 
-    class ProductListViewHolder private constructor(
-        private val binding: ItemProductBinding,
-        private val onClick: (Long) -> Unit,
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(product: ProductUIState) {
-            binding.product = product
-            binding.tvProductPrice.text = itemView.context.getString(R.string.product_price)
-                .format(PRICE_FORMAT.format(product.price))
-            Glide.with(itemView)
-                .load(product.imageUrl)
-                .into(binding.ivProduct)
-            binding.root.setOnClickListener { onClick(product.id) }
-        }
-
-        companion object {
-            fun create(parent: ViewGroup, onClick: (Long) -> Unit): ProductListViewHolder {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_product, parent, false)
-                val binding = ItemProductBinding.bind(view)
-                return ProductListViewHolder(binding, onClick)
-            }
-        }
+    fun replaceItem(newProduct: ProductUIState) {
+        val index = products.indexOfFirst { newProduct.id == it.id }
+        if (index == -1) return
+        products[index] = newProduct
+        notifyItemChanged(index)
     }
 }

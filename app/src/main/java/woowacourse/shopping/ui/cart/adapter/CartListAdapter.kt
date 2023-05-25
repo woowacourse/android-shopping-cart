@@ -1,21 +1,27 @@
 package woowacourse.shopping.ui.cart.adapter
 
-import android.view.LayoutInflater
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.ui.cart.uistate.CartItemUIState
-import woowacourse.shopping.utils.PRICE_FORMAT
 
 class CartListAdapter(
-    private val cartItems: List<CartItemUIState>,
-    private val onCloseButtonClick: (Long) -> Unit,
-) : RecyclerView.Adapter<CartListAdapter.CartListViewHolder>() {
+    private val onClickCloseButton: (Long) -> Unit,
+    private val onClickCheckBox: (Long, Boolean) -> Unit,
+    private val onClickPlus: (Long) -> Unit,
+    private val onClickMinus: (Long) -> Unit,
+) : RecyclerView.Adapter<CartListViewHolder>() {
+
+    private val cartItems: MutableList<CartItemUIState> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListViewHolder {
-        return CartListViewHolder.create(parent, onCloseButtonClick)
+        return CartListViewHolder.create(
+            parent,
+            onClickCloseButton,
+            onClickCheckBox,
+            onClickPlus,
+            onClickMinus
+        )
     }
 
     override fun getItemCount(): Int = cartItems.size
@@ -24,31 +30,10 @@ class CartListAdapter(
         holder.bind(cartItems[position])
     }
 
-    class CartListViewHolder private constructor(
-        private val binding: ItemCartBinding,
-        private val onCloseButtonClick: (Long) -> Unit,
-    ) : RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(cartItem: CartItemUIState) {
-            binding.tvCartName.text = cartItem.name
-            binding.tvCartPrice.text = itemView.context.getString(R.string.product_price).format(
-                PRICE_FORMAT.format(cartItem.price),
-            )
-            Glide.with(itemView)
-                .load(cartItem.imageUrl)
-                .into(binding.ivCart)
-            binding.btnCartClose.setOnClickListener {
-                onCloseButtonClick(cartItem.id)
-            }
-        }
-
-        companion object {
-            fun create(parent: ViewGroup, onCloseButtonClick: (Long) -> Unit): CartListViewHolder {
-                val view =
-                    LayoutInflater.from(parent.context).inflate(R.layout.item_cart, parent, false)
-                val binding = ItemCartBinding.bind(view)
-                return CartListViewHolder(binding, onCloseButtonClick)
-            }
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    fun setCartItems(cartItems: List<CartItemUIState>) {
+        this.cartItems.clear()
+        this.cartItems.addAll(cartItems)
+        notifyDataSetChanged()
     }
 }

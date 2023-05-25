@@ -9,12 +9,19 @@ interface ProductListContract {
         fun restoreCurrentPage(currentPage: Int)
         fun onLoadRecentlyViewedProducts()
         fun onLoadProductsNextPage()
-        fun onViewProduct(productId: Long)
+        fun onAddToCart(productId: Long)
+        fun onRefreshProducts()
+        fun onPlusCount(cartItemId: Long)
+        fun onMinusCount(cartItemId: Long)
+        fun onLoadCartItemCount()
     }
 
     interface View {
         fun setRecentlyViewedProducts(recentlyViewedProducts: List<RecentlyViewedProductUIState>)
         fun addProducts(products: List<ProductUIState>)
+        fun replaceProduct(product: ProductUIState)
+        fun setProducts(products: List<ProductUIState>)
         fun setCanLoadMore(canLoadMore: Boolean)
+        fun setCartItemCount(count: Int)
     }
 }

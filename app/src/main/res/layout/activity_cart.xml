@@ -10,12 +10,14 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_cart"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/app_bar"
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <TextView
@@ -29,51 +31,123 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_cart"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/btn_page_down"
+            app:layout_constraintBottom_toTopOf="@id/layout_page"
             app:layout_constraintTop_toBottomOf="@id/toolbar_cart"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_bias="0.0"
             tools:itemCount="3"
             tools:listitem="@layout/item_cart" />
 
-        <TextView
-            android:id="@+id/tv_cart_page"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_page"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/black"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/layout_order"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_cart"
-            tools:text="3" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageButton
-            android:id="@+id/btn_page_down"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/icon_left_page"
-            app:layout_constraintBottom_toBottomOf="@id/tv_cart_page"
-            app:layout_constraintEnd_toStartOf="@id/tv_cart_page"
-            app:layout_constraintTop_toTopOf="@id/tv_cart_page" />
+            <TextView
+                android:id="@+id/tv_cart_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="@id/btn_page_down"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btn_page_down"
+                tools:text="3" />
 
-        <ImageButton
-            android:id="@+id/btn_page_Up"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:background="@android:color/transparent"
-            android:src="@drawable/icon_right_page"
-            app:layout_constraintBottom_toBottomOf="@id/tv_cart_page"
-            app:layout_constraintStart_toEndOf="@id/tv_cart_page"
-            app:layout_constraintTop_toTopOf="@id/tv_cart_page" />
+            <ImageButton
+                android:id="@+id/btn_page_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/icon_left_page"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_cart_page" />
+
+            <ImageButton
+                android:id="@+id/btn_page_Up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:background="@android:color/transparent"
+                android:src="@drawable/icon_right_page"
+                app:layout_constraintBottom_toBottomOf="@id/btn_page_down"
+                app:layout_constraintStart_toEndOf="@id/tv_cart_page"
+                app:layout_constraintTop_toTopOf="@id/btn_page_down" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_order"
+            android:layout_width="0dp"
+            android:layout_height="76dp"
+            android:background="@color/grey_555"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <CheckBox
+                android:id="@+id/cb_page_all_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/tv_cb_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@string/all_of_them"
+                app:layout_constraintTop_toBottomOf="@id/cb_page_all_select"
+                app:layout_constraintStart_toStartOf="@id/cb_page_all_select"
+                app:layout_constraintEnd_toEndOf="@id/cb_page_all_select"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="전체"/>
+
+            <TextView
+                android:id="@+id/tv_order_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_order"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="184,200원" />
+
+            <TextView
+                android:id="@+id/tv_order"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@color/turquoise"
+                android:paddingHorizontal="15dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="주문하기(1)" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
