@@ -10,8 +10,9 @@ class CartListAdapter(
     private val onClickCheckBox: (Long, Boolean) -> Unit,
     private val onClickPlus: (Long) -> Unit,
     private val onClickMinus: (Long) -> Unit,
-    private val cartItems: MutableList<CartItemUIState> = mutableListOf()
 ) : RecyclerView.Adapter<CartListViewHolder>() {
+
+    private val cartItems: MutableList<CartItemUIState> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListViewHolder {
         return CartListViewHolder.create(

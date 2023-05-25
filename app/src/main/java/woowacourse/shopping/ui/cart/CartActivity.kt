@@ -21,9 +21,11 @@ import woowacourse.shopping.ui.cart.uistate.CartItemUIState
 import woowacourse.shopping.utils.PRICE_FORMAT
 
 class CartActivity : AppCompatActivity(), CartContract.View {
+
     private val binding: ActivityCartBinding by lazy {
         ActivityCartBinding.inflate(layoutInflater)
     }
+
     private val presenter: CartPresenter by lazy {
         CartPresenter(
             this,
@@ -33,6 +35,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                     ProductRepositoryImpl(ProductMemoryDao)
                 )
             )
+        )
+    }
+
+    private val cartListAdapter by lazy {
+        CartListAdapter(
+            onClickCloseButton = { presenter.onDeleteCartItem(it) },
+            onClickCheckBox = { id, isSelected ->
+                presenter.onChangeSelectionOfCartItem(id, isSelected)
+            },
+            onClickPlus = { presenter.onPlusCount(it) },
+            onClickMinus = { presenter.onMinusCount(it) }
         )
     }
 
@@ -99,14 +112,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun initCartList() {
-        binding.recyclerViewCart.adapter = CartListAdapter(
-            onClickCloseButton = { presenter.onDeleteCartItem(it) },
-            onClickCheckBox = { id, isSelected ->
-                presenter.onChangeSelectionOfCartItem(id, isSelected)
-            },
-            onClickPlus = { presenter.onPlusCount(it) },
-            onClickMinus = { presenter.onMinusCount(it) }
-        )
+        binding.recyclerViewCart.adapter = cartListAdapter
         presenter.onLoadCartItemsOfNextPage()
     }
 
@@ -120,19 +126,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setCartItems(cartItems: List<CartItemUIState>, initScroll: Boolean) {
-        if (initScroll) {
-            binding.recyclerViewCart.adapter = CartListAdapter(
-                onClickCloseButton = { presenter.onDeleteCartItem(it) },
-                onClickCheckBox = { productId, isSelected ->
-                    presenter.onChangeSelectionOfCartItem(productId, isSelected)
-                },
-                onClickPlus = { presenter.onPlusCount(it) },
-                onClickMinus = { presenter.onMinusCount(it) },
-                cartItems = cartItems.toMutableList()
-            )
-            return
-        }
-        (binding.recyclerViewCart.adapter as CartListAdapter).setCartItems(cartItems)
+        cartListAdapter.setCartItems(cartItems)
+        if (initScroll) binding.recyclerViewCart.smoothScrollToPosition(0)
     }
 
     override fun setStateThatCanRequestNextPage(canRequest: Boolean) {
