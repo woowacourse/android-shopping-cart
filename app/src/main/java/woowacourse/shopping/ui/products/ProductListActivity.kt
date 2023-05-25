@@ -13,7 +13,7 @@ import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProduct
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.datasource.cart.CartItemLocalDao
 import woowacourse.shopping.datasource.product.ProductMemoryDao
-import woowacourse.shopping.datasource.recentlyviewedproduct.RecentlyViewedProductMemoryDao
+import woowacourse.shopping.datasource.recentlyviewedproduct.RecentlyViewedProductLocalDao
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductListAdapter
@@ -33,7 +33,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         ProductListPresenter(
             this,
             RecentlyViewedProductRepositoryImpl(
-                RecentlyViewedProductMemoryDao(
+                RecentlyViewedProductLocalDao(
                     DbHelper.getDbInstance(this),
                     ProductRepositoryImpl(ProductMemoryDao)
                 )

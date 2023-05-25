@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.RecentlyViewedProduct
 import woowacourse.shopping.repository.ProductRepository
 import java.time.LocalDateTime
 
-class RecentlyViewedProductMemoryDao(private val db: SQLiteDatabase, private val productRepository: ProductRepository) : RecentlyViewedProductDataSource {
+class RecentlyViewedProductLocalDao(private val db: SQLiteDatabase, private val productRepository: ProductRepository) : RecentlyViewedProductDataSource {
     override fun save(recentlyViewedProduct: RecentlyViewedProduct) {
         deleteRecentlyViewedProductIfSameProductExists(recentlyViewedProduct)
 

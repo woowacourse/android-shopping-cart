@@ -15,7 +15,7 @@ import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProduct
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.datasource.cart.CartItemLocalDao
 import woowacourse.shopping.datasource.product.ProductMemoryDao
-import woowacourse.shopping.datasource.recentlyviewedproduct.RecentlyViewedProductMemoryDao
+import woowacourse.shopping.datasource.recentlyviewedproduct.RecentlyViewedProductLocalDao
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.uistate.LastViewedProductUIState
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
@@ -37,7 +37,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 )
             ),
             RecentlyViewedProductRepositoryImpl(
-                RecentlyViewedProductMemoryDao(
+                RecentlyViewedProductLocalDao(
                     DbHelper.getDbInstance(this),
                     ProductRepositoryImpl(ProductMemoryDao)
                 )
