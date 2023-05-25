@@ -3,18 +3,14 @@ package woowacourse.shopping.ui.cart.presenter
 import woowacourse.shopping.domain.CartItem
 import woowacourse.shopping.repository.CartItemRepository
 import woowacourse.shopping.ui.cart.CartContract
+import woowacourse.shopping.ui.cart.uistate.CartItemUIState
 import java.lang.IllegalStateException
 import kotlin.properties.Delegates
 
 class CartPresenter(
-    view: CartContract.View,
+    private val view: CartContract.View,
     private val cartItemRepository: CartItemRepository,
 ) : CartContract.Presenter {
-
-    private val showCartItems = ShowCartItems(view, cartItemRepository, PAGE_SIZE)
-    private val showPageUI = ShowPageUI(view, cartItemRepository, PAGE_SIZE)
-    private val showAllSelectionUI = ShowAllSelectionUI(view, cartItemRepository, PAGE_SIZE)
-    private val showOrderUI = ShowOrderUI(view)
 
     private var _currentPage by Delegates.observable(0) { _, _, new ->
         showCartItems(new, selectedCartItems, true)
@@ -109,6 +105,54 @@ class CartPresenter(
         }
         showCartItems(_currentPage, selectedCartItems, false)
     }
+
+    private fun showAllSelectionUI(currentPage: Int, selectedCartItems: Set<CartItem>) {
+        val cartItems = getCartItemsOf(currentPage)
+        view.setStateOfAllSelection(
+            cartItems.all { it in selectedCartItems } && cartItems.isNotEmpty()
+        )
+    }
+
+    private fun getCartItemsOf(page: Int): List<CartItem> {
+        val offset = (page - 1) * PAGE_SIZE
+        return cartItemRepository.findAllOrderByAddedTime(PAGE_SIZE, offset)
+    }
+
+    private fun showCartItems(page: Int, selectedCartItems: Set<CartItem>, initScroll: Boolean) {
+        val cartItems = getCartItemsOf(page)
+        val cartItemUIStates =
+            cartItems.map { CartItemUIState.create(it, it in selectedCartItems) }
+        view.setCartItems(cartItemUIStates, initScroll)
+    }
+
+    private fun showOrderUI(selectedCartItems: Set<CartItem>) {
+        view.setOrderPrice(selectedCartItems.sumOf(CartItem::getOrderPrice))
+        view.setOrderCount(selectedCartItems.size)
+    }
+
+    private fun showPageUI(currentPage: Int) {
+        refreshStateThatCanRequestPreviousPage(currentPage)
+        refreshStateThatCanRequestNextPage(currentPage)
+        view.setPage(currentPage)
+    }
+
+    private fun refreshStateThatCanRequestPreviousPage(currentPage: Int) {
+        if (currentPage <= 1) {
+            view.setStateThatCanRequestPreviousPage(false)
+        } else {
+            view.setStateThatCanRequestPreviousPage(true)
+        }
+    }
+
+    private fun refreshStateThatCanRequestNextPage(currentPage: Int) {
+        if (currentPage >= getMaxPage()) {
+            view.setStateThatCanRequestNextPage(false)
+        } else {
+            view.setStateThatCanRequestNextPage(true)
+        }
+    }
+
+    private fun getMaxPage(): Int = (cartItemRepository.countAll() - 1) / PAGE_SIZE + 1
 
     companion object {
         private const val PAGE_SIZE = 5

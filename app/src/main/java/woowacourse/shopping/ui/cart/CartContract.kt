@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.cart
 
+import woowacourse.shopping.ui.cart.uistate.CartItemUIState
+
 interface CartContract {
 
     interface Presenter {
@@ -28,5 +30,19 @@ interface CartContract {
         fun onMinusCount(cartItemId: Long)
     }
 
-    interface View : PageableView, CartItemsView, AllSelectableItemView, OrderView
+    interface View {
+        fun setStateThatCanRequestPreviousPage(canRequest: Boolean)
+
+        fun setStateThatCanRequestNextPage(canRequest: Boolean)
+
+        fun setPage(page: Int)
+
+        fun setCartItems(cartItems: List<CartItemUIState>, initScroll: Boolean)
+
+        fun setStateOfAllSelection(isAllSelected: Boolean)
+
+        fun setOrderPrice(price: Int)
+
+        fun setOrderCount(count: Int)
+    }
 }
