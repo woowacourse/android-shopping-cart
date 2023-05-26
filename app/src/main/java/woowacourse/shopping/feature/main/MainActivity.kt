@@ -2,9 +2,9 @@ package woowacourse.shopping.feature.main
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     private fun initAdapters() {
         mainProductAdapter = MainProductAdapter(
-            listOf(),
             object : MainProductClickListener {
                 override fun onPlusClick(product: ProductUiModel, previousCount: Int) {
                     presenter.increaseCartProduct(product, previousCount)
@@ -123,10 +122,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         startActivity(DetailActivity.getIntent(this, product, recentProduct))
     }
 
-    override fun addProducts(products: List<ProductUiModel>) {
-        runOnUiThread { mainProductAdapter.addItems(products) }
-    }
-
     override fun updateRecent(recent: List<RecentProductUiModel>) {
         recentAdapter.submitList(recent)
     }
@@ -137,18 +132,13 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun updateCartProductCount(count: Int) {
         if (::cartProductCountTv.isInitialized) {
-            if (count == 0) cartProductCountTv.visibility = View.GONE
-            else cartProductCountTv.visibility = View.VISIBLE
+            cartProductCountTv.isVisible = count != 0
             cartProductCountTv.text = count.toString()
         }
     }
 
-    override fun updateProductsCount(products: List<ProductUiModel>) {
-        mainProductAdapter.updateItems(products)
-    }
-
-    override fun updateProductCount(product: ProductUiModel) {
-        mainProductAdapter.updateItem(product)
+    override fun submitList(products: List<ProductUiModel>) {
+        mainProductAdapter.submitList(products.toList())
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -1,6 +1,6 @@
 package woowacourse.shopping.feature.main.product
 
-import android.view.View
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemMainProductBinding
 import woowacourse.shopping.model.ProductUiModel
@@ -13,13 +13,13 @@ class MainProductViewHolder(
         binding.apply {
             this.product = product
             countView.count = product.count
-            setVisibility(product.count != 0)
+            setCountVisibility(product.count != 0)
 
             mainProductLayout.setOnClickListener {
                 mainProductClickListener.onProductClick(product)
             }
             plusFab.setOnClickListener {
-                setVisibility(true)
+                setCountVisibility(true)
                 mainProductClickListener.onPlusClick(product, countView.count)
                 countView.count = 1
             }
@@ -29,20 +29,15 @@ class MainProductViewHolder(
             countView.minusClickListener = {
                 val currentCount = countView.count
                 if (currentCount == 1) {
-                    setVisibility(false)
+                    setCountVisibility(false)
                 }
                 mainProductClickListener.onMinusClick(product, currentCount)
             }
         }
     }
 
-    private fun setVisibility(isCountOn: Boolean) {
-        if (!isCountOn) {
-            binding.countView.visibility = View.GONE
-            binding.plusFab.visibility = View.VISIBLE
-        } else {
-            binding.countView.visibility = View.VISIBLE
-            binding.plusFab.visibility = View.GONE
-        }
+    private fun setCountVisibility(isCountOn: Boolean) {
+        binding.countView.isVisible = isCountOn
+        binding.plusFab.isVisible = !isCountOn
     }
 }

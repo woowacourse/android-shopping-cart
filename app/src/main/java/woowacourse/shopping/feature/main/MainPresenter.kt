@@ -18,12 +18,13 @@ class MainPresenter(
 ) : MainContract.Presenter {
 
     private var totalCount: Int = cartRepository.getAll().size
+    private val mainProducts = mutableListOf<ProductUiModel>()
 
     override fun loadProducts() {
         productRepository.getFirstProducts(
             onSuccess = {
-                val productItems = matchCartProductCount(it)
-                view.addProducts(productItems)
+                mainProducts.addAll(matchCartProductCount(it))
+                view.submitList(mainProducts)
             }
         )
     }
@@ -50,7 +51,8 @@ class MainPresenter(
         productRepository.getNextProducts(
             onSuccess = {
                 val nextProductItems = matchCartProductCount(it)
-                view.addProducts(nextProductItems)
+                mainProducts.addAll(nextProductItems)
+                view.submitList(mainProducts)
             }
         )
     }
@@ -80,7 +82,10 @@ class MainPresenter(
         cartRepository.addProduct(product.toDomain(), previousCount + 1)
         if (previousCount == 0) totalCount++
         view.updateCartProductCount(totalCount)
-        view.updateProductCount(product.copy(count = previousCount + 1))
+        val index = mainProducts.indexOfFirst { it.id == product.id }
+        if (index != -1) {
+            mainProducts[index] = mainProducts[index].copy(count = previousCount + 1)
+        }
     }
 
     override fun decreaseCartProduct(product: ProductUiModel, previousCount: Int) {
@@ -91,14 +96,27 @@ class MainPresenter(
         } else {
             cartRepository.addProduct(product.toDomain(), previousCount - 1)
         }
-        view.updateProductCount(product.copy(count = previousCount + 1))
+        val index = mainProducts.indexOfFirst { it.id == product.id }
+        if (index != -1) {
+            mainProducts[index] = mainProducts[index].copy(count = previousCount - 1)
+        }
     }
 
     override fun updateProducts() {
         val products = cartRepository.getAll().map {
             it.product.toPresentation(count = it.count)
         }
-        view.updateProductsCount(products)
+        view.updateCartProductCount(products.size)
+        if (mainProducts.isEmpty()) return
+
+        mainProducts.forEachIndexed { index, product ->
+            if (product.count != 0) {
+                mainProducts[index] = mainProducts[index].copy(
+                    count = products.find { it.id == product.id }?.count ?: 0
+                )
+            }
+        }
+        view.submitList(mainProducts)
         view.updateCartProductCount(products.size)
     }
 }
