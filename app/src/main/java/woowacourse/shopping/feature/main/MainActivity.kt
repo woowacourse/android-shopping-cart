@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
+import woowacourse.shopping.data.MockServer
 import woowacourse.shopping.data.ProductCacheImpl
-import woowacourse.shopping.data.ProductMockWebServer
+import woowacourse.shopping.data.ProductMockService
 import woowacourse.shopping.data.ProductRemoteMockRepositoryImpl
 import woowacourse.shopping.data.RecentProductRepositoryImpl
 import woowacourse.shopping.data.sql.cart.CartDao
@@ -100,7 +101,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private fun initPresenter() {
         presenter = MainPresenter(
             this,
-            ProductRemoteMockRepositoryImpl(ProductMockWebServer(), ProductCacheImpl),
+            ProductRemoteMockRepositoryImpl(ProductMockService(MockServer()), ProductCacheImpl),
             RecentProductRepositoryImpl(RecentDao(this)),
             CartRepositoryImpl(CartDao(this))
         )

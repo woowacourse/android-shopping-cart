@@ -7,12 +7,12 @@ import java.util.concurrent.CountDownLatch
 
 internal class ProductRepositoryTest {
 
-    private val productMockWebServer: ProductMockWebServer = ProductMockWebServer()
+    private val productMockService: ProductMockService = ProductMockService(MockServer())
 
     @Test
     fun `처음 상품 목록을 가져온다`() {
         val productRemoteRepository = ProductRemoteMockRepositoryImpl(
-            productMockWebServer,
+            productMockService,
             ProductCacheImpl.apply { clear() }
         )
 
@@ -40,7 +40,7 @@ internal class ProductRepositoryTest {
             addProducts(productsDatasource.take(20))
         }
         val productRemoteRepository = ProductRemoteMockRepositoryImpl(
-            productMockWebServer,
+            productMockService,
             productCache
         )
 
