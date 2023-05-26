@@ -15,7 +15,7 @@ interface ShoppingCartContract {
     }
 
     interface Presenter {
-        fun getShoppingCart(page: Int)
+        fun fetchProductsInCartByPage(page: Int)
         fun setPageNumber()
         fun goNextPage()
         fun goPreviousPage()

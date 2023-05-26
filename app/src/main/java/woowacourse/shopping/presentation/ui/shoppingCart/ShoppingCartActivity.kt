@@ -52,7 +52,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun initView() {
-        presenter.getShoppingCart(INIT_PAGE)
+        presenter.fetchProductsInCartByPage(INIT_PAGE)
         presenter.setPageNumber()
         presenter.checkPageMovement()
     }

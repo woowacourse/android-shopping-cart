@@ -47,7 +47,7 @@ class ShoppingCartPresenterTest {
         every { view.setShoppingCart(capture(slot)) } answers { nothing }
 
         // when
-        presenter.getShoppingCart(PAGE_NUMBER)
+        presenter.fetchProductsInCartByPage(PAGE_NUMBER)
 
         // then
         val actual = slot.captured

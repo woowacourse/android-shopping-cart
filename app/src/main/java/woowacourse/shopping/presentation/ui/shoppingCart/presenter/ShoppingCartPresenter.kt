@@ -25,7 +25,7 @@ class ShoppingCartPresenter(
     private val _totalAmount: MutableLiveData<Int> = MutableLiveData(0)
     val totalAmount: LiveData<Int> get() = _totalAmount
 
-    override fun getShoppingCart(page: Int) {
+    override fun fetchProductsInCartByPage(page: Int) {
         val shoppingCart = shoppingCartRepository.getShoppingCart()
         val shoppingCartByPage =
             shoppingCartRepository.getShoppingCartByPage(SHOPPING_CART_ITEM_COUNT, page)
