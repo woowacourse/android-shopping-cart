@@ -23,7 +23,7 @@ class CartPage(
             .sumOf { it.price.value }
 
     private fun getCartProductOnPage(): List<CartProduct> {
-        val startIndex = currentPage.value * ITEM_COUNT_ON_EACH_PAGE
+        val startIndex = (currentPage.value - 1) * ITEM_COUNT_ON_EACH_PAGE
         val endIndex = (startIndex + ITEM_COUNT_ON_EACH_PAGE).coerceAtMost(cart.products.size)
 
         if (startIndex >= cart.products.size) {
@@ -36,7 +36,7 @@ class CartPage(
         if (totalProductsSize == 0) {
             return Page()
         }
-        return Page((totalProductsSize - 1) / ITEM_COUNT_ON_EACH_PAGE)
+        return Page((totalProductsSize - 1) / ITEM_COUNT_ON_EACH_PAGE + 1)
     }
 
     override fun moveToNextPage(

@@ -1,15 +1,15 @@
 package model
 
 @JvmInline
-value class Page(val value: Int = 0) : Comparable<Page> {
+value class Page(val value: Int = 1) : Comparable<Page> {
 
     fun next(): Page {
         return Page(value + 1)
     }
 
     fun prev(): Page {
-        if (value == 0) {
-            return Page(0)
+        if (value == 1) {
+            return Page(1)
         }
         return Page(value - 1)
     }
