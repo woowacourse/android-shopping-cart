@@ -1,10 +1,11 @@
 package woowacourse.shopping.shoppingcart.adapter
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.CountPickerListener
 import woowacourse.shopping.model.CartProductUiModel
+import woowacourse.shopping.shoppingcart.CartProductDiffUtil
 import woowacourse.shopping.shoppingcart.adapter.viewholder.CartItemViewHolder
 
 class CartRecyclerAdapter(
@@ -31,10 +32,16 @@ class CartRecyclerAdapter(
         )
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun refreshItems(products: List<CartProductUiModel>) {
+        val diffCartProducts = DiffUtil.calculateDiff(
+            CartProductDiffUtil(
+                oldCartProducts = shoppingCartProducts,
+                newCartProducts = products
+            )
+        )
+
         shoppingCartProducts = products
-        notifyDataSetChanged()
+        diffCartProducts.dispatchUpdatesTo(this@CartRecyclerAdapter)
     }
 
     private fun getCountPickerListenerImpl(id: Int) =
