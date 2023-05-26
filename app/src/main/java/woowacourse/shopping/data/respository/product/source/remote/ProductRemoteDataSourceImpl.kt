@@ -14,39 +14,36 @@ class ProductRemoteDataSourceImpl : ProductRemoteDataSource {
     }
 
     override fun requestDatas(startPosition: Int): List<ProductEntity> {
-        var newProducts: List<ProductEntity> = emptyList()
+        val client = OkHttpClient()
+        val url = "http://localhost:$PORT"
+        val path = "$PRODUCTS?$startPosition"
+        val request = Request.Builder().url(url + path).build()
+        val result = request(client, request) ?: return emptyList()
 
-        val thread = Thread {
-            val client = OkHttpClient()
-            val host = "http://localhost:$PORT"
-            val path = "/shopping/products?$startPosition"
-            val request = Request.Builder().url(host + path).build()
-            val response = client.newCall(request).execute()
-            val body = response.body?.string() ?: return@Thread
-            newProducts = parseProductList(body)
-        }
-        thread.start()
-        thread.join()
-
-        return newProducts
+        return parseProductList(result)
     }
 
     override fun requestData(productId: Long): ProductEntity {
-        var newProducts: ProductEntity = ProductEntity.errorData
+        val client = OkHttpClient()
+        val url = "http://localhost:$PORT"
+        val path = "$PRODUCTS/$productId"
+        val request = Request.Builder().url(url + path).build()
+        val result = request(client, request) ?: return ProductEntity.errorData
+
+        return parseProduct(JSONObject(result))
+    }
+
+    private fun request(client: OkHttpClient, request: Request): String? {
+        var result: String? = null
 
         val thread = Thread {
-            val client = OkHttpClient()
-            val host = "http://localhost:$PORT"
-            val path = "/shopping/products/$productId"
-            val request = Request.Builder().url(host + path).build()
             val response = client.newCall(request).execute()
-            val body = response.body?.string() ?: return@Thread
-            newProducts = parseProduct(JSONObject(body))
+            result = response.body?.string()
         }
         thread.start()
         thread.join()
 
-        return newProducts
+        return result
     }
 
     private fun parseProductList(response: String): List<ProductEntity> {
@@ -68,5 +65,9 @@ class ProductRemoteDataSourceImpl : ProductRemoteDataSource {
         val image = json.getString("imageUrl")
 
         return ProductEntity(id, name, price, image)
+    }
+
+    companion object {
+        private const val PRODUCTS = "/shopping/products"
     }
 }
