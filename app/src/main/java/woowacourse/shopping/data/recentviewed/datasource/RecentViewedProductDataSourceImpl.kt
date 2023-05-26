@@ -1,15 +1,10 @@
 package woowacourse.shopping.data.recentviewed.datasource
 
-import android.content.Context
 import woowacourse.shopping.data.recentviewed.RecentViewedProductEntity
 import woowacourse.shopping.data.recentviewed.cache.RecentViewedProductCache
-import woowacourse.shopping.data.recentviewed.cache.RecentViewedProductCacheImpl
 
 class RecentViewedProductDataSourceImpl(
-    context: Context,
-    private val recentViewedProductCache: RecentViewedProductCache = RecentViewedProductCacheImpl(
-        context
-    ),
+    private val recentViewedProductCache: RecentViewedProductCache
 ) : RecentViewedProductDataSource {
 
     override fun addToRecentViewedProduct(id: Int) {

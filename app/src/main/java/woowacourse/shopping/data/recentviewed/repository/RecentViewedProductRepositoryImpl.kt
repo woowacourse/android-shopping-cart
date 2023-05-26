@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.recentviewed.repository
 
-import android.content.Context
 import model.Name
 import model.Price
 import model.Product
@@ -8,14 +7,10 @@ import model.RecentViewedProduct
 import woowacourse.shopping.data.product.datasource.ProductDataSource
 import woowacourse.shopping.data.product.datasource.ProductDataSourceImpl
 import woowacourse.shopping.data.recentviewed.datasource.RecentViewedProductDataSource
-import woowacourse.shopping.data.recentviewed.datasource.RecentViewedProductDataSourceImpl
 
 class RecentViewedProductRepositoryImpl(
-    context: Context,
+    private val recentViewedProductDataSource: RecentViewedProductDataSource,
     private val productDataSource: ProductDataSource = ProductDataSourceImpl(),
-    private val recentViewedProductDataSource: RecentViewedProductDataSource = RecentViewedProductDataSourceImpl(
-        context
-    ),
 ) : RecentViewedProductRepository {
 
     override fun addToRecentViewedProduct(id: Int) {

@@ -1,15 +1,13 @@
 package woowacourse.shopping.data.recentviewed.cache
 
 import android.content.ContentValues
-import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.ShoppingDao
 import woowacourse.shopping.data.recentviewed.RecentViewedDBContract
 import woowacourse.shopping.data.recentviewed.RecentViewedProductEntity
 
 class RecentViewedProductCacheImpl(
-    context: Context,
-    shoppingDao: ShoppingDao = ShoppingDao(context),
+    shoppingDao: ShoppingDao,
 ) : RecentViewedProductCache {
 
     private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
@@ -34,7 +32,6 @@ class RecentViewedProductCacheImpl(
             ),
             null, null, null, null, null
         )
-        val recentViewedProducts = mutableListOf<RecentViewedProductEntity>()
 
         return with(recentViewedCursor) {
             buildList {

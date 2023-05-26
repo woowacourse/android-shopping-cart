@@ -8,8 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ShoppingDao
+import woowacourse.shopping.data.cart.cache.CartCacheImpl
+import woowacourse.shopping.data.cart.datasource.CartDataSourceImpl
 import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
 import woowacourse.shopping.data.product.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.recentviewed.cache.RecentViewedProductCacheImpl
+import woowacourse.shopping.data.recentviewed.datasource.RecentViewedProductDataSourceImpl
 import woowacourse.shopping.data.recentviewed.repository.RecentViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUiModel
@@ -29,8 +34,20 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         ShoppingPresenter(
             view = this,
             productRepository = ProductRepositoryImpl(),
-            cartRepository = CartRepositoryImpl(this),
-            recentViewedProductRepository = RecentViewedProductRepositoryImpl(this)
+            cartRepository = CartRepositoryImpl(
+                cartDataSource = CartDataSourceImpl(
+                    cartCache = CartCacheImpl(
+                        shoppingDao = ShoppingDao(this)
+                    )
+                )
+            ),
+            recentViewedProductRepository = RecentViewedProductRepositoryImpl(
+                recentViewedProductDataSource = RecentViewedProductDataSourceImpl(
+                    recentViewedProductCache = RecentViewedProductCacheImpl(
+                        shoppingDao = ShoppingDao(this)
+                    )
+                )
+            )
         )
     }
     override val shoppingNavigator: ShoppingNavigator by lazy {
