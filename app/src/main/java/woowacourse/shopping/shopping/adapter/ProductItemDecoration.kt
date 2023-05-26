@@ -19,9 +19,14 @@ class ProductItemDecoration(
 
         if (getItemViewType(position) == ShoppingRecyclerItemViewType.PRODUCT.ordinal) {
             when (position % 2) {
-                0 -> outRect.left = 40
-                1 -> outRect.left = 80
+                0 -> outRect.left = LEFT_HALF_MARGIN
+                1 -> outRect.left = LEFT_MARGIN
             }
         }
+    }
+
+    companion object {
+        private const val LEFT_MARGIN = 80
+        private const val LEFT_HALF_MARGIN = LEFT_MARGIN / 2
     }
 }
