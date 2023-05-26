@@ -5,7 +5,7 @@ import woowacourse.shopping.data.product.remote.ProductRemote
 import woowacourse.shopping.data.product.remote.ProductRemoteImpl
 
 class ProductDataSourceImpl(
-    private val productRemote: ProductRemote = ProductRemoteImpl(),
+    private val productRemote: ProductRemote = ProductRemoteImpl,
 ) : ProductDataSource {
 
     override fun getProductById(id: Int): ProductEntity {

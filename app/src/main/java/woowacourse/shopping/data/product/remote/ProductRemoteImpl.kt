@@ -10,7 +10,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import woowacourse.shopping.data.product.ProductEntity
 
-class ProductRemoteImpl : ProductRemote {
+object ProductRemoteImpl : ProductRemote {
 
     private lateinit var mockWebServer: MockWebServer
     val products = """
@@ -293,9 +293,5 @@ class ProductRemoteImpl : ProductRemote {
             price = this.getInt("price"),
             imageUrl = this.getString("imageUrl")
         )
-    }
-
-    companion object {
-        private const val PORT = 9876
     }
 }
