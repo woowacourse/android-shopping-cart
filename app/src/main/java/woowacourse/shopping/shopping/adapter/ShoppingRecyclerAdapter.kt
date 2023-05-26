@@ -1,6 +1,5 @@
 package woowacourse.shopping.shopping.adapter
 
-import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -95,16 +94,16 @@ class ShoppingRecyclerAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun refreshRecentViewedItems(products: List<RecentViewedProductUiModel>) {
         recentViewedProducts = products
-        notifyDataSetChanged()
+        notifyItemChanged(INITIAL_POSITION)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
+        val oldProductsSize = products.size
+
         products.addAll(toAdd)
-        notifyDataSetChanged()
+        notifyItemRangeChanged(oldProductsSize, toAdd.size)
     }
 
     companion object {
