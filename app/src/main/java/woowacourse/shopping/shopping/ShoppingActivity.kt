@@ -54,6 +54,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         ShoppingNavigatorImpl(this)
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        presenter.loadCartProductsCount()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
@@ -72,7 +78,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         when (item.itemId) {
             R.id.shopping_cart -> shoppingNavigator.navigateToCartView()
         }
-        presenter.loadCartProductsCount()
 
         return super.onOptionsItemSelected(item)
     }
