@@ -17,13 +17,13 @@ class CartPresenter(
     override var page: PageUiModel = PageUiModel(cartRepository.getAll().size, 1)
         private set
 
-    private var _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
+    private val _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
     val totalPrice: LiveData<Int> get() = _totalPrice
 
-    private var _totalCount: MutableLiveData<Int> = MutableLiveData(0)
+    private val _totalCount: MutableLiveData<Int> = MutableLiveData(0)
     val totalCount: LiveData<Int> get() = _totalCount
 
-    private var _allSelected: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val _allSelected: MutableLiveData<Boolean> = MutableLiveData(false)
     val allSelected: LiveData<Boolean> get() = _allSelected
 
     override fun setup() {
