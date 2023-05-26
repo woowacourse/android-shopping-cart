@@ -20,6 +20,7 @@ import java.io.IOException
 class ProductMockWebServer {
     private lateinit var mockWebServer: MockWebServer
     private val okHttpClient = OkHttpClient()
+    private var baseUrl: String = ""
 
     private val dispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
@@ -55,14 +56,19 @@ class ProductMockWebServer {
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit
     ) {
-        if (!::mockWebServer.isInitialized) {
-            synchronized(this) {
-                mockWebServer = MockWebServer()
-                mockWebServer.dispatcher = dispatcher
-                mockWebServer.url("/")
+        synchronized(this) {
+            if (!::mockWebServer.isInitialized) {
+                val thread = Thread {
+                    mockWebServer = MockWebServer()
+                    mockWebServer.url("/")
+                    mockWebServer.dispatcher = dispatcher
+                    baseUrl = String.format("http://localhost:%s", mockWebServer.port)
+                }
+                thread.start()
+                thread.join()
             }
         }
-        val baseUrl = String.format("http://localhost:%s", mockWebServer.port)
+
         val url = "$baseUrl/products?page=$page"
         val request = Request.Builder().url(url).build()
 
