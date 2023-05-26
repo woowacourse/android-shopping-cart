@@ -8,7 +8,7 @@ import woowacourse.shopping.data.cart.CartDBContract
 import woowacourse.shopping.data.cart.CartProductEntity
 
 class CartCacheImpl(
-    shoppingDao: ShoppingDao
+    shoppingDao: ShoppingDao,
 ) : CartCache {
 
     private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
@@ -57,30 +57,45 @@ class CartCacheImpl(
     }
 
     override fun addToCart(id: Int, count: Int) {
+        val selection = "id = ?"
+        val selectionArgs = arrayOf(id.toString())
+        val cursor = getCursorFromCartTable(
+            selection = selection,
+            selectionColumns = arrayOf("id"),
+            selectionArgs = selectionArgs
+        )
+
         val values = ContentValues().apply {
             put(CartDBContract.CART_PRODUCT_ID, id)
             put(CartDBContract.COUNT, count)
         }
-        // todo : 함수 분리하기
-        val selection = "id = ?"
-        val selectionArgs = arrayOf(id.toString())
-        val cursor = shoppingDB.query(
-            CartDBContract.TABLE_NAME, arrayOf("id"),
+
+        with(cursor) {
+            if (moveToFirst()) {
+                shoppingDB.update(
+                    CartDBContract.TABLE_NAME,
+                    values,
+                    selection,
+                    selectionArgs
+                )
+            } else {
+                shoppingDB.insert(CartDBContract.TABLE_NAME, null, values)
+            }
+            close()
+        }
+    }
+
+    private fun getCursorFromCartTable(
+        selection: String,
+        selectionColumns: Array<String>,
+        selectionArgs: Array<String>,
+    ): Cursor {
+
+        return shoppingDB.query(
+            CartDBContract.TABLE_NAME, selectionColumns,
             selection, selectionArgs,
             null, null, null
         )
-
-        if (cursor.moveToFirst()) {
-            shoppingDB.update(
-                CartDBContract.TABLE_NAME,
-                values,
-                selection,
-                selectionArgs
-            )
-        } else {
-            shoppingDB.insert(CartDBContract.TABLE_NAME, null, values)
-        }
-        cursor.close()
     }
 
     override fun removeCartProductById(id: Int) {
