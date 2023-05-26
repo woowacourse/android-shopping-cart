@@ -29,6 +29,12 @@ class ShoppingRecyclerAdapter(
 
     private val products: MutableList<ProductUiModel> =
         products.toMutableList()
+    private val positionDiff: Int
+        get() = if (recentViewedProducts.isEmpty()) {
+            0
+        } else {
+            1
+        }
 
     override fun getItemViewType(position: Int): Int {
         if (position == INITIAL_POSITION && recentViewedProducts.isEmpty()) {
@@ -75,7 +81,7 @@ class ShoppingRecyclerAdapter(
             )
 
             is ShoppingProductViewHolder -> holder.bind(
-                itemData = ShoppingProduct(products[position]),
+                itemData = ShoppingProduct(products[position - positionDiff]),
             )
 
             is ReadMoreViewHolder -> holder.bind(
@@ -99,7 +105,7 @@ class ShoppingRecyclerAdapter(
 
     fun refreshRecentViewedItems(products: List<RecentViewedProductUiModel>) {
         recentViewedProducts = products
-        notifyItemChanged(INITIAL_POSITION)
+        notifyItemRangeChanged(INITIAL_POSITION, products.size + 1)
     }
 
     fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
