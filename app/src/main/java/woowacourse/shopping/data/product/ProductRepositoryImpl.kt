@@ -6,7 +6,7 @@ import org.json.JSONArray
 import woowacourse.shopping.model.Product
 import java.lang.Thread.sleep
 
-class MockWebProductRepository(baseUrl: String) : ProductRepository {
+class ProductRepositoryImpl(baseUrl: String) : ProductRepository {
     private val baseUrl = baseUrl.dropLast(1)
     private val client = OkHttpClient()
 
@@ -65,16 +65,5 @@ class MockWebProductRepository(baseUrl: String) : ProductRepository {
             }
             products
         } ?: emptyList()
-    }
-
-    companion object {
-        fun from(baseUrl: String): MockWebProductRepository {
-            var url: String? = null
-            val thread = Thread { url = baseUrl }
-            thread.start()
-            thread.join()
-
-            return MockWebProductRepository(url ?: "")
-        }
     }
 }

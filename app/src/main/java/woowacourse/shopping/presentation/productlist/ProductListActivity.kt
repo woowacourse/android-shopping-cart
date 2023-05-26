@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbAdapter
 import woowacourse.shopping.data.cart.CartDbHelper
-import woowacourse.shopping.data.product.MockWebProductRepository
 import woowacourse.shopping.data.product.ProductMockServer
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.data.recentproduct.RecentProductIdDbAdapter
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -29,13 +29,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var productListAdapter: ProductListAdapter
 
     private val presenter: ProductListPresenter by lazy {
-
-        var url: String? = null
-        val thread = Thread { url = ProductMockServer().url }
-        thread.start()
-        thread.join()
-
-        val productRepository = MockWebProductRepository(url ?: "")
+        val productRepository = ProductRepositoryImpl(ProductMockServer().url)
         val recentProductRepository = RecentProductIdDbAdapter(RecentProductDbHelper(this))
         val cartProductRepository = CartDbAdapter(CartDbHelper(this))
 

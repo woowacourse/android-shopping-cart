@@ -12,8 +12,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDbAdapter
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.MockWebProductRepository
 import woowacourse.shopping.data.product.ProductMockServer
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.putincartdialog.PutInCartDialogFragment
@@ -23,13 +23,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
 
     private val presenter: ProductDetailContract.Presenter by lazy {
-
-        var url: String? = null
-        val thread = Thread { url = ProductMockServer().url }
-        thread.start()
-        thread.join()
-
-        val productRepository = MockWebProductRepository(url ?: "")
+        val productRepository = ProductRepositoryImpl(ProductMockServer().url)
         val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
         ProductDetailPresenter(this, cartRepository, productRepository)
     }

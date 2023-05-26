@@ -12,8 +12,12 @@ class ProductMockServer {
     val url = mockWebServer.url("").toString()
 
     init {
-        mockWebServer.dispatcher = getDispatcher()
-        mockWebServer.url("/")
+        val thread = Thread {
+            mockWebServer.dispatcher = getDispatcher()
+            mockWebServer.url("/")
+        }
+        thread.start()
+        thread.join()
     }
 
     fun takeRequest(): RecordedRequest {
