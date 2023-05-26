@@ -14,19 +14,21 @@ class CountView @JvmOverloads constructor(
     private val binding = LayoutCountViewBinding.inflate(LayoutInflater.from(context), this, true)
     private val presenter = CountPresenter(this)
 
-    var countStateChangeListener: OnCountStateChangeListener? = null
+    var countStateChangeListener: (Int) -> Unit = { count: Int ->
+        updateCount(count)
+    }
 
     override fun setMinusButton() {
         binding.btCountMinus.setOnClickListener {
             presenter.updateMinusCount()
-            countStateChangeListener?.onCountChanged(this, presenter.getCount())
+            countStateChangeListener(presenter.getCount())
         }
     }
 
     override fun setPlusButton() {
         binding.btCountPlus.setOnClickListener {
             presenter.updatePlusCount()
-            countStateChangeListener?.onCountChanged(this, presenter.getCount())
+            countStateChangeListener(presenter.getCount())
         }
     }
 
@@ -47,7 +49,4 @@ class CountView @JvmOverloads constructor(
     }
 
     override fun getCount(): Int = presenter.getCount()
-    interface OnCountStateChangeListener {
-        fun onCountChanged(countView: CountView?, count: Int)
-    }
 }

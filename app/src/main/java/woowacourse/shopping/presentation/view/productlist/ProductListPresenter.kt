@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.view.productlist
 
+import android.util.Log
 import woowacourse.shopping.data.mapper.toUIModel
 import woowacourse.shopping.data.model.ProductEntity
 import woowacourse.shopping.data.respository.cart.CartRepository
@@ -113,6 +114,7 @@ class ProductListPresenter(
     }
 
     private fun updateProductCount(productId: Long, count: Int) {
+        Log.d("test", "오냐? count: $count")
         val product = products.find { it.id == productId } ?: return
         product.count = count
         if (count == 0) {

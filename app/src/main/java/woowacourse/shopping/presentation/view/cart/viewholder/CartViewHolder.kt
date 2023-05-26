@@ -7,7 +7,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartListBinding
 import woowacourse.shopping.presentation.model.CartModel
 import woowacourse.shopping.presentation.view.cart.CartProductListener
-import woowacourse.shopping.presentation.view.custom.CountView
 
 class CartViewHolder(
     parent: ViewGroup,
@@ -20,12 +19,8 @@ class CartViewHolder(
 
     init {
         binding.cartProductListener = cartProductListener
-        binding.countViewCartListItem.countStateChangeListener = object : CountView.OnCountStateChangeListener {
-            override fun onCountChanged(countView: CountView?, count: Int) {
-                binding.cart?.let {
-                    cartProductListener.onCountClick(it.id, count)
-                }
-            }
+        binding.countViewCartListItem.countStateChangeListener = { count ->
+            binding.cart?.let { cartProductListener.onCountClick(it.id, count) }
         }
     }
 
