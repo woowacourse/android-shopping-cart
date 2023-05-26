@@ -1,20 +1,17 @@
 package woowacourse.shopping.data.cart.repository
 
-import android.content.Context
 import model.CartProduct
 import model.Count
 import model.Name
 import model.Price
 import model.Product
 import woowacourse.shopping.data.cart.datasource.CartDataSource
-import woowacourse.shopping.data.cart.datasource.CartDataSourceImpl
 import woowacourse.shopping.data.product.datasource.ProductDataSource
 import woowacourse.shopping.data.product.datasource.ProductDataSourceImpl
 
 class CartRepositoryImpl(
-    context: Context,
+    private val cartDataSource: CartDataSource,
     private val productDataSource: ProductDataSource = ProductDataSourceImpl(),
-    private val cartDataSource: CartDataSource = CartDataSourceImpl(context),
 ) : CartRepository {
 
     override fun getCartProducts(): List<CartProduct> {

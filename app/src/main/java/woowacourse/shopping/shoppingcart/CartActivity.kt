@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
+import woowacourse.shopping.data.ShoppingDao
+import woowacourse.shopping.data.cart.cache.CartCacheImpl
+import woowacourse.shopping.data.cart.datasource.CartDataSourceImpl
 import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.model.CartProductUiModel
@@ -20,7 +23,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val presenter: CartPresenter by lazy {
         CartPresenter(
             view = this,
-            cartRepository = CartRepositoryImpl(this)
+            cartRepository = CartRepositoryImpl(
+                cartDataSource = CartDataSourceImpl(
+                    cartCache = CartCacheImpl(
+                        shoppingDao = ShoppingDao(this)
+                    )
+                )
+            )
         )
     }
     private lateinit var binding: ActivityShoppingCartBinding

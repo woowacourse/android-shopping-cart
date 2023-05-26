@@ -1,13 +1,10 @@
 package woowacourse.shopping.data.cart.datasource
 
-import android.content.Context
 import woowacourse.shopping.data.cart.CartProductEntity
 import woowacourse.shopping.data.cart.cache.CartCache
-import woowacourse.shopping.data.cart.cache.CartCacheImpl
 
 class CartDataSourceImpl(
-    context: Context,
-    private val cartCache: CartCache = CartCacheImpl(context),
+    private val cartCache: CartCache,
 ) : CartDataSource {
 
     override fun getCartProducts(): List<CartProductEntity> {

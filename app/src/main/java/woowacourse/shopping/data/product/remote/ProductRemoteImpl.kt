@@ -251,9 +251,13 @@ class ProductRemoteImpl : ProductRemote {
                 val client = OkHttpClient()
                 val host = "http://localhost:${mockWebServer.port}/"
                 val path = "products"
-                val request = Request.Builder().url(host + path).build()
-                val response = client.newCall(request).execute()
-                val body = response.body?.string() ?: return@Thread
+                val request = Request.Builder()
+                    .url(host + path)
+                    .build()
+                val response = client.newCall(request)
+                    .execute()
+                val body = response.body
+                    ?.string() ?: return@Thread
                 val json = JSONArray(body)
 
                 (0 until json.length()).map {

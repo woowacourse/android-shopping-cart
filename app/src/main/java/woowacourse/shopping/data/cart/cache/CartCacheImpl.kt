@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.cart.cache
 
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import woowacourse.shopping.data.ShoppingDao
@@ -9,8 +8,7 @@ import woowacourse.shopping.data.cart.CartDBContract
 import woowacourse.shopping.data.cart.CartProductEntity
 
 class CartCacheImpl(
-    context: Context,
-    shoppingDao: ShoppingDao = ShoppingDao(context),
+    shoppingDao: ShoppingDao
 ) : CartCache {
 
     private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
