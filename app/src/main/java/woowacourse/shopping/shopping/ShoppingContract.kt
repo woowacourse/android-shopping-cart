@@ -32,7 +32,7 @@ interface ShoppingContract {
 
         fun loadCartProductsCount()
 
-        fun loadProductDetail(product: ProductUiModel)
+        fun loadProductDetail(productId: Int)
 
         fun addToRecentViewedProduct(id: Int)
 

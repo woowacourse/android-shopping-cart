@@ -22,7 +22,7 @@ import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemView
 class ShoppingRecyclerAdapter(
     products: List<ProductUiModel>,
     private var recentViewedProducts: List<RecentViewedProductUiModel>,
-    private val onProductClicked: (product: ProductUiModel) -> Unit,
+    private val onProductClicked: (productId: Int) -> Unit,
     private val onReadMoreButtonClicked: () -> Unit,
     private val productCountPickerListener: ShoppingProductCountPicker,
 ) : RecyclerView.Adapter<ShoppingRecyclerItemViewHolder<out ShoppingRecyclerItem, out ViewDataBinding>>() {
@@ -46,7 +46,10 @@ class ShoppingRecyclerAdapter(
     ): ShoppingRecyclerItemViewHolder<out ShoppingRecyclerItem, out ViewDataBinding> {
 
         return when (ShoppingRecyclerItemViewType.find(viewType)) {
-            RECENT_VIEWED -> RecentViewedViewHolder.from(parent)
+            RECENT_VIEWED -> RecentViewedViewHolder.from(
+                parent = parent,
+                onRecentViewedProductProductClicked = onProductClicked
+            )
 
             PRODUCT -> ShoppingProductViewHolder.from(
                 parent = parent,

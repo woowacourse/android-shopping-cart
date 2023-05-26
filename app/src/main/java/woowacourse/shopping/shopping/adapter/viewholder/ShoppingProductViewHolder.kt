@@ -10,7 +10,7 @@ import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingProductViewHolder private constructor(
     binding: ItemShoppingProductBinding,
-    private val onProductImageClicked: (product: ProductUiModel) -> Unit,
+    private val onProductImageClicked: (productId: Int) -> Unit,
     private val onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
     private val getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
 ) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ShoppingProduct, ItemShoppingProductBinding>(
@@ -24,7 +24,7 @@ class ShoppingProductViewHolder private constructor(
     private fun setOnClicked() {
         with(binding) {
             imageProduct.setOnClickListener {
-                onProductImageClicked(product ?: return@setOnClickListener)
+                onProductImageClicked(product?.id ?: return@setOnClickListener)
             }
             imageAddToCart.setOnClickListener {
                 it.isVisible = false
@@ -55,7 +55,7 @@ class ShoppingProductViewHolder private constructor(
     companion object {
         fun from(
             parent: ViewGroup,
-            onProductImageClicked: (product: ProductUiModel) -> Unit,
+            onProductImageClicked: (productId: Int) -> Unit,
             onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
             getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
         ): ShoppingProductViewHolder {
