@@ -235,7 +235,7 @@ class ProductRemoteImpl : ProductRemote {
         val products = getAllProducts()
 
         return products.find { it.id == id }
-            ?: throw java.util.NoSuchElementException("해당 상품은 존재하지 않습니다")
+            ?: throw NoSuchElementException("해당 상품은 존재하지 않습니다")
     }
 
     override fun getProductInRange(from: Int, count: Int): List<ProductEntity> {
