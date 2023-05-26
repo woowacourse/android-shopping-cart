@@ -6,7 +6,7 @@ import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
 
 class ProductMockRepositoryImpl(
-    override val productCache: ProductCache = ProductCacheImpl
+    private val productCache: ProductCache = ProductCacheImpl
 ) : ProductRepository {
 
     override fun getFirstProducts(onSuccess: (List<Product>) -> Unit) {

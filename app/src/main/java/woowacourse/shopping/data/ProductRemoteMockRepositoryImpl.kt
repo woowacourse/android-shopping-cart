@@ -6,7 +6,7 @@ import com.example.domain.repository.ProductRepository
 
 class ProductRemoteMockRepositoryImpl(
     private val service: ProductMockService,
-    override val productCache: ProductCache
+    private val productCache: ProductCache
 ) : ProductRepository {
     override fun getFirstProducts(onSuccess: (List<Product>) -> Unit) {
         if (productCache.productList.isEmpty()) {
