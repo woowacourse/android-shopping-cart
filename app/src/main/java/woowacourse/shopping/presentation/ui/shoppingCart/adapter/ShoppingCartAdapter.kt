@@ -2,8 +2,8 @@ package woowacourse.shopping.presentation.ui.shoppingCart.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class ShoppingCartAdapter(
     private val onClick: ShoppingCartSetClickListener,

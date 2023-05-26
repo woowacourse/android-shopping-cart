@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.ui.shoppingCart.presenter
 
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator
-import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 interface ShoppingCartContract {
     interface View {

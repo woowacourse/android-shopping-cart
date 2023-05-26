@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator.MINUS
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator.PLUS
-import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
@@ -34,6 +34,59 @@ class ShoppingCartPresenter(
         _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
 
         view.setShoppingCart(shoppingCartByPage.map { it.toUiState() })
+    }
+
+    override fun addCountOfProductInCart(request: Operator, productInCart: ProductInCartUiState) {
+        val quantity = Quantity()
+        when (request) {
+            PLUS -> quantity.add()
+            MINUS -> quantity.subtract()
+        }
+
+        shoppingCartRepository.addProductInCart(
+            ProductInCart(
+                productInCart.product,
+                quantity.amount,
+            ),
+        )
+        val shoppingCart = shoppingCartRepository.getShoppingCart()
+
+        _totalAmount.value = shoppingCart.sumOf { it.quantity }
+        _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
+        view.setShoppingCart(shoppingCart.map { it.toUiState() })
+    }
+
+    override fun deleteProductInCart(productId: Long): Boolean {
+        val result = shoppingCartRepository.deleteProductInCart(productId)
+        val shoppingCart = shoppingCartRepository.getShoppingCart()
+        _totalAmount.value = shoppingCart.sumOf { it.quantity }
+        _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
+
+        Thread {
+        }
+        return result
+    }
+
+    override fun calculateTotalWithCheck(isChecked: Boolean, productInCart: ProductInCartUiState) {
+        val shoppingCart = shoppingCartRepository.getShoppingCart()
+
+        when (isChecked) {
+            false -> calculateUnChecked(shoppingCart)
+            true -> calculateChecked(shoppingCart)
+        }
+    }
+
+    private fun calculateUnChecked(shoppingCart: List<ProductInCart>) {
+        _isChecked.value = false
+        _totalAmount.value = _totalAmount.value?.minus(shoppingCart.sumOf { it.quantity })
+        _totalPrice.value =
+            _totalPrice.value?.minus(shoppingCart.sumOf { it.getTotalPriceOfProduct() })
+    }
+
+    private fun calculateChecked(shoppingCart: List<ProductInCart>) {
+        _totalAmount.value = _totalAmount.value?.plus(shoppingCart.sumOf { it.quantity })
+        _totalPrice.value =
+            _totalPrice.value?.plus(shoppingCart.sumOf { it.getTotalPriceOfProduct() })
     }
 
     override fun setPageNumber() {
@@ -68,57 +121,6 @@ class ShoppingCartPresenter(
         val nextEnable = size > pageNumber.value * SHOPPING_CART_ITEM_COUNT
         val previousEnable = pageNumber.value > 1
         view.setPageButtonEnable(previousEnable, nextEnable)
-    }
-
-    override fun addCountOfProductInCart(request: Operator, productInCart: ProductInCartUiState) {
-        val quantity = Quantity()
-        when (request) {
-            PLUS -> quantity.add()
-            MINUS -> quantity.subtract()
-        }
-
-        shoppingCartRepository.addProductInCart(
-            ProductInCart(
-                productInCart.product,
-                quantity.amount,
-            ),
-        )
-        val shoppingCart = shoppingCartRepository.getShoppingCart()
-
-        _totalAmount.value = shoppingCart.sumOf { it.quantity }
-        _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
-        view.setShoppingCart(shoppingCart.map { it.toUiState() })
-    }
-
-    override fun deleteProductInCart(productId: Long): Boolean {
-        val result = shoppingCartRepository.deleteProductInCart(productId)
-        val shoppingCart = shoppingCartRepository.getShoppingCart()
-        _totalAmount.value = shoppingCart.sumOf { it.quantity }
-        _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
-
-        return result
-    }
-
-    override fun calculateTotalWithCheck(isChecked: Boolean, productInCart: ProductInCartUiState) {
-        val shoppingCart = shoppingCartRepository.getShoppingCart()
-
-        when (isChecked) {
-            false -> calculateUnChecked(shoppingCart)
-            true -> calculateChecked(shoppingCart)
-        }
-    }
-
-    private fun calculateUnChecked(shoppingCart: List<ProductInCart>) {
-        _isChecked.value = false
-        _totalAmount.value = _totalAmount.value?.minus(shoppingCart.sumOf { it.quantity })
-        _totalPrice.value =
-            _totalPrice.value?.minus(shoppingCart.sumOf { it.getTotalPriceOfProduct() })
-    }
-
-    private fun calculateChecked(shoppingCart: List<ProductInCart>) {
-        _totalAmount.value = _totalAmount.value?.plus(shoppingCart.sumOf { it.quantity })
-        _totalPrice.value =
-            _totalPrice.value?.plus(shoppingCart.sumOf { it.getTotalPriceOfProduct() })
     }
 
     private fun ProductInCart.toUiState(): ProductInCartUiState = ProductInCartUiState(

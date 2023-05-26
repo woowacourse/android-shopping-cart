@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.ui.shoppingCart
 
 import woowacourse.shopping.presentation.ui.common.QuantityControlClickListener
-import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 interface ShoppingCartSetClickListener : QuantityControlClickListener {
 

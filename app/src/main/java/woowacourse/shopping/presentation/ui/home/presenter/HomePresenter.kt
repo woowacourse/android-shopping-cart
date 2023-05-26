@@ -9,7 +9,7 @@ import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.ShowMoreProducts
-import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class HomePresenter(
     private val view: HomeContract.View,
@@ -62,8 +62,10 @@ class HomePresenter(
         view.setUpCountOfProductInCart(shoppingCart)
     }
 
-    private fun List<Product>.toProductsByView(): List<Products> = this.map { product ->
-        Products(product)
+    private fun List<Product>.toProductsByView(): List<Products> {
+        return this.map { product ->
+            Products(product)
+        }
     }
 
     private fun List<Product>.toRecentProductsByView(): RecentlyViewedProducts =
@@ -72,6 +74,6 @@ class HomePresenter(
     private fun ProductInCart.toUiState(): ProductInCartUiState = ProductInCartUiState(
         product = this.product,
         quantity = this.quantity,
-        isChecked = false
+        isChecked = false,
     )
 }

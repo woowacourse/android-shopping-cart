@@ -8,12 +8,13 @@ import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.presentation.ui.common.uimodel.Operator
-import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.MINUS
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.PLUS
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartContract
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartPresenter
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private lateinit var binding: ActivityShoppingCartBinding
@@ -38,6 +39,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         initPresenterDataBinding()
         initView()
         initClickListeners()
+        initAdapter()
+    }
+
+    private fun initAdapter() {
         binding.rvShoppingCart.adapter = shoppingCartAdapter
     }
 
@@ -95,7 +100,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             operator: Boolean,
             productInCart: ProductInCartUiState,
         ) {
-            val request = if (operator) Operator.PLUS else Operator.MINUS
+            val request = if (operator) PLUS else MINUS
             if (productInCart.quantity == 1 && !operator) {
                 setEventOnDelete(productInCart)
                 return

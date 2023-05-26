@@ -14,7 +14,7 @@ import woowacourse.shopping.presentation.ui.home.adapter.HomeViewType.SHOW_MORE
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ProductViewHolder
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.RecentlyViewedViewHolder
 import woowacourse.shopping.presentation.ui.home.adapter.viewHolder.ShowMoreViewHolder
-import woowacourse.shopping.presentation.ui.home.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class HomeAdapter(
     productInCart: List<ProductInCartUiState>,
