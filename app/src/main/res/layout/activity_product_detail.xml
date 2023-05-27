@@ -6,7 +6,15 @@
     <data>
 
         <variable
+            name="recentProductClickListener"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
             name="productModel"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
+
+        <variable
+            name="recentProductModel"
             type="woowacourse.shopping.presentation.model.ProductModel" />
     </data>
 
@@ -23,11 +31,11 @@
             android:id="@+id/image_product_detail_poster"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:imageGlide="@{productModel.imageUrl}"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
-            app:imageGlide="@{productModel.imageUrl}"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
@@ -76,6 +84,26 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_product_detail_price_title"
             tools:text="99,800원" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_recent_product_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="16dp"
+            android:clickable="true"
+            android:onClick="@{_ -> recentProductClickListener.invoke(recentProductModel.id)}"
+            app:layout_constraintTop_toBottomOf="@id/text_product_detail_price_title"
+            app:strokeColor="@color/gray"
+            app:strokeWidth="3dp"
+            tools:layout_editor_absoluteX="10dp">
+
+            <include
+                android:id="@+id/container_recent_product_detail"
+                layout="@layout/container_recent_product"
+                app:productModel="@{recentProductModel}" />
+
+        </com.google.android.material.card.MaterialCardView>
 
         <Button
             android:id="@+id/button_put_in_cart"

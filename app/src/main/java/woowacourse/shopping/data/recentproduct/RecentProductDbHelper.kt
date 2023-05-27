@@ -11,7 +11,7 @@ class RecentProductDbHelper(
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${RecentProductDbContract.TABLE_NAME}(" +
-                "${RecentProductDbContract.PRODUCT_ID} int," +
+                "${RecentProductDbContract.PRODUCT_ID} long," +
                 "${RecentProductDbContract.TIMESTAMP} int" +
                 ");",
         )

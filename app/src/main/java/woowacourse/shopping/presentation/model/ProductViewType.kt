@@ -5,7 +5,7 @@ sealed interface ProductViewType {
     val number: Int
 
     data class ProductItem(
-        val productModel: ProductModel,
+        val cartProductModel: CartProductModel,
     ) : ProductViewType {
         override val number: Int
             get() = PRODUCT_VIEW_TYPE_NUMBER

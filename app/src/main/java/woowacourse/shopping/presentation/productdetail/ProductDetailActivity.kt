@@ -7,23 +7,27 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbAdapter
+import woowacourse.shopping.data.cart.CartDbDao
 import woowacourse.shopping.data.cart.CartDbHelper
-import woowacourse.shopping.data.product.MockProductRepository
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductMockServer
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.productdetail.putincartdialog.PutInCartDialogFragment
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
 
-    private val productId: Int by lazy {
-        intent.getIntExtra(PRODUCT_ID_KEY_VALUE, 0)
-    }
-
     private val presenter: ProductDetailContract.Presenter by lazy {
-        ProductDetailPresenter(this, CartDbAdapter(CartDbHelper(this)), MockProductRepository)
+        val productRepository = ProductRepositoryImpl(ProductMockServer().url)
+        val cartRepository: CartRepository =
+            CartRepositoryImpl(CartDbDao(CartDbHelper(this)), productRepository)
+        ProductDetailPresenter(this, cartRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,15 +37,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         initView()
     }
 
-    override fun showCompleteMessage(productName: String) {
-        Toast.makeText(
-            this,
-            getString(R.string.put_in_cart_complete_message, productName),
-            Toast.LENGTH_LONG,
-        ).show()
+    override fun showRecentProduct(productModel: ProductModel) {
+        binding.recentProductModel = productModel
     }
 
-    override fun setProductDetail(productModel: ProductModel) {
+    override fun showProductDetail(productModel: ProductModel) {
         binding.productModel = productModel
     }
 
@@ -62,12 +62,57 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun initView() {
         setToolbar()
-        presenter.loadProductDetail(productId)
-        binding.buttonPutInCart.setOnClickListener { putInCart() }
+        loadProductAndRecentProduct()
+        binding.buttonPutInCart.setOnClickListener { showPunInCartDialog() }
     }
 
-    private fun putInCart() {
-        presenter.putProductInCart()
+    private fun loadProductAndRecentProduct() {
+        loadProduct()
+        loadRecentProduct()
+    }
+
+    private fun loadProduct() {
+        val productId = intent.getLongExtra(PRODUCT_ID_KEY, DEFAULT_VALUE)
+        presenter.loadProductDetail(productId)
+    }
+
+    private fun loadRecentProduct() {
+        val recentProductId = intent.getLongExtra(RECENT_PRODUCT_ID_KEY, DEFAULT_VALUE)
+        if (recentProductId == DEFAULT_VALUE) {
+            binding.cardRecentProductDetail.isVisible = false
+            return
+        }
+        presenter.loadRecentProduct(recentProductId)
+        binding.recentProductClickListener = ::showRecentProductDetail
+    }
+
+    private fun showRecentProductDetail(recentProductId: Long) {
+        val intent = getIntent(context = this, productId = recentProductId, recentProductId = null)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+    }
+
+    private fun showPunInCartDialog() {
+        val dialogFragment = PutInCartDialogFragment.newInstance(
+            binding.productModel!!.name,
+            binding.productModel!!.price,
+            ::putInCart,
+        )
+        dialogFragment.show(supportFragmentManager, PutInCartDialogFragment.TAG)
+    }
+
+    private fun putInCart(count: Int) {
+        presenter.putProductInCart(count)
+        showToast()
+        finish()
+    }
+
+    private fun showToast() {
+        Toast.makeText(
+            this,
+            getString(R.string.put_in_cart_complete_message),
+            Toast.LENGTH_SHORT,
+        ).show()
     }
 
     private fun setToolbar() {
@@ -76,11 +121,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     companion object {
-        private const val PRODUCT_ID_KEY_VALUE = "PRODUCT_ID_KEY_VALUE"
 
-        fun getIntent(context: Context, productId: Int): Intent {
+        private const val PRODUCT_ID_KEY = "PRODUCT_ID_KEY"
+        private const val RECENT_PRODUCT_ID_KEY = "RECENT_PRODUCT_ID_KEY"
+        private const val DEFAULT_VALUE = -1L
+
+        fun getIntent(context: Context, productId: Long, recentProductId: Long?): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(PRODUCT_ID_KEY_VALUE, productId)
+                putExtra(PRODUCT_ID_KEY, productId)
+                if (recentProductId != null) {
+                    putExtra(RECENT_PRODUCT_ID_KEY, recentProductId)
+                }
             }
         }
     }

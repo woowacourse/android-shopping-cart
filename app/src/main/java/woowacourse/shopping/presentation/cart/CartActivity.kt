@@ -6,19 +6,54 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbAdapter
+import woowacourse.shopping.data.cart.CartDbDao
 import woowacourse.shopping.data.cart.CartDbHelper
-import woowacourse.shopping.data.product.MockProductRepository
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductMockServer
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.productlist.ProductListActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
+
     private val presenter: CartContract.Presenter by lazy {
-        CartPresenter(this, CartDbAdapter(CartDbHelper(this)), MockProductRepository)
+        val productRepository = ProductRepositoryImpl(ProductMockServer().url)
+        val cartRepository: CartRepository =
+            CartRepositoryImpl(CartDbDao(CartDbHelper(this)), productRepository)
+        CartPresenter(this, cartRepository)
     }
+
+    override fun showTotalPrice(price: Int) {
+        binding.textOrderMoney.text = getString(R.string.price_format, price)
+    }
+
+    override fun showTotalCount(count: Int) {
+        binding.textOrderCount.text = getString(R.string.order_count_format, count)
+    }
+
     private val cartAdapter: CartAdapter by lazy {
-        CartAdapter(listOf(), presenter::deleteProduct)
+        val cartListener = object : CartListener {
+            override fun onAddClick(cartProductModel: CartProductModel) {
+                presenter.addProductCartCount(cartProductModel)
+            }
+
+            override fun onRemoveClick(cartProductModel: CartProductModel) {
+                presenter.subProductCartCount(cartProductModel)
+            }
+
+            override fun onCloseClick(cartProductModel: CartProductModel) {
+                presenter.deleteCartProduct(cartProductModel)
+            }
+
+            override fun changeSelectionProduct(productModel: ProductModel) {
+                presenter.changeProductSelected(productModel)
+            }
+        }
+        CartAdapter(listOf(), cartListener)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +68,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setToolBar()
         initLeftClick()
         initRightClick()
+        initCheckBoxClick()
     }
 
-    override fun setPage(count: Int) {
+    override fun showPageNumber(count: Int) {
         binding.textCartPage.text = count.toString()
     }
 
@@ -48,6 +84,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
+                startActivity(ProductListActivity.getIntent(this))
                 finish()
             }
             else -> return super.onOptionsItemSelected(item)
@@ -60,8 +97,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter.loadCart()
     }
 
-    override fun setCartProductModels(productModels: List<ProductModel>) {
-        cartAdapter.setItems(productModels)
+    override fun showCartProductModels(cartProductModels: List<CartProductModel>) {
+        cartAdapter.setItems(cartProductModels)
     }
 
     private fun initRightClick() {
@@ -76,7 +113,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setRightPageEnable(isEnable: Boolean) {
+    override fun showRightPageIsEnabled(isEnable: Boolean) {
         binding.buttonRightPage.isClickable = isEnable
         if (isEnable) {
             binding.buttonRightPage.setImageResource(R.drawable.icon_right_page_true)
@@ -85,13 +122,27 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
-    override fun setLeftPageEnable(isEnable: Boolean) {
+    override fun showLeftPageIsEnabled(isEnable: Boolean) {
         binding.buttonLeftPage.isClickable = isEnable
         if (isEnable) {
             binding.buttonLeftPage.setImageResource(R.drawable.icon_left_page_true)
         } else {
             binding.buttonLeftPage.setImageResource(R.drawable.icon_left_page_false)
         }
+    }
+
+    private fun initCheckBoxClick() {
+        binding.checkBoxSelectAll.setOnClickListener {
+            if (binding.checkBoxSelectAll.isChecked) {
+                presenter.selectAllProduct()
+            } else {
+                presenter.unselectAllProduct()
+            }
+        }
+    }
+
+    override fun showAllCheckBoxIsChecked(isChecked: Boolean) {
+        binding.checkBoxSelectAll.isChecked = isChecked
     }
 
     companion object {

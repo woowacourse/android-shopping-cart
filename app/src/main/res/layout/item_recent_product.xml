@@ -20,10 +20,10 @@
             android:id="@+id/image_product_list_poster"
             android:layout_width="98dp"
             android:layout_height="98dp"
+            app:imageGlide="@{productModel.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:imageGlide="@{productModel.imageUrl}"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView

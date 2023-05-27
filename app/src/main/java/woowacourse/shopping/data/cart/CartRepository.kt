@@ -1,7 +1,15 @@
 package woowacourse.shopping.data.cart
 
+import woowacourse.shopping.model.CartProduct
+import woowacourse.shopping.model.Product
+import woowacourse.shopping.presentation.model.CartProductModel
+
 interface CartRepository {
-    fun addCartProductId(productId: Int)
-    fun deleteCartProductId(productId: Int)
-    fun getCartProductIds(): List<Int>
+    fun insertCartProduct(productId: Long, count: Int)
+    fun updateCartProductCount(cartId: Long, count: Int)
+    fun deleteCartProduct(cartId: Long)
+    fun getCartProducts(): List<CartProduct>
+    fun getCartProduct(productId: Long): CartProduct
+    fun getProductsByRange(startIndex: Int, size: Int): List<CartProductModel>
+    fun findProductById(productId: Long): Product
 }

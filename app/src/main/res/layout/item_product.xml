@@ -6,24 +6,30 @@
     <data>
 
         <variable
-            name="productModel"
-            type="woowacourse.shopping.presentation.model.ProductModel" />
+            name="productClickListener"
+            type="woowacourse.shopping.presentation.productlist.product.ProductClickListener" />
+
+        <variable
+            name="cartProductModel"
+            type="woowacourse.shopping.presentation.model.CartProductModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="@{() -> productClickListener.onItemClick(cartProductModel.productModel)}"
         android:padding="6dp">
+
 
         <ImageView
             android:id="@+id/image_product_list_poster"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:imageGlide="@{cartProductModel.productModel.imageUrl}"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:imageGlide="@{productModel.imageUrl}"
             tools:srcCompat="@tools:sample/avatars" />
 
         <TextView
@@ -34,7 +40,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@{productModel.name}"
+            android:text="@{cartProductModel.productModel.name}"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -48,12 +54,39 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="14dp"
-            android:text="@{@string/price_format(productModel.price)}"
+            android:text="@{@string/price_format(cartProductModel.productModel.price)}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/text_product_list_name"
             app:layout_constraintStart_toStartOf="@+id/text_product_list_name"
             app:layout_constraintTop_toBottomOf="@id/text_product_list_name"
             tools:text="10,000원" />
+
+        <include
+            android:id="@+id/item_count_cart"
+            layout="@layout/item_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="10dp"
+            app:cartCounterListener="@{productClickListener}"
+            app:cartProductModel="@{cartProductModel}"
+            app:layout_constraintBottom_toBottomOf="@id/image_product_list_poster"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_count_plus_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/plus"
+            android:onClickListener="@{_ -> productClickListener.onAddClick(cartProductModel)}"
+            android:text="@string/plus"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="@id/image_product_list_poster"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,39 +1,46 @@
 package woowacourse.shopping.presentation.productlist
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.MockProductRepository
+import woowacourse.shopping.data.cart.CartDbDao
+import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductMockServer
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.data.recentproduct.RecentProductIdDbAdapter
-import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.ProductViewType
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.productlist.product.ProductClickListener
 import woowacourse.shopping.presentation.productlist.product.ProductListAdapter
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
-    private lateinit var binding: ActivityProductListBinding
 
+    private lateinit var binding: ActivityProductListBinding
     private lateinit var productListAdapter: ProductListAdapter
 
-    private val recentProductRepository: RecentProductIdRepository by lazy {
-        RecentProductIdDbAdapter(RecentProductDbHelper(this))
-    }
-
     private val presenter: ProductListPresenter by lazy {
-        ProductListPresenter(this, MockProductRepository, recentProductRepository)
+        val productRepository = ProductRepositoryImpl(ProductMockServer().url)
+        val recentProductRepository = RecentProductIdDbAdapter(RecentProductDbHelper(this))
+        val cartProductRepository =
+            CartRepositoryImpl(CartDbDao(CartDbHelper(this)), productRepository)
+
+        ProductListPresenter(this, cartProductRepository, recentProductRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
         initRecyclerView()
         setSupportActionBar(binding.toolbarProductList.toolbar)
@@ -41,8 +48,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun initRecyclerView() {
         initProductListAdapter()
-        presenter.loadProducts()
         setLayoutManager()
+        presenter.loadProducts()
     }
 
     override fun onStart() {
@@ -51,31 +58,41 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initProductListAdapter() {
+        val productClickListener = object : ProductClickListener {
+            override fun onAddClick(cartProductModel: CartProductModel) {
+                presenter.addCartProductCount(cartProductModel)
+            }
+
+            override fun onRemoveClick(cartProductModel: CartProductModel) {
+                presenter.subCartProductCount(cartProductModel)
+            }
+
+            override fun onItemClick(productModel: ProductModel) {
+                productClick(productModel)
+            }
+        }
+
         productListAdapter = ProductListAdapter(
-            productItems = combineProductViewItems(listOf(), listOf()),
+            productItems = listOf<ProductViewType.ProductItem>() + ProductViewType.MoreItem,
             showMoreProductItem = presenter::loadProducts,
-            showProductDetail = ::productClick,
+            productClickListener = productClickListener,
         )
 
         binding.recyclerProduct.adapter = productListAdapter
     }
 
-    override fun setProductModels(productModels: List<ProductModel>) {
-        productListAdapter.setProductItems(productModels)
-    }
-
-    private fun combineProductViewItems(
-        recentProductModels: List<ProductModel>,
-        productModels: List<ProductModel>,
-    ): List<ProductViewType> {
-        val productItems =
-            listOf(ProductViewType.RecentProductModels(recentProductModels)) +
-                productModels.map { ProductViewType.ProductItem(it) } + ProductViewType.MoreItem
-        return productItems
+    override fun setProductModels(cartProductModels: List<CartProductModel>) {
+        productListAdapter.setProductItems(
+            cartProductModels.map { ProductViewType.ProductItem(it) },
+        )
     }
 
     override fun setRecentProductModels(productModels: List<ProductModel>) {
         productListAdapter.setRecentProductsItems(productModels)
+    }
+
+    override fun setCartCount(count: Int) {
+        binding.textCartCountProductList.text = count.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -85,7 +102,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.icon_cart -> startActivity(CartActivity.getIntent(this))
+            R.id.icon_cart -> {
+                startActivity(CartActivity.getIntent(this))
+                finish()
+            }
             else -> return super.onOptionsItemSelected(item)
         }
         return true
@@ -96,8 +116,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         showProductDetail(productModel.id)
     }
 
-    private fun showProductDetail(productId: Int) {
-        startActivity(ProductDetailActivity.getIntent(this, productId))
+    private fun showProductDetail(productId: Long) {
+        val recentProductId = productListAdapter.getRecentFirstProduct()
+        startActivity(
+            ProductDetailActivity.getIntent(this, productId, recentProductId),
+        )
     }
 
     private fun setLayoutManager() {
@@ -107,7 +130,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
     }
 
+    override fun replaceProductModel(cartProductModel: CartProductModel) {
+        productListAdapter.replaceProductItem(ProductViewType.ProductItem(cartProductModel))
+    }
+
     companion object {
         private const val SPAN_COUNT = 2
+        fun getIntent(context: Context): Intent {
+            return Intent(context, ProductListActivity::class.java)
+        }
     }
 }

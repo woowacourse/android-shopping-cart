@@ -1,16 +1,30 @@
 package woowacourse.shopping.presentation.productlist.recentproduct
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 import woowacourse.shopping.presentation.model.ProductModel
-import woowacourse.shopping.presentation.productlist.product.ProductBaseViewHolder
 
 class RecentProductItemViewHolder(
-    private val binding: ItemRecentProductBinding,
-    showProductDetail: (ProductModel) -> Unit,
-) : ProductBaseViewHolder(binding.root, showProductDetail) {
+    parent: ViewGroup,
+    inflater: LayoutInflater,
+    onItemClick: (position: Int) -> Unit,
+) : RecyclerView.ViewHolder(
+    inflater.inflate(R.layout.item_recent_product, parent, false),
+) {
+    // 사용하진 않지만 확장성을 위해 정의
+    constructor(parent: ViewGroup, onItemClick: (Int) -> Unit) :
+        this(parent, LayoutInflater.from(parent.context), onItemClick)
 
-    override fun bind(product: ProductModel) {
-        _productModel = product
-        binding.productModel = productModel
+    private val binding = ItemRecentProductBinding.bind(itemView)
+
+    init {
+        itemView.setOnClickListener { onItemClick(adapterPosition) }
+    }
+
+    fun bind(product: ProductModel) {
+        binding.productModel = product
     }
 }
