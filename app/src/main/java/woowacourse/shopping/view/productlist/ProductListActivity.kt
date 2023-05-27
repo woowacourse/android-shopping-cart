@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartProductSqliteProductRepository
-import woowacourse.shopping.data.RecentViewedDbRepository
+import woowacourse.shopping.data.CartProductRepositoryImpl
+import woowacourse.shopping.data.RecentViewedRepositoryImpl
 import woowacourse.shopping.data.db.CartDBHelper
 import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
@@ -45,8 +45,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             ProductListPresenter(
                 this,
                 ProductServiceImpl(),
-                RecentViewedDbRepository(this),
-                CartProductSqliteProductRepository(
+                RecentViewedRepositoryImpl(this),
+                CartProductRepositoryImpl(
                     CartDBHelper(this),
                 ),
             )

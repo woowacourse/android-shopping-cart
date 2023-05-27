@@ -9,8 +9,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartProductSqliteProductRepository
-import woowacourse.shopping.data.RecentViewedDbRepository
+import woowacourse.shopping.data.CartProductRepositoryImpl
+import woowacourse.shopping.data.RecentViewedRepositoryImpl
 import woowacourse.shopping.data.db.CartDBHelper
 import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -41,7 +41,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setPresenter() {
         presenter =
-            ProductDetailPresenter(this, CartProductSqliteProductRepository(CartDBHelper(this)), RecentViewedDbRepository(this), ProductServiceImpl())
+            ProductDetailPresenter(this, CartProductRepositoryImpl(CartDBHelper(this)), RecentViewedRepositoryImpl(this), ProductServiceImpl())
     }
 
     private fun setActionBar() {
@@ -71,7 +71,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.btnPutInCart.setOnClickListener {
             val dialog = CartDialog(
                 this,
-                CartProductSqliteProductRepository(CartDBHelper(this)),
+                CartProductRepositoryImpl(CartDBHelper(this)),
                 presenter.getProductData(),
             )
             dialog.show()

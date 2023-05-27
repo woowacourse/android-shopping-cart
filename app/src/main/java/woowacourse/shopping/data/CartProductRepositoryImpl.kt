@@ -4,7 +4,7 @@ import woowacourse.shopping.data.db.CartDBHelper
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartProductRepository
 
-class CartProductSqliteProductRepository(
+class CartProductRepositoryImpl(
     private val dbHelper: CartDBHelper,
 ) : CartProductRepository {
     override fun findAll(): List<CartProduct> {

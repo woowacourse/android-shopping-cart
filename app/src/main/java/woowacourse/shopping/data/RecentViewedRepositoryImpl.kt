@@ -4,7 +4,7 @@ import android.content.Context
 import woowacourse.shopping.data.db.RecentViewedDBHelper
 import woowacourse.shopping.domain.RecentViewedRepository
 
-class RecentViewedDbRepository(context: Context) :
+class RecentViewedRepositoryImpl(context: Context) :
     RecentViewedRepository {
     private val dbHelper = RecentViewedDBHelper(context)
 

@@ -7,7 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.common.PriceFormatter
-import woowacourse.shopping.data.CartProductSqliteProductRepository
+import woowacourse.shopping.data.CartProductRepositoryImpl
 import woowacourse.shopping.data.db.CartDBHelper
 import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -44,7 +44,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun setPresenter() {
         presenter = CartPresenter(
             this,
-            CartProductSqliteProductRepository(CartDBHelper(this)),
+            CartProductRepositoryImpl(CartDBHelper(this)),
             ProductServiceImpl(),
         )
     }
