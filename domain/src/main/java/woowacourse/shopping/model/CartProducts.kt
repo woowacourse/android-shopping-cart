@@ -1,7 +1,7 @@
 package woowacourse.shopping.model
 
-class CartProducts(products: List<CartProduct> = listOf()) {
-    private val _items = products.toMutableList()
+class CartProducts(cartProducts: List<CartProduct> = listOf()) {
+    private val _items = cartProducts.toMutableList()
     val items get() = _items.toList()
 
     val size get(): Int = _items.size
@@ -25,16 +25,12 @@ class CartProducts(products: List<CartProduct> = listOf()) {
 
     fun addProductByCount(product: Product, count: Int) {
         val targetIndex = _items.indexOfLast { it.product == product }
-        if (targetIndex == NOT_FOUND) {
-            _items.add(CartProduct(product, count, true))
-            return
-        }
         addTargetProductCount(targetIndex, count)
     }
 
     private fun addTargetProductCount(targetIndex: Int, count: Int) {
         val targetProduct = _items[targetIndex]
-        _items[targetIndex] = targetProduct.plusCount(count)
+        _items[targetIndex] = targetProduct + count
     }
 
     fun deleteProduct(product: Product) {
@@ -51,10 +47,10 @@ class CartProducts(products: List<CartProduct> = listOf()) {
 
     private fun subTargetProductCount(targetIndex: Int, count: Int) {
         val targetProduct = _items[targetIndex]
-        if (targetProduct.count - count < MIN_COUNT) {
+        if (targetProduct.quantity - count < MIN_COUNT) {
             return
         }
-        _items[targetIndex] = targetProduct.subCount(count)
+        _items[targetIndex] = targetProduct - count
     }
 
     fun changeSelectedProduct(product: Product) {
@@ -88,7 +84,7 @@ class CartProducts(products: List<CartProduct> = listOf()) {
     }
 
     fun getSelectedProductsTotalCount(): Int {
-        return _items.filter { it.isChecked }.sumOf { it.count }
+        return _items.filter { it.isChecked }.sumOf { it.quantity }
     }
 
     companion object {

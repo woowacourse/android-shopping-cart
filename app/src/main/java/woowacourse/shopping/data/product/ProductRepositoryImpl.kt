@@ -6,17 +6,11 @@ import org.json.JSONArray
 import woowacourse.shopping.model.Product
 import java.lang.Thread.sleep
 
-class ProductRepositoryImpl(baseUrl: String) : ProductRepository {
+class ProductRepositoryImpl(baseUrl: String) : ProductDataSource {
     private val baseUrl = baseUrl.dropLast(1)
     private val client = OkHttpClient()
 
-    override val products: List<Product>
-        get() {
-            val request = Request.Builder().url("$baseUrl/products").build()
-            return executeRequest(request).let { parseResponse(it) }
-        }
-
-    override fun findProductById(id: Int): Product {
+    override fun findProductById(id: Long): Product {
         val request = Request.Builder()
             .url("$baseUrl/products/$id")
             .build()

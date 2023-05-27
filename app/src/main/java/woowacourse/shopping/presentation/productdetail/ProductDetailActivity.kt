@@ -9,9 +9,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbAdapter
+import woowacourse.shopping.data.cart.CartDbDao
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductMockServer
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -24,8 +25,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private val presenter: ProductDetailContract.Presenter by lazy {
         val productRepository = ProductRepositoryImpl(ProductMockServer().url)
-        val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
-        ProductDetailPresenter(this, cartRepository, productRepository)
+        val cartRepository: CartRepository =
+            CartRepositoryImpl(CartDbDao(CartDbHelper(this)), productRepository)
+        ProductDetailPresenter(this, cartRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,12 +72,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun loadProduct() {
-        val productId = intent.getIntExtra(PRODUCT_ID_KEY, DEFAULT_VALUE)
+        val productId = intent.getLongExtra(PRODUCT_ID_KEY, DEFAULT_VALUE)
         presenter.loadProductDetail(productId)
     }
 
     private fun loadRecentProduct() {
-        val recentProductId = intent.getIntExtra(RECENT_PRODUCT_ID_KEY, DEFAULT_VALUE)
+        val recentProductId = intent.getLongExtra(RECENT_PRODUCT_ID_KEY, DEFAULT_VALUE)
         if (recentProductId == DEFAULT_VALUE) {
             binding.cardRecentProductDetail.isVisible = false
             return
@@ -84,7 +86,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.recentProductClickListener = ::showRecentProductDetail
     }
 
-    private fun showRecentProductDetail(recentProductId: Int) {
+    private fun showRecentProductDetail(recentProductId: Long) {
         val intent = getIntent(context = this, productId = recentProductId, recentProductId = null)
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
         startActivity(intent)
@@ -122,9 +124,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         private const val PRODUCT_ID_KEY = "PRODUCT_ID_KEY"
         private const val RECENT_PRODUCT_ID_KEY = "RECENT_PRODUCT_ID_KEY"
-        private const val DEFAULT_VALUE = -1
+        private const val DEFAULT_VALUE = -1L
 
-        fun getIntent(context: Context, productId: Int, recentProductId: Int?): Intent {
+        fun getIntent(context: Context, productId: Long, recentProductId: Long?): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID_KEY, productId)
                 if (recentProductId != null) {

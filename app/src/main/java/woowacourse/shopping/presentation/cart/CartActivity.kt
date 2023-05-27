@@ -6,9 +6,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbAdapter
+import woowacourse.shopping.data.cart.CartDbDao
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductMockServer
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -21,8 +22,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private val presenter: CartContract.Presenter by lazy {
         val productRepository = ProductRepositoryImpl(ProductMockServer().url)
-        val cartRepository: CartRepository = CartDbAdapter(CartDbHelper(this))
-        CartPresenter(this, cartRepository, productRepository)
+        val cartRepository: CartRepository =
+            CartRepositoryImpl(CartDbDao(CartDbHelper(this)), productRepository)
+        CartPresenter(this, cartRepository)
     }
 
     override fun showTotalPrice(price: Int) {
@@ -43,8 +45,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 presenter.subProductCartCount(cartProductModel)
             }
 
-            override fun onCloseClick(productModel: ProductModel) {
-                presenter.deleteProduct(productModel)
+            override fun onCloseClick(cartProductModel: CartProductModel) {
+                presenter.deleteCartProduct(cartProductModel)
             }
 
             override fun changeSelectionProduct(productModel: ProductModel) {

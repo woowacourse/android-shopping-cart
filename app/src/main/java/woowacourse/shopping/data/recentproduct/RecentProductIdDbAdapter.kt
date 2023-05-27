@@ -9,8 +9,8 @@ class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepos
 
     private val writableDb: SQLiteDatabase = db.writableDatabase
 
-    override fun getRecentProductIds(size: Int): List<Int> {
-        val productIds = mutableListOf<Int>()
+    override fun getRecentProductIds(size: Int): List<Long> {
+        val productIds = mutableListOf<Long>()
 
         val cursor = writableDb.query(
             RecentProductDbContract.TABLE_NAME,
@@ -35,10 +35,10 @@ class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepos
         return productIds
     }
 
-    private fun Cursor.getRecentProductId(): Int =
-        getInt(getColumnIndexOrThrow(RecentProductDbContract.PRODUCT_ID))
+    private fun Cursor.getRecentProductId(): Long =
+        getLong(getColumnIndexOrThrow(RecentProductDbContract.PRODUCT_ID))
 
-    override fun addRecentProductId(recentProductId: Int) {
+    override fun addRecentProductId(recentProductId: Long) {
         val values = ContentValues().apply {
             put(RecentProductDbContract.PRODUCT_ID, recentProductId)
             put(RecentProductDbContract.TIMESTAMP, System.currentTimeMillis())
@@ -47,7 +47,7 @@ class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepos
         writableDb.insert(RecentProductDbContract.TABLE_NAME, null, values)
     }
 
-    override fun deleteRecentProductId(recentProductId: Int) {
+    override fun deleteRecentProductId(recentProductId: Long) {
         writableDb.delete(
             RecentProductDbContract.TABLE_NAME,
             "${RecentProductDbContract.PRODUCT_ID}=?",

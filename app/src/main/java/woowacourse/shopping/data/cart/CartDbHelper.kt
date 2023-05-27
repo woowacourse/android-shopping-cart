@@ -6,12 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class CartDbHelper(
     context: Context,
-) : SQLiteOpenHelper(context, DB_NAME, null, 2) {
+) : SQLiteOpenHelper(context, DB_NAME, null, 3) {
 
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${CartDbContract.TABLE_NAME}(" +
-                "${CartDbContract.PRODUCT_ID} int," +
+                "${CartDbContract.CART_ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "${CartDbContract.PRODUCT_ID} INTEGER," +
                 "${CartDbContract.TIMESTAMP} int," +
                 "${CartDbContract.PRODUCT_COUNT} int" +
                 ");",

@@ -109,7 +109,7 @@ class ProductListAdapter(
         }
     }
 
-    fun getRecentFirstProduct(): Int? {
+    fun getRecentFirstProduct(): Long? {
         if (_productItems[RECENT_PRODUCT_VIEW_POSITION] is RecentProductModels) {
             val recentProductModels =
                 _productItems[RECENT_PRODUCT_VIEW_POSITION] as RecentProductModels

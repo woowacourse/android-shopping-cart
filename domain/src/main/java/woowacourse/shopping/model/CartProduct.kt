@@ -1,32 +1,14 @@
 package woowacourse.shopping.model
 
 data class CartProduct(
+    val cartId: Long,
     val product: Product,
-    val count: Int,
+    val quantity: Int,
     val isChecked: Boolean,
 ) {
-    fun getTotalPrice() = count * product.price.value
-    fun plusCount(count: Int) = CartProduct(
-        product = product,
-        count = this.count + count,
-        isChecked = isChecked,
-    )
-
-    fun subCount(count: Int) = CartProduct(
-        product = product,
-        count = this.count - count,
-        isChecked = isChecked,
-    )
-
-    fun select() = CartProduct(
-        product = product,
-        count = this.count,
-        isChecked = true,
-    )
-
-    fun unselect() = CartProduct(
-        product = product,
-        count = this.count,
-        isChecked = false,
-    )
+    fun getTotalPrice() = quantity * product.price.value
+    operator fun plus(count: Int) = copy(quantity = quantity + count)
+    operator fun minus(count: Int) = copy(quantity = quantity - count)
+    fun select() = copy(isChecked = true)
+    fun unselect() = copy(isChecked = false)
 }

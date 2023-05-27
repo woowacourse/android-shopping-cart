@@ -19,7 +19,7 @@ fun Product.toJson(): String {
 
 fun JSONObject.toProduct(): Product {
     return Product(
-        id = getInt("id"),
+        id = getLong("id"),
         name = getString("name"),
         imageUrl = getString("imageUrl"),
         price = Price(getInt("price")),

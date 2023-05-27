@@ -9,12 +9,13 @@ class ProductMockServer {
 
     private val mockWebServer = MockWebServer()
 
-    val url = mockWebServer.url("").toString()
+    lateinit var url: String
 
     init {
         val thread = Thread {
             mockWebServer.dispatcher = getDispatcher()
             mockWebServer.url("/")
+            url = mockWebServer.url("").toString()
         }
         thread.start()
         thread.join()

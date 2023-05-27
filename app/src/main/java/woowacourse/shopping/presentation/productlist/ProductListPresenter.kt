@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.productlist
 
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
 import woowacourse.shopping.model.Counter
 import woowacourse.shopping.model.Product
@@ -12,35 +11,37 @@ import woowacourse.shopping.presentation.model.UnCheckableCartProductModel
 
 class ProductListPresenter(
     private val view: ProductListContract.View,
-    private val productRepository: ProductRepository,
-    private val recentProductIdRepository: RecentProductIdRepository,
     private val cartRepository: CartRepository,
+    private val recentProductIdRepository: RecentProductIdRepository,
 ) : ProductListContract.Presenter {
 
     private var itemCount = Counter(FIRST_SIZE)
 
     override fun loadProducts() {
-        val products = loadProductsWithSize(PRODUCTS_SIZE)
-        val cartProductModels = products.map { getCartProductModel(it) }
+        val cartProductModels = loadProductsWithSize(PRODUCTS_SIZE)
         view.setProductModels(cartProductModels)
         loadCartCount()
     }
 
     private fun loadCartCount() {
-        val cartCount = cartRepository.getCartEntities().sumOf { it.count }
+        val cartCount = cartRepository.getCartProducts().sumOf { it.quantity }
         view.setCartCount(cartCount)
     }
 
-    private fun getCartProductModel(product: Product) =
-        UnCheckableCartProductModel(
-            product.toPresentation(),
-            cartRepository.getCartEntity(product.id).count,
-        )
+    private fun getCartProductModel(product: Product): CartProductModel {
+        val cartProduct = cartRepository.getCartProduct(product.id)
 
-    private fun loadProductsWithSize(size: Int): List<Product> {
-        val products = productRepository.getProductsWithRange(itemCount.value, size)
+        return UnCheckableCartProductModel(
+            cartProduct.cartId,
+            product.toPresentation(),
+            cartProduct.quantity,
+        )
+    }
+
+    private fun loadProductsWithSize(size: Int): List<CartProductModel> {
+        val cartProducts = cartRepository.getProductsByRange(itemCount.value, size)
         itemCount += size
-        return products
+        return cartProducts
     }
 
     override fun loadRecentProducts() {
@@ -50,7 +51,7 @@ class ProductListPresenter(
         }
     }
 
-    override fun saveRecentProductId(productId: Int) {
+    override fun saveRecentProductId(productId: Long) {
         recentProductIdRepository.deleteRecentProductId(productId)
         recentProductIdRepository.addRecentProductId(productId)
     }
@@ -59,7 +60,11 @@ class ProductListPresenter(
         val nextCount = cartProductModel.count + COUNT_UNIT
         cartRepository.insertCartProduct(cartProductModel.productModel.id, COUNT_UNIT)
         view.replaceProductModel(
-            UnCheckableCartProductModel(cartProductModel.productModel, nextCount),
+            UnCheckableCartProductModel(
+                cartProductModel.cartId,
+                cartProductModel.productModel,
+                nextCount,
+            ),
         )
         loadCartCount()
     }
@@ -68,7 +73,11 @@ class ProductListPresenter(
         val nextCount = cartProductModel.count - COUNT_UNIT
         cartRepository.updateCartProductCount(cartProductModel.productModel.id, nextCount)
         view.replaceProductModel(
-            UnCheckableCartProductModel(cartProductModel.productModel, nextCount),
+            UnCheckableCartProductModel(
+                cartProductModel.cartId,
+                cartProductModel.productModel,
+                nextCount,
+            ),
         )
         loadCartCount()
     }
@@ -78,9 +87,9 @@ class ProductListPresenter(
         return findProductsById(recentProductIds)
     }
 
-    private fun findProductsById(productIds: List<Int>): List<ProductModel> {
+    private fun findProductsById(productIds: List<Long>): List<ProductModel> {
         return productIds.map {
-            val product = productRepository.findProductById(it) ?: Product.defaultProduct
+            val product = cartRepository.findProductById(it)
             product.toPresentation()
         }
     }

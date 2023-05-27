@@ -7,7 +7,7 @@ interface ProductListContract {
     interface Presenter {
         fun loadProducts()
         fun loadRecentProducts()
-        fun saveRecentProductId(productId: Int)
+        fun saveRecentProductId(productId: Long)
         fun addCartProductCount(cartProductModel: CartProductModel)
         fun subCartProductCount(cartProductModel: CartProductModel)
     }

@@ -8,8 +8,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbAdapter
+import woowacourse.shopping.data.cart.CartDbDao
 import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductMockServer
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
@@ -31,14 +32,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private val presenter: ProductListPresenter by lazy {
         val productRepository = ProductRepositoryImpl(ProductMockServer().url)
         val recentProductRepository = RecentProductIdDbAdapter(RecentProductDbHelper(this))
-        val cartProductRepository = CartDbAdapter(CartDbHelper(this))
+        val cartProductRepository =
+            CartRepositoryImpl(CartDbDao(CartDbHelper(this)), productRepository)
 
-        ProductListPresenter(
-            this,
-            productRepository,
-            recentProductRepository,
-            cartProductRepository,
-        )
+        ProductListPresenter(this, cartProductRepository, recentProductRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +116,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         showProductDetail(productModel.id)
     }
 
-    private fun showProductDetail(productId: Int) {
+    private fun showProductDetail(productId: Long) {
         val recentProductId = productListAdapter.getRecentFirstProduct()
         startActivity(
             ProductDetailActivity.getIntent(this, productId, recentProductId),

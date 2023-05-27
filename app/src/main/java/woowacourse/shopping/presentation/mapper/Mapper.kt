@@ -8,8 +8,9 @@ import woowacourse.shopping.presentation.model.ProductModel
 
 fun CartProduct.toPresentation(): CheckableCartProductModel {
     return CheckableCartProductModel(
+        cartId = cartId,
         productModel = product.toPresentation(),
-        count = count,
+        count = quantity,
         isChecked = isChecked,
     )
 }

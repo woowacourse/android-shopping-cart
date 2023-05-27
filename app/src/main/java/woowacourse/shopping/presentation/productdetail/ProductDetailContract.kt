@@ -4,8 +4,8 @@ import woowacourse.shopping.presentation.model.ProductModel
 
 interface ProductDetailContract {
     interface Presenter {
-        fun loadProductDetail(productId: Int)
-        fun loadRecentProduct(productId: Int)
+        fun loadProductDetail(productId: Long)
+        fun loadRecentProduct(productId: Long)
         fun putProductInCart(count: Int)
     }
 

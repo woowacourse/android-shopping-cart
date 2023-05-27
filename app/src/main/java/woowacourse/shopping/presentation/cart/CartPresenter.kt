@@ -1,8 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
-import woowacourse.shopping.data.CartProductDataAdapter
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartPages
 import woowacourse.shopping.model.CartProducts
 import woowacourse.shopping.model.Counter
@@ -14,7 +12,6 @@ import woowacourse.shopping.presentation.model.ProductModel
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
     private val initialPage: Counter = Counter(CartPages.FIRST_PAGE),
 ) : CartContract.Presenter {
 
@@ -26,7 +23,7 @@ class CartPresenter(
 
     private fun initCartPages() {
         val productItems =
-            CartProductDataAdapter(cartRepository, productRepository).getCartProducts()
+            cartRepository.getCartProducts()
         cartPages = CartPages(CartProducts(productItems), initialPage)
     }
 
@@ -41,9 +38,9 @@ class CartPresenter(
         checkLeftPageAble()
     }
 
-    override fun deleteProduct(productModel: ProductModel) {
-        cartRepository.deleteCartProduct(productModel.id)
-        cartPages.deleteProducts(productModel.toDomain())
+    override fun deleteCartProduct(cartProductModel: CartProductModel) {
+        cartRepository.deleteCartProduct(cartProductModel.cartId)
+        cartPages.deleteProducts(cartProductModel.productModel.toDomain())
         val deletedProducts = cartPages.getCurrentProducts()
         if (deletedProducts.size == 0) {
             minusPage()

@@ -2,7 +2,7 @@ package woowacourse.shopping.data.recentproduct
 
 interface RecentProductIdRepository {
 
-    fun addRecentProductId(recentProductId: Int)
-    fun deleteRecentProductId(recentProductId: Int)
-    fun getRecentProductIds(size: Int): List<Int>
+    fun addRecentProductId(recentProductId: Long)
+    fun deleteRecentProductId(recentProductId: Long)
+    fun getRecentProductIds(size: Int): List<Long>
 }

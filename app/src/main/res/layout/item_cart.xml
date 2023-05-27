@@ -54,7 +54,7 @@
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="22dp"
                     android:layout_marginEnd="22dp"
-                    android:onClick="@{v -> cartListener.onCloseClick(cartProductModel.productModel)}"
+                    android:onClick="@{v -> cartListener.onCloseClick(cartProductModel)}"
                     android:src="@drawable/close_16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/text_cart_product_name"
