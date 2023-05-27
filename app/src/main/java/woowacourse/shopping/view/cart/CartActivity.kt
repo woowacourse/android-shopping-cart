@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.common.PriceFormatter
 import woowacourse.shopping.data.CartProductSqliteProductRepository
-import woowacourse.shopping.data.ProductMockWebRepository
 import woowacourse.shopping.data.db.CartDBHelper
+import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartProductModel
 
@@ -45,7 +45,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter = CartPresenter(
             this,
             CartProductSqliteProductRepository(CartDBHelper(this)),
-            ProductMockWebRepository(),
+            ProductServiceImpl(),
         )
     }
 

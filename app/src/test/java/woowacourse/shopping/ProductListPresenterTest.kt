@@ -8,7 +8,7 @@ import io.mockk.slot
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.ProductMockWebRepository
+import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.domain.CartProductRepository
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
@@ -22,7 +22,7 @@ class ProductListPresenterTest {
     private lateinit var presenter: ProductListContract.Presenter
     private lateinit var view: ProductListContract.View
 
-    private lateinit var productRepository: ProductMockWebRepository
+    private lateinit var productRepository: ProductServiceImpl
     private lateinit var cartProductRepository: CartProductRepository
     private lateinit var recentViewedRepository: RecentViewedRepository
 

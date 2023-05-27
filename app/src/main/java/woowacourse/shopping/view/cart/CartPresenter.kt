@@ -2,16 +2,16 @@ package woowacourse.shopping.view.cart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import woowacourse.shopping.data.server.ProductService
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.CartProductRepository
-import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartProductRepository: CartProductRepository,
-    private val productRepository: ProductRepository,
+    private val productRepository: ProductService,
 ) : CartContract.Presenter {
     private val _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
     override val totalPrice: LiveData<Int>

@@ -1,7 +1,7 @@
 package woowacourse.shopping.view.productlist
 
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductMockWebRepository
+import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.domain.CartProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
@@ -9,7 +9,7 @@ import woowacourse.shopping.model.toUiModel
 
 class ProductListPresenter(
     private val view: ProductListContract.View,
-    private val productRepository: ProductMockWebRepository,
+    private val productRepository: ProductServiceImpl,
     private val recentViewedRepository: RecentViewedRepository,
     private val cartProductRepository: CartProductRepository,
 ) : ProductListContract.Presenter {

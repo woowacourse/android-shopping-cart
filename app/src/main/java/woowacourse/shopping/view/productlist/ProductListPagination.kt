@@ -2,12 +2,12 @@ package woowacourse.shopping.view.productlist
 
 import android.util.Log
 import woowacourse.shopping.common.Pagination
+import woowacourse.shopping.data.server.ProductService
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
 
 class ProductListPagination(
     private val rangeSize: Int,
-    private val productRepository: ProductRepository,
+    private val productRepository: ProductService,
 ) :
     Pagination<Product> {
     override var mark = 0
