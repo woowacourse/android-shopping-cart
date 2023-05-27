@@ -7,15 +7,15 @@ import woowacourse.shopping.util.OffsetPaging
 
 class CartOffsetPaging(
     override val limit: Int = LIMIT,
-    private val startPage: Int = START_PAGE,
+    startPage: Int = START_PAGE,
     private val cartRepository: CartRepository,
 ) : OffsetPaging<CartProductInfo>(startPage) {
     fun plusPage() {
-        setPage(currentPage.value.plus(PAGE_STEP))
+        setPage(currentPage.plus(PAGE_STEP))
     }
 
     fun minusPage() {
-        setPage(currentPage.value.minus(PAGE_STEP))
+        setPage(currentPage.minus(PAGE_STEP))
     }
 
     override fun loadPageItems(page: Page): List<CartProductInfo> {
@@ -23,16 +23,17 @@ class CartOffsetPaging(
     }
 
     override fun isPlusPageAble(): Boolean {
-        val page = currentPage.value.plus(PAGE_STEP)
+        val page = currentPage.plus(PAGE_STEP)
         return loadPageItems(page).isNotEmpty()
     }
 
     override fun isMinusPageAble(): Boolean {
         val page = currentPage.value
-        return page.value != startPage
+        return page != MINIMUM_PAGE
     }
 
     companion object {
+        private const val MINIMUM_PAGE = 1
         private const val START_PAGE = 1
         private const val PAGE_STEP = 1
         private const val LIMIT = 5

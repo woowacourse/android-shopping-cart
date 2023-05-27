@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
@@ -16,6 +17,7 @@ import woowacourse.shopping.presentation.model.CartProductInfoModel
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var cartAdapter: CartAdapter
+    private lateinit var cartProductPriceView: TextView
     private val presenter: CartContract.Presenter by lazy {
         CartPresenter(
             this,
@@ -33,19 +35,19 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun setUpBinding() {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.lifecycleOwner = this
     }
 
     private fun initView() {
         initCartAdapter()
         setToolBar()
         updateView()
-        binding.presenter = presenter
+        allOrderedCheckBoxChange()
     }
 
     private fun initCartAdapter() {
         cartAdapter = CartAdapter(
             presenter = presenter,
+            updateProductPrice = ::updateProductPrice,
         )
         binding.recyclerCart.adapter = cartAdapter
     }
@@ -57,10 +59,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun updateView() {
-        presenter.loadCurrentPageProducts()
-        presenter.updateCurrentPageCartView()
+        presenter.refreshCurrentPage()
         presenter.checkPlusPageAble()
         presenter.checkMinusPageAble()
+        presenter.checkCurrentPageProductsOrderState()
+        presenter.updateOrderPrice()
+        presenter.updateOrderCount()
     }
 
     private fun managePaging() {
@@ -92,8 +96,16 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return true
     }
 
+    private fun allOrderedCheckBoxChange() {
+        binding.checkboxAllCart.setOnCheckedChangeListener { _, isChecked ->
+            presenter.changeCurrentPageProductsOrder(isChecked)
+            presenter.updateOrderPrice()
+            presenter.updateOrderCount()
+        }
+    }
+
     override fun setCartItems(productModels: List<CartProductInfoModel>) {
-        cartAdapter.setItems(productModels)
+        cartAdapter.submitList(productModels)
     }
 
     override fun setUpPlusPageState(isEnable: Boolean) {
@@ -112,6 +124,31 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         } else {
             binding.buttonMinusPage.setImageResource(R.drawable.icon_left_page_false)
         }
+    }
+
+    override fun setAllOrderState(isAllOrdered: Boolean) {
+        binding.checkboxAllCart.isChecked = isAllOrdered
+    }
+
+    private fun updateProductPrice(textView: TextView, cartProductInfoModel: CartProductInfoModel) {
+        cartProductPriceView = textView
+        presenter.updateProductPrice(cartProductInfoModel)
+    }
+
+    override fun setProductPrice(price: Int) {
+        cartProductPriceView.text = getString(R.string.price_format, price)
+    }
+
+    override fun setPage(page: String) {
+        binding.textCartPage.text = page
+    }
+
+    override fun setOrderPrice(totalPrice: Int) {
+        binding.textCartPrice.text = getString(R.string.price_format, totalPrice)
+    }
+
+    override fun setOrderCount(count: Int) {
+        binding.buttonCartOrder.text = getString(R.string.order_format, count)
     }
 
     companion object {

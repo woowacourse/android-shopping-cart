@@ -6,7 +6,7 @@ import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import woowacourse.shopping.presentation.common.CounterView
 
-object ViewBinding {
+object DataBindingAdapter {
 
     @JvmStatic
     @BindingAdapter("imageUrl", "error")

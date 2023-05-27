@@ -2,12 +2,12 @@ package woowacourse.shopping.presentation.productlist.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductContainerBinding
+import woowacourse.shopping.presentation.common.CartProductDiffItemCallback
 import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.presentation.productlist.ProductListContract
 import woowacourse.shopping.presentation.productlist.product.ProductListViewType.* // ktlint-disable no-wildcard-imports
@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.productlist.recentproduct.RecentProduct
 class ProductListAdapter(
     private val recentProductAdapter: RecentProductAdapter,
     private val presenter: ProductListContract.Presenter,
-) : ListAdapter<CartProductInfoModel, RecyclerView.ViewHolder>(diffCallback()) {
+) : ListAdapter<CartProductInfoModel, RecyclerView.ViewHolder>(CartProductDiffItemCallback()) {
 
     private lateinit var itemProductBinding: ItemProductBinding
     private lateinit var inflater: LayoutInflater
@@ -79,16 +79,5 @@ class ProductListAdapter(
 
     companion object {
         const val RECENT_PRODUCT_VIEW_POSITION = 0
-        fun diffCallback() = object : DiffUtil.ItemCallback<CartProductInfoModel>() {
-            override fun areItemsTheSame(
-                oldItem: CartProductInfoModel,
-                newItem: CartProductInfoModel,
-            ): Boolean = (oldItem.productModel.id == newItem.productModel.id)
-
-            override fun areContentsTheSame(
-                oldItem: CartProductInfoModel,
-                newItem: CartProductInfoModel,
-            ): Boolean = oldItem == newItem
-        }
     }
 }

@@ -1,34 +1,27 @@
 package woowacourse.shopping.presentation.cart
 
 import woowacourse.shopping.CartProductInfoList
+import woowacourse.shopping.presentation.mapper.toDomain
 import woowacourse.shopping.presentation.mapper.toPresentation
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.repository.CartRepository
-import woowacourse.shopping.util.SafeLiveData
-import woowacourse.shopping.util.SafeMutableLiveData
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    initCartProductList: CartProductInfoList = CartProductInfoList(listOf()),
     initPage: Int = DEFAULT_INIT_PAGE,
 ) : CartContract.Presenter {
 
-    override val paging = CartOffsetPaging(cartRepository = cartRepository, startPage = initPage)
-    private val offset: Int get() = paging.currentPage.value.getOffset(paging.limit)
+    private val paging = CartOffsetPaging(cartRepository = cartRepository, startPage = initPage)
+    private val offset: Int get() = paging.currentPage.getOffset(paging.limit)
 
-    private val _loadedCartProducts = SafeMutableLiveData(initCartProductList)
-    override val loadedCartProducts: SafeLiveData<CartProductInfoList> get() = _loadedCartProducts
-
-    private val _pageProducts = SafeMutableLiveData(initCartProductList)
-    override val pageProducts: SafeLiveData<CartProductInfoList> get() = _pageProducts
+    private var cartProducts = cartRepository.getAllCartProductsInfo()
+    private val pageProducts get() = cartProducts.getItemsInRange(offset, paging.limit)
 
     init {
-        initView()
-    }
-
-    private fun initView() {
-        checkPlusPageAble()
-        checkMinusPageAble()
+        updateOrderCount()
+        updateOrderPrice()
+        view.setPage(paging.currentPage.value.toString())
     }
 
     override fun checkPlusPageAble() {
@@ -39,78 +32,85 @@ class CartPresenter(
         view.setUpMinusPageState(paging.isMinusPageAble())
     }
 
-    override fun addProductInOrder(position: Int) {
-        if (position == PREVIOUS_PAGE_POSITION) return
-        val index = offset + position
-        _loadedCartProducts.value =
-            _loadedCartProducts.value.updateItemOrdered(index, true)
-        updateCurrentPageProducts()
+    override fun addProductInOrder(cartProductModel: CartProductInfoModel) {
+        cartProducts = cartProducts.updateItemOrdered(cartProductModel.toDomain(), true)
+        view.setCartItems(pageProducts.toPresentationList())
     }
 
-    private fun updateCurrentPageProducts() {
-        _pageProducts.value =
-            loadedCartProducts.value.getItemsInRange(
-                offset,
-                paging.limit,
-            )
+    private fun CartProductInfoList.toPresentationList(): List<CartProductInfoModel> {
+        return this.items.map {
+            it.toPresentation()
+        }
     }
 
-    override fun deleteProductInOrder(position: Int) {
-        if (position == PREVIOUS_PAGE_POSITION) return
-        val index = offset + position
-        _loadedCartProducts.value =
-            _loadedCartProducts.value.updateItemOrdered(index, false)
-        updateCurrentPageProducts()
+    override fun deleteProductInOrder(cartProductModel: CartProductInfoModel) {
+        cartProducts = cartProducts.updateItemOrdered(cartProductModel.toDomain(), false)
+        view.setCartItems(pageProducts.toPresentationList())
     }
 
-    override fun updateProductCount(position: Int, count: Int) {
-        val productInfo = pageProducts.value.items[position]
+    override fun updateProductCount(cartProductModel: CartProductInfoModel, count: Int) {
         cartRepository.updateCartProductCount(
-            productInfo.product.id,
+            cartProductModel.productModel.id,
             count,
         )
-        val index = offset + position
-        _loadedCartProducts.value = _loadedCartProducts.value.updateItemCount(index, count)
-        updateCurrentPageProducts()
+        cartProducts = cartProducts.updateItemCount(cartProductModel.toDomain(), count)
     }
 
-    override fun changeCurrentPageProductsOrder() {
-        if (pageProducts.value.isAllOrdered) {
-            _pageProducts.value = _pageProducts.value.updateAllItemOrdered(false)
-        } else {
-            _pageProducts.value = _pageProducts.value.updateAllItemOrdered(true)
+    override fun updateProductPrice(cartProductModel: CartProductInfoModel) {
+        val price = cartProductModel.toDomain().totalPrice
+        view.setProductPrice(price)
+    }
+
+    override fun changeCurrentPageProductsOrder(isOrdered: Boolean) {
+        if (isOrdered) {
+            cartProducts = cartProducts.replaceItemList(pageProducts.updateAllItemOrdered(true))
+        } else if (!isOrdered && pageProducts.isAllOrdered) {
+            cartProducts = cartProducts.replaceItemList(pageProducts.updateAllItemOrdered(false))
         }
-        _loadedCartProducts.value = _loadedCartProducts.value.replaceItemList(_pageProducts.value)
+        view.setCartItems(pageProducts.toPresentationList())
     }
 
-    override fun deleteProductItem(position: Int) {
-        val productInfo = pageProducts.value.items[position]
-        cartRepository.deleteCartProductId(productInfo.product.id)
-        _loadedCartProducts.value = _loadedCartProducts.value.delete(productInfo)
+    override fun checkCurrentPageProductsOrderState() {
+        if (pageProducts.isAllOrdered) {
+            view.setAllOrderState(true)
+        } else {
+            view.setAllOrderState(false)
+        }
+    }
+
+    override fun updateOrderPrice() {
+        val price = cartProducts.orders.totalPrice
+        view.setOrderPrice(price)
+    }
+
+    override fun updateOrderCount() {
+        val count = cartProducts.orders.count
+        view.setOrderCount(count)
+    }
+
+    override fun deleteProductItem(cartProductModel: CartProductInfoModel) {
+        cartRepository.deleteCartProductId(cartProductModel.productModel.id)
+        cartProducts = cartProducts.delete(cartProductModel.toDomain())
+        view.setCartItems(pageProducts.toPresentationList())
     }
 
     override fun plusPage() {
         paging.plusPage()
+        view.setPage(paging.currentPage.value.toString())
+        view.setCartItems(pageProducts.toPresentationList())
     }
 
     override fun minusPage() {
         paging.minusPage()
+        view.setPage(paging.currentPage.value.toString())
+        view.setCartItems(pageProducts.toPresentationList())
     }
 
-    override fun loadCurrentPageProducts() {
-        val currentPage = paging.currentPage.value
-        _loadedCartProducts.value =
-            _loadedCartProducts.value.addAll(paging.loadPageItems(currentPage))
-    }
-
-    override fun updateCurrentPageCartView() {
-        updateCurrentPageProducts()
-        val cartProductInfoModels = pageProducts.value.items.map { it.toPresentation() }
-        view.setCartItems(cartProductInfoModels)
+    override fun refreshCurrentPage() {
+        view.setCartItems(pageProducts.toPresentationList())
     }
 
     companion object {
         private const val DEFAULT_INIT_PAGE = 1
-        private const val PREVIOUS_PAGE_POSITION = -1
     }
 }

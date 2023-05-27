@@ -31,3 +31,11 @@ fun CartProductInfo.toPresentation(): CartProductInfoModel {
         isOrdered = isOrdered,
     )
 }
+
+fun CartProductInfoModel.toDomain(): CartProductInfo {
+    return CartProductInfo(
+        product = productModel.toDomain(),
+        count = count,
+        isOrdered = isOrdered,
+    )
+}

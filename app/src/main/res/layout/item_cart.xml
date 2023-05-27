@@ -6,12 +6,8 @@
     <data>
 
         <variable
-            name="presenter"
-            type="woowacourse.shopping.presentation.cart.CartContract.Presenter" />
-
-        <variable
-            name="position"
-            type="Integer" />
+            name="cartProduct"
+            type="woowacourse.shopping.presentation.model.CartProductInfoModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +29,7 @@
                 android:layout_height="match_parent">
 
                 <CheckBox
-                    android:checked="@{presenter.pageProducts.items[position].ordered}"
+                    android:checked="@{cartProduct.ordered}"
                     android:id="@+id/checkbox_product_cart"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
@@ -50,14 +46,13 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="10dp"
-                    android:text="@{presenter.pageProducts.items[position].product.name}"
+                    android:text="@{cartProduct.productModel.name}"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     tools:text="[든든] 동원 스위트콘" />
 
                 <ImageView
-                    android:onClick="@{()->presenter.deleteProductItem(position)}"
                     android:id="@+id/image_cart_delete"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
@@ -70,7 +65,7 @@
                     android:layout_marginStart="7dp" />
 
                 <ImageView
-                    app:imageUrl="@{presenter.pageProducts.items[position].product.imageUrl}"
+                    app:imageUrl="@{cartProduct.productModel.imageUrl}"
                     app:error="@{@drawable/default_image}"
                     android:id="@+id/image_cart_product_poster"
                     android:layout_width="136dp"
@@ -90,13 +85,13 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/counter_cart_product"
                     android:layout_marginEnd="13dp"
-                    android:text="@{@string/price_format(presenter.pageProducts.items[position].totalPrice)}"
                     tools:text="99000원" />
 
                 <woowacourse.shopping.presentation.common.CounterView
                     android:id="@+id/counter_cart_product"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:counterText="@{cartProduct.count}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="18dp"

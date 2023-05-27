@@ -1,75 +1,79 @@
 package woowacourse.shopping.presentation.cart.viewholder
 
-import androidx.core.view.doOnAttach
-import androidx.lifecycle.findViewTreeLifecycleOwner
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.presentation.cart.CartContract
-import woowacourse.shopping.presentation.common.CounterContract
+import woowacourse.shopping.presentation.common.CounterListener
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 
 class CartItemViewHolder(
     private val binding: ItemCartBinding,
     private val presenter: CartContract.Presenter,
+    private val updateProductPrice: (TextView, CartProductInfoModel) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
-    private val counterPresenter: CounterContract.Presenter =
-        binding.counterCartProduct.presenter
+    private lateinit var cartProductModel: CartProductInfoModel
+    private val counterListener = object : CounterListener {
+        override fun onPlus(count: Int) {
+            updateCart(count)
+        }
 
-    init {
-        itemView.doOnAttach {
-            setUpBinding()
-            setUpView()
+        override fun onMinus(count: Int) {
+            updateCart(count)
         }
     }
 
-    private fun setUpBinding() {
-        binding.lifecycleOwner = itemView.findViewTreeLifecycleOwner()
-        binding.presenter = presenter
-        binding.position = adapterPosition
+    init {
+        deleteButtonClick()
     }
 
-    private fun setUpView() {
-        counterPresenter.updateCount(presenter.pageProducts.value.items[adapterPosition].count)
-        setDeleteButtonClick()
-        setPlusButtonClick()
-        setMinusButtonClick()
-        setCheckBoxCheckedChange()
+    private fun updateCart(count: Int) {
+        presenter.updateProductCount(cartProductModel, count)
+        presenter.updateOrderCount()
+        presenter.updateOrderPrice()
+        presenter.refreshCurrentPage()
     }
 
-    private fun setDeleteButtonClick() {
+    fun bind(item: CartProductInfoModel) {
+        cartProductModel = item
+        binding.cartProduct = cartProductModel
+        updateProductPrice(binding.textCartProductPrice, cartProductModel)
+        setUpCounterView()
+        checkBoxChange()
+    }
+
+    private fun setUpCounterView() {
+        binding.counterCartProduct.setUpView(
+            counterListener,
+            initCount = cartProductModel.count,
+            minimumCount = 1,
+        )
+    }
+
+    private fun deleteButtonClick() {
         binding.imageCartDelete.setOnClickListener {
-            presenter.deleteProductItem(adapterPosition)
-            presenter.updateCurrentPageCartView()
+            presenter.deleteProductItem(cartProductModel)
+            presenter.updateOrderCount()
+            presenter.updateOrderPrice()
             presenter.checkPlusPageAble()
         }
     }
 
-    private fun setPlusButtonClick() {
-        binding.counterCartProduct.plusButton.setOnClickListener {
-            binding.counterCartProduct.presenter.plusCount()
-            presenter.updateProductCount(
-                adapterPosition,
-                counterPresenter.counter.value.value,
-            )
-        }
-    }
-
-    private fun setMinusButtonClick() {
-        binding.counterCartProduct.minusButton.setOnClickListener {
-            binding.counterCartProduct.presenter.minusCount()
-            presenter.updateProductCount(
-                adapterPosition,
-                counterPresenter.counter.value.value,
-            )
-        }
-    }
-
-    private fun setCheckBoxCheckedChange() {
+    private fun checkBoxChange() {
         binding.checkboxProductCart.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                presenter.addProductInOrder(adapterPosition)
+                presenter.addProductInOrder(cartProductModel)
+                updateOrderView()
             } else {
-                presenter.deleteProductInOrder(adapterPosition)
+                presenter.deleteProductInOrder(cartProductModel)
+                updateOrderView()
             }
         }
+    }
+
+    private fun updateOrderView() {
+        presenter.updateOrderCount()
+        presenter.updateOrderPrice()
+        presenter.checkCurrentPageProductsOrderState()
     }
 }

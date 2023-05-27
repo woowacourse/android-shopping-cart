@@ -1,16 +1,14 @@
 package woowacourse.shopping
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import junit.framework.TestCase.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.presentation.cart.CartContract
 import woowacourse.shopping.presentation.cart.CartPresenter
 import woowacourse.shopping.presentation.mapper.toPresentation
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.repository.CartRepository
 
 class CartPresenterTest {
@@ -18,14 +16,10 @@ class CartPresenterTest {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var cartRepository: CartRepository
 
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
-
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         cartRepository = mockk(relaxed = true)
-        presenter = CartPresenter(view, cartRepository)
     }
 
     private fun makeNotOrderedCartProductInfoList(): CartProductInfoList {
@@ -44,146 +38,134 @@ class CartPresenterTest {
         return Product(id, "", "", Price(1000))
     }
 
-    @Test
-    fun 페이지의_0번째_상품을_삭제할_수_있다() {
-        // given
-        val initCartProductInfoList = makeNotOrderedCartProductInfoList()
-        val deleteItem = initCartProductInfoList.items[0]
-        presenter = CartPresenter(view, cartRepository, initCartProductInfoList)
-        // when
-        presenter.deleteProductItem(0)
-        val actual = presenter.loadedCartProducts.value.items.contains(deleteItem)
-        // then
-        verify { cartRepository.deleteCartProductId(0) }
-        assertEquals(actual, false)
+    private fun makeTestCartProduct(
+        id: Int,
+        count: Int,
+        isOrdered: Boolean = false,
+    ): CartProductInfoModel {
+        return CartProductInfoModel(makeTestProduct(id).toPresentation(), count, isOrdered)
     }
 
     @Test
-    fun 페이지의_0번째_상품의_count를_업데이트_할_수_있다() {
+    fun x버튼을_누르면_해당하는_상품을_삭제할_수_있다() {
         // given
-        val initCartProductInfoList = makeNotOrderedCartProductInfoList()
-        presenter = CartPresenter(view, cartRepository, initCartProductInfoList)
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository)
         // when
-        presenter.updateProductCount(0, 3)
-        val actual = presenter.loadedCartProducts.value.items[0].count
-        // then
-        verify { cartRepository.updateCartProductCount(0, 3) }
-        assertEquals(actual, 3)
-    }
-
-    @Test
-    fun 전체_체크박스를_체크하면_페이지에_있는_모든_상품을_주문목록에_추가한다() {
-        // given
-        val initCartProductInfoList = makeNotOrderedCartProductInfoList()
-        presenter = CartPresenter(view, cartRepository, initCartProductInfoList)
-        // when
-        presenter.changeCurrentPageProductsOrder()
-        val actualFirst = presenter.loadedCartProducts.value.items.first().isOrdered
-        val actualLast = presenter.loadedCartProducts.value.items.last().isOrdered
-        // then
-        assertEquals(true, actualFirst)
-        assertEquals(true, actualLast)
-    }
-
-    @Test
-    fun 전체_체크박스를_해제하면_페이지에_있는_모든_상품을_주문목록에_추가한다() {
-        // given
-        val initCartProductInfoList = makeOrderedCartProductInfoList()
-        presenter = CartPresenter(view, cartRepository, initCartProductInfoList)
-        // when
-        presenter.changeCurrentPageProductsOrder()
-        val actualFirst = presenter.loadedCartProducts.value.items.first().isOrdered
-        val actualLast = presenter.loadedCartProducts.value.items.last().isOrdered
-        // then
-        assertEquals(false, actualFirst)
-        assertEquals(false, actualLast)
-    }
-
-    @Test
-    fun 현재_페이지의_카트_목록을_총_로드된_카트목록에_추가한다() {
-        // given
-        presenter = CartPresenter(
-            view = view,
-            cartRepository = cartRepository,
-            initCartProductList = CartProductInfoList(listOf()),
-            initPage = 1,
+        presenter.deleteProductItem(
+            CartProductInfoModel(makeTestProduct(1).toPresentation(), 1),
         )
-        every {
-            cartRepository.getCartProductsInfo(
-                5,
-                0,
-            )
-        } returns makeNotOrderedCartProductInfoList()
-        // when
-        presenter.loadCurrentPageProducts()
         // then
-        assertEquals(
-            presenter.loadedCartProducts.value.items.first(),
-            makeNotOrderedCartProductInfoList().items.first(),
+        verify { cartRepository.deleteCartProductId(1) }
+        val expectedList = listOf(
+            makeTestCartProduct(0, 1),
+            makeTestCartProduct(2, 1),
+            makeTestCartProduct(3, 1),
+            makeTestCartProduct(4, 1),
         )
-        assertEquals(
-            presenter.loadedCartProducts.value.items.last(),
-            makeNotOrderedCartProductInfoList().items.last(),
-        )
+        verify { view.setCartItems(expectedList) }
     }
 
     @Test
-    fun 현재_페이지의_화면을_업데이트한다() {
+    fun 수량_더하기_버튼을_누르면_해당하는_상품의_개수를_업데이트_할_수_있다() {
         // given
-        presenter = CartPresenter(
-            view = view,
-            cartRepository = cartRepository,
-            initCartProductList = makeNotOrderedCartProductInfoList(),
-            initPage = 1,
-        )
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository)
         // when
-        presenter.updateCurrentPageCartView()
+        presenter.updateProductCount(makeTestCartProduct(1, 2), 3)
         // then
-        val actual = makeNotOrderedCartProductInfoList().items.map { it.toPresentation() }
-        verify { view.setCartItems(actual) }
+        verify { cartRepository.updateCartProductCount(1, 3) }
     }
 
     @Test
-    fun `0번째_상품의_체크박스를_체크하면_주문목록에_추가된다`() {
+    fun 전체_체크박스를_체크하면_페이지에_있는_모든_상품들을_주문목록에_추가한다() {
         // given
-        presenter = CartPresenter(
-            view = view,
-            cartRepository = cartRepository,
-            initCartProductList = makeNotOrderedCartProductInfoList(),
-            initPage = 1,
-        )
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository)
         // when
-        presenter.addProductInOrder(0)
+        presenter.changeCurrentPageProductsOrder(true)
         // then
-        val actual = presenter.loadedCartProducts.value.items[0].isOrdered
-        assertEquals(true, actual)
+        val expectedList = listOf(
+            makeTestCartProduct(0, 1, true),
+            makeTestCartProduct(1, 1, true),
+            makeTestCartProduct(2, 1, true),
+            makeTestCartProduct(3, 1, true),
+            makeTestCartProduct(4, 1, true),
+        )
+        verify { view.setCartItems(expectedList) }
+    }
+
+    @Test
+    fun 전체_체크박스를_해제하면_페이지에_있는_모든_상품들의_주문목록을_해제한다() {
+        // given
+        every { cartRepository.getAllCartProductsInfo() } returns makeOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository)
+        // when
+        presenter.changeCurrentPageProductsOrder(false)
+        // then
+        val expectedList = listOf(
+            makeTestCartProduct(0, 1, false),
+            makeTestCartProduct(1, 1, false),
+            makeTestCartProduct(2, 1, false),
+            makeTestCartProduct(3, 1, false),
+            makeTestCartProduct(4, 1, false),
+        )
+        verify { view.setCartItems(expectedList) }
+    }
+
+    @Test
+    fun 현재_페이지의_상품들을_새로고침한다() {
+        // given
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository)
+        // when
+        presenter.refreshCurrentPage()
+        // then
+        val expectedItems = makeNotOrderedCartProductInfoList().items.map { it.toPresentation() }
+        verify { view.setCartItems(expectedItems) }
+    }
+
+    @Test
+    fun `해당하는_상품의_체크박스를_체크하면_주문목록에_추가된다`() {
+        // given
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository)
+        // when
+        presenter.addProductInOrder(makeTestCartProduct(1, 1))
+        // then
+        val expectedItems = listOf(
+            makeTestCartProduct(0, 1),
+            makeTestCartProduct(1, 1, true),
+            makeTestCartProduct(2, 1),
+            makeTestCartProduct(3, 1),
+            makeTestCartProduct(4, 1),
+        )
+        verify { view.setCartItems(expectedItems) }
     }
 
     @Test
     fun `0번째_상품의_체크박스를_해제하면_주문목록에서_제거된다`() {
         // given
-        presenter = CartPresenter(
-            view = view,
-            cartRepository = cartRepository,
-            initCartProductList = makeNotOrderedCartProductInfoList(),
-            initPage = 1,
-        )
+        every { cartRepository.getAllCartProductsInfo() } returns makeOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository)
         // when
-        presenter.deleteProductInOrder(0)
+        presenter.deleteProductInOrder(makeTestCartProduct(1, 1))
         // then
-        val actual = presenter.loadedCartProducts.value.items[0].isOrdered
-        assertEquals(false, actual)
+        val expectedItems = listOf(
+            makeTestCartProduct(0, 1, true),
+            makeTestCartProduct(1, 1, false),
+            makeTestCartProduct(2, 1, true),
+            makeTestCartProduct(3, 1, true),
+            makeTestCartProduct(4, 1, true),
+        )
+        verify { view.setCartItems(expectedItems) }
     }
 
     @Test
     fun 다음_페이지에_상품이_있으면_오른쪽페이지_버튼상태를_true로_한다() {
         // given
-        every {
-            cartRepository.getCartProductsInfo(
-                5,
-                5,
-            )
-        } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository, 1)
+        every { cartRepository.getCartProductsInfo(5, 5) } returns makeNotOrderedCartProductInfoList()
         // when
         presenter.checkPlusPageAble()
         // then
@@ -193,7 +175,8 @@ class CartPresenterTest {
     @Test
     fun 다음_페이지에_상품이_없으면_오른쪽페이지_버튼상태를_false로_한다() {
         // given
-        every { cartRepository.getCartProductsInfo(5, 5) } returns CartProductInfoList(listOf())
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository, 1)
         // when
         presenter.checkPlusPageAble()
         // then
@@ -202,6 +185,9 @@ class CartPresenterTest {
 
     @Test
     fun 현재_페이지가_1이라면_왼쪽버튼상태를_false로_한다() {
+        // given
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository)
         // when
         presenter.checkMinusPageAble()
         // then
@@ -210,8 +196,10 @@ class CartPresenterTest {
 
     @Test
     fun 현재_페이지가_1이_아니라면_왼쪽버튼상태를_true로_한다() {
+        // given
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository, 2)
         // when
-        presenter.plusPage()
         presenter.checkMinusPageAble()
         // then
         verify { view.setUpMinusPageState(true) }
@@ -220,12 +208,12 @@ class CartPresenterTest {
     @Test
     fun 오른쪽_버튼을_페이지를_1_증가시킨다() {
         // given
-        presenter = CartPresenter(view, cartRepository, initPage = 1)
+        every { cartRepository.getAllCartProductsInfo() } returns makeNotOrderedCartProductInfoList()
+        presenter = CartPresenter(view, cartRepository, 1)
         // when
         presenter.plusPage()
-        val actual = presenter.paging.currentPage.value.value
         // then
-        assertEquals(2, actual)
+        verify { view.setPage("2") }
     }
 
     @Test
@@ -234,8 +222,7 @@ class CartPresenterTest {
         presenter = CartPresenter(view, cartRepository, initPage = 2)
         // when
         presenter.minusPage()
-        val actual = presenter.paging.currentPage.value.value
         // then
-        assertEquals(1, actual)
+        verify { view.setPage("1") }
     }
 }
