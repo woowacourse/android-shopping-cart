@@ -2,16 +2,17 @@ package woowacourse.shopping.view.productlist
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.CartProductSqliteProductRepository
 import woowacourse.shopping.model.ProductModel
 
 class ProductListAdapter(
     private val recentViewedProducts: List<ProductModel>,
     private val products: List<ProductModel>,
-    private val cartRepository: CartProductSqliteProductRepository,
     private val onProductClick: (ProductModel) -> Unit,
     private val onShowMoreClick: () -> Unit,
     private val showCartItemsCountInMenu: () -> Unit,
+    private val addProductCount: (ProductModel) -> Unit,
+    private val plusProductCount: (ProductModel) -> Unit,
+    private val minusProductCount: (ProductModel) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder.of(
@@ -43,7 +44,13 @@ class ProductListAdapter(
 
             is ProductViewHolder.ProductItemViewHolder -> {
                 val convertPosition = if (isRecentViewedExist()) position - 1 else position
-                holder.bind(products[convertPosition], cartRepository, showCartItemsCountInMenu)
+                holder.bind(
+                    products[convertPosition],
+                    showCartItemsCountInMenu,
+                    addProductCount,
+                    plusProductCount,
+                    minusProductCount,
+                )
             }
 
             is ProductViewHolder.ShowMoreViewHolder -> {

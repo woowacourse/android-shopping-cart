@@ -58,6 +58,26 @@ class ProductListPresenter(
         return cartProductRepository.findAll().sumOf { it.count }
     }
 
+    override fun addProductCount(product: ProductModel) {
+        cartProductRepository.add(product.id, 1, true)
+        product.count++
+    }
+
+    override fun plusProductCount(product: ProductModel) {
+        cartProductRepository.plusCount(product.id)
+        product.count++
+    }
+
+    override fun minusProductCount(product: ProductModel) {
+        if (product.count <= 1) {
+            cartProductRepository.remove(product.id)
+            product.count--
+        } else {
+            cartProductRepository.subCount(product.id)
+            product.count--
+        }
+    }
+
     override fun handleNextStep(itemId: Int) {
         when (itemId) {
             R.id.cart -> {

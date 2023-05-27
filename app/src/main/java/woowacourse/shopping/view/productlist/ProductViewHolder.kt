@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.CartProductSqliteProductRepository
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentViewedBinding
 import woowacourse.shopping.databinding.ItemShowMoreBinding
@@ -33,36 +32,54 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(
             product: ProductModel,
-            cartRepository: CartProductSqliteProductRepository,
             showCartItemsCountInMenu: () -> Unit,
+            addProductCount: (ProductModel) -> Unit,
+            plusProductCount: (ProductModel) -> Unit,
+            minusProductCount: (ProductModel) -> Unit,
         ) {
             setVisibility(product.count)
             binding.product = product
             binding.count.count = product.count
             binding.countOpen.setOnClickListener {
-                cartRepository.add(product.id, 1, true)
-                product.count++
-                binding.count.count = product.count
-                setVisibility(product.count)
-                showCartItemsCountInMenu()
+                onCountOpenClick(product, addProductCount, showCartItemsCountInMenu)
             }
             binding.count.plusClickListener = {
-                cartRepository.plusCount(product.id)
-                product.count++
-                setVisibility(product.count)
-                showCartItemsCountInMenu()
+                onCountPlusClick(product, plusProductCount, showCartItemsCountInMenu)
             }
             binding.count.minusClickListener = {
-                if (product.count <= 1) {
-                    cartRepository.remove(product.id)
-                    product.count--
-                } else {
-                    cartRepository.subCount(product.id)
-                    product.count--
-                }
-                showCartItemsCountInMenu()
-                setVisibility(product.count)
+                onCountMinusClick(product, minusProductCount, showCartItemsCountInMenu)
             }
+        }
+
+        private fun onCountOpenClick(
+            product: ProductModel,
+            addProductCount: (ProductModel) -> Unit,
+            showCartItemsCountInMenu: () -> Unit,
+        ) {
+            addProductCount(product)
+            setVisibility(product.count)
+            showCartItemsCountInMenu()
+            binding.count.count = product.count
+        }
+
+        private fun onCountPlusClick(
+            product: ProductModel,
+            plusProductCount: (ProductModel) -> Unit,
+            showCartItemsCountInMenu: () -> Unit,
+        ) {
+            plusProductCount(product)
+            setVisibility(product.count)
+            showCartItemsCountInMenu()
+        }
+
+        private fun onCountMinusClick(
+            product: ProductModel,
+            minusProductCount: (ProductModel) -> Unit,
+            showCartItemsCountInMenu: () -> Unit,
+        ) {
+            minusProductCount(product)
+            setVisibility(product.count)
+            showCartItemsCountInMenu()
         }
 
         private fun setVisibility(count: Int) {

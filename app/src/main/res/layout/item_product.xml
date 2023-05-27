@@ -12,6 +12,7 @@
         <variable
             name="onItemClick"
             type="kotlin.jvm.functions.Function1" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

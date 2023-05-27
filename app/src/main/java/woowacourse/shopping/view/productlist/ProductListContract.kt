@@ -17,5 +17,8 @@ interface ProductListContract {
         fun calculateSpanSize(recentViewedProducts: List<ProductModel>, position: Int): Int
         fun handleNextStep(itemId: Int)
         fun getCartItemsCount(): Int
+        fun addProductCount(product: ProductModel)
+        fun plusProductCount(product: ProductModel)
+        fun minusProductCount(product: ProductModel)
     }
 }

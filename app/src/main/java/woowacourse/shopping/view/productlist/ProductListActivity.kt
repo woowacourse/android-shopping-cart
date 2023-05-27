@@ -71,10 +71,12 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.gridProducts.adapter = ProductListAdapter(
             recentViewedProducts,
             products,
-            CartProductSqliteProductRepository(CartDBHelper(this)),
             fun(product: ProductModel) { showProductDetail(product) },
             fun() { presenter.showMoreProducts() },
             ::showCartItemsCountInMenu,
+            fun(product: ProductModel) { presenter.addProductCount(product) },
+            fun(product: ProductModel) { presenter.plusProductCount(product) },
+            fun(product: ProductModel) { presenter.minusProductCount(product) },
         )
     }
 
