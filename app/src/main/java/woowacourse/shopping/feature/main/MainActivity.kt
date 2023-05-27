@@ -100,7 +100,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private fun initPresenter() {
         presenter = MainPresenter(
             this,
-            ProductRemoteMockRepositoryImpl(ProductMockService(MockServer()), ProductCacheImpl),
+            ProductRemoteMockRepositoryImpl(
+                ProductMockService(MockServer(applicationContext)),
+                ProductCacheImpl
+            ),
             RecentProductRepositoryImpl(RecentDao(this)),
             CartRepositoryImpl(CartDao(this))
         )

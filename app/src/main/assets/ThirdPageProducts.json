@@ -1,0 +1,13 @@
+{
+  "code": 200,
+  "data": {
+    "products": [
+      {
+        "id": 41,
+        "name": "[마이노멀] 알룰로스",
+        "imageUrl": "https://img-cf.kurly.com/shop/data/goods/1657530801983l0.jpg",
+        "price": 8900
+      }
+    ]
+  }
+}
