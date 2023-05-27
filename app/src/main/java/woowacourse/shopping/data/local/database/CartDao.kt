@@ -84,7 +84,7 @@ class CartDao(context: Context) {
         return db.rawQuery(CartContract.getCartSql(startPosition, cartItemCount), null)
     }
 
-    fun getDataForTotalPrice(): List<CartProductEntity> {
+    fun getTotalPrice(): List<CartProductEntity> {
         val result = mutableListOf<CartProductEntity>()
         val cursor = getTotalPriceCursor()
         with(cursor) {

@@ -3,14 +3,12 @@ package woowacourse.shopping.presentation.view.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.data.respository.cart.CartRepository
-import woowacourse.shopping.data.respository.cart.CartTotalPriceRepository
 import woowacourse.shopping.domain.CartPage
 import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    private val cartTotalPriceRepository: CartTotalPriceRepository,
     private var cartPage: CartPage = CartPage()
 ) : CartContract.Presenter {
     private val _totalPrice = MutableLiveData<Int>()
@@ -25,7 +23,7 @@ class CartPresenter(
         newCarts = submitNewCarts(newCarts)
         view.setCartItemsView(newCarts)
         view.setCurrentPage(cartPage.currentPage)
-        _totalPrice.value = cartTotalPriceRepository.getTotalPrice()
+        _totalPrice.value = cartRepository.getTotalPrice()
     }
 
     private fun submitNewCarts(newCarts: List<CartProductModel>): List<CartProductModel> {
@@ -61,7 +59,7 @@ class CartPresenter(
 
     override fun changeAllCartSelectedStatus(cartsId: List<Long>, isSelected: Boolean) {
         cartRepository.updateCartsSelected(cartsId, isSelected)
-        _totalPrice.value = cartTotalPriceRepository.getTotalPrice()
+        _totalPrice.value = cartRepository.getTotalPrice()
     }
 
     override fun changeCartSelectedStatus(productId: Long, isSelected: Boolean) {
@@ -75,7 +73,7 @@ class CartPresenter(
     }
 
     private fun updateTotalPrice() {
-        _totalPrice.value = cartTotalPriceRepository.getTotalPrice()
+        _totalPrice.value = cartRepository.getTotalPrice()
     }
 
     companion object {

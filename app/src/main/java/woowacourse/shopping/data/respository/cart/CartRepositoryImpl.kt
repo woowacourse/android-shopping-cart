@@ -2,6 +2,7 @@ package woowacourse.shopping.data.respository.cart
 
 import woowacourse.shopping.data.local.database.CartDao
 import woowacourse.shopping.data.mapper.toUIModel
+import woowacourse.shopping.data.respository.product.ProductsDao
 import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
@@ -31,5 +32,9 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
 
     override fun insertCart(productId: Long, productCount: Int) {
         cartDao.insertProduct(productId, productCount)
+    }
+
+    override fun getTotalPrice(): Int {
+        return cartTotalPrice
     }
 }

@@ -6,7 +6,7 @@ object CartContract {
     const val CREATE_SQL = "CREATE TABLE IF NOT EXISTS ${Cart.TABLE_NAME} (" +
         "${Cart.PRODUCT_ID} INTEGER PRIMARY KEY," +
         "${Cart.PRODUCT_COUNT} INTEGER default 0," +
-        "${Cart.IS_SELECTED} TEXT default 'n')"
+        "${Cart.IS_SELECTED} TEXT default '0')"
 
     const val DROP_SQL = "DROP TABLE IF EXISTS ${Cart.TABLE_NAME}"
 
@@ -20,7 +20,7 @@ object CartContract {
     fun getTotalPriceSql(): String {
         return "SELECT * " +
             "FROM ${Cart.TABLE_NAME} " +
-            "WHERE ${Cart.PRODUCT_COUNT} > '0' and ${Cart.IS_SELECTED}= 'y'"
+            "WHERE ${Cart.PRODUCT_COUNT} > '0' and ${Cart.IS_SELECTED}= '1'"
     }
 
     fun getProductCount(productId: Long): String {

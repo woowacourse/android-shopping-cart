@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.local.database.CartDao
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
-import woowacourse.shopping.data.respository.cart.CartTotalPriceRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.view.cart.adapter.CartAdapter
@@ -25,8 +24,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val presenter: CartContract.Presenter by lazy {
         CartPresenter(
             this,
-            CartRepositoryImpl(CartDao(this)),
-            CartTotalPriceRepositoryImpl(CartDao(this))
+            CartRepositoryImpl(CartDao(this))
         )
     }
 

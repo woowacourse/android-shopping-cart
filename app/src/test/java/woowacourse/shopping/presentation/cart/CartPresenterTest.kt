@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.data.respository.cart.CartRepository
-import woowacourse.shopping.data.respository.cart.CartTotalPriceRepository
 import woowacourse.shopping.presentation.CartProductFixture
 import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.view.cart.CartContract
@@ -21,7 +20,6 @@ internal class CartPresenterTest {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var view: CartContract.View
     private lateinit var cartRepository: CartRepository
-    private lateinit var cartTotalPriceRepository: CartTotalPriceRepository
 
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
@@ -30,7 +28,6 @@ internal class CartPresenterTest {
     fun setUp() {
         view = mockk(relaxed = true)
         cartRepository = mockk(relaxed = true)
-        cartTotalPriceRepository = mockk(relaxed = true)
     }
 
     @Test
@@ -44,7 +41,7 @@ internal class CartPresenterTest {
                 capture(cartItemSlot)
             )
         }
-        presenter = CartPresenter(view, cartRepository, cartTotalPriceRepository)
+        presenter = CartPresenter(view, cartRepository)
         // when
         presenter.loadCartItems()
 
@@ -62,7 +59,7 @@ internal class CartPresenterTest {
         justRun { cartRepository.deleteCartByProductId(1) }
         every { cartRepository.getCarts(0, 4) } returns CartProductFixture.getFixture().dropLast(1)
 
-        presenter = CartPresenter(view, cartRepository, cartTotalPriceRepository)
+        presenter = CartPresenter(view, cartRepository)
 
         // when
         val cartItemSlot = slot<List<CartProductModel>>()
@@ -81,8 +78,8 @@ internal class CartPresenterTest {
 
     @Test
     fun `카트에 있는 총 합 가격을 계산한다`() {
-        every { cartTotalPriceRepository.getTotalPrice() } returns 10000
-        presenter = CartPresenter(view, cartRepository, cartTotalPriceRepository)
+        every { cartRepository.getTotalPrice() } returns 10000
+        presenter = CartPresenter(view, cartRepository)
         // when
         presenter.loadCartItems()
         // then

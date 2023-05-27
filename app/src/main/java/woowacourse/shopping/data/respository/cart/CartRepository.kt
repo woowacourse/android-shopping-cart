@@ -8,4 +8,5 @@ interface CartRepository {
     fun updateCartsSelected(productsId: List<Long>, isSelected: Boolean)
     fun deleteCartByProductId(productId: Long)
     fun insertCart(productId: Long, productCount: Int)
+    fun getTotalPrice(): Int
 }
