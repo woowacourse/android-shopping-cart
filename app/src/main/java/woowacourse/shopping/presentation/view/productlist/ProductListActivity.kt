@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.view.productlist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -51,7 +50,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
 
     private val productListener = object : ProductListener {
         override fun onCountClick(productId: Long, count: Int) {
-            Log.d("test", "오냐? count: $count")
             presenter.updateCount(productId, count)
         }
 
