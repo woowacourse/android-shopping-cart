@@ -2,7 +2,6 @@ package woowacourse.shopping.presentation.view.productlist
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
@@ -127,8 +126,11 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         productListAdapter =
             ProductListAdapter(
                 products,
-                { onProductClickEvent(it, recentProductId) },
-                ::onCountChangedEvent
+                {
+                    updateRecentProduct(it)
+                    startProductDetailActivity(it, recentProductId)
+                },
+                ::updateCartProductCount
             )
     }
 
@@ -138,7 +140,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun setMoreProductListAdapter() {
-        moreProductListAdapter = MoreProductListAdapter(::onMoreProductList)
+        moreProductListAdapter = MoreProductListAdapter(::getMoreProductList)
     }
 
     private fun setConcatAdapter() {
@@ -153,16 +155,18 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         recentProductListAdapter.updateDataSet()
     }
 
-    private fun onProductClickEvent(product: ProductModel, recentProductId: Long) {
-        presenter.saveRecentProduct(product.id)
-        presenter.updateRecentProductItems()
-        Log.d("this", "onProductClickEvent: $recentProductId")
+    private fun startProductDetailActivity(product: ProductModel, recentProductId: Long) {
         moveToActivityWithRecentProduct(
             product.id, recentProductId
         )
     }
 
-    private fun onCountChangedEvent(id: Long, Count: Int, position: Int) {
+    private fun updateRecentProduct(product: ProductModel) {
+        presenter.saveRecentProduct(product.id)
+        presenter.updateRecentProductItems()
+    }
+
+    private fun updateCartProductCount(id: Long, Count: Int, position: Int) {
         presenter.updateCartProduct(id, Count, position)
     }
 
@@ -175,7 +179,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         activityResultLauncher.launch(intent)
     }
 
-    private fun onMoreProductList() {
+    private fun getMoreProductList() {
         presenter.loadMoreData(productListAdapter.itemCount - 1)
     }
 
