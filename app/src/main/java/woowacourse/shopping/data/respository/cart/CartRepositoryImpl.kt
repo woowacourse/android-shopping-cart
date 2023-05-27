@@ -35,6 +35,9 @@ class CartRepositoryImpl(private val cartDao: CartDao) : CartRepository {
     }
 
     override fun getTotalPrice(): Int {
-        return cartTotalPrice
+        return cartDao.getSelectedData().sumOf {
+            (ProductsDao.getDataById(it.productId) ?: ProductsDao.getErrorData())
+                .price * it.count
+        }
     }
 }
