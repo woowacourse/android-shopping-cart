@@ -15,6 +15,7 @@ import woowacourse.shopping.presentation.ui.shoppingCart.adapter.ShoppingCartAda
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartContract
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartPresenter
 import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ShoppingCartUiState
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private lateinit var binding: ActivityShoppingCartBinding
@@ -31,12 +32,15 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         )
     }
 
+    override fun setTotalPrice(shoppingCart: ShoppingCartUiState) {
+        binding.shoppingCart = shoppingCart
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initPresenterDataBinding()
         initView()
         initClickListeners()
         initAdapter()
@@ -46,13 +50,9 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         binding.rvShoppingCart.adapter = shoppingCartAdapter
     }
 
-    private fun initPresenterDataBinding() {
-        binding.presenter = presenter
-        binding.lifecycleOwner = this
-    }
-
     private fun initView() {
         presenter.fetchProductsInCartByPage(INIT_PAGE)
+        presenter.fetchTotalPriceByCheckAll()
         presenter.setPageNumber()
         presenter.checkPageMovement()
     }
@@ -107,6 +107,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             }
 
             presenter.addCountOfProductInCart(request, productInCart)
+            presenter.fetchTotalPriceByCheckAll()
         }
 
         override fun setClickEventOnCheckBox(
@@ -123,8 +124,12 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun setEventOnDelete(productInCart: ProductInCartUiState) {
-        val result = presenter.deleteProductInCart(productInCart.product.id)
-        if (result) shoppingCartAdapter.deleteItem(productInCart.product.id)
+        presenter.deleteProductInCart(productInCart.product.id)
+        presenter.fetchTotalPriceByCheckAll()
+    }
+
+    override fun deleteItemInCart(result: Boolean, productId: Long) {
+        if (result) shoppingCartAdapter.deleteItem(productId)
     }
 
     companion object {

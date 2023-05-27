@@ -1,8 +1,6 @@
 package woowacourse.shopping.databinding;
 import woowacourse.shopping.R;
 import woowacourse.shopping.BR;
-import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -93,7 +91,7 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
     public boolean setVariable(int variableId, @Nullable Object variable)  {
         boolean variableSet = true;
         if (BR.shoppingCart == variableId) {
-            setShoppingCart((ProductInCartUiState) variable);
+            setShoppingCart((woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState) variable);
         }
         else if (BR.setClickListener == variableId) {
             setSetClickListener((woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener) variable);
@@ -104,7 +102,7 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
             return variableSet;
     }
 
-    public void setShoppingCart(@Nullable ProductInCartUiState ShoppingCart) {
+    public void setShoppingCart(@Nullable woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState ShoppingCart) {
         this.mShoppingCart = ShoppingCart;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -153,7 +151,7 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
             mDirtyFlags = 0;
         }
         java.lang.String shoppingCartProductItemImage = null;
-        ProductInCartUiState shoppingCart = mShoppingCart;
+        woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
         java.lang.String tvCartProductPriceAndroidStringPriceFormatShoppingCartGetTotalPriceOfProduct = null;
         int shoppingCartGetTotalPriceOfProduct = 0;
         woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener setClickListener = mSetClickListener;
@@ -217,7 +215,7 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
         // setClickListener != null
         boolean setClickListenerJavaLangObjectNull = false;
         // shoppingCart
-        ProductInCartUiState shoppingCart = mShoppingCart;
+        woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
         // setClickListener
         woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener setClickListener = mSetClickListener;
 
@@ -239,7 +237,7 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
                 // setClickListener != null
                 boolean setClickListenerJavaLangObjectNull = false;
                 // shoppingCart
-                ProductInCartUiState shoppingCart = mShoppingCart;
+                woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
                 // setClickListener
                 woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener setClickListener = mSetClickListener;
 
@@ -259,7 +257,7 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
                 // setClickListener != null
                 boolean setClickListenerJavaLangObjectNull = false;
                 // shoppingCart
-                ProductInCartUiState shoppingCart = mShoppingCart;
+                woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
                 // setClickListener
                 woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener setClickListener = mSetClickListener;
 

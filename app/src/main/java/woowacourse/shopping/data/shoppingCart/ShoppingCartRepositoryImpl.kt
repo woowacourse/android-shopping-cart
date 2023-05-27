@@ -23,7 +23,7 @@ class ShoppingCartRepositoryImpl(
 
     private fun ProductInCartEntity.toProductInCart(): ProductInCart? {
         val product = productDataSource.getProductEntity(productId)?.toDomainModel()
-        return product?.let { ProductInCart(it, quantity) }
+        return product?.let { ProductInCart(it, quantity, true) }
     }
 
     override fun addProductInCart(productInCart: ProductInCart): Long {

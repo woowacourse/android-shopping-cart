@@ -1,8 +1,6 @@
 package woowacourse.shopping.databinding;
 import woowacourse.shopping.R;
 import woowacourse.shopping.BR;
-import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -75,7 +73,7 @@ public class LayoutControlQuantityBindingImpl extends LayoutControlQuantityBindi
             setSetQuantityClickListener((woowacourse.shopping.presentation.ui.common.QuantityControlClickListener) variable);
         }
         else if (BR.productInCart == variableId) {
-            setProductInCart((ProductInCartUiState) variable);
+            setProductInCart((woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState) variable);
         }
         else {
             variableSet = false;
@@ -91,7 +89,7 @@ public class LayoutControlQuantityBindingImpl extends LayoutControlQuantityBindi
         notifyPropertyChanged(BR.setQuantityClickListener);
         super.requestRebind();
     }
-    public void setProductInCart(@Nullable ProductInCartUiState ProductInCart) {
+    public void setProductInCart(@Nullable woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState ProductInCart) {
         this.mProductInCart = ProductInCart;
         synchronized(this) {
             mDirtyFlags |= 0x2L;
@@ -118,7 +116,7 @@ public class LayoutControlQuantityBindingImpl extends LayoutControlQuantityBindi
         java.lang.String stringValueOfProductInCartQuantity = null;
         woowacourse.shopping.presentation.ui.common.QuantityControlClickListener setQuantityClickListener = mSetQuantityClickListener;
         int productInCartDeletedViewINVISIBLEViewVISIBLE = 0;
-        ProductInCartUiState productInCart = mProductInCart;
+        woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState productInCart = mProductInCart;
         int productInCartQuantity = 0;
 
         if ((dirtyFlags & 0x6L) != 0) {
@@ -169,7 +167,7 @@ public class LayoutControlQuantityBindingImpl extends LayoutControlQuantityBindi
                 // setQuantityClickListener
                 woowacourse.shopping.presentation.ui.common.QuantityControlClickListener setQuantityClickListener = mSetQuantityClickListener;
                 // productInCart
-                ProductInCartUiState productInCart = mProductInCart;
+                woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState productInCart = mProductInCart;
                 // setQuantityClickListener != null
                 boolean setQuantityClickListenerJavaLangObjectNull = false;
 
@@ -190,7 +188,7 @@ public class LayoutControlQuantityBindingImpl extends LayoutControlQuantityBindi
                 // setQuantityClickListener
                 woowacourse.shopping.presentation.ui.common.QuantityControlClickListener setQuantityClickListener = mSetQuantityClickListener;
                 // productInCart
-                ProductInCartUiState productInCart = mProductInCart;
+                woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState productInCart = mProductInCart;
                 // setQuantityClickListener != null
                 boolean setQuantityClickListenerJavaLangObjectNull = false;
 

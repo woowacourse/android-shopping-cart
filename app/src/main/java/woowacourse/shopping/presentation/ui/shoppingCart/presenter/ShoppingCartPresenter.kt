@@ -1,7 +1,5 @@
 package woowacourse.shopping.presentation.ui.shoppingCart.presenter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.PageNumber
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.model.ProductInCart
@@ -10,6 +8,7 @@ import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator.MINUS
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator.PLUS
 import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ShoppingCartUiState
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
@@ -17,23 +16,38 @@ class ShoppingCartPresenter(
 ) : ShoppingCartContract.Presenter {
     private var pageNumber = PageNumber()
 
-    val _isChecked: MutableLiveData<Boolean> = MutableLiveData(true)
+    private fun saveProductCheckState(): MutableMap<ProductInCart, Boolean> {
+        val shoppingCart = shoppingCartRepository.getShoppingCart()
+        val productCheckState: MutableMap<ProductInCart, Boolean> = mutableMapOf()
 
-    // val isChecked: LiveData<Boolean> get() = _isChecked
-    private val _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
-    val totalPrice: LiveData<Int> get() = _totalPrice
-    private val _totalAmount: MutableLiveData<Int> = MutableLiveData(0)
-    val totalAmount: LiveData<Int> get() = _totalAmount
+        shoppingCart.forEach {
+            productCheckState[it] = it.isChecked
+        }
+
+        return productCheckState
+    }
 
     override fun fetchProductsInCartByPage(page: Int) {
-        val shoppingCart = shoppingCartRepository.getShoppingCart()
-        val shoppingCartByPage =
+        val productsInCartByPage =
             shoppingCartRepository.getShoppingCartByPage(SHOPPING_CART_ITEM_COUNT, page)
 
-        _totalAmount.value = shoppingCart.sumOf { it.quantity }
-        _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
+        view.setShoppingCart(productsInCartByPage.map { it.toProductInCartUiState() })
+    }
 
-        view.setShoppingCart(shoppingCartByPage.map { it.toUiState() })
+    override fun fetchTotalPriceByCheckAll() {
+        val productCheckState = saveProductCheckState()
+        val isCheckedAll = productCheckState.values.all { it }
+        val totalPrice = productCheckState.asSequence().filter { it.value }
+            .sumOf { it.key.getTotalPriceOfProduct() }
+        val amount = productCheckState.asSequence().filter { it.value }.sumOf { it.key.quantity }
+
+        view.setTotalPrice(
+            ShoppingCartUiState(
+                isCheckedAll = isCheckedAll,
+                totalPrice = totalPrice,
+                amount = amount,
+            ),
+        )
     }
 
     override fun addCountOfProductInCart(request: Operator, productInCart: ProductInCartUiState) {
@@ -47,46 +61,27 @@ class ShoppingCartPresenter(
             ProductInCart(
                 productInCart.product,
                 quantity.amount,
+                false,
             ),
         )
         val shoppingCart = shoppingCartRepository.getShoppingCart()
 
-        _totalAmount.value = shoppingCart.sumOf { it.quantity }
-        _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
-        view.setShoppingCart(shoppingCart.map { it.toUiState() })
+        view.setShoppingCart(shoppingCart.map { it.toProductInCartUiState() })
     }
 
-    override fun deleteProductInCart(productId: Long): Boolean {
+    override fun deleteProductInCart(productId: Long) {
         val result = shoppingCartRepository.deleteProductInCart(productId)
-        val shoppingCart = shoppingCartRepository.getShoppingCart()
-        _totalAmount.value = shoppingCart.sumOf { it.quantity }
-        _totalPrice.value = shoppingCart.sumOf { it.getTotalPriceOfProduct() }
 
-        Thread {
-        }
-        return result
+        view.deleteItemInCart(result, productId)
     }
 
     override fun calculateTotalWithCheck(isChecked: Boolean, productInCart: ProductInCartUiState) {
         val shoppingCart = shoppingCartRepository.getShoppingCart()
 
-        when (isChecked) {
-            false -> calculateUnChecked(shoppingCart)
-            true -> calculateChecked(shoppingCart)
-        }
-    }
-
-    private fun calculateUnChecked(shoppingCart: List<ProductInCart>) {
-        _isChecked.value = false
-        _totalAmount.value = _totalAmount.value?.minus(shoppingCart.sumOf { it.quantity })
-        _totalPrice.value =
-            _totalPrice.value?.minus(shoppingCart.sumOf { it.getTotalPriceOfProduct() })
-    }
-
-    private fun calculateChecked(shoppingCart: List<ProductInCart>) {
-        _totalAmount.value = _totalAmount.value?.plus(shoppingCart.sumOf { it.quantity })
-        _totalPrice.value =
-            _totalPrice.value?.plus(shoppingCart.sumOf { it.getTotalPriceOfProduct() })
+        // 체크 분기처리하기
+        // 전체체크 해제 시, 0원 else max
+        // 단일 체크 해제 시, delete와 같은 효과
+        // 단일 체크 해제 시, 전체 체크해제
     }
 
     override fun setPageNumber() {
@@ -96,7 +91,7 @@ class ShoppingCartPresenter(
     private fun getPage() {
         val shoppingCart =
             shoppingCartRepository.getShoppingCartByPage(SHOPPING_CART_ITEM_COUNT, pageNumber.value)
-                .map { it.toUiState() }
+                .map { it.toProductInCartUiState() }
         view.setShoppingCart(shoppingCart)
     }
 
@@ -123,10 +118,10 @@ class ShoppingCartPresenter(
         view.setPageButtonEnable(previousEnable, nextEnable)
     }
 
-    private fun ProductInCart.toUiState(): ProductInCartUiState = ProductInCartUiState(
+    private fun ProductInCart.toProductInCartUiState(): ProductInCartUiState = ProductInCartUiState(
         product = this.product,
         quantity = this.quantity,
-        isChecked = _isChecked.value ?: true,
+        isChecked = this.isChecked,
     )
 
     companion object {

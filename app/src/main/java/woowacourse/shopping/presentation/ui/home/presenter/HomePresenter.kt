@@ -55,7 +55,13 @@ class HomePresenter(
             Operator.MINUS -> quantity.subtract()
         }
 
-        shoppingCartRepository.addProductInCart(ProductInCart(productInCart, quantity.amount))
+        shoppingCartRepository.addProductInCart(
+            ProductInCart(
+                productInCart,
+                quantity.amount,
+                false,
+            ),
+        )
 
         val shoppingCart = shoppingCartRepository.getShoppingCart().map { it.toUiState() }
 
