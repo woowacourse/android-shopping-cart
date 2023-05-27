@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -15,6 +16,7 @@ import woowacourse.shopping.data.cart.cache.CartCacheImpl
 import woowacourse.shopping.data.cart.datasource.CartDataSourceImpl
 import woowacourse.shopping.data.cart.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.databinding.DialogCountPickerBinding
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.navigator.ProductDetailNavigator
@@ -23,9 +25,10 @@ import woowacourse.shopping.util.handleMissingSerializableData
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
+    private lateinit var dialogBinding: DialogCountPickerBinding
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailPresenter
-    private lateinit var dialog: ProductCountPickerDialog
+    private lateinit var dialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +88,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 presenter.loadLatestViewedProduct()
             }
             buttonPutToShoppingCart.setOnClickListener {
-                dialog.show(supportFragmentManager, ProductCountPickerDialog.TAG)
+                dialog.show()
             }
         }
     }
@@ -99,32 +102,33 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun setUpProductCountPickerDialog(product: ProductUiModel) {
-        val countPickerListenerImpl = object : CountPickerListener {
+        dialogBinding = DialogCountPickerBinding.inflate(layoutInflater)
+        dialog = AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .create()
 
-            override fun onPlus() {
-                presenter.plusCartProductCount()
-            }
-
-            override fun onMinus() {
-                presenter.minusCartProductCount()
-            }
-        }
-        val addingCartListenerImpl = object : AddingCartListener {
-
-            override fun onAdded() {
+        with(dialogBinding) {
+            this.product = product
+            countPicker.setListener(getCountPickerListener())
+            buttonAddToCart.setOnClickListener {
                 presenter.addToCart()
+                dialog.dismiss()
             }
         }
+    }
 
-        dialog = ProductCountPickerDialog.newInstance(
-            product = product,
-            countPickerListener = countPickerListenerImpl,
-            addingCartListener = addingCartListenerImpl
-        )
+    private fun getCountPickerListener() = object : CountPickerListener {
+        override fun onPlus() {
+            presenter.plusCartProductCount()
+        }
+
+        override fun onMinus() {
+            presenter.minusCartProductCount()
+        }
     }
 
     override fun setUpDialogTotalPriceView(totalPrice: Int) {
-        dialog.setTextTotalPrice(totalPrice)
+        dialogBinding.textProductPrice.text = totalPrice.toString()
     }
 
     companion object {

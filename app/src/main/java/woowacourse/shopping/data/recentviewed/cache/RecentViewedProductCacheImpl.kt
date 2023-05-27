@@ -56,10 +56,10 @@ class RecentViewedProductCacheImpl(
     override fun getLatestViewedProduct(): RecentViewedProductEntity? {
         val recentViewedProducts = getRecentViewedProducts()
 
-        if (recentViewedProducts.isEmpty()) return null
+        if (recentViewedProducts.size < 2) return null
 
         return RecentViewedProductEntity(
-            id = recentViewedProducts.first().id
+            id = recentViewedProducts[1].id
         )
     }
 }
