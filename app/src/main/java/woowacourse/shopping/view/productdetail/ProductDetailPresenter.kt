@@ -39,15 +39,14 @@ class ProductDetailPresenter(
     }
 
     override fun plusCount() {
-        if (_count.value in COUNT_MIN until COUNT_MAX) _count.value = _count.value?.plus(1)
+        _count.value = _count.value?.plus(1)
     }
 
     override fun minusCount() {
-        if (_count.value in COUNT_MIN + 1..COUNT_MAX) _count.value = _count.value?.minus(1)
+        if ((_count.value ?: 1) > COUNT_MIN + 1) _count.value = _count.value?.minus(1)
     }
 
     companion object {
-        private const val COUNT_MAX = 100
         private const val COUNT_MIN = 1
     }
 }
