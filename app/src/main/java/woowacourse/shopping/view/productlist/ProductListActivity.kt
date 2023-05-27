@@ -21,46 +21,46 @@ import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productdetail.ProductDetailActivity
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
-    private lateinit var mockWebServer: MockServer
-    private lateinit var binding: ActivityProductListBinding
-    private lateinit var presenter: ProductListContract.Presenter
+    private val binding: ActivityProductListBinding by lazy {
+        ActivityProductListBinding.inflate(layoutInflater)
+    }
+    private val presenter: ProductListContract.Presenter by lazy {
+        ProductListPresenter(
+            this,
+            ProductRemoteRepository(mockWebServer.url),
+            RecentViewedDbRepository(this),
+            CartDbRepository(this),
+        )
+    }
     private lateinit var cartCountInAppBar: TextView
-    private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val id = it.data?.getIntExtra(ID, -1)
-        when (it.resultCode) {
-            RESULT_VIEWED -> {
-                presenter.updateRecentViewed(id ?: -1)
-            }
-            RESULT_ADDED -> {
-                presenter.updateRecentViewed(id ?: -1)
-                presenter.fetchCartCount()
-                presenter.fetchProductCount(id ?: -1)
-                showToastAddInCart()
-            }
-            RESULT_VISIT_CART -> {
-                presenter.fetchCartCount()
-                presenter.fetchProductCounts()
+    private lateinit var mockWebServer: MockServer
+
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val id = it.data?.getIntExtra(ID, -1)
+            when (it.resultCode) {
+                RESULT_VIEWED -> {
+                    presenter.updateRecentViewed(id ?: -1)
+                }
+                RESULT_ADDED -> {
+                    presenter.updateRecentViewed(id ?: -1)
+                    presenter.fetchCartCount()
+                    presenter.fetchProductCount(id ?: -1)
+                    showToastAddInCart()
+                }
+                RESULT_VISIT_CART -> {
+                    presenter.fetchCartCount()
+                    presenter.fetchProductCounts()
+                }
             }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpMockServer()
-        setUpBinding()
         setContentView(binding.root)
-        setUpPresenter()
         setUpActionBar()
         presenter.fetchProducts()
-    }
-
-    private fun setUpBinding() {
-        binding = ActivityProductListBinding.inflate(layoutInflater)
-    }
-
-    private fun setUpPresenter() {
-        presenter =
-            ProductListPresenter(this, ProductRemoteRepository(mockWebServer.url), RecentViewedDbRepository(this), CartDbRepository(this))
     }
 
     private fun setUpActionBar() {
@@ -123,7 +123,8 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     override fun onClickProductDetail(product: ProductModel, lastViewedProduct: ProductModel?) {
-        val intent = ProductDetailActivity.newIntent(binding.root.context, product, lastViewedProduct)
+        val intent =
+            ProductDetailActivity.newIntent(binding.root.context, product, lastViewedProduct)
         resultLauncher.launch(intent)
     }
 

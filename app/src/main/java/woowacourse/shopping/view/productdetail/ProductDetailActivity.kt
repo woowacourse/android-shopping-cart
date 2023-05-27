@@ -22,14 +22,13 @@ import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESUL
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_VIEWED
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
-    private lateinit var productDetailBinding: ActivityProductDetailBinding
-    private lateinit var dialogBinding: DialogCountBinding
+    private val productDetailBinding: ActivityProductDetailBinding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
+    private val dialogBinding: DialogCountBinding by lazy { DialogCountBinding.inflate(layoutInflater) }
+    private val presenter: ProductDetailContract.Presenter by lazy { ProductDetailPresenter(INITIAL_COUNT, this, CartDbRepository(this), RecentViewedDbRepository(this)) }
     private lateinit var dialog: AlertDialog
-    private lateinit var presenter: ProductDetailContract.Presenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setUpPresenter()
-        setUpBinding()
         setContentView(productDetailBinding.root)
         val product = intent.getParcelableCompat<ProductModel>(PRODUCT)
         val lastViewedProduct = intent.getParcelableCompat<ProductModel>(LAST_VIEWED_PRODUCT)
@@ -41,16 +40,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setUpInitView(product, lastViewedProduct)
         setUpDialog(product)
         presenter.updateRecentViewedProducts(product.id)
-    }
-
-    private fun setUpBinding() {
-        productDetailBinding = ActivityProductDetailBinding.inflate(layoutInflater)
-        dialogBinding = DialogCountBinding.inflate(layoutInflater)
-    }
-
-    private fun setUpPresenter() {
-        presenter =
-            ProductDetailPresenter(INITIAL_COUNT, this, CartDbRepository(this), RecentViewedDbRepository(this))
     }
 
     private fun forceQuit() {

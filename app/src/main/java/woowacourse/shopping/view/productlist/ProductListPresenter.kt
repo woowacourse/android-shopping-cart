@@ -112,10 +112,12 @@ class ProductListPresenter(
         val product = cartRepository.find(id)
         val index =
             productsListItems.indexOfFirst { it is ProductListViewItem.ProductItem && it.product.id == id }
-        val item = productsListItems[index] as ProductListViewItem.ProductItem
-        productsListItems[index] =
-            ProductListViewItem.ProductItem(item.product.copy(count = product?.count ?: 0))
-        view.notifyDataChanged(index)
+        if (index != -1) {
+            val item = productsListItems[index] as ProductListViewItem.ProductItem
+            productsListItems[index] =
+                ProductListViewItem.ProductItem(item.product.copy(count = product?.count ?: 0))
+            view.notifyDataChanged(index)
+        }
     }
 
     override fun updateRecentViewed(id: Int) {

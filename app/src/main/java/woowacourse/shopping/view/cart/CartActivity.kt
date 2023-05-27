@@ -6,21 +6,26 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.repository.CartDbRepository
-import woowacourse.shopping.domain.repository.ProductRemoteRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.data.MockServer
+import woowacourse.shopping.domain.repository.ProductRemoteRepository
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.view.productlist.ProductListActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var mockWebServer: MockServer
-    private lateinit var binding: ActivityCartBinding
-    private lateinit var presenter: CartContract.Presenter
+    private val binding: ActivityCartBinding by lazy { ActivityCartBinding.inflate(layoutInflater) }
+    private val presenter: CartContract.Presenter by lazy {
+        CartPresenter(
+            this,
+            CartDbRepository(this),
+            ProductRemoteRepository(mockWebServer.url),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setUpMockServer()
-        setUpPresenter()
         setUpBinding()
         setContentView(binding.root)
         setUpActionBar()
@@ -34,17 +39,12 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun setUpBinding() {
-        binding = ActivityCartBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
         binding.presenter = presenter
     }
 
     private fun setUpActionBar() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun setUpPresenter() {
-        presenter = CartPresenter(this, CartDbRepository(this), ProductRemoteRepository(mockWebServer.url))
     }
 
     override fun showProducts(items: List<CartViewItem>) {
@@ -70,7 +70,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 override fun onSelectProduct(product: CartProductModel) {
                     presenter.checkProduct(product)
                 }
-            }
+            },
         )
     }
 
