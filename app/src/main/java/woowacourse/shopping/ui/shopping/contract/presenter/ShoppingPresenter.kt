@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.shopping.contract.presenter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
@@ -21,80 +20,87 @@ class ShoppingPresenter(
     private val cartRepository: CartRepository,
 ) : ShoppingContract.Presenter {
     private var productsData: MutableList<ProductsItemType> = mutableListOf()
-    private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
-    val countLiveDatas: Map<Long, LiveData<Int>> get() = _countLiveDatas
 
     override fun setUpProducts() {
-        val datas = repository.getNext(PRODUCT_COUNT)
-        productsData += datas
-            .map { product: Product -> ProductItem(product.toUIModel(), getCount(product.id)) }
-        datas.forEach {
-            _countLiveDatas[it.id] = MutableLiveData(getCount(it.id))
-        }
-        view.setProducts(productsData.plus(ProductReadMore))
+        repository.getNext(PRODUCT_COUNT, onSuccess = { datas ->
+            productsData += datas.map { product: Product ->
+                ProductItem(product.toUIModel(), getCount(product.id))
+            }
+            view.setProducts(productsData.plus(ProductReadMore))
+        }, onFailure = { exception ->
+            // Handle failure case
+        })
     }
 
     override fun updateProducts() {
         val recentProductsData = RecentProductsItem(
             recentRepository.getRecent(RECENT_PRODUCT_COUNT).map { it.toUIModel() },
         )
-        if (productsData.isEmpty()) {
-            productsData.add(recentProductsData)
-        } else {
-            if (productsData[0] is RecentProductsItem) {
-                productsData[0] = recentProductsData
-            } else {
-                productsData.add(0, recentProductsData)
+        when {
+            productsData.isEmpty() && recentProductsData.product.isNotEmpty() -> productsData.add(
+                recentProductsData,
+            )
+            productsData.isNotEmpty() -> {
+                updateProductsDataWithRecentData(recentProductsData)
             }
         }
         view.setProducts(productsData.plus(ProductReadMore))
     }
 
+    private fun updateProductsDataWithRecentData(recentProductsData: RecentProductsItem) {
+        when {
+            recentProductsData.product.isEmpty() -> productsData.removeIf { it is RecentProductsItem }
+            productsData[0] is RecentProductsItem -> productsData[0] = recentProductsData
+            else -> productsData.add(0, recentProductsData)
+        }
+    }
+
     override fun fetchMoreProducts() {
-        productsData += repository.getNext(PRODUCT_COUNT)
-            .map { ProductItem(it.toUIModel(), getCount(it.id)) }
-        view.addProducts(productsData.plus(ProductReadMore))
+        repository.getNext(PRODUCT_COUNT, onSuccess = { datas ->
+            productsData += datas.map { product: Product ->
+                ProductItem(product.toUIModel(), getCount(product.id))
+            }
+
+            view.addProducts(productsData.plus(ProductReadMore))
+        }, onFailure = { exception ->
+            // Handle failure case
+        })
     }
 
     override fun navigateToItemDetail(id: Long) {
-        val product = repository.findById(id)
-        view.navigateToProductDetail(product.toUIModel())
-    }
-
-    override fun updateItemCounts() {
-        _countLiveDatas.clear()
-        cartRepository.getAll().forEach {
-            _countLiveDatas[it.product.id] = MutableLiveData(it.count)
-        }
+        val latestProduct = recentRepository.getRecent(1).firstOrNull()?.toUIModel()
+        repository.findById(id, onSuccess = {
+            view.navigateToProductDetail(it.toUIModel(), latestProduct)
+        }, onFailure = {
+            // Handle failure case
+        })
     }
 
     override fun updateItemCount(id: Long, count: Int) {
-        repository.findById(id).let {
+        repository.findById(id, onSuccess = {
             cartRepository.insert(CartProduct(it, count, true))
-        }
-        updateItemCounts()
-        updateCountSize()
+            updateCountSize()
+        }, onFailure = {
+            // Handle failure case
+        })
     }
 
     override fun increaseCount(id: Long) {
-        _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.plus(1)
-        _countLiveDatas[id]?.value?.let { cartRepository.updateCount(id, it) }
+        cartRepository.updateCount(id, getCount(id) + 1)
+        view.updateItem(id, getCount(id))
     }
 
     override fun decreaseCount(id: Long) {
-        _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.minus(1)
-        _countLiveDatas[id]?.value?.let { cartRepository.updateCount(id, it) }
+        cartRepository.updateCount(id, getCount(id) - 1)
+        view.updateItem(id, getCount(id))
     }
 
     override fun updateCountSize() {
-        view.showCountSize(cartRepository.getCheckCart().size)
+        view.showCountSize(cartRepository.getAll().size)
     }
 
     private fun getCount(id: Long): Int {
-        cartRepository.getFindById(id)?.let {
-            return it.count
-        }
-        return 0
+        return cartRepository.findById(id)?.count ?: 0
     }
 
     companion object {

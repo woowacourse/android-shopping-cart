@@ -7,7 +7,7 @@ fun CartProduct.toUIModel(): CartProductUIModel {
     return CartProductUIModel(
         product = this.product.toUIModel(),
         count = this.count,
-        isChecked = this.isChecked,
+        isChecked = this.selected,
     )
 }
 
@@ -15,6 +15,6 @@ fun CartProductUIModel.toDomain(): CartProduct {
     return CartProduct(
         product = this.product.toDomain(),
         count = this.count,
-        isChecked = this.isChecked,
+        selected = this.isChecked,
     )
 }

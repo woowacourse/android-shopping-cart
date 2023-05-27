@@ -1,44 +1,29 @@
 package woowacourse.shopping.ui.cart.contract.presenter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.example.domain.model.CartItems
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.CartUIModel
-import woowacourse.shopping.ui.cart.CartActivity.Companion.KEY_OFFSET
 import woowacourse.shopping.ui.cart.CartOffset
+import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.cart.contract.CartContract
 
 class CartPresenter(
+    val repository: CartRepository,
     val view: CartContract.View,
-    private val repository: CartRepository,
     offset: Int = 0,
 ) : CartContract.Presenter {
+    private val cartItems = CartItems()
     private var cartOffset = CartOffset(offset, repository)
-    private var _countLiveDatas: MutableMap<Long, MutableLiveData<Int>> = mutableMapOf()
-    val countLiveDatas: Map<Long, LiveData<Int>> get() = _countLiveDatas
-
-    private var _checkedLiveDatas: MutableMap<Long, MutableLiveData<Boolean>> = mutableMapOf()
-    val checkedLiveDatas: Map<Long, LiveData<Boolean>> get() = _checkedLiveDatas
-
-    init {
-        setAllOrderCount()
-        setAllCheckbox()
-    }
 
     override fun setUpCarts() {
-        val datas = repository.getSubList(cartOffset.getOffset(), STEP)
-        datas.forEach {
-            _countLiveDatas[it.product.id] = MutableLiveData(getCount(it.product.id))
-            _checkedLiveDatas[it.product.id] = MutableLiveData(getChecked(it.product.id))
-        }
-        setCartItemsPrice()
+        cartItems.updateItems(repository.getAll())
         view.setCarts(
-            datas.map { it.toUIModel() },
+            repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() },
             CartUIModel(
-                cartOffset.getOffset() + STEP < repository.getAll().size,
+                cartOffset.getOffset() + 5 < repository.getAll().size,
                 0 < cartOffset.getOffset(),
-                cartOffset.getOffset() / STEP + 1,
+                cartOffset.getOffset() / 5 + 1,
             ),
         )
     }
@@ -63,74 +48,86 @@ class CartPresenter(
     }
 
     override fun navigateToItemDetail(id: Long) {
-        val product = repository.getFindById(id)?.product
-        product?.let { view.navigateToItemDetail(it.toUIModel()) }
+        val product = repository.findById(id)?.product
+        product.let {
+            if (it != null) {
+                view.navigateToItemDetail(it.toUIModel())
+            }
+        }
     }
 
     override fun saveOffsetState(outState: MutableMap<String, Int>) {
-        outState[KEY_OFFSET] = cartOffset.getOffset()
+        outState[CartActivity.KEY_OFFSET] = cartOffset.getOffset()
     }
 
     override fun restoreOffsetState(state: Map<String, Int>) {
-        val savedOffset = state[KEY_OFFSET] ?: 0
+        val savedOffset = state[CartActivity.KEY_OFFSET] ?: 0
         cartOffset = CartOffset(savedOffset, repository)
     }
 
     override fun onCheckChanged(id: Long, isChecked: Boolean) {
-        _checkedLiveDatas[id]?.value = isChecked
-        _checkedLiveDatas[id]?.value?.let { repository.updateCheckChanged(id, it) }
-
-        setAllCheckbox()
+        val cartProduct = repository.findById(id)
+        if (isChecked) {
+            cartProduct?.let { cartItems.insert(it) }
+        } else {
+            cartProduct?.product?.id?.let {
+                cartItems.remove(
+                    it,
+                )
+            }
+        }
         updateCartItems()
+        setAllCheckbox()
     }
 
     override fun setCartItemsPrice() {
-        view.setCartItemsPrice(repository.getCartItemsPrice())
+        view.setCartItemsPrice(cartItems.getPrice())
     }
 
     override fun onAllCheckboxClick(isChecked: Boolean) {
         repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
-            .forEach { product ->
-                repository.updateCheckChanged(product.product.id, isChecked)
+            .forEach {
+                onCheckChanged(it.product.id, isChecked)
+                view.updateChecked(it.product.id, isChecked)
             }
-        setUpCarts()
-        updateCartItems()
     }
 
     override fun setAllCheckbox() {
-        val cartItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
-        val allChecked = cartItems.all { it.isChecked }
+        val pageItems = repository.getSubList(cartOffset.getOffset(), STEP).map { it.toUIModel() }
+        val allChecked = pageItems.all { cartItems.isContain(it.product.id) }
 
         view.setAllCheckbox(allChecked)
     }
 
     override fun setAllOrderCount() {
-        view.setAllOrderCount(repository.getCheckCart().size)
+        view.setAllOrderCount(cartItems.getSize())
     }
 
     override fun increaseCount(id: Long) {
-        _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.plus(1)
-        _countLiveDatas[id]?.value?.let { repository.updateCount(id, it) }
-        updateCartItems()
+        repository.updateCount(id, getCount(id) + 1)
+        cartItems.updateItems(repository.getAll())
+        view.updateItem(id, getCount(id))
+        if (cartItems.isContain(id)) {
+            updateCartItems()
+        }
     }
 
     override fun decreaseCount(id: Long) {
-        _countLiveDatas[id]?.value = _countLiveDatas[id]?.value?.minus(1)
-        _countLiveDatas[id]?.value?.let { repository.updateCount(id, it) }
-        updateCartItems()
+        repository.updateCount(id, getCount(id) - 1)
+        cartItems.updateItems(repository.getAll())
+        view.updateItem(id, getCount(id))
+        if (cartItems.isContain(id)) {
+            updateCartItems()
+        }
+    }
+
+    private fun getCount(id: Long): Int {
+        return repository.findById(id)?.count ?: 0
     }
 
     private fun updateCartItems() {
         setAllOrderCount()
         setCartItemsPrice()
-    }
-
-    private fun getCount(id: Long): Int {
-        return repository.getFindById(id)?.count ?: 0
-    }
-
-    private fun getChecked(id: Long): Boolean {
-        return repository.getFindById(id)?.isChecked ?: true
     }
 
     companion object {

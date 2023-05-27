@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import woowacourse.shopping.R
 import woowacourse.shopping.data.MockProductWebServer
 import woowacourse.shopping.data.ProductFakeRepository
@@ -72,7 +73,6 @@ class ShoppingActivity :
 
     override fun onResume() {
         super.onResume()
-        presenter.updateItemCounts()
         presenter.updateProducts()
         presenter.updateCountSize()
     }
@@ -116,15 +116,14 @@ class ShoppingActivity :
     override fun setProducts(data: List<ProductsItemType>) {
         binding.productRecyclerview.adapter = ProductsAdapter(
             data,
-            presenter,
-            this,
+            CartDatabase(CartDBHelper(this).writableDatabase),
             this,
             presenter::fetchMoreProducts,
         )
     }
 
-    override fun navigateToProductDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.from(this, product, true))
+    override fun navigateToProductDetail(product: ProductUIModel, latestProduct: ProductUIModel?) {
+        startActivity(ProductDetailActivity.from(this, product, latestProduct))
     }
 
     override fun addProducts(data: List<ProductsItemType>) {
@@ -139,6 +138,14 @@ class ShoppingActivity :
         cartSize?.text = size.toString()
     }
 
+    override fun updateItem(id: Long, count: Int) {
+        binding.productRecyclerview.adapter?.let {
+            if (it is ProductsAdapter) {
+                it.updateItemCount(id, count)
+            }
+        }
+    }
+
     private fun navigateToCart() {
         startActivity(CartActivity.from(this))
     }
@@ -148,12 +155,12 @@ class ShoppingActivity :
     }
 
     override fun onAddCart(id: Long, count: Int) {
+        presenter.updateItemCount(id, count)
         binding.productRecyclerview.adapter?.let {
             if (it is ProductsAdapter) {
                 it.updateItemCount(id, count)
             }
         }
-        presenter.updateItemCount(id, count)
     }
 
     override fun increaseCount(id: Long) {

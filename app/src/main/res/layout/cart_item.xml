@@ -13,9 +13,6 @@
             name="listener"
             type="woowacourse.shopping.ui.cart.viewHolder.OnCartClickListener" />
 
-        <variable
-            name="presenter"
-            type="woowacourse.shopping.ui.cart.contract.presenter.CartPresenter" />
     </data>
 
 
@@ -31,8 +28,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginStart="16dp"
-            android:checked="@{presenter.checkedLiveDatas[product.product.id]}"
-            android:onCheckedChanged="@{(_, isChecked) -> listener.onCheckChanged(product.product.id, isChecked)}"
+            android:checked="@{product.isChecked}"
             app:layout_constraintBottom_toBottomOf="@+id/product_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/product_title" />
@@ -93,10 +89,10 @@
             layout="@layout/order_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:count="@{presenter.countLiveDatas[product.product.id]}"
             app:layout_constraintEnd_toEndOf="@+id/textView"
             app:layout_constraintTop_toBottomOf="@+id/textView"
             app:listener="@{listener}"
+            app:count = "@{product.count}"
             app:product="@{product.product}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

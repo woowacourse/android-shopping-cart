@@ -14,8 +14,8 @@
             type="woowacourse.shopping.ui.productdetail.dialog.ProductDialogInterface" />
 
         <variable
-            name="presenter"
-            type="woowacourse.shopping.ui.productdetail.contract.presenter.ProductDetailPresenter" />
+            name="count"
+            type="int" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,7 +56,7 @@
             android:layout_marginStart="176dp"
             android:layout_marginTop="50dp"
             android:layout_marginEnd="12dp"
-            app:count="@{presenter.count}"
+            app:count="@{count}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

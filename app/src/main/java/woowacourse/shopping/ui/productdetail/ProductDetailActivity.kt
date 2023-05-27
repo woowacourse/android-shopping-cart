@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
@@ -40,7 +39,6 @@ class ProductDetailActivity :
         presenter = ProductDetailPresenter(
             this,
             intent.getSerializableExtraCompat(KEY_PRODUCT) ?: return keyError(KEY_PRODUCT),
-            intent.getBooleanExtra("KEY_VISIBLE", true),
             CartDatabase(CartDBHelper(this).writableDatabase),
             RecentProductDatabase(this),
         )
@@ -50,6 +48,10 @@ class ProductDetailActivity :
         }
 
         binding.listener = this
+        binding.latestProduct =
+            intent.getSerializableExtraCompat(RECENT_KEY_PRODUCT) ?: return keyError(
+                RECENT_KEY_PRODUCT,
+            )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -70,7 +72,7 @@ class ProductDetailActivity :
     }
 
     override fun showProductCountDialog(product: ProductUIModel) {
-        productOrderDialog = ProductOrderDialog(this, this, presenter, this, product)
+        productOrderDialog = ProductOrderDialog(this, this, product)
         productOrderDialog.show()
     }
 
@@ -97,12 +99,8 @@ class ProductDetailActivity :
     }
 
     override fun navigateToDetail(product: ProductUIModel) {
-        startActivity(from(this, product, false))
+        startActivity(from(this, product, null))
         finish()
-    }
-
-    override fun setVisibleLatestProduct(visible: Boolean) {
-        binding.visible = visible
     }
 
     override fun clickLatestProduct() {
@@ -110,10 +108,15 @@ class ProductDetailActivity :
     }
 
     companion object {
-        fun from(context: Context, product: ProductUIModel, isVisible: Boolean): Intent {
+        private const val RECENT_KEY_PRODUCT = "recent_product"
+        fun from(
+            context: Context,
+            product: ProductUIModel,
+            recentProduct: ProductUIModel? = null,
+        ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
-                putExtra("KEY_VISIBLE", isVisible)
+                putExtra(RECENT_KEY_PRODUCT, recentProduct)
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
         }

@@ -1,27 +1,20 @@
 package woowacourse.shopping.ui.cart
 
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.model.CartProductUIModel
-import woowacourse.shopping.ui.cart.contract.CartContract
 import woowacourse.shopping.ui.cart.viewHolder.CartViewHolder
 import woowacourse.shopping.ui.cart.viewHolder.OnCartClickListener
 
 class CartAdapter(
     cartItems: List<CartProductUIModel>,
-    private val lifecycleOwner: LifecycleOwner,
-    private val presenter: CartContract.Presenter,
     private val onCartClickListener: OnCartClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-
     private var cartItems: MutableList<CartProductUIModel> = cartItems.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return CartViewHolder.from(
             parent,
-            lifecycleOwner,
-            presenter,
             onCartClickListener,
         )
     }
@@ -36,5 +29,17 @@ class CartAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return position
+    }
+
+    fun updateItem(id: Long, count: Int) {
+        val index = cartItems.indexOfFirst { it.product.id == id }
+        cartItems[index] = cartItems[index].copy(count = count)
+        notifyDataSetChanged()
+    }
+
+    fun updateChecked(id: Long, isChecked: Boolean) {
+        val index = cartItems.indexOfFirst { it.product.id == id }
+        cartItems[index] = cartItems[index].copy(isChecked = isChecked)
+        notifyDataSetChanged()
     }
 }

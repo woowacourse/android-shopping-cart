@@ -5,9 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
-import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartDBHelper
 import woowacourse.shopping.database.cart.CartDatabase
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -20,21 +18,21 @@ import woowacourse.shopping.ui.cart.viewHolder.OnCartClickListener
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View, OnCartClickListener {
-
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        binding = ActivityCartBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         presenter = CartPresenter(
-            this,
             CartDatabase(CartDBHelper(this).writableDatabase),
+            this,
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0,
         )
         setToolbar()
         presenter.setUpCarts()
+        presenter.onAllCheckboxClick(true)
 
         binding.allCheckBox.setOnClickListener {
             presenter.onAllCheckboxClick(binding.allCheckBox.isChecked)
@@ -62,8 +60,6 @@ class CartActivity : AppCompatActivity(), CartContract.View, OnCartClickListener
         val cartAdapter = CartAdapter(
             products.map { it },
             this,
-            presenter,
-            this,
         )
 
         binding.cartRecyclerview.adapter = ConcatAdapter(
@@ -73,11 +69,10 @@ class CartActivity : AppCompatActivity(), CartContract.View, OnCartClickListener
     }
 
     override fun navigateToItemDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.from(this, product, true))
+        startActivity(ProductDetailActivity.from(this, product))
     }
 
     override fun setCartItemsPrice(price: Int) {
-        binding.executePendingBindings()
         binding.price = price
     }
 
@@ -87,16 +82,28 @@ class CartActivity : AppCompatActivity(), CartContract.View, OnCartClickListener
         }
     }
 
-    override fun setAllOrderCount(count: Int) {
-        binding.executePendingBindings()
-        binding.count = count
+    override fun updateItem(id: Long, count: Int) {
+        val adapter = binding.cartRecyclerview.adapter as? ConcatAdapter
+
+        adapter?.adapters?.forEach { innerAdapter ->
+            if (innerAdapter is CartAdapter) {
+                innerAdapter.updateItem(id, count)
+            }
+        }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val state = mutableMapOf<String, Int>()
-        presenter.saveOffsetState(state)
-        state[KEY_OFFSET]?.let { outState.putInt(KEY_OFFSET, it) }
+    override fun updateChecked(id: Long, checked: Boolean) {
+        val adapter = binding.cartRecyclerview.adapter as? ConcatAdapter
+
+        adapter?.adapters?.forEach { innerAdapter ->
+            if (innerAdapter is CartAdapter) {
+                innerAdapter.updateChecked(id, checked)
+            }
+        }
+    }
+
+    override fun setAllOrderCount(count: Int) {
+        binding.count = count
     }
 
     override fun onClick(id: Long) {

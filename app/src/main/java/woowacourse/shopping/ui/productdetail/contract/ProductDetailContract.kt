@@ -10,7 +10,6 @@ interface ProductDetailContract {
         fun showLatestProduct(product: ProductUIModel)
 
         fun navigateToDetail(product: ProductUIModel)
-        fun setVisibleLatestProduct(visible: Boolean)
     }
 
     interface Presenter {
@@ -25,6 +24,5 @@ interface ProductDetailContract {
 
         fun setLatestProduct()
         fun clickLatestProduct()
-        fun isVisibleLatestProduct()
     }
 }

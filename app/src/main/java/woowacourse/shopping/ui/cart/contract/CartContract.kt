@@ -12,6 +12,8 @@ interface CartContract {
         fun setCartItemsPrice(price: Int)
         fun setAllCheckbox(isChecked: Boolean)
         fun setAllOrderCount(count: Int)
+        fun updateItem(id: Long, count: Int)
+        fun updateChecked(id: Long, checked: Boolean)
     }
 
     interface Presenter {
@@ -26,6 +28,7 @@ interface CartContract {
         fun restoreOffsetState(state: Map<String, Int>)
 
         fun onCheckChanged(id: Long, isChecked: Boolean)
+
         fun setCartItemsPrice()
         fun onAllCheckboxClick(isChecked: Boolean)
         fun setAllCheckbox()
