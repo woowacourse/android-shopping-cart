@@ -92,20 +92,26 @@ class ShoppingRecyclerAdapter(
 
     override fun getItemCount(): Int = products.size + 1
 
-    private fun getCountPickerListenerImpl(product: CartProductUiModel) = object : CountPickerListener {
+    private fun getCountPickerListenerImpl(product: CartProductUiModel) =
+        object : CountPickerListener {
 
-        override fun onPlus() {
-            productCountPickerListener.onPlus(product)
-        }
+            override fun onPlus() {
+                productCountPickerListener.onPlus(product)
+            }
 
-        override fun onMinus() {
-            productCountPickerListener.onMinus(product)
+            override fun onMinus() {
+                productCountPickerListener.onMinus(product)
+            }
         }
-    }
 
     fun refreshRecentViewedItems(products: List<RecentViewedProductUiModel>) {
-        recentViewedProducts = products
-        notifyItemRangeChanged(INITIAL_POSITION, products.size + 1)
+        if (recentViewedProducts.isEmpty()) {
+            recentViewedProducts = products
+            notifyItemRangeChanged(INITIAL_POSITION, products.size + 1)
+        } else {
+            recentViewedProducts = products
+            notifyItemChanged(0)
+        }
     }
 
     fun refreshShoppingProductsItem(products: List<CartProductUiModel>) {
