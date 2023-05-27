@@ -3,11 +3,11 @@ package woowacourse.shopping.view.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.cartsystem.CartPageStatus
-import woowacourse.shopping.domain.pagination.CartPagination
-import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.cartsystem.CartSystem
 import woowacourse.shopping.domain.cartsystem.CartSystemResult
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.pagination.CartPagination
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.toDomain
@@ -27,8 +27,8 @@ class CartPresenter(
         CartPageStatus(
             isPrevEnabled = false,
             isNextEnabled = false,
-            0
-        )
+            0,
+        ),
     )
     private var _isCheckedAll = MutableLiveData(false)
 
@@ -79,7 +79,7 @@ class CartPresenter(
         val product = cartPagination.currentLastItem() ?: return null
         return product.toUiModel(
             cartSystem.isSelectedProduct(product),
-            productRepository.find(product.id)
+            productRepository.find(product.id),
         )
     }
 
@@ -87,7 +87,7 @@ class CartPresenter(
         val isChecked = _isCheckedAll.value?.not() ?: true
 
         cartItems.filterIsInstance<CartViewItem.CartProductItem>().forEachIndexed { index, it ->
-            it.product.isChecked = isChecked
+            cartItems[index] = CartViewItem.CartProductItem(it.product.copy(isChecked = isChecked))
             view.showChangedItem(index)
         }
 
@@ -140,7 +140,7 @@ class CartPresenter(
         val cartProducts = convertItemsToCartProducts(cartItems)
         cartProducts.find { it.id == id }?.let {
             val index = cartProducts.indexOf(it)
-            (cartItems[index] as CartViewItem.CartProductItem).product.count = count
+            cartItems[index] = CartViewItem.CartProductItem((cartItems[index] as CartViewItem.CartProductItem).product.copy(count = count))
             view.showChangedItem(index)
             _cartSystemResult.value = cartSystem.updateProduct(id, count)
         }
@@ -157,6 +157,5 @@ class CartPresenter(
     companion object {
         private const val PAGINATION_SIZE = 5
         private const val COUNT_MIN = 1
-        private const val COUNT_MAX = 100
     }
 }
