@@ -1,11 +1,15 @@
 package woowacourse.shopping.data
 
+import android.os.Looper
 import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import org.json.JSONArray
-import java.lang.Thread.sleep
+import java.io.IOException
 
 class ProductFakeRepository(url: String) : ProductRepository {
 
@@ -13,50 +17,70 @@ class ProductFakeRepository(url: String) : ProductRepository {
     private val okHttpClient = OkHttpClient()
     private var offset = 0
 
-    private val products: List<Product>
-        get() = Request.Builder().url("$url/products").build().let { request ->
-            getResponse(request)?.let { response -> ProductJsonParser.parse(response) }
-                ?: throw IllegalArgumentException("해당하는 아이템이 없습니다.")
-        }
-
-    override fun getAll(): List<Product> {
-        return products.toList()
+    override fun getAll(
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: (Exception) -> Unit,
+    ) {
+        val request = Request.Builder().url("$url/products").build()
+        getResponse(request, onSuccess, onFailure)
     }
 
-    override fun getNext(count: Int): List<Product> {
+    override fun getNext(
+        count: Int,
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: (Exception) -> Unit,
+    ) {
         val request = Request.Builder().url("$url/products?offset=$offset&count=$count").build()
-        val products = getResponse(request).let { response -> ProductJsonParser.parse(response) }
-        offset += products.size
-        return products
+        getResponse(request, onSuccess = {
+            offset += count
+            onSuccess(it)
+        }, onFailure)
     }
 
-    override fun findById(id: Long): Product {
-        Request.Builder().url("$url/products/$id").build().let { request ->
-            getResponse(request)?.let { response ->
-                return ProductJsonParser.parse(response).firstOrNull { it.id == id }
-                    ?: throw IllegalArgumentException("해당하는 아이템이 없습니다.")
-            } ?: throw IllegalArgumentException("해당하는 아이템이 없습니다.")
-        }
+    override fun findById(
+        id: Long,
+        onSuccess: (Product) -> Unit,
+        onFailure: (Exception) -> Unit,
+    ) {
+        val request = Request.Builder().url("$url/products/$id").build()
+        getResponse(request, { products ->
+            val product = products.firstOrNull { it.id == id }
+            if (product != null) {
+                onSuccess(product)
+            } else {
+                onFailure(IllegalArgumentException("해당하는 아이템이 없습니다."))
+            }
+        }, onFailure)
     }
 
-    private fun getResponse(request: Request): String? {
-        var responseBody: String? = null
-        okHttpClient.newCall(request).enqueue(
-            object : okhttp3.Callback {
-                override fun onFailure(call: okhttp3.Call, e: java.io.IOException) {
-                    throw e
-                }
+    private fun getResponse(
+        request: Request,
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: (Exception) -> Unit,
+    ) {
+        val handler = android.os.Handler(Looper.getMainLooper())
 
-                override fun onResponse(call: okhttp3.Call, response: okhttp3.Response) {
-                    responseBody = response.body?.string()
-                    response.close()
+        okHttpClient.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                handler.post {
+                    onFailure(e)
                 }
-            },
-        )
-        while (responseBody == null) {
-            sleep(1)
-        }
-        return responseBody
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body?.string()
+                    val products = ProductJsonParser.parse(responseBody)
+                    handler.post {
+                        onSuccess(products)
+                    }
+                } else {
+                    handler.post {
+                        onFailure(Exception("Response unsuccessful"))
+                    }
+                }
+            }
+        })
     }
 }
 

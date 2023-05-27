@@ -26,32 +26,38 @@ class MockProductWebServer {
 
     private fun getDisPatcher() = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
-            val path = request.path ?: MockResponse().setHeader("Content-Type", "application/json")
-                .setResponseCode(404).toString()
-            return when {
-                path.startsWith("/products/") -> {
-                    val productId = path.substringAfterLast("/")
-                    MockResponse()
-                        .setHeader("Content-Type", "application/json")
-                        .setResponseCode(200)
-                        .setBody(findById(productId))
+            return when (request.method) {
+                "GET" -> {
+                    val path =
+                        request.path ?: MockResponse().setHeader("Content-Type", "application/json")
+                            .setResponseCode(404).toString()
+                    when {
+                        path.startsWith("/products/") -> {
+                            val productId = path.substringAfterLast("/")
+                            MockResponse()
+                                .setHeader("Content-Type", "application/json")
+                                .setResponseCode(200)
+                                .setBody(findById(productId))
+                        }
+
+                        path == "/products" ->
+                            MockResponse()
+                                .setHeader("Content-Type", "application/json")
+                                .setResponseCode(200)
+                                .setBody(products)
+
+                        path.startsWith("/products") -> {
+                            val offset = path.substringAfter("offset=").substringBefore("&").toInt()
+                            val count = path.substringAfter("count=").toInt()
+                            MockResponse()
+                                .setHeader("Content-Type", "application/json")
+                                .setResponseCode(200)
+                                .setBody(getNext(offset, count))
+                        }
+
+                        else -> MockResponse().setResponseCode(404)
+                    }
                 }
-
-                path == "/products" ->
-                    MockResponse()
-                        .setHeader("Content-Type", "application/json")
-                        .setResponseCode(200)
-                        .setBody(products)
-
-                path.startsWith("/products") -> {
-                    val offset = path.substringAfter("offset=").substringBefore("&").toInt()
-                    val count = path.substringAfter("count=").toInt()
-                    MockResponse()
-                        .setHeader("Content-Type", "application/json")
-                        .setResponseCode(200)
-                        .setBody(getNext(offset, count))
-                }
-
                 else -> MockResponse().setResponseCode(404)
             }
         }
