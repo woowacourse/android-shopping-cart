@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.model
+package woowacourse.shopping.data.dataSource.local.cart
 
 data class CartEntity(
     val cartId: Long,

@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.sql.cart
+package woowacourse.shopping.data.dataSource.local.cart
 
 object CartTableContract {
     const val TABLE_NAME = "cart_table"

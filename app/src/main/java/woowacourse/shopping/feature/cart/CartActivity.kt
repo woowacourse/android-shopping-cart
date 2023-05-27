@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.SimpleItemAnimator
 import woowacourse.shopping.R
+import woowacourse.shopping.data.dataSource.local.cart.CartDao
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
-import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.util.toMoneyFormat
 

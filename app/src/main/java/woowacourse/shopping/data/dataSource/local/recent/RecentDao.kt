@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.sql.recent
+package woowacourse.shopping.data.dataSource.local.recent
 
 import android.content.ContentValues
 import android.content.Context
@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.Product
 import com.example.domain.model.RecentProduct
-import woowacourse.shopping.data.model.RecentProductEntity
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 

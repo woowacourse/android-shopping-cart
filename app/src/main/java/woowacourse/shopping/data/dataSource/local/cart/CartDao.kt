@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.sql.cart
+package woowacourse.shopping.data.dataSource.local.cart
 
 import android.content.ContentValues
 import android.content.Context
@@ -7,9 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Product
-import woowacourse.shopping.data.model.CartEntity
-import woowacourse.shopping.data.model.CartEntity.Companion.CHECK
-import woowacourse.shopping.data.model.CartEntity.Companion.NON_CHECK
+import woowacourse.shopping.data.dataSource.local.cart.CartEntity.Companion.CHECK
+import woowacourse.shopping.data.dataSource.local.cart.CartEntity.Companion.NON_CHECK
 
 class CartDao(
     context: Context
@@ -51,7 +50,7 @@ class CartDao(
         return cart
     }
 
-    fun insertProduct(product: Product, count: Int = 1) {
+    private fun insertProduct(product: Product, count: Int = 1) {
         if (count <= ZERO) return
         val values = ContentValues().apply {
             put(CartTableContract.TABLE_COLUMN_PRODUCT_ID, product.id)

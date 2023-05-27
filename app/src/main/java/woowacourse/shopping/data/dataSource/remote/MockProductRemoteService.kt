@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.service
+package woowacourse.shopping.data.dataSource.remote
 
 import com.example.domain.datasource.firstJsonProducts
 import com.example.domain.datasource.secondJsonProducts

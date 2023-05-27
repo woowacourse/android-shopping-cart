@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.common_ui.CartCounterBadge
+import woowacourse.shopping.data.dataSource.local.cart.CartDao
+import woowacourse.shopping.data.dataSource.local.recent.RecentDao
+import woowacourse.shopping.data.dataSource.remote.MockProductRemoteService
 import woowacourse.shopping.data.repository.local.CartRepositoryImpl
 import woowacourse.shopping.data.repository.local.RecentProductRepositoryImpl
 import woowacourse.shopping.data.repository.remote.MockRemoteProductRepositoryImpl
-import woowacourse.shopping.data.service.MockProductRemoteService
-import woowacourse.shopping.data.sql.cart.CartDao
-import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity

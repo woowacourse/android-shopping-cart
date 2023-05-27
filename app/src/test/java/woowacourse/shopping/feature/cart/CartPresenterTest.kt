@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.cart
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.CartProduct
-import com.example.domain.model.Price
 import com.example.domain.model.Product
 import com.example.domain.repository.CartRepository
 import io.mockk.Runs
@@ -129,11 +128,4 @@ internal class CartPresenterTest {
             it.toLong(), productsDatasource[it], it + 1, true
         )
     }
-
-    private val mockProduct = Product(
-        5,
-        "유명산지 고당도사과 1.5kg",
-        "https://product-image.kurly.com/cdn-cgi/image/quality=85,width=676/product/image/b573ba85-9bfa-433b-bafc-3356b081440b.jpg",
-        Price(13000)
-    )
 }
