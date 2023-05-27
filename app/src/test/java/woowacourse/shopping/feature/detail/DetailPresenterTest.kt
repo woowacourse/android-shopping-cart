@@ -29,7 +29,7 @@ internal class DetailPresenterTest {
     @Test
     fun `장바구니에 상품을 추가한다`() {
         val slot = slot<Product>()
-        every { cartRepository.addProduct(capture(slot)) } just Runs
+        every { cartRepository.addProduct(capture(slot), 1) } just Runs
 
         presenter.addCart()
 

@@ -12,6 +12,16 @@ object ProductCacheImpl : ProductCache {
         _productList.addAll(products)
     }
 
+    override fun getSubProducts(page: Int, size: Int): List<Product> {
+        val startIndex = size * (page - 1)
+        if (startIndex > _productList.size) return emptyList()
+        if (startIndex + size >= _productList.size) return productList.subList(
+            startIndex,
+            _productList.size
+        )
+        return _productList.subList(startIndex, startIndex + size)
+    }
+
     override fun clear() {
         _productList.clear()
     }

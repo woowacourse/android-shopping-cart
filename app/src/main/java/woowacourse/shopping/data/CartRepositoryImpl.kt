@@ -12,12 +12,17 @@ class CartRepositoryImpl(
         return cartDao.selectAll()
     }
 
-    override fun addProduct(product: Product) {
-        cartDao.insertProduct(product)
+    override fun addProduct(product: Product, count: Int) {
+        cartDao.putProduct(product, count)
     }
 
-    override fun deleteProduct(cartProduct: CartProduct) {
-        cartDao.deleteCartProduct(cartProduct)
+    override fun deleteProduct(product: Product) {
+        cartDao.deleteCartProduct(product)
+    }
+
+    override fun updateSelection(product: Product, isSelected: Boolean) {
+        if (isSelected) cartDao.updateSelection(product, 1)
+        else cartDao.updateSelection(product, 0)
     }
 
     override fun getProductsByPage(page: Int, size: Int): List<CartProduct> {

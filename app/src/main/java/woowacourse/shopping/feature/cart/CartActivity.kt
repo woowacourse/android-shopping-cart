@@ -22,27 +22,44 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        binding.lifecycleOwner = this
 
-        cartProductAdapter = CartProductAdapter(listOf()) {
-            presenter.deleteCartProduct(it)
-        }
-        binding.cartItemRecyclerview.adapter = cartProductAdapter
-        presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
-        presenter.loadInitCartProduct()
+        initAdapter()
+        initPresenter()
 
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        initClickListener()
     }
 
-    private fun initClickListener() {
-        binding.previousPageBtn.setOnClickListener {
-            presenter.loadPreviousPage()
-        }
-        binding.nextPageBtn.setOnClickListener {
-            presenter.loadNextPage()
-        }
+    private fun initPresenter() {
+        val cartPresenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
+        presenter = cartPresenter
+        binding.presenter = cartPresenter
+        presenter.setup()
+    }
+
+    private fun initAdapter() {
+        cartProductAdapter = CartProductAdapter(
+            listOf(),
+            object : CartProductClickListener {
+                override fun onPlusClick(cartProduct: CartProductUiModel, previousCount: Int) {
+                    presenter.increaseCartProduct(cartProduct.productUiModel, previousCount)
+                }
+
+                override fun onMinusClick(cartProduct: CartProductUiModel, previousCount: Int) {
+                    presenter.decreaseCartProduct(cartProduct.productUiModel, previousCount)
+                }
+
+                override fun onCheckClick(cartProduct: CartProductUiModel, isSelected: Boolean) {
+                    presenter.toggleCartProduct(cartProduct, isSelected)
+                }
+
+                override fun onDeleteClick(cartProduct: CartProductUiModel) {
+                    presenter.deleteCartProduct(cartProduct.productUiModel)
+                }
+            }
+        )
+        binding.cartItemRecyclerview.adapter = cartProductAdapter
     }
 
     override fun changeCartProducts(newItems: List<CartProductUiModel>) {

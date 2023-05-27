@@ -5,6 +5,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class CartProductUiModel(
-    val cartId: Long,
-    val productUiModel: ProductUiModel
-) : Parcelable
+    val productUiModel: ProductUiModel,
+    val count: Int,
+    val isSelected: Boolean
+) : Parcelable {
+    fun totalPrice(): Int = count * productUiModel.price
+}

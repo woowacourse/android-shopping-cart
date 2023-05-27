@@ -7,5 +7,5 @@ import woowacourse.shopping.model.ProductUiModel
 fun ProductUiModel.toDomain(): Product =
     Product(id, name, imgUrl, Price(price))
 
-fun Product.toPresentation(): ProductUiModel =
-    ProductUiModel(id, name, imgUrl, price.value)
+fun Product.toPresentation(count: Int = 0): ProductUiModel =
+    ProductUiModel(id, name, imgUrl, price.value, count)

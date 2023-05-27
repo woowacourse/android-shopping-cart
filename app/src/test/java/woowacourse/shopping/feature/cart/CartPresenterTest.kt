@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.cart
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.domain.datasource.productsDatasource
 import com.example.domain.model.CartProduct
 import com.example.domain.model.Price
@@ -12,6 +13,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toPresentation
@@ -22,6 +24,9 @@ internal class CartPresenterTest {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var view: CartContract.View
     private lateinit var cartRepository: CartRepository
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun init() {
@@ -37,11 +42,11 @@ internal class CartPresenterTest {
         val cartProductSlot = slot<List<CartProductUiModel>>()
         every { view.changeCartProducts(capture(cartProductSlot)) } just Runs
 
-        presenter.loadInitCartProduct()
+        presenter.setup()
 
         val expected = mockCartProducts.take(5)
         val actual = cartProductSlot.captured.map {
-            CartProduct(it.cartId, it.productUiModel.toDomain())
+            CartProduct(it.productUiModel.toDomain(), 1, true)
         }
 
         assert(expected == actual)
@@ -93,7 +98,7 @@ internal class CartPresenterTest {
 
     private val mockCartProducts = List(41) {
         CartProduct(
-            it.toLong(), productsDatasource[it]
+            productsDatasource[it], 1, true
         )
     }
 
@@ -105,6 +110,6 @@ internal class CartPresenterTest {
     )
 
     private val mockCartProductUiModel = CartProductUiModel(
-        5L, mockProduct.toPresentation()
+        mockProduct.toPresentation(1), 1, true
     )
 }

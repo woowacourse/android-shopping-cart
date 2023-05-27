@@ -2,20 +2,27 @@ package woowacourse.shopping.feature.main
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.data.CartRepositoryImpl
+import woowacourse.shopping.data.MockServer
+import woowacourse.shopping.data.ProductCacheImpl
+import woowacourse.shopping.data.ProductMockService
+import woowacourse.shopping.data.ProductRemoteMockRepositoryImpl
 import woowacourse.shopping.data.RecentProductRepositoryImpl
+import woowacourse.shopping.data.sql.cart.CartDao
 import woowacourse.shopping.data.sql.recent.RecentDao
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.DetailActivity
 import woowacourse.shopping.feature.main.load.LoadAdapter
 import woowacourse.shopping.feature.main.product.MainProductAdapter
+import woowacourse.shopping.feature.main.product.MainProductClickListener
 import woowacourse.shopping.feature.main.recent.RecentAdapter
 import woowacourse.shopping.feature.main.recent.RecentWrapperAdapter
 import woowacourse.shopping.model.ProductUiModel
@@ -28,6 +35,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var recentAdapter: RecentAdapter
     private lateinit var recentWrapperAdapter: RecentWrapperAdapter
     private lateinit var loadAdapter: LoadAdapter
+    private lateinit var cartProductCountTv: TextView
 
     private val concatAdapter: ConcatAdapter by lazy {
         val config = ConcatAdapter.Config.Builder().apply {
@@ -40,30 +48,39 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        presenter = MainPresenter(
-            this,
-            ProductMockRepository(),
-            RecentProductRepositoryImpl(RecentDao(this))
-        )
-
         initAdapters()
         initLayoutManager()
-        binding.productRv.adapter = concatAdapter
+        initPresenter()
+
         presenter.loadProducts()
         presenter.loadRecent()
     }
 
     private fun initAdapters() {
-        mainProductAdapter = MainProductAdapter(listOf()) { product ->
-            presenter.moveToDetail(product)
-        }
-        recentAdapter = RecentAdapter(listOf()) { recentProduct ->
+        mainProductAdapter = MainProductAdapter(
+            object : MainProductClickListener {
+                override fun onPlusClick(product: ProductUiModel, previousCount: Int) {
+                    presenter.increaseCartProduct(product, previousCount)
+                }
+
+                override fun onMinusClick(product: ProductUiModel, previousCount: Int) {
+                    presenter.decreaseCartProduct(product, previousCount)
+                }
+
+                override fun onProductClick(product: ProductUiModel) {
+                    presenter.moveToDetail(product)
+                }
+            }
+        )
+        recentAdapter = RecentAdapter { recentProduct ->
             presenter.moveToDetail(recentProduct.productUiModel)
         }
+
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
         loadAdapter = LoadAdapter {
-            presenter.loadMoreProduct()
+            presenter.loadProducts()
         }
+        binding.productRv.adapter = concatAdapter
     }
 
     private fun initLayoutManager() {
@@ -80,40 +97,61 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding.productRv.layoutManager = layoutManager
     }
 
+    private fun initPresenter() {
+        presenter = MainPresenter(
+            this,
+            ProductRemoteMockRepositoryImpl(
+                ProductMockService(MockServer(applicationContext)),
+                ProductCacheImpl
+            ),
+            RecentProductRepositoryImpl(RecentDao(this)),
+            CartRepositoryImpl(CartDao(this))
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.updateProducts()
+    }
+
     override fun showCartScreen() {
         startActivity(CartActivity.getIntent(this))
     }
 
-    override fun showProductDetailScreenByProduct(product: ProductUiModel) {
-        startActivity(DetailActivity.getIntent(this, product))
-    }
-
-    override fun addProducts(products: List<ProductUiModel>) {
-        mainProductAdapter.addItems(products)
+    override fun showProductDetailScreenByProduct(
+        product: ProductUiModel,
+        recentProduct: ProductUiModel?
+    ) {
+        startActivity(DetailActivity.getIntent(this, product, recentProduct))
     }
 
     override fun updateRecent(recent: List<RecentProductUiModel>) {
-        recentAdapter.setItems(recent)
+        recentAdapter.submitList(recent)
     }
 
     override fun showProductDetailScreenByRecent(recentProduct: RecentProductUiModel) {
         startActivity(DetailActivity.getIntent(this, recentProduct.productUiModel))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.app_bar_menu, menu)
-        return true
+    override fun updateCartProductCount(count: Int) {
+        if (::cartProductCountTv.isInitialized) {
+            cartProductCountTv.isVisible = count != 0
+            cartProductCountTv.text = count.toString()
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.cart_action -> {
-                presenter.moveToCart()
-                true
-            }
+    override fun submitList(products: List<ProductUiModel>) {
+        mainProductAdapter.submitList(products.toList())
+    }
 
-            else -> super.onOptionsItemSelected(item)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.app_bar_menu, menu)
+        menu?.findItem(R.id.cart_action)?.actionView?.let { view ->
+            view.setOnClickListener { presenter.moveToCart() }
+            view.findViewById<TextView>(R.id.cart_count_tv)?.let { cartProductCountTv = it }
         }
+        presenter.setCartProductCount()
+        return true
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

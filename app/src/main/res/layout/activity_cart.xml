@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.feature.cart.CartPresenter" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,7 +19,7 @@
             android:id="@+id/cart_item_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="16dp"
             android:clipToPadding="false"
             android:padding="18dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -29,6 +36,7 @@
             android:insetBottom="0dp"
             android:padding="12dp"
             android:src="@drawable/ic_arrow_back_ios_new_24"
+            android:onClick="@{()->presenter.loadPreviousPage()}"
             app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
             app:layout_constraintEnd_toStartOf="@id/page_count_text_view"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -39,12 +47,12 @@
             android:id="@+id/page_count_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="50dp"
+            android:layout_marginVertical="16dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:padding="12dp"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottom_layout"
             app:layout_constraintEnd_toStartOf="@id/next_page_btn"
             app:layout_constraintStart_toEndOf="@id/previous_page_btn"
             tools:text="0" />
@@ -58,10 +66,66 @@
             android:insetBottom="0dp"
             android:padding="12dp"
             android:src="@drawable/ic_arrow_forward_ios_24"
+            android:onClick="@{()->presenter.loadNextPage()}"
             app:layout_constraintBottom_toBottomOf="@id/page_count_text_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/page_count_text_view"
             app:layout_constraintTop_toTopOf="@id/page_count_text_view" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/gray_dark"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <CheckBox
+                android:id="@+id/toggle_all_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/all"
+                android:textColor="@color/white"
+                android:layout_marginVertical="24dp"
+                android:layout_marginStart="24dp"
+                android:checked="@{presenter.allSelected}"
+                android:gravity="center"
+                android:onCheckedChanged="@{(_, isChecked)->presenter.toggleAllProductOnPage(isChecked)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/total_price_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_marginEnd="12dp"
+                android:text="@{@string/price_format(presenter.totalPrice)}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/order_tv"
+                tools:text="1,000원" />
+
+            <TextView
+                android:id="@+id/order_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="end"
+                android:background="@color/mint"
+                android:gravity="center"
+                android:padding="24dp"
+                android:text="@{@string/order(presenter.totalCount)}"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="주문하기(5)" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

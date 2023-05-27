@@ -15,22 +15,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/bg_item_cart_product"
-        android:padding="12dp">
+        android:background="@drawable/bg_round_border"
+        android:paddingBottom="12dp">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/start_guideline"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="0dp" />
+            app:layout_constraintGuide_begin="12dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/end_guideline"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="0dp" />
+            app:layout_constraintGuide_end="12dp" />
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/product_title"
@@ -44,8 +51,9 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/delete_btn"
-            app:layout_constraintStart_toEndOf="@id/start_guideline"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkbox"
+            app:layout_constraintTop_toTopOf="@id/checkbox"
+            app:layout_constraintBottom_toBottomOf="@id/checkbox"
             tools:text="상품 이름" />
 
         <ImageView
@@ -55,7 +63,8 @@
             android:contentDescription="@string/cancel_button"
             android:src="@drawable/ic_clear"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/checkbox"
+            app:layout_constraintBottom_toBottomOf="@id/checkbox"
             app:tint="@color/gray_dark"
             tools:src="@drawable/ic_clear" />
 
@@ -71,18 +80,24 @@
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/start_guideline"
-            app:layout_constraintTop_toBottomOf="@id/product_title"
+            app:layout_constraintTop_toBottomOf="@id/checkbox"
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{@string/price_format(cartProduct.productUiModel.toPriceFormat())}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="@{@string/price_format(cartProduct.productUiModel.price)}"
+            app:layout_constraintBottom_toTopOf="@id/count_view"
             app:layout_constraintEnd_toStartOf="@id/end_guideline"
             tools:text="1,000원" />
 
+        <woowacourse.shopping.feature.common.CountView
+            android:id="@+id/count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/end_guideline" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

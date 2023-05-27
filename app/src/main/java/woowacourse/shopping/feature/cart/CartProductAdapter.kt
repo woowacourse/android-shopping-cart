@@ -10,7 +10,7 @@ import woowacourse.shopping.model.CartProductUiModel
 
 class CartProductAdapter(
     items: List<CartProductUiModel>,
-    private val onClick: (CartProductUiModel) -> Unit
+    private val cartProductClickListener: CartProductClickListener
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
     private val _items = items.toMutableList()
 
@@ -22,13 +22,13 @@ class CartProductAdapter(
             parent,
             false
         )
-        return CartProductViewHolder(binding)
+        return CartProductViewHolder(binding, cartProductClickListener)
     }
 
     override fun getItemCount(): Int = _items.size
 
     override fun onBindViewHolder(holder: CartProductViewHolder, position: Int) {
-        holder.bind(_items[position], onClick)
+        holder.bind(_items[position])
     }
 
     fun setItems(newItems: List<CartProductUiModel>) {

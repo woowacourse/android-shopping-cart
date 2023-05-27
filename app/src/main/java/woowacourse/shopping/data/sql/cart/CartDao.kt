@@ -25,9 +25,9 @@ class CartDao(
         val cursor = readableDatabase.query(
             CartContract.TABLE_NAME,
             arrayOf(
-                CartContract.TABLE_COLUMN_CART_ID,
                 CartContract.TABLE_COLUMN_PRODUCT_ID,
-                CartContract.TABLE_COLUMN_PRODUCT_COUNT
+                CartContract.TABLE_COLUMN_PRODUCT_COUNT,
+                CartContract.TABLE_COLUMN_PRODUCT_IS_SELECTED
             ),
             null, null, null, null, null
         )
@@ -35,34 +35,60 @@ class CartDao(
         val cart = mutableListOf<CartProduct>()
         while (cursor.moveToNext()) {
             val data = CartEntity(
-                cursor.getLong(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CART_ID)),
                 cursor.getLong(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_ID)),
-                cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_COUNT))
+                cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_COUNT)),
+                cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_PRODUCT_IS_SELECTED))
             )
             val product: Product = productsDatasource.find { it.id == data.productId } ?: continue
-            cart.add(CartProduct(data.cartId, product))
+            cart.add(CartProduct(product, data.count, data.isSelected == 1))
         }
 
         cursor.close()
         return cart
     }
 
-    fun insertProduct(product: Product) {
+    fun putProduct(product: Product, count: Int) {
+        val findProduct = selectAll().find { it.product.id == product.id }
+        if (findProduct == null) {
+            insertNewProduct(product, count)
+        } else {
+            addProduct(product, count)
+        }
+    }
+
+    private fun insertNewProduct(product: Product, count: Int) {
         val values = ContentValues().apply {
             put(CartContract.TABLE_COLUMN_PRODUCT_ID, product.id)
-            put(CartContract.TABLE_COLUMN_PRODUCT_COUNT, 1) // 일단 1로 고정
+            put(CartContract.TABLE_COLUMN_PRODUCT_COUNT, count)
+            put(CartContract.TABLE_COLUMN_PRODUCT_IS_SELECTED, 1)
         }
         writableDatabase.insert(CartContract.TABLE_NAME, null, values)
     }
 
-    fun deleteCartProduct(cartProduct: CartProduct) {
-        val selection = "${CartContract.TABLE_COLUMN_CART_ID} = ?"
-        val selectionArgs = arrayOf("${cartProduct.cartId}")
+    private fun addProduct(product: Product, count: Int) {
+        val updateSql = "UPDATE ${CartContract.TABLE_NAME} " +
+            "SET ${CartContract.TABLE_COLUMN_PRODUCT_COUNT}=$count " +
+            "WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+
+        writableDatabase.execSQL(updateSql)
+    }
+
+    fun deleteCartProduct(product: Product) {
+        val selection = "${CartContract.TABLE_COLUMN_PRODUCT_ID} = ?"
+        val selectionArgs = arrayOf("${product.id}")
         writableDatabase.delete(CartContract.TABLE_NAME, selection, selectionArgs)
+    }
+
+    fun updateSelection(product: Product, isSelected: Int) {
+        val updateSql = "UPDATE ${CartContract.TABLE_NAME} " +
+            "SET ${CartContract.TABLE_COLUMN_PRODUCT_IS_SELECTED}=$isSelected " +
+            "WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID}=${product.id}"
+
+        writableDatabase.execSQL(updateSql)
     }
 
     companion object {
         private const val DB_NAME = "cart_db"
-        private const val VERSION = 1
+        private const val VERSION = 3
     }
 }
