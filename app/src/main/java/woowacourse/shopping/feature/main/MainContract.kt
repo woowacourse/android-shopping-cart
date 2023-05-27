@@ -17,7 +17,6 @@ interface MainContract {
         fun loadProducts()
         fun loadRecent()
         fun setCartProductCount()
-        fun loadMoreProduct()
         fun moveToCart()
         fun moveToDetail(product: ProductUiModel)
         fun refresh()

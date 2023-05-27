@@ -8,31 +8,19 @@ class ProductRemoteMockRepositoryImpl(
     private val service: ProductMockService,
     private val productCache: ProductCache
 ) : ProductRepository {
-    override fun getFirstProducts(onSuccess: (List<Product>) -> Unit) {
-        if (productCache.productList.isEmpty()) {
+    override fun getProducts(page: Int, onSuccess: (List<Product>) -> Unit) {
+        if (productCache.productList.size >= page * LOAD_SIZE) {
+            onSuccess(productCache.getSubProducts(page, LOAD_SIZE))
+        } else {
             service.request(
-                page = 1,
+                page = page,
                 onSuccess = {
                     productCache.addProducts(it)
-                    onSuccess(it)
+                    onSuccess(productCache.getSubProducts(page, LOAD_SIZE))
                 },
-                onFailure = { onSuccess(emptyList()) }
+                onFailure = {}
             )
-        } else {
-            onSuccess(productCache.productList)
         }
-    }
-
-    override fun getNextProducts(onSuccess: (List<Product>) -> Unit) {
-        val currentPage = (productCache.productList.size - 1) / LOAD_SIZE + 1
-        service.request(
-            currentPage + 1,
-            onSuccess = {
-                productCache.addProducts(it)
-                onSuccess(it)
-            },
-            onFailure = { }
-        )
     }
 
     override fun clearCache() {

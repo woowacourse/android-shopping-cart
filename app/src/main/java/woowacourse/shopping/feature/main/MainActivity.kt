@@ -78,7 +78,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
         recentWrapperAdapter = RecentWrapperAdapter(recentAdapter)
         loadAdapter = LoadAdapter {
-            presenter.loadMoreProduct()
+            presenter.loadProducts()
         }
         binding.productRv.adapter = concatAdapter
     }

@@ -19,10 +19,13 @@ class MainPresenter(
 
     private var totalCount: Int = cartRepository.getAll().size
     private val mainProducts = mutableListOf<ProductUiModel>()
+    private var page = 1
 
     override fun loadProducts() {
-        productRepository.getFirstProducts(
+        productRepository.getProducts(
+            page = page,
             onSuccess = {
+                ++page
                 mainProducts.addAll(matchCartProductCount(it))
                 view.submitList(mainProducts)
             }
@@ -45,16 +48,6 @@ class MainPresenter(
     override fun setCartProductCount() {
         val count = cartRepository.getAll().size
         view.updateCartProductCount(count)
-    }
-
-    override fun loadMoreProduct() {
-        productRepository.getNextProducts(
-            onSuccess = {
-                val nextProductItems = matchCartProductCount(it)
-                mainProducts.addAll(nextProductItems)
-                view.submitList(mainProducts)
-            }
-        )
     }
 
     override fun moveToCart() {
