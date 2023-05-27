@@ -176,9 +176,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun onMoreProductList() {
-        Thread {
-            presenter.loadMoreData(productListAdapter.itemCount - 1)
-        }.start()
+        presenter.loadMoreData(productListAdapter.itemCount - 1)
     }
 
     override fun updateMoreProductsView(newProducts: List<ProductModel>) {
