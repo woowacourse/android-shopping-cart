@@ -9,6 +9,6 @@ class MoreItemViewHolder(
     presenter: ProductListContract.Presenter,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        itemView.setOnClickListener { presenter.updateProductItems() }
+        itemView.setOnClickListener { presenter.loadMoreProductItems() }
     }
 }

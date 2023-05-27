@@ -19,6 +19,7 @@ import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.databinding.BadgeCartBinding
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.productlist.product.ProductListAdapter
@@ -26,10 +27,12 @@ import woowacourse.shopping.presentation.productlist.recentproduct.RecentProduct
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var activityBinding: ActivityProductListBinding
+    private var cartIconBinding: BadgeCartBinding? = null
+
     private lateinit var productListAdapter: ProductListAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
     private lateinit var cartMenuItem: MenuItem
-    private var cartIconBinding: BadgeCartBinding? = null
+
     private val productRemoteDataSource: ProductRemoteDataSource by lazy { ProductService }
     private val presenter: ProductListPresenter by lazy {
         ProductListPresenter(
@@ -62,9 +65,9 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun updateView() {
-        presenter.updateProductItems()
-        presenter.updateRecentProductItems()
-        presenter.updateCartProductInfoList()
+        presenter.refreshProductItems()
+        presenter.loadRecentProductItems()
+        presenter.updateCartCount()
     }
 
     private fun initRecentProductAdapter() {
@@ -93,12 +96,20 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         activityBinding.recyclerProduct.adapter = productListAdapter
     }
 
-    override fun loadProductModels(productModels: List<ProductModel>) {
-        productListAdapter.setItems(productModels)
+    override fun loadProductItems(cartProductModels: List<CartProductInfoModel>) {
+        val newList =
+            listOf(CartProductInfoModel.defaultInfo()) + cartProductModels + listOf(
+                CartProductInfoModel.defaultInfo(),
+            )
+        productListAdapter.submitList(newList)
     }
 
-    override fun loadRecentProductModels(productModels: List<ProductModel>) {
+    override fun loadRecentProductItems(productModels: List<ProductModel>) {
         recentProductAdapter.submitList(productModels)
+    }
+
+    override fun showCartCount(count: Int) {
+        cartIconBinding?.badgeCartCounter?.text = count.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -121,11 +132,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
                 false,
             )
         cartMenuItem.actionView = cartIconBinding?.root
-        cartIconBinding?.presenter = presenter
-        cartIconBinding?.lifecycleOwner = this
         cartIconBinding?.iconCartMenu?.setOnClickListener {
             startActivity(CartActivity.getIntent(this))
         }
+        presenter.updateCartCount()
     }
 
     companion object {

@@ -1,31 +1,34 @@
 package woowacourse.shopping.presentation.common
 
 import woowacourse.shopping.Counter
-import woowacourse.shopping.util.SafeLiveData
-import woowacourse.shopping.util.SafeMutableLiveData
 
 class CounterPresenter constructor(
     private val view: CounterContract.View,
+    private val counterListener: CounterListener,
+    minimumCount: Int = INIT_NUMBER,
     initCount: Int = INIT_NUMBER,
 ) : CounterContract.Presenter {
 
-    private val _counter: SafeMutableLiveData<Counter> =
-        SafeMutableLiveData(Counter(initCount))
-    override val counter: SafeLiveData<Counter> get() = _counter
+    private var counter: Counter = Counter(value = initCount, minimumCount = minimumCount)
     override fun updateCount(count: Int) {
-        _counter.value = _counter.value.set(count)
+        counter = counter.set(count)
+        view.setCountText(counter.value)
     }
 
     override fun plusCount() {
-        _counter.value = _counter.value.plus(INCREMENT_VALUE)
+        counter += INCREMENT_VALUE
+        counterListener.onPlus(counter.value)
+        view.setCountText(counter.value)
     }
 
     override fun minusCount() {
-        _counter.value = _counter.value.minus(DECREMENT_VALUE)
+        counter -= DECREMENT_VALUE
+        counterListener.onMinus(counter.value)
+        view.setCountText(counter.value)
     }
 
     override fun checkCounterVisibility() {
-        if (counter.value.value == VISIBILITY_CONDITION) {
+        if (counter.value == NOT_VISIBLE_CONDITION) {
             view.setCounterVisibility(false)
         } else {
             view.setCounterVisibility(true)
@@ -33,7 +36,7 @@ class CounterPresenter constructor(
     }
 
     companion object {
-        private const val VISIBILITY_CONDITION = 0
+        private const val NOT_VISIBLE_CONDITION = 0
         private const val INCREMENT_VALUE = 1
         private const val DECREMENT_VALUE = 1
         private const val INIT_NUMBER = 1

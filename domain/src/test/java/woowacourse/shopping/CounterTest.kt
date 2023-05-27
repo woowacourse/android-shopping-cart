@@ -25,4 +25,15 @@ class CounterTest {
         val expected = 1
         assertThat(actual.value).isEqualTo(expected)
     }
+
+    @Test
+    fun `뺏을 때, 지정한 최소 숫자보다 작으면 최소 숫자 카운터를 반환한다`() {
+        // given
+        val counter = Counter(value = 1, minimumCount = 1)
+        // when
+        val actual = counter - 2
+        // given
+        val expected = 1
+        assertThat(actual.value).isEqualTo(expected)
+    }
 }

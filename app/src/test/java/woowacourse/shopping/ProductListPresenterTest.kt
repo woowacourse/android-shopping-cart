@@ -1,15 +1,13 @@
 package woowacourse.shopping
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import junit.framework.TestCase.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.presentation.mapper.toDomain
 import woowacourse.shopping.presentation.mapper.toPresentation
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productlist.ProductListContract
 import woowacourse.shopping.presentation.productlist.ProductListPresenter
@@ -24,9 +22,6 @@ class ProductListPresenterTest {
     private val recentProductRepository: RecentProductRepository = mockk(relaxed = true)
     private val cartRepository: CartRepository = mockk(relaxed = true)
 
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
-
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
@@ -37,11 +32,20 @@ class ProductListPresenterTest {
     @Test
     fun 상품_목록을_업데이트한다() {
         // given
-        every { productRepository.getProductsWithRange(20, 20) } returns listOf()
+        val product = Product(1, "", "", Price(100))
+        val productModels = List(10) { product.toPresentation() }
+        every {
+            productRepository.getProductsWithRange(
+                0,
+                20,
+            )
+        } returns productModels.map { it.toDomain() }
+        every { cartRepository.getCartProductInfoById(1) } returns CartProductInfo(product, 1)
         // when
-        presenter.updateProductItems()
+        presenter.refreshProductItems()
         // then
-        verify { view.loadProductModels(listOf()) }
+        val expected = List(10) { CartProductInfo(product, 1).toPresentation() }
+        verify { view.loadProductItems(expected) }
     }
 
     @Test
@@ -51,9 +55,9 @@ class ProductListPresenterTest {
         val productModels = List(10) { product.toPresentation() }
         every { recentProductRepository.getRecentProducts(10) } returns productModels.map { it.toDomain() }
         // when
-        presenter.updateRecentProductItems()
+        presenter.loadRecentProductItems()
         // then
-        verify { view.loadRecentProductModels(productModels) }
+        verify { view.loadRecentProductItems(productModels) }
     }
 
     @Test
@@ -61,17 +65,18 @@ class ProductListPresenterTest {
         // given
         every { cartRepository.getAllCartProductsInfo() } returns makeTestCartProductInfoList()
         // when
-        presenter.updateCartProductInfoList()
+        presenter.updateCartCount()
         // then
-        assertEquals(10, presenter.cartProductInfoList.value.count)
+        verify { view.showCartCount(10) }
     }
 
     @Test
     fun 카트_상품의_개수가_0이라면_상품을_삭제한다() {
         // given
         val productModel = ProductModel(1, "", "", 1000)
+        val cartModel = CartProductInfoModel(productModel, 2)
         // when
-        presenter.updateCartProductCount(productModel, 0)
+        presenter.updateCartProductCount(cartModel, 0)
         // then
         verify { cartRepository.deleteCartProductId(1) }
     }
@@ -80,8 +85,9 @@ class ProductListPresenterTest {
     fun 카트_상품의_개수가_0이_아니라면_상품개수를_업데이트한다() {
         // given
         val productModel = ProductModel(1, "", "", 1000)
+        val cartModel = CartProductInfoModel(productModel, 2)
         // when
-        presenter.updateCartProductCount(productModel, 1)
+        presenter.updateCartProductCount(cartModel, 1)
         // then
         verify { cartRepository.updateCartProductCount(1, 1) }
     }

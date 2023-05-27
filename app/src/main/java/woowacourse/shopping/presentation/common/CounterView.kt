@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import woowacourse.shopping.databinding.CustomCounterBinding
 
 class CounterView @JvmOverloads constructor(
@@ -18,13 +17,34 @@ class CounterView @JvmOverloads constructor(
         this,
         true,
     )
-    val plusButton = binding.textCounterPlus
-    val minusButton = binding.textCounterMinus
-    val presenter: CounterContract.Presenter = CounterPresenter(this)
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        binding.presenter = presenter
-        binding.lifecycleOwner = findViewTreeLifecycleOwner()
+    private lateinit var presenter: CounterContract.Presenter
+    fun setUpView(counterListener: CounterListener, initCount: Int, minimumCount: Int) {
+        presenter = CounterPresenter(
+            view = this,
+            initCount = initCount,
+            minimumCount = minimumCount,
+            counterListener = counterListener,
+        )
+        presenter.checkCounterVisibility()
+        onPlusClick()
+        onMinusClick()
+    }
+
+    private fun onPlusClick() {
+        binding.textCounterPlus.setOnClickListener {
+            presenter.plusCount()
+        }
+    }
+
+    private fun onMinusClick() {
+        binding.textCounterMinus.setOnClickListener {
+            presenter.minusCount()
+            presenter.checkCounterVisibility()
+        }
+    }
+
+    override fun setCountText(count: Int) {
+        binding.textCounterNumber.text = count.toString()
     }
 
     override fun setCounterVisibility(visible: Boolean) {
