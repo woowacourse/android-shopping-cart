@@ -98,25 +98,32 @@ class ProductListPresenter(
 
         itemsHaveCount.forEach { item ->
             val cartProduct = cartProducts.find { it.id == item.product.id }
-            item.product.count = cartProduct?.count ?: 0
-            view.notifyDataChanged(productsListItems.indexOf(item))
+            val index = productsListItems.indexOf(item)
+            val listItem = productsListItems[index] as ProductListViewItem.ProductItem
+            productsListItems[index] = ProductListViewItem.ProductItem(
+                listItem.product.copy(count = cartProduct?.count ?: 0),
+            )
+            view.notifyDataChanged(index)
         }
     }
 
     override fun fetchProductCount(id: Int) {
         if (id == -1) return
         val product = cartRepository.find(id)
-        val item = productsListItems.filterIsInstance<ProductListViewItem.ProductItem>()
-            .filter { it.product.id == id }[0]
-        item.product.count = product?.count ?: 0
-        view.notifyDataChanged(productsListItems.indexOf(item))
+        val index =
+            productsListItems.indexOfFirst { it is ProductListViewItem.ProductItem && it.product.id == id }
+        val item = productsListItems[index] as ProductListViewItem.ProductItem
+        productsListItems[index] =
+            ProductListViewItem.ProductItem(item.product.copy(count = product?.count ?: 0))
+        view.notifyDataChanged(index)
     }
 
     override fun updateRecentViewed(id: Int) {
         if (id == -1) return
         if (isExistRecentViewed()) productsListItems.removeIf { it is ProductListViewItem.RecentViewedItem }
 
-        val viewedProductModels = convertIdsToProductModels(recentViewedRepository.findAll()).reversed()
+        val viewedProductModels =
+            convertIdsToProductModels(recentViewedRepository.findAll()).reversed()
         productsListItems.add(0, ProductListViewItem.RecentViewedItem(viewedProductModels))
         view.notifyRecentViewedChanged()
     }
