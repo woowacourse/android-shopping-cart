@@ -132,15 +132,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/btn_put_in_cart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/mint"
+            android:background="@drawable/back_rectangle"
+            android:backgroundTint="@color/mint"
             android:text="@string/put_in_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

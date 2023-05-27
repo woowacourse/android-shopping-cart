@@ -47,14 +47,15 @@
             app:layout_constraintStart_toStartOf="@id/img_product"
             app:layout_constraintTop_toTopOf="@id/btn_add">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_minus"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/back_left_rounded"
                 android:text="@string/minus"
                 android:textColor="@color/gray"
-                android:textSize="22sp"
+                android:textSize="17sp"
+                app:backgroundTint="@null"
                 app:layout_constraintEnd_toStartOf="@id/text_count"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -72,14 +73,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_plus"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/back_right_rounded"
                 android:text="@string/plus"
                 android:textColor="@color/gray"
-                android:textSize="22sp"
+                android:textSize="17sp"
+                app:backgroundTint="@null"
                 app:layout_constraintStart_toEndOf="@id/text_count"
                 app:layout_constraintTop_toTopOf="parent" />
 

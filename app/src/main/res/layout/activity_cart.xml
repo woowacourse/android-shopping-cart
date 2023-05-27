@@ -78,11 +78,12 @@
                 tools:text="10,000원" />
 
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_order"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:background="@drawable/back_rectangle"
+                app:backgroundTint="@null"
                 android:paddingHorizontal="14dp"
                 android:text="@{@string/order_count(presenter.cartSystemResult.totalCount)}"
                 android:textColor="@color/white"

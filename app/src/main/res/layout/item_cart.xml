@@ -81,7 +81,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_minus"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -89,7 +89,8 @@
                 android:onClick="@{() -> onItemClick.onUpdateCount(cartProduct.id, cartProduct.count - 1)}"
                 android:text="@string/minus"
                 android:textColor="@color/gray"
-                android:textSize="22sp"
+                android:textSize="17sp"
+                app:backgroundTint="@null"
                 app:layout_constraintEnd_toStartOf="@id/text_count"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -100,6 +101,7 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:text="@{Integer.toString(cartProduct.count)}"
+                android:textAlignment="center"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -107,15 +109,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_plus"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/back_right_rounded"
                 android:onClick="@{() -> onItemClick.onUpdateCount(cartProduct.id, cartProduct.count + 1)}"
                 android:text="@string/plus"
+                android:textAlignment="center"
                 android:textColor="@color/gray"
-                android:textSize="22sp"
+                android:textSize="17sp"
+                app:backgroundTint="@null"
                 app:layout_constraintStart_toEndOf="@id/text_count"
                 app:layout_constraintTop_toTopOf="parent" />
 
