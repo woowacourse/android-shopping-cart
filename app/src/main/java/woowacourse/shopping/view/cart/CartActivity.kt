@@ -42,7 +42,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun setPresenter() {
-        presenter = CartPresenter(this, CartProductSqliteProductRepository(CartDBHelper(this)), ProductMockWebRepository())
+        presenter = CartPresenter(
+            this,
+            CartProductSqliteProductRepository(CartDBHelper(this)),
+            ProductMockWebRepository(),
+        )
     }
 
     override fun showProducts(
@@ -102,11 +106,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onAllCheckSelected() {
         binding.allCheck.setOnCheckedChangeListener { _, checked ->
-            if (checked) {
-                presenter.setAllCheck()
-            } else {
-                presenter.setAllUncheck()
-            }
+            presenter.judgeCheck(checked)
         }
     }
 

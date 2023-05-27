@@ -79,14 +79,22 @@ class CartPresenter(
         _totalCount.value = cartModels.sumOf { it.count }
     }
 
-    override fun setAllCheck() {
+    override fun judgeCheck(checked: Boolean) {
+        if (checked) {
+            setAllCheck()
+        } else {
+            setAllUncheck()
+        }
+    }
+
+    private fun setAllCheck() {
         currentCartProducts.forEach { cartProduct ->
             cartProductRepository.updateCheckState(cartProduct.id, true)
         }
         updateCartItems(cartPagination.currentItems())
     }
 
-    override fun setAllUncheck() {
+    private fun setAllUncheck() {
         currentCartProducts.forEach { cartProduct ->
             cartProductRepository.updateCheckState(cartProduct.id, false)
         }

@@ -31,9 +31,8 @@ interface CartContract {
         fun setupTotalPrice()
         fun setupTotalCount()
         fun updateItemCheck(id: Int, checked: Boolean)
-        fun setAllCheck()
+        fun judgeCheck(checked: Boolean)
         fun handleNextStep(itemId: Int)
         fun setAllCheckCondition(): Boolean
-        fun setAllUncheck()
     }
 }
