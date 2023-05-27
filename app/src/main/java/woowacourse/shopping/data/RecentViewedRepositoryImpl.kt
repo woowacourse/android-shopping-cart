@@ -12,6 +12,14 @@ class RecentViewedRepositoryImpl(context: Context) :
         return dbHelper.selectAll()
     }
 
+    override fun find(id: Int): Int? {
+        return dbHelper.selectWhereId(id)
+    }
+
+    override fun findMostRecent(): Int {
+        return dbHelper.selectMostRecent() ?: -1
+    }
+
     override fun add(id: Int) {
         if (find(id) != null) {
             dbHelper.remove(id)
@@ -20,14 +28,6 @@ class RecentViewedRepositoryImpl(context: Context) :
             dbHelper.removeOldest()
         }
         dbHelper.insert(id)
-    }
-
-    override fun find(id: Int): Int? {
-        return dbHelper.selectWhereId(id)
-    }
-
-    override fun findMostRecent(): Int {
-        return dbHelper.selectMostRecent() ?: -1
     }
 
     override fun remove(id: Int) {

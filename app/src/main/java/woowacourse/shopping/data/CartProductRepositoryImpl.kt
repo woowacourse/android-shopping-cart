@@ -15,6 +15,14 @@ class CartProductRepositoryImpl(
         return dbHelper.findWhereById(id)
     }
 
+    override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
+        return dbHelper.findRange(mark, rangeSize)
+    }
+
+    override fun findCheckedItem(): List<CartProduct> {
+        return dbHelper.findByChecked()
+    }
+
     override fun add(id: Int, count: Int, check: Boolean) {
         val cardProduct = find(id)
         if (cardProduct != null) {
@@ -24,31 +32,23 @@ class CartProductRepositoryImpl(
         dbHelper.insert(id, count, check)
     }
 
-    override fun remove(id: Int) {
-        dbHelper.remove(id)
-    }
-
-    override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
-        return dbHelper.findRange(mark, rangeSize)
-    }
-
-    override fun isExistByMark(mark: Int): Boolean {
-        return dbHelper.getSize(mark)
-    }
-
-    override fun plusCount(id: Int) {
+    override fun updatePlus(id: Int) {
         dbHelper.plusCount(id)
     }
 
-    override fun subCount(id: Int) {
+    override fun UpdateSub(id: Int) {
         dbHelper.subCount(id)
-    }
-
-    override fun findCheckedItem(): List<CartProduct> {
-        return dbHelper.findByChecked()
     }
 
     override fun updateCheckState(id: Int, checked: Boolean) {
         dbHelper.updateCheck(id, checked)
+    }
+
+    override fun remove(id: Int) {
+        dbHelper.remove(id)
+    }
+
+    override fun isExistByMark(mark: Int): Boolean {
+        return dbHelper.getSize(mark)
     }
 }

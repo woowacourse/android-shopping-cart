@@ -64,7 +64,7 @@ class ProductListPresenter(
     }
 
     override fun plusProductCount(product: ProductModel) {
-        cartProductRepository.plusCount(product.id)
+        cartProductRepository.updatePlus(product.id)
         product.count++
     }
 
@@ -73,7 +73,7 @@ class ProductListPresenter(
             cartProductRepository.remove(product.id)
             product.count--
         } else {
-            cartProductRepository.subCount(product.id)
+            cartProductRepository.UpdateSub(product.id)
             product.count--
         }
     }

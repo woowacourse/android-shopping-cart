@@ -55,11 +55,11 @@ class CartPresenter(
     }
 
     override fun plusCount(id: Int) {
-        cartProductRepository.plusCount(id)
+        cartProductRepository.updatePlus(id)
     }
 
     override fun subCount(id: Int) {
-        cartProductRepository.subCount(id)
+        cartProductRepository.UpdateSub(id)
     }
 
     override fun setupTotalPrice() {
