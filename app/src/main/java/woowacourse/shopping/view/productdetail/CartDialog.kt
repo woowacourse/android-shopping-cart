@@ -14,7 +14,7 @@ class CartDialog(
 ) {
     private val dialog = Dialog(context)
     private var binding: CartDialogBinding = CartDialogBinding.inflate(context.layoutInflater)
-    private var productCount = 1
+    private var productCount = DEFAULT_COUNT_VALUE
 
     init {
         dialog.setContentView(binding.root)
@@ -49,10 +49,15 @@ class CartDialog(
     }
 
     private fun plusCount() {
-        productCount += 1
+        productCount += COUNT_CALCULATE_VALUE
     }
 
     private fun subCount() {
-        productCount -= 1
+        productCount -= COUNT_CALCULATE_VALUE
+    }
+
+    companion object {
+        private const val DEFAULT_COUNT_VALUE = 1
+        private const val COUNT_CALCULATE_VALUE = 1
     }
 }
