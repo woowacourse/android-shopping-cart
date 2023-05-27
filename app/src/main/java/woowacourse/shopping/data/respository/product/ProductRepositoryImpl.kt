@@ -35,6 +35,6 @@ class ProductRepositoryImpl(private val cartDao: CartDao) :
     }
 
     override fun getDataById(id: Long): ProductModel {
-        return (ProductsDao.getDataById(id) ?: ProductsDao.getErrorData()).toUIModel()
+        return (ProductsDao().getDataById(id) ?: ProductsDao().getErrorData()).toUIModel()
     }
 }

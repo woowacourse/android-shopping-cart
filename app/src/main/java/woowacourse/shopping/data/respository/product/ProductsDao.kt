@@ -2,7 +2,7 @@ package woowacourse.shopping.data.respository.product
 
 import woowacourse.shopping.data.model.ProductEntity
 
-object ProductsDao {
+class ProductsDao {
     private val items = listOf(
         ProductEntity(
             id = 0,
