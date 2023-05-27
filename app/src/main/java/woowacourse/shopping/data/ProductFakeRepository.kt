@@ -3,6 +3,7 @@ package woowacourse.shopping.data
 import android.os.Looper
 import com.example.domain.model.Product
 import com.example.domain.repository.ProductRepository
+import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -91,12 +92,7 @@ object ProductJsonParser {
             val products = mutableListOf<Product>()
             for (i in 0 until productsJsonArray.length()) {
                 val productJson = productsJsonArray.getJSONObject(i)
-                val product = Product(
-                    productJson.getLong("id"),
-                    productJson.getString("name"),
-                    productJson.getInt("price"),
-                    productJson.getString("imageUrl"),
-                )
+                val product = Gson().fromJson(productJson.toString(), Product::class.java)
                 products.add(product)
             }
             products
