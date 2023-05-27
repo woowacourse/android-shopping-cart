@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import woowacourse.shopping.domain.CartProduct
 
-class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 3) {
+class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 4) {
     private fun Int.toBoolean(): Boolean = this == 1
 
     override fun onCreate(db: SQLiteDatabase?) {

@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 1) {
+class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 2) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${RecentViewedContract.TABLE_NAME} (" +
@@ -29,17 +29,17 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_T
         writableDatabase.execSQL("DELETE FROM ${RecentViewedContract.TABLE_NAME} WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id")
     }
 
-    fun selectWhereId(id: Int): Int? {
+    fun selectWhereId(id: Int): Int {
+        var result = 0
         val sql =
             "select * from ${RecentViewedContract.TABLE_NAME} WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id"
         val cursor = readableDatabase.rawQuery(sql, null)
         while (cursor.moveToNext()) {
-            val id =
+            result =
                 cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
             cursor.close()
-            return id
         }
-        return null
+        return result
     }
 
     fun selectAll(): List<Int> {
@@ -55,15 +55,18 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_T
         return viewedProducts
     }
 
-    fun selectMostRecent(): Int? {
-        val sql =
-            "select * from ${RecentViewedContract.TABLE_NAME} WHERE rowid = (SELECT MAX(rowid) FROM ${RecentViewedContract.TABLE_NAME});"
-        val cursor = readableDatabase.rawQuery(sql, null)
+    fun selectMostRecent(): Int {
+        var id = 0
+
+        val cursor = readableDatabase.rawQuery(
+            "select * from ${RecentViewedContract.TABLE_NAME} WHERE rowid = (SELECT MAX(rowid) FROM ${RecentViewedContract.TABLE_NAME});",
+            null,
+        )
         while (cursor.moveToNext()) {
-            return cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
+            id = cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
         }
         cursor.close()
-        return null
+        return id
     }
 
     fun removeOldest() {
