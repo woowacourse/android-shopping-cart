@@ -70,7 +70,7 @@ class CartDao(context: Context) {
                     CartProductEntity(
                         productId,
                         productCount,
-                        isSelected == "y"
+                        isSelected == IS_SELECTED_FLAG
                     )
                 )
             }
@@ -123,5 +123,10 @@ class CartDao(context: Context) {
 
     private fun getCartProductCount(productId: Long): Cursor {
         return db.rawQuery(CartContract.getProductCount(productId), null)
+    }
+
+    companion object {
+        const val IS_SELECTED_FLAG = "1"
+        const val IS_NOT_SELECTED_FLAG = "0"
     }
 }
