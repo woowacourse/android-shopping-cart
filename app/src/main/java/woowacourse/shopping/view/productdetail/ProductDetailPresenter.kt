@@ -15,8 +15,8 @@ class ProductDetailPresenter(
 ) : ProductDetailContract.Presenter {
 
     private lateinit var productData: ProductModel
-    private lateinit var recentViewedProductData: ProductModel
-    private var visibilityFlag: Boolean = false
+    private lateinit var latestViewedProductData: ProductModel
+    private var latestViewVisibilityFlag: Boolean = false
 
     override fun setProductData(productModel: ProductModel) {
         productData = productModel
@@ -27,26 +27,26 @@ class ProductDetailPresenter(
     }
 
     override fun setFlag(flag: Boolean) {
-        visibilityFlag = flag
+        latestViewVisibilityFlag = flag
     }
 
     override fun getFlag(): Boolean {
-        return visibilityFlag
+        return latestViewVisibilityFlag
     }
 
-    override fun getRecentViewedProductData(): ProductModel {
+    override fun getLatestViewedProductData(): ProductModel {
         val mostRecentId = recentViewedRepository.findMostRecent()
-        recentViewedProductData = convertIdToModel(mostRecentId)
-        return recentViewedProductData
+        latestViewedProductData = convertIdToModel(mostRecentId)
+        return latestViewedProductData
     }
 
-    override fun updateRecentViewedProducts() {
+    override fun updateLatestViewedProducts() {
         recentViewedRepository.add(productData.id)
     }
 
     override fun compareNowAndRecent() {
-        if (recentViewedProductData.id == productData.id) {
-            visibilityFlag = true
+        if (latestViewedProductData.id == productData.id) {
+            latestViewVisibilityFlag = true
         }
     }
 
@@ -61,7 +61,7 @@ class ProductDetailPresenter(
     }
 
     override fun navigateRecentViewedDetail() {
-        view.startRecentViewedDetail(recentViewedProductData)
+        view.startRecentViewedDetail(latestViewedProductData)
     }
 
     override fun navigateNextStep(itemId: Int) {

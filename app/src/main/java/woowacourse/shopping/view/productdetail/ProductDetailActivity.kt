@@ -32,7 +32,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         bindView()
         showDialog()
         setMostRecentViewedVisibility()
-        presenter.updateRecentViewedProducts()
+        presenter.updateLatestViewedProducts()
     }
 
     private fun setBinding() {
@@ -56,7 +56,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun bindView() {
         binding.product = presenter.getProductData()
-        binding.recentViewedProduct = presenter.getRecentViewedProductData()
+        binding.recentViewedProduct = presenter.getLatestViewedProductData()
         binding.presenter = presenter
     }
 

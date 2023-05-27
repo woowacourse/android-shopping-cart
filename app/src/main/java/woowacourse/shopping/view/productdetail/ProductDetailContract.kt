@@ -17,8 +17,8 @@ interface ProductDetailContract {
         fun getProductData(): ProductModel
         fun setFlag(flag: Boolean)
         fun getFlag(): Boolean
-        fun updateRecentViewedProducts()
-        fun getRecentViewedProductData(): ProductModel
+        fun updateLatestViewedProducts()
+        fun getLatestViewedProductData(): ProductModel
         fun putInCart(product: ProductModel)
         fun navigateRecentViewedDetail()
         fun navigateNextStep(itemId: Int)

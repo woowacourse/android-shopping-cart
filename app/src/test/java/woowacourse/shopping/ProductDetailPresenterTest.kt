@@ -8,8 +8,8 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.data.server.ProductService
 import woowacourse.shopping.domain.CartProductRepository
-import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.productdetail.ProductDetailContract
@@ -19,7 +19,7 @@ class ProductDetailPresenterTest {
     private lateinit var view: ProductDetailContract.View
     private lateinit var presenter: ProductDetailContract.Presenter
 
-    private lateinit var productRepository: ProductRepository
+    private lateinit var productRepository: ProductService
     private lateinit var cartProductRepository: CartProductRepository
     private lateinit var recentViewedRepository: RecentViewedRepository
 
@@ -68,9 +68,9 @@ class ProductDetailPresenterTest {
         )
 
         presenter.setProductData(product)
-        presenter.updateRecentViewedProducts()
+        presenter.updateLatestViewedProducts()
 
-        verify(exactly = 1) { presenter.updateRecentViewedProducts() }
+        verify(exactly = 1) { presenter.updateLatestViewedProducts() }
     }
 
     @Test
@@ -78,7 +78,7 @@ class ProductDetailPresenterTest {
         every { view.startRecentViewedDetail(any()) } just runs
         every { recentViewedRepository.findMostRecent() } returns 1
 
-        presenter.getRecentViewedProductData()
+        presenter.getLatestViewedProductData()
         presenter.navigateRecentViewedDetail()
 
         verify(exactly = 1) { presenter.navigateRecentViewedDetail() }
