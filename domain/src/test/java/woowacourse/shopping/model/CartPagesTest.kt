@@ -7,8 +7,9 @@ import org.junit.jupiter.api.assertAll
 class CartPagesTest {
 
     // given 1 부터 10 까지 상품
-    private val fakeCartProducts = (1..10).map {
+    private val fakeCartProducts = (1L..10L).map {
         CartProduct(
+            it,
             Product(it, "test.com", "햄버거", Price(10000)),
             2,
             true,
@@ -36,8 +37,9 @@ class CartPagesTest {
 
         // then 반환 1 부터 5 상품 & 페이지 번호 1
         val expectedPage = 2
-        val expectedProducts = (6..10).map {
+        val expectedProducts = (6L..10L).map {
             CartProduct(
+                it,
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
                 true,
@@ -61,8 +63,9 @@ class CartPagesTest {
 
         // then 반환 1 부터 5 상품 & 페이지 번호 1
         val expectedPage = 1
-        val expectedProducts = (1..5).map {
+        val expectedProducts = (1L..5L).map {
             CartProduct(
+                it,
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
                 true,
@@ -87,8 +90,9 @@ class CartPagesTest {
         val actualProducts = cartPages.getCurrentProducts()
 
         // then 반환 1, 2, 3, 5, 6 상품 & 페이지 번호 1
-        val expectedProducts = listOf(1, 2, 3, 5, 6).map {
+        val expectedProducts = listOf(1L, 2L, 3L, 5L, 6L).map {
             CartProduct(
+                it,
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
                 true,
@@ -105,19 +109,21 @@ class CartPagesTest {
 
         // when 줄어든 페이지 상품 요청
         cartPages.subCountProducts(
-            Product(5, "test.com", "햄버거", Price(10000)),
+            Product(5L, "test.com", "햄버거", Price(10000)),
         )
 
         val actualProducts = cartPages.getCurrentProducts()
 
         // then 반환 1, 2, 3, 4, 5 상품 5번 개수 -1 & 페이지 번호 1
-        val expectedProducts = listOf(1, 2, 3, 4).map {
+        val expectedProducts = (1L..4L).map {
             CartProduct(
+                it,
                 Product(it, "test.com", "햄버거", Price(10000)),
                 2,
                 true,
             )
         } + CartProduct(
+            5L,
             Product(5, "test.com", "햄버거", Price(10000)),
             1,
             true,
@@ -133,20 +139,22 @@ class CartPagesTest {
 
         // when 삭제된 페이지 상품 요청
         cartPages.addCountProducts(
-            Product(1, "test.com", "햄버거", Price(10000)),
+            Product(1L, "test.com", "햄버거", Price(10000)),
         )
         val actualProducts = cartPages.getCurrentProducts()
 
         // then 반환 1, 2, 3, 4, 5 상품 1번 개수 +1 & 페이지 번호 1
         val expectedProducts = listOf(
             CartProduct(
-                Product(1, "test.com", "햄버거", Price(10000)),
+                1L,
+                Product(1L, "test.com", "햄버거", Price(10000)),
                 3,
                 true,
             ),
         ) +
-            listOf(2, 3, 4, 5).map {
+            (2L..5L).map {
                 CartProduct(
+                    it,
                     Product(it, "test.com", "햄버거", Price(10000)),
                     2,
                     true,
