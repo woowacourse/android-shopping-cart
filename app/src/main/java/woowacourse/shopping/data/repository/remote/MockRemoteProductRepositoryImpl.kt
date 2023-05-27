@@ -15,16 +15,14 @@ class MockRemoteProductRepositoryImpl(
         onFailure: () -> Unit
     ) {
         if (cache.productList.isEmpty()) {
-            Thread {
-                service.request(
-                    lastProductId = 0,
-                    onSuccess = {
-                        cache.addProducts(it)
-                        onSuccess(it)
-                    },
-                    onFailure = onFailure
-                )
-            }.start()
+            service.request(
+                lastProductId = 0,
+                onSuccess = {
+                    cache.addProducts(it)
+                    onSuccess(it)
+                },
+                onFailure = onFailure
+            )
         } else {
             onSuccess(cache.productList)
         }
@@ -35,16 +33,14 @@ class MockRemoteProductRepositoryImpl(
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit
     ) {
-        Thread {
-            service.request(
-                lastProductId = lastProductId,
-                onSuccess = {
-                    cache.addProducts(it)
-                    onSuccess(it)
-                },
-                onFailure = onFailure
-            )
-        }.start()
+        service.request(
+            lastProductId = lastProductId,
+            onSuccess = {
+                cache.addProducts(it)
+                onSuccess(it)
+            },
+            onFailure = onFailure
+        )
     }
 
     override fun resetCache() {
