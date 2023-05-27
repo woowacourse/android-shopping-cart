@@ -107,7 +107,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun setAllProduceCheckedClick() {
-        binding.cbCartAll.setOnCheckedChangeListener { _, isChecked ->
+        binding.cbCartAll.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed.not()) return@setOnCheckedChangeListener
             presenter.updateCurrentPageAllProductChecked(isChecked)
             presenter.calculateTotalPrice()
         }
@@ -118,9 +119,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun setAllCartChecked(isChecked: Boolean) {
-        binding.cbCartAll.setOnCheckedChangeListener { _, _ -> }
         binding.cbCartAll.isChecked = isChecked
-        setAllProduceCheckedClick()
     }
 
     override fun setPageCountView(page: Int) {
