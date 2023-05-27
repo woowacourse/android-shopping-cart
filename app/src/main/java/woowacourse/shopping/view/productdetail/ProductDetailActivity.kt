@@ -69,8 +69,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun showDialog() {
         binding.btnPutInCart.setOnClickListener {
-            val dialog = CartDialog(this, CartProductSqliteProductRepository(CartDBHelper(this)))
-            dialog.show(presenter.getProductData())
+            val dialog = CartDialog(
+                this,
+                CartProductSqliteProductRepository(CartDBHelper(this)),
+                presenter.getProductData(),
+            )
+            dialog.show()
         }
     }
 

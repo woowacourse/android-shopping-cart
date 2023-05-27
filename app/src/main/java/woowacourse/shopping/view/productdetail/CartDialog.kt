@@ -7,31 +7,31 @@ import woowacourse.shopping.data.CartProductSqliteProductRepository
 import woowacourse.shopping.databinding.CartDialogBinding
 import woowacourse.shopping.model.ProductModel
 
-class CartDialog(private val context: ProductDetailActivity, private val cartRepository: CartProductSqliteProductRepository) {
+class CartDialog(
+    private val context: ProductDetailActivity,
+    private val cartRepository: CartProductSqliteProductRepository,
+    private val productModel: ProductModel,
+) {
     private val dialog = Dialog(context)
-    private lateinit var binding: CartDialogBinding
-    private lateinit var product: ProductModel
+    private var binding: CartDialogBinding = CartDialogBinding.inflate(context.layoutInflater)
     private var productCount = 1
 
-    fun show(productModel: ProductModel) {
-        binding = CartDialogBinding.inflate(context.layoutInflater)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+    init {
         dialog.setContentView(binding.root)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
 
-        setData(productModel)
         setBinding()
         setCountView()
         setClickListener()
+    }
+
+    fun show() {
         dialog.show()
     }
 
-    private fun setData(productModel: ProductModel) {
-        product = productModel
-    }
-
     private fun setBinding() {
-        binding.product = product
+        binding.product = productModel
     }
 
     private fun setCountView() {
@@ -42,7 +42,7 @@ class CartDialog(private val context: ProductDetailActivity, private val cartRep
 
     private fun setClickListener() {
         binding.dialogPutButton.setOnClickListener {
-            cartRepository.add(product.id, productCount, true)
+            cartRepository.add(productModel.id, productCount, true)
             dialog.dismiss()
             context.startCartActivity()
         }
