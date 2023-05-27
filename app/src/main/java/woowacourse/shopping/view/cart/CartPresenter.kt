@@ -22,22 +22,19 @@ class CartPresenter(
     private val cartSystem = CartSystem(productRepository)
     private val cartItems: MutableList<CartViewItem>
 
-    private var _cartSystemResult = MutableLiveData(CartSystemResult(0, 0))
-    private var _cartPageStatus = MutableLiveData(
-        CartPageStatus(
-            isPrevEnabled = false,
-            isNextEnabled = false,
-            0,
-        ),
-    )
-    private var _isCheckedAll = MutableLiveData(false)
-
     override val cartSystemResult: LiveData<CartSystemResult>
         get() = _cartSystemResult
+    private var _cartSystemResult = MutableLiveData(CartSystemResult(0, 0))
+
     override val cartPageStatus: LiveData<CartPageStatus>
         get() = _cartPageStatus
+    private var _cartPageStatus = MutableLiveData(
+        CartPageStatus(isPrevEnabled = false, isNextEnabled = false, 0),
+    )
+
     override val isCheckedAll: LiveData<Boolean>
         get() = _isCheckedAll
+    private var _isCheckedAll = MutableLiveData(false)
 
     init {
         val models = convertCartProductToModels(cartPagination.nextItems())
@@ -140,7 +137,9 @@ class CartPresenter(
         val cartProducts = convertItemsToCartProducts(cartItems)
         cartProducts.find { it.id == id }?.let {
             val index = cartProducts.indexOf(it)
-            cartItems[index] = CartViewItem.CartProductItem((cartItems[index] as CartViewItem.CartProductItem).product.copy(count = count))
+            cartItems[index] = CartViewItem.CartProductItem(
+                (cartItems[index] as CartViewItem.CartProductItem).product.copy(count = count),
+            )
             view.showChangedItem(index)
             _cartSystemResult.value = cartSystem.updateProduct(id, count)
         }
