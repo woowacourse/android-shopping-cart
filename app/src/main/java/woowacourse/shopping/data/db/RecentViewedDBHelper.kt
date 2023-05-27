@@ -26,17 +26,23 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_T
     }
 
     fun remove(id: Int) {
-        writableDatabase.execSQL("DELETE FROM ${RecentViewedContract.TABLE_NAME} WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id")
+        writableDatabase.execSQL(
+            "DELETE FROM ${RecentViewedContract.TABLE_NAME} " +
+                "WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id",
+        )
     }
 
     fun selectWhereId(id: Int): Int {
         var result = 0
-        val sql =
-            "select * from ${RecentViewedContract.TABLE_NAME} WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id"
-        val cursor = readableDatabase.rawQuery(sql, null)
-        while (cursor.moveToNext()) {
-            result =
-                cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
+        readableDatabase.use {
+            val cursor = it.rawQuery(
+                "select * from ${RecentViewedContract.TABLE_NAME} " +
+                    "WHERE ${RecentViewedContract.TABLE_COLUMN_ID}=$id",
+                null,
+            )
+            while (cursor.moveToNext()) {
+                result = cursor.getInt(0)
+            }
             cursor.close()
         }
         return result
@@ -44,33 +50,40 @@ class RecentViewedDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_T
 
     fun selectAll(): List<Int> {
         val viewedProducts = mutableListOf<Int>()
-        val sql = "select * from ${RecentViewedContract.TABLE_NAME}"
-        val cursor = readableDatabase.rawQuery(sql, null)
-        while (cursor.moveToNext()) {
-            val id =
-                cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
-            viewedProducts.add(id)
+        readableDatabase.use {
+            val cursor = it.rawQuery("select * from ${RecentViewedContract.TABLE_NAME}", null)
+            while (cursor.moveToNext()) {
+                val id = cursor.getInt(0)
+                viewedProducts.add(id)
+            }
+            cursor.close()
         }
-        cursor.close()
         return viewedProducts
     }
 
     fun selectMostRecent(): Int {
         var id = 0
-
-        val cursor = readableDatabase.rawQuery(
-            "select * from ${RecentViewedContract.TABLE_NAME} WHERE rowid = (SELECT MAX(rowid) FROM ${RecentViewedContract.TABLE_NAME});",
-            null,
-        )
-        while (cursor.moveToNext()) {
-            id = cursor.getInt(cursor.getColumnIndexOrThrow(RecentViewedContract.TABLE_COLUMN_ID))
+        readableDatabase.use {
+            val cursor = it.rawQuery(
+                "select * from ${RecentViewedContract.TABLE_NAME} " +
+                    "WHERE rowid = (SELECT MAX(rowid)" +
+                    " FROM ${RecentViewedContract.TABLE_NAME});",
+                null,
+            )
+            while (cursor.moveToNext()) {
+                id = cursor.getInt(0)
+            }
+            cursor.close()
         }
-        cursor.close()
         return id
     }
 
     fun removeOldest() {
-        writableDatabase.execSQL("DELETE FROM ${RecentViewedContract.TABLE_NAME} WHERE rowid = (SELECT MIN(rowid) FROM ${RecentViewedContract.TABLE_NAME});")
+        writableDatabase.execSQL(
+            "DELETE FROM ${RecentViewedContract.TABLE_NAME}" +
+                " WHERE rowid = (SELECT MIN(rowid)" +
+                " FROM ${RecentViewedContract.TABLE_NAME});",
+        )
     }
 
     companion object {
