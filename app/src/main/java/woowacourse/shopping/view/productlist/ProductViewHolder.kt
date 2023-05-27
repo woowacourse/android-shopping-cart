@@ -15,7 +15,7 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         ProductViewHolder(binding.root) {
         fun bind(
             item: ProductListViewItem.RecentViewedItem,
-            onItemClick: ProductListAdapter.OnItemClick
+            onItemClick: ProductListAdapter.OnItemClick,
         ) {
             binding.recyclerRecentViewed.adapter =
                 RecentViewedAdapter(item.products, onItemClick)
@@ -24,35 +24,31 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     class ProductItemViewHolder(
         private val binding: ItemProductBinding,
-        private val onItemClick: ProductListAdapter.OnItemClick
+        private val onItemClick: ProductListAdapter.OnItemClick,
     ) : ProductViewHolder(binding.root) {
         init {
             binding.onItemClick = onItemClick
+            val onPlusClick = { id: Int ->
+                onItemClick.onProductUpdateCount(id, Integer.parseInt(binding.textCount.text.toString()) + 1)
+                binding.textCount.text = (Integer.parseInt(binding.textCount.text.toString()) + 1).toString()
+            }
+            val onMinusClick = { id: Int ->
+                onItemClick.onProductUpdateCount(id, Integer.parseInt(binding.textCount.text.toString()) - 1)
+                binding.textCount.text = (Integer.parseInt(binding.textCount.text.toString()) - 1).toString()
+            }
+            binding.onPlusClick = onPlusClick
+            binding.onMinusClick = onMinusClick
         }
 
         fun bind(item: ProductListViewItem.ProductItem) {
             binding.product = item.product
             Glide.with(binding.root.context).load(item.product.imageUrl).into(binding.imgProduct)
-            binding.btnAdd.setOnClickListener {
-                onItemClick.onProductClickAddFirst(item.product.id, 1)
-                binding.textCount.text = "1"
-                binding.btnAdd.visibility = View.INVISIBLE
-                binding.layoutAddBtns.visibility = View.VISIBLE
-            }
-            binding.btnPlus.setOnClickListener {
-                onItemClick.onProductUpdateCount(item.product.id, Integer.parseInt(binding.textCount.text.toString()) + 1)
-                binding.textCount.text = (Integer.parseInt(binding.textCount.text.toString()) + 1).toString()
-            }
-            binding.btnMinus.setOnClickListener {
-                onItemClick.onProductUpdateCount(item.product.id, Integer.parseInt(binding.textCount.text.toString()) - 1)
-                binding.textCount.text = (Integer.parseInt(binding.textCount.text.toString()) - 1).toString()
-            }
         }
     }
 
     class ShowMoreViewHolder(
         binding: ItemShowMoreBinding,
-        onItemClick: ProductListAdapter.OnItemClick
+        onItemClick: ProductListAdapter.OnItemClick,
     ) : ProductViewHolder(binding.root) {
         init {
             binding.onItemClick = onItemClick
@@ -63,24 +59,24 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun of(
             parent: ViewGroup,
             type: ProductListViewType,
-            onItemClick: ProductListAdapter.OnItemClick
+            onItemClick: ProductListAdapter.OnItemClick,
         ): ProductViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(type.id, parent, false)
             return when (type) {
                 ProductListViewType.RECENT_VIEWED_ITEM -> RecentViewedViewHolder(
-                    ItemRecentViewedBinding.bind(view)
+                    ItemRecentViewedBinding.bind(view),
                 )
                 ProductListViewType.PRODUCT_ITEM -> ProductItemViewHolder(
                     ItemProductBinding.bind(
-                        view
+                        view,
                     ),
-                    onItemClick
+                    onItemClick,
                 )
                 ProductListViewType.SHOW_MORE_ITEM -> ShowMoreViewHolder(
                     ItemShowMoreBinding.bind(
-                        view
+                        view,
                     ),
-                    onItemClick
+                    onItemClick,
                 )
             }
         }

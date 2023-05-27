@@ -13,6 +13,14 @@
             name="onItemClick"
             type="woowacourse.shopping.view.productlist.ProductListAdapter.OnItemClick" />
 
+        <variable
+            name="onPlusClick"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="onMinusClick"
+            type="kotlin.jvm.functions.Function1" />
+
         <import type="woowacourse.shopping.util.PriceFormatter" />
 
         <import type="android.view.View" />
@@ -52,6 +60,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/back_left_rounded"
+                android:onClick="@{() -> onMinusClick.invoke(product.id)}"
                 android:text="@string/minus"
                 android:textColor="@color/gray"
                 android:textSize="17sp"
@@ -78,6 +87,7 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/back_right_rounded"
+                android:onClick="@{() -> onPlusClick.invoke(product.id)}"
                 android:text="@string/plus"
                 android:textColor="@color/gray"
                 android:textSize="17sp"
@@ -94,6 +104,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:background="@drawable/ic_add_circle"
+            android:onClick="@{() -> onItemClick.onProductClickAddFirst(product.id, 1)}"
             android:visibility="@{product.count == 0 ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintBottom_toBottomOf="@id/img_product"
             app:layout_constraintCircleRadius="@dimen/cardview_compat_inset_shadow"
