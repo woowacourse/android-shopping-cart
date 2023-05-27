@@ -50,8 +50,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private fun setViewSettings() {
         binding.rvCartList.adapter = adapter
-        binding.tvTotalPrice.text = getText(R.string.price_format).toString().format(0)
-        binding.btnOrder.text = getText(R.string.order_format).toString().format(0)
         updatePageCounter(INIT_PAGE_COUNTER_VIEW)
         presenter.updateSelectedTotal()
     }

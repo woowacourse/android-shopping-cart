@@ -127,7 +127,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_order"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="38,000원" />
+                android:text="@{@string/price_format(0)}" />
 
             <TextView
                 android:padding="10dp"
@@ -142,7 +142,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="주문하기(5)" />
+                android:text="@{@string/order_format(0)}"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
