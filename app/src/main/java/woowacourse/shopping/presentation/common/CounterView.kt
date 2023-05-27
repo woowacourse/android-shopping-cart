@@ -18,6 +18,8 @@ class CounterView @JvmOverloads constructor(
         true,
     )
     private lateinit var presenter: CounterContract.Presenter
+    val count: Int get() = binding.textCounterNumber.text.toString().toInt()
+
     fun setUpView(counterListener: CounterListener, initCount: Int, minimumCount: Int) {
         presenter = CounterPresenter(
             view = this,

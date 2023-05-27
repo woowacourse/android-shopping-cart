@@ -1,10 +1,14 @@
 package woowacourse.shopping.presentation.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class CartProductInfoModel(
     val productModel: ProductModel,
     val count: Int,
     val isOrdered: Boolean = false,
-) {
+) : Parcelable {
     companion object {
         fun defaultInfo(): CartProductInfoModel = CartProductInfoModel(
             productModel = ProductModel(

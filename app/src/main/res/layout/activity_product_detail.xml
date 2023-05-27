@@ -6,12 +6,8 @@
     <data>
 
         <variable
-            name="onClickButton"
-            type="kotlin.jvm.functions.Function1" />
-
-        <variable
-            name="presenter"
-            type="woowacourse.shopping.presentation.productdetail.ProductDetailContract.Presenter" />
+            name="mostRecentProductModel"
+            type="woowacourse.shopping.presentation.model.ProductModel" />
 
         <variable
             name="productModel"
@@ -121,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     tools:text="[든든] 동원 스위트콘"
-                    android:text="@{presenter.mostRecentProduct.name}"
+                    android:text="@{mostRecentProductModel.name}"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="@id/text_product_detail_most_recent_description"
@@ -133,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     tools:text="99,800원"
-                    android:text="@{@string/price_format(presenter.mostRecentProduct.price.value)}"
+                    android:text="@{@string/price_format(mostRecentProductModel.price)}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/text_product_detail_most_recent_name"
                     app:layout_constraintBottom_toBottomOf="@id/text_product_detail_most_recent_name"
@@ -144,7 +140,6 @@
         </com.google.android.material.card.MaterialCardView>
 
         <Button
-            android:onClick="@{()->onClickButton.invoke(1)}"
             android:id="@+id/button_put_in_cart"
             android:layout_width="0dp"
             android:layout_height="50dp"

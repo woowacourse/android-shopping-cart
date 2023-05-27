@@ -1,21 +1,23 @@
 package woowacourse.shopping.presentation.productdetail
 
-import woowacourse.shopping.CartProductInfo
-import woowacourse.shopping.Product
-import woowacourse.shopping.util.SafeLiveData
+import woowacourse.shopping.presentation.model.CartProductInfoModel
+import woowacourse.shopping.presentation.model.ProductModel
 
 interface ProductDetailContract {
     interface Presenter {
-        val productInfo: SafeLiveData<CartProductInfo>
-        val mostRecentProduct: SafeLiveData<Product>
         fun saveProductInRepository(count: Int)
-        fun updateProductCount(count: Int)
         fun saveRecentProduct()
         fun checkCurrentProductIsMostRecent()
+        fun showMostRecentProductDetail()
+        fun showProductCart()
+        fun updateTotalPrice(count: Int)
     }
 
     interface View {
         fun showCompleteMessage(productName: String)
-        fun hideMostRecentProduct()
+        fun setMostRecentProductVisible(visible: Boolean, mostRecentProductModel: ProductModel)
+        fun navigateToMostRecent(mostRecentProductModel: ProductModel)
+        fun showProductCart(cartProductModel: CartProductInfoModel)
+        fun setTotalPrice(price: Int)
     }
 }

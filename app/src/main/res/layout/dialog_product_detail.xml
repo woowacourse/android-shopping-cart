@@ -6,20 +6,8 @@
     <data>
 
         <variable
-            name="productModel"
-            type="woowacourse.shopping.presentation.model.ProductModel" />
-
-        <variable
-            name="presenter"
-            type="woowacourse.shopping.presentation.productdetail.ProductDetailContract.Presenter" />
-
-        <variable
-            name="onMinusClick"
-            type="kotlin.jvm.functions.Function1" />
-
-        <variable
-            name="onPlusClick"
-            type="kotlin.jvm.functions.Function1" />
+            name="cartProduct"
+            type="woowacourse.shopping.presentation.model.CartProductInfoModel" />
     </data>
 
 
@@ -36,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
-            android:text="@{productModel.name}"
+            android:text="@{cartProduct.productModel.name}"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="18sp"
@@ -46,13 +34,14 @@
             android:id="@+id/text_dialog_cart_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/price_format(presenter.productInfo.totalPrice)}"
+            android:text="@{@string/price_format(cartProduct.productModel.price)}"
             tools:text="99000원"
             app:layout_constraintStart_toStartOf="@+id/text_dialog_cart_product_name"
             app:layout_constraintTop_toBottomOf="@+id/text_dialog_cart_product_name" />
 
         <woowacourse.shopping.presentation.common.CounterView
             android:id="@+id/counter_dialog_cart_product"
+            app:counterText="@{1}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"

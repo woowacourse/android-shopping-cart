@@ -1,14 +1,12 @@
 package woowacourse.shopping
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import junit.framework.TestCase.assertEquals
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.presentation.mapper.toDomain
+import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.ProductDetailContract
 import woowacourse.shopping.presentation.productdetail.ProductDetailPresenter
@@ -22,9 +20,6 @@ class ProductDetailPresenterTest {
     private lateinit var recentProductRepository: RecentProductRepository
     private val initProductModel = ProductModel(1, "", "wooseok", 1000)
 
-    @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
-
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
@@ -34,6 +29,7 @@ class ProductDetailPresenterTest {
             initProductModel.toDomain(),
             5,
         )
+        every { recentProductRepository.getMostRecentProduct() } returns initProductModel.toDomain()
         presenter =
             ProductDetailPresenter(
                 view = view,
@@ -45,12 +41,35 @@ class ProductDetailPresenterTest {
 
     @Test
     fun 현재상품이_최근본_상품과_동일하다면_최근본_상품을_보여주지_않는다() {
-        // given
-        every { recentProductRepository.getMostRecentProduct() } returns initProductModel.toDomain()
         // when
         presenter.checkCurrentProductIsMostRecent()
         // then
-        verify { view.hideMostRecentProduct() }
+        verify { view.setMostRecentProductVisible(false, initProductModel) }
+    }
+
+    @Test
+    fun 현재상품이_최근본_상품과_동일하지_않다면_최근본_상품을_보여준다() {
+        // given
+        every { recentProductRepository.getMostRecentProduct() } returns Product.defaultProduct
+        presenter =
+            ProductDetailPresenter(
+                view = view,
+                recentProductRepository = recentProductRepository,
+                cartRepository = cartRepository,
+                productModel = initProductModel,
+            )
+        // when
+        presenter.checkCurrentProductIsMostRecent()
+        // then
+        verify { view.setMostRecentProductVisible(true, Product.defaultProduct.toPresentation()) }
+    }
+
+    @Test
+    fun 최근_본_상품을_누르면_최근_본_상세_화면으로_넘어간다() {
+        // when
+        presenter.showMostRecentProductDetail()
+        // then
+        verify { view.navigateToMostRecent(initProductModel) }
     }
 
     @Test
@@ -73,10 +92,10 @@ class ProductDetailPresenterTest {
     }
 
     @Test
-    fun 상품의_수량을_갱신한다() {
+    fun 상품_총액을_계산하여_보여준다() {
         // when
-        presenter.updateProductCount(3)
+        presenter.updateTotalPrice(3)
         // then
-        assertEquals(presenter.productInfo.value.count, 3)
+        verify { view.setTotalPrice(3000) }
     }
 }
