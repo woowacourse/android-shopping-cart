@@ -40,7 +40,7 @@ class DetailPresenter(
         product.count = count
     }
 
-    override fun handleAddCartClick() {
+    override fun handleAddCartSlide() {
         view.showSelectCartProductCountScreen(product)
     }
 

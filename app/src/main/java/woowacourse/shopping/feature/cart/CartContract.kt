@@ -15,11 +15,11 @@ interface CartContract {
         val pageBottomNavigationUiModel: LiveData<PageBottomNavigationUiModel>
         val cartBottomNavigationUiModel: LiveData<CartBottomNavigationUiModel>
         fun loadInitCartProduct()
-        fun handleDeleteCartProductClick(cartId: Long)
+        fun handleDeleteCartProduct(cartId: Long)
         fun handleCartProductCartCountChange(cartId: Long, count: Int)
         fun handlePurchaseSelectedCheckedChange(cartId: Long, checked: Boolean)
         fun handleCurrentPageAllCheckedChange(checked: Boolean)
-        fun processOrderClick()
+        fun processOrder()
         fun loadPreviousPage()
         fun loadNextPage()
         fun setPage(restorePage: Int)

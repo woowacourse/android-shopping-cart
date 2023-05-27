@@ -110,7 +110,7 @@
             android:insetBottom="0dp"
             android:paddingHorizontal="14dp"
             android:paddingVertical="22dp"
-            android:onClick="@{()->presenter.processOrderClick()}"
+            android:onClick="@{()->presenter.processOrder()}"
             android:text="@{@string/order_count_confirm_text(orderCount)}"
             android:textColor="@color/white"
             android:textSize="18sp"

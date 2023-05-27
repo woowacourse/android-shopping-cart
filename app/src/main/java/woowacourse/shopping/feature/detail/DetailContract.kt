@@ -20,7 +20,7 @@ interface DetailContract {
         fun initScreen()
         fun updateProductCount(count: Int)
         fun navigateRecentProductDetail()
-        fun handleAddCartClick()
+        fun handleAddCartSlide()
         fun setProductCountInfo(count: Int)
         fun exit()
     }

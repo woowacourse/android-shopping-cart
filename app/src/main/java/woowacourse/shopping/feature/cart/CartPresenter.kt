@@ -57,7 +57,7 @@ class CartPresenter(
         _page = page.toDomain().nextPage().toPresentation()
     }
 
-    override fun handleDeleteCartProductClick(cartId: Long) {
+    override fun handleDeleteCartProduct(cartId: Long) {
         val cartProduct = page.currentPageCartProducts.find { it.cartId == cartId } ?: return
         cartRepository.deleteProduct(cartProduct.toDomain())
         _page = page.toDomain().remove(cartId).toPresentation()
@@ -89,7 +89,7 @@ class CartPresenter(
         cartRepository.changeCurrentPageAllCheckedState(currentIds, checked)
     }
 
-    override fun processOrderClick() {
+    override fun processOrder() {
         if (page.cartBottomNavigationUiModel.isAnyChecked.not()) return
         cartRepository.deleteAllCheckedCartProduct()
         _page = page.toDomain().removeAllChecked().toPresentation()

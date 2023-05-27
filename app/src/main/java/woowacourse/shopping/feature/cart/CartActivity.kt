@@ -21,7 +21,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val cartProductClickListener: CartProductClickListener by lazy {
         object : CartProductClickListener {
             override fun onDeleteClick(cartId: Long) {
-                presenter.handleDeleteCartProductClick(cartId)
+                presenter.handleDeleteCartProduct(cartId)
             }
 
             override fun onCartCountChanged(cartId: Long, count: Int) {

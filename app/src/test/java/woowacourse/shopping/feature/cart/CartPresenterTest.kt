@@ -52,7 +52,7 @@ internal class CartPresenterTest {
         every { cartRepository.deleteProduct(capture(slot)) } just Runs
 
         // when
-        presenter.handleDeleteCartProductClick(4L)
+        presenter.handleDeleteCartProduct(4L)
 
         // then
         verify { cartRepository.deleteProduct(mockCartProducts[4]) }
@@ -99,7 +99,7 @@ internal class CartPresenterTest {
         every { cartRepository.deleteProduct(capture(slot)) } just Runs
 
         // when
-        presenter.handleDeleteCartProductClick(4L)
+        presenter.handleDeleteCartProduct(4L)
 
         // then
         verify { cartRepository.deleteProduct(mockCartProducts[4]) }

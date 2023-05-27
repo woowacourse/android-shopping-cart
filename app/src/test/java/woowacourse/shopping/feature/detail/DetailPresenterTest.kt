@@ -93,7 +93,7 @@ internal class DetailPresenterTest {
         )
 
         // when
-        presenter.handleAddCartClick()
+        presenter.handleAddCartSlide()
 
         // then
         verify { view.showSelectCartProductCountScreen(presenter.product) }
