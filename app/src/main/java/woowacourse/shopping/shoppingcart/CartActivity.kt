@@ -116,6 +116,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.textPageNumber.text = pageNumber.toString()
     }
 
+    override fun setUpOrderButtonText(cartProductsCount: Int) {
+        binding.buttonOrder.text = getString(R.string.order, cartProductsCount)
+    }
+
     override fun showMessageReachedEndPage() {
         Toast.makeText(this, getString(R.string.message_last_page), Toast.LENGTH_SHORT).show()
     }

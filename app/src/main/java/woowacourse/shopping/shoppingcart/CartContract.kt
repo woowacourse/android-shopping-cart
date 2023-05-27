@@ -5,6 +5,7 @@ interface CartContract {
     interface View {
 
         fun showMessageReachedEndPage()
+        fun setUpOrderButtonText(cartProductsCount: Int)
     }
 
     interface Presenter {

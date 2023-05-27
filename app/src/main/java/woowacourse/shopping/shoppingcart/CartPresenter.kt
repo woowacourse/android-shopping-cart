@@ -38,6 +38,10 @@ class CartPresenter(
     val currentPage: LiveData<Int>
         get() = _currentPage
 
+    init {
+        view.setUpOrderButtonText(cartRepository.getCountOfCartProducts())
+    }
+
     override fun loadShoppingCartProducts() {
         val products = cartRepository.getCartProducts()
         cart.addAll(products)
