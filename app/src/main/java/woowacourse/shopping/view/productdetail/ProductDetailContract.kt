@@ -19,7 +19,7 @@ interface ProductDetailContract {
         fun getFlag(): Boolean
         fun updateLatestViewedProducts()
         fun getLatestViewedProductData(): ProductModel
-        fun putInCart(product: ProductModel)
+        fun putInCart(product: ProductModel, productCount: Int)
         fun navigateRecentViewedDetail()
         fun navigateNextStep(itemId: Int)
         fun compareNowAndRecent()

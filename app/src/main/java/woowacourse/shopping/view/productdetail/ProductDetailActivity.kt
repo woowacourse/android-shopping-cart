@@ -28,6 +28,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setContentView(binding.root)
         setPresenter()
         setActionBar()
+
         getData()
         bindView()
         showDialog()
@@ -71,9 +72,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.btnPutInCart.setOnClickListener {
             val dialog = CartDialog(
                 this,
-                CartProductRepositoryImpl(CartDBHelper(this)),
                 presenter.getProductData(),
-            )
+                fun(product: ProductModel, productCount: Int) {
+                    presenter.putInCart(product, productCount)
+                },
+            ) { startCartActivity() }
             dialog.show()
         }
     }
@@ -98,7 +101,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         presenter.navigateNextStep(item.itemId)
-        println("onOptionsItemSelected")
         return super.onOptionsItemSelected(item)
     }
 

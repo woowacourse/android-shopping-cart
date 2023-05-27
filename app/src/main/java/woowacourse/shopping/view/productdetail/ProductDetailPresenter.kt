@@ -50,9 +50,8 @@ class ProductDetailPresenter(
         }
     }
 
-    override fun putInCart(product: ProductModel) {
-        cartProductRepository.add(product.id, 1, true)
-        view.startCartActivity()
+    override fun putInCart(product: ProductModel, productCount: Int) {
+        cartProductRepository.add(product.id, productCount, true)
     }
 
     private fun convertIdToModel(id: Int): ProductModel {

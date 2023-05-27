@@ -3,22 +3,22 @@ package woowacourse.shopping.view.productdetail
 import android.app.Dialog
 import android.view.Window
 import android.view.WindowManager
-import woowacourse.shopping.data.CartProductRepositoryImpl
 import woowacourse.shopping.databinding.CartDialogBinding
 import woowacourse.shopping.model.ProductModel
 
 class CartDialog(
-    private val context: ProductDetailActivity,
-    private val cartRepository: CartProductRepositoryImpl,
+    context: ProductDetailActivity,
     private val productModel: ProductModel,
+    private val putInCart: (ProductModel, Int) -> Unit,
+    private val navigateToNextStep: () -> Unit,
 ) {
     private val dialog = Dialog(context)
     private var binding: CartDialogBinding = CartDialogBinding.inflate(context.layoutInflater)
     private var productCount = DEFAULT_COUNT_VALUE
 
     init {
-        dialog.setContentView(binding.root)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(binding.root)
         dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT)
 
         setBinding()
@@ -42,9 +42,9 @@ class CartDialog(
 
     private fun setClickListener() {
         binding.dialogPutButton.setOnClickListener {
-            cartRepository.add(productModel.id, productCount, true)
+            putInCart(productModel, productCount)
             dialog.dismiss()
-            context.startCartActivity()
+            navigateToNextStep()
         }
     }
 
