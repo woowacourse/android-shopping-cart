@@ -39,9 +39,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setLeftButtonClick()
         setRightButtonClick()
         observeTotalPrice()
-//        Thread() {
-//            ProductMockRepositoryImpl().test()
-//        }.start()
     }
     private val handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
