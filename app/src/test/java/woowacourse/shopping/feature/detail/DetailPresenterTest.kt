@@ -96,7 +96,7 @@ internal class DetailPresenterTest {
         presenter.handleAddCartSlide()
 
         // then
-        verify { view.showSelectCartProductCountScreen(presenter.product) }
+        verify { view.showSelectCartProductCountScreen(mockProduct1) }
     }
 
     private val mockProduct1 = productsDatasource[0].toPresentation()

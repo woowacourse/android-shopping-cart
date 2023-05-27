@@ -35,7 +35,7 @@ class CounterView @JvmOverloads constructor(
     var countStateChangeListener: OnCountStateChangeListener? = null
 
     interface OnCountStateChangeListener {
-        fun onCountChanged(counterNavigationView: CounterView?, count: Int)
+        fun onCountChanged(counterView: CounterView?, count: Int)
     }
 
     init {

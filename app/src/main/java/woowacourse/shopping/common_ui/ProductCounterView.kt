@@ -17,7 +17,7 @@ class ProductCounterView @JvmOverloads constructor(
     }
 
     private val defaultClickListener = object : CounterView.OnCountStateChangeListener {
-        override fun onCountChanged(counterNavigationView: CounterView?, count: Int) {
+        override fun onCountChanged(counterView: CounterView?, count: Int) {
             updateViewState(count)
         }
     }
@@ -27,14 +27,14 @@ class ProductCounterView @JvmOverloads constructor(
             binding.counterView.countStateChangeListener =
                 object : CounterView.OnCountStateChangeListener {
                     override fun onCountChanged(
-                        counterNavigationView: CounterView?,
+                        counterView: CounterView?,
                         count: Int
                     ) {
                         // 카운터 뷰한테서 받은 카운트로 뷰 상태 업데이트
                         updateViewState(count)
 
                         // 등록받은 리스너 호출해서 바뀐 카운트값을 외부에 전달
-                        value.onCountChanged(counterNavigationView, count)
+                        value.onCountChanged(counterView, count)
                     }
                 }
             field = value

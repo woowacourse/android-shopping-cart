@@ -116,9 +116,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             mainProductAdapter.setItems(it)
         }
         presenter.recentProducts.observe(this) { recentAdapter.setItems(it) }
-        presenter.mainScreenEvent.observe(this) {
-            handleMainScreenEvent(it)
-        }
+        presenter.mainScreenEvent.observe(this) { handleMainScreenEvent(it) }
     }
 
     private fun handleMainScreenEvent(event: MainContract.View.MainScreenEvent) {
