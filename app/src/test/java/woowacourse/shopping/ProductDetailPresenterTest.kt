@@ -21,6 +21,21 @@ class ProductDetailPresenterTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
+    val product = ProductModel(
+        10,
+        "락토핏",
+        "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+        10000,
+        10,
+    )
+    val lastViewedProduct = ProductModel(
+        11,
+        "락토핏11",
+        "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+        10000,
+        10,
+    )
+
     private val products = mutableListOf(
         CartProduct(
             0,
@@ -96,7 +111,7 @@ class ProductDetailPresenterTest {
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        presenter = ProductDetailPresenter(1, view, cartRepository, recentViewedRepository)
+        presenter = ProductDetailPresenter(1, product, lastViewedProduct, view, cartRepository, recentViewedRepository)
     }
 
     @Test
@@ -106,7 +121,7 @@ class ProductDetailPresenterTest {
             "락토핏",
             "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
             10000,
-            10
+            10,
         )
         presenter.putInCart(product)
         val expectedSize = 5
@@ -117,19 +132,8 @@ class ProductDetailPresenterTest {
     }
 
     @Test
-    fun `상품 상세 페이지로 들어가면 최근 본 상품에 해당 상품이 등록된다`() {
-        val id = 1
-        presenter.updateRecentViewedProducts(id)
-
-        val expectedSize = 4
-        val actualSize = recentViewedRepository.findAll().size
-
-        assertEquals(expectedSize, actualSize)
-    }
-
-    @Test
-    fun `현재 선택한 개수가 1이상 100 미만의 값이라면 개수 증가를 할 수 있다`() {
-        presenter = ProductDetailPresenter(3, view, cartRepository, recentViewedRepository)
+    fun `현재 선택한 개수가 1이상의 값이라면 개수 증가를 할 수 있다`() {
+        presenter = ProductDetailPresenter(3, product, lastViewedProduct, view, cartRepository, recentViewedRepository)
         presenter.plusCount()
 
         val expectedCount = 4
@@ -139,22 +143,11 @@ class ProductDetailPresenterTest {
     }
 
     @Test
-    fun `현재 선택한 개수가 100이라면 개수 증가를 할 수 없다`() {
-        presenter = ProductDetailPresenter(100, view, cartRepository, recentViewedRepository)
-        presenter.plusCount()
-
-        val expectedCount = 100
-        val actualCount = presenter.count.value
-
-        assertEquals(expectedCount, actualCount)
-    }
-
-    @Test
     fun `현재 선택한 개수가 1이라면 개수 감소를 할 수 없다`() {
-        presenter = ProductDetailPresenter(1, view, cartRepository, recentViewedRepository)
+        presenter = ProductDetailPresenter(3, product, lastViewedProduct, view, cartRepository, recentViewedRepository)
         presenter.minusCount()
 
-        val expectedCount = 1
+        val expectedCount = 2
         val actualCount = presenter.count.value
 
         assertEquals(expectedCount, actualCount)

@@ -13,9 +13,9 @@ import org.junit.Rule
 import org.junit.Test
 import woowacourse.shopping.domain.cartsystem.CartPageStatus
 import woowacourse.shopping.domain.model.CartProduct
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.model.Price
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.view.cart.CartContract
@@ -90,8 +90,11 @@ class CartPresenterTest {
             }
 
             override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
-                return if (mark + rangeSize < cartProducts.size) cartProducts.subList(mark, mark + rangeSize)
-                else cartProducts.subList(mark, cartProducts.size)
+                return if (mark + rangeSize < cartProducts.size) {
+                    cartProducts.subList(mark, mark + rangeSize)
+                } else {
+                    cartProducts.subList(mark, cartProducts.size)
+                }
             }
 
             override fun isExistByMark(mark: Int): Boolean {
@@ -118,8 +121,8 @@ class CartPresenterTest {
             CartPageStatus(
                 isPrevEnabled = false,
                 isNextEnabled = true,
-                count = 1
-            )
+                count = 1,
+            ),
         )
         assertEquals(itemsExpected, items.captured)
     }
@@ -144,7 +147,7 @@ class CartPresenterTest {
     }
 
     @Test
-    fun 업데이트_하려는_상품의_개수가_1부터_100사이면_업데이트할_수_있다() {
+    fun 업데이트_하려는_상품의_개수가_양수면_업데이트할_수_있다() {
         val actualSlot = slot<Int>()
         every { view.showChangedItem(capture(actualSlot)) } just runs
 
@@ -160,17 +163,6 @@ class CartPresenterTest {
         every { view.showChangedItem(capture(actualSlot)) } just runs
 
         presenter.updateCartProductCount(0, 0)
-        val expected = false
-
-        assertEquals(expected, actualSlot.isCaptured)
-    }
-
-    @Test
-    fun 업데이트_하려는_상품의_개수가_100초과면_업데이트하지_않는다() {
-        val actualSlot = slot<Int>()
-        every { view.showChangedItem(capture(actualSlot)) } just runs
-
-        presenter.updateCartProductCount(0, 101)
         val expected = false
 
         assertEquals(expected, actualSlot.isCaptured)
