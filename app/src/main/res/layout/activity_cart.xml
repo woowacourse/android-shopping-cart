@@ -124,7 +124,6 @@
             android:layout_marginStart="26dp"
             android:checked="true"
             android:gravity="center"
-            android:onCheckedChanged="@{(_,isChecked)->presenter.handleCurrentPageAllCheckedChange(isChecked)}"
             android:text="@string/all_select_check_box_text"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/order_money_view"

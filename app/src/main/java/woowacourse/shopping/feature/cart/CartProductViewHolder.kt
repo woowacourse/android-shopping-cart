@@ -21,6 +21,11 @@ class CartProductViewHolder private constructor(
                     binding.cartProduct?.let { listener.onCartCountChanged(it.cartId, count) }
                 }
             }
+
+        binding.purchaseCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed.not()) return@setOnCheckedChangeListener
+            binding.cartProduct?.let { listener.onSelectedPurchaseChanged(it.cartId, isChecked) }
+        }
     }
 
     fun bind(cartProduct: CartProductUiModel) {

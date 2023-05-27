@@ -48,7 +48,6 @@
             android:layout_height="wrap_content"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:onCheckedChanged="@{(_,isChecked)->listener.onSelectedPurchaseChanged(cartProduct.cartId, isChecked)}"
             app:layout_constraintBottom_toBottomOf="@id/product_title"
             app:layout_constraintEnd_toStartOf="@id/product_title"
             app:layout_constraintStart_toEndOf="@id/start_guideline"

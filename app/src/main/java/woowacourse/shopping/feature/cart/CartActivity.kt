@@ -39,6 +39,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         cartProductAdapter = CartProductAdapter(cartProductClickListener)
         binding.cartItemRecyclerview.adapter = cartProductAdapter
+        initSetOnClickListener()
+
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
         binding.presenter = presenter
@@ -50,6 +52,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         observePresenter()
     }
 
+    private fun initSetOnClickListener() {
+        binding.allCheckView.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed.not()) return@setOnCheckedChangeListener
+            presenter.handleCurrentPageAllCheckedChange(isChecked)
+        }
+    }
+
     private fun setRecyclerViewAnimator() {
         val animator = binding.cartItemRecyclerview.itemAnimator
         if (animator is SimpleItemAnimator) {
@@ -58,29 +67,17 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun observePresenter() {
-        presenter.currentPageCartProducts.observe(this) {
-            cartProductAdapter.setItems(it)
-        }
+        presenter.currentPageCartProducts.observe(this) { cartProductAdapter.setItems(it) }
         presenter.pageBottomNavigationUiModel.observe(this) {
             binding.previousPageBtn.isEnabled = it.hasPreviousPage
             binding.nextPageBtn.isEnabled = it.hasNextPage
             binding.pageCountTextView.text = it.currentPageNumber.toString()
         }
         presenter.cartBottomNavigationUiModel.observe(this) {
-            setAllCheckedButtonState(it.isCurrentPageAllChecked)
-
+            binding.allCheckView.isChecked = it.isCurrentPageAllChecked
             binding.orderCount = it.checkedCount
             binding.orderConfirmView.isEnabled = it.isAnyChecked
-
             binding.money = it.totalCheckedMoney.toMoneyFormat()
-        }
-    }
-
-    private fun setAllCheckedButtonState(isAllChecked: Boolean) {
-        binding.allCheckView.setOnCheckedChangeListener { _, _ -> }
-        binding.allCheckView.isChecked = isAllChecked
-        binding.allCheckView.setOnCheckedChangeListener { _, isChecked ->
-            presenter.handleCurrentPageAllCheckedChange(isChecked)
         }
     }
 
