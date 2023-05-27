@@ -54,6 +54,7 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
             recentProduct
         )
         binding.presenter = presenter
+        binding.product = product
         presenter.initScreen()
     }
 
@@ -63,7 +64,6 @@ class DetailActivity : AppCompatActivity(), DetailContract.View {
             this
         ) { _, bundle ->
             val changeCount = bundle.getInt(CounterDialog.COUNT_KEY, -1)
-            if (changeCount < 0) return@setFragmentResultListener
             presenter.updateProductCount(changeCount)
         }
     }

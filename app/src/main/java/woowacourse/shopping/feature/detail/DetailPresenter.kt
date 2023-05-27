@@ -9,22 +9,15 @@ import java.time.LocalDateTime
 class DetailPresenter(
     val view: DetailContract.View,
     private val recentProductRepository: RecentProductRepository,
-    product: ProductUiModel,
+    private var product: ProductUiModel,
     recentProductUiModel: RecentProductUiModel?
 ) : DetailContract.Presenter {
-    override var product: ProductUiModel = product
-        private set
-    override var recentProduct: RecentProductUiModel? = recentProductUiModel
-        private set
+    private var recentProduct: RecentProductUiModel? = recentProductUiModel
 
-    override val isRecentProduct: Boolean
-
-    init {
-        isRecentProduct = recentProduct?.let {
-            if (product.id == it.productUiModel.id) return@let true
-            return@let false
-        } ?: false
-    }
+    private val isRecentProduct: Boolean = recentProduct?.let {
+        if (product.id == it.productUiModel.id) return@let true
+        return@let false
+    } ?: false
 
     override fun initScreen() {
         if (isRecentProduct || recentProduct == null) return view.hideRecentScreen()
@@ -37,6 +30,7 @@ class DetailPresenter(
     }
 
     override fun updateProductCount(count: Int) {
+        if (count < 0) return
         product.count = count
     }
 

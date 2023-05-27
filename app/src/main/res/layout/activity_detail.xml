@@ -7,6 +7,10 @@
         <variable
             name="presenter"
             type="woowacourse.shopping.feature.detail.DetailContract.Presenter" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.ProductUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -30,7 +34,7 @@
 
                 <ImageView
                     android:id="@+id/detail_product_img"
-                    imgUrl="@{presenter.product.imgUrl}"
+                    imgUrl="@{product.imgUrl}"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:adjustViewBounds="true"
@@ -62,7 +66,7 @@
                     android:layout_marginTop="16dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{presenter.product.name}"
+                    android:text="@{product.name}"
                     android:textColor="@color/black"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -95,7 +99,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:text="@{@string/price_format(presenter.product.toMoneyFormat())}"
+                    android:text="@{@string/price_format(product.toMoneyFormat())}"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     app:layout_constraintEnd_toStartOf="@id/end_guideline"
