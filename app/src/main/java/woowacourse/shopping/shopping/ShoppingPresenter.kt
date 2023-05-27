@@ -5,6 +5,7 @@ import model.RecentViewedProducts
 import woowacourse.shopping.data.cart.repository.CartRepository
 import woowacourse.shopping.data.product.repository.ProductRepository
 import woowacourse.shopping.data.recentviewed.repository.RecentViewedProductRepository
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toProductUiModel
 import woowacourse.shopping.util.toRecentViewedProductUiModel
@@ -22,17 +23,24 @@ class ShoppingPresenter(
 
     private var numberOfReadProduct: Int = 0
 
-    override fun loadProducts() {
+    override fun setUpProducts() {
         val products = selectProducts()
         val recentViewedProducts = recentViewedProducts.values.map {
             it.toRecentViewedProductUiModel()
         }
+        numberOfReadProduct += products.size
 
         view.setUpShoppingView(
             products = products,
             recentViewedProducts = recentViewedProducts,
         )
         loadCartProductsCount()
+    }
+
+    override fun loadProducts() {
+        view.refreshShoppingProductsView(
+            products = selectProducts(0, numberOfReadProduct)
+        )
     }
 
     override fun loadCartProductsCount() {
@@ -53,29 +61,35 @@ class ShoppingPresenter(
     override fun readMoreShoppingProducts() {
         val products = selectProducts()
 
-        view.refreshShoppingProductsView(products)
-    }
-
-    private fun selectProducts(): List<ProductUiModel> {
-        val products = productRepository.getProductInRange(
-            from = numberOfReadProduct,
-            count = COUNT_TO_READ
-        ).map { it.toProductUiModel() }
-
         numberOfReadProduct += products.size
 
-        return products
+        view.showMoreProducts(products)
     }
 
-    override fun addProductToShoppingCart(product: ProductUiModel) {
+    private fun selectProducts(
+        from: Int = numberOfReadProduct,
+        count: Int = COUNT_TO_READ,
+    ): List<CartProductUiModel> {
+        val products = productRepository.getProductInRange(
+            from = from,
+            count = count
+        ).map { it.toProductUiModel() }
+
+        return products.toCartProducts()
+    }
+
+    override fun addProductToShoppingCart(product: CartProductUiModel) {
         cartRepository.addToCart(id = product.id)
 
         view.refreshProductCount(
             count = cartRepository.getCountOfCartProducts()
         )
+        view.refreshShoppingProductsView(
+            products = selectProducts(0, numberOfReadProduct)
+        )
     }
 
-    override fun plusShoppingCartProductCount(product: ProductUiModel) {
+    override fun plusShoppingCartProductCount(product: CartProductUiModel) {
         val shoppingCartProduct = cartRepository.getCartProductById(product.id)
             .plusCount()
 
@@ -83,9 +97,12 @@ class ShoppingPresenter(
             id = product.id,
             count = shoppingCartProduct.count.value
         )
+        view.refreshShoppingProductsView(
+            products = selectProducts(0, numberOfReadProduct)
+        )
     }
 
-    override fun minusShoppingCartProductCount(product: ProductUiModel) {
+    override fun minusShoppingCartProductCount(product: CartProductUiModel) {
         val cartProduct = cartRepository.getCartProductById(product.id)
             .minusCount(handleZeroCount = ::removeCartProduct)
 
@@ -96,6 +113,9 @@ class ShoppingPresenter(
                     .value
             )
         }
+        view.refreshShoppingProductsView(
+            products = selectProducts(0, numberOfReadProduct)
+        )
     }
 
     private fun removeCartProduct(cartProduct: CartProduct) {
@@ -116,6 +136,25 @@ class ShoppingPresenter(
         view.refreshRecentViewedProductsView(
             products = recentViewedProducts.values.map { it.toRecentViewedProductUiModel() }
         )
+    }
+
+    private fun List<ProductUiModel>.toCartProducts(): List<CartProductUiModel> {
+        val cartProducts = cartRepository.getCartProducts()
+
+        return this.map { product ->
+            val count = cartProducts.find { cartProduct ->
+                product.id == cartProduct.product.id
+            }?.count?.value ?: 0
+
+            CartProductUiModel(
+                id = product.id,
+                name = product.name,
+                imageUrl = product.imageUrl,
+                price = product.price,
+                count = count,
+                selected = true
+            )
+        }
     }
 
     companion object {

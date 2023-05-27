@@ -17,7 +17,7 @@ import woowacourse.shopping.data.recentviewed.cache.RecentViewedProductCacheImpl
 import woowacourse.shopping.data.recentviewed.datasource.RecentViewedProductDataSourceImpl
 import woowacourse.shopping.data.recentviewed.repository.RecentViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
 import woowacourse.shopping.shopping.adapter.ProductItemDecoration
 import woowacourse.shopping.shopping.adapter.ShoppingProductCountPicker
@@ -54,10 +54,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         ShoppingNavigatorImpl(this)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onRestart() {
+        super.onRestart()
 
         presenter.loadCartProductsCount()
+        presenter.loadProducts()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +66,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
 
         setSupportActionBar(binding.toolbarShopping)
-        presenter.loadProducts()
+        presenter.setUpProducts()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -83,9 +84,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     override fun setUpShoppingView(
-        products: List<ProductUiModel>,
+        products: List<CartProductUiModel>,
         recentViewedProducts: List<RecentViewedProductUiModel>,
     ) {
+        binding.productRecyclerView.itemAnimator = null
         shoppingRecyclerAdapter = ShoppingRecyclerAdapter(
             products = products,
             recentViewedProducts = recentViewedProducts,
@@ -109,15 +111,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     }
 
     private fun getProductCountPickerListenerImpl() = object : ShoppingProductCountPicker {
-        override fun onPlus(product: ProductUiModel) {
+        override fun onPlus(product: CartProductUiModel) {
             presenter.plusShoppingCartProductCount(product)
         }
 
-        override fun onMinus(product: ProductUiModel) {
+        override fun onMinus(product: CartProductUiModel) {
             presenter.minusShoppingCartProductCount(product)
         }
 
-        override fun onAdded(product: ProductUiModel) {
+        override fun onAdded(product: CartProductUiModel) {
             presenter.addProductToShoppingCart(product)
         }
     }
@@ -126,11 +128,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         shoppingRecyclerAdapter.refreshRecentViewedItems(products = products)
     }
 
-    override fun refreshShoppingProductsView(toAdd: List<ProductUiModel>) {
+    override fun refreshShoppingProductsView(products: List<CartProductUiModel>) {
+        shoppingRecyclerAdapter.refreshShoppingProductsItem(products)
+    }
+
+    override fun showMoreProducts(toAdd: List<CartProductUiModel>) {
         if (toAdd.isEmpty()) {
             return showMessageNothingToRead()
         }
-        shoppingRecyclerAdapter.refreshShoppingItems(toAdd = toAdd)
+        shoppingRecyclerAdapter.addShoppingItems(toAdd = toAdd)
     }
 
     private fun showMessageNothingToRead() {

@@ -6,13 +6,13 @@ import androidx.core.view.isVisible
 import woowacourse.shopping.common.CountPickerListener
 import woowacourse.shopping.common.ZeroCountHandler
 import woowacourse.shopping.databinding.ItemShoppingProductBinding
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 
 class ShoppingProductViewHolder private constructor(
     binding: ItemShoppingProductBinding,
     private val onProductImageClicked: (productId: Int) -> Unit,
-    private val onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
-    private val getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
+    private val onAddToCartButtonClicked: (product: CartProductUiModel) -> Unit,
+    private val getCountPickerListener: (product: CartProductUiModel) -> CountPickerListener,
 ) : ShoppingRecyclerItemViewHolder<ShoppingRecyclerItem.ShoppingProduct, ItemShoppingProductBinding>(
     binding
 ) {
@@ -50,14 +50,17 @@ class ShoppingProductViewHolder private constructor(
             countPickerListener = getCountPickerListener(itemData.value),
             zeroCountHandler = getZeroCountHandler()
         )
+        if (itemData.value.count != 0) {
+            binding.countPicker.setTextCount(itemData.value.count)
+        }
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
             onProductImageClicked: (productId: Int) -> Unit,
-            onAddToCartButtonClicked: (product: ProductUiModel) -> Unit,
-            getCountPickerListener: (product: ProductUiModel) -> CountPickerListener,
+            onAddToCartButtonClicked: (product: CartProductUiModel) -> Unit,
+            getCountPickerListener: (product: CartProductUiModel) -> CountPickerListener,
         ): ShoppingProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemShoppingProductBinding.inflate(layoutInflater, parent, false)

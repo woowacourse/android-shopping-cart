@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.CountPickerListener
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
 import woowacourse.shopping.shopping.adapter.viewholder.ReadMoreViewHolder
 import woowacourse.shopping.shopping.adapter.viewholder.RecentViewedViewHolder
@@ -20,14 +20,14 @@ import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemView
 import woowacourse.shopping.shopping.adapter.viewholder.ShoppingRecyclerItemViewType.RECENT_VIEWED
 
 class ShoppingRecyclerAdapter(
-    products: List<ProductUiModel>,
+    products: List<CartProductUiModel>,
     private var recentViewedProducts: List<RecentViewedProductUiModel>,
     private val onProductClicked: (productId: Int) -> Unit,
     private val onReadMoreButtonClicked: () -> Unit,
     private val productCountPickerListener: ShoppingProductCountPicker,
 ) : RecyclerView.Adapter<ShoppingRecyclerItemViewHolder<out ShoppingRecyclerItem, out ViewDataBinding>>() {
 
-    private val products: MutableList<ProductUiModel> =
+    private var products: MutableList<CartProductUiModel> =
         products.toMutableList()
     private val positionDiff: Int
         get() = if (recentViewedProducts.isEmpty()) {
@@ -92,7 +92,7 @@ class ShoppingRecyclerAdapter(
 
     override fun getItemCount(): Int = products.size + 1
 
-    private fun getCountPickerListenerImpl(product: ProductUiModel) = object : CountPickerListener {
+    private fun getCountPickerListenerImpl(product: CartProductUiModel) = object : CountPickerListener {
 
         override fun onPlus() {
             productCountPickerListener.onPlus(product)
@@ -108,7 +108,12 @@ class ShoppingRecyclerAdapter(
         notifyItemRangeChanged(INITIAL_POSITION, products.size + 1)
     }
 
-    fun refreshShoppingItems(toAdd: List<ProductUiModel>) {
+    fun refreshShoppingProductsItem(products: List<CartProductUiModel>) {
+        this.products = products.toMutableList()
+        notifyItemRangeChanged(positionDiff, products.size + positionDiff)
+    }
+
+    fun addShoppingItems(toAdd: List<CartProductUiModel>) {
         val oldProductsSize = products.size
 
         products.addAll(toAdd)

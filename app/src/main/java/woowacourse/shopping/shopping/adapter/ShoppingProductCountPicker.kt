@@ -1,12 +1,12 @@
 package woowacourse.shopping.shopping.adapter
 
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 
 interface ShoppingProductCountPicker {
 
-    fun onPlus(product: ProductUiModel)
+    fun onPlus(product: CartProductUiModel)
 
-    fun onMinus(product: ProductUiModel)
+    fun onMinus(product: CartProductUiModel)
 
-    fun onAdded(product: ProductUiModel)
+    fun onAdded(product: CartProductUiModel)
 }

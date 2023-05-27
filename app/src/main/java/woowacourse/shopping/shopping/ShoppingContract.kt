@@ -1,6 +1,6 @@
 package woowacourse.shopping.shopping
 
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
 import woowacourse.shopping.shopping.navigator.ShoppingNavigator
 
@@ -11,22 +11,24 @@ interface ShoppingContract {
         val shoppingNavigator: ShoppingNavigator
 
         fun setUpShoppingView(
-            products: List<ProductUiModel>,
-            recentViewedProducts: List<RecentViewedProductUiModel>,
+            products: List<CartProductUiModel>,
+            recentViewedProducts: List<RecentViewedProductUiModel>
         )
 
         fun refreshRecentViewedProductsView(
             products: List<RecentViewedProductUiModel>,
         )
 
-        fun refreshShoppingProductsView(
-            toAdd: List<ProductUiModel>,
-        )
+        fun refreshShoppingProductsView(products: List<CartProductUiModel>)
+
+        fun showMoreProducts(toAdd: List<CartProductUiModel>)
 
         fun refreshProductCount(count: Int)
     }
 
     interface Presenter {
+
+        fun setUpProducts()
 
         fun loadProducts()
 
@@ -38,10 +40,10 @@ interface ShoppingContract {
 
         fun readMoreShoppingProducts()
 
-        fun plusShoppingCartProductCount(product: ProductUiModel)
+        fun plusShoppingCartProductCount(product: CartProductUiModel)
 
-        fun minusShoppingCartProductCount(product: ProductUiModel)
+        fun minusShoppingCartProductCount(product: CartProductUiModel)
 
-        fun addProductToShoppingCart(product: ProductUiModel)
+        fun addProductToShoppingCart(product: CartProductUiModel)
     }
 }
