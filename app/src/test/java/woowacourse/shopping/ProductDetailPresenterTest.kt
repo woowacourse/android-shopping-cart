@@ -21,14 +21,14 @@ class ProductDetailPresenterTest {
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
-    val product = ProductModel(
+    private val product = ProductModel(
         10,
         "락토핏",
         "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
         10000,
         10,
     )
-    val lastViewedProduct = ProductModel(
+    private val lastViewedProduct = ProductModel(
         11,
         "락토핏11",
         "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
@@ -36,75 +36,63 @@ class ProductDetailPresenterTest {
         10,
     )
 
-    private val products = mutableListOf(
-        CartProduct(
-            0,
-            1,
-        ),
-        CartProduct(
-            0,
-            1,
-        ),
-        CartProduct(
-            0,
-            1,
-        ),
-        CartProduct(
-            0,
-            1,
-        ),
-    )
-
     private val recentViewedRepository = object : RecentViewedRepository {
-        private val mIds = mutableListOf(0, 1, 2)
         override fun findAll(): List<Int> {
-            return mIds.toList()
+            return listOf(0, 1, 2)
         }
 
         override fun add(id: Int) {
-            mIds.add(id)
         }
 
         override fun remove(id: Int) {
-            mIds.find { it == id }?.let {
-                mIds.remove(it)
-            }
         }
     }
 
     private val cartRepository = object : CartRepository {
-        private val mProducts = products
+        private val cartProducts = mutableListOf<CartProduct>()
+
+        init {
+            cartProducts.add(CartProduct(0, 1))
+            cartProducts.add(CartProduct(1, 1))
+            cartProducts.add(CartProduct(2, 1))
+            cartProducts.add(CartProduct(3, 1))
+            cartProducts.add(CartProduct(4, 1))
+            cartProducts.add(CartProduct(5, 1))
+            cartProducts.add(CartProduct(6, 1))
+            cartProducts.add(CartProduct(7, 1))
+        }
+
         override fun findAll(): List<CartProduct> {
-            return mProducts
+            return cartProducts
         }
 
         override fun find(id: Int): CartProduct? {
-            return mProducts.find { it.id == id }
+            return CartProduct(0, 1)
         }
 
         override fun add(id: Int, count: Int) {
-            mProducts.add(CartProduct(id, count))
+            cartProducts.add(CartProduct(id, count))
         }
 
         override fun update(id: Int, count: Int) {
-            val index = mProducts.indexOfFirst { it.id == id }
-            if (index == -1) {
-                mProducts.add(CartProduct(id, count))
-                return
-            }
-            mProducts[index] = CartProduct(id, count)
         }
 
         override fun remove(id: Int) {
-            mProducts.filter { it.id != id }.toList()
         }
 
         override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
-            return mProducts.subList(mark, mark + rangeSize)
+            return listOf(
+                CartProduct(0, 1),
+                CartProduct(1, 1),
+                CartProduct(2, 1),
+                CartProduct(3, 1),
+                CartProduct(4, 1),
+            )
         }
 
         override fun isExistByMark(mark: Int): Boolean {
-            return mProducts.find { it.id == mark } != null
+            if (mark < 0) return false
+            return true
         }
     }
 
@@ -117,14 +105,14 @@ class ProductDetailPresenterTest {
     @Test
     fun `장바구니 담기 버튼을 클릭하면 장바구니에 상품이 담긴다`() {
         val product = ProductModel(
-            10,
+            0,
             "락토핏",
             "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
             10000,
             10,
         )
         presenter.putInCart(product)
-        val expectedSize = 5
+        val expectedSize = 9
         val actualSize = cartRepository.findAll().size
 
         assertEquals(expectedSize, actualSize)

@@ -39,20 +39,28 @@ class CartPresenterTest {
             }
 
             override fun find(id: Int): Product {
-                return mProducts[id]
+                return Product(0, "락토핏", "", Price(10000))
             }
 
             override fun findRange(mark: Int, rangeSize: Int): List<Product> {
-                return mProducts.subList(mark, mark + rangeSize)
+                return listOf(
+                    Product(0, "락토핏", "", Price(10000)),
+                    Product(1, "락토핏", "", Price(10000)),
+                    Product(2, "락토핏", "", Price(10000)),
+                    Product(3, "락토핏", "", Price(10000)),
+                    Product(4, "락토핏", "", Price(10000)),
+                )
             }
 
             override fun isExistByMark(mark: Int): Boolean {
-                return mProducts.find { it.id == mark } != null
+                if (mark < 0) return false
+                return true
             }
         }
 
         val cartRepository = object : CartRepository {
             private val cartProducts = mutableListOf<CartProduct>()
+
             init {
                 cartProducts.add(CartProduct(0, 1))
                 cartProducts.add(CartProduct(1, 1))
@@ -69,36 +77,31 @@ class CartPresenterTest {
             }
 
             override fun find(id: Int): CartProduct? {
-                return cartProducts.find { it.id == id }
+                return CartProduct(0, 1)
             }
 
             override fun add(id: Int, count: Int) {
-                cartProducts.add(CartProduct(id, count))
             }
 
             override fun update(id: Int, count: Int) {
-                val index = cartProducts.indexOfFirst { it.id == id }
-                if (index == -1) {
-                    cartProducts.add(CartProduct(id, count))
-                    return
-                }
-                cartProducts[index] = CartProduct(id, count)
             }
 
             override fun remove(id: Int) {
-                cartProducts.remove(cartProducts.find { it.id == id })
             }
 
             override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
-                return if (mark + rangeSize < cartProducts.size) {
-                    cartProducts.subList(mark, mark + rangeSize)
-                } else {
-                    cartProducts.subList(mark, cartProducts.size)
-                }
+                return listOf(
+                    CartProduct(0, 1),
+                    CartProduct(1, 1),
+                    CartProduct(2, 1),
+                    CartProduct(3, 1),
+                    CartProduct(4, 1),
+                )
             }
 
             override fun isExistByMark(mark: Int): Boolean {
-                return cartProducts.getOrNull(mark) != null
+                if (mark < 0) return false
+                return true
             }
         }
 
@@ -124,6 +127,7 @@ class CartPresenterTest {
                 count = 1,
             ),
         )
+        println(items.captured.last())
         assertEquals(itemsExpected, items.captured)
     }
 

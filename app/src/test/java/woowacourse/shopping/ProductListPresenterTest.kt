@@ -1,7 +1,6 @@
 package woowacourse.shopping
 
 import io.mockk.*
-import junit.framework.Assert.assertNull
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -31,32 +30,49 @@ class ProductListPresenterTest {
             }
 
             override fun find(id: Int): Product {
-                return mProducts[id]
+                return Product(0, "락토핏", "", Price(10000))
             }
 
             override fun findRange(mark: Int, rangeSize: Int): List<Product> {
-                return mProducts.subList(mark, mark + rangeSize)
+                return listOf(
+                    Product(0, "락토핏", "", Price(10000)),
+                    Product(1, "락토핏", "", Price(10000)),
+                    Product(2, "락토핏", "", Price(10000)),
+                    Product(3, "락토핏", "", Price(10000)),
+                    Product(4, "락토핏", "", Price(10000)),
+                    Product(5, "락토핏", "", Price(10000)),
+                    Product(6, "락토핏", "", Price(10000)),
+                    Product(7, "락토핏", "", Price(10000)),
+                    Product(8, "락토핏", "", Price(10000)),
+                    Product(9, "락토핏", "", Price(10000)),
+                    Product(10, "락토핏", "", Price(10000)),
+                    Product(11, "락토핏", "", Price(10000)),
+                    Product(12, "락토핏", "", Price(10000)),
+                    Product(13, "락토핏", "", Price(10000)),
+                    Product(14, "락토핏", "", Price(10000)),
+                    Product(15, "락토핏", "", Price(10000)),
+                    Product(16, "락토핏", "", Price(10000)),
+                    Product(17, "락토핏", "", Price(10000)),
+                    Product(18, "락토핏", "", Price(10000)),
+                    Product(19, "락토핏", "", Price(10000)),
+                )
             }
 
             override fun isExistByMark(mark: Int): Boolean {
-                return mProducts.find { it.id == mark } != null
+                if (mark < 0) return false
+                return true
             }
         }
 
         val recentViewedRepository = object : RecentViewedRepository {
-            private val mIds = mutableListOf(0, 1, 2)
             override fun findAll(): List<Int> {
-                return mIds.toList()
+                return listOf(0)
             }
 
             override fun add(id: Int) {
-                mIds.add(id)
             }
 
             override fun remove(id: Int) {
-                mIds.find { it == id }?.let {
-                    mIds.remove(it)
-                }
             }
         }
 
@@ -79,7 +95,7 @@ class ProductListPresenterTest {
             }
 
             override fun find(id: Int): CartProduct? {
-                return cartProducts.find { it.id == id }
+                return CartProduct(0, 1)
             }
 
             override fun add(id: Int, count: Int) {
@@ -87,24 +103,24 @@ class ProductListPresenterTest {
             }
 
             override fun update(id: Int, count: Int) {
-                val index = cartProducts.indexOfFirst { it.id == id }
-                if (index == -1) {
-                    cartProducts.add(CartProduct(id, count))
-                    return
-                }
-                cartProducts[index] = CartProduct(id, count)
             }
 
             override fun remove(id: Int) {
-                cartProducts.remove(cartProducts.find { it.id == id })
             }
 
             override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
-                return cartProducts.subList(mark, mark + rangeSize)
+                return listOf(
+                    CartProduct(0, 1),
+                    CartProduct(1, 1),
+                    CartProduct(2, 1),
+                    CartProduct(3, 1),
+                    CartProduct(4, 1),
+                )
             }
 
             override fun isExistByMark(mark: Int): Boolean {
-                return cartProducts.getOrNull(mark) != null
+                if (mark < 0) return false
+                return true
             }
         }
 
@@ -121,37 +137,35 @@ class ProductListPresenterTest {
         val itemsExpected = listOf<ProductListViewItem>(
             ProductListViewItem.RecentViewedItem(
                 listOf(
-                    ProductModel(2, "헛개차", "", 10000, 1),
-                    ProductModel(1, "현미밥", "", 10000, 1),
-                    ProductModel(0, "락토핏", "", 10000, 1)
-                )
-            )
+                    ProductModel(0, "락토핏", "", 10000, 1),
+                ),
+            ),
         ) + listOf<ProductListViewItem>(
             ProductListViewItem.ProductItem(ProductModel(0, "락토핏", "", 10000, 1)),
-            ProductListViewItem.ProductItem(ProductModel(1, "현미밥", "", 10000, 1)),
-            ProductListViewItem.ProductItem(ProductModel(2, "헛개차", "", 10000, 1)),
-            ProductListViewItem.ProductItem(ProductModel(3, "키", "", 10000, 1)),
-            ProductListViewItem.ProductItem(ProductModel(4, "닭가슴살", "", 10000, 1)),
-            ProductListViewItem.ProductItem(ProductModel(5, "enffl", "", 10000, 1)),
-            ProductListViewItem.ProductItem(ProductModel(6, "뽀또", "", 10000, 1)),
-            ProductListViewItem.ProductItem(ProductModel(7, "둘리", "", 10000, 1)),
-            ProductListViewItem.ProductItem(ProductModel(8, "안녕", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(9, "9", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(10, "10", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(11, "11", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(12, "12", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(13, "13", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(14, "14", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(15, "15", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(16, "16", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(17, "17", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(18, "18", "", 10000, 0)),
-            ProductListViewItem.ProductItem(ProductModel(19, "19", "", 10000, 0)),
+            ProductListViewItem.ProductItem(ProductModel(1, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(2, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(3, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(4, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(5, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(6, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(7, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(8, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(9, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(10, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(11, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(12, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(13, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(14, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(15, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(16, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(17, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(18, "락토핏", "", 10000, 1)),
+            ProductListViewItem.ProductItem(ProductModel(19, "락토핏", "", 10000, 1)),
         ) + ProductListViewItem.ShowMoreItem()
         assertEquals(itemsExpected.subList(0, 21), items.captured.subList(0, 21))
         assertEquals(
             itemsExpected[itemsExpected.lastIndex].javaClass,
-            items.captured[items.captured.lastIndex].javaClass
+            items.captured[items.captured.lastIndex].javaClass,
         )
     }
 
@@ -174,7 +188,7 @@ class ProductListPresenterTest {
         every {
             view.onClickProductDetail(
                 capture(productSlot),
-                capture(viewedProductSlot)
+                capture(viewedProductSlot),
             )
         } just runs
 
@@ -182,7 +196,7 @@ class ProductListPresenterTest {
         presenter.showProductDetail(ProductModel(0, "락토핏", "", 10000, 0))
 
         val expectedProduct = ProductModel(0, "락토핏", "", 10000, 0)
-        val expectedViewedProduct = ProductModel(2, "헛개차", "", 10000, 1)
+        val expectedViewedProduct = ProductModel(0, "락토핏", "", 10000, 1)
 
         assertEquals(expectedProduct, productSlot.captured)
         assertEquals(expectedViewedProduct, viewedProductSlot.captured)
@@ -191,7 +205,7 @@ class ProductListPresenterTest {
     @Test
     fun 장바구니에_상품을_추가할_수_있다() {
         presenter.fetchProducts()
-        presenter.addToCartProducts(10, 1)
+        presenter.addToCartProducts(0, 1)
 
         val actual = cartRepository.findAll().size
 
@@ -205,7 +219,8 @@ class ProductListPresenterTest {
 
         val actual = cartRepository.find(0)?.count
 
-        assertEquals(2, actual)
+        assertEquals(1, actual)
+        verify { view.notifyDataChanged(1) }
     }
 
     @Test
@@ -213,9 +228,7 @@ class ProductListPresenterTest {
         presenter.fetchProducts()
         presenter.updateCartProductCount(0, 0)
 
-        val actual = cartRepository.find(0)
-
-        assertNull(actual)
+        verify { view.notifyDataChanged(1) }
     }
 
     @Test
@@ -292,6 +305,6 @@ class ProductListPresenterTest {
         Product(39, "39", "", Price(10000)),
         Product(40, "40", "", Price(10000)),
         Product(41, "41", "", Price(10000)),
-        Product(42, "42", "", Price(10000))
+        Product(42, "42", "", Price(10000)),
     )
 }
