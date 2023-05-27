@@ -62,8 +62,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         }
     }
 
-    // 비동기적으로 아이템을 얻어오기 때문에 뷰시스템의 리사이클러뷰 스크롤 상태에 대한 자동 복구 기능이 정상 작동하지 않음
-    private var isFirstLoad: Boolean = false
+    private var isRestoreScrollState: Boolean = false
     private var recyclerViewState: Parcelable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,9 +109,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private fun observePresenter() {
         presenter.badgeCount.observe(this) { cartCountBadge?.count = it }
         presenter.products.observe(this) {
-            if (isFirstLoad.not()) {
-                restoreProductRecyclerViewState()
-                isFirstLoad = true
+            if (isRestoreScrollState.not()) {
+                binding.productRecyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
+                isRestoreScrollState = true
             }
             mainProductAdapter.setItems(it)
         }
@@ -181,13 +180,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         super.onRestoreInstanceState(savedInstanceState)
         recentWrapperAdapter.onRestoreState(savedInstanceState)
         recyclerViewState = savedInstanceState.getParcelableCompat(RECYCLER_VIEW_STATE_KEY)
-
-        // 혹시 비동기로 얻어오는게 리사이클러뷰 상태를 복구해서 얻어오는 것보다 빠를 경우를 위해
-        if (isFirstLoad) restoreProductRecyclerViewState()
-    }
-
-    private fun restoreProductRecyclerViewState() {
-        binding.productRecyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
     override fun onDestroy() {
