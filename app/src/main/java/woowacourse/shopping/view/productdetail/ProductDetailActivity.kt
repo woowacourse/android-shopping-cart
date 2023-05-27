@@ -22,52 +22,59 @@ import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESUL
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_VIEWED
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
-    private val productDetailBinding: ActivityProductDetailBinding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
-    private val dialogBinding: DialogCountBinding by lazy { DialogCountBinding.inflate(layoutInflater) }
-    private val presenter: ProductDetailContract.Presenter by lazy { ProductDetailPresenter(INITIAL_COUNT, this, CartDbRepository(this), RecentViewedDbRepository(this)) }
-    private lateinit var dialog: AlertDialog
+    private val product by lazy { intent.getParcelableCompat<ProductModel>(PRODUCT) }
+    private val lastViewedProduct by lazy { intent.getParcelableCompat<ProductModel>(LAST_VIEWED_PRODUCT) }
+    private val productDetailBinding: ActivityProductDetailBinding by lazy {
+        ActivityProductDetailBinding.inflate(layoutInflater)
+    }
+    private val dialogBinding: DialogCountBinding by lazy {
+        DialogCountBinding.inflate(layoutInflater)
+    }
+    private val dialog: AlertDialog by lazy {
+        AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .create()
+    }
+    private val presenter: ProductDetailContract.Presenter by lazy {
+        ProductDetailPresenter(
+            INITIAL_COUNT,
+            product,
+            lastViewedProduct,
+            this,
+            CartDbRepository(this),
+            RecentViewedDbRepository(this),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(productDetailBinding.root)
-        val product = intent.getParcelableCompat<ProductModel>(PRODUCT)
-        val lastViewedProduct = intent.getParcelableCompat<ProductModel>(LAST_VIEWED_PRODUCT)
-        if (product == null) {
-            forceQuit()
-            return
-        }
-        intent.putExtra(ID, product.id)
-        setUpInitView(product, lastViewedProduct)
-        setUpDialog(product)
-        presenter.updateRecentViewedProducts(product.id)
+        presenter.fetchProduct()
+        intent.putExtra(ID, product?.id)
     }
 
-    private fun forceQuit() {
+    override fun forceQuit() {
         Toast.makeText(this, NOT_EXIST_DATA_ERROR, Toast.LENGTH_LONG).show()
         finish()
     }
 
-    private fun setUpInitView(product: ProductModel, lastViewedProduct: ProductModel?) {
+    override fun setUpProductDetailView(product: ProductModel) {
         productDetailBinding.product = product
-        if (lastViewedProduct != null) {
-            productDetailBinding.lastViewedProduct = lastViewedProduct
-            productDetailBinding.layoutLastViewed.setOnClickListener {
-                startLastViewedDetailActivity(lastViewedProduct)
-            }
-        }
-        Glide.with(productDetailBinding.root.context).load(product.imageUrl).into(productDetailBinding.imgProduct)
+        Glide.with(productDetailBinding.root.context).load(product.imageUrl)
+            .into(productDetailBinding.imgProduct)
         productDetailBinding.btnPutInCart.setOnClickListener {
             dialog.show()
         }
     }
-    private fun setUpDialog(product: ProductModel) {
-        setUpDialogBinding(product)
-        dialog = AlertDialog.Builder(this)
-            .setView(dialogBinding.root)
-            .create()
+
+    override fun setUpLastViewedProductView(lastViewedProduct: ProductModel) {
+        productDetailBinding.lastViewedProduct = lastViewedProduct
+        productDetailBinding.layoutLastViewed.setOnClickListener {
+            startLastViewedDetailActivity(lastViewedProduct)
+        }
     }
 
-    private fun setUpDialogBinding(product: ProductModel) {
+    override fun setUpDialogBinding(product: ProductModel) {
         dialogBinding.lifecycleOwner = this
         dialogBinding.presenter = presenter
         dialogBinding.product = product
@@ -114,7 +121,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         const val LAST_VIEWED_PRODUCT = "LAST_VIEWED"
         private const val NOT_EXIST_DATA_ERROR = "데이터가 넘어오지 않았습니다."
 
-        fun newIntent(context: Context, product: ProductModel, lastViewedProduct: ProductModel?): Intent {
+        fun newIntent(
+            context: Context,
+            product: ProductModel,
+            lastViewedProduct: ProductModel?,
+        ): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(PRODUCT, product)
             intent.putExtra(LAST_VIEWED_PRODUCT, lastViewedProduct)

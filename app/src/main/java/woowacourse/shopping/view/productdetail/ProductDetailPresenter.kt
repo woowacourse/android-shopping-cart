@@ -8,6 +8,8 @@ import woowacourse.shopping.model.ProductModel
 
 class ProductDetailPresenter(
     initialCount: Int,
+    private val product: ProductModel?,
+    private val lastViewedProduct: ProductModel?,
     private val view: ProductDetailContract.View,
     private val cartRepository: CartRepository,
     private val recentViewedRepository: RecentViewedRepository,
@@ -16,12 +18,23 @@ class ProductDetailPresenter(
     override val count: LiveData<Int>
         get() = _count
 
+    override fun fetchProduct() {
+        if (product == null) {
+            view.forceQuit()
+        } else {
+            updateRecentViewedProducts(product.id)
+            view.setUpProductDetailView(product)
+            if (lastViewedProduct != null) view.setUpLastViewedProductView(lastViewedProduct)
+            view.setUpDialogBinding(product)
+        }
+    }
+
     override fun putInCart(product: ProductModel) {
         if (_count.value != null) cartRepository.add(product.id, _count.value ?: 0)
         view.finishActivity(true)
     }
 
-    override fun updateRecentViewedProducts(id: Int) {
+    private fun updateRecentViewedProducts(id: Int) {
         recentViewedRepository.add(id)
     }
 
