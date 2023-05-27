@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteOpenHelper
 import woowacourse.shopping.domain.CartProduct
 
 class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, null, 3) {
+    private fun Int.toBoolean(): Boolean = this == 1
+
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(
             "CREATE TABLE ${CartContract.TABLE_NAME} (" +
@@ -31,106 +33,134 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(context, TABLE_TITLE, nu
     }
 
     fun update(id: Int, count: Int) {
-        writableDatabase.execSQL("UPDATE ${CartContract.TABLE_NAME} SET ${CartContract.TABLE_COLUMN_COUNT}=$count WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
+        writableDatabase.execSQL(
+            "UPDATE ${CartContract.TABLE_NAME} " +
+                "SET ${CartContract.TABLE_COLUMN_COUNT}=$count " +
+                "WHERE ${CartContract.TABLE_COLUMN_ID}=$id",
+        )
     }
 
     fun remove(id: Int) {
-        writableDatabase.execSQL("DELETE FROM ${CartContract.TABLE_NAME} WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
+        writableDatabase.execSQL(
+            "DELETE FROM ${CartContract.TABLE_NAME}" +
+                " WHERE ${CartContract.TABLE_COLUMN_ID}=$id",
+        )
     }
 
-    fun selectAll(): List<CartProduct> {
-        val products = mutableListOf<CartProduct>()
-        val sql = "select * from ${CartContract.TABLE_NAME}"
-        val cursor = readableDatabase.rawQuery(sql, null)
-        while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
-            val check = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECK))
-            val isChecked = check == 1
-            products.add(CartProduct(id, count, isChecked))
-        }
-        cursor.close()
-        return products
-    }
-
-    fun selectWhereId(id: Int): CartProduct? {
-        val sql =
-            "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_ID}=$id"
-        val cursor = readableDatabase.rawQuery(sql, null)
-        while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
-            val check = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECK))
-            val isChecked = check == 1
+    fun findAll(): List<CartProduct> {
+        val cartProducts = mutableListOf<CartProduct>()
+        writableDatabase.use {
+            val cursor = it.rawQuery("select * from ${CartContract.TABLE_NAME}", null)
+            while (cursor.moveToNext()) {
+                val cartProduct = CartProduct(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2).toBoolean())
+                cartProducts.add(cartProduct)
+            }
             cursor.close()
-            return CartProduct(id, count, isChecked)
         }
-        return null
+        return cartProducts
     }
 
-    fun selectRange(mark: Int, rangeSize: Int): List<CartProduct> {
-        val products = mutableListOf<CartProduct>()
-        val sql = "select * from ${CartContract.TABLE_NAME} limit $rangeSize offset $mark;"
-        val cursor = readableDatabase.rawQuery(sql, null)
-        while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
-            val check = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECK))
-            val isChecked = check == 1
-            products.add(CartProduct(id, count, isChecked))
+    fun findWhereById(id: Int): CartProduct? {
+        writableDatabase.use {
+            val cursor = readableDatabase.rawQuery(
+                "select * from ${CartContract.TABLE_NAME}" +
+                    " where ${CartContract.TABLE_COLUMN_ID}=$id",
+                null,
+            )
+            while (cursor.moveToNext()) {
+                return CartProduct(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2).toBoolean())
+            }
+            cursor.close()
+            return null
         }
-        cursor.close()
-        return products
+    }
+
+    fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
+        val cartProducts = mutableListOf<CartProduct>()
+        writableDatabase.use {
+            val cursor = readableDatabase.rawQuery(
+                "select * from ${CartContract.TABLE_NAME} " +
+                    "limit $rangeSize offset $mark;",
+                null,
+            )
+            while (cursor.moveToNext()) {
+                val cartProduct = CartProduct(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2).toBoolean())
+                cartProducts.add(cartProduct)
+            }
+            cursor.close()
+        }
+        return cartProducts
     }
 
     fun plusCount(id: Int) {
         var count = 1
-        val sql =
-            "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_ID}=$id"
-        val cursor = readableDatabase.rawQuery(sql, null)
-        while (cursor.moveToNext()) {
-            count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
-            count += 1
-            cursor.close()
+        writableDatabase.use {
+            val cursor = readableDatabase.rawQuery(
+                "select * from ${CartContract.TABLE_NAME} " +
+                    "where ${CartContract.TABLE_COLUMN_ID}=$id",
+                null,
+            )
+            while (cursor.moveToNext()) {
+                count = cursor.getInt(1)
+                count += 1
+                cursor.close()
+            }
         }
-        writableDatabase.execSQL("UPDATE ${CartContract.TABLE_NAME} SET ${CartContract.TABLE_COLUMN_COUNT}=$count WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
+        writableDatabase.execSQL(
+            "UPDATE ${CartContract.TABLE_NAME} " +
+                "SET ${CartContract.TABLE_COLUMN_COUNT}=$count" +
+                " WHERE ${CartContract.TABLE_COLUMN_ID}=$id",
+        )
     }
 
     fun subCount(id: Int) {
         var count = 1
-        val sql =
-            "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_ID}=$id"
-        val cursor = readableDatabase.rawQuery(sql, null)
-        while (cursor.moveToNext()) {
-            count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
-            count -= 1
-            cursor.close()
+        writableDatabase.use {
+            val cursor = readableDatabase.rawQuery(
+                "select * from ${CartContract.TABLE_NAME}" +
+                    " where ${CartContract.TABLE_COLUMN_ID}=$id",
+                null,
+            )
+            while (cursor.moveToNext()) {
+                count = cursor.getInt(1)
+                count -= 1
+                cursor.close()
+            }
         }
-        writableDatabase.execSQL("UPDATE ${CartContract.TABLE_NAME} SET ${CartContract.TABLE_COLUMN_COUNT}=$count WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
+        writableDatabase.execSQL(
+            "UPDATE ${CartContract.TABLE_NAME}" +
+                " SET ${CartContract.TABLE_COLUMN_COUNT}=$count" +
+                " WHERE ${CartContract.TABLE_COLUMN_ID}=$id",
+        )
     }
 
-    fun selectChecked(): List<CartProduct> {
-        val products = mutableListOf<CartProduct>()
-        val sql =
-            "select * from ${CartContract.TABLE_NAME} where ${CartContract.TABLE_COLUMN_CHECK}=1"
-        val cursor = readableDatabase.rawQuery(sql, null)
-        while (cursor.moveToNext()) {
-            val id = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_ID))
-            val count = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_COUNT))
-            val check = cursor.getInt(cursor.getColumnIndexOrThrow(CartContract.TABLE_COLUMN_CHECK))
-            val isChecked = check == 1
-            products.add(CartProduct(id, count, isChecked))
+    fun findByChecked(): List<CartProduct> {
+        val cartProducts = mutableListOf<CartProduct>()
+        writableDatabase.use {
+            val cursor = readableDatabase.rawQuery(
+                "select * from ${CartContract.TABLE_NAME}" +
+                    " where ${CartContract.TABLE_COLUMN_CHECK}=1",
+                null,
+            )
+            while (cursor.moveToNext()) {
+                val cartProduct = CartProduct(cursor.getInt(0), cursor.getInt(1), cursor.getInt(2).toBoolean())
+                cartProducts.add(cartProduct)
+            }
+            cursor.close()
         }
-        cursor.close()
-        return products
+        return cartProducts
     }
 
     fun updateCheck(id: Int, checked: Boolean) {
-        writableDatabase.execSQL("UPDATE ${CartContract.TABLE_NAME} SET ${CartContract.TABLE_COLUMN_CHECK}=$checked WHERE ${CartContract.TABLE_COLUMN_ID}=$id")
+        writableDatabase.execSQL(
+            "UPDATE ${CartContract.TABLE_NAME}" +
+                " SET ${CartContract.TABLE_COLUMN_CHECK}=$checked" +
+                " WHERE ${CartContract.TABLE_COLUMN_ID}=$id",
+        )
     }
 
     fun getSize(mark: Int): Boolean {
-        val itemsSize = selectAll().size
+        val itemsSize = findAll().size
         return mark in 0 until itemsSize
     }
 

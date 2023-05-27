@@ -2,9 +2,9 @@ package woowacourse.shopping.view.cart
 
 import woowacourse.shopping.common.Pagination
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.CartProductRepository
 
-class CartPagination(private val rangeSize: Int, private val cartRepository: CartRepository) :
+class CartPagination(private val rangeSize: Int, private val cartProductRepository: CartProductRepository) :
     Pagination<CartProduct> {
     override var mark = 0
     override var isNextEnabled = nextItemExist()
@@ -16,7 +16,7 @@ class CartPagination(private val rangeSize: Int, private val cartRepository: Car
 
     override fun nextItems(): List<CartProduct> {
         if (nextItemExist()) {
-            val items = cartRepository.findRange(mark, rangeSize)
+            val items = cartProductRepository.findRange(mark, rangeSize)
             mark += rangeSize
             return items
         }
@@ -26,22 +26,22 @@ class CartPagination(private val rangeSize: Int, private val cartRepository: Car
     fun undoItems(): List<CartProduct> {
         if (undoItemExist()) {
             mark -= rangeSize
-            val items = cartRepository.findRange(mark - rangeSize, rangeSize)
+            val items = cartProductRepository.findRange(mark - rangeSize, rangeSize)
             return items
         }
         return emptyList()
     }
 
     override fun nextItemExist(): Boolean {
-        return cartRepository.isExistByMark(mark)
+        return cartProductRepository.isExistByMark(mark)
     }
     private fun undoItemExist(): Boolean {
-        return cartRepository.isExistByMark(mark - rangeSize - 1)
+        return cartProductRepository.isExistByMark(mark - rangeSize - 1)
     }
 
     fun currentItems(): List<CartProduct> {
         val currentMark = mark - rangeSize
-        return cartRepository.findRange(currentMark, rangeSize)
+        return cartProductRepository.findRange(currentMark, rangeSize)
     }
 
     fun getPageNumber(): String {

@@ -3,11 +3,11 @@ package woowacourse.shopping.view.productdetail
 import android.app.Dialog
 import android.view.Window
 import android.view.WindowManager
-import woowacourse.shopping.data.CartDbRepository
+import woowacourse.shopping.data.CartProductSqliteProductRepository
 import woowacourse.shopping.databinding.CartDialogBinding
 import woowacourse.shopping.model.ProductModel
 
-class CartDialog(private val context: ProductDetailActivity, private val cartRepository: CartDbRepository) {
+class CartDialog(private val context: ProductDetailActivity, private val cartRepository: CartProductSqliteProductRepository) {
     private val dialog = Dialog(context)
     private lateinit var binding: CartDialogBinding
     private lateinit var product: ProductModel

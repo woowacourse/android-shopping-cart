@@ -2,7 +2,7 @@ package woowacourse.shopping.view.productlist
 
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ProductMockWebRepository
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.CartProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
@@ -11,7 +11,7 @@ class ProductListPresenter(
     private val view: ProductListContract.View,
     private val productRepository: ProductMockWebRepository,
     private val recentViewedRepository: RecentViewedRepository,
-    private val cartRepository: CartRepository,
+    private val cartProductRepository: CartProductRepository,
 ) : ProductListContract.Presenter {
     private val productListPagination = ProductListPagination(PAGINATION_SIZE, productRepository)
     private val products = productListPagination.nextItems().map { it.toUiModel() }.toMutableList()
@@ -47,7 +47,7 @@ class ProductListPresenter(
     }
 
     private fun setCartProductCount() {
-        val cartProducts = cartRepository.findAll()
+        val cartProducts = cartProductRepository.findAll()
         products.map { product ->
             val count = cartProducts.find { cartProduct -> cartProduct.id == product.id }?.count ?: 0
             product.count = count
@@ -55,7 +55,7 @@ class ProductListPresenter(
     }
 
     override fun getCartItemsCount(): Int {
-        return cartRepository.findAll().sumOf { it.count }
+        return cartProductRepository.findAll().sumOf { it.count }
     }
 
     override fun handleNextStep(itemId: Int) {

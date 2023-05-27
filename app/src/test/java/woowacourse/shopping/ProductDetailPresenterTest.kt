@@ -8,7 +8,7 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.CartProductRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
@@ -20,19 +20,19 @@ class ProductDetailPresenterTest {
     private lateinit var presenter: ProductDetailContract.Presenter
 
     private lateinit var productRepository: ProductRepository
-    private lateinit var cartRepository: CartRepository
+    private lateinit var cartProductRepository: CartProductRepository
     private lateinit var recentViewedRepository: RecentViewedRepository
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
-        cartRepository = mockk(relaxed = true)
+        cartProductRepository = mockk(relaxed = true)
         recentViewedRepository = mockk(relaxed = true)
 
         presenter = ProductDetailPresenter(
             view,
-            cartRepository,
+            cartProductRepository,
             recentViewedRepository,
             productRepository,
         )
@@ -50,7 +50,7 @@ class ProductDetailPresenterTest {
         )
         presenter.putInCart(product)
         val expectedSize = 4
-        val actualSize = cartRepository.findAll().size
+        val actualSize = cartProductRepository.findAll().size
 
         assertEquals(expectedSize, actualSize)
         verify { view.startCartActivity() }

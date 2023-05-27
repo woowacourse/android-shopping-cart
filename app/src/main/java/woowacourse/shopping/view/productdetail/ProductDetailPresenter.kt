@@ -1,7 +1,7 @@
 package woowacourse.shopping.view.productdetail
 
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.CartProductRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
@@ -9,7 +9,7 @@ import woowacourse.shopping.model.toUiModel
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
-    private val cartRepository: CartRepository,
+    private val cartProductRepository: CartProductRepository,
     private val recentViewedRepository: RecentViewedRepository,
     private val productRepository: ProductRepository,
 ) : ProductDetailContract.Presenter {
@@ -51,7 +51,7 @@ class ProductDetailPresenter(
     }
 
     override fun putInCart(product: ProductModel) {
-        cartRepository.add(product.id, 1, true)
+        cartProductRepository.add(product.id, 1, true)
         view.startCartActivity()
     }
 

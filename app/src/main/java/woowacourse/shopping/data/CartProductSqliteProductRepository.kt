@@ -1,18 +1,18 @@
 package woowacourse.shopping.data
 
-import android.content.Context
 import woowacourse.shopping.data.db.CartDBHelper
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.CartProductRepository
 
-class CartDbRepository(context: Context) : CartRepository {
-    private val dbHelper = CartDBHelper(context)
+class CartProductSqliteProductRepository(
+    private val dbHelper: CartDBHelper,
+) : CartProductRepository {
     override fun findAll(): List<CartProduct> {
-        return dbHelper.selectAll()
+        return dbHelper.findAll()
     }
 
     private fun find(id: Int): CartProduct? {
-        return dbHelper.selectWhereId(id)
+        return dbHelper.findWhereById(id)
     }
 
     override fun add(id: Int, count: Int, check: Boolean) {
@@ -29,7 +29,7 @@ class CartDbRepository(context: Context) : CartRepository {
     }
 
     override fun findRange(mark: Int, rangeSize: Int): List<CartProduct> {
-        return dbHelper.selectRange(mark, rangeSize)
+        return dbHelper.findRange(mark, rangeSize)
     }
 
     override fun isExistByMark(mark: Int): Boolean {
@@ -45,7 +45,7 @@ class CartDbRepository(context: Context) : CartRepository {
     }
 
     override fun findCheckedItem(): List<CartProduct> {
-        return dbHelper.selectChecked()
+        return dbHelper.findByChecked()
     }
 
     override fun updateCheckState(id: Int, checked: Boolean) {

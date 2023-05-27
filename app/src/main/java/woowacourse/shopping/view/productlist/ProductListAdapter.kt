@@ -2,13 +2,13 @@ package woowacourse.shopping.view.productlist
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.CartDbRepository
+import woowacourse.shopping.data.CartProductSqliteProductRepository
 import woowacourse.shopping.model.ProductModel
 
 class ProductListAdapter(
     private val recentViewedProducts: List<ProductModel>,
     private val products: List<ProductModel>,
-    private val cartRepository: CartDbRepository,
+    private val cartRepository: CartProductSqliteProductRepository,
     private val onProductClick: (ProductModel) -> Unit,
     private val onShowMoreClick: () -> Unit,
     private val showCartItemsCountInMenu: () -> Unit,

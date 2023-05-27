@@ -3,14 +3,14 @@ package woowacourse.shopping.view.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.CartProductRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.model.CartProductModel
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val cartRepository: CartRepository,
+    private val cartProductRepository: CartProductRepository,
     private val productRepository: ProductRepository,
 ) : CartContract.Presenter {
     private val _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
@@ -21,7 +21,7 @@ class CartPresenter(
     override val totalCount: LiveData<Int>
         get() = _totalCount
 
-    private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
+    private val cartPagination = CartPagination(PAGINATION_SIZE, cartProductRepository)
 
     private val currentCartProducts =
         convertIdToModel(cartPagination.nextItems()).toMutableList()
@@ -37,7 +37,7 @@ class CartPresenter(
 
     override fun removeProduct(id: Int) {
         val removedItem = currentCartProducts.find { it.id == id }
-        cartRepository.remove(id)
+        cartProductRepository.remove(id)
         view.notifyRemoveItem(currentCartProducts.indexOf(removedItem))
         currentCartProducts.remove(removedItem)
         val getItems = cartPagination.currentItems()
@@ -55,40 +55,40 @@ class CartPresenter(
     }
 
     override fun plusCount(id: Int) {
-        cartRepository.plusCount(id)
+        cartProductRepository.plusCount(id)
     }
 
     override fun subCount(id: Int) {
-        cartRepository.subCount(id)
+        cartProductRepository.subCount(id)
     }
 
     override fun setupTotalPrice() {
-        val cartModels = convertIdToModel(cartRepository.findCheckedItem())
+        val cartModels = convertIdToModel(cartProductRepository.findCheckedItem())
         _totalPrice.value = cartModels.sumOf { it.count * it.product.price }
     }
 
     override fun updateItemCheck(id: Int, checked: Boolean) {
-        cartRepository.updateCheckState(id, checked)
+        cartProductRepository.updateCheckState(id, checked)
         currentCartProducts
             .indexOfFirst { it.id == id }
             .let { currentCartProducts[it] = currentCartProducts[it].copy(check = checked) }
     }
 
     override fun setupTotalCount() {
-        val cartModels = convertIdToModel(cartRepository.findCheckedItem())
+        val cartModels = convertIdToModel(cartProductRepository.findCheckedItem())
         _totalCount.value = cartModels.sumOf { it.count }
     }
 
     override fun setAllCheck() {
         currentCartProducts.forEach { cartProduct ->
-            cartRepository.updateCheckState(cartProduct.id, true)
+            cartProductRepository.updateCheckState(cartProduct.id, true)
         }
         updateCartItems(cartPagination.currentItems())
     }
 
     override fun setAllUncheck() {
         currentCartProducts.forEach { cartProduct ->
-            cartRepository.updateCheckState(cartProduct.id, false)
+            cartProductRepository.updateCheckState(cartProduct.id, false)
         }
         updateCartItems(cartPagination.currentItems())
     }

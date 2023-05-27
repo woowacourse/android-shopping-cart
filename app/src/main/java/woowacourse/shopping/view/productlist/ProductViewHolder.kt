@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.data.CartDbRepository
+import woowacourse.shopping.data.CartProductSqliteProductRepository
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentViewedBinding
 import woowacourse.shopping.databinding.ItemShowMoreBinding
@@ -33,7 +33,7 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(
             product: ProductModel,
-            cartRepository: CartDbRepository,
+            cartRepository: CartProductSqliteProductRepository,
             showCartItemsCountInMenu: () -> Unit,
         ) {
             setVisibility(product.count)

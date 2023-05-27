@@ -9,9 +9,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDbRepository
+import woowacourse.shopping.data.CartProductSqliteProductRepository
 import woowacourse.shopping.data.ProductMockWebRepository
 import woowacourse.shopping.data.RecentViewedDbRepository
+import woowacourse.shopping.data.db.CartDBHelper
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.cart.CartActivity
@@ -41,7 +42,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun setPresenter() {
         presenter =
-            ProductListPresenter(this, ProductMockWebRepository(), RecentViewedDbRepository(this), CartDbRepository(this))
+            ProductListPresenter(
+                this,
+                ProductMockWebRepository(),
+                RecentViewedDbRepository(this),
+                CartProductSqliteProductRepository(
+                    CartDBHelper(this),
+                ),
+            )
     }
 
     private fun setActionBar() {
@@ -63,7 +71,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.gridProducts.adapter = ProductListAdapter(
             recentViewedProducts,
             products,
-            CartDbRepository(this),
+            CartProductSqliteProductRepository(CartDBHelper(this)),
             fun(product: ProductModel) { showProductDetail(product) },
             fun() { presenter.showMoreProducts() },
             ::showCartItemsCountInMenu,

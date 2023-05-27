@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain
 
-interface CartRepository {
+interface CartProductRepository {
     fun findAll(): List<CartProduct>
     fun add(id: Int, count: Int, check: Boolean)
     fun remove(id: Int)

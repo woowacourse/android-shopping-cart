@@ -9,7 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.data.ProductMockWebRepository
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.CartProductRepository
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentViewedRepository
@@ -23,7 +23,7 @@ class ProductListPresenterTest {
     private lateinit var view: ProductListContract.View
 
     private lateinit var productRepository: ProductMockWebRepository
-    private lateinit var cartRepository: CartRepository
+    private lateinit var cartProductRepository: CartProductRepository
     private lateinit var recentViewedRepository: RecentViewedRepository
 
     private val fakeRecentViewedData = listOf(0, 1, 2, 3)
@@ -60,7 +60,7 @@ class ProductListPresenterTest {
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
-        cartRepository = mockk(relaxed = true)
+        cartProductRepository = mockk(relaxed = true)
         recentViewedRepository = mockk(relaxed = true)
 
         presenter =
@@ -68,7 +68,7 @@ class ProductListPresenterTest {
                 view,
                 productRepository,
                 recentViewedRepository,
-                cartRepository,
+                cartProductRepository,
             )
     }
 
