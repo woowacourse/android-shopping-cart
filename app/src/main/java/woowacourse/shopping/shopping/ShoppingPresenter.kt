@@ -93,11 +93,21 @@ class ShoppingPresenter(
     }
 
     override fun refreshView() {
-        productRepository.loadProducts(
-            lastProductId = 0,
-            onSuccess = { view.refreshShoppingProductsView(synchronizeWithCartProducts(it)) },
-            onFailure = {},
-        )
+        val products = mutableListOf<ProductUiModel>()
+        val latch = CountDownLatch(1)
+        repeat(numberOfReadProduct.toInt()) { repeatNum ->
+            productRepository.loadProducts(
+                lastProductId = repeatNum.toLong(),
+                onSuccess = {
+                    products.addAll(synchronizeWithCartProducts(it))
+                    latch.countDown()
+                },
+                onFailure = { latch.countDown() },
+            )
+        }
+        latch.await()
+
+        view.refreshShoppingProductsView(products)
     }
 
     companion object {
