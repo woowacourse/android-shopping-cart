@@ -94,17 +94,17 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
                 LocalBasketDataSource(BasketDaoImpl(shoppingDatabase))
             )
         )
-//        // DB 더미 담는로직 필요에 의해 주석처리
-//        repeat(100) {
-//            ProductDaoImpl(shoppingDatabase).add(
-//                DataProduct(
-//                    0,
-//                    "$it",
-//                    DataPrice(1000),
-//                    "https://pbs.twimg.com/media/FpFzjV-aAAAIE-v?format=jpg&name=large"
-//                )
-//            )
-//        }
+        // DB 더미 담는로직 필요에 의해 주석처리
+        repeat(100) {
+            ProductDaoImpl(shoppingDatabase).add(
+                DataProduct(
+                    it + 1,
+                    "${it + 1}",
+                    DataPrice(1000),
+                    "https://pbs.twimg.com/media/FpFzjV-aAAAIE-v?format=jpg&name=large"
+                )
+            )
+        }
     }
 
     override fun updateProducts(products: List<UiProduct>) {

@@ -11,8 +11,8 @@ class ProductResponseJson {
 
     val totalProducts = List(66) {
         DataProduct(
-            it,
-            "$it",
+            it + 1,
+            "${it + 1}",
             DataPrice(1000),
             "https://pbs.twimg.com/media/FpFzjV-aAAAIE-v?format=jpg&name=large"
         )
