@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.contract.CartContract
 import woowacourse.shopping.cart.contract.presenter.CartPresenter
-import woowacourse.shopping.database.cart.CartDBHelper
-import woowacourse.shopping.database.cart.CartDatabase
+import woowacourse.shopping.database.cart.CartDao
+import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.CartNavigationUIModel
 import woowacourse.shopping.model.CartProductUIModel
@@ -29,7 +29,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         presenter = CartPresenter(
             this,
-            CartDatabase(CartDBHelper(this).writableDatabase),
+            CartRepositoryImpl(CartDao(this)),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0,
         )
         presenter.setUpCarts()

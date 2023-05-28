@@ -3,8 +3,8 @@ package woowacourse.shopping.database.recentProduct
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import woowacourse.shopping.database.cart.CartDBHelper.Companion.DATABASE_NAME
-import woowacourse.shopping.database.cart.CartDBHelper.Companion.DATABASE_VERSION
+import woowacourse.shopping.database.cart.CartDao.Companion.DATABASE_NAME
+import woowacourse.shopping.database.cart.CartDao.Companion.DATABASE_VERSION
 
 class RecentProductDBHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {

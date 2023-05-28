@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
-import woowacourse.shopping.database.cart.CartDBHelper
-import woowacourse.shopping.database.cart.CartDatabase
+import woowacourse.shopping.database.cart.CartDao
+import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.recentProduct.RecentProductDatabase
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.databinding.DialogCartBinding
@@ -38,7 +38,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(
             this,
             product,
-            CartDatabase(CartDBHelper(this).writableDatabase),
+            CartRepositoryImpl(CartDao(this)),
             RecentProductDatabase(this),
         )
         presenter.setUp()
