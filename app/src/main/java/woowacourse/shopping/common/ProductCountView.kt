@@ -9,7 +9,8 @@ import woowacourse.shopping.databinding.LayoutMainCountBinding
 class ProductCountView @JvmOverloads constructor(
     context: Context,
     attributesSet: AttributeSet? = null,
-) : ConstraintLayout(context, attributesSet) {
+    defStyleAttr: Int = 0,
+) : ConstraintLayout(context, attributesSet, defStyleAttr) {
 
     val binding = LayoutMainCountBinding.inflate(
         LayoutInflater.from(context),
