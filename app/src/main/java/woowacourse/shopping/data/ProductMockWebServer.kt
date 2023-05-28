@@ -28,20 +28,6 @@ class ProductMockWebServer {
                         .setBody(products)
                 }
 
-//                "/products?page=2" -> {
-//                    MockResponse()
-//                        .setHeader("Content-Type", "application/json")
-//                        .setResponseCode(200)
-//                        .setBody(secondPageProducts)
-//                }
-//
-//                "/products?page=3" -> {
-//                    MockResponse()
-//                        .setHeader("Content-Type", "application/json")
-//                        .setResponseCode(200)
-//                        .setBody(thirdPageProducts)
-//                }
-
                 else -> MockResponse().setResponseCode(404)
             }
         }

@@ -5,7 +5,6 @@ import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +25,6 @@ class CartDialog(
     ): View {
         binding = DialogCartBinding.inflate(inflater, container, false)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//        val width = resources.getDimensionPixelSize(R.dimen.popup_width)
-//        val height = resources.getDimensionPixelSize(R.dimen.popup_height)
         dialog?.window?.setLayout(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
         binding.product = product
         binding.tvAddCart.setOnClickListener {
