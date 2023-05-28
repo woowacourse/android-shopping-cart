@@ -228,9 +228,9 @@ val productsDatasource = listOf<Product>(
     ),
     Product(
         38,
-        "DOLE 실속 바나나 1KG(필리핀)",
-        "https://img-cf.kurly.com/shop/data/goods/165303902534l0.jpg",
-        Price(3890)
+        "[닥터지] 레드블레미쉬 클리어 수딩 크림",
+        "https://product-image.kurly.com/product/image/76a1dedf-4421-4631-b065-4859100bd2de.jpg",
+        Price(24700)
     ),
     Product(
         39,

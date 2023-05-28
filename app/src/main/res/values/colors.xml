@@ -11,4 +11,5 @@
     <color name="gray_light">#AAAAAA</color>
     <color name="gray_normal">#555555</color>
     <color name="gray_dark">#333333</color>
+    <color name="order_confirm_enabled_false">#D6D6D6</color>
 </resources>

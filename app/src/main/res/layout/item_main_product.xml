@@ -5,19 +5,22 @@
 
     <data>
         <variable
-            name="item"
-            type="woowacourse.shopping.feature.main.product.MainProductItemModel" />
+            name="product"
+            type="woowacourse.shopping.model.ProductUiModel" />
+        <variable
+            name="listener"
+            type="woowacourse.shopping.feature.main.product.ProductClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:onClick="@{()->item.onClick.invoke(item.product.id)}">
+        android:onClick="@{()->listener.onClick(product.id)}">
 
         <ImageView
-            android:id="@+id/product_img"
-            imgUrl="@{item.product.imgUrl}"
+            android:id="@+id/main_product_img"
+            imgUrl="@{product.imgUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
@@ -37,8 +40,8 @@
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="@{item.product.name}"
-            app:layout_constraintTop_toBottomOf="@id/product_img"
+            android:text="@{product.name}"
+            app:layout_constraintTop_toBottomOf="@id/main_product_img"
             tools:text="상품이름" />
 
         <TextView
@@ -47,10 +50,18 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{@string/price_format(item.product.toPriceFormat())}"
+            android:text="@{@string/price_format(product.toMoneyFormat())}"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@id/product_title"
             tools:text="상품가격" />
+
+        <woowacourse.shopping.common_ui.ProductCounterView
+            android:id="@+id/counter_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/main_product_img"
+            android:layout_marginBottom="8dp"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,24 +1,28 @@
 package woowacourse.shopping.feature.cart
 
+import androidx.lifecycle.LiveData
+import woowacourse.shopping.model.CartBottomNavigationUiModel
 import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.model.PageUiModel
+import woowacourse.shopping.model.PageBottomNavigationUiModel
 
 interface CartContract {
     interface View {
-        fun changeCartProducts(newItems: List<CartProductUiModel>)
-        fun setPreviousButtonState(enabled: Boolean)
-        fun setNextButtonState(enabled: Boolean)
-        fun setCount(count: Int)
         fun exitCartScreen()
     }
 
     interface Presenter {
-        val page: PageUiModel
+        val currentPageCartProducts: LiveData<List<CartProductUiModel>>
+        val pageBottomNavigationUiModel: LiveData<PageBottomNavigationUiModel>
+        val cartBottomNavigationUiModel: LiveData<CartBottomNavigationUiModel>
         fun loadInitCartProduct()
-        fun deleteCartProduct(cartId: Long)
+        fun handleDeleteCartProduct(cartId: Long)
+        fun handleCartProductCartCountChange(cartId: Long, count: Int)
+        fun handlePurchaseSelectedCheckedChange(cartId: Long, checked: Boolean)
+        fun handleCurrentPageAllCheckedChange(checked: Boolean)
+        fun processOrder()
         fun loadPreviousPage()
         fun loadNextPage()
-        fun setPage(newPage: PageUiModel)
+        fun setPage(restorePage: Int)
         fun exit()
     }
 }

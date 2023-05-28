@@ -3,20 +3,46 @@ package woowacourse.shopping.feature.cart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.common_ui.CounterView
 import woowacourse.shopping.databinding.ItemCartProductBinding
+import woowacourse.shopping.model.CartProductUiModel
 
 class CartProductViewHolder private constructor(
-    private val binding: ItemCartProductBinding
+    private val binding: ItemCartProductBinding,
+    listener: CartProductClickListener
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(cartProduct: CartProductItemModel) {
-        binding.itemModel = cartProduct
+
+    init {
+        binding.listener = listener
+
+        binding.counterView.countStateChangeListener =
+            object : CounterView.OnCountStateChangeListener {
+                override fun onCountChanged(counterView: CounterView?, count: Int) {
+                    binding.cartProduct?.let { listener.onCartCountChanged(it.cartId, count) }
+                }
+            }
+
+        binding.purchaseCheckBox.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed.not()) return@setOnCheckedChangeListener
+            binding.cartProduct?.let { listener.onSelectedPurchaseChanged(it.cartId, isChecked) }
+        }
+    }
+
+    fun bind(cartProduct: CartProductUiModel) {
+        binding.cartProduct = cartProduct
+        binding.counterView.setCountState(cartProduct.productUiModel.count, false)
+
+        binding.purchaseCheckBox.isChecked = cartProduct.checked
     }
 
     companion object {
-        fun create(parent: ViewGroup): CartProductViewHolder {
+        fun create(
+            parent: ViewGroup,
+            cartProductClickListener: CartProductClickListener
+        ): CartProductViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = ItemCartProductBinding.inflate(layoutInflater, parent, false)
-            return CartProductViewHolder(binding)
+            return CartProductViewHolder(binding, cartProductClickListener)
         }
     }
 }

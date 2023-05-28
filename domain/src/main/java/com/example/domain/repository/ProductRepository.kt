@@ -5,7 +5,16 @@ import com.example.domain.model.Product
 
 interface ProductRepository {
     val cache: ProductCache
-    fun getFirstProducts(): List<Product>
-    fun getNextProducts(lastProductId: Long): List<Product>
+    fun fetchFirstProducts(
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: () -> Unit
+    )
+
+    fun fetchNextProducts(
+        lastProductId: Long,
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: () -> Unit
+    )
+
     fun resetCache()
 }

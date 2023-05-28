@@ -6,52 +6,82 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.SimpleItemAnimator
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.sql.cart.CartDao
+import woowacourse.shopping.data.dataSource.local.cart.CartDao
+import woowacourse.shopping.data.repository.local.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.CartProductUiModel
-import woowacourse.shopping.model.PageUiModel
+import woowacourse.shopping.util.toMoneyFormat
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var presenter: CartContract.Presenter
     private lateinit var cartProductAdapter: CartProductAdapter
 
+    private val cartProductClickListener: CartProductClickListener by lazy {
+        object : CartProductClickListener {
+            override fun onDeleteClick(cartId: Long) {
+                presenter.handleDeleteCartProduct(cartId)
+            }
+
+            override fun onCartCountChanged(cartId: Long, count: Int) {
+                presenter.handleCartProductCartCountChange(cartId, count)
+            }
+
+            override fun onSelectedPurchaseChanged(cartId: Long, checked: Boolean) {
+                presenter.handlePurchaseSelectedCheckedChange(cartId, checked)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        cartProductAdapter = CartProductAdapter()
+        cartProductAdapter = CartProductAdapter(cartProductClickListener)
         binding.cartItemRecyclerview.adapter = cartProductAdapter
+        initSetOnClickListener()
+
         presenter = CartPresenter(this, CartRepositoryImpl(CartDao(this)))
         presenter.loadInitCartProduct()
         binding.presenter = presenter
 
         supportActionBar?.title = getString(R.string.cart)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        setRecyclerViewAnimator()
+        observePresenter()
     }
 
-    override fun changeCartProducts(newItems: List<CartProductUiModel>) {
-        val newItemModels =
-            newItems.map { it.toItemModel { cartId -> presenter.deleteCartProduct(cartId) } }
-        cartProductAdapter.setItems(newItemModels)
+    private fun initSetOnClickListener() {
+        binding.allCheckView.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed.not()) return@setOnCheckedChangeListener
+            presenter.handleCurrentPageAllCheckedChange(isChecked)
+        }
     }
 
-    override fun setPreviousButtonState(enabled: Boolean) {
-        binding.previousPageBtn.isEnabled = enabled
+    private fun setRecyclerViewAnimator() {
+        val animator = binding.cartItemRecyclerview.itemAnimator
+        if (animator is SimpleItemAnimator) {
+            animator.supportsChangeAnimations = false
+        }
     }
 
-    override fun setNextButtonState(enabled: Boolean) {
-        binding.nextPageBtn.isEnabled = enabled
+    private fun observePresenter() {
+        presenter.currentPageCartProducts.observe(this) { cartProductAdapter.setItems(it) }
+        presenter.pageBottomNavigationUiModel.observe(this) {
+            binding.previousPageBtn.isEnabled = it.hasPreviousPage
+            binding.nextPageBtn.isEnabled = it.hasNextPage
+            binding.pageCountTextView.text = it.currentPageNumber.toString()
+        }
+        presenter.cartBottomNavigationUiModel.observe(this) {
+            binding.allCheckView.isChecked = it.isCurrentPageAllChecked
+            binding.orderCount = it.checkedCount
+            binding.orderConfirmView.isEnabled = it.isAnyChecked
+            binding.money = it.totalCheckedMoney.toMoneyFormat()
+        }
     }
 
-    override fun setCount(count: Int) {
-        binding.pageCountTextView.text = count.toString()
-    }
-
-    override fun exitCartScreen() {
-        finish()
-    }
+    override fun exitCartScreen() = finish()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -66,20 +96,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(CURRENT_PAGE_KEY, presenter.page.currentPage)
-        outState.putInt(ALL_SIZE_KEY, presenter.page.allSize)
+        outState.putInt(
+            CURRENT_PAGE_KEY,
+            presenter.pageBottomNavigationUiModel.value?.currentPageNumber ?: 1
+        )
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val currentPage = savedInstanceState.getInt(CURRENT_PAGE_KEY)
-        val allSize = savedInstanceState.getInt(ALL_SIZE_KEY)
-        presenter.setPage(PageUiModel(allSize, currentPage))
+        presenter.setPage(currentPage)
     }
 
     companion object {
         private const val CURRENT_PAGE_KEY = "CURRENT_PAGE_KEY"
-        private const val ALL_SIZE_KEY = "ALL_SIZE_KEY"
 
         fun getIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)

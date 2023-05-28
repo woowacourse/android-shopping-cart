@@ -1,15 +1,16 @@
 package woowacourse.shopping.feature.main.load
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.databinding.ItemLoadMoreProductBinding
 
 class LoadAdapter(
     val onClick: () -> Unit
 ) : RecyclerView.Adapter<LoadViewHolder>() {
+    private lateinit var loadViewHolder: LoadViewHolder
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoadViewHolder {
-        return LoadViewHolder.create(parent)
+        loadViewHolder = LoadViewHolder.create(parent)
+        return loadViewHolder
     }
 
     override fun getItemCount(): Int = 1
@@ -21,6 +22,8 @@ class LoadAdapter(
     override fun getItemViewType(position: Int): Int {
         return VIEW_TYPE
     }
+
+    fun hide() = loadViewHolder.hide()
 
     companion object {
         const val VIEW_TYPE = 333

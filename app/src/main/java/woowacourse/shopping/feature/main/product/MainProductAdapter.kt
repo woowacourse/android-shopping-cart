@@ -1,34 +1,46 @@
 package woowacourse.shopping.feature.main.product
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import woowacourse.shopping.model.ProductUiModel
 
 class MainProductAdapter(
-    items: List<MainProductItemModel>
-) : RecyclerView.Adapter<MainProductViewHolder>() {
-    private val _items = items.toMutableList()
-
+    private val listener: ProductClickListener
+) : ListAdapter<ProductUiModel, MainProductViewHolder>(ProductDiffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainProductViewHolder {
-        return MainProductViewHolder.create(parent)
+        return MainProductViewHolder.create(parent, listener)
     }
 
-    override fun getItemCount(): Int = _items.size
-
     override fun onBindViewHolder(holder: MainProductViewHolder, position: Int) {
-        holder.bind(_items[position])
+        holder.bind(getItem(position))
     }
 
     override fun getItemViewType(position: Int): Int {
         return VIEW_TYPE
     }
 
-    fun addItems(newItems: List<MainProductItemModel>) {
-        val preSize = _items.size
-        _items.addAll(newItems.toList())
-        notifyItemRangeInserted(preSize, newItems.size)
+    fun setItems(newItems: List<ProductUiModel>) {
+        submitList(newItems)
     }
 
     companion object {
         const val VIEW_TYPE = 222
+
+        private val ProductDiffUtil = object : DiffUtil.ItemCallback<ProductUiModel>() {
+            override fun areItemsTheSame(
+                oldItem: ProductUiModel,
+                newItem: ProductUiModel
+            ): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(
+                oldItem: ProductUiModel,
+                newItem: ProductUiModel
+            ): Boolean {
+                return oldItem == newItem
+            }
+        }
     }
 }
