@@ -1,6 +1,7 @@
 package woowacourse.shopping.data
 
 import com.domain.model.Product
+import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -43,14 +44,9 @@ object ProductService {
         val jsonProducts = JSONObject(json).getJSONObject("data").getJSONArray("products")
 
         for (i in 0 until jsonProducts.length()) {
-            val jsonProduct = jsonProducts.getJSONObject(i)
+            val jsonProduct: JSONObject = jsonProducts.getJSONObject(i)
+            val product: Product = Gson().fromJson(jsonProduct.toString(), Product::class.java)
 
-            val id = jsonProduct.getInt("id")
-            val name = jsonProduct.getString("name")
-            val imageUrl = jsonProduct.getString("imageUrl")
-            val price = jsonProduct.getInt("price")
-
-            val product = Product(id, name, price, imageUrl)
             products.add(product)
         }
 
