@@ -6,6 +6,11 @@
     <data>
 
         <variable
+            name="setClickListener"
+            type="woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener" />
+
+
+        <variable
             name="shoppingCart"
             type="woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ShoppingCartUiState" />
 
@@ -122,6 +127,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:checked="@{shoppingCart.checkedAll}"
+                android:onCheckedChanged="@{(_,isChecked) -> setClickListener.setClickEventOnCheckAll(isChecked)}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

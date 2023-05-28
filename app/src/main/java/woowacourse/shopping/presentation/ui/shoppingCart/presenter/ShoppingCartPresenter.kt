@@ -14,7 +14,12 @@ class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ShoppingCartContract.Presenter {
+    private val checkState: MutableMap<ProductInCart, Boolean> = saveProductCheckState()
     private var pageNumber = PageNumber()
+
+    init {
+        saveProductCheckState()
+    }
 
     private fun saveProductCheckState(): MutableMap<ProductInCart, Boolean> {
         val shoppingCart = shoppingCartRepository.getShoppingCart()
@@ -34,12 +39,11 @@ class ShoppingCartPresenter(
         view.setShoppingCart(productsInCartByPage.map { it.toProductInCartUiState() })
     }
 
-    override fun fetchTotalPriceByCheckAll() {
+    override fun fetchTotalPrice() {
         val productCheckState = saveProductCheckState()
         val isCheckedAll = productCheckState.values.all { it }
-        val totalPrice = productCheckState.asSequence().filter { it.value }
-            .sumOf { it.key.getTotalPriceOfProduct() }
-        val amount = productCheckState.asSequence().filter { it.value }.sumOf { it.key.quantity }
+        val totalPrice = productCheckState.getSumOf(PRICE)
+        val amount = productCheckState.getSumOf(AMOUNT)
 
         view.setTotalPrice(
             ShoppingCartUiState(
@@ -47,6 +51,25 @@ class ShoppingCartPresenter(
                 totalPrice = totalPrice,
                 amount = amount,
             ),
+        )
+    }
+
+    override fun fetchTotalPriceByCheckAll(isChecked: Boolean) {
+        val productCheckState = saveProductCheckState()
+        val totalPrice = if (isChecked) productCheckState.getSumOf(PRICE) else NOTHING
+        val amount = if (isChecked) productCheckState.getSumOf(AMOUNT) else NOTHING
+
+        checkState.replaceAll { _, _ -> isChecked }
+
+        view.setTotalPrice(
+            ShoppingCartUiState(
+                isCheckedAll = isChecked,
+                totalPrice = totalPrice,
+                amount = amount,
+            ),
+        )
+        view.setShoppingCart(
+            shoppingCartRepository.getShoppingCart().map { it.toProductInCartUiState() },
         )
     }
 
@@ -71,6 +94,9 @@ class ShoppingCartPresenter(
 
     override fun deleteProductInCart(productId: Long) {
         val result = shoppingCartRepository.deleteProductInCart(productId)
+
+        checkState.clear()
+        checkState.putAll(saveProductCheckState())
 
         view.deleteItemInCart(result, productId)
     }
@@ -121,10 +147,23 @@ class ShoppingCartPresenter(
     private fun ProductInCart.toProductInCartUiState(): ProductInCartUiState = ProductInCartUiState(
         product = this.product,
         quantity = this.quantity,
-        isChecked = this.isChecked,
+        isChecked = checkState.values.all { it },
     )
 
+    private fun MutableMap<ProductInCart, Boolean>.getSumOf(demand: String): Int {
+        val sequence = this.asSequence().filter { it.value }
+
+        return when (demand) {
+            PRICE -> sequence.sumOf { it.key.getTotalPriceOfProduct() }
+            AMOUNT -> sequence.sumOf { it.key.quantity }
+            else -> throw IllegalArgumentException()
+        }
+    }
+
     companion object {
+        private const val PRICE = "price"
+        private const val AMOUNT = "amount"
+        private const val NOTHING = 0
         private const val SHOPPING_CART_ITEM_COUNT = 5
     }
 }

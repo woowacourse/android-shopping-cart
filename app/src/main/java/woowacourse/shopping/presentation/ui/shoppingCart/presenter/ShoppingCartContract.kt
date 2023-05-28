@@ -19,7 +19,8 @@ interface ShoppingCartContract {
 
     interface Presenter {
         fun fetchProductsInCartByPage(page: Int)
-        fun fetchTotalPriceByCheckAll()
+        fun fetchTotalPrice()
+        fun fetchTotalPriceByCheckAll(isChecked: Boolean)
         fun setPageNumber()
         fun goNextPage()
         fun goPreviousPage()

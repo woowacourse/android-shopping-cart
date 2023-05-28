@@ -34,6 +34,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun setTotalPrice(shoppingCart: ShoppingCartUiState) {
         binding.shoppingCart = shoppingCart
+        binding.setClickListener = setUpClickListener()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +53,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private fun initView() {
         presenter.fetchProductsInCartByPage(INIT_PAGE)
-        presenter.fetchTotalPriceByCheckAll()
+        presenter.fetchTotalPrice()
         presenter.setPageNumber()
         presenter.checkPageMovement()
     }
@@ -107,7 +108,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             }
 
             presenter.addCountOfProductInCart(request, productInCart)
-            presenter.fetchTotalPriceByCheckAll()
+            presenter.fetchTotalPrice()
         }
 
         override fun setClickEventOnCheckBox(
@@ -115,6 +116,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             productInCart: ProductInCartUiState,
         ) {
             presenter.calculateTotalWithCheck(isChecked, productInCart)
+        }
+
+        override fun setClickEventOnCheckAll(isChecked: Boolean) {
+            presenter.fetchTotalPriceByCheckAll(isChecked)
         }
     }
 
@@ -125,7 +130,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     private fun setEventOnDelete(productInCart: ProductInCartUiState) {
         presenter.deleteProductInCart(productInCart.product.id)
-        presenter.fetchTotalPriceByCheckAll()
+        presenter.fetchTotalPrice()
     }
 
     override fun deleteItemInCart(result: Boolean, productId: Long) {
