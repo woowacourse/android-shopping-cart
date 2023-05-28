@@ -8,6 +8,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.shopping.domain.CartRepository
+import com.shopping.domain.RecentRepository
 import woowacourse.shopping.BundleKeys
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
@@ -32,9 +34,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         val productData =
             intent.getSerializableCompat(BundleKeys.KEY_PRODUCT) ?: ProductUIModel.dummy
-        val recentRepository =
+        val recentRepository: RecentRepository =
             RecentProductDBRepository(RecentProductDBHelper(this).writableDatabase)
-        val cartRepository = CartDBRepository(CartDBHelper(this).writableDatabase)
+        val cartRepository: CartRepository = CartDBRepository(CartDBHelper(this).writableDatabase)
 
         presenter = ProductDetailPresenter(this, productData, recentRepository, cartRepository)
         binding.presenter = presenter
@@ -65,6 +67,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

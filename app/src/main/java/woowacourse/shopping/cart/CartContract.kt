@@ -8,6 +8,8 @@ interface CartContract {
         fun showPageNumber(page: Int)
         fun removeAdapterData(cartProductUIModel: CartProductUIModel, position: Int)
         fun refreshAllChecked(isChecked: Boolean)
+        fun setTotalPrice(price: Int)
+        fun setOrderProductTypeCount(productTypeCount: Int)
     }
 
     interface Presenter {

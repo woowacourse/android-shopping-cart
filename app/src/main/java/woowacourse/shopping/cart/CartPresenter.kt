@@ -1,8 +1,5 @@
 package woowacourse.shopping.cart
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.shopping.domain.Cart
 import com.shopping.domain.CartRepository
 import com.shopping.domain.PageNumber
@@ -17,11 +14,6 @@ class CartPresenter(
     private var pageNumber = PageNumber()
     private var cart = Cart()
     private var recentPageProducts = Cart()
-
-    private val _totalPrice: MutableLiveData<Int> = MutableLiveData(0)
-    val totalPrice: LiveData<Int> get() = _totalPrice
-    private val _totalPickedProductsCount: MutableLiveData<Int> = MutableLiveData(0)
-    val totalPickedProductsCount: LiveData<Int> get() = _totalPickedProductsCount
 
     override fun getCartProducts() {
         val cartProducts = cartRepository.getUnitData(CART_UNIT_SIZE, pageNumber.value)
@@ -80,10 +72,7 @@ class CartPresenter(
     }
 
     override fun calculateTotalPrice() {
-        _totalPrice.value = cart.getPickedProductsTotalPrice()
-        Log.d("bandal", "${_totalPrice.value}")
-        Log.d("bandal", "${cart.products.map { it.product.name to it.isPicked }}")
-        Log.d("bandal", "${recentPageProducts.products.map {it.product.name to it.isPicked }}")
+        view.setTotalPrice(cart.getPickedProductsTotalPrice())
     }
 
     override fun updateIsPickAllProduct(isPicked: Boolean) {
@@ -103,7 +92,7 @@ class CartPresenter(
     }
 
     override fun updateCountOfProductType() {
-        _totalPickedProductsCount.value = cart.getTotalPickedProductsCount()
+        view.setOrderProductTypeCount(cart.getTotalPickedProductsCount())
     }
 
     override fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int) {

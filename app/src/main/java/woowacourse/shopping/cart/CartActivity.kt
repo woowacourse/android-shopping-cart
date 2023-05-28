@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.shopping.domain.CartRepository
 import woowacourse.shopping.BundleKeys
 import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.R
@@ -27,8 +28,8 @@ class CartActivity :
     private lateinit var binding: ActivityCartBinding
     private val adapter: CartRecyclerViewAdapter =
         CartRecyclerViewAdapter(this, this, this)
-    private lateinit var presenter: CartPresenter
-    private val repository: CartDBRepository by lazy { CartDBRepository(CartDBHelper(this).writableDatabase) }
+    private lateinit var presenter: CartContract.Presenter
+    private val repository: CartRepository by lazy { CartDBRepository(CartDBHelper(this).writableDatabase) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,16 +38,8 @@ class CartActivity :
         initPresenter()
         initCartList()
         initSetOnClickListener()
-        showTotalPrice()
-        showTotalPickedProductsCount()
         initAdapter()
         setOnAllCheckedChangeListener()
-    }
-
-    private fun showTotalPickedProductsCount() {
-        presenter.totalPickedProductsCount.observe(this) {
-            binding.btOrder.text = getString(R.string.cart_order_button_text, it)
-        }
     }
 
     private fun setOnAllCheckedChangeListener() {
@@ -127,12 +120,6 @@ class CartActivity :
         binding.cbAllChecked.isChecked = isChecked
     }
 
-    private fun showTotalPrice() {
-        presenter.totalPrice.observe(this) {
-            binding.tvTotalPrice.text = getString(R.string.formatted_price, it)
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) finish()
         return super.onOptionsItemSelected(item)
@@ -142,6 +129,14 @@ class CartActivity :
         val intent = ProductDetailActivity.getIntent(this)
         intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
         startActivity(intent)
+    }
+
+    override fun setTotalPrice(price: Int) {
+        binding.tvTotalPrice.text = getString(R.string.formatted_price, price)
+    }
+
+    override fun setOrderProductTypeCount(productTypeCount: Int) {
+        binding.btOrder.text = getString(R.string.cart_order_button_text, productTypeCount)
     }
 
     override fun onChangedIsPicked(cartProductUIModel: CartProductUIModel, isPicked: Boolean) {
