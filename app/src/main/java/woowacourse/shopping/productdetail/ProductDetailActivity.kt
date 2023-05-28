@@ -43,7 +43,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun showCartPage() {
-        startActivity(CartActivity.intent(binding.root.context))
+        startActivity(CartActivity.getIntent(binding.root.context))
     }
 
     override fun setLatestProductVisibility() {
@@ -70,7 +70,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     companion object {
-        fun intent(context: Context): Intent {
+        fun getIntent(context: Context): Intent {
             return Intent(context, ProductDetailActivity::class.java)
         }
     }

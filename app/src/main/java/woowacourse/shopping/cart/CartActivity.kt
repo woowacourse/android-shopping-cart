@@ -139,7 +139,7 @@ class CartActivity :
     }
 
     override fun onProductClick(productUIModel: ProductUIModel) {
-        val intent = ProductDetailActivity.intent(this)
+        val intent = ProductDetailActivity.getIntent(this)
         intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
         startActivity(intent)
     }
@@ -154,6 +154,6 @@ class CartActivity :
     }
 
     companion object {
-        fun intent(context: Context) = Intent(context, CartActivity::class.java)
+        fun getIntent(context: Context) = Intent(context, CartActivity::class.java)
     }
 }

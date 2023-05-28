@@ -77,7 +77,7 @@ class ProductCatalogueActivity :
         presenter.updateCartCount()
 
         binding.ivCart.setOnClickListener {
-            startActivity(CartActivity.intent(this))
+            startActivity(CartActivity.getIntent(this))
         }
     }
 
@@ -102,7 +102,7 @@ class ProductCatalogueActivity :
     }
 
     override fun onProductClick(productUIModel: ProductUIModel) {
-        val intent = ProductDetailActivity.intent(this)
+        val intent = ProductDetailActivity.getIntent(this)
         intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
         startActivity(intent)
     }
@@ -110,7 +110,6 @@ class ProductCatalogueActivity :
     override fun onDownClicked(cartProduct: CartProductUIModel, countView: TextView) {
         val count = countView.text.toString().toInt() - 1
         presenter.decreaseCartProductCount(cartProduct, count)
-        // presenter에서 관리하도록 변경, 다만 뷰에 일시키는 것을 어케할지 관건
         presenter.updateCartCount()
     }
 
