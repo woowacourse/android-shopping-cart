@@ -71,9 +71,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         if (isRecentProduct || product == null) {
             binding.recentViewedProduct.visibility = View.GONE
         } else {
-            binding.textRecentProductName.text = product.name
-            binding.textRecentProductPrice.text =
-                getString(R.string.price_format, product.toPriceFormat())
+            binding.product = product
             binding.recentViewedProduct.setOnClickListener {
                 navigateToRecentProductView(product)
             }
