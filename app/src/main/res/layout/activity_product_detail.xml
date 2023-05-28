@@ -5,13 +5,17 @@
 
     <data>
 
+        <import type="woowacourse.shopping.util.PriceFormatter" />
+
+        <import type="android.view.View" />
+
         <variable
             name="product"
             type="woowacourse.shopping.model.ProductModel" />
 
         <variable
-            name="presenter"
-            type="woowacourse.shopping.view.productdetail.ProductDetailContract.Presenter" />
+            name="last_viewed_product"
+            type="woowacourse.shopping.model.ProductModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,22 +73,76 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
+            android:text="@{@string/korean_won2(product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/text_price_label"
             tools:text="99,800원" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_last_viewed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginVertical="29dp"
+            android:background="@drawable/back_rounded"
+            android:padding="18dp"
+            android:visibility="@{product.id == last_viewed_product.id || last_viewed_product == null ? View.INVISIBLE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_price_label">
+
+            <TextView
+                android:id="@+id/text_viewed_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/product_viewed_last"
+                android:textColor="@color/mint"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_product_name_viewed_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@{last_viewed_product.name}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_viewed_last"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <TextView
+                android:id="@+id/text_price_viewed_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/korean_won2(last_viewed_product.price)}"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/text_product_name_viewed_last"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_product_name_viewed_last"
+                tools:text="10,000원" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <Button
             android:id="@+id/btn_put_in_cart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/mint"
-            android:onClick="@{()->presenter.putInCart(product)}"
+            android:background="@drawable/back_rectangle"
+            android:backgroundTint="@color/mint"
             android:text="@string/put_in_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

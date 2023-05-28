@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="woowacourse.shopping.view.productdetail.ProductDetailContract.Presenter" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.ProductModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="14dp">
+
+        <TextView
+            android:id="@+id/text_product_name_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="[든든] 동원 스위트콘" />
+
+        <TextView
+            android:id="@+id/text_price_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@{@string/korean_won2(product.price)}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_product_name_selected"
+            tools:text="99,900원" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/back_left_rounded"
+            android:onClick="@{() -> presenter.minusCount()}"
+            android:text="@string/minus"
+            android:textColor="@color/gray"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/text_count"
+            app:layout_constraintEnd_toStartOf="@id/text_count"
+            app:layout_constraintTop_toTopOf="@id/text_count" />
+
+        <TextView
+            android:id="@+id/text_count"
+            android:layout_width="42dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="@{presenter.count.toString()}"
+            android:textColor="@color/gray"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_plus"
+            app:layout_constraintEnd_toStartOf="@id/btn_plus"
+            app:layout_constraintTop_toTopOf="@id/btn_plus" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/back_right_rounded"
+            android:onClick="@{() -> presenter.plusCount()}"
+            android:text="@string/plus"
+            android:textColor="@color/gray"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_to_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_price_selected" />
+
+        <Button
+            android:id="@+id/btn_add_to_cart"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/mint"
+            android:onClick="@{() -> presenter.putInCart(product)}"
+            android:text="@string/add_to_cart"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

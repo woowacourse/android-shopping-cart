@@ -1,4 +1,4 @@
-package woowacourse.shopping.model
+package woowacourse.shopping.domain.pagination
 
 interface NextPagination<T> {
     val isNextEnabled: Boolean

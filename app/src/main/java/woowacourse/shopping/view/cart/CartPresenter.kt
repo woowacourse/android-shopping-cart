@@ -1,65 +1,160 @@
 package woowacourse.shopping.view.cart
 
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.CartRepository
-import woowacourse.shopping.domain.ProductRepository
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import woowacourse.shopping.domain.cartsystem.CartPageStatus
+import woowacourse.shopping.domain.cartsystem.CartSystem
+import woowacourse.shopping.domain.cartsystem.CartSystemResult
+import woowacourse.shopping.domain.model.CartProduct
+import woowacourse.shopping.domain.pagination.CartPagination
+import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.model.CartProductModel
+import woowacourse.shopping.model.toDomain
 import woowacourse.shopping.model.toUiModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository
+    private val productRepository: ProductRepository,
 ) : CartContract.Presenter {
     private val cartPagination = CartPagination(PAGINATION_SIZE, cartRepository)
+    private val cartSystem = CartSystem(productRepository)
+    private val cartItems: MutableList<CartViewItem>
 
-    private val currentCartProducts =
-        convertToCartProductModels(cartPagination.nextItems()).toMutableList()
-    private val cartItems =
-        (
-            currentCartProducts.map { CartViewItem.CartProductItem(it) } +
+    override val cartSystemResult: LiveData<CartSystemResult>
+        get() = _cartSystemResult
+    private var _cartSystemResult = MutableLiveData(CartSystemResult(0, 0))
+
+    override val cartPageStatus: LiveData<CartPageStatus>
+        get() = _cartPageStatus
+    private var _cartPageStatus = MutableLiveData(
+        CartPageStatus(isPrevEnabled = false, isNextEnabled = false, 0),
+    )
+
+    override val isCheckedAll: LiveData<Boolean>
+        get() = _isCheckedAll
+    private var _isCheckedAll = MutableLiveData(false)
+
+    init {
+        val models = convertCartProductToModels(cartPagination.nextItems())
+        cartItems = (
+            models.map { CartViewItem.CartProductItem(it) } +
                 CartViewItem.PaginationItem(cartPagination.status)
             ).toMutableList()
+    }
 
     override fun fetchProducts() {
         view.showProducts(cartItems)
     }
 
     override fun removeProduct(id: Int) {
-        val removedItem = currentCartProducts.find { it.id == id }
+        val nextItemExist = cartPagination.isNextEnabled
         cartRepository.remove(id)
-        view.notifyRemoveItem(currentCartProducts.indexOf(removedItem))
-        cartItems.removeAt(currentCartProducts.indexOf(removedItem))
-        currentCartProducts.remove(removedItem)
+        cartItems.removeIf { it is CartViewItem.CartProductItem && it.product.id == id }
+        _cartSystemResult.value = cartSystem.removeProduct(id)
+        _isCheckedAll.value = getIsCheckedAll()
+
+        // 남은 자리 페이지 뒷 상품으로 다시 채우기
+        if (nextItemExist) addNextProduct()
+        view.showChangedItems()
+    }
+
+    private fun addNextProduct() {
+        cartItems.removeLast()
+        getNextCartProductModel()?.let {
+            cartItems.add(CartViewItem.CartProductItem(it))
+        }
+        cartItems.add(CartViewItem.PaginationItem(cartPagination.status))
+        _isCheckedAll.value = getIsCheckedAll()
+    }
+
+    private fun getIsCheckedAll() =
+        cartSystem.selectedProducts.containsAll(convertItemsToCartProducts(cartItems))
+
+    private fun getNextCartProductModel(): CartProductModel? {
+        val product = cartPagination.currentLastItem() ?: return null
+        return product.toUiModel(
+            cartSystem.isSelectedProduct(product),
+            productRepository.find(product.id),
+        )
+    }
+
+    override fun checkProductsAll() {
+        val isChecked = _isCheckedAll.value?.not() ?: true
+
+        cartItems.filterIsInstance<CartViewItem.CartProductItem>().forEachIndexed { index, it ->
+            cartItems[index] = CartViewItem.CartProductItem(it.product.copy(isChecked = isChecked))
+            view.showChangedItem(index)
+        }
+
+        val products = if (isChecked) { // 전체 선택
+            convertItemsToCartProducts(cartItems) - cartSystem.selectedProducts.toSet()
+        } else { // 전체 해제
+            convertItemsToCartProducts(cartItems).intersect(cartSystem.selectedProducts.toSet())
+        }
+        var result: CartSystemResult? = _cartSystemResult.value
+        products.forEach {
+            result = cartSystem.selectProduct(it)
+        }
+        _cartSystemResult.value = result
+        _isCheckedAll.value = isChecked
+    }
+
+    override fun checkProduct(product: CartProductModel) {
+        _cartSystemResult.value = cartSystem.selectProduct(product.toDomain())
+        _isCheckedAll.value = getIsCheckedAll()
     }
 
     override fun fetchNextPage() {
         val items = cartPagination.nextItems()
         if (items.isNotEmpty()) {
             changeListItems(items)
-            view.showOtherPage()
+            view.showChangedItems()
         }
+        _isCheckedAll.value = getIsCheckedAll()
     }
 
     override fun fetchPrevPage() {
         val items = cartPagination.prevItems()
         if (items.isNotEmpty()) {
             changeListItems(items)
-            view.showOtherPage()
+            view.showChangedItems()
         }
+        _isCheckedAll.value = getIsCheckedAll()
     }
 
-    private fun convertToCartProductModels(cartProducts: List<CartProduct>) =
-        cartProducts.asSequence().map { it.toUiModel(productRepository.find(it.id)) }.toList()
-
     private fun changeListItems(items: List<CartProduct>) {
-        currentCartProducts.clear()
-        currentCartProducts.addAll(convertToCartProductModels(items))
+        val models = convertCartProductToModels(items)
         cartItems.clear()
-        cartItems.addAll(currentCartProducts.map { CartViewItem.CartProductItem(it) })
+        cartItems.addAll(models.map { CartViewItem.CartProductItem(it) })
         cartItems.add(CartViewItem.PaginationItem(cartPagination.status))
     }
 
+    override fun updateCartProductCount(id: Int, count: Int) {
+        if (count < COUNT_MIN) return
+        cartRepository.update(id, count)
+        val cartProducts = convertItemsToCartProducts(cartItems)
+        cartProducts.find { it.id == id }?.let {
+            val index = cartProducts.indexOf(it)
+            cartItems[index] = CartViewItem.CartProductItem(
+                (cartItems[index] as CartViewItem.CartProductItem).product.copy(count = count),
+            )
+            view.showChangedItem(index)
+            _cartSystemResult.value = cartSystem.updateProduct(id, count)
+        }
+    }
+
+    private fun convertCartProductToModels(cartProducts: List<CartProduct>) =
+        cartProducts.map {
+            it.toUiModel(cartSystem.isSelectedProduct(it), productRepository.find(it.id))
+        }.toMutableList()
+
+    private fun convertItemsToCartProducts(items: List<CartViewItem>): List<CartProduct> =
+        items.filterIsInstance<CartViewItem.CartProductItem>().map { it.product.toDomain() }
+
     companion object {
         private const val PAGINATION_SIZE = 5
+        private const val COUNT_MIN = 1
     }
 }

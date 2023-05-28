@@ -1,4 +1,4 @@
-package woowacourse.shopping.model
+package woowacourse.shopping.domain.cartsystem
 
 data class CartPageStatus(
     val isPrevEnabled: Boolean,

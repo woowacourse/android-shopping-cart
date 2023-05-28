@@ -1,8 +1,8 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.repository
 
 import android.content.Context
 import woowacourse.shopping.data.db.RecentViewedDBHelper
-import woowacourse.shopping.domain.RecentViewedRepository
+import woowacourse.shopping.domain.repository.RecentViewedRepository
 
 class RecentViewedDbRepository(context: Context) :
     RecentViewedRepository {

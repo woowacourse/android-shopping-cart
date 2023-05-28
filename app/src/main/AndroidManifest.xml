@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -19,7 +20,7 @@
         <activity
             android:name=".view.cart.CartActivity"
             android:exported="false"
-            android:label="Cart" />
+            android:label="@string/label_cart" />
         <activity
             android:name=".view.productlist.ProductListActivity"
             android:exported="true">

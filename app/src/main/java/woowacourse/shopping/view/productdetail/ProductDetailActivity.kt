@@ -7,67 +7,97 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.RecentViewedDbRepository
+import woowacourse.shopping.data.repository.CartDbRepository
+import woowacourse.shopping.data.repository.RecentViewedDbRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.databinding.DialogCountBinding
 import woowacourse.shopping.model.ProductModel
-import woowacourse.shopping.util.PriceFormatter
 import woowacourse.shopping.util.getParcelableCompat
-import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.ID
+import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_ADDED
 import woowacourse.shopping.view.productlist.ProductListActivity.Companion.RESULT_VIEWED
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
-    private lateinit var binding: ActivityProductDetailBinding
-    private lateinit var presenter: ProductDetailContract.Presenter
+    private val product by lazy { intent.getParcelableCompat<ProductModel>(PRODUCT) }
+    private val lastViewedProduct by lazy { intent.getParcelableCompat<ProductModel>(LAST_VIEWED_PRODUCT) }
+    private val productDetailBinding: ActivityProductDetailBinding by lazy {
+        ActivityProductDetailBinding.inflate(layoutInflater)
+    }
+    private val dialogBinding: DialogCountBinding by lazy {
+        DialogCountBinding.inflate(layoutInflater)
+    }
+    private val dialog: AlertDialog by lazy {
+        AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .create()
+    }
+    private val presenter: ProductDetailContract.Presenter by lazy {
+        ProductDetailPresenter(
+            INITIAL_COUNT,
+            product,
+            lastViewedProduct,
+            this,
+            CartDbRepository(this),
+            RecentViewedDbRepository(this),
+        )
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setUpPresenter()
-        setUpBinding()
-        setContentView(binding.root)
-        val product = intent.getParcelableCompat<ProductModel>(PRODUCT)
-        if (product == null) {
-            forceQuit()
-            return
-        }
-        setUpInitView(product)
-        setUpResult(product.id)
-        presenter.updateRecentViewedProducts(product.id)
+        setContentView(productDetailBinding.root)
+        presenter.fetchProduct()
+        intent.putExtra(ID, product?.id)
     }
 
-    private fun setUpBinding() {
-        binding = ActivityProductDetailBinding.inflate(layoutInflater)
-    }
-
-    private fun setUpPresenter() {
-        presenter =
-            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
-    }
-
-    private fun forceQuit() {
+    override fun forceQuit() {
         Toast.makeText(this, NOT_EXIST_DATA_ERROR, Toast.LENGTH_LONG).show()
         finish()
     }
 
-    private fun setUpInitView(product: ProductModel) {
-        binding.product = product
-        binding.presenter = presenter
-        Glide.with(binding.root.context).load(product.imageUrl).into(binding.imgProduct)
-        binding.textPrice.text =
-            getString(R.string.korean_won, PriceFormatter.format(product.price))
+    override fun setUpProductDetailView(product: ProductModel) {
+        productDetailBinding.product = product
+        Glide.with(productDetailBinding.root.context).load(product.imageUrl)
+            .into(productDetailBinding.imgProduct)
+        productDetailBinding.btnPutInCart.setOnClickListener {
+            dialog.show()
+        }
     }
 
-    private fun setUpResult(id: Int) {
-        intent.putExtra(ID, id)
-        setResult(RESULT_VIEWED, intent)
+    override fun setUpLastViewedProductView(lastViewedProduct: ProductModel) {
+        productDetailBinding.lastViewedProduct = lastViewedProduct
+        productDetailBinding.layoutLastViewed.setOnClickListener {
+            startLastViewedDetailActivity(lastViewedProduct)
+        }
     }
 
-    override fun startCartActivity() {
-        val intent = CartActivity.newIntent(this)
-        startActivity(intent)
+    override fun setUpDialogBinding(product: ProductModel) {
+        dialogBinding.lifecycleOwner = this
+        dialogBinding.presenter = presenter
+        dialogBinding.product = product
+    }
+
+    private fun setUpResult(isAdd: Boolean) {
+        if (isAdd) {
+            setResult(RESULT_ADDED, intent)
+        } else {
+            setResult(RESULT_VIEWED, intent)
+        }
+    }
+
+    override fun finishActivity(isAdd: Boolean) {
+        setUpResult(isAdd)
+        dialog.dismiss()
+        finish()
+    }
+
+    private fun startLastViewedDetailActivity(lastViewedProduct: ProductModel) {
+        val nextIntent = newIntent(this, lastViewedProduct, null)
+        nextIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(nextIntent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -79,19 +109,26 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.close -> {
-                finish()
+                finishActivity(false)
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     companion object {
+        private const val INITIAL_COUNT = 1
         const val PRODUCT = "PRODUCT"
+        const val LAST_VIEWED_PRODUCT = "LAST_VIEWED"
         private const val NOT_EXIST_DATA_ERROR = "데이터가 넘어오지 않았습니다."
 
-        fun newIntent(context: Context, product: ProductModel): Intent {
+        fun newIntent(
+            context: Context,
+            product: ProductModel,
+            lastViewedProduct: ProductModel?,
+        ): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(PRODUCT, product)
+            intent.putExtra(LAST_VIEWED_PRODUCT, lastViewedProduct)
             return intent
         }
     }
