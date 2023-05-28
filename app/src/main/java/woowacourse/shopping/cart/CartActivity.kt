@@ -153,11 +153,6 @@ class CartActivity :
         presenter.getCartProducts()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        repository.close()
-    }
-
     companion object {
         fun intent(context: Context) = Intent(context, CartActivity::class.java)
     }
