@@ -25,7 +25,6 @@ import woowacourse.shopping.productdetail.contract.ProductDetailContract
 import woowacourse.shopping.productdetail.contract.presenter.ProductDetailPresenter
 import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.utils.keyError
-import java.text.DecimalFormat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
@@ -47,7 +46,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.cartButton.setOnClickListener {
             presenter.onClickCart()
         }
-        binding.recentProduct.setOnClickListener {
+        binding.recentProductLayout.setOnClickListener {
             val intent = Intent(this, ProductDetailActivity::class.java)
             intent.putExtra(KEY_PRODUCT, product)
             intent.flags = FLAG_ACTIVITY_CLEAR_TOP
@@ -99,14 +98,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun disappearRecent() {
-        binding.recentProduct.visibility = View.GONE
+        binding.recentProductLayout.visibility = View.GONE
     }
 
     override fun displayRecent(product: ProductUIModel) {
-        binding.recentProduct.visibility = View.VISIBLE
-        binding.recentProductName.text = product.name
-        binding.recentProductPrice.text =
-            getString(R.string.product_price, DecimalFormat("#,###").format(product.price))
+        binding.recentProduct = product
+        binding.recentProductLayout.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
