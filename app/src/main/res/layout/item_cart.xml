@@ -7,7 +7,7 @@
 
         <variable
             name="cartProduct"
-            type="woowacourse.shopping.model.ProductModel" />
+            type="woowacourse.shopping.model.CartProductModel" />
 
         <variable
             name="onItemClick"
@@ -27,45 +27,65 @@
             android:id="@+id/text_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{cartProduct.name}"
+            android:layout_marginStart="11dp"
+            android:text="@{cartProduct.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cart_check"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="동원참치" />
 
         <ImageView
             android:id="@+id/img_product"
-            setImage="@{cartProduct.imageUrl}"
+            setImage="@{cartProduct.product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="26dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/text_product_name"
+            app:layout_constraintStart_toStartOf="@+id/cart_check"
             app:layout_constraintTop_toBottomOf="@id/text_product_name"
             tools:background="@color/black" />
 
         <TextView
             android:id="@+id/text_price"
-            setPrice="@{cartProduct.price}"
+            setPrice="@{cartProduct.product.price}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="13dp"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_close"
             tools:text="99,800원" />
 
         <Button
             android:id="@+id/btn_close"
             android:layout_width="26dp"
             android:layout_height="26dp"
+            android:layout_marginEnd="13dp"
             android:background="@drawable/ic_close"
             android:backgroundTint="@color/gray"
             android:onClick="@{() -> onItemClick.onRemoveClick(cartProduct.id)}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <woowacourse.shopping.common.CountView
+            android:id="@+id/count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <CheckBox
+            android:id="@+id/cart_check"
+            android:layout_width="25dp"
+            android:layout_height="28dp"
+            isChecked="@{cartProduct.check}"
+            android:onCheckedChanged="@{(_, isChecked) -> onItemClick.onItemCheckChanged(cartProduct.id, isChecked)}"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 

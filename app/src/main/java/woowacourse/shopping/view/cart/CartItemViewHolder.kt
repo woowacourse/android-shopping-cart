@@ -6,14 +6,26 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.databinding.ItemCartPaginationBinding
-import woowacourse.shopping.model.ProductModel
+import woowacourse.shopping.model.CartProductModel
 
 sealed class CartItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class CartProductViewHolder(private val binding: ItemCartBinding) :
         CartItemViewHolder(binding.root) {
-        fun bind(product: ProductModel, onItemClick: CartAdapter.OnItemClick) {
-            binding.cartProduct = product
-            binding.onItemClick = onItemClick
+
+        fun bind(product: CartProductModel, onItemClick: CartAdapter.OnItemClick) {
+            binding.apply {
+                cartProduct = product
+                binding.onItemClick = onItemClick
+                countView.count = product.count
+                countView.plusClickListener = {
+                    onItemClick.onPlusClick(product.id)
+                }
+                countView.minusClickListener = {
+                    if (product.count > 1) {
+                        onItemClick.onMinusClick(product.id)
+                    }
+                }
+            }
         }
     }
 

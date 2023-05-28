@@ -4,11 +4,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.ProductMockRepository
-import woowacourse.shopping.data.RecentViewedDbRepository
+import woowacourse.shopping.data.CartProductRepositoryImpl
+import woowacourse.shopping.data.RecentViewedRepositoryImpl
+import woowacourse.shopping.data.db.CartDBHelper
+import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.view.cart.CartActivity
@@ -17,6 +21,8 @@ import woowacourse.shopping.view.productdetail.ProductDetailActivity
 class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var presenter: ProductListContract.Presenter
+
+    private var menuCount: TextView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
@@ -36,10 +42,18 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
     private fun setPresenter() {
         presenter =
-            ProductListPresenter(this, ProductMockRepository, RecentViewedDbRepository(this))
+            ProductListPresenter(
+                this,
+                ProductServiceImpl(),
+                RecentViewedRepositoryImpl(this),
+                CartProductRepositoryImpl(
+                    CartDBHelper(this),
+                ),
+            )
     }
 
     private fun setActionBar() {
+        setSupportActionBar(binding.listToolbar)
         supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 
@@ -59,6 +73,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             products,
             fun(product: ProductModel) { showProductDetail(product) },
             fun() { presenter.showMoreProducts() },
+            ::showCartItemsCountInMenu,
+            fun(product: ProductModel) { presenter.addProductCount(product) },
+            fun(product: ProductModel) { presenter.plusProductCount(product) },
+            fun(product: ProductModel) { presenter.minusProductCount(product) },
         )
     }
 
@@ -67,13 +85,27 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun showProductDetail(product: ProductModel) {
-        val intent = ProductDetailActivity.newIntent(binding.root.context, product)
+        val intent = ProductDetailActivity.newIntent(this, product, false)
         startActivity(intent)
+    }
+
+    private fun showCartItemsCountInMenu() {
+        if (presenter.getCartItemsCount() <= 0) {
+            menuCount?.visibility = View.GONE
+        } else {
+            menuCount?.visibility = View.VISIBLE
+            menuCount?.text = presenter.getCartItemsCount().toString()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu_item, menu)
+        menu?.findItem(R.id.cart)?.actionView?.let { view ->
+            view.setOnClickListener { handleCartMenuClicked() }
+            view.findViewById<TextView>(R.id.cart_icon_count)?.let { menuCount = it }
+        }
+        showCartItemsCountInMenu()
         return true
     }
 

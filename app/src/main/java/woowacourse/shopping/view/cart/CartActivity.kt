@@ -5,10 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.ProductMockRepository
+import woowacourse.shopping.R
+import woowacourse.shopping.common.PriceFormatter
+import woowacourse.shopping.data.CartProductRepositoryImpl
+import woowacourse.shopping.data.db.CartDBHelper
+import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.ProductModel
+import woowacourse.shopping.model.CartProductModel
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -23,6 +26,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setActionBar()
         setPresenter()
         presenter.fetchProducts()
+        observeTotalPrice()
+        observeTotalCount()
+        onAllCheckSelected()
+        showAllCheckBox()
     }
 
     private fun setBinding() {
@@ -30,16 +37,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     private fun setActionBar() {
+        setSupportActionBar(binding.CartToolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = ACTION_BAR_TITLE
     }
 
     private fun setPresenter() {
-        presenter = CartPresenter(this, CartDbRepository(this), ProductMockRepository)
+        presenter = CartPresenter(
+            this,
+            CartProductRepositoryImpl(CartDBHelper(this)),
+            ProductServiceImpl(),
+        )
     }
 
     override fun showProducts(
-        cartProducts: List<ProductModel>,
+        cartProducts: List<CartProductModel>,
         isExistUndo: Boolean,
         isExistNext: Boolean,
         count: String,
@@ -58,6 +69,25 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 override fun onUndoClick() {
                     presenter.fetchUndoPage()
                 }
+
+                override fun onPlusClick(id: Int) {
+                    presenter.plusCount(id)
+                    presenter.setupTotalPrice()
+                }
+
+                override fun onMinusClick(id: Int) {
+                    presenter.subCount(id)
+                    presenter.setupTotalPrice()
+                }
+
+                override fun onItemCheckChanged(id: Int, checked: Boolean) {
+                    presenter.updateItemCheck(id, checked)
+                    presenter.setupTotalPrice()
+                    presenter.setupTotalCount()
+                    binding.allCheck.setOnCheckedChangeListener { _, _ -> }
+                    showAllCheckBox()
+                    onAllCheckSelected()
+                }
             },
             isExistUndo,
             isExistNext,
@@ -74,6 +104,28 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         adpater.removeCartItems(position)
     }
 
+    override fun onAllCheckSelected() {
+        binding.allCheck.setOnCheckedChangeListener { _, checked ->
+            presenter.judgeCheck(checked)
+        }
+    }
+
+    override fun showAllCheckBox() {
+        binding.allCheck.isChecked = presenter.setAllCheckCondition()
+    }
+
+    private fun observeTotalPrice() {
+        presenter.totalPrice.observe(this) {
+            binding.totalPrice.text = getString(R.string.korean_won, PriceFormatter.format(it))
+        }
+    }
+
+    private fun observeTotalCount() {
+        presenter.totalCount.observe(this) {
+            binding.order.text = getString(R.string.order_text, it)
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         presenter.handleNextStep(item.itemId)
         return super.onOptionsItemSelected(item)
@@ -84,8 +136,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     companion object {
-        private const val ACTION_BAR_TITLE = "Cart"
-
         fun newIntent(context: Context): Intent = Intent(context, CartActivity::class.java)
     }
 }

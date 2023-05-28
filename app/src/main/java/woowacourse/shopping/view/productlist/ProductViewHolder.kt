@@ -30,8 +30,66 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             binding.onItemClick = onProductClick
         }
 
-        fun bind(product: ProductModel) {
+        fun bind(
+            product: ProductModel,
+            showCartItemsCountInMenu: () -> Unit,
+            addProductCount: (ProductModel) -> Unit,
+            plusProductCount: (ProductModel) -> Unit,
+            minusProductCount: (ProductModel) -> Unit,
+        ) {
+            setVisibility(product.count)
             binding.product = product
+            binding.count.count = product.count
+            binding.countOpen.setOnClickListener {
+                onCountOpenClick(product, addProductCount, showCartItemsCountInMenu)
+            }
+            binding.count.plusClickListener = {
+                onCountPlusClick(product, plusProductCount, showCartItemsCountInMenu)
+            }
+            binding.count.minusClickListener = {
+                onCountMinusClick(product, minusProductCount, showCartItemsCountInMenu)
+            }
+        }
+
+        private fun onCountOpenClick(
+            product: ProductModel,
+            addProductCount: (ProductModel) -> Unit,
+            showCartItemsCountInMenu: () -> Unit,
+        ) {
+            addProductCount(product)
+            setVisibility(product.count)
+            showCartItemsCountInMenu()
+            binding.count.count = product.count
+        }
+
+        private fun onCountPlusClick(
+            product: ProductModel,
+            plusProductCount: (ProductModel) -> Unit,
+            showCartItemsCountInMenu: () -> Unit,
+        ) {
+            plusProductCount(product)
+            setVisibility(product.count)
+            showCartItemsCountInMenu()
+        }
+
+        private fun onCountMinusClick(
+            product: ProductModel,
+            minusProductCount: (ProductModel) -> Unit,
+            showCartItemsCountInMenu: () -> Unit,
+        ) {
+            minusProductCount(product)
+            setVisibility(product.count)
+            showCartItemsCountInMenu()
+        }
+
+        private fun setVisibility(count: Int) {
+            if (count <= 0) {
+                binding.countOpen.visibility = View.VISIBLE
+                binding.count.visibility = View.GONE
+            } else {
+                binding.countOpen.visibility = View.GONE
+                binding.count.visibility = View.VISIBLE
+            }
         }
     }
 

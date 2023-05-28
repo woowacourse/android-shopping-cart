@@ -4,12 +4,20 @@ import android.content.Context
 import woowacourse.shopping.data.db.RecentViewedDBHelper
 import woowacourse.shopping.domain.RecentViewedRepository
 
-class RecentViewedDbRepository(context: Context) :
+class RecentViewedRepositoryImpl(context: Context) :
     RecentViewedRepository {
     private val dbHelper = RecentViewedDBHelper(context)
 
     override fun findAll(): List<Int> {
         return dbHelper.selectAll()
+    }
+
+    override fun find(id: Int): Int? {
+        return dbHelper.selectWhereId(id)
+    }
+
+    override fun findMostRecent(): Int {
+        return dbHelper.selectMostRecent() ?: -1
     }
 
     override fun add(id: Int) {
@@ -20,10 +28,6 @@ class RecentViewedDbRepository(context: Context) :
             dbHelper.removeOldest()
         }
         dbHelper.insert(id)
-    }
-
-    private fun find(id: Int): Int? {
-        return dbHelper.selectWhereId(id)
     }
 
     override fun remove(id: Int) {

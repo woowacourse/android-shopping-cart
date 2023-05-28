@@ -9,6 +9,10 @@ class ProductListAdapter(
     private val products: List<ProductModel>,
     private val onProductClick: (ProductModel) -> Unit,
     private val onShowMoreClick: () -> Unit,
+    private val showCartItemsCountInMenu: () -> Unit,
+    private val addProductCount: (ProductModel) -> Unit,
+    private val plusProductCount: (ProductModel) -> Unit,
+    private val minusProductCount: (ProductModel) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         return ProductViewHolder.of(
@@ -40,7 +44,13 @@ class ProductListAdapter(
 
             is ProductViewHolder.ProductItemViewHolder -> {
                 val convertPosition = if (isRecentViewedExist()) position - 1 else position
-                holder.bind(products[convertPosition])
+                holder.bind(
+                    products[convertPosition],
+                    showCartItemsCountInMenu,
+                    addProductCount,
+                    plusProductCount,
+                    minusProductCount,
+                )
             }
 
             is ProductViewHolder.ShowMoreViewHolder -> {

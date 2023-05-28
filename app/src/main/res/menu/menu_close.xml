@@ -5,7 +5,7 @@
     <item android:id="@+id/close"
         android:icon="@drawable/ic_close"
         android:iconTint="@color/white"
-        android:title="@string/shoppingcart"
+        android:title="@string/shopping_cart"
         app:showAsAction="ifRoom"
         />
 </menu>

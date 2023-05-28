@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.CartDbRepository
-import woowacourse.shopping.data.RecentViewedDbRepository
+import woowacourse.shopping.data.CartProductRepositoryImpl
+import woowacourse.shopping.data.RecentViewedRepositoryImpl
+import woowacourse.shopping.data.db.CartDBHelper
+import woowacourse.shopping.data.server.ProductServiceImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.util.getParcelableCompat
@@ -24,9 +27,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setBinding()
         setContentView(binding.root)
         setPresenter()
+        setActionBar()
+
         getData()
         bindView()
-        presenter.updateRecentViewedProducts()
+        showDialog()
+        setMostRecentViewedVisibility()
+        presenter.updateLatestViewedProducts()
     }
 
     private fun setBinding() {
@@ -35,20 +42,53 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setPresenter() {
         presenter =
-            ProductDetailPresenter(this, CartDbRepository(this), RecentViewedDbRepository(this))
+            ProductDetailPresenter(this, CartProductRepositoryImpl(CartDBHelper(this)), RecentViewedRepositoryImpl(this), ProductServiceImpl())
+    }
+
+    private fun setActionBar() {
+        setSupportActionBar(binding.detailToolbar)
+        supportActionBar?.setDisplayShowCustomEnabled(true)
     }
 
     override fun getData() {
         intent.getParcelableCompat<ProductModel>(PRODUCT)?.let { presenter.setProductData(it) }
+        intent.getBooleanExtra(FLAG, false).let { presenter.setFlag(it) }
     }
 
     private fun bindView() {
         binding.product = presenter.getProductData()
+        binding.recentViewedProduct = presenter.getLatestViewedProductData()
         binding.presenter = presenter
+    }
+
+    private fun setMostRecentViewedVisibility() {
+        presenter.compareNowAndRecent()
+        if (presenter.getFlag()) {
+            binding.lastProductLayout.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun showDialog() {
+        binding.btnPutInCart.setOnClickListener {
+            val dialog = CartDialog(
+                this,
+                presenter.getProductData(),
+                fun(product: ProductModel, productCount: Int) {
+                    presenter.putInCart(product, productCount)
+                },
+            ) { startCartActivity() }
+            dialog.show()
+        }
     }
 
     override fun startCartActivity() {
         val intent = CartActivity.newIntent(this)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun startRecentViewedDetail(product: ProductModel) {
+        val intent = newIntent(this, product, true)
         startActivity(intent)
         finish()
     }
@@ -60,7 +100,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        presenter.handleNextStep(item.itemId)
+        presenter.navigateNextStep(item.itemId)
         return super.onOptionsItemSelected(item)
     }
 
@@ -70,10 +110,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         const val PRODUCT = "PRODUCT"
+        const val FLAG = "flag"
 
-        fun newIntent(context: Context, product: ProductModel): Intent {
+        fun newIntent(context: Context, product: ProductModel, flag: Boolean): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(PRODUCT, product)
+            intent.putExtra(FLAG, flag)
             return intent
         }
     }

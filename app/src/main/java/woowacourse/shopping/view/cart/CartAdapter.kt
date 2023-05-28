@@ -2,10 +2,10 @@ package woowacourse.shopping.view.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.ProductModel
+import woowacourse.shopping.model.CartProductModel
 
 class CartAdapter(
-    private val products: List<ProductModel>,
+    private val products: List<CartProductModel>,
     private val onItemClick: OnItemClick,
     private val isExistUndo: Boolean,
     private val isExistNext: Boolean,
@@ -16,6 +16,9 @@ class CartAdapter(
         fun onRemoveClick(id: Int)
         fun onNextClick()
         fun onUndoClick()
+        fun onPlusClick(id: Int)
+        fun onMinusClick(id: Int)
+        fun onItemCheckChanged(id: Int, checked: Boolean)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {

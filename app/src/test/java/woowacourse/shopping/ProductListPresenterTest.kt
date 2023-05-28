@@ -1,12 +1,17 @@
 package woowacourse.shopping
 
-import io.mockk.*
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
+import io.mockk.slot
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.data.server.ProductServiceImpl
+import woowacourse.shopping.domain.CartProductRepository
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentViewedRepository
 import woowacourse.shopping.model.ProductModel
 import woowacourse.shopping.model.toUiModel
@@ -17,56 +22,74 @@ class ProductListPresenterTest {
     private lateinit var presenter: ProductListContract.Presenter
     private lateinit var view: ProductListContract.View
 
+    private lateinit var productRepository: ProductServiceImpl
+    private lateinit var cartProductRepository: CartProductRepository
+    private lateinit var recentViewedRepository: RecentViewedRepository
+
+    private val fakeRecentViewedData = listOf(0, 1, 2, 3)
+
+    private val fakeProducts = listOf(
+        Product(
+            0,
+            "락토핏",
+            "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+            Price(10000),
+        ),
+        Product(
+            1,
+            "락토핏",
+            "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+            Price(10000),
+        ),
+        Product(
+            2,
+            "락토핏",
+            "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+            Price(10000),
+        ),
+    )
+
+    val fakeProduct = Product(
+        0,
+        "락토핏",
+        "https://thumbnail6.coupangcdn.com/thumbnails/remote/230x230ex/image/retail/images/6769030628798948-183ad194-f24c-44e6-b92f-1ed198b347cd.jpg",
+        Price(10000),
+    )
+
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        val productRepository = object : ProductRepository {
-            private val mProducts = products
-            override fun findAll(): List<Product> {
-                return mProducts
-            }
+        productRepository = mockk(relaxed = true)
+        cartProductRepository = mockk(relaxed = true)
+        recentViewedRepository = mockk(relaxed = true)
 
-            override fun find(id: Int): Product {
-                return mProducts[id]
-            }
-
-            override fun findRange(mark: Int, rangeSize: Int): List<Product> {
-                return mProducts.subList(mark, mark + rangeSize)
-            }
-
-            override fun isExistByMark(mark: Int): Boolean {
-                return mProducts.find { it.id == mark } != null
-            }
-        }
-
-        val recentViewedRepository = object : RecentViewedRepository {
-            private val mIds = mutableListOf(0, 1, 2)
-            override fun findAll(): List<Int> {
-                return mIds.toList()
-            }
-
-            override fun add(id: Int) {
-                mIds.add(id)
-            }
-
-            override fun remove(id: Int) {
-                mIds.find { it == id }?.let {
-                    mIds.remove(it)
-                }
-            }
-        }
-
-        presenter = ProductListPresenter(view, productRepository, recentViewedRepository)
+        presenter =
+            ProductListPresenter(
+                view,
+                productRepository,
+                recentViewedRepository,
+                cartProductRepository,
+            )
     }
 
     @Test
     fun 최근_본_상품과_20개의_상품들을_띄울_수_있다() {
+        every { recentViewedRepository.findAll() } returns fakeRecentViewedData
+        every { productRepository.get() } returns fakeProducts
+        every { productRepository.find(any()) } returns fakeProduct
         val viewedProductsActual = slot<List<ProductModel>>()
         val productsActual = slot<List<ProductModel>>()
-        every { view.showProducts(capture(viewedProductsActual), capture(productsActual)) } just runs
+        every {
+            view.showProducts(
+                capture(viewedProductsActual),
+                capture(productsActual),
+            )
+        } just runs
         presenter.fetchProducts()
 
-        val viewedProductExpected = listOf(0, 1, 2).map { id -> products.find { it.id == id }?.toUiModel() }.sortedByDescending { it?.id }
+        val viewedProductExpected =
+            listOf(0, 1, 2).map { id -> products.find { it.id == id }?.toUiModel() }
+                .sortedByDescending { it?.id }
         val productsExpected = products.subList(0, 20).map { it.toUiModel() }
         assertEquals(viewedProductExpected, viewedProductsActual.captured)
         assertEquals(productsExpected, productsActual.captured)
