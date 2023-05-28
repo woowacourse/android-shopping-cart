@@ -25,16 +25,18 @@ class ProductsAdapter(
             ProductsItemType.TYPE_FOOTER -> ReadMoreViewHolder.from(parent) { onReadMoreClick() }
             ProductsItemType.TYPE_ITEM -> ProductsViewHolder.from(
                 parent,
-                {
-                    onClickItem((productItemTypes[it] as ProductItem).product)
-                },
-                { onClickAdd((productItemTypes[it] as ProductItem).product) },
-                { onClickPlus((productItemTypes[it] as ProductItem).product) },
-                { onClickMinus((productItemTypes[it] as ProductItem).product) },
+                { onClickItem(getProduct(it)) },
+                { onClickAdd(getProduct(it)) },
+                { onClickPlus(getProduct(it)) },
+                { onClickMinus(getProduct(it)) },
                 { loadCartCount(it) },
             )
             else -> throw IllegalArgumentException("Invalid view type")
         }
+    }
+
+    private fun getProduct(position: Int): ProductUIModel {
+        return (productItemTypes[position] as ProductItem).product
     }
 
     override fun getItemCount(): Int = productItemTypes.size
