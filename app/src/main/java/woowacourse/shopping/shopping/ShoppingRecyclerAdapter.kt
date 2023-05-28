@@ -17,9 +17,9 @@ class ShoppingRecyclerAdapter(
     private val countClickListener: ProductCountClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var products: MutableList<ProductUiModel> =
+    private val products: MutableList<ProductUiModel> =
         products.toMutableList()
-    private var recentViewedProducts: MutableList<ProductUiModel> =
+    private val recentViewedProducts: MutableList<ProductUiModel> =
         recentViewedProducts.toMutableList()
 
     override fun getItemViewType(position: Int): Int {
@@ -68,12 +68,14 @@ class ShoppingRecyclerAdapter(
     }
 
     fun refreshRecentViewedItems(toReplace: List<ProductUiModel>) {
-        recentViewedProducts = toReplace.toMutableList()
-        notifyItemRangeChanged(0, RECENT_VIEWED_ITEM_SIZE)
+        recentViewedProducts.clear()
+        recentViewedProducts.addAll(toReplace)
+        notifyItemChanged(0)
     }
 
     fun refreshShoppingItems(toReplace: List<ProductUiModel>) {
-        products = toReplace.toMutableList()
+        products.clear()
+        products.addAll(toReplace)
 
         notifyItemRangeChanged(
             if (recentViewedProducts.isEmpty()) 0 else 1,
@@ -90,7 +92,6 @@ class ShoppingRecyclerAdapter(
 
     companion object {
         private const val VIEW_TYPE_ERROR = "해당 타입의 뷰홀더는 생성할 수 없습니다."
-        private const val RECENT_VIEWED_ITEM_SIZE = 10
         private const val INITIAL_POSITION = 0
     }
 }
