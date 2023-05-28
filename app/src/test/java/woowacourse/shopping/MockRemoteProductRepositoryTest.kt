@@ -1,5 +1,7 @@
 package woowacourse.shopping
 
+import io.mockk.every
+import io.mockk.mockk
 import model.Product
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -8,16 +10,15 @@ import woowacourse.shopping.database.MockProductRemoteService
 import woowacourse.shopping.database.MockRemoteProductRepositoryImpl
 import woowacourse.shopping.database.product.MockProduct
 import woowacourse.shopping.database.product.ProductRepository
-import woowacourse.shopping.util.toDomainModel
 import java.lang.Thread.sleep
 
 class MockRemoteProductRepositoryTest {
     private lateinit var mockRemoteProductRepository: ProductRepository
-    private val mockProductRemoteService: MockProductRemoteService =
-        MockProductRemoteService()
+    private lateinit var mockProductRemoteService: MockProductRemoteService
 
     @Before
     fun init() {
+        mockProductRemoteService = mockk()
         mockRemoteProductRepository =
             MockRemoteProductRepositoryImpl(mockProductRemoteService)
     }
@@ -26,6 +27,15 @@ class MockRemoteProductRepositoryTest {
     fun `처음 20개의 상품을 불러온다`() {
         // given
         var actual: List<Product> = listOf()
+        every {
+            mockProductRemoteService.request(
+                lastProductId = 0,
+                onSuccess = any(),
+                onFailure = any()
+            )
+        } answers {
+            secondArg<(List<Product>) -> Unit>().invoke(MockProduct.products.take(20))
+        }
 
         // when
         mockRemoteProductRepository.loadProducts(
@@ -38,7 +48,7 @@ class MockRemoteProductRepositoryTest {
         sleep(1000)
 
         // then
-        val expected = MockProduct.products.subList(0, 20).map { it.toDomainModel() }
+        val expected = MockProduct.products.subList(0, 20)
         assertEquals(expected, actual)
     }
 
@@ -46,6 +56,15 @@ class MockRemoteProductRepositoryTest {
     fun `두번째 20개의 상품을 불러온다`() {
         // given
         var actual: List<Product> = listOf()
+        every {
+            mockProductRemoteService.request(
+                lastProductId = 20,
+                onSuccess = any(),
+                onFailure = any()
+            )
+        } answers {
+            secondArg<(List<Product>) -> Unit>().invoke(MockProduct.products.subList(20, 40))
+        }
 
         // when
         mockRemoteProductRepository.loadProducts(
@@ -58,7 +77,7 @@ class MockRemoteProductRepositoryTest {
         sleep(1000)
 
         // then
-        val expected = MockProduct.products.subList(20, 40).map { it.toDomainModel() }
+        val expected = MockProduct.products.subList(20, 40)
         assertEquals(expected, actual)
     }
 
@@ -66,6 +85,20 @@ class MockRemoteProductRepositoryTest {
     fun `세번째 페이지의 상품들을 불러온다`() {
         // given
         var actual: List<Product> = listOf()
+        every {
+            mockProductRemoteService.request(
+                lastProductId = 40,
+                onSuccess = any(),
+                onFailure = any()
+            )
+        } answers {
+            secondArg<(List<Product>) -> Unit>().invoke(
+                MockProduct.products.subList(
+                    40,
+                    MockProduct.products.size
+                )
+            )
+        }
 
         // when
         mockRemoteProductRepository.loadProducts(
@@ -79,7 +112,7 @@ class MockRemoteProductRepositoryTest {
 
         // then
         val expected =
-            MockProduct.products.subList(40, MockProduct.products.size).map { it.toDomainModel() }
+            MockProduct.products.subList(40, MockProduct.products.size)
         assertEquals(expected, actual)
     }
 }

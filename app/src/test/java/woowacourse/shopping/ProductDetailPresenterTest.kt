@@ -10,7 +10,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.productdetail.ProductDetailPresenter
 import woowacourse.shopping.util.toUiModel
@@ -36,16 +35,15 @@ class ProductDetailPresenterTest {
             Product(1, "아메리카노"),
         )
         every { repository.selectRecentViewedProducts() } returns products
-        val product = ProductUiModel(1, "아메리카노")
-        val slot = slot<ProductUiModel>()
-        every { view.setUpRecentViewedProduct(capture(slot)) } just Runs
+        every { view.setUpRecentViewedProduct(any()) } just Runs
 
         // when
         presenter.setUpView()
 
         // then
-        assertEquals(product, slot.captured)
-        verify { view.setUpRecentViewedProduct(product) }
+        val expected = ProductUiModel(1, "아메리카노")
+        assertEquals(expected, products[1].toUiModel())
+        verify { view.setUpRecentViewedProduct(expected) }
     }
 
     @Test
