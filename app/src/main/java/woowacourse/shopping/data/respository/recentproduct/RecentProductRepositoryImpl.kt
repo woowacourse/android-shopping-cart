@@ -9,8 +9,8 @@ class RecentProductRepositoryImpl(
 ) : RecentProductRepository {
     private val recentProductDao = RecentProductDao(context)
 
-    override fun getRecentProducts(): List<RecentProductEntity> {
-        return recentProductDao.getAll()
+    override fun getRecentProducts(limit: Int): List<RecentProductEntity> {
+        return recentProductDao.getAll(limit)
     }
 
     override fun deleteNotTodayRecentProducts(today: String) {

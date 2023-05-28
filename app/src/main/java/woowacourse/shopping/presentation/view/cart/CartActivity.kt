@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.SimpleItemAnimator
 import woowacourse.shopping.R
 import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -21,14 +22,36 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         CartPresenter(this, CartRepositoryImpl(this))
     }
 
+    private val cartProductListener = object : CartProductListener {
+        override fun onCheckChanged(cartId: Long, checked: Boolean) {
+            presenter.updateProductChecked(cartId, checked)
+            presenter.calculateTotalPrice()
+        }
+
+        override fun onCountClick(cartId: Long, count: Int) {
+            presenter.updateProductCount(cartId, count)
+            presenter.calculateTotalPrice()
+        }
+
+        override fun onDeleteClick(cartId: Long) {
+            presenter.deleteCartItem(cartId)
+            presenter.calculateTotalPrice()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setResult(RESULT_OK)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
         setSupportActionBar()
+        setRecyclerViewAnimator()
         presenter.loadCartItems()
+        presenter.calculateTotalPrice()
         setLeftButtonClick()
         setRightButtonClick()
+        setAllProduceCheckedClick()
     }
 
     private fun setSupportActionBar() {
@@ -45,9 +68,20 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun setRecyclerViewAnimator() {
+        val animator = binding.rvCart.itemAnimator
+        if (animator is SimpleItemAnimator) {
+            animator.supportsChangeAnimations = false
+        }
+    }
+
     override fun setCartItemsView(carts: List<CartModel>) {
-        cartAdapter = CartAdapter(carts, presenter::deleteCartItem)
+        cartAdapter = CartAdapter(carts, cartProductListener)
         binding.rvCart.adapter = cartAdapter
+    }
+
+    override fun setChangedCartItemsView(carts: List<CartModel>) {
+        cartAdapter.updateList(carts)
     }
 
     override fun setEnableLeftButton(isEnabled: Boolean) {
@@ -72,8 +106,28 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         }
     }
 
+    private fun setAllProduceCheckedClick() {
+        binding.cbCartAll.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (buttonView.isPressed.not()) return@setOnCheckedChangeListener
+            presenter.updateCurrentPageAllProductChecked(isChecked)
+            presenter.calculateTotalPrice()
+        }
+    }
+
+    override fun updateAllChecking(startPosition: Int, count: Int) {
+        cartAdapter.updateAllChecking(startPosition, count)
+    }
+
+    override fun setAllCartChecked(isChecked: Boolean) {
+        binding.cbCartAll.isChecked = isChecked
+    }
+
     override fun setPageCountView(page: Int) {
         binding.tvCartListPageCount.text = page.toString()
+    }
+
+    override fun setTotalPriceView(totalPrice: Int) {
+        binding.totalPrice = totalPrice
     }
 
     companion object {

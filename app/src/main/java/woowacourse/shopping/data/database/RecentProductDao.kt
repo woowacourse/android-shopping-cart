@@ -15,6 +15,15 @@ class RecentProductDao(context: Context) {
             put(RecentProductContract.RecentProduct.PRODUCT_ID, productId)
             put(RecentProductContract.RecentProduct.CREATE_DATE, LocalDateTime.now().toString())
         }
+        if (checkRecentProduct(productId)) {
+            db.update(
+                RecentProductContract.RecentProduct.TABLE_NAME,
+                value,
+                "${RecentProductContract.RecentProduct.PRODUCT_ID} = ? ",
+                arrayOf(productId.toString())
+            )
+            return
+        }
         db.insert(RecentProductContract.RecentProduct.TABLE_NAME, null, value)
     }
 
@@ -25,9 +34,16 @@ class RecentProductDao(context: Context) {
         db.execSQL(sql)
     }
 
-    fun getAll(): List<RecentProductEntity> {
+    private fun checkRecentProduct(selectProductId: Long): Boolean {
+        val recentProduct = selectRecentProductByProductId(selectProductId)
+        if (recentProduct.isEmpty()) return false
+        return true
+    }
+
+    private fun selectRecentProductByProductId(selectProductId: Long): List<RecentProductEntity> {
         val result = mutableListOf<RecentProductEntity>()
-        val cursor = getCursor()
+        val cursor = getCursorByProductId(selectProductId, 1)
+
         with(cursor) {
             while (moveToNext()) {
                 val recentProductId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
@@ -38,10 +54,27 @@ class RecentProductDao(context: Context) {
         }
         cursor.close()
 
+        return result
+    }
+
+    fun getAll(limit: Int): List<RecentProductEntity> {
+        val result = mutableListOf<RecentProductEntity>()
+        val cursor = getCursor(limit)
+        with(cursor) {
+            while (moveToNext()) {
+                val recentProductId = getLong(getColumnIndexOrThrow(BaseColumns._ID))
+                val productId =
+                    getLong(getColumnIndexOrThrow(RecentProductContract.RecentProduct.PRODUCT_ID))
+                result.add(RecentProductEntity(recentProductId, productId))
+            }
+        }
+        cursor.close()
+        if (result.isEmpty()) result.add(getErrorData())
+
         return result.toList()
     }
 
-    private fun getCursor(): Cursor {
+    private fun getCursor(limit: Int): Cursor {
         return db.query(
             RecentProductContract.RecentProduct.TABLE_NAME,
             null,
@@ -50,7 +83,25 @@ class RecentProductDao(context: Context) {
             null,
             null,
             RecentProductContract.RecentProduct.CREATE_DATE + " DESC",
-            "10"
+            limit.toString()
         )
     }
+
+    private fun getCursorByProductId(productId: Long, limit: Int): Cursor {
+        return db.query(
+            RecentProductContract.RecentProduct.TABLE_NAME,
+            null,
+            "${RecentProductContract.RecentProduct.PRODUCT_ID} = ?",
+            arrayOf(productId.toString()),
+            null,
+            null,
+            null,
+            limit.toString()
+        )
+    }
+
+    private fun getErrorData() = RecentProductEntity(
+        id = -1L,
+        productId = -1L
+    )
 }

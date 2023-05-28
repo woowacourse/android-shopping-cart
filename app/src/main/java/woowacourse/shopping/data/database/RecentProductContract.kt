@@ -5,7 +5,7 @@ import android.provider.BaseColumns
 object RecentProductContract {
     const val CREATE_SQL = "CREATE TABLE IF NOT EXISTS ${RecentProduct.TABLE_NAME} (" +
         "${BaseColumns._ID} INTEGER PRIMARY KEY," +
-        "${RecentProduct.PRODUCT_ID} INTEGER," +
+        "${RecentProduct.PRODUCT_ID} INTEGER UNIQUE," +
         "${RecentProduct.CREATE_DATE} TEXT)"
 
     const val DROP_SQL = "DROP TABLE IF EXISTS ${RecentProduct.TABLE_NAME}"

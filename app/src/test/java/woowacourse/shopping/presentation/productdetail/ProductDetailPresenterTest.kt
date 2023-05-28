@@ -13,6 +13,7 @@ import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.presentation.ProductFixture
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.model.RecentProductModel
 import woowacourse.shopping.presentation.view.productdetail.ProductDetailContract
 import woowacourse.shopping.presentation.view.productdetail.ProductDetailPresenter
 
@@ -28,6 +29,7 @@ class ProductDetailPresenterTest {
 
         cartRepository = mockk()
         productRepository = mockk()
+        every { productRepository.loadDataById(0L) } returns ProductFixture.getData()
 
         presenter = ProductDetailPresenter(view, 0L, productRepository, cartRepository)
     }
@@ -35,7 +37,6 @@ class ProductDetailPresenterTest {
     @Test
     fun `id를 통해 데이터를 받아와 상품 정보를 보여준다`() {
         // given
-        every { productRepository.getDataById(0L) } returns ProductFixture.getData()
         val slot = slot<ProductModel>()
         justRun { view.setProductInfoView(capture(slot)) }
 
@@ -47,26 +48,74 @@ class ProductDetailPresenterTest {
         val expected = ProductFixture.getData().toUIModel()
 
         assertEquals(expected, actual)
-        verify { productRepository.getDataById(actual.id) }
+        verify { productRepository.loadDataById(actual.id) }
         verify { view.setProductInfoView(actual) }
     }
 
     @Test
-    fun `상품을 장바구니에 저장한다`() {
+    fun `장바구니 담기를 누르면 상품의 개수를 정하는 다이얼로그가 보여진다`() {
         // given
-        val slot = slot<Long>()
-        justRun { cartRepository.addCart(capture(slot)) }
+        val product = ProductFixture.getData().toUIModel()
+        justRun { view.showCountView(product) }
+
+        // when
+        presenter.showCount()
+
+        // then
+        verify { view.showCountView(product) }
+    }
+
+    @Test
+    fun `마지막으로 본 상품을 보여준다`() {
+        // given
+        val product = ProductFixture.getData().toUIModel()
+        val lastRecentProduct = RecentProductModel(1L, product)
+        val slot = slot<RecentProductModel>()
+        justRun { view.setVisibleOfLastRecentProductInfoView(capture(slot)) }
+
+        // when
+        presenter.loadLastRecentProductInfo(lastRecentProduct)
+
+        // then
+        val actual = slot.captured
+        assertEquals(lastRecentProduct, actual)
+        verify { view.setVisibleOfLastRecentProductInfoView(actual) }
+    }
+
+    @Test
+    fun `마지막으로 본 상품이 존재하지 않으면 보여지지 않는다`() {
+        // given
+        val product = ProductModel(-1L, "", 0, "")
+        val lastRecentProduct = RecentProductModel(-1L, product)
+        justRun { view.setGoneOfLastRecentProductInfoView() }
+
+        // when
+        presenter.loadLastRecentProductInfo(lastRecentProduct)
+
+        // then
+        verify { view.setGoneOfLastRecentProductInfoView() }
+    }
+
+    @Test
+    fun `상품을 장바구니에 1개 저장한다`() {
+        // given
+        val slotId = slot<Long>()
+        val slotCount = slot<Int>()
+        justRun { cartRepository.addCart(capture(slotId), capture(slotCount)) }
         justRun { view.addCartSuccessView() }
         justRun { view.exitProductDetailView() }
 
         // when
-        presenter.addCart()
+        presenter.addCart(1)
 
         // then
-        val actual = slot.captured
-        val expected = 0L
-        assertEquals(expected, actual)
-        verify { cartRepository.addCart(actual) }
+        val actualId = slotId.captured
+        val actualCount = slotCount.captured
+        val expectedId = 0L
+        val expectedCount = 1
+        assertEquals(expectedId, actualId)
+        assertEquals(expectedCount, actualCount)
+        verify { cartRepository.addCart(actualId, actualCount) }
         verify { view.addCartSuccessView() }
         verify { view.exitProductDetailView() }
     }

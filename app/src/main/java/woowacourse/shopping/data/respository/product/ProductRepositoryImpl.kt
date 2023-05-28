@@ -1,13 +1,17 @@
 package woowacourse.shopping.data.respository.product
 
 import woowacourse.shopping.data.model.ProductEntity
+import woowacourse.shopping.data.respository.product.source.remote.ProductRemoteDataSource
+import woowacourse.shopping.data.respository.product.source.remote.ProductRemoteDataSourceImpl
 
-class ProductRepositoryImpl : ProductRepository {
-    override fun getData(startPosition: Int, count: Int): List<ProductEntity> {
-        return ProductsDao.getData(startPosition, count)
+class ProductRepositoryImpl(
+    private val productRemoteDataSource: ProductRemoteDataSource = ProductRemoteDataSourceImpl()
+) : ProductRepository {
+    override fun loadData(startPosition: Int): List<ProductEntity> {
+        return productRemoteDataSource.requestDatas(startPosition)
     }
 
-    override fun getDataById(id: Long): ProductEntity {
-        return ProductsDao.getDataById(id) ?: ProductsDao.getErrorData()
+    override fun loadDataById(id: Long): ProductEntity {
+        return productRemoteDataSource.requestData(id)
     }
 }
