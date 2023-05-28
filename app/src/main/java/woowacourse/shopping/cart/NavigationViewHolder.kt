@@ -5,16 +5,15 @@ import woowacourse.shopping.databinding.ItemCartNavigatorBinding
 
 class NavigationViewHolder(
     private val binding: ItemCartNavigatorBinding,
-    onPreviousButtonClick: () -> Unit,
-    onNextButtonClick: () -> Unit
+    cartNavigationListener: CartNavigationListener
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.cartNavigatorPreviousButton.setOnClickListener {
-            onPreviousButtonClick()
+            cartNavigationListener.onPreviousButtonClick()
         }
 
         binding.cartNavigatorNextButton.setOnClickListener {
-            onNextButtonClick()
+            cartNavigationListener.onNextButtonClick()
         }
     }
 

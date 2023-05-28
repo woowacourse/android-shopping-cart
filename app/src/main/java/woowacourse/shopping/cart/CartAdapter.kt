@@ -8,22 +8,21 @@ import woowacourse.shopping.databinding.ItemCartNavigatorBinding
 import woowacourse.shopping.databinding.ItemCartProductListBinding
 
 class CartAdapter(
-    private val onCartItemRemoveButtonClick: (CartProductModel) -> Unit,
-    private val onPreviousButtonClick: () -> Unit,
-    private val onNextButtonClick: () -> Unit,
-    private val onCheckBoxClick: (CartProductModel) -> Unit,
-    private val onMinusAmountButtonClick: (CartProductModel) -> Unit,
-    private val onPlusAmountButtonClick: (CartProductModel) -> Unit,
+    cartProductListener: CartProductListener,
+    private val cartNavigationListener: CartNavigationListener,
     private var currentPage: Int = 1,
     private var isNavigationVisible: Boolean = false,
     private var isLastPage: Boolean = false
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val cartProducts: MutableList<CartProductModel> = mutableListOf()
     private val onCartItemRemoveButtonViewClick: (Int) -> Unit =
-        { onCartItemRemoveButtonClick(cartProducts[it]) }
-    private val onCheckBoxViewClick: (Int) -> Unit = { onCheckBoxClick(cartProducts[it]) }
-    private val onMinusAmountButtonViewClick: (Int) -> Unit = { onMinusAmountButtonClick(cartProducts[it]) }
-    private val onPlusAmountButtonViewClick: (Int) -> Unit = { onPlusAmountButtonClick(cartProducts[it]) }
+        { cartProductListener.onCartItemRemoveButtonClick(cartProducts[it]) }
+    private val onCheckBoxViewClick: (Int) -> Unit =
+        { cartProductListener.onCheckBoxClick(cartProducts[it]) }
+    private val onMinusAmountButtonViewClick: (Int) -> Unit =
+        { cartProductListener.onMinusAmountButtonClick(cartProducts[it]) }
+    private val onPlusAmountButtonViewClick: (Int) -> Unit =
+        { cartProductListener.onPlusAmountButtonClick(cartProducts[it]) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (CartViewType.values()[viewType]) {
@@ -40,7 +39,7 @@ class CartAdapter(
                 ItemCartNavigatorBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 ),
-                onPreviousButtonClick, onNextButtonClick
+                cartNavigationListener
             )
         }
     }
@@ -50,7 +49,10 @@ class CartAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (CartViewType.values()[getItemViewType(position)]) {
             CartViewType.CART -> (holder as CartViewHolder).bind(cartProducts[position])
-            CartViewType.NAVIGATION -> (holder as NavigationViewHolder).bind(currentPage, isLastPage)
+            CartViewType.NAVIGATION -> (holder as NavigationViewHolder).bind(
+                currentPage,
+                isLastPage
+            )
         }
     }
 
@@ -59,7 +61,11 @@ class CartAdapter(
         return CartViewType.NAVIGATION.ordinal
     }
 
-    fun updateCartProducts(cartProducts: List<CartProductModel>, currentPage: Int, isLastPage: Boolean) {
+    fun updateCartProducts(
+        cartProducts: List<CartProductModel>,
+        currentPage: Int,
+        isLastPage: Boolean
+    ) {
         this.cartProducts.clear()
         this.cartProducts.addAll(cartProducts)
         this.currentPage = currentPage

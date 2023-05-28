@@ -18,6 +18,34 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var presenter: CartContract.Presenter
     private lateinit var cartAdapter: CartAdapter
 
+    private val cartProductListener = object : CartProductListener {
+        override fun onCartItemRemoveButtonClick(cartProductModel: CartProductModel) {
+            presenter.removeCartProduct(cartProductModel)
+        }
+
+        override fun onCheckBoxClick(cartProductModel: CartProductModel) {
+            presenter.reverseCartProductChecked(cartProductModel)
+            presenter.updateAllChecked()
+        }
+
+        override fun onMinusAmountButtonClick(cartProductModel: CartProductModel) {
+            presenter.decreaseCartProductAmount(cartProductModel)
+        }
+
+        override fun onPlusAmountButtonClick(cartProductModel: CartProductModel) {
+            presenter.increaseCartProductAmount(cartProductModel)
+        }
+    }
+    private val cartNavigationListener = object : CartNavigationListener {
+        override fun onPreviousButtonClick() {
+            presenter.goToPreviousPage()
+        }
+
+        override fun onNextButtonClick() {
+            presenter.goToNextPage()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
@@ -76,19 +104,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun initCartAdapter() {
         cartAdapter = CartAdapter(
-            onCartItemRemoveButtonClick = { presenter.removeCartProduct(it) },
-            onPreviousButtonClick = { presenter.goToPreviousPage() },
-            onNextButtonClick = { presenter.goToNextPage() },
-            onCheckBoxClick = { cartProductModel ->
-                presenter.reverseCartProductChecked(cartProductModel)
-                presenter.updateAllChecked()
-            },
-            onMinusAmountButtonClick = {
-                presenter.decreaseCartProductAmount(it)
-            },
-            onPlusAmountButtonClick = {
-                presenter.increaseCartProductAmount(it)
-            }
+            cartProductListener,
+            cartNavigationListener
         )
         binding.cartProductList.adapter = cartAdapter
     }
