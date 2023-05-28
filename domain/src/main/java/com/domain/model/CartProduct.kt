@@ -1,3 +1,3 @@
 package com.domain.model
 
-data class CartProduct(val product: Product, val count: Int, val isChecked: Boolean)
+data class CartProduct(val product: Product, var count: Int, var isChecked: Boolean)

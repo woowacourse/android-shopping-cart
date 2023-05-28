@@ -89,18 +89,7 @@ class CartDao(
         writableDatabase.execSQL(query)
     }
 
-    fun getChecked(): List<CartProduct> {
-        val cartProducts = mutableListOf<CartProduct>()
-        val query =
-            "SELECT * FROM $TABLE_NAME WHERE ${CartContract.TABLE_COLUMN_PRODUCT_CHECKED} = 1"
-        val cursor: Cursor = readableDatabase.rawQuery(query, null)
-        while (cursor.moveToNext()) {
-            cartProducts.add(getCartProduct(cursor))
-        }
-        return cartProducts
-    }
-
-    fun findById(id: Int): CartProduct? {
+    private fun findById(id: Int): CartProduct? {
         val query =
             "SELECT * FROM $TABLE_NAME WHERE ${CartContract.TABLE_COLUMN_PRODUCT_ID} = $id"
         val cursor: Cursor = readableDatabase.rawQuery(query, null)
