@@ -3,22 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.CartProductUiModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.shoppingcart.adapter.CartProductCountPickerListener" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
+        android:layout_margin="18dp"
         android:background="@drawable/item_round"
         android:paddingBottom="18dp">
+
+        <CheckBox
+            android:id="@+id/check_box_selecting"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="25dp"
+            android:checked="@{product.selected}"
+            app:layout_constraintBottom_toBottomOf="@+id/text_product_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="16dp"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/check_box_selecting"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="아메리카노" />
 
@@ -35,25 +58,36 @@
 
         <ImageView
             android:id="@+id/image_product"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="13dp"
-            android:layout_marginBottom="18dp"
             android:contentDescription="@string/image_of_product"
             android:scaleType="centerCrop"
             android:src="@drawable/example"
-            app:layout_constraintStart_toStartOf="@id/text_product_name"
+            app:layout_constraintStart_toStartOf="@+id/check_box_selecting"
             app:layout_constraintTop_toBottomOf="@id/text_product_name" />
 
         <TextView
             android:id="@+id/text_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="11dp"
+            android:text="@{String.valueOf(product.price)}"
             android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/image_remove_product"
+            app:layout_constraintTop_toBottomOf="@id/image_remove_product"
             tools:text="99,800원" />
+
+        <woowacourse.shopping.common.CountPickerView
+            android:id="@+id/count_picker"
+            android:layout_width="130dp"
+            android:layout_height="41dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="@+id/text_product_price"
+            app:layout_constraintTop_toBottomOf="@id/text_product_price" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

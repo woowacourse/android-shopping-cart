@@ -6,6 +6,8 @@
         android:id="@+id/shopping_cart"
         android:icon="@drawable/shopping_cart_24"
         android:title="@string/shopping"
+        android:orderInCategory="1"
         app:showAsAction="always"/>
+
 
 </menu>

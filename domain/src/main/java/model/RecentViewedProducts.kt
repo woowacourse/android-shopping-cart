@@ -9,21 +9,16 @@ class RecentViewedProducts(
     val values: List<RecentViewedProduct>
         get() = _values.toList()
 
-    fun add(product: RecentViewedProduct): RecentViewedProduct? {
-        refreshLatestProduct(product)
-
-        if (_values.size > maxSize) {
-            val removingProduct = values.last()
-
-            _values.remove(removingProduct)
-
-            return removingProduct
-        }
-        return null
-    }
-
-    private fun refreshLatestProduct(product: RecentViewedProduct) {
+    fun add(
+        product: RecentViewedProduct,
+        handleOldestViewedProduct: () -> Unit,
+    ) {
         _values.remove(product)
         _values.add(0, product)
+
+        if (_values.size > maxSize) {
+            handleOldestViewedProduct()
+            _values.removeLast()
+        }
     }
 }

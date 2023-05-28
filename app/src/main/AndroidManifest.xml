@@ -9,12 +9,13 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.Shopping"
         tools:targetApi="31">
         <activity
-            android:name=".shoppingcart.ShoppingCartActivity"
+            android:name=".shoppingcart.CartActivity"
             android:exported="false" />
         <activity
             android:name=".productdetail.ProductDetailActivity"

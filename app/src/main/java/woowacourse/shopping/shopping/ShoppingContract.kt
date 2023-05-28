@@ -1,36 +1,49 @@
 package woowacourse.shopping.shopping
 
-import model.RecentViewedProducts
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.RecentViewedProductUiModel
+import woowacourse.shopping.shopping.navigator.ShoppingNavigator
 
 interface ShoppingContract {
 
     interface View {
 
+        val shoppingNavigator: ShoppingNavigator
+
         fun setUpShoppingView(
-            products: List<ProductUiModel>,
-            recentViewedProducts: List<RecentViewedProductUiModel>,
-            readMoreShoppingProducts: () -> Unit
+            products: List<CartProductUiModel>,
+            recentViewedProducts: List<RecentViewedProductUiModel>
         )
 
         fun refreshRecentViewedProductsView(
-            products: List<RecentViewedProductUiModel>
+            products: List<RecentViewedProductUiModel>,
         )
 
-        fun refreshShoppingProductsView(
-            toAdd: List<ProductUiModel>
-        )
+        fun refreshShoppingProductsView(products: List<CartProductUiModel>)
+
+        fun showMoreProducts(toAdd: List<CartProductUiModel>)
+
+        fun refreshProductCount(count: Int)
     }
 
     interface Presenter {
 
-        val recentViewedProducts: RecentViewedProducts
+        fun setUpProducts()
 
         fun loadProducts()
+
+        fun loadCartProductsCount()
+
+        fun loadProductDetail(productId: Int)
 
         fun addToRecentViewedProduct(id: Int)
 
         fun readMoreShoppingProducts()
+
+        fun plusShoppingCartProductCount(product: CartProductUiModel)
+
+        fun minusShoppingCartProductCount(product: CartProductUiModel)
+
+        fun addProductToShoppingCart(product: CartProductUiModel)
     }
 }

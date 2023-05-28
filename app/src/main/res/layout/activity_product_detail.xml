@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="presenter"
-            type="woowacourse.shopping.productdetail.ProductDetailContract.Presenter" />
+            name="product"
+            type="woowacourse.shopping.model.ProductUiModel" />
+
+        <variable
+            name="latestViewedProduct"
+            type="woowacourse.shopping.model.ProductUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,6 +31,7 @@
 
         <ImageView
             android:id="@+id/image_product_detail"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="360dp"
             android:contentDescription="@string/image_of_product"
@@ -40,6 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +82,7 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="29dp"
             android:layout_marginEnd="18dp"
+            android:text="@{String.valueOf(product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,13 +94,58 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="@color/button_color"
-            android:onClick="@{()->presenter.addToShoppingCart()}"
             android:text="@string/put_to_shopping_cart"
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_latest_viewed_product"
+            android:layout_width="324dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="29dp"
+            android:background="@drawable/item_round"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_product_price">
+
+            <TextView
+                android:id="@+id/text_latest_viewed_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/latest_viewed_product"
+                android:textColor="#04C09E"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_latest_view_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="33dp"
+                android:text="@{latestViewedProduct.name}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@+id/text_latest_viewed_product"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="카푸치노" />
+
+            <TextView
+                android:id="@+id/text_latest_viewed_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:text="@{String.valueOf(latestViewedProduct.price)}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/text_latest_view_product_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="9,800원" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

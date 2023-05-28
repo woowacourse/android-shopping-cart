@@ -3,17 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.CartProductUiModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_marginStart="10dp">
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_add_to_cart"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/image_of_product"
+            android:src="@drawable/image_add_to_cart"
+            android:translationZ="1dp"
+            android:visibility="@{product.count==0 ? View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/image_product"
+            app:layout_constraintEnd_toEndOf="@id/image_product" />
 
         <ImageView
             android:id="@+id/image_product"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
             android:contentDescription="@string/image_of_product"
+            android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/example" />
@@ -25,11 +46,12 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.name}"
             android:textColor="#333333"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/image_product"
-            app:layout_constraintStart_toStartOf="@+id/image_product"
-            app:layout_constraintTop_toBottomOf="@+id/image_product"
+            app:layout_constraintEnd_toEndOf="@id/image_product"
+            app:layout_constraintStart_toStartOf="@id/image_product"
+            app:layout_constraintTop_toBottomOf="@id/image_product"
             tools:text="PET보틀-정사각..." />
 
         <TextView
@@ -37,9 +59,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/text_product_name"
+            app:layout_constraintStart_toStartOf="@id/text_product_name"
             app:layout_constraintTop_toBottomOf="@id/text_product_name"
             tools:text="10,000원" />
+
+        <woowacourse.shopping.common.CountPickerView
+            android:id="@+id/count_picker"
+            android:layout_width="126dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="10dp"
+            android:visibility="@{product.count==0 ? View.GONE:View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="@id/image_product"
+            app:layout_constraintEnd_toEndOf="@id/image_product"
+            app:layout_constraintStart_toStartOf="@id/image_product" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

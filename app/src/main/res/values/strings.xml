@@ -12,4 +12,13 @@
     <string name="next_page"><![CDATA[>]]></string>
     <string name="image_of_product">image of product</string>
     <string name="image_of_cancel_menu">image_of_cancel_menu</string>
+    <string name="image_to_minus_product_count">image to minus product count</string>
+    <string name="image_to_plus_product_count">image to plus product count</string>
+    <string name="text">전체</string>
+    <string name="order">주문하기(%d)</string>
+    <string name="minus_description">-</string>
+    <string name="plus_description">+</string>
+    <string name="initial_count">1</string>
+    <string name="latest_viewed_product">마지막으로 본 상품</string>
+    <string name="add_to_cart">담기</string>
 </resources>

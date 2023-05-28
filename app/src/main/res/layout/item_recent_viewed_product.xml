@@ -3,12 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.RecentViewedProductUiModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/image_recent_product"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="98dp"
             android:layout_height="98dp"
             android:contentDescription="@string/image_of_product"
@@ -23,6 +31,7 @@
             android:layout_marginTop="7dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.name}"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="12sp"

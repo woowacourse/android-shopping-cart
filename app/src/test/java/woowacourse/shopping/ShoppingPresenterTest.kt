@@ -7,10 +7,14 @@ import model.Product
 import model.RecentViewedProduct
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.database.ShoppingRepository
+import woowacourse.shopping.data.cart.repository.CartRepository
+import woowacourse.shopping.data.product.repository.ProductRepository
+import woowacourse.shopping.data.recentviewed.repository.RecentViewedProductRepository
 import woowacourse.shopping.shopping.ShoppingContract
 import woowacourse.shopping.shopping.ShoppingPresenter
-import woowacourse.shopping.util.toUiModel
+import woowacourse.shopping.util.toCartProductUiModel
+import woowacourse.shopping.util.toProductUiModel
+import woowacourse.shopping.util.toRecentViewedProductUiModel
 
 class ShoppingPresenterTest {
 
@@ -18,12 +22,24 @@ class ShoppingPresenterTest {
     private lateinit var recentViewedProducts: List<RecentViewedProduct>
     private lateinit var recentViewedProduct: RecentViewedProduct
     private lateinit var view: ShoppingContract.View
-    private lateinit var repository: ShoppingRepository
+    private lateinit var presenter: ShoppingPresenter
+    private lateinit var cartRepository: CartRepository
+    private lateinit var productRepository: ProductRepository
+    private lateinit var recentViewedProductRepository: RecentViewedProductRepository
 
     @Before
     fun setUp() {
-        repository = mockk(relaxed = true)
         view = mockk(relaxed = true)
+        cartRepository = mockk(relaxed = true)
+        productRepository = mockk(relaxed = true)
+        recentViewedProductRepository = mockk(relaxed = true)
+        presenter = ShoppingPresenter(
+            view = view,
+            cartRepository = cartRepository,
+            productRepository = productRepository,
+            recentViewedProductRepository = recentViewedProductRepository
+        )
+
         products = listOf(
             Product(name = "아메리카노"),
             Product(name = "카페라떼")
@@ -38,90 +54,166 @@ class ShoppingPresenterTest {
     @Test
     fun `저장소로부터 상품 목록을 받아와서 뷰를 초기화한다`() {
         // given
-        every { repository.selectProducts(any(), any()) } returns products
+        every { productRepository.getProductInRange(any(), any()) } returns products
+        every { cartRepository.getCartProducts() } returns products.toCartProducts()
 
         // when
-        val presenter = ShoppingPresenter(
-            view = view,
-            repository = repository
-        )
-
-        presenter.loadProducts()
+        presenter.setUpProducts()
 
         // then
-        val expected = products.map { it.toUiModel() }
-
+        val expectedProducts = products.toCartProducts()
         verify {
             view.setUpShoppingView(
-                products = expected,
-                any(),
+                products = expectedProducts.map { it.toCartProductUiModel() },
                 any()
             )
         }
     }
 
     @Test
-    fun `저장소로부터 최근 본 상품을 받아와서 뷰를 초기화한다`() {
+    fun `저장소로부터 최근 본 상품 목록을 받아와서 뷰를 초기화한다`() {
         // given
-        every { repository.selectRecentViewedProducts() } returns recentViewedProducts
+        every { recentViewedProductRepository.getRecentViewedProducts() } returns recentViewedProducts
 
         // when
         val presenter = ShoppingPresenter(
             view = view,
-            repository = repository
+            productRepository = productRepository,
+            cartRepository = cartRepository,
+            recentViewedProductRepository = recentViewedProductRepository
         )
 
-        presenter.loadProducts()
+        presenter.setUpProducts()
 
         // then
-        val expected = recentViewedProducts.map { it.toUiModel() }
+        val expected = recentViewedProducts.map { it.toRecentViewedProductUiModel() }
 
         verify {
             view.setUpShoppingView(
                 any(),
                 recentViewedProducts = expected,
-                any()
             )
         }
     }
 
     @Test
-    fun `상품을 더 읽어오면 추가적으로 받아온 상품들을 가지고 뷰를 갱신한다`() {
+    fun `장바구니에 있는 상품들에 대한 개수를 저장소로부터 받아서 뷰를 갱신한다`() {
         // given
-        every { repository.selectProducts(any(), any()) } returns products
+        every { cartRepository.getCountOfCartProducts() } returns 7
 
         // when
-        val presenter = ShoppingPresenter(
-            view = view,
-            repository = repository
-        )
-
-        presenter.readMoreShoppingProducts()
+        presenter.loadCartProductsCount()
 
         // then
-        val expected = products.map { it.toUiModel() }
-
-        verify { view.refreshShoppingProductsView(toAdd = expected) }
+        val expected = 7
+        verify { view.refreshProductCount(expected) }
     }
 
     @Test
     fun `최근 본 상품을 추가하면 저장소에 저장한 후 기존 최근 본 상품들과 합쳐서 뷰를 갱신한다`() {
         // given
-        every { repository.selectRecentViewedProducts() } returns recentViewedProducts
-        every { repository.selectRecentViewedProductById(id = recentViewedProduct.id) } returns recentViewedProduct
+        every { recentViewedProductRepository.getRecentViewedProducts() } returns recentViewedProducts
+        every { recentViewedProductRepository.getRecentViewedProductById(id = recentViewedProduct.id) } returns recentViewedProduct
 
         // when
         val presenter = ShoppingPresenter(
             view = view,
-            repository = repository
+            productRepository = productRepository,
+            cartRepository = cartRepository,
+            recentViewedProductRepository = recentViewedProductRepository
         )
 
         presenter.addToRecentViewedProduct(recentViewedProduct.id)
 
         // then
-        val expected = listOf(recentViewedProduct.toUiModel()) +
-            recentViewedProducts.map { it.toUiModel() }
+        val expected = listOf(recentViewedProduct.toRecentViewedProductUiModel()) +
+            recentViewedProducts.map { it.toRecentViewedProductUiModel() }
 
         verify { view.refreshRecentViewedProductsView(products = expected) }
+    }
+
+    @Test
+    fun `상품의 상세 정보를 로드할때 저장소로부터 마지막으로 본 상품을 받아와서 뷰에 넘겨준다`() {
+        // given
+        val product = Product(id = 50, name = "아메리카노")
+        val latestProduct = Product(name = "밀크티")
+        every { recentViewedProductRepository.getLatestViewedProduct() } returns latestProduct
+        every { productRepository.getProductById(product.id) } returns product
+
+        // when
+        presenter.loadProductDetail(product.id)
+
+        // then
+        verify {
+            view.shoppingNavigator.navigateToProductDetailView(
+                product = product.toProductUiModel(),
+                latestViewedProduct = latestProduct.toProductUiModel()
+            )
+        }
+    }
+
+    @Test
+    fun `상품을 추가적으로 읽어오면 추가적으로 읽어온 상품으로 뷰를 갱신한다`() {
+        // given
+        every { productRepository.getProductInRange(any(), any()) } returns products
+        every { cartRepository.getCartProducts() } returns products.toCartProducts()
+
+        // when
+        presenter.readMoreShoppingProducts()
+
+        // then
+        verify {
+            view.showMoreProducts(products.toCartProducts().map { it.toCartProductUiModel() })
+        }
+    }
+
+    @Test
+    fun `상품을 장바구니에 추가하면 저장소에 저장하고 장바구니 상품의 개수를 나타내는 뷰를 갱신한다`() {
+        // given
+        val product = CartProduct(name = "우유")
+        every { cartRepository.getCountOfCartProducts() } returns 3
+
+        // when
+        presenter.addProductToShoppingCart(product.toCartProductUiModel())
+
+        // then
+        verify { cartRepository.addToCart(product.product.id) }
+        verify { view.refreshProductCount(3) }
+    }
+
+    @Test
+    fun `상품의 개수를 증가시키면 저장소에 저장한다`() {
+        // given
+        val cartProduct = CartProduct(name = "우유", count = 1)
+        every { cartRepository.getCartProductById(cartProduct.product.id) } returns cartProduct
+
+        // when
+        presenter.plusShoppingCartProductCount(cartProduct.toCartProductUiModel())
+
+        // then
+        verify {
+            cartRepository.addToCart(
+                id = cartProduct.product.id,
+                count = cartProduct.count.value + 1
+            )
+        }
+    }
+
+    @Test
+    fun `상품의 개수를 감소시키면 저장소에 저장한다`() {
+        // given
+        val cartProduct = CartProduct(name = "우유", count = 2)
+        every { cartRepository.getCartProductById(cartProduct.product.id) } returns cartProduct
+
+        // when
+        presenter.minusShoppingCartProductCount(cartProduct.toCartProductUiModel())
+
+        // then
+        verify {
+            cartRepository.addToCart(
+                id = cartProduct.product.id,
+                count = cartProduct.count.value - 1
+            )
+        }
     }
 }
