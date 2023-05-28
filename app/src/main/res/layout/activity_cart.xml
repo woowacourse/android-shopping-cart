@@ -3,6 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="price"
+            type="int" />
+
+        <variable
+            name="count"
+            type="int" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,11 +32,70 @@
             android:id="@+id/cart_recyclerview"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginBottom="78dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:layout_marginEnd="122dp"
+            android:background="#555555"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <CheckBox
+                android:id="@+id/allCheckBox"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="23dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/checkbox"
+                android:button="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:checked="true" />
+
+            <TextView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:gravity="center"
+                android:text="전체"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/allCheckBox" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:text="@{@string/product_price(price)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="184,200원" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="122dp"
+            android:layout_height="78dp"
+            android:background="#04C09E"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@{@string/order_button_message(count)}"
+            tools:text="주문하기(2)" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

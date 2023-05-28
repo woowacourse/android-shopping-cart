@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="count"
+            type="int" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.model.ProductUIModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.utils.CustomViewOnClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/order_count_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_border_radius_no_line">
+
+        <ImageView
+            android:id="@+id/minusBtn"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:paddingHorizontal="14dp"
+            android:src="@drawable/remove_button"
+            android:onClick="@{() -> listener.decreaseCount(product.id) }"
+            android:visibility = "@{count > 1 ? View.VISIBLE : View.INVISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/plusBtn"
+            app:layout_constraintStart_toEndOf="@+id/minusBtn"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{String.valueOf(count)}"
+            tools:text="1" />
+
+        <ImageView
+            android:id="@+id/plusBtn"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:paddingHorizontal="14dp"
+            android:src="@drawable/add_button"
+            android:onClick="@{() -> listener.increaseCount(product.id)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

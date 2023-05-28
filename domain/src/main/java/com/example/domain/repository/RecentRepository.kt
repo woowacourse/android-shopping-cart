@@ -5,6 +5,6 @@ import com.example.domain.model.Product
 interface RecentRepository {
     fun insert(product: Product)
     fun getRecent(maxSize: Int): List<Product>
-    fun delete(id: Int)
-    fun findById(id: Int): Product?
+    fun delete(id: Long)
+    fun findById(id: Long): Product?
 }

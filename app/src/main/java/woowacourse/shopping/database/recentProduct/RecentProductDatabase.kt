@@ -44,7 +44,7 @@ class RecentProductDatabase(context: Context) : RecentRepository {
         val products = mutableListOf<Product>()
         while (cursor.moveToNext()) {
             val id =
-                cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_ID))
+                cursor.getLong(cursor.getColumnIndexOrThrow(TABLE_COLUMN_ID))
             val name =
                 cursor.getString(
                     cursor.getColumnIndexOrThrow(TABLE_COLUMN_NAME),
@@ -63,7 +63,7 @@ class RecentProductDatabase(context: Context) : RecentRepository {
         return products
     }
 
-    override fun findById(id: Int): Product? {
+    override fun findById(id: Long): Product? {
         val selection = "$TABLE_COLUMN_ID = ?"
         val selectionArgs = arrayOf(id.toString())
         val cursor = db.query(
@@ -80,7 +80,7 @@ class RecentProductDatabase(context: Context) : RecentRepository {
         if (cursor.count > 0) {
             cursor.moveToFirst()
             val id =
-                cursor.getInt(cursor.getColumnIndexOrThrow(TABLE_COLUMN_ID))
+                cursor.getLong(cursor.getColumnIndexOrThrow(TABLE_COLUMN_ID))
             val name =
                 cursor.getString(
                     cursor.getColumnIndexOrThrow(TABLE_COLUMN_NAME),
@@ -99,7 +99,7 @@ class RecentProductDatabase(context: Context) : RecentRepository {
         return product
     }
 
-    override fun delete(id: Int) {
+    override fun delete(id: Long) {
         val whereClause = "$TABLE_COLUMN_ID = ?"
         val whereArgs = arrayOf(id.toString())
         db.delete(

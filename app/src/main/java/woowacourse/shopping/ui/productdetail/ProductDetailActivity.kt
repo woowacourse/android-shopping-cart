@@ -17,12 +17,19 @@ import woowacourse.shopping.model.ProductUIModel.Companion.KEY_PRODUCT
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
 import woowacourse.shopping.ui.productdetail.contract.presenter.ProductDetailPresenter
+import woowacourse.shopping.ui.productdetail.dialog.ProductDialogInterface
+import woowacourse.shopping.ui.productdetail.dialog.ProductOrderDialog
 import woowacourse.shopping.utils.getSerializableExtraCompat
 import woowacourse.shopping.utils.keyError
 
-class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
+class ProductDetailActivity :
+    AppCompatActivity(),
+    ProductDetailContract.View,
+    ProductDialogInterface,
+    ProductDetailListener {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
+    private lateinit var productOrderDialog: ProductOrderDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +44,14 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         )
 
         binding.cartButton.setOnClickListener {
-            presenter.addProductToCart()
-            navigateToCart()
+            presenter.setProductCountDialog()
         }
+
+        binding.listener = this
+        binding.latestProduct =
+            intent.getSerializableExtraCompat(RECENT_KEY_PRODUCT) ?: return keyError(
+                RECENT_KEY_PRODUCT,
+            )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -59,14 +71,53 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding.product = product
     }
 
+    override fun showProductCountDialog(product: ProductUIModel) {
+        productOrderDialog = ProductOrderDialog(this, this, product)
+        productOrderDialog.show()
+    }
+
+    override fun showLatestProduct(product: ProductUIModel) {
+        binding.latestProduct = product
+    }
+
     private fun navigateToCart() {
+        productOrderDialog.dismiss()
         startActivity(CartActivity.from(this))
     }
 
+    override fun addToCart() {
+        presenter.addProductToCart()
+        navigateToCart()
+    }
+
+    override fun increaseCount(id: Long) {
+        presenter.addProductCount(id)
+    }
+
+    override fun decreaseCount(id: Long) {
+        presenter.subtractProductCount(id)
+    }
+
+    override fun navigateToDetail(product: ProductUIModel) {
+        startActivity(from(this, product, null))
+        finish()
+    }
+
+    override fun clickLatestProduct() {
+        presenter.clickLatestProduct()
+    }
+
     companion object {
-        fun from(context: Context, product: ProductUIModel): Intent {
+        private const val RECENT_KEY_PRODUCT = "recent_product"
+        fun from(
+            context: Context,
+            product: ProductUIModel,
+            recentProduct: ProductUIModel? = null,
+        ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(KEY_PRODUCT, product)
+                putExtra(RECENT_KEY_PRODUCT, recentProduct)
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
         }
     }

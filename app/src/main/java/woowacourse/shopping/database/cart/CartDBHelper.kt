@@ -3,6 +3,8 @@ package woowacourse.shopping.database.cart
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_CART_PRODUCT_COUNT
+import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_CART_PRODUCT_IS_CHECKED
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_IMAGE_URL
 import woowacourse.shopping.database.cart.CartConstant.TABLE_COLUMN_PRODUCT_NAME
@@ -24,6 +26,8 @@ class CartDBHelper(
                 "$TABLE_COLUMN_PRODUCT_NAME TEXT," +
                 "$TABLE_COLUMN_PRODUCT_PRICE INTEGER," +
                 "$TABLE_COLUMN_PRODUCT_IMAGE_URL TEXT," +
+                "$TABLE_COLUMN_CART_PRODUCT_COUNT INTEGER," +
+                "$TABLE_COLUMN_CART_PRODUCT_IS_CHECKED BOOLEAN," +
                 "$TABLE_COLUMN_PRODUCT_SAVE_TIME LONG not null)",
         )
     }
@@ -34,7 +38,7 @@ class CartDBHelper(
     }
 
     companion object {
-        const val DATABASE_VERSION = 8
+        const val DATABASE_VERSION = 11
         const val DATABASE_NAME = "shopping_db"
     }
 }

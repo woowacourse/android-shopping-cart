@@ -1,8 +1,10 @@
 package woowacourse.shopping.ui.productdetail.contract.presenter
 
+import com.example.domain.model.CartProduct
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.RecentRepository
 import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.ui.productdetail.contract.ProductDetailContract
 
@@ -12,10 +14,14 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository,
     private val recentRepository: RecentRepository,
 ) : ProductDetailContract.Presenter {
+    private var count = 1
+
+    private var latestProduct: ProductUIModel? = null
 
     init {
         setUpProductDetail()
-        addProductToCart()
+        setLatestProduct()
+        addProductToRecent()
     }
 
     override fun setUpProductDetail() {
@@ -23,7 +29,9 @@ class ProductDetailPresenter(
     }
 
     override fun addProductToCart() {
-        cartRepository.insert(product.toDomain())
+        CartProduct(product.toDomain(), count, true).let {
+            cartRepository.insert(it)
+        }
     }
 
     override fun addProductToRecent() {
@@ -31,5 +39,28 @@ class ProductDetailPresenter(
             recentRepository.delete(it.id)
         }
         recentRepository.insert(product.toDomain())
+    }
+
+    override fun setProductCountDialog() {
+        view.showProductCountDialog(product)
+    }
+
+    override fun setLatestProduct() {
+        recentRepository.getRecent(1).firstOrNull()?.let { recent ->
+            latestProduct = recent.toUIModel()
+            view.showLatestProduct(latestProduct!!)
+        }
+    }
+
+    override fun clickLatestProduct() {
+        latestProduct?.let { view.navigateToDetail(it) }
+    }
+
+    override fun addProductCount(id: Long) {
+        count++
+    }
+
+    override fun subtractProductCount(id: Long) {
+        count--
     }
 }

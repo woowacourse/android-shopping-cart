@@ -1,10 +1,12 @@
 package com.example.domain.repository
 
-import com.example.domain.model.Product
+import com.example.domain.model.CartProduct
 
 interface CartRepository {
-    fun getAll(): List<Product>
-    fun insert(product: Product)
-    fun getSubList(offset: Int, size: Int): List<Product>
-    fun remove(id: Int)
+    fun getAll(): List<CartProduct>
+    fun insert(product: CartProduct)
+    fun remove(id: Long)
+    fun updateCount(id: Long, count: Int)
+    fun findById(id: Long): CartProduct?
+    fun getSubList(offset: Int, step: Int): List<CartProduct>
 }

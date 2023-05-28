@@ -5,8 +5,18 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="product"
+            type="woowacourse.shopping.model.ProductUIModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ui.productdetail.ProductDetailListener" />
+
+        <variable
+            name="latestProduct"
             type="woowacourse.shopping.model.ProductUIModel" />
     </data>
 
@@ -69,6 +79,7 @@
             app:layout_constraintTop_toBottomOf="@+id/divideBar" />
 
         <TextView
+            android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
@@ -85,10 +96,25 @@
             android:layout_height="50dp"
             android:background="#04C09E"
             android:gravity="center"
-            android:text="@string/insert_cart_texgt"
+            android:text="@string/insert_cart_text"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+        <include
+            android:id="@+id/latest_product_layout"
+            layout="@layout/latest_product_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="29dp"
+            android:layout_marginBottom="33dp"
+            android:visibility="@{ (latestProduct == null) ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toTopOf="@+id/cart_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5"
+            app:listener="@{listener}"
+            app:product="@{latestProduct}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -11,5 +11,5 @@ sealed interface ProductsItemType {
 }
 
 data class RecentProductsItem(val product: List<ProductUIModel>) : ProductsItemType
-data class ProductItem(val product: ProductUIModel) : ProductsItemType
+data class ProductItem(val product: ProductUIModel, val count: Int) : ProductsItemType
 object ProductReadMore : ProductsItemType
