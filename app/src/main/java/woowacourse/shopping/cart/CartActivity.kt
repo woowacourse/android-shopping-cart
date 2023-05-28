@@ -97,7 +97,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private fun setupCartProductAllCheckbox() {
         binding.cartProductAllCheckbox.setOnClickListener {
-            presenter.updateCartProductCheckedInPage(binding.cartProductAllCheckbox.isChecked)
+            presenter.changeAllChecked(binding.cartProductAllCheckbox.isChecked)
         }
     }
 

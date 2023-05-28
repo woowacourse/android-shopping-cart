@@ -80,7 +80,7 @@ class CartPresenter(
         }
     }
 
-    override fun updateCartProductCheckedInPage(isChecked: Boolean) {
+    override fun changeAllChecked(isChecked: Boolean) {
         val cart = getCartInPage()
         cart.cartProducts.forEach {
             if (it.isChecked != isChecked) {
