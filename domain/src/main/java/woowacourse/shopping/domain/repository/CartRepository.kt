@@ -22,8 +22,4 @@ interface CartRepository {
     fun modifyCartProduct(cartProduct: CartProduct)
 
     fun getTotalPrice(): Int
-
-    fun replaceCartProduct(prev: CartProduct, new: CartProduct)
-
-    fun isAllCheckedInPage(page: Int, sizePerPage: Int): Boolean
 }

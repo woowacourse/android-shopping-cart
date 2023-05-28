@@ -7,10 +7,8 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartRepositoryImpl(
-    private val cartDao: CartDao,
-    private var cart: Cart = Cart(emptyList())
+    private val cartDao: CartDao
 ) : CartRepository {
-
     override fun addCartProduct(cartProduct: CartProduct) {
         cartDao.insertCartProduct(cartProduct)
     }
@@ -24,20 +22,11 @@ class CartRepositoryImpl(
     }
 
     override fun getPage(page: Int, sizePerPage: Int): Cart {
-        val startIndex = page * sizePerPage
-        val newCart = if (startIndex < cart.cartProducts.size) {
-            cart.getSubCart(startIndex, startIndex + sizePerPage)
-        } else {
-            cartDao.selectPage(page, sizePerPage).apply {
-                cart = Cart(cart.cartProducts + cartProducts)
-            }
-        }
-        return newCart
+        return cartDao.selectPage(page, sizePerPage)
     }
 
     override fun deleteCartProduct(cartProduct: CartProduct) {
         cartDao.deleteCartProduct(cartProduct)
-        cart = cart.removeCartProduct(cartProduct)
     }
 
     override fun getTotalAmount(): Int {
@@ -54,15 +43,5 @@ class CartRepositoryImpl(
 
     override fun getTotalPrice(): Int {
         return cartDao.getTotalPrice()
-    }
-
-    override fun replaceCartProduct(prev: CartProduct, new: CartProduct) {
-        cart = cart.replaceCartProduct(prev, new)
-    }
-
-    override fun isAllCheckedInPage(page: Int, sizePerPage: Int): Boolean {
-        val startIndex = page * sizePerPage
-        val cartInPage = cart.getSubCart(startIndex, startIndex + sizePerPage)
-        return cartInPage.cartProducts.all { it.isChecked }
     }
 }
