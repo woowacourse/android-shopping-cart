@@ -54,12 +54,22 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     ) {
         shoppingCartRecyclerAdapter = ShoppingCartRecyclerAdapter(
             products = products,
-            onRemoved = presenter::removeShoppingCartProduct,
+            cartClickListener = object : CartClickListener {
+                override fun onClickRemoveBtn(id: Int) {
+                    presenter.removeShoppingCartProduct(id)
+                }
+
+                override fun onClickCheckBox(id: Int, isSelected: Boolean) {
+                    presenter.changeShoppingCartProductSelection(id, isSelected)
+                }
+
+                override fun onClickCheckAllBtn(products: List<CartProductUiModel>, isSelected: Boolean) {
+                    presenter.checkAllBox(products, isSelected)
+                }
+            },
             showingRule = ShowingShoppingCartProducts(),
             updatePageState = ::setUpPageState,
             totalSize = totalSize,
-            onClickCheckBox = presenter::changeShoppingCartProductSelection,
-            checkUpAll = presenter::checkAllBox,
             countClickListener = object : ProductCountClickListener {
                 override fun onPlusClick(id: Int) {
                     presenter.changeShoppingCartProductCount(id, true)

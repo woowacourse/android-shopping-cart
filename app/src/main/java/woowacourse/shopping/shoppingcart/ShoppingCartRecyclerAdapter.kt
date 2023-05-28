@@ -10,12 +10,10 @@ import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 
 class ShoppingCartRecyclerAdapter(
     products: List<CartProductUiModel>,
-    private val onRemoved: (id: Int) -> Unit,
+    private val cartClickListener: CartClickListener,
     private val showingRule: ShowingRule,
     private val updatePageState: (pageNumber: Int, totalSize: Int) -> Unit,
     private var totalSize: Int,
-    private val onClickCheckBox: (id: Int, isSelected: Boolean) -> Unit,
-    private val checkUpAll: (products: List<CartProductUiModel>, isSelected: Boolean) -> Unit,
     private val countClickListener: ProductCountClickListener,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
 
@@ -35,7 +33,7 @@ class ShoppingCartRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartItemViewHolder {
-        return ShoppingCartItemViewHolder.from(parent, onClickCheckBox, countClickListener)
+        return ShoppingCartItemViewHolder.from(parent, cartClickListener::onClickCheckBox, countClickListener)
     }
 
     override fun onBindViewHolder(holder: ShoppingCartItemViewHolder, position: Int) {
@@ -46,7 +44,7 @@ class ShoppingCartRecyclerAdapter(
     }
 
     private fun removeItem(position: Int) {
-        onRemoved(shoppingCartProducts[position].product.id)
+        cartClickListener.onClickRemoveBtn(shoppingCartProducts[position].product.id)
         shoppingCartProducts.removeAt(position)
         if (showingProducts.isEmpty()) {
             currentPage = currentPage.prev()
@@ -71,7 +69,7 @@ class ShoppingCartRecyclerAdapter(
     }
 
     fun checkAllBtn(isSelected: Boolean) {
-        checkUpAll(showingProducts, isSelected)
+        cartClickListener.onClickCheckAllBtn(showingProducts, isSelected)
         showingProducts.forEach { it.isSelected = isSelected }
         notifyItemRangeChanged(0, CART_PRODUCT_TO_READ)
     }
