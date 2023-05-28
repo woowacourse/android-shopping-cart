@@ -12,24 +12,12 @@ import woowacourse.shopping.database.product.ProductDBContract
 import woowacourse.shopping.database.product.ShoppingDao
 import woowacourse.shopping.database.recentviewed.RecentViewedDBContract
 import woowacourse.shopping.database.shoppingcart.ShoppingCartDBContract
-import woowacourse.shopping.model.ProductUiModel
 
 class ShoppingDBRepository(
     shoppingDao: ShoppingDao,
 ) : ShoppingRepository {
 
     private val shoppingDB: SQLiteDatabase = shoppingDao.writableDatabase
-
-    private fun addProduct(product: ProductUiModel) {
-        val values = ContentValues().apply {
-            put(ProductDBContract.PRODUCT_ID, product.id)
-            put(ProductDBContract.PRODUCT_IMG, product.imageUrl)
-            put(ProductDBContract.PRODUCT_NAME, product.name)
-            put(ProductDBContract.PRODUCT_PRICE, product.price)
-        }
-
-        shoppingDB.insert(ProductDBContract.TABLE_NAME, null, values)
-    }
 
     override fun selectProducts(from: Int, count: Int): List<Product> {
         val products = mutableListOf<Product>()
@@ -132,17 +120,8 @@ class ShoppingDBRepository(
     }
 
     override fun selectProductById(id: Int): Product {
-        val cursor = shoppingDB.rawQuery(
-            "select * from ${ProductDBContract.TABLE_NAME} where ${ProductDBContract.PRODUCT_ID} = ?",
-            arrayOf(id.toString()),
-        ).apply {
-            moveToNext()
-        }
-
-        val product = cursor.getProduct()
-        cursor.close()
-
-        return product
+        return MockProduct.products.find { it.id == id }
+            ?: Product(-1, Name(""), "", Price(0))
     }
 
     override fun selectShoppingCartProductById(id: Int): CartProduct {
@@ -263,14 +242,5 @@ class ShoppingDBRepository(
             "${RecentViewedDBContract.RECENT_VIEWED_PRODUCT_ID} = ?",
             arrayOf(id.toString()),
         )
-    }
-
-    /**
-     * 테스트를 위해 가짜 데이터 insert를 위한 함수
-     */
-    fun setUpDB() {
-        MockProduct.products.forEach {
-            addProduct(it)
-        }
     }
 }

@@ -1,6 +1,7 @@
 package woowacourse.shopping.database.product
 
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.util.toDomainModel
 
 object MockProduct {
 
@@ -305,5 +306,5 @@ object MockProduct {
             imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2020/06/[9300000002856]_20200626140039590.jpg",
             price = 7000,
         ),
-    )
+    ).map { it.toDomainModel() }
 }
