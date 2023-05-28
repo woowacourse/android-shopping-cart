@@ -15,7 +15,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.database.cart.CartDao
 import woowacourse.shopping.database.cart.CartRepositoryImpl
-import woowacourse.shopping.database.recentProduct.RecentProductDatabase
+import woowacourse.shopping.database.recentProduct.RecentProductDao
+import woowacourse.shopping.database.recentProduct.RecentRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.databinding.DialogCartBinding
 import woowacourse.shopping.model.ProductUIModel
@@ -39,7 +40,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             this,
             product,
             CartRepositoryImpl(CartDao(this)),
-            RecentProductDatabase(this),
+            RecentRepositoryImpl(RecentProductDao(this)),
         )
         presenter.setUp()
         presenter.manageRecentView()

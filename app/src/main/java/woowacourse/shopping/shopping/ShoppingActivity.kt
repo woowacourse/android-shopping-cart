@@ -14,7 +14,8 @@ import woowacourse.shopping.data.ProductFakeRepository.KEY_PRODUCT_OFFSET
 import woowacourse.shopping.data.ProductRepository
 import woowacourse.shopping.database.cart.CartDao
 import woowacourse.shopping.database.cart.CartRepositoryImpl
-import woowacourse.shopping.database.recentProduct.RecentProductDatabase
+import woowacourse.shopping.database.recentProduct.RecentProductDao
+import woowacourse.shopping.database.recentProduct.RecentRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
@@ -41,7 +42,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             this,
             savedInstanceState?.getInt(KEY_PRODUCT_OFFSET) ?: 20,
             ProductRepository(),
-            RecentProductDatabase(this),
+            RecentRepositoryImpl(RecentProductDao(this)),
             CartRepositoryImpl(CartDao(this)),
         )
         binding.cartIcon.setOnClickListener { navigateToCart() }
