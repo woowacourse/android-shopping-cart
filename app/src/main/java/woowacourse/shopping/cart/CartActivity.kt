@@ -62,7 +62,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartOrderButton.text = getString(R.string.order_button, amount)
     }
 
-    override fun notifyAmountChanged() {
+    override fun notifyCartChanged() {
         setResult(Activity.RESULT_OK)
     }
 
@@ -84,11 +84,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 presenter.updateAllChecked()
             },
             onMinusAmountButtonClick = {
-                setResult(RESULT_OK)
                 presenter.decreaseCartProductAmount(it)
             },
             onPlusAmountButtonClick = {
-                setResult(RESULT_OK)
                 presenter.increaseCartProductAmount(it)
             }
         )
@@ -106,6 +104,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         presenter = CartPresenter(
             this, cartRepository = CartRepositoryImpl(CartDao(db)), sizePerPage = SIZE_PER_PAGE
         )
+    }
+
+    override fun finish() {
+        presenter.checkCartChanged()
+        super.finish()
     }
 
     companion object {

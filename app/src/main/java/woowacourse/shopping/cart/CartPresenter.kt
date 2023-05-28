@@ -11,9 +11,10 @@ class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
     private var currentPage: Int = 0,
-    private val sizePerPage: Int
-) : CartContract.Presenter {
+    private val sizePerPage: Int,
+    private var initialCart: Cart = Cart(emptyList()),
     private var cart: Cart = Cart(emptyList())
+) : CartContract.Presenter {
     private var cartTotalPrice: Int = 0
     private var cartTotalAmount: Int = 0
 
@@ -31,7 +32,6 @@ class CartPresenter(
 
         view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
-        view.notifyAmountChanged()
     }
 
     override fun goToPreviousPage() {
@@ -89,6 +89,13 @@ class CartPresenter(
         }
     }
 
+    override fun checkCartChanged() {
+        val cartProducts = cart.cartProducts.map { it.copy(isChecked = true) }
+        if (cartProducts != initialCart.cartProducts) {
+            view.notifyCartChanged()
+        }
+    }
+
     private fun updateCartPage() {
         val newCart = getCartInPage()
         view.updateCart(
@@ -105,6 +112,7 @@ class CartPresenter(
             cart.getSubCart(startIndex, startIndex + sizePerPage)
         } else {
             cartRepository.getPage(currentPage, sizePerPage).apply {
+                initialCart = Cart(initialCart.cartProducts + cartProducts)
                 cart = Cart(cart.cartProducts + cartProducts)
             }
         }

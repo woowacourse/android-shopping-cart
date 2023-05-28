@@ -8,9 +8,12 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.common.model.CartProductModel
+import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
 import woowacourse.shopping.createCartProductModel
+import woowacourse.shopping.createProduct
 import woowacourse.shopping.createProductModel
 import woowacourse.shopping.domain.Cart
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import java.time.LocalDateTime
 
@@ -70,10 +73,9 @@ class CartPresenterTest {
     }
 
     @Test
-    fun 장바구니_아이템을_제거하면_저장하고_뷰에_갱신한다() {
+    fun 장바구니_아이템을_제거하면_아이템을_제거한다() {
         // given
         every { cartRepository.deleteCartProduct(any()) } just runs
-        every { view.notifyAmountChanged() } just runs
 
         // when
         val cartProductModel = createCartProductModel()
@@ -82,7 +84,6 @@ class CartPresenterTest {
         // then
         verify {
             cartRepository.deleteCartProduct(any())
-            view.notifyAmountChanged()
         }
     }
 
@@ -266,6 +267,88 @@ class CartPresenterTest {
         verify(exactly = 2) {
             view.updateCartTotalPrice(any())
             view.updateCartTotalAmount(any())
+        }
+    }
+
+    @Test
+    fun 카트_아이템_수량이_다르면_카트에_변화가_있음을_알린다() {
+        // given
+        val time = LocalDateTime.now()
+        val initialCart = Cart(listOf(CartProduct(time, 2, true, createProduct())))
+        val cart = Cart(listOf(CartProduct(time, 1, true, createProduct())))
+        presenter = CartPresenter(
+            view, cartRepository, 0, 0, initialCart, cart
+        )
+        every { view.notifyCartChanged() } just runs
+
+        // when
+        presenter.checkCartChanged()
+
+        // then
+        verify(exactly = 1) {
+            view.notifyCartChanged()
+        }
+    }
+
+    @Test
+    fun 카트_아이템_수량이_같으면_카트에_변화가_있음을_알리지_않는다() {
+        // given
+        val time = LocalDateTime.now()
+        val initialCart = Cart(listOf(CartProduct(time, 2, true, createProduct())))
+        val cart = Cart(listOf(CartProduct(time, 2, true, createProduct())))
+        presenter = CartPresenter(
+            view, cartRepository, 0, 0, initialCart, cart
+        )
+        every { view.notifyCartChanged() } just runs
+
+        // when
+        presenter.checkCartChanged()
+
+        // then
+        verify(exactly = 0) {
+            view.notifyCartChanged()
+        }
+    }
+
+    @Test
+    fun 카트_아이템_선택_여부가_달라도_카트에_변화가_있음을_알리지_않는다() {
+        // given
+        val time = LocalDateTime.now()
+        val initialCart = Cart(listOf(CartProduct(time, 2, true, createProduct())))
+        val cart = Cart(listOf(CartProduct(time, 2, false, createProduct())))
+        presenter = CartPresenter(
+            view, cartRepository, 0, 0, initialCart, cart
+        )
+        every { view.notifyCartChanged() } just runs
+
+        // when
+        presenter.checkCartChanged()
+
+        // then
+        verify(exactly = 0) {
+            view.notifyCartChanged()
+        }
+    }
+
+    @Test
+    fun 카트_아이템이_삭제되면_카트에_변화가_있음을_알린다() {
+        // given
+        val cartProduct = CartProduct(LocalDateTime.now(), 2, true, createProduct())
+        val initialCart = Cart(listOf(cartProduct))
+        val cart = Cart(listOf(cartProduct))
+        presenter = CartPresenter(
+            view, cartRepository, 0, 0, initialCart, cart
+        )
+        every { view.notifyCartChanged() } just runs
+        every { cartRepository.deleteCartProduct(any()) } just runs
+
+        // when
+        presenter.removeCartProduct(cartProduct.toView())
+        presenter.checkCartChanged()
+
+        // then
+        verify(exactly = 1) {
+            view.notifyCartChanged()
         }
     }
 }
