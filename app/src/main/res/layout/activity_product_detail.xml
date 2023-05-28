@@ -10,7 +10,7 @@
             type="woowacourse.shopping.productdetail.ProductDetailContract.Presenter" />
 
         <variable
-            name="product"
+            name="recentProduct"
             type="woowacourse.shopping.model.ProductUiModel" />
     </data>
 
@@ -114,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp"
-                android:text="@{product.name}"
+                android:text="@{recentProduct.name}"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="@id/text_recent_description"
@@ -126,7 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="18dp"
-                android:text="@{@string/price_format(product.toPriceFormat())}"
+                android:text="@{@string/price_format(recentProduct.toPriceFormat())}"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -15,7 +15,7 @@ import woowacourse.shopping.shoppingcart.ShoppingCartPresenter
 
 fun generateProductDetailPresenter(
     view: ProductDetailContract.View,
-    product: ProductUiModel,
+    product: ProductUiModel?,
     context: Context,
 ) = ProductDetailPresenter(
     view,

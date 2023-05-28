@@ -15,7 +15,7 @@ interface ProductDetailContract {
 
     interface Presenter {
 
-        val product: ProductUiModel
+        var product: ProductUiModel?
         val count: Int
 
         fun setUpView()

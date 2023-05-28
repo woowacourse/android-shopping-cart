@@ -7,7 +7,7 @@ import woowacourse.shopping.util.toUiModel
 
 class ProductDetailPresenter(
     val view: ProductDetailContract.View,
-    override val product: ProductUiModel,
+    override var product: ProductUiModel?,
     private val repository: ShoppingRepository,
 ) : ProductDetailContract.Presenter {
 
@@ -16,6 +16,9 @@ class ProductDetailPresenter(
         get() = _count
 
     override fun setUpView() {
+        if (product == null) {
+            product = repository.selectRecentViewedProducts()[LAST_VIEWED_PRODUCT].toUiModel()
+        }
         val recentViewedProducts = repository.selectRecentViewedProducts()
         var lastViewedProduct: ProductUiModel? = null
         if (recentViewedProducts.isExist()) {
@@ -38,7 +41,7 @@ class ProductDetailPresenter(
     }
 
     override fun addToShoppingCart() {
-        repository.insertToShoppingCart(product.id, count, true)
+        product?.let { repository.insertToShoppingCart(it.id, count, true) }
         view.navigateToShoppingCartView()
     }
 

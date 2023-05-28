@@ -22,13 +22,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
 
-    private val product: ProductUiModel by lazy { intent.getSerializableCompat(PRODUCT_KEY)!! }
-    private val isRecentProduct: Boolean by lazy {
-        intent.getBooleanExtra(
-            IS_RECENT_PRODUCT,
-            false,
-        )
-    }
+    private val product: ProductUiModel? by lazy { intent.getSerializableCompat(PRODUCT_KEY) }
     private val presenter: ProductDetailPresenter by lazy {
         generateProductDetailPresenter(this, product, this)
     }
@@ -68,12 +62,13 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setUpRecentViewedProduct(product: ProductUiModel?) {
-        if (isRecentProduct || product == null) {
+        if (this.product == null || product == null) {
             binding.recentViewedProduct.visibility = View.GONE
         } else {
-            binding.product = product
+            binding.recentProduct = product
             binding.recentViewedProduct.setOnClickListener {
-                navigateToRecentProductView(product)
+                startActivity(Intent(this, ProductDetailActivity::class.java))
+                finish()
             }
         }
     }
@@ -104,23 +99,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         finish()
     }
 
-    private fun navigateToRecentProductView(product: ProductUiModel) {
-        val intent = getRecentViewIntent(this, product)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun getRecentViewIntent(context: Context, product: ProductUiModel): Intent {
-        val intent = Intent(context, ProductDetailActivity::class.java).apply {
-            putExtra(PRODUCT_KEY, product)
-            putExtra(IS_RECENT_PRODUCT, true)
-        }
-        return intent
-    }
-
     companion object {
         private const val PRODUCT_KEY = "product"
-        private const val IS_RECENT_PRODUCT = "is_recent_product"
         const val DETAIL_ACTIVITY_RESULT_CODE = 0
 
         fun getIntent(context: Context, product: ProductUiModel): Intent {
