@@ -6,6 +6,7 @@ import com.shopping.domain.ProductRepository
 import com.shopping.domain.RecentRepository
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUIModel
+import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductCataloguePresenter(
@@ -33,16 +34,35 @@ class ProductCataloguePresenter(
         view.setCartCountCircle(cartRepository.getSize())
     }
 
-    override fun updateCartProductCount(product: ProductUIModel, count: Int) {
-        if (count <= 0) return
-        if (count == 1) cartRepository.insert(CartProduct(true, 1, product.toDomain()))
-        cartRepository.updateProductCount(product.id, count)
+    override fun decreaseCartProductCount(cartProduct: CartProductUIModel, count: Int) {
+        if (count == 0) {
+            deleteCartProduct(cartProduct)
+            return
+        }
+        if (count < 0) return
+        updateCartProductCount(cartProduct, count)
+    }
+
+    override fun increaseCartProductCount(cartProduct: CartProductUIModel, count: Int) {
+        if (count == 1) {
+            cartRepository.insert(CartProduct(true, 1, cartProduct.product.toDomain()))
+            return
+        }
+        updateCartProductCount(cartProduct, count)
     }
 
     override fun getProductCount(product: ProductUIModel): Int {
-        val count = cartRepository.getProductCount(product.id)
+        val count = cartRepository.getProductCount(product.id) // 조회 했을 떄 없다면 0을 리턴
         if (count == 1) cartRepository.insert(CartProduct(true, 1, product.toDomain()))
         return count
+    }
+
+    override fun deleteCartProduct(cartProduct: CartProductUIModel) {
+        cartRepository.remove(cartProduct.product.id)
+    }
+
+    private fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int) {
+        cartRepository.updateProductCount(cartProduct.product.id, count)
     }
 
     companion object {

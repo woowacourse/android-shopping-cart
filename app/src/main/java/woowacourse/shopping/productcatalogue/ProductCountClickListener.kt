@@ -1,11 +1,9 @@
 package woowacourse.shopping.productcatalogue
 
 import android.widget.TextView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.uimodel.CartProductUIModel
 
 interface ProductCountClickListener {
-    fun onDownClicked(product: ProductUIModel, countView: TextView)
-    fun onUpClicked(product: ProductUIModel, countView: TextView)
-    fun onShowClicked(down: TextView, up: TextView, count: TextView, show: FloatingActionButton)
+    fun onDownClicked(cartProduct: CartProductUIModel, countView: TextView)
+    fun onUpClicked(cartProduct: CartProductUIModel, countView: TextView)
 }
