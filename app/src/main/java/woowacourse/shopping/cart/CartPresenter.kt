@@ -35,12 +35,11 @@ class CartPresenter(
     }
 
     override fun goToPreviousPage() {
-        if (!currentPage.isFirstPage()) {
-            currentPage = currentPage.moveToPreviousPage()
-            updateCartPage()
+        if (currentPage.isFirstPage()) return
 
-            if (currentPage.isFirstPage()) view.updateNavigationVisibility(determineNavigationVisibility())
-        }
+        currentPage = currentPage.moveToPreviousPage()
+        updateCartPage()
+        if (currentPage.isFirstPage()) view.updateNavigationVisibility(determineNavigationVisibility())
     }
 
     override fun goToNextPage() {
@@ -59,15 +58,15 @@ class CartPresenter(
     }
 
     override fun decreaseCartProductAmount(cartProductModel: CartProductModel) {
-        if (cartProductModel.amount > 1) {
-            val prevCartProduct = cartProductModel.toDomain()
-            val newCartProduct = prevCartProduct.decreaseAmount()
-            updateCartProduct(prevCartProduct, newCartProduct)
+        if (cartProductModel.amount <= 1) return
 
-            if (cartProductModel.isChecked) {
-                subtractProductPriceToCartTotalPrice(cartProductModel)
-                decreaseTotalAmount()
-            }
+        val prevCartProduct = cartProductModel.toDomain()
+        val newCartProduct = prevCartProduct.decreaseAmount()
+        updateCartProduct(prevCartProduct, newCartProduct)
+
+        if (cartProductModel.isChecked) {
+            subtractProductPriceToCartTotalPrice(cartProductModel)
+            decreaseTotalAmount()
         }
     }
 
