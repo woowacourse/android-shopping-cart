@@ -9,6 +9,9 @@ import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.domain.Basket
+import woowacourse.shopping.domain.BasketProduct
+import woowacourse.shopping.domain.Count
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
@@ -103,6 +106,43 @@ class ShoppingPresenterTest() {
     }
 
     @Test
+    fun `장바구니에 10,000원짜리 상품 1개 35,000원짜리 상품 2개 가 있다면 총갯수는 3개이다`() {
+        // given
+        presenter =
+            ShoppingPresenter(
+                view = view,
+                productRepository = productRepository,
+                recentProductRepository = recentProductRepository,
+                basketRepository = basketRepository,
+                basket = Basket(
+                    listOf(
+                        BasketProduct(
+                            id = 1,
+                            count = Count(1),
+                            product = Product(1, "더미입니다만", Price(10000), "url")
+                        ),
+                        BasketProduct(
+                            id = 2,
+                            count = Count(2),
+                            product = Product(2, "더미입니다만", Price(35000), "url")
+                        )
+                    )
+                )
+            )
+
+        val totalBasketCount = slot<Int>()
+        every { view.updateTotalBasketCount(capture(totalBasketCount)) } just runs
+
+        // when
+        presenter.fetchTotalBasketCount()
+
+        // then
+        val expected = 3
+        val actual = totalBasketCount.captured
+        assertEquals(expected, actual)
+    }
+
+    @Test
     fun `장바구니에 물품을 추가하면 데이터베이스에 저장하고 관련 데이터(상품이 장바구니에 담긴 갯수 전체 장바구니 count 수)를 업데이트 한다`() {
         // given
         every { view.updateProducts(any()) } just runs
@@ -114,6 +154,44 @@ class ShoppingPresenterTest() {
         verify(exactly = 1) { view.updateProducts(any()) }
         verify(exactly = initialUpdateTotalBasketCount + 1) { view.updateTotalBasketCount(any()) }
         verify(exactly = 1) { basketRepository.add(any()) }
+    }
+
+    @Test
+    fun `장바구니에 10,000원짜리 상품 1개 35,000원짜리 상품 2개 가 있을때 장바구니에 15000원짜리 상품을 1개 추가하면 총물품 갯수는 4개이다`() {
+        // given
+        presenter =
+            ShoppingPresenter(
+                view = view,
+                productRepository = productRepository,
+                recentProductRepository = recentProductRepository,
+                basketRepository = basketRepository,
+                basket = Basket(
+                    listOf(
+                        BasketProduct(
+                            id = 1,
+                            count = Count(1),
+                            product = Product(1, "더미입니다만", Price(10000), "url")
+                        ),
+                        BasketProduct(
+                            id = 2,
+                            count = Count(2),
+                            product = Product(2, "더미입니다만", Price(35000), "url")
+                        )
+                    )
+                )
+            )
+        val totalBasketCount = slot<Int>()
+        every { view.updateProducts(any()) } just runs
+        every { view.updateTotalBasketCount(capture(totalBasketCount)) } just runs
+        every { basketRepository.add(any()) } just runs
+
+        // when
+        presenter.addBasketProduct(Product(3, "더미입니다만", Price(15000), "url"))
+
+        // then
+        val expected = 4
+        val actual = totalBasketCount.captured
+        assertEquals(expected, actual)
     }
 
     @Test
