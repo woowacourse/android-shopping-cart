@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.cart
 
 import woowacourse.shopping.ui.model.CartProductModel
+import woowacourse.shopping.ui.model.ShoppingProductModel
 
 interface CartContract {
     interface Presenter {
@@ -32,7 +33,7 @@ interface CartContract {
 
         fun updateCartTotalAmount(amount: Int)
 
-        fun notifyProductsChanged()
+        fun notifyProductsChanged(difference: List<ShoppingProductModel>, amountDifference: Int)
 
         fun updateCartProduct(prev: CartProductModel, new: CartProductModel)
 

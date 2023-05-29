@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.productdetail.dialog
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +12,8 @@ import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.databinding.DialogAddCartProductBinding
 import woowacourse.shopping.ui.model.ProductModel
+import woowacourse.shopping.ui.model.ShoppingProductModel
+import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 
 class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
     private lateinit var binding: DialogAddCartProductBinding
@@ -52,6 +53,11 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
         dismiss()
     }
 
+    override fun notifyProductChanged(product: ShoppingProductModel, amountDifference: Int) {
+        (activity as? ProductDetailActivity)?.addDifference(product)
+        (activity as? ProductDetailActivity)?.addToAmountDifference(amountDifference)
+    }
+
     private fun initBinding(inflater: LayoutInflater, container: ViewGroup?) {
         binding = DialogAddCartProductBinding.inflate(inflater, container, false)
         binding.product = product
@@ -81,13 +87,8 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
 
     private fun setupAddToCartButton() {
         binding.dialogAddToCartButton.setOnClickListener {
-            setResultForChange()
             presenter.addToCart()
         }
-    }
-
-    private fun setResultForChange() {
-        activity?.setResult(Activity.RESULT_OK)
     }
 
     companion object {

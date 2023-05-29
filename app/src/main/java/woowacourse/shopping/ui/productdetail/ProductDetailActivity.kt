@@ -14,15 +14,22 @@ import woowacourse.shopping.data.database.dao.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.model.ProductModel
+import woowacourse.shopping.ui.model.ShoppingProductModel
 import woowacourse.shopping.ui.productdetail.dialog.CartProductDialog
 import woowacourse.shopping.ui.shopping.ShoppingActivity
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
+    private val difference: MutableList<ShoppingProductModel> by lazy {
+        intent.getSerializable<ArrayList<ShoppingProductModel>>(EXTRA_KEY_DIFFERENCE)?.toMutableList() ?: mutableListOf()
+    }
+    private var amountDifference: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        amountDifference = intent.getIntExtra(EXTRA_KEY_AMOUNT_DIFFERENCE, 0)
 
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -104,31 +111,47 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         productModel: ProductModel,
         recentProductModel: ProductModel?
     ) {
-        val intent = createIntent(this, productModel, recentProductModel)
+        val intent = createIntent(this, productModel, recentProductModel, difference, amountDifference)
         intent.flags = Intent.FLAG_ACTIVITY_FORWARD_RESULT
         startActivity(intent)
+        finish()
     }
 
     private fun goBackToShoppingActivity(): Boolean {
+        val intent = ShoppingActivity.createIntent(this, difference, amountDifference)
+        if (difference.isNotEmpty()) {
+            setResult(RESULT_OK, intent)
+        }
         finish()
-        val intent = ShoppingActivity.createIntent(this)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP + Intent.FLAG_ACTIVITY_SINGLE_TOP
-        startActivity(intent)
         return true
+    }
+
+    fun addDifference(product: ShoppingProductModel) {
+        difference.add(product)
+    }
+
+    fun addToAmountDifference(amount: Int) {
+        amountDifference += amount
     }
 
     companion object {
         private const val EXTRA_KEY_PRODUCT = "product"
         private const val EXTRA_KEY_RECENT_PRODUCT = "recent_product"
+        private const val EXTRA_KEY_DIFFERENCE = "difference"
+        private const val EXTRA_KEY_AMOUNT_DIFFERENCE = "amountDifference"
 
         fun createIntent(
             context: Context,
             productModel: ProductModel,
-            recentProductModel: ProductModel?
+            recentProductModel: ProductModel?,
+            difference: List<ShoppingProductModel>,
+            amountDifference: Int
         ): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(EXTRA_KEY_PRODUCT, productModel)
             intent.putExtra(EXTRA_KEY_RECENT_PRODUCT, recentProductModel)
+            intent.putExtra(EXTRA_KEY_DIFFERENCE, ArrayList(difference))
+            intent.putExtra(EXTRA_KEY_AMOUNT_DIFFERENCE, amountDifference)
             return intent
         }
     }

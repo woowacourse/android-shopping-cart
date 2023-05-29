@@ -218,19 +218,17 @@ class ShoppingPresenterTest {
     }
 
     @Test
-    fun 카트_변경_업데이트를_하면_상품_정보가_업데이트_되고_총_카트_상품_개수가_업데이트_된다() {
+    fun 카트_변경_업데이트를_하면_상품_정보가_업데이트_된다() {
         // given
         every { cartRepository.getTotalAmount() } returns 0
-        every { view.updateProducts(any()) } just runs
-        every { view.updateCartAmount(any()) } just runs
+        every { view.updateChange(any()) } just runs
 
         // when
-        presenter.updateCartChange()
+        presenter.updateChange(mockk())
 
         // then
         verify {
-            view.updateProducts(any())
-            view.updateCartAmount(any())
+            view.updateChange(any())
         }
     }
 }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.common.utils.convertDpToPixel
+import woowacourse.shopping.common.utils.getSerializable
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.CartDao
@@ -98,8 +99,20 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private val activityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            presenter.updateCartChange()
+        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+            val difference: ArrayList<ShoppingProductModel>? = result.data?.getSerializable(EXTRA_KEY_DIFFERENCE)
+            val amountDifference = result.data?.getIntExtra(EXTRA_KEY_AMOUNT_DIFFERENCE, 0) ?: 0
+            updateChange(difference, amountDifference)
+        }
+    }
+
+    private fun updateChange(
+        difference: ArrayList<ShoppingProductModel>?,
+        amountDifference: Int
+    ) {
+        if (difference != null) {
+            presenter.updateChange(difference.toList())
+            updateCartAmount(shoppingCartAmount?.text.toString().toInt() + amountDifference)
         }
     }
 
@@ -129,7 +142,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             onOptionsItemSelected(shoppingCartAction)
         }
 
-        shoppingCartAmount = shoppingCartAction?.actionView?.findViewById(R.id.tv_shopping_cart_amount)
+        shoppingCartAmount =
+            shoppingCartAction?.actionView?.findViewById(R.id.tv_shopping_cart_amount)
         presenter.setUpCartAmount()
 
         return super.onCreateOptionsMenu(menu)
@@ -169,6 +183,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun updateShoppingProduct(prev: ShoppingProductModel, new: ShoppingProductModel) {
         productAdapter.updateProduct(prev, new)
+    }
+
+    override fun updateChange(difference: List<ShoppingProductModel>) {
+        productAdapter.updateChange(difference)
     }
 
     private fun startCartActivity() {
@@ -212,8 +230,17 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         }
     }
 
-    private fun startProductDetailActivity(productModel: ProductModel, recentProductModel: ProductModel?) {
-        val intent = ProductDetailActivity.createIntent(this, productModel, recentProductModel)
+    private fun startProductDetailActivity(
+        productModel: ProductModel,
+        recentProductModel: ProductModel?
+    ) {
+        val intent = ProductDetailActivity.createIntent(
+            this,
+            productModel,
+            recentProductModel,
+            emptyList(),
+            0
+        )
         activityResultLauncher.launch(intent)
     }
 
@@ -221,9 +248,18 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         private const val SPAN_COUNT = 2
         private const val DP_GRID_TOP_OFFSET = 10
         private const val DP_GRID_EDGE_HORIZONTAL_OFFSET = 14
+        private const val EXTRA_KEY_DIFFERENCE = "difference"
+        private const val EXTRA_KEY_AMOUNT_DIFFERENCE = "amountDifference"
 
-        fun createIntent(context: Context): Intent {
-            return Intent(context, ShoppingActivity::class.java)
+        fun createIntent(
+            context: Context,
+            difference: List<ShoppingProductModel>,
+            amountDifference: Int
+        ): Intent {
+            val intent = Intent(context, ShoppingActivity::class.java)
+            intent.putExtra(EXTRA_KEY_DIFFERENCE, ArrayList(difference))
+            intent.putExtra(EXTRA_KEY_AMOUNT_DIFFERENCE, amountDifference)
+            return intent
         }
     }
 }

@@ -12,6 +12,8 @@ import woowacourse.shopping.data.database.ShoppingDBOpenHelper
 import woowacourse.shopping.data.database.dao.CartDao
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.model.CartProductModel
+import woowacourse.shopping.ui.model.ShoppingProductModel
+import woowacourse.shopping.ui.shopping.ShoppingActivity
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -90,8 +92,9 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartOrderButton.text = getString(R.string.order_button, amount)
     }
 
-    override fun notifyProductsChanged() {
-        setResult(Activity.RESULT_OK)
+    override fun notifyProductsChanged(difference: List<ShoppingProductModel>, amountDifference: Int) {
+        val intent = ShoppingActivity.createIntent(this, difference, amountDifference)
+        setResult(Activity.RESULT_OK, intent)
     }
 
     override fun updateCartProduct(prev: CartProductModel, new: CartProductModel) {

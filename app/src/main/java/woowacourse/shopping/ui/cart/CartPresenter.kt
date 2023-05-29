@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.ui.model.CartProductModel
 import woowacourse.shopping.ui.model.mapper.CartProductMapper.toDomain
 import woowacourse.shopping.ui.model.mapper.CartProductMapper.toView
+import woowacourse.shopping.ui.model.mapper.ShoppingProductMapper.toView
 
 class CartPresenter(
     private val view: CartContract.View,
@@ -19,6 +20,7 @@ class CartPresenter(
     private var totalCount: Int = 0
     private var selectedCartTotalPrice: Int = 0
     private var selectedCartTotalAmount: Int = 0
+    private val difference: MutableList<ShoppingProduct> = mutableListOf()
 
     init {
         setupTotalCount()
@@ -32,6 +34,7 @@ class CartPresenter(
         val cartProduct = cartProductModel.toDomain()
         cartRepository.deleteCartProduct(cartProduct)
         cart = cart.removeCartProduct(cartProduct)
+        difference.add(ShoppingProduct(cartProduct.product, amount = 0))
         totalCount--
 
         if (cartProductModel.isChecked) {
@@ -104,8 +107,13 @@ class CartPresenter(
             initialCart.cartProducts.map { ShoppingProduct(it.product, it.amount) }
         val shoppingProducts =
             cart.cartProducts.map { ShoppingProduct(it.product, it.amount) }
-        if (initialShoppingProducts != shoppingProducts) {
-            view.notifyProductsChanged()
+
+        val amountChangedProducts = shoppingProducts - initialShoppingProducts.toSet()
+        val amountDifference = shoppingProducts.sumOf { it.amount } - initialShoppingProducts.sumOf { it.amount }
+        difference.addAll(amountChangedProducts)
+
+        if (difference.isNotEmpty()) {
+            view.notifyProductsChanged(difference.map { it.toView() }, amountDifference)
         }
     }
 

@@ -6,7 +6,7 @@ import woowacourse.shopping.ui.model.ShoppingProductModel
 
 interface ShoppingContract {
     interface Presenter {
-        fun updateCartChange()
+        fun updateChange(difference: List<ShoppingProductModel>)
 
         fun updateRecentProducts()
 
@@ -37,5 +37,7 @@ interface ShoppingContract {
         fun updateCartAmount(amount: Int)
 
         fun updateShoppingProduct(prev: ShoppingProductModel, new: ShoppingProductModel)
+
+        fun updateChange(difference: List<ShoppingProductModel>)
     }
 }

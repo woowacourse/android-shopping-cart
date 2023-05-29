@@ -53,6 +53,16 @@ class ProductAdapter(
         notifyDataSetChanged()
     }
 
+    fun updateChange(difference: List<ShoppingProductModel>) {
+        products.forEachIndexed { index, shoppingProduct ->
+            val newProduct = difference.find { it.product == shoppingProduct.product }
+            if (newProduct != null) {
+                products[index] = newProduct
+                notifyItemChanged(index)
+            }
+        }
+    }
+
     companion object {
         const val VIEW_TYPE = 0
     }

@@ -282,14 +282,14 @@ class CartPresenterTest {
         presenter = CartPresenter(
             view, cartRepository, Page(0), 0, initialCart, cart
         )
-        every { view.notifyProductsChanged() } just runs
+        every { view.notifyProductsChanged(any(), any()) } just runs
 
         // when
         presenter.checkProductsChanged()
 
         // then
         verify(exactly = 1) {
-            view.notifyProductsChanged()
+            view.notifyProductsChanged(any(), any())
         }
     }
 
@@ -302,14 +302,14 @@ class CartPresenterTest {
         presenter = CartPresenter(
             view, cartRepository, Page(0), 0, initialCart, cart
         )
-        every { view.notifyProductsChanged() } just runs
+        every { view.notifyProductsChanged(any(), any()) } just runs
 
         // when
         presenter.checkProductsChanged()
 
         // then
         verify(exactly = 0) {
-            view.notifyProductsChanged()
+            view.notifyProductsChanged(any(), any())
         }
     }
 
@@ -322,14 +322,14 @@ class CartPresenterTest {
         presenter = CartPresenter(
             view, cartRepository, Page(0), 0, initialCart, cart
         )
-        every { view.notifyProductsChanged() } just runs
+        every { view.notifyProductsChanged(any(), any()) } just runs
 
         // when
         presenter.checkProductsChanged()
 
         // then
         verify(exactly = 0) {
-            view.notifyProductsChanged()
+            view.notifyProductsChanged(any(), any())
         }
     }
 
@@ -342,7 +342,7 @@ class CartPresenterTest {
         presenter = CartPresenter(
             view, cartRepository, Page(0), 0, initialCart, cart
         )
-        every { view.notifyProductsChanged() } just runs
+        every { view.notifyProductsChanged(any(), any()) } just runs
         every { cartRepository.deleteCartProduct(any()) } just runs
 
         // when
@@ -351,7 +351,7 @@ class CartPresenterTest {
 
         // then
         verify(exactly = 1) {
-            view.notifyProductsChanged()
+            view.notifyProductsChanged(any(), any())
         }
     }
 

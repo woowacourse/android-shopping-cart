@@ -5,6 +5,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
+import woowacourse.shopping.createCartProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.ui.productdetail.dialog.CartProductDialogContract
 import woowacourse.shopping.ui.productdetail.dialog.CartProductDialogPresenter
@@ -88,7 +89,7 @@ class CartProductDialogPresenterTest {
     }
 
     @Test
-    fun 새로운_상품을_카트에_담으면_카트에_담기고_완료를_알린다() {
+    fun 상품을_카트에_담으면_카트에_담기고_완료를_알린다() {
         // given
         presenter = CartProductDialogPresenter(
             view,
@@ -96,7 +97,7 @@ class CartProductDialogPresenterTest {
             cartRepository,
             cartProductAmount = 1
         )
-        every { cartRepository.getCartProductByProduct(any()) } returns null
+        every { cartRepository.getCartProductByProduct(any()) } returns createCartProduct()
 
         // when
         presenter.addToCart()
@@ -104,27 +105,6 @@ class CartProductDialogPresenterTest {
         // then
         verify {
             cartRepository.addCartProduct(any())
-            view.notifyAddToCartCompleted()
-        }
-    }
-
-    @Test
-    fun 이미_담겨있는_상품을_카트에_담으면_카트_상품이_업데이트_되고_완료를_알린다() {
-        // given
-        presenter = CartProductDialogPresenter(
-            view,
-            productModel = mockk(relaxed = true),
-            cartRepository,
-            cartProductAmount = 1
-        )
-        every { cartRepository.getCartProductByProduct(any()) } returns mockk(relaxed = true)
-
-        // when
-        presenter.addToCart()
-
-        // then
-        verify {
-            cartRepository.modifyCartProduct(any())
             view.notifyAddToCartCompleted()
         }
     }

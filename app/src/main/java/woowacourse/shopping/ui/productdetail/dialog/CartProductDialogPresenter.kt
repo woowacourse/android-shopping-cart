@@ -3,7 +3,9 @@ package woowacourse.shopping.ui.productdetail.dialog
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.ui.model.ProductModel
+import woowacourse.shopping.ui.model.ShoppingProductModel
 import woowacourse.shopping.ui.model.mapper.ProductMapper.toDomain
+import woowacourse.shopping.ui.model.mapper.ProductMapper.toView
 import java.time.LocalDateTime
 
 class CartProductDialogPresenter(
@@ -38,6 +40,12 @@ class CartProductDialogPresenter(
     override fun addToCart() {
         cartRepository.addCartProduct(cartProduct)
         view.notifyAddToCartCompleted()
+
+        val addedCartProduct = cartRepository.getCartProductByProduct(cartProduct.product)!!
+        view.notifyProductChanged(
+            product = ShoppingProductModel(addedCartProduct.product.toView(), addedCartProduct.amount),
+            amountDifference = cartProduct.amount
+        )
     }
 
     companion object {
