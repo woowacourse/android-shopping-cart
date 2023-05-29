@@ -8,6 +8,8 @@ data class CartProduct(
     val isChecked: Boolean,
     val product: Product
 ) {
+    val price: Int = product.price * amount
+
     fun decreaseAmount(): CartProduct = copy(amount = amount - 1)
 
     fun increaseAmount(): CartProduct = copy(amount = amount + 1)

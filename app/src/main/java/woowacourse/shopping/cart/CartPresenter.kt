@@ -69,8 +69,8 @@ class CartPresenter(
         updateCartProduct(prevCartProduct, newCartProduct)
 
         if (cartProductModel.isChecked) {
-            subtractProductPriceToCartTotalPrice(cartProductModel)
-            decreaseTotalAmount()
+            subtractPriceFromCartTotalPrice(cartProductModel.product.price)
+            subtractAmountFromCartTotalAmount(1)
         }
     }
 
@@ -80,8 +80,8 @@ class CartPresenter(
         updateCartProduct(prevCartProduct, newCartProduct)
 
         if (cartProductModel.isChecked) {
-            addProductPriceToCartTotalPrice(cartProductModel)
-            increaseTotalAmount()
+            addPriceToCartTotalPrice(cartProductModel.product.price)
+            addAmountToCartTotalAmount(1)
         }
     }
 
@@ -158,23 +158,18 @@ class CartPresenter(
     }
 
     private fun applyProductTotalPriceToCartTotalPrice(cartProduct: CartProduct) {
-        val productTotalPrice = cartProduct.product.price * cartProduct.amount
         if (cartProduct.isChecked) {
-            selectedCartTotalPrice += productTotalPrice
-            view.updateCartTotalPrice(selectedCartTotalPrice)
+            addPriceToCartTotalPrice(cartProduct.price)
         } else {
-            selectedCartTotalPrice -= productTotalPrice
-            view.updateCartTotalPrice(selectedCartTotalPrice)
+            subtractPriceFromCartTotalPrice(cartProduct.price)
         }
     }
 
     private fun applyProductAmountToCartTotalAmount(cartProduct: CartProduct) {
         if (cartProduct.isChecked) {
-            selectedCartTotalAmount += cartProduct.amount
-            view.updateCartTotalAmount(selectedCartTotalAmount)
+            addAmountToCartTotalAmount(cartProduct.amount)
         } else {
-            selectedCartTotalAmount -= cartProduct.amount
-            view.updateCartTotalAmount(selectedCartTotalAmount)
+            subtractAmountFromCartTotalAmount(cartProduct.amount)
         }
     }
 
@@ -184,23 +179,23 @@ class CartPresenter(
         view.updateCartProduct(prev.toView(), new.toView())
     }
 
-    private fun subtractProductPriceToCartTotalPrice(cartProductModel: CartProductModel) {
-        selectedCartTotalPrice -= cartProductModel.product.price
+    private fun subtractPriceFromCartTotalPrice(price: Int) {
+        selectedCartTotalPrice -= price
         view.updateCartTotalPrice(selectedCartTotalPrice)
     }
 
-    private fun decreaseTotalAmount() {
-        selectedCartTotalAmount -= 1
+    private fun subtractAmountFromCartTotalAmount(amount: Int) {
+        selectedCartTotalAmount -= amount
         view.updateCartTotalAmount(selectedCartTotalAmount)
     }
 
-    private fun addProductPriceToCartTotalPrice(cartProductModel: CartProductModel) {
-        selectedCartTotalPrice += cartProductModel.product.price
+    private fun addPriceToCartTotalPrice(price: Int) {
+        selectedCartTotalPrice += price
         view.updateCartTotalPrice(selectedCartTotalPrice)
     }
 
-    private fun increaseTotalAmount() {
-        selectedCartTotalAmount += 1
+    private fun addAmountToCartTotalAmount(amount: Int) {
+        selectedCartTotalAmount += amount
         view.updateCartTotalAmount(selectedCartTotalAmount)
     }
 }

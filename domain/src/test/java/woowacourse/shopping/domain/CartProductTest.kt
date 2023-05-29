@@ -2,6 +2,7 @@ package woowacourse.shopping.domain
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
+import java.time.LocalDateTime
 
 internal class CartProductTest {
 
@@ -44,6 +45,24 @@ internal class CartProductTest {
 
         // then
         val expected = true
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun 가격이_1000원이고_수량이_2개인_상품의_가격은_2000원이다() {
+        // given
+
+        // when
+        val cartProduct = CartProduct(
+            time = LocalDateTime.now(),
+            amount = 2,
+            isChecked = true,
+            product = Product(URL(""), title = "", price = 1000)
+        )
+        val actual = cartProduct.price
+
+        // then
+        val expected = 2000
         assertEquals(expected, actual)
     }
 }
