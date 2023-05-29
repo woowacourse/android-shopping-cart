@@ -34,6 +34,11 @@ class CartPresenter(
         cart = cart.removeCartProduct(cartProduct)
         totalCount--
 
+        if (cartProductModel.isChecked) {
+            subtractPriceFromCartTotalPrice(cartProduct.price)
+            subtractAmountFromCartTotalAmount(cartProduct.amount)
+        }
+
         view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
     }
