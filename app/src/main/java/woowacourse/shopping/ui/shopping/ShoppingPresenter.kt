@@ -12,7 +12,6 @@ import woowacourse.shopping.ui.model.mapper.ProductMapper.toDomain
 import woowacourse.shopping.ui.model.mapper.ProductMapper.toView
 import woowacourse.shopping.ui.model.mapper.RecentProductMapper.toView
 import woowacourse.shopping.ui.model.mapper.ShoppingProductMapper.toView
-import java.time.LocalDateTime
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
@@ -120,16 +119,7 @@ class ShoppingPresenter(
     }
 
     private fun getCartProduct(productModel: ProductModel): CartProduct {
-        var cartProduct: CartProduct? = cartRepository.getCartProductByProduct(productModel.toDomain())
-        if (cartProduct == null) {
-            cartProduct = CartProduct(
-                time = LocalDateTime.now(),
-                amount = 0,
-                isChecked = true,
-                product = productModel.toDomain()
-            )
-        }
-        return cartProduct
+        return cartRepository.getCartProductByProduct(productModel.toDomain())
     }
 
     private fun updateCartProduct(cartProduct: CartProduct) {

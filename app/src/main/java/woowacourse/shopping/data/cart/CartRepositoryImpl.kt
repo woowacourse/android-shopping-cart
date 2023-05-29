@@ -5,6 +5,7 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.CartRepository
+import java.time.LocalDateTime
 
 class CartRepositoryImpl(
     private val cartDao: CartDao
@@ -33,8 +34,14 @@ class CartRepositoryImpl(
         return cartDao.getTotalAmount()
     }
 
-    override fun getCartProductByProduct(product: Product): CartProduct? {
+    override fun getCartProductByProduct(product: Product): CartProduct {
         return cartDao.selectCartProductByProduct(product)
+            ?: CartProduct(
+                time = LocalDateTime.now(),
+                amount = 0,
+                isChecked = true,
+                product = product
+            )
     }
 
     override fun modifyCartProduct(cartProduct: CartProduct) {

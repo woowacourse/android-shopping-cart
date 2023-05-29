@@ -17,7 +17,7 @@ interface CartRepository {
 
     fun getTotalAmount(): Int
 
-    fun getCartProductByProduct(product: Product): CartProduct?
+    fun getCartProductByProduct(product: Product): CartProduct
 
     fun modifyCartProduct(cartProduct: CartProduct)
 

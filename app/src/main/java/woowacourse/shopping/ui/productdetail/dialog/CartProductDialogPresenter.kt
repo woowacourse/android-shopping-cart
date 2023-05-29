@@ -41,7 +41,7 @@ class CartProductDialogPresenter(
         cartRepository.addCartProduct(cartProduct)
         view.notifyAddToCartCompleted()
 
-        val addedCartProduct = cartRepository.getCartProductByProduct(cartProduct.product)!!
+        val addedCartProduct = cartRepository.getCartProductByProduct(cartProduct.product)
         view.notifyProductChanged(
             product = ShoppingProductModel(addedCartProduct.product.toView(), addedCartProduct.amount),
             amountDifference = cartProduct.amount
