@@ -14,6 +14,8 @@ import java.util.concurrent.CountDownLatch
 import kotlin.concurrent.thread
 
 class ProductRemoteDataSource {
+    private val okHttpClient = OkHttpClient()
+
     init {
         thread {
             startMockWebServer()
@@ -22,7 +24,6 @@ class ProductRemoteDataSource {
 
     fun getProducts(path: Int): List<Product> {
         val url = "http://localhost:8080/products/$path"
-        val okHttpClient = OkHttpClient()
         val request = Request.Builder().url(url).build()
         val products = mutableListOf<Product>()
 
