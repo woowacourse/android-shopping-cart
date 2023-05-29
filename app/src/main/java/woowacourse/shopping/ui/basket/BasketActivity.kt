@@ -13,7 +13,6 @@ import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.ui.model.UiBasketProduct
-import woowacourse.shopping.ui.shopping.ShoppingActivity
 import woowacourse.shopping.util.turnOffSupportChangeAnimation
 
 class BasketActivity : AppCompatActivity(), BasketContract.View {
@@ -40,7 +39,7 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
     }
 
     private fun initSetResult() {
-        setResult(Activity.RESULT_OK, ShoppingActivity.getResultIntent())
+        setResult(Activity.RESULT_OK)
     }
 
     private fun initPresenter() {

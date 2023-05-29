@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.shopping
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -54,11 +53,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val returnPoint = result.data?.getBooleanExtra(FROM_ANOTHER_ACTIVITY, false) ?: false
-            if (returnPoint) {
-                presenter.updateBasket()
-                presenter.fetchRecentProducts()
-            }
+            presenter.updateBasket()
+            presenter.fetchRecentProducts()
         }
     }
 
@@ -201,9 +197,5 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     companion object {
         private const val LOAD_POSITION = 4
         private const val STATE_LOWEST = 1
-
-        private const val FROM_ANOTHER_ACTIVITY = "FromAnotherActivity"
-
-        fun getResultIntent() = Intent().putExtra(FROM_ANOTHER_ACTIVITY, true)
     }
 }
