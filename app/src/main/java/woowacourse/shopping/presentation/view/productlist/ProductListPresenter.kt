@@ -29,8 +29,10 @@ class ProductListPresenter(
 
     override fun loadProductItems() {
         val recentProduct = recentProducts.lastOrNull()
-        products.addAll(productRepository.getData(0, LOAD_PRODUCT_COUNT))
-        view.setProductItemsView(products.toList(), recentProduct?.id ?: -1)
+        productRepository.getData(0, LOAD_PRODUCT_COUNT) {
+            products.addAll(it)
+            view.setProductItemsView(products.toList(), recentProduct?.id ?: -1)
+        }
         updateCartCount()
     }
 
@@ -50,9 +52,11 @@ class ProductListPresenter(
     }
 
     override fun loadMoreData(startPosition: Int) {
-        val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT)
-        products.addAll(newProducts)
-        view.updateMoreProductsView(newProducts)
+        productRepository.getData(startPosition, LOAD_PRODUCT_COUNT) { newProducts ->
+            products.addAll(newProducts)
+            view.updateMoreProductsView(newProducts)
+        }
+
     }
 
     override fun updateCartProduct(productId: Long, count: Int, position: Int) {

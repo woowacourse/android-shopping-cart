@@ -79,7 +79,6 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         presenter.loadRecentProductItems()
         presenter.loadProductItems()
         setMoreProductListAdapter()
-        setConcatAdapter()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -132,6 +131,9 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
                 },
                 ::updateCartProductCount
             )
+        runOnUiThread {
+            setConcatAdapter()
+        }
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
