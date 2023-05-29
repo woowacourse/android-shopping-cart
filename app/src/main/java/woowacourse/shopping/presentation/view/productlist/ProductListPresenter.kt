@@ -56,7 +56,6 @@ class ProductListPresenter(
             products.addAll(newProducts)
             view.updateMoreProductsView(newProducts)
         }
-
     }
 
     override fun updateCartProduct(productId: Long, count: Int, position: Int) {

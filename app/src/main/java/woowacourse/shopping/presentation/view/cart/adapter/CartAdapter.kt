@@ -6,12 +6,11 @@ import woowacourse.shopping.presentation.model.CartProductModel
 import woowacourse.shopping.presentation.view.cart.viewholder.CartViewHolder
 
 class CartAdapter(
-    items: List<CartProductModel>,
+    private var items: List<CartProductModel>,
     private val onCloseClick: (Long, Int) -> Unit,
     private val onCheckedChangeListener: (Long, Boolean, List<Boolean>) -> Unit,
     private val onCountChanged: (Long, Int) -> Unit
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val items = items.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
         return CartViewHolder(
@@ -20,7 +19,7 @@ class CartAdapter(
                 onCloseClick(items[it].product.id, items.size)
             },
             onCheckedChangeListener = { position, isChecked ->
-                items[position] = items[position].copy(isChecked = isChecked)
+                updateItemChecked(position, isChecked)
                 onCheckedChangeListener(
                     items[position].product.id,
                     isChecked,
@@ -28,7 +27,7 @@ class CartAdapter(
                 )
             },
             { position, count ->
-                items[position] = items[position].copy(count = count)
+                updateItemCount(position, count)
                 onCountChanged(items[position].product.id, count)
             }
         )
@@ -40,9 +39,23 @@ class CartAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    fun updateItemsChecked(isChecked: Boolean) {
-        items.forEachIndexed { index, _ ->
-            items[index] = items[index].copy(isChecked = isChecked)
+    private fun updateItemCount(position: Int, count: Int) {
+        val updatedItems = items.toMutableList().apply {
+            this[position] = this[position].copy(count = count)
+        }
+        items = updatedItems.toList()
+    }
+
+    private fun updateItemChecked(position: Int, isChecked: Boolean) {
+        val updatedItems = items.toMutableList().apply {
+            this[position] = this[position].copy(isChecked = isChecked)
+        }
+        items = updatedItems.toList()
+    }
+
+    fun updateItemAllChecked(isChecked: Boolean) {
+        items = items.map {
+            it.copy(isChecked = isChecked)
         }
         notifyItemRangeChanged(0, items.size)
     }

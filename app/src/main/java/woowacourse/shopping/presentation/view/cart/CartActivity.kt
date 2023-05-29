@@ -81,7 +81,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 carts.map { it.product.id },
                 binding.checkboxCartAll.isChecked
             )
-            cartAdapter.updateItemsChecked(binding.checkboxCartAll.isChecked)
+            cartAdapter.updateItemAllChecked(binding.checkboxCartAll.isChecked)
         }
     }
 
