@@ -58,14 +58,19 @@ class BasketPresenter(
     }
 
     override fun moveToPreviousPage() {
-        updateCurrentPage(false)
+        currentPage -= 1
         if (startId - BASKET_PAGING_SIZE > 0) startId -= BASKET_PAGING_SIZE else startId = 0
-        updateBasketProductViewData()
+        updatePage()
     }
 
     override fun moveToNextPage() {
-        updateCurrentPage(true)
+        currentPage += 1
         if (startId + BASKET_PAGING_SIZE <= basket.products.lastIndex) startId += BASKET_PAGING_SIZE
+        updatePage()
+    }
+
+    private fun updatePage() {
+        view.updateCurrentPage(currentPage)
         updateBasketProductViewData()
     }
 
@@ -83,7 +88,6 @@ class BasketPresenter(
         )
     }
 
-    // 요기
     override fun deleteBasketProduct(
         product: UiBasketProduct
     ) {
@@ -101,11 +105,6 @@ class BasketPresenter(
         }
         if (startId < 0) startId = 0
         if (currentPage < 1) currentPage = 1
-    }
-
-    private fun updateCurrentPage(isIncrease: Boolean) {
-        if (isIncrease) currentPage += 1 else currentPage -= 1
-        view.updateCurrentPage(currentPage)
     }
 
     companion object {
