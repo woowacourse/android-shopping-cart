@@ -1,69 +1,123 @@
 # 쇼핑 장바구니 기능 목록
 
 - [x] MVP
+    - Presenter
     - [x] Shopping
-        - [x] ProductList (RecyclerView)
-        - [x] RecentProductList (RecyclerView)
-        - [x] init { }
-            - [x] productDao.select()
-            - [x] recentProductDao.select()
-            - [x] view.updateProductList(products)
-            - [x] view.updateRecentProductList(recentProducts)
-        - [x] resumeView()
-            - [x] view.updateProductList(products)
-            - [x] view.updateRecentProductList(recentProducts)
-        - [x] openProduct(product)
-            - [x] RecentProducts.add()
-            - [x] view.showProductDetail()
-        - [x] openCart()
-            - [x] view.showCart()
+        - CartRepository
+        - [x] setUpCartAmount()
+            - [x] updateCartAmount()
+        - [x] private updateCartAmount()
+            - [x] cartRepository.getTotalAmount()
+            - [x] view.updateCartAmount(amount)
+        - [x] decreaseCartProductAmount(productModel)
+            - [x] getCartProduct(productModel)
+            - [x] cartProduct.decreaseAmount()
+            - [x] if(amount > 0)
+                - [x] updateCartProduct(cartProduct)
+            - [x] if(amount <= 0)
+                - [x] removeFromCart(cartProduct)
+            - [x] updateShoppingProduct(shoppingProductModel, cartProduct)
+            - [x] updateCartAmount()
+        - [x] private getCartProduct(productModel) : CartProduct
+            - [x] cartRepository.getCartProductByProduct(product)
+            - [x] if(cartProduct == null) CartProduct(...)
+        - [x] private updateCartProduct(cartProduct)
+            - [x] cartRepository.modifyCartProduct(cartProduct)
+        - [x] private removeFromCart(cartProduct)
+            - [x] cartRepository.deleteCartProduct(cartProduct)
+        - [x] increaseCartProductAmount(productModel)
+            - [x] getCartProduct(productModel)
+            - [x] cartProduct.increaseAmount()
+            - [x] if(amount > 1)
+                - [x] updateCartProduct(cartProduct, productModel)
+            - [x] if(amount <= 1)
+                - [x] addToCart(cartProduct, productModel)
+            - [x] updateShoppingProduct(shoppingProductModel, cartProduct)
+            - [x] updateCartAmount()
+        - [x] private addToCart(cartProduct)
+            - [x] cartRepository.addCartProduct(cartProduct)
+        - [x] private updateShoppingProduct(cartProduct, productModel)
+            - [x] view.updateShoppingProduct(shoppingProductModel)
     - [x] ProductDetail
+        - RecentProductRepository
         - [x] init { }
-            - [x] view.updateProductDetail(product)
-        - [x] addToCart(product)
-            - [x] cartState.load()
-            - [x] Cart.add(product)
-            - [x] cartDao.insert(product)
-            - [x] view.showCart()
+            - [x] view.setupRecentProductDetail(productModel)
+        - [x] setupCartProductDialog()
+            - [x] view.showCartProductDialog(productModel)
+        - [x] openProduct()
+            - [x] recentProductRepository.modifyRecentProduct(recentProduct)
+            - [x] view.showRecentProductDetail(recentProductModel)
+    - [x] CartProductDialog
+        - CartProduct
+        - [x] init { }
+            - [x] create cart product
+            - [x] updateCartProductAmount()
+        - [x] decreaseCartProductAmount()
+            - [x] if(amount > 1)
+                - [x] cartProduct.decreaseAmount()
+                - [x] updateCartProductAmount()
+        - [x] increaseCartProductAmount()
+            - [x] cartProduct.increaseAmount()
+            - [x] updateCartProductAmount()
+        - [x] private updateCartProductAmount()
+            - [x] view.updateCartProductAmount(amount)
+        - [x] addToCart()
+            - [x] if (cartRepository.getCartProductByProduct(product) == null)
+                - [x] cartRepository.addCartProduct(cartProduct)
+            - [x] else
+                - [x] updateCartProduct(cartProduct)
+            - [x] view.notifyAddToCartCompleted()
+        - [x] updateCartProduct(cartProduct)
+            - [x] update amount to sum of prev cart product amount and current cart product
+              amount
+            - [x] cartRepository.modifyCartProduct(cartProduct)
     - [x] Cart
-        - [x] ProductList (RecyclerView)
+        - Cart
         - [x] init { }
-            - [x] cartDao.select()
-            - [x] view.updateCart(cart)
-        - [x] resumeView()
-          - [x] cartState.load()
-          - [x] view.updateCart(cart)
-        - [x] removeProduct()
-            - [x] Cart.remove() (domain)
-            - [x] view.updateCart(cart)
+            - [x] view.updateCartTotalPrice(price)
+            - [x] view.updateCartTotalAmount(amount)
+        - [x] changeCartProductChecked(cartProductModel)
+            - [x] cartProduct.changeChecked(!isChecked)
+            - [x] cart.replaceCartProduct(prev, new)
+            - [x] view.updateCartProduct(prev, new)
+            - [x] apply price to total price
+            - [x] apply amount to total amount
+        - [x] updateAllChecked()
+            - [x] cartRepository.isAllCheckedInPage(page, sizePerPage)
+            - [x] view.updateAllChecked(isAllChecked)
+        - [x] private updateCartPage()
+            - [x] updateAllChecked()
+        - [x] decreaseCartProductAmount(cartProductModel)
+            - [x] if(amount > 1)
+                - [x] cartProduct.decreaseAmount()
+                - [x] updateCartProduct(prev, new)
+                - [x] if (isChecked)
+                    - [x] subtract product price to cart total price and update view
+                    - [x] decrease total amount and update view
+        - [x] increaseCartProductAmount(cartProductModel)
+            - [x] cartProduct.increaseAmount()
+            - [x] updateCartProduct(prev, new)
+            - [x] if (isChecked)
+                - [x] add product price to cart total price and update view
+                - [x] increase total amount and update view
+        - [x] private updateCartProduct(prev, new)
+            - [x] cartRepository.modifyCartProduct(new)
+            - [x] cartRepository.replaceCartProduct(prev, new)
+            - [x] view.updateCartProduct(prev, new)
+        - [x] updateCartProductCheckedInPage(isChecked)
+            - [x] if(cartProduct.isChecked != isChecked)
+                - [x] change cartProduct.isChecked
+                - [x] update total price
+                - [x] update total amount
 - [x] SQLite
-    - [x] RecentProduct
-        - [x] ordinal (Primary Key, Int)
-        - [x] product_id (Int)
     - [x] Cart
-        - [x] ordinal (Primary Key, Int)
-        - [x] product_id (Int)
-    - [x] Product
-        - [x] id (Primary Key, Int)
-        - [x] picture (Text)
-        - [x] title (Text)
-        - [x] price (Int)
+        - [x] amount(Int)
 - [x] Domain
-    - [x] Product
-        - [x] Picture (URL)
-        - [x] Title
-        - [x] Price
-    - [x] Cart
-        - [x] List<CartProduct>
-        - [x] add(CartProduct)
-        - [x] remove(CartProduct)
     - [x] CartProduct
-        - [x] Ordinal
-        - [x] Product
-    - [x] RecentProducts
-        - [x] List<RecentProduct>
-        - [x] add(RecentProduct)
-        - [x] getRecentProducts(Int)
-    - [x] RecentProduct
-        - [x] Ordinal
-        - [x] Product
+        - [x] Amount
+        - [x] Checked
+        - [x] decreaseAmount()
+        - [x] increaseAmount()
+        - [x] changeChecked(isChecked)
+
+- [x] Products HTTP Client

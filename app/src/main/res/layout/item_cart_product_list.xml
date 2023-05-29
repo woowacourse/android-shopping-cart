@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="cartProduct"
-            type="woowacourse.shopping.common.model.CartProductModel" />
+            type="woowacourse.shopping.ui.model.CartProductModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +18,18 @@
         android:background="@drawable/cart_product_list_background"
         android:paddingHorizontal="13dp"
         android:paddingVertical="10dp">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/cart_product_checkbox"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="14dp"
+            android:buttonTint="@color/primary"
+            android:checked="@{cartProduct.checked}"
+            app:layout_constraintBottom_toBottomOf="@id/cart_product_list_title"
+            app:layout_constraintEnd_toStartOf="@id/cart_product_list_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cart_product_list_title" />
 
         <TextView
             android:id="@+id/cart_product_list_title"
@@ -30,7 +43,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/cart_product_list_remove_button"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cart_product_checkbox"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
 
@@ -61,13 +74,21 @@
             android:id="@+id/cart_product_list_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:text="@{@string/product_price(cartProduct.product.price)}"
             android:textColor="#333333"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/cart_product_counter"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />
+
+        <include
+            android:id="@+id/cart_product_counter"
+            layout="@layout/product_counter"
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            bind:amount="@{cartProduct.amount}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

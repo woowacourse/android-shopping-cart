@@ -3,8 +3,6 @@ package woowacourse.shopping.data.database.dao
 import android.content.ContentValues
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.RecentProductModel
 import woowacourse.shopping.data.database.selectRowId
 import woowacourse.shopping.data.database.table.SqlProduct
 import woowacourse.shopping.data.database.table.SqlRecentProduct
@@ -15,14 +13,14 @@ import woowacourse.shopping.domain.URL
 import java.time.LocalDateTime
 
 class RecentProductDao(private val db: SQLiteDatabase) {
-    fun insertRecentProduct(recentProductModel: RecentProductModel) {
+    fun insertRecentProduct(recentProduct: RecentProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = recentProductModel.product.picture
-        productRow[SqlProduct.TITLE] = recentProductModel.product.title
-        productRow[SqlProduct.PRICE] = recentProductModel.product.price
+        productRow[SqlProduct.PICTURE] = recentProduct.product.picture.value
+        productRow[SqlProduct.TITLE] = recentProduct.product.title
+        productRow[SqlProduct.PRICE] = recentProduct.product.price
 
         val row = ContentValues()
-        row.put(SqlRecentProduct.TIME, recentProductModel.time.toString())
+        row.put(SqlRecentProduct.TIME, recentProduct.time.toString())
         row.put(SqlRecentProduct.PRODUCT_ID, SqlProduct.selectRowId(db, productRow))
         db.insert(SqlRecentProduct.name, null, row)
     }
@@ -55,9 +53,9 @@ class RecentProductDao(private val db: SQLiteDatabase) {
         )
     )
 
-    fun selectByProduct(product: ProductModel): RecentProduct? {
+    fun selectByProduct(product: Product): RecentProduct? {
         val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = product.picture
+        productRow[SqlProduct.PICTURE] = product.picture.value
         productRow[SqlProduct.TITLE] = product.title
         productRow[SqlProduct.PRICE] = product.price
 
@@ -73,17 +71,38 @@ class RecentProductDao(private val db: SQLiteDatabase) {
         }
     }
 
-    fun updateRecentProduct(recentProductModel: RecentProductModel) {
+    fun updateRecentProduct(recentProduct: RecentProduct) {
         val productRow: MutableMap<String, Any> = mutableMapOf()
-        productRow[SqlProduct.PICTURE] = recentProductModel.product.picture
-        productRow[SqlProduct.TITLE] = recentProductModel.product.title
-        productRow[SqlProduct.PRICE] = recentProductModel.product.price
+        productRow[SqlProduct.PICTURE] = recentProduct.product.picture.value
+        productRow[SqlProduct.TITLE] = recentProduct.product.title
+        productRow[SqlProduct.PRICE] = recentProduct.product.price
 
         val productId = SqlProduct.selectRowId(db, productRow)
         val row = ContentValues()
-        row.put(SqlRecentProduct.TIME, recentProductModel.time.toString())
+        row.put(SqlRecentProduct.TIME, recentProduct.time.toString())
         row.put(SqlRecentProduct.PRODUCT_ID, productId)
 
-        db.update(SqlRecentProduct.name, row, "${SqlRecentProduct.PRODUCT_ID} = ?", arrayOf(productId.toString()))
+        db.update(
+            SqlRecentProduct.name,
+            row,
+            "${SqlRecentProduct.PRODUCT_ID} = ?",
+            arrayOf(productId.toString())
+        )
+    }
+
+    fun selectLatestRecentProduct(): RecentProduct? {
+        val cursor = db.rawQuery(
+            """
+                |SELECT * FROM ${SqlRecentProduct.name}, ${SqlProduct.name} ON ${SqlRecentProduct.name}.${SqlRecentProduct.PRODUCT_ID} = ${SqlProduct.name}.${SqlProduct.ID} 
+                |ORDER BY ${SqlRecentProduct.TIME} DESC
+                |LIMIT 1
+            """.trimMargin(),
+            null
+        )
+
+        return cursor.use {
+            if (it.moveToNext()) createRecentProduct(cursor)
+            else null
+        }
     }
 }
