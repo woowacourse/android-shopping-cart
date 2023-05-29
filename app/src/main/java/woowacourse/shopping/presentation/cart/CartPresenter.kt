@@ -9,13 +9,14 @@ import woowacourse.shopping.repository.CartRepository
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
+    cartProductsModel: List<CartProductInfoModel>,
     initPage: Int = DEFAULT_INIT_PAGE,
 ) : CartContract.Presenter {
 
     private val paging = CartOffsetPaging(cartRepository = cartRepository, startPage = initPage)
     private val offset: Int get() = paging.currentPage.getOffset(paging.limit)
 
-    private var cartProducts = cartRepository.getAllCartProductsInfo()
+    private var cartProducts = CartProductInfoList(cartProductsModel.map { it.toDomain() })
     private val pageProducts get() = cartProducts.getItemsInRange(offset, paging.limit)
 
     init {
@@ -25,7 +26,9 @@ class CartPresenter(
     }
 
     override fun checkPlusPageAble() {
-        view.setUpPlusPageState(paging.isPlusPageAble())
+        paging.isPlusPageAble {
+            view.setUpPlusPageState(it)
+        }
     }
 
     override fun checkMinusPageAble() {

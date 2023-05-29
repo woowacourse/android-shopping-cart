@@ -10,18 +10,33 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.ProductService
+import woowacourse.shopping.data.product.ProductServiceHelper
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.presentation.model.CartProductInfoListModel
 import woowacourse.shopping.presentation.model.CartProductInfoModel
+import woowacourse.shopping.util.getParcelableExtraCompat
+import woowacourse.shopping.util.noIntentExceptionHandler
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private lateinit var binding: ActivityCartBinding
     private lateinit var cartAdapter: CartAdapter
     private lateinit var cartProductPriceView: TextView
-    private val presenter: CartContract.Presenter by lazy {
-        CartPresenter(
+    private lateinit var cartProductsModel: List<CartProductInfoModel>
+    private val presenter: CartContract.Presenter by lazy { initPresenter() }
+
+    private fun initProductModel() {
+        intent.getParcelableExtraCompat<CartProductInfoListModel>(CART_PRODUCTS_KEY)
+            ?.let { receivedCartProduct ->
+                cartProductsModel = receivedCartProduct.items
+            } ?: noIntentExceptionHandler(getString(R.string.product_model_null_error_message))
+    }
+
+    private fun initPresenter(): CartContract.Presenter {
+        initProductModel()
+        return CartPresenter(
             this,
-            CartRepositoryImpl(CartDao(CartDbHelper(this)), ProductService),
+            CartRepositoryImpl(CartDao(CartDbHelper(this)), ProductServiceHelper),
+            cartProductsModel,
         )
     }
 
@@ -152,8 +167,11 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     companion object {
-        fun getIntent(context: Context): Intent {
-            return Intent(context, CartActivity::class.java)
+        private const val CART_PRODUCTS_KEY = "CART_PRODUCTS_KEY"
+        fun getIntent(context: Context, cartProducts: CartProductInfoListModel): Intent {
+            val intent = Intent(context, CartActivity::class.java)
+            intent.putExtra(CART_PRODUCTS_KEY, cartProducts)
+            return intent
         }
     }
 }

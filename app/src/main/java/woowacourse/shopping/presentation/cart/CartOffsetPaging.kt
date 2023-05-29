@@ -18,16 +18,20 @@ class CartOffsetPaging(
         setPage(currentPage.minus(PAGE_STEP))
     }
 
-    override fun loadPageItems(page: Page): List<CartProductInfo> {
-        return cartRepository.getCartProductsInfo(limit, page.getOffset(limit)).items
+    private fun loadPageItems(page: Page, onSuccess: (List<CartProductInfo>) -> Unit) {
+        cartRepository.getCartProductsInfo(limit, page.getOffset(limit)) {
+            onSuccess(it)
+        }
     }
 
-    override fun isPlusPageAble(): Boolean {
+    fun isPlusPageAble(onSuccess: (Boolean) -> Unit) {
         val page = currentPage.plus(PAGE_STEP)
-        return loadPageItems(page).isNotEmpty()
+        loadPageItems(page) {
+            onSuccess(it.isNotEmpty())
+        }
     }
 
-    override fun isMinusPageAble(): Boolean {
+    fun isMinusPageAble(): Boolean {
         val page = currentPage.value
         return page != MINIMUM_PAGE
     }
