@@ -35,7 +35,7 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
 
     private fun initTotalCheckBoxOnCheckedChangedListener() {
         binding.checkButtonClickListener =
-            { presenter.fetchTotalCheckToCurrentPage(binding.cbTotal.isChecked) }
+            { presenter.toggleAllProductsChecked(binding.cbTotal.isChecked) }
     }
 
     private fun initSetResult() {

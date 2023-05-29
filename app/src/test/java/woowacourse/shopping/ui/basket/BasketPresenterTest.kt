@@ -35,7 +35,7 @@ class BasketPresenterTest() {
         every { view.updateBasketProducts(any()) } just Runs
 
         // when
-        presenter.fetchTotalCheckToCurrentPage(true)
+        presenter.toggleAllProductsChecked(true)
 
         // then
         verify(exactly = 1) { view.updateTotalPrice(any()) }
@@ -51,7 +51,7 @@ class BasketPresenterTest() {
         every { view.updateBasketProducts(any()) } just Runs
 
         // when
-        presenter.fetchTotalCheckToCurrentPage(false)
+        presenter.toggleAllProductsChecked(false)
 
         // then
         verify(exactly = 1) { view.updateTotalPrice(any()) }

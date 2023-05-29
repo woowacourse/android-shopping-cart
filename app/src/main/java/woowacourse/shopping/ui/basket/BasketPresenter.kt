@@ -18,7 +18,7 @@ class BasketPresenter(
 ) : BasketContract.Presenter {
     private val hasNext: Boolean get() = basket.products.lastIndex >= startId + BASKET_PAGING_SIZE
 
-    override fun fetchTotalCheckToCurrentPage(totalIsChecked: Boolean) {
+    override fun toggleAllProductsChecked(totalIsChecked: Boolean) {
         basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE).toggleAllCheck(totalIsChecked)
         updateOrderInformation()
         updateViewBasketProduct()
