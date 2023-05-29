@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Window
 import woowacourse.shopping.data.product.ProductDao
@@ -38,7 +37,6 @@ class ProductDetailCustomDialog(val context: Context) : ProductDetailDialogContr
     }
 
     override fun setCount(product: ProductInCartUiState) {
-        Log.d("123123", product.quantity.toString())
         onBindData(product)
     }
 
@@ -47,7 +45,6 @@ class ProductDetailCustomDialog(val context: Context) : ProductDetailDialogContr
         dialog.apply {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             requestWindowFeature(Window.FEATURE_NO_TITLE)
-            setCanceledOnTouchOutside(false)
             setContentView(binding.root)
         }
 
