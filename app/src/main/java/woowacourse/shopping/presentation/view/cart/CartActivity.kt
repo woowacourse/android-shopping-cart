@@ -105,11 +105,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         isSelected: Boolean,
         isCartsChecked: List<Boolean>
     ) {
-        if (isCartsChecked.all { it }) {
-            binding.checkboxCartAll.isChecked = isSelected
-        } else {
-            binding.checkboxCartAll.isChecked = false
-        }
+        presenter.updateCheckAllStatus(isCartsChecked)
         presenter.changeCartSelectedStatus(productId, isSelected)
     }
 
@@ -123,6 +119,10 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     override fun updateTotalPrice(totalPrice: Int) {
         binding.tvCartTotalPrice.text = getString(R.string.product_price_format, totalPrice)
+    }
+
+    override fun updateCheckAllView(isChecked: Boolean) {
+        binding.checkboxCartAll.isChecked = isChecked
     }
 
     private fun setLeftButtonClick() {

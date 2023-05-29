@@ -10,6 +10,7 @@ interface CartContract {
         fun setEnableLeftButton(isEnabled: Boolean)
         fun setEnableRightButton(isEnabled: Boolean)
         fun updateTotalPrice(totalPrice: Int)
+        fun updateCheckAllView(isChecked: Boolean)
     }
 
     interface Presenter {
@@ -21,5 +22,6 @@ interface CartContract {
         fun changeAllCartSelectedStatus(cartsId: List<Long>, isSelected: Boolean)
         fun changeCartSelectedStatus(productId: Long, isSelected: Boolean)
         fun updateProductCount(productId: Long, productCount: Int)
+        fun updateCheckAllStatus(isCartsChecked: List<Boolean>)
     }
 }

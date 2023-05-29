@@ -72,6 +72,10 @@ class CartPresenter(
         updateTotalPrice()
     }
 
+    override fun updateCheckAllStatus(isCartsChecked: List<Boolean>) {
+        view.updateCheckAllView(isCartsChecked.all { it })
+    }
+
     private fun updateTotalPrice() {
         _totalPrice.value = cartRepository.getTotalPrice()
     }
