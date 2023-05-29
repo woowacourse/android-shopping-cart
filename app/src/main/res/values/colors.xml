@@ -15,5 +15,7 @@
     <color name="woowa_divider">#EBEBEB</color>
     <color name="woowa_previous_disable">#E6E6E6</color>
     <color name="woowa_previous_enable">#04C09E</color>
+    <color name="check_box_unchecked">#C7C7C7</color>
+
 
 </resources>

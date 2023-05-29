@@ -1,19 +1,75 @@
 package woowacourse.shopping.ui.shopping
 
+import woowacourse.shopping.domain.Basket
+import woowacourse.shopping.domain.BasketProduct
+import woowacourse.shopping.domain.Count
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.repository.BasketRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.RecentProductRepository
 import woowacourse.shopping.ui.mapper.toDomain
 import woowacourse.shopping.ui.mapper.toUi
 import woowacourse.shopping.ui.model.UiProduct
+import woowacourse.shopping.ui.model.UiRecentProduct
+import woowacourse.shopping.util.secondOrNull
 import kotlin.concurrent.thread
 
 class ShoppingPresenter(
     override val view: ShoppingContract.View,
     private val productRepository: ProductRepository,
-    private val recentProductRepository: RecentProductRepository
+    private val recentProductRepository: RecentProductRepository,
+    private val basketRepository: BasketRepository,
+    private var hasNext: Boolean = false,
+    private var lastId: Int = -1,
+    private var totalProducts: List<UiProduct> = listOf(),
+    private var recentProducts: List<UiRecentProduct> = listOf(),
+    private var basket: Basket = Basket(basketRepository.getAll())
 ) : ShoppingContract.Presenter {
-    private var hasNext: Boolean = false
-    private var lastId: Int = -1
+
+    init {
+        fetchTotalBasketCount()
+    }
+
+    private fun fetchBasketCount() {
+        totalProducts = totalProducts.map {
+            UiProduct(
+                it.id,
+                it.name,
+                it.price,
+                it.imageUrl,
+                basket.getCountByProductId(it.id)
+            )
+        }
+    }
+
+    override fun updateBasket() {
+        basket = Basket(basketRepository.getAll())
+        fetchBasketCount()
+        fetchTotalBasketCount()
+        view.updateProducts(totalProducts)
+    }
+
+    override fun fetchTotalBasketCount() {
+        view.updateTotalBasketCount(basket.products.fold(0) { acc, basketProduct -> acc + basketProduct.count.value })
+    }
+
+    override fun addBasketProduct(product: Product) {
+        val addedProduct = BasketProduct(count = Count(1), product = product)
+        basketRepository.add(addedProduct)
+        basket = basket.plus(addedProduct)
+        fetchBasketCount()
+        fetchTotalBasketCount()
+        view.updateProducts(totalProducts)
+    }
+
+    override fun removeBasketProduct(product: Product) {
+        val removedProduct = BasketProduct(count = Count(1), product = product)
+        basketRepository.minus(removedProduct)
+        basket = basket.minus(removedProduct)
+        fetchBasketCount()
+        fetchTotalBasketCount()
+        view.updateProducts(totalProducts)
+    }
 
     override fun fetchProducts() {
         var products = productRepository
@@ -23,26 +79,25 @@ class ShoppingPresenter(
         hasNext = checkHasNext(products)
         lastId -= if (hasNext) 1 else 0
         if (hasNext) products = products.dropLast(1)
-        view.updateProducts(products)
+        totalProducts += products
+        fetchBasketCount()
+        view.updateProducts(totalProducts)
     }
 
     private fun checkHasNext(products: List<UiProduct>): Boolean =
         products.size == TOTAL_LOAD_PRODUCT_SIZE_AT_ONCE
 
     override fun fetchRecentProducts() {
-        view.updateRecentProducts(
-            recentProductRepository.getPartially(RECENT_PRODUCT_SIZE).map { it.toUi() }
-        )
+        recentProducts = recentProductRepository.getPartially(RECENT_PRODUCT_SIZE)
+            .map { it.toUi() }
+        view.updateRecentProducts(recentProducts)
     }
 
     override fun inquiryProductDetail(product: UiProduct) {
-        view.showProductDetail(product)
+        val previousProduct =
+            if (recentProducts.firstOrNull()?.product == product) recentProducts.secondOrNull()?.product else recentProducts.firstOrNull()?.product
+        view.showProductDetail(currentProduct = product, previousProduct = previousProduct)
         thread { recentProductRepository.add(product.toDomain()) }
-    }
-
-    override fun inquiryRecentProductDetail(recentProduct: UiProduct) {
-        view.showProductDetail(recentProduct)
-        thread { recentProductRepository.add(recentProduct.toDomain()) }
     }
 
     override fun fetchHasNext() {

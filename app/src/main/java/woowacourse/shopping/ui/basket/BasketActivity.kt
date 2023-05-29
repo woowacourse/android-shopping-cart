@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.basket
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,7 @@ import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
 import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.databinding.ActivityBasketBinding
 import woowacourse.shopping.ui.model.UiBasketProduct
+import woowacourse.shopping.util.turnOffSupportChangeAnimation
 
 class BasketActivity : AppCompatActivity(), BasketContract.View {
     private lateinit var presenter: BasketContract.Presenter
@@ -21,11 +23,23 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initSetResult()
         binding = DataBindingUtil.setContentView(this, R.layout.activity_basket)
+        binding.rvBasket.turnOffSupportChangeAnimation()
         initPresenter()
         initAdapter()
         initToolbarBackButton()
         navigatorClickListener()
+        initTotalCheckBoxOnCheckedChangedListener()
+    }
+
+    private fun initTotalCheckBoxOnCheckedChangedListener() {
+        binding.checkButtonClickListener =
+            { presenter.toggleAllProductsChecked(binding.cbTotal.isChecked) }
+    }
+
+    private fun initSetResult() {
+        setResult(Activity.RESULT_OK)
     }
 
     private fun initPresenter() {
@@ -36,9 +50,14 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
     }
 
     private fun initAdapter() {
-        basketAdapter = BasketAdapter(presenter::removeBasketProduct)
+        basketAdapter = BasketAdapter(
+            presenter::deleteBasketProduct,
+            presenter::removeBasketProduct,
+            presenter::addBasketProduct,
+            presenter::updateBasketProductCheckState
+        )
         binding.rvBasket.adapter = basketAdapter
-        presenter.fetchBasketProducts()
+        presenter.initBasketProducts()
     }
 
     private fun initToolbarBackButton() {
@@ -49,17 +68,15 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
 
     private fun navigatorClickListener() {
         binding.btnPrevious.setOnClickListener {
-            presenter.updateCurrentPage(false)
-            presenter.fetchPreviousBasketProducts(basketAdapter.currentList)
+            presenter.moveToPreviousPage()
         }
         binding.btnNext.setOnClickListener {
-            presenter.updateCurrentPage(true)
-            presenter.fetchBasketProducts()
+            presenter.moveToNextPage()
         }
     }
 
-    override fun updateBasketProducts(products: List<UiBasketProduct>) {
-        basketAdapter.submitList(products)
+    override fun updateBasketProducts(basketProducts: List<UiBasketProduct>) {
+        basketAdapter.submitList(basketProducts)
     }
 
     override fun updateNavigatorEnabled(previous: Boolean, next: Boolean) {
@@ -69,6 +86,18 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
 
     override fun updateCurrentPage(currentPage: Int) {
         binding.tvCurrentPage.text = currentPage.toString()
+    }
+
+    override fun updateTotalPrice(totalPrice: Int) {
+        binding.totalPrice = totalPrice
+    }
+
+    override fun updateCheckedProductsCount(checkedProductsCount: Int) {
+        binding.checkedCount = checkedProductsCount
+    }
+
+    override fun updateTotalCheckBox(isChecked: Boolean) {
+        binding.cbTotal.isChecked = isChecked
     }
 
     companion object {

@@ -1,18 +1,31 @@
 package woowacourse.shopping.data.datasource.basket
 
 import woowacourse.shopping.data.model.DataBasketProduct
-import woowacourse.shopping.data.model.DataProduct
 
 interface BasketDataSource {
     interface Local {
-        fun getPartially(
+        fun getPreviousPartially(
             size: Int,
             standard: Int,
-            isNext: Boolean,
             includeStandard: Boolean
         ): List<DataBasketProduct>
 
-        fun add(basketProduct: DataProduct)
+        fun getNextPartially(
+            size: Int,
+            standard: Int,
+            includeStandard: Boolean
+        ): List<DataBasketProduct>
+
+        fun getAll(): List<DataBasketProduct>
+
+        fun getByProductId(productId: Int): DataBasketProduct?
+
+        fun add(basketProduct: DataBasketProduct)
+
+        fun minus(basketProduct: DataBasketProduct)
+
+        fun update(basketProduct: DataBasketProduct)
+
         fun remove(basketProduct: DataBasketProduct)
     }
 

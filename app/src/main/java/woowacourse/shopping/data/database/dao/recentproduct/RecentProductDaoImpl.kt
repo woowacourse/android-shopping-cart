@@ -47,12 +47,24 @@ class RecentProductDaoImpl(private val database: SQLiteOpenHelper) : RecentProdu
     }
 
     override fun add(recentProduct: DataProduct) {
+        removeByProductId(recentProduct.id)
+
         val contentValues = ContentValues().apply {
             put("${ProductContract.TABLE_NAME}${BaseColumns._ID}", recentProduct.id)
         }
 
         database.writableDatabase.use { db ->
             db.insert(RecentProductContract.TABLE_NAME, null, contentValues)
+        }
+    }
+
+    private fun removeByProductId(productId: Int) {
+        database.writableDatabase.use { db ->
+            db.delete(
+                RecentProductContract.TABLE_NAME,
+                " ${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?",
+                arrayOf(productId.toString())
+            )
         }
     }
 

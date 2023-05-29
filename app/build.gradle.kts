@@ -64,4 +64,13 @@ dependencies {
 
     // concatAdapter
     implementation("androidx.recyclerview:recyclerview:1.3.0")
+
+    // MockWebServer
+    implementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.ui.model.Product" />
+
+        <variable
+            name="count"
+            type="Integer" />
+
+         <variable
+            name="minusClickListener"
+            type="kotlin.jvm.functions.Function1" />
+
+        <variable
+            name="plusClickListener"
+            type="kotlin.jvm.functions.Function1" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_navigator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/btn_minus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/shape_previous"
+            android:gravity="center"
+            android:onClick="@{()->minusClickListener.invoke(product)}"
+            android:text="@string/btn_minus"
+            android:textColor="@color/woowa_toolbar_gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_current_page"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_current_page"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingHorizontal="16dp"
+            android:text="@{String.valueOf(count)}"
+            android:textColor="@color/woowa_toolbar_gray"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_plus"
+            app:layout_constraintStart_toEndOf="@+id/btn_minus"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/btn_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/shape_next"
+            android:gravity="center"
+            android:onClick="@{()->plusClickListener.invoke(product)}"
+            android:text="@string/btn_plus"
+            android:textColor="@color/woowa_toolbar_gray"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_current_page"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

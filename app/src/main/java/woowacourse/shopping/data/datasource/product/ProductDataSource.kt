@@ -7,5 +7,7 @@ interface ProductDataSource {
         fun getPartially(size: Int, lastId: Int): List<DataProduct>
     }
 
-    interface Remote
+    interface Remote {
+        fun getPartially(size: Int, lastId: Int): List<DataProduct>
+    }
 }

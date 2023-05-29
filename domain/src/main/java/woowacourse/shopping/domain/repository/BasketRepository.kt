@@ -1,16 +1,18 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.BasketProduct
-import woowacourse.shopping.domain.Product
 
 interface BasketRepository {
-    fun getPartially(
-        size: Int,
-        standard: Int,
-        isNext: Boolean,
-        includeStandard: Boolean
-    ): List<BasketProduct>
 
-    fun add(product: Product)
+    fun getAll(): List<BasketProduct>
+
+    fun getByProductId(productId: Int): BasketProduct?
+
+    fun add(basketProduct: BasketProduct)
+
+    fun minus(basketProduct: BasketProduct)
+
+    fun update(basketProduct: BasketProduct)
+
     fun remove(basketProduct: BasketProduct)
 }

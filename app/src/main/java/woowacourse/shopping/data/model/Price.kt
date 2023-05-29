@@ -2,4 +2,5 @@ package woowacourse.shopping.data.model
 
 typealias DataPrice = Price
 
-data class Price(val value: Int)
+@JvmInline
+value class Price(val value: Int)

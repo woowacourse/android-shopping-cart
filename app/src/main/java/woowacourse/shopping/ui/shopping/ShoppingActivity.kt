@@ -1,6 +1,8 @@
 package woowacourse.shopping.ui.shopping
 
+import android.app.Activity
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
@@ -8,10 +10,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.database.ShoppingDatabase
+import woowacourse.shopping.data.database.dao.basket.BasketDaoImpl
 import woowacourse.shopping.data.database.dao.product.ProductDaoImpl
 import woowacourse.shopping.data.database.dao.recentproduct.RecentProductDaoImpl
+import woowacourse.shopping.data.datasource.basket.local.LocalBasketDataSource
 import woowacourse.shopping.data.datasource.product.local.LocalProductDataSource
+import woowacourse.shopping.data.datasource.product.remote.RemoteProductDataSource
 import woowacourse.shopping.data.datasource.recentproduct.local.LocalRecentProductDataSource
+import woowacourse.shopping.data.mockserver.ShoppingCartMockServer
+import woowacourse.shopping.data.model.DataPrice
+import woowacourse.shopping.data.model.DataProduct
+import woowacourse.shopping.data.repository.BasketRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
@@ -27,6 +36,7 @@ import woowacourse.shopping.ui.shopping.product.ProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductAdapter
 import woowacourse.shopping.ui.shopping.recentproduct.RecentProductWrapperAdapter
 import woowacourse.shopping.util.setThrottleFirstOnClickListener
+import woowacourse.shopping.util.turnOffSupportChangeAnimation
 
 class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
@@ -39,12 +49,27 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     private lateinit var moreButtonAdapter: MoreButtonAdapter
     private lateinit var concatAdapter: ConcatAdapter
 
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            refreshData()
+        }
+    }
+
+    private fun refreshData() {
+        presenter.updateBasket()
+        presenter.fetchRecentProducts()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
+        binding.rvShopping.turnOffSupportChangeAnimation()
         initPresenter()
         initAdapter()
         initProductData()
+        initRecentProductsData()
         initButtonBasketClickListener()
         initShoppingRecyclerViewScrollListener()
     }
@@ -59,16 +84,31 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         presenter = ShoppingPresenter(
             this,
             ProductRepositoryImpl(
-                LocalProductDataSource(ProductDaoImpl(shoppingDatabase))
+                LocalProductDataSource(ProductDaoImpl(shoppingDatabase)),
+                RemoteProductDataSource(ShoppingCartMockServer())
             ),
             RecentProductRepositoryImpl(
                 LocalRecentProductDataSource(RecentProductDaoImpl(shoppingDatabase))
+            ),
+            BasketRepositoryImpl(
+                LocalBasketDataSource(BasketDaoImpl(shoppingDatabase))
             )
         )
+        // DB 더미 담는로직 필요에 의해 주석처리
+        repeat(100) {
+            ProductDaoImpl(shoppingDatabase).add(
+                DataProduct(
+                    it + 1,
+                    "${it + 1}",
+                    DataPrice(1000),
+                    "https://pbs.twimg.com/media/FpFzjV-aAAAIE-v?format=jpg&name=large"
+                )
+            )
+        }
     }
 
     override fun updateProducts(products: List<UiProduct>) {
-        productAdapter.submitList(productAdapter.currentList + products)
+        productAdapter.submitList(products)
     }
 
     override fun updateRecentProducts(recentProducts: List<UiRecentProduct>) {
@@ -76,19 +116,32 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         recentProductWrapperAdapter.notifyDataSetChanged()
     }
 
-    override fun showProductDetail(product: UiProduct) {
-        startActivity(ProductDetailActivity.getIntent(this, product))
+    override fun showProductDetail(currentProduct: UiProduct, previousProduct: UiProduct?) {
+        activityResultLauncher.launch(
+            ProductDetailActivity.getIntent(
+                this,
+                currentProduct,
+                previousProduct
+            )
+        )
     }
 
     override fun updateMoreButtonState(isVisible: Boolean) {
-        moreButtonAdapter.hasNext = isVisible
-        moreButtonAdapter.notifyDataSetChanged()
+        moreButtonAdapter.updateItemCount(isVisible)
+    }
+
+    override fun updateTotalBasketCount(totalBasketCount: Int) {
+        binding.totalBasketCount = totalBasketCount
     }
 
     private fun initAdapter() {
-        recentProductAdapter = RecentProductAdapter(presenter::inquiryRecentProductDetail)
+        recentProductAdapter = RecentProductAdapter(presenter::inquiryProductDetail)
         recentProductWrapperAdapter = RecentProductWrapperAdapter(recentProductAdapter)
-        productAdapter = ProductAdapter(presenter::inquiryProductDetail)
+        productAdapter = ProductAdapter(
+            presenter::inquiryProductDetail,
+            presenter::removeBasketProduct,
+            presenter::addBasketProduct
+        )
         moreButtonAdapter = MoreButtonAdapter(presenter::fetchProducts)
         concatAdapter =
             ConcatAdapter(
@@ -141,7 +194,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     private fun initButtonBasketClickListener() {
         binding.ivBasket.setThrottleFirstOnClickListener {
-            startActivity(BasketActivity.getIntent(this))
+            activityResultLauncher.launch(BasketActivity.getIntent(this))
         }
     }
 

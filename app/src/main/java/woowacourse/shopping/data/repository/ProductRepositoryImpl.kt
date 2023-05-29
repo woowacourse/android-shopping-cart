@@ -6,8 +6,9 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductRepositoryImpl(
-    private val localProductDataSource: ProductDataSource.Local
+    private val localProductDataSource: ProductDataSource.Local,
+    private val remoteProductDataSource: ProductDataSource.Remote
 ) : ProductRepository {
     override fun getPartially(size: Int, lastId: Int): List<Product> =
-        localProductDataSource.getPartially(size, lastId).map { it.toDomain() }
+        remoteProductDataSource.getPartially(size, lastId).map { it.toDomain() }
 }

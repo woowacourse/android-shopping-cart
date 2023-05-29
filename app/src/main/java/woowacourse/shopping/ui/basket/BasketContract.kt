@@ -1,27 +1,42 @@
 package woowacourse.shopping.ui.basket
 
+import woowacourse.shopping.domain.BasketProduct
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.ui.model.UiBasketProduct
 
 interface BasketContract {
     interface View {
 
-        fun updateBasketProducts(products: List<UiBasketProduct>)
+        fun updateBasketProducts(basketProducts: List<UiBasketProduct>)
 
         fun updateNavigatorEnabled(previous: Boolean, next: Boolean)
 
         fun updateCurrentPage(currentPage: Int)
+
+        fun updateTotalPrice(totalPrice: Int)
+
+        fun updateCheckedProductsCount(checkedProductsCount: Int)
+
+        fun updateTotalCheckBox(isChecked: Boolean)
     }
 
     interface Presenter {
         val view: View
-        var lastId: Int
 
-        fun fetchPreviousBasketProducts(currentProducts: List<UiBasketProduct>)
+        fun toggleAllProductsChecked(totalIsChecked: Boolean)
 
-        fun fetchBasketProducts(standard: Int = lastId, includeStandard: Boolean = false)
+        fun updateBasketProductCheckState(basketProduct: BasketProduct)
 
-        fun removeBasketProduct(product: UiBasketProduct, currentProducts: List<UiBasketProduct>)
+        fun addBasketProduct(product: Product)
 
-        fun updateCurrentPage(isIncrease: Boolean)
+        fun removeBasketProduct(product: Product)
+
+        fun initBasketProducts()
+
+        fun moveToPreviousPage()
+
+        fun moveToNextPage()
+
+        fun deleteBasketProduct(product: UiBasketProduct)
     }
 }
