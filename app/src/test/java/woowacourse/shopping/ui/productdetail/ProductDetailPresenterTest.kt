@@ -47,13 +47,13 @@ class ProductDetailPresenterTest() {
     @Test
     fun `장바구니 항목 선택 다이얼로그의 데이터 및 관련 데이터 수정 리스너들을 전달한다`() {
         // given
-        every { view.showBasketDialog(any(), any(), any(), any()) } just runs
+        every { view.showBasketDialog(any()) } just runs
         every { view.updateProductCount(any()) } just runs
         // when
         presenter.setBasketDetailData()
 
         // then
-        verify(exactly = 1) { view.showBasketDialog(any(), any(), any(), any()) }
+        verify(exactly = 1) { view.showBasketDialog(any()) }
         verify(exactly = 1) { view.updateProductCount(any()) }
     }
 
