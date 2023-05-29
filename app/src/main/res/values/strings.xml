@@ -13,6 +13,7 @@
 
     <string name="amount_format">주문하기%,(d)</string>
     <string name="tv_detail_last_viewed">마지막으로 본 상품</string>
+    <string name="btn_detail_add_button">장바구니 담기</string>
 
 
 </resources>

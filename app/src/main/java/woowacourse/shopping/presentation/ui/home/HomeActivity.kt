@@ -21,7 +21,6 @@ import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
-import woowacourse.shopping.util.initProducts
 
 class HomeActivity :
     BindingActivity<ActivityHomeBinding>(R.layout.activity_home),
@@ -103,7 +102,7 @@ class HomeActivity :
     }
 
     private fun setEventOnProduct(productId: Long) {
-        val intent = ProductDetailActivity.getIntent(this, productId)
+        val intent = ProductDetailActivity.getIntent(this, productId, false)
         startActivity(intent)
     }
 

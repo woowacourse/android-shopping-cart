@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="setClickListener"
+            type="woowacourse.shopping.presentation.ui.productDetail.ProductDetailClickListener" />
+
+        <variable
             name="lastViewedProduct"
             type="woowacourse.shopping.domain.model.Product" />
 
@@ -65,9 +69,10 @@
                 android:layout_height="wrap_content"
                 android:background="@color/woowa_dealer_blue_600"
                 android:gravity="center"
+                android:onClick="@{() -> setClickListener.setClickEventOnToShoppingCart(product)}"
                 android:paddingTop="14dp"
                 android:paddingBottom="16dp"
-                android:text="장바구니 담기"
+                android:text="@string/btn_detail_add_button"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -132,6 +137,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="32dp"
                 android:background="@drawable/rectangle_radius_4dp"
+                android:onClick="@{() -> setClickListener.setClickEventOnLastViewed(lastViewedProduct)}"
                 app:layout_constraintBottom_toTopOf="@+id/btn_detail_add_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.product
 
-import android.util.Log
 import woowacourse.shopping.data.product.ProductMapper.toDomainModel
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDataSource
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedEntity
@@ -40,7 +39,6 @@ class ProductRepositoryImpl(
         val lastViewed: List<RecentlyViewedEntity> =
             recentlyViewedDataSource.getLastViewedProduct()
 
-        Log.d("123123", lastViewed.toString())
         return when {
             lastViewed.isEmpty() -> FAIL(Error.NoSuchId)
             lastViewed.size > 1 -> getProductEntity(lastViewed.first().productId)?.let {

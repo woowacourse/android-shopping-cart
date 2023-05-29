@@ -13,7 +13,6 @@ class ProductDetailPresenter(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ProductDetailContract.Presenter {
-    lateinit var selectedProduct: Product
 
     override fun fetchProduct(id: Long) {
         when (val result = productRepository.getProduct(id)) {
@@ -31,7 +30,7 @@ class ProductDetailPresenter(
         productRepository.addRecentlyViewedProduct(id, unit)
     }
 
-    override fun addProductInCart() {
-        shoppingCartRepository.addProductInCart(ProductInCart(selectedProduct, 1, true))
+    override fun addProductInCart(product: Product) {
+        shoppingCartRepository.addProductInCart(ProductInCart(product, 1, true))
     }
 }

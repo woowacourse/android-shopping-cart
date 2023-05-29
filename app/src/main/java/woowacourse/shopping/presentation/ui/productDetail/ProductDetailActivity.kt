@@ -41,12 +41,21 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override fun setLastViewedProduct(result: WoowaResult<Product>) {
         when (result) {
             is WoowaResult.SUCCESS -> {
+                if (checkStackState()) return
                 binding.clDetailLastViewed.visibility = View.VISIBLE
                 binding.lastViewedProduct = result.data
             }
 
             is WoowaResult.FAIL -> binding.clDetailLastViewed.visibility = View.INVISIBLE
         }
+    }
+
+    private fun checkStackState(): Boolean {
+        if (intent.getBooleanExtra(IS_STACKED, false)) {
+            binding.clDetailLastViewed.visibility = View.INVISIBLE
+            return true
+        }
+        return false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,24 +88,35 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun setClickEventOnToShoppingCartButton() {
-        binding.btnDetailAddButton.setOnClickListener {
-            presenter.addProductInCart()
-            startActivity(Intent(this, ShoppingCartActivity::class.java))
+        binding.setClickListener = object : ProductDetailClickListener {
+            override fun setClickEventOnToShoppingCart(product: Product) {
+                presenter.addProductInCart(product)
+                navigateToShoppingCartActivity()
+            }
+
+            override fun setClickEventOnLastViewed(lastViewedProduct: Product) {
+                navigateToNewProductDetailActivity(lastViewedProduct)
+            }
         }
     }
 
-    private fun setClickEventOnLastViewed() {
-//        val intent = getIntent(this, productId)
-//        startActivity(intent)
+    private fun navigateToShoppingCartActivity() =
+        startActivity(ShoppingCartActivity.getIntent(this))
+
+    private fun navigateToNewProductDetailActivity(lastViewedProduct: Product) {
+        val intent = getIntent(this, lastViewedProduct.id, true)
+        startActivity(intent)
     }
 
     companion object {
         private const val DEFAULT_ID: Long = 0
         private const val DEFAULT_UNIT_RECENT_PRODUCT = 10
         private const val PRODUCT_ID = "productId"
-        fun getIntent(context: Context, productId: Long): Intent {
+        private const val IS_STACKED = "isStacked"
+        fun getIntent(context: Context, productId: Long, isStacked: Boolean): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_ID, productId)
+                putExtra(IS_STACKED, isStacked)
             }
         }
     }

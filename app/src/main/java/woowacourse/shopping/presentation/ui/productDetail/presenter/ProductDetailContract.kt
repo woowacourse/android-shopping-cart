@@ -15,6 +15,6 @@ interface ProductDetailContract {
         fun fetchProduct(id: Long)
         fun fetchLastViewedProduct()
         fun addRecentlyViewedProduct(id: Long, unit: Int)
-        fun addProductInCart()
+        fun addProductInCart(product: Product)
     }
 }

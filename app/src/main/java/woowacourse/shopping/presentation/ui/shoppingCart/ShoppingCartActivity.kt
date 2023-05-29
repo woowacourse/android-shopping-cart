@@ -132,7 +132,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun setEventOnItem(productInCart: ProductInCartUiState) {
-        val intent = ProductDetailActivity.getIntent(this, productInCart.product.id)
+        val intent = ProductDetailActivity.getIntent(this, productInCart.product.id, false)
         startActivity(intent)
     }
 
