@@ -10,10 +10,7 @@ interface ProductDetailContract {
         fun updateBindingData(product: UiProduct, previousProduct: UiProduct?)
 
         fun showBasketDialog(
-            currentProduct: UiProduct,
-            minusClickListener: () -> Unit,
-            plusClickListener: () -> Unit,
-            updateBasketProduct: () -> Unit
+            currentProduct: UiProduct
         )
 
         fun updateProductCount(count: Int)
@@ -22,10 +19,16 @@ interface ProductDetailContract {
     interface Presenter {
         val view: View
 
-        fun setBasketDialog()
+        fun setBasketDetailData()
 
         fun selectPreviousProduct()
 
         fun initProductData()
+
+        fun minusProductCount()
+
+        fun plusProductCount()
+
+        fun updateBasketProduct()
     }
 }

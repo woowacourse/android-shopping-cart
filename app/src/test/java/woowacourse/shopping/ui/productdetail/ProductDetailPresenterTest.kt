@@ -50,7 +50,7 @@ class ProductDetailPresenterTest() {
         every { view.showBasketDialog(any(), any(), any(), any()) } just runs
         every { view.updateProductCount(any()) } just runs
         // when
-        presenter.setBasketDialog()
+        presenter.setBasketDetailData()
 
         // then
         verify(exactly = 1) { view.showBasketDialog(any(), any(), any(), any()) }

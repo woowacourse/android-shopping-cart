@@ -46,14 +46,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initBasketButtonClickListener() {
-        binding.addMarketClickListener = presenter::setBasketDialog
+        binding.addMarketClickListener = presenter::setBasketDetailData
     }
 
     override fun showBasketDialog(
-        currentProduct: UiProduct,
-        minusClickListener: () -> Unit,
-        plusClickListener: () -> Unit,
-        updateBasketProduct: () -> Unit
+        currentProduct: UiProduct
     ) {
         dialogViewBinding = DialogProductDetailBinding.inflate(layoutInflater)
         alertDialog = AlertDialog.Builder(this)
@@ -61,9 +58,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             .create()
 
         dialogViewBinding.product = currentProduct
-        dialogViewBinding.dialogCounter.minusClickListener = { _ -> minusClickListener() }
-        dialogViewBinding.dialogCounter.plusClickListener = { _ -> plusClickListener() }
-        dialogViewBinding.addBasketClickListener = updateBasketProduct
+        dialogViewBinding.dialogCounter.minusClickListener = { _ -> presenter.minusProductCount() }
+        dialogViewBinding.dialogCounter.plusClickListener = { _ -> presenter.plusProductCount() }
+        dialogViewBinding.addBasketClickListener = presenter::updateBasketProduct
 
         alertDialog.show()
     }

@@ -28,27 +28,22 @@ class ProductDetailPresenter(
         view.updateBindingData(currentProduct, previousProduct)
     }
 
-    override fun setBasketDialog() {
-        view.showBasketDialog(
-            currentProduct,
-            ::minusProductCount,
-            ::plusProductCount,
-            ::updateBasketProduct
-        )
+    override fun setBasketDetailData() {
+        view.showBasketDialog(currentProduct)
         view.updateProductCount(currentProduct.basketCount)
     }
 
-    private fun minusProductCount() {
+    override fun minusProductCount() {
         if (currentProduct.basketCount - 1 >= 0) currentProduct.basketCount -= 1
         view.updateProductCount(currentProduct.basketCount)
     }
 
-    private fun plusProductCount() {
+    override fun plusProductCount() {
         currentProduct.basketCount += 1
         view.updateProductCount(currentProduct.basketCount)
     }
 
-    private fun updateBasketProduct() {
+    override fun updateBasketProduct() {
         thread {
             basketRepository.update(
                 BasketProduct(
