@@ -8,18 +8,6 @@ data class BasketProduct(
 ) {
     fun getTotalPrice(): Price = product.price * count
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as BasketProduct
-
-        if (product != other.product) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return product.hashCode()
-    }
+    fun compareWithProductId(other: BasketProduct): Boolean =
+        this.id == other.id
 }

@@ -1,8 +1,8 @@
 package woowacourse.shopping.domain
 
 data class Basket(val products: List<BasketProduct>) {
-    fun add(basketProduct: BasketProduct): Basket =
-        if (basketProduct in products) Basket(
+    fun plus(basketProduct: BasketProduct): Basket =
+        if (products.find { it.compareWithProductId(basketProduct) } != null) Basket(
             products.map { plusCountTargetBasketProduct(it, basketProduct) }
         )
         else Basket(products + basketProduct)
@@ -15,8 +15,8 @@ data class Basket(val products: List<BasketProduct>) {
         return processTargetBasketProduct(existingBasketProduct, target, processedCount)
     }
 
-    fun delete(basketProduct: BasketProduct): Basket =
-        if (basketProduct in products) Basket(
+    fun minus(basketProduct: BasketProduct): Basket =
+        if (products.find { it.compareWithProductId(basketProduct) } != null) Basket(
             products.map { minusCountTargetBasketProduct(it, basketProduct) }
                 .filter { !it.count.isZero() }
         )
@@ -34,14 +34,14 @@ data class Basket(val products: List<BasketProduct>) {
         existingBasketProduct: BasketProduct,
         target: BasketProduct,
         processedCount: Count
-    ): BasketProduct = if (existingBasketProduct == target) BasketProduct(
+    ): BasketProduct = if (existingBasketProduct.compareWithProductId(target)) BasketProduct(
         id = existingBasketProduct.id,
         count = processedCount,
         product = existingBasketProduct.product
     ) else existingBasketProduct
 
     fun remove(basketProduct: BasketProduct): Basket =
-        Basket(products.toMutableList().apply { remove(basketProduct) })
+        Basket(products.toMutableList().filter { !it.compareWithProductId(basketProduct) })
 
     fun getCountByProductId(productId: Int): Int =
         products.find { it.product.id == productId }?.count?.value ?: 0
@@ -59,7 +59,7 @@ data class Basket(val products: List<BasketProduct>) {
     }
 
     fun updateCheck(basketProduct: BasketProduct) {
-        products.find { it.product.id == basketProduct.product.id }?.isChecked =
+        products.find { it.compareWithProductId(basketProduct) }?.isChecked =
             basketProduct.isChecked
     }
 

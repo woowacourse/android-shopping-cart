@@ -56,7 +56,7 @@ class ShoppingPresenter(
     override fun addBasketProduct(product: Product) {
         val addedProduct = BasketProduct(count = Count(1), product = product)
         basketRepository.add(addedProduct)
-        basket = basket.add(addedProduct)
+        basket = basket.plus(addedProduct)
         fetchBasketCount()
         fetchTotalBasketCount()
         view.updateProducts(totalProducts)
@@ -65,7 +65,7 @@ class ShoppingPresenter(
     override fun removeBasketProduct(product: Product) {
         val removedProduct = BasketProduct(count = Count(1), product = product)
         basketRepository.minus(removedProduct)
-        basket = basket.delete(removedProduct)
+        basket = basket.minus(removedProduct)
         fetchBasketCount()
         fetchTotalBasketCount()
         view.updateProducts(totalProducts)

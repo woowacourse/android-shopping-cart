@@ -41,14 +41,14 @@ class BasketPresenter(
     override fun addBasketProduct(product: Product) {
         val addedProduct = BasketProduct(count = Count(1), product = product)
         basketRepository.add(addedProduct)
-        basket = basket.add(addedProduct)
+        basket = basket.plus(addedProduct)
         updateBasketProductViewData()
     }
 
     override fun removeBasketProduct(product: Product) {
         val removedProduct = BasketProduct(count = Count(1), product = product)
         basketRepository.minus(removedProduct)
-        basket = basket.delete(removedProduct)
+        basket = basket.minus(removedProduct)
         updateBasketProductViewData()
     }
 
