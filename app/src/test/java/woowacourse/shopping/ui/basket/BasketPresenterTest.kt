@@ -160,7 +160,7 @@ class BasketPresenterTest() {
         every { view.updateNavigatorEnabled(any(), any()) } just Runs
         every { view.updateBasketProducts(any()) } just Runs
         // when
-        presenter.updatePreviousPage()
+        presenter.moveToPreviousPage()
         // then
         verify(exactly = 1) { view.updateCurrentPage(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }
@@ -174,7 +174,7 @@ class BasketPresenterTest() {
         every { view.updateNavigatorEnabled(any(), any()) } just Runs
         every { view.updateBasketProducts(any()) } just Runs
         // when
-        presenter.updateNextPage()
+        presenter.moveToNextPage()
         // then
         verify(exactly = 1) { view.updateCurrentPage(any()) }
         verify(exactly = 1) { view.updateNavigatorEnabled(any(), any()) }

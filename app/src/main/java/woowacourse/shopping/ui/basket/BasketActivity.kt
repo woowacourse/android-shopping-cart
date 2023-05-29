@@ -68,10 +68,10 @@ class BasketActivity : AppCompatActivity(), BasketContract.View {
 
     private fun navigatorClickListener() {
         binding.btnPrevious.setOnClickListener {
-            presenter.updatePreviousPage()
+            presenter.moveToPreviousPage()
         }
         binding.btnNext.setOnClickListener {
-            presenter.updateNextPage()
+            presenter.moveToNextPage()
         }
     }
 

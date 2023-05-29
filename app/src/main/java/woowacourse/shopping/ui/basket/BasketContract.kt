@@ -33,9 +33,9 @@ interface BasketContract {
 
         fun initBasketProducts()
 
-        fun updatePreviousPage()
+        fun moveToPreviousPage()
 
-        fun updateNextPage()
+        fun moveToNextPage()
 
         fun deleteBasketProduct(product: UiBasketProduct)
     }
