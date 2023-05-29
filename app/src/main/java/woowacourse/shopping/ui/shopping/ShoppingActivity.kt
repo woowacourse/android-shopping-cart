@@ -23,8 +23,8 @@ import woowacourse.shopping.data.database.dao.ProductDao
 import woowacourse.shopping.data.database.dao.RecentProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
+import woowacourse.shopping.data.server.ProductRemoteDataSource
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.server.ProductRemoteDataSource
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.model.ProductModel
 import woowacourse.shopping.ui.model.RecentProductModel

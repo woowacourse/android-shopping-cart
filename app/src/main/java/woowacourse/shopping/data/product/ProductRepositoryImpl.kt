@@ -1,10 +1,10 @@
 package woowacourse.shopping.data.product
 
 import woowacourse.shopping.data.database.dao.ProductDao
+import woowacourse.shopping.data.server.ProductRemoteDataSource
 import woowacourse.shopping.domain.Products
 import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.server.ProductRemoteDataSource
 
 class ProductRepositoryImpl(
     private val productDao: ProductDao,
