@@ -92,6 +92,10 @@ class HomeActivity :
             setEventOnShowMoreButton()
         }
 
+        override fun setClickEventOnPlusButton(productInCart: ProductInCartUiState) {
+            presenter.addCountOfProductInCart(PLUS, productInCart.product)
+        }
+
         override fun setClickEventOnOperatorButton(
             operator: Boolean,
             productInCart: ProductInCartUiState,

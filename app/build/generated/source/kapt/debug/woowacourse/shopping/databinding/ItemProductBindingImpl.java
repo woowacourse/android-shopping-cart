@@ -26,6 +26,8 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
     private final androidx.constraintlayout.widget.ConstraintLayout mboundView1;
     // variables
     @Nullable
+    private final android.view.View.OnClickListener mCallback9;
+    @Nullable
     private final android.view.View.OnClickListener mCallback8;
     // values
     // listeners
@@ -53,6 +55,7 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
         this.tvItemProductPrice.setTag(null);
         setRootTag(root);
         // listeners
+        mCallback9 = new woowacourse.shopping.generated.callback.OnClickListener(this, 2);
         mCallback8 = new woowacourse.shopping.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
@@ -196,6 +199,12 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
                 tvItemProductPriceAndroidStringPriceFormatProductPrice = tvItemProductPrice.getResources().getString(R.string.price_format, productPrice);
         }
         // batch finished
+        if ((dirtyFlags & 0x10L) != 0) {
+            // api target 1
+
+            this.fabItemProductQuantity.setOnClickListener(mCallback9);
+            this.mboundView0.setOnClickListener(mCallback8);
+        }
         if ((dirtyFlags & 0x12L) != 0) {
             // api target 1
 
@@ -215,32 +224,52 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
 
             this.layoutQuantity.setSetQuantityClickListener(setClickListener);
         }
-        if ((dirtyFlags & 0x10L) != 0) {
-            // api target 1
-
-            this.mboundView0.setOnClickListener(mCallback8);
-        }
         executeBindingsOn(layoutQuantity);
     }
     // Listener Stub Implementations
     // callback impls
     public final void _internalCallbackOnClick(int sourceId , android.view.View callbackArg_0) {
-        // localize variables for thread safety
-        // setClickListener != null
-        boolean setClickListenerJavaLangObjectNull = false;
-        // product
-        woowacourse.shopping.domain.model.Product product = mProduct;
-        // setClickListener
-        woowacourse.shopping.presentation.ui.home.HomeSetClickListener setClickListener = mSetClickListener;
+        switch(sourceId) {
+            case 2: {
+                // localize variables for thread safety
+                // setClickListener != null
+                boolean setClickListenerJavaLangObjectNull = false;
+                // shoppingCart
+                woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
+                // setClickListener
+                woowacourse.shopping.presentation.ui.home.HomeSetClickListener setClickListener = mSetClickListener;
 
 
 
-        setClickListenerJavaLangObjectNull = (setClickListener) != (null);
-        if (setClickListenerJavaLangObjectNull) {
+                setClickListenerJavaLangObjectNull = (setClickListener) != (null);
+                if (setClickListenerJavaLangObjectNull) {
 
 
 
-            setClickListener.setClickEventOnProduct(product);
+                    setClickListener.setClickEventOnPlusButton(shoppingCart);
+                }
+                break;
+            }
+            case 1: {
+                // localize variables for thread safety
+                // setClickListener != null
+                boolean setClickListenerJavaLangObjectNull = false;
+                // product
+                woowacourse.shopping.domain.model.Product product = mProduct;
+                // setClickListener
+                woowacourse.shopping.presentation.ui.home.HomeSetClickListener setClickListener = mSetClickListener;
+
+
+
+                setClickListenerJavaLangObjectNull = (setClickListener) != (null);
+                if (setClickListenerJavaLangObjectNull) {
+
+
+
+                    setClickListener.setClickEventOnProduct(product);
+                }
+                break;
+            }
         }
     }
     // dirty flag

@@ -7,6 +7,7 @@ import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUi
 interface HomeSetClickListener : QuantityControlClickListener {
 
     fun setClickEventOnProduct(product: Product)
+    fun setClickEventOnPlusButton(productInCart: ProductInCartUiState)
     fun setClickEventOnShowMoreButton()
     override fun setClickEventOnOperatorButton(
         operator: Boolean,

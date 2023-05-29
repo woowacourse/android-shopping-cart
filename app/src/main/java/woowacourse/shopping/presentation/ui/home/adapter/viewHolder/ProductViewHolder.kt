@@ -24,7 +24,6 @@ class ProductViewHolder(
         binding.fabItemProductQuantity.setOnClickListener {
             binding.fabItemProductQuantity.visibility = View.INVISIBLE
             binding.layoutQuantity.root.visibility = View.VISIBLE
-            binding.layoutQuantity.tvQuantityAmount.text = "1"
         }
 
         binding.shoppingCart = shoppingCart.find { it.product.id == data.product.id }
