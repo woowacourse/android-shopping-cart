@@ -10,5 +10,5 @@ data class BasketProduct(
     val id: Int,
     val count: UiCount,
     val product: UiProduct,
-    val checked: Boolean
+    val isChecked: Boolean
 ) : Parcelable

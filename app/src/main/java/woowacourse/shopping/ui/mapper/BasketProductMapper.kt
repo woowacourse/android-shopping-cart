@@ -8,8 +8,8 @@ fun UiBasketProduct.toDomain(): BasketProduct =
         id = id,
         count = count.toDomain(),
         product = product.toDomain(),
-        checked = checked
+        isChecked = isChecked
     )
 
 fun BasketProduct.toUi(): UiBasketProduct =
-    UiBasketProduct(id = id, count = count.toUi(), product = product.toUi(), checked = checked)
+    UiBasketProduct(id = id, count = count.toUi(), product = product.toUi(), isChecked = isChecked)

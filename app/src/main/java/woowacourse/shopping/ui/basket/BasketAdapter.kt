@@ -31,7 +31,7 @@ class BasketAdapter(
                     id = basketProduct.id,
                     count = basketProduct.count.toDomain(),
                     product = basketProduct.product.toDomain(),
-                    checked = isChecked
+                    isChecked = isChecked
                 )
                 onCheckedChangeListener(processedBasketProduct)
             }

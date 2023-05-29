@@ -83,7 +83,7 @@ class BasketPresenterTest() {
             id = 1,
             count = Count(3),
             product = Product(1, "더미입니다만", Price(1000), "url"),
-            checked = true
+            isChecked = true
         )
         presenter.updateBasketProductCheckState(updateProduct)
 

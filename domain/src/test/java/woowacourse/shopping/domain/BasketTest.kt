@@ -276,7 +276,7 @@ class BasketTest {
 
         // when
         basket.toggleAllCheck(true)
-        val actual = basket.products.filter { !it.checked }
+        val actual = basket.products.filter { !it.isChecked }
         val expected = emptyList<BasketProduct>()
 
         // then

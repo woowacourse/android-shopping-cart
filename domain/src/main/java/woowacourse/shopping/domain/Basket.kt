@@ -35,7 +35,7 @@ data class Basket(val products: List<BasketProduct>) {
         products.fold(0) { acc, basketProduct -> acc + basketProduct.getTotalPrice().value }
 
     fun getCheckedProductsTotalPrice(): Int =
-        products.fold(0) { acc, basketProduct -> if (basketProduct.checked) acc + basketProduct.getTotalPrice().value else acc }
+        products.fold(0) { acc, basketProduct -> if (basketProduct.isChecked) acc + basketProduct.getTotalPrice().value else acc }
 
     fun getSubBasketByStartId(startId: Int, subBasketSize: Int): Basket {
         val endIndex =
@@ -44,16 +44,16 @@ data class Basket(val products: List<BasketProduct>) {
     }
 
     fun updateCheck(basketProduct: BasketProduct) {
-        products.find { it.product.id == basketProduct.product.id }?.checked = basketProduct.checked
+        products.find { it.product.id == basketProduct.product.id }?.isChecked = basketProduct.isChecked
     }
 
     fun getCheckedProductsCount(): Int =
-        products.filter { it.checked }.size
+        products.filter { it.isChecked }.size
 
     fun toggleAllCheck(isChecked: Boolean) {
-        products.map { it.checked = isChecked }
+        products.map { it.isChecked = isChecked }
     }
 
     fun allItemIsChecked(): Boolean =
-        products.none { !it.checked }
+        products.none { !it.isChecked }
 }
