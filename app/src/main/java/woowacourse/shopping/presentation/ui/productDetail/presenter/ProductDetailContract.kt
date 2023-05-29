@@ -1,12 +1,19 @@
 package woowacourse.shopping.presentation.ui.productDetail.presenter
 
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.util.WoowaResult
+import woowacourse.shopping.presentation.ui.common.BaseView
+
 interface ProductDetailContract {
-    interface View {
-        val presenter: Presenter
+    interface View : BaseView<Presenter> {
+
+        fun setProduct(product: Product)
+        fun setLastViewedProduct(result: WoowaResult<Product>)
     }
 
     interface Presenter {
-        fun getProduct(id: Long)
+        fun fetchProduct(id: Long)
+        fun fetchLastViewedProduct()
         fun addRecentlyViewedProduct(id: Long, unit: Int)
         fun addProductInCart()
     }

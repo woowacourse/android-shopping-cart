@@ -21,6 +21,7 @@ import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
+import woowacourse.shopping.util.initProducts
 
 class HomeActivity :
     BindingActivity<ActivityHomeBinding>(R.layout.activity_home),

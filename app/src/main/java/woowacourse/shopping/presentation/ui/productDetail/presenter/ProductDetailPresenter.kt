@@ -9,16 +9,22 @@ import woowacourse.shopping.domain.util.WoowaResult.FAIL
 import woowacourse.shopping.domain.util.WoowaResult.SUCCESS
 
 class ProductDetailPresenter(
+    private val view: ProductDetailContract.View,
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ProductDetailContract.Presenter {
     lateinit var selectedProduct: Product
 
-    override fun getProduct(id: Long) {
-        when (val woowaResult = productRepository.getProduct(id)) {
-            is SUCCESS -> selectedProduct = woowaResult.data
-            is FAIL -> Log.d("ERROR", woowaResult.error.errorMessage)
+    override fun fetchProduct(id: Long) {
+        when (val result = productRepository.getProduct(id)) {
+            is SUCCESS -> view.setProduct(result.data)
+            is FAIL -> Log.d("ERROR", result.error.errorMessage)
         }
+    }
+
+    override fun fetchLastViewedProduct() {
+        val result = productRepository.getLastViewedProduct()
+        view.setLastViewedProduct(result)
     }
 
     override fun addRecentlyViewedProduct(id: Long, unit: Int) {

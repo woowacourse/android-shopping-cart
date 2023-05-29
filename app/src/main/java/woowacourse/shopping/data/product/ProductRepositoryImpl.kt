@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.product
 
+import android.util.Log
 import woowacourse.shopping.data.product.ProductMapper.toDomainModel
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDataSource
 import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedEntity
@@ -16,8 +17,7 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
 
     override fun getProduct(id: Long): WoowaResult<Product> {
-        val productEntity: ProductEntity =
-            productDataSource.getProductEntity(id) ?: return FAIL(Error.NoSuchId)
+        val productEntity: ProductEntity = getProductEntity(id) ?: return FAIL(Error.NoSuchId)
 
         return SUCCESS(productEntity.toDomainModel())
     }
@@ -32,8 +32,31 @@ class ProductRepositoryImpl(
         val recentlyViewed: List<RecentlyViewedEntity> =
             recentlyViewedDataSource.getRecentlyViewedProducts(unit)
         val productEntities: List<ProductEntity> =
-            recentlyViewed.mapNotNull { productDataSource.getProductEntity(it.productId) }
+            recentlyViewed.mapNotNull { getProductEntity(it.productId) }
         return productEntities.map { it.toDomainModel() }
+    }
+
+    override fun getLastViewedProduct(): WoowaResult<Product> {
+        val lastViewed: List<RecentlyViewedEntity> =
+            recentlyViewedDataSource.getLastViewedProduct()
+
+        Log.d("123123", lastViewed.toString())
+        return when {
+            lastViewed.isEmpty() -> FAIL(Error.NoSuchId)
+            lastViewed.size > 1 -> getProductEntity(lastViewed.first().productId)?.let {
+                SUCCESS(it.toDomainModel())
+            } ?: FAIL(Error.NoSuchId)
+
+            lastViewed.size == 1 -> getProductEntity(lastViewed.last().productId)?.let {
+                SUCCESS(it.toDomainModel())
+            } ?: FAIL(Error.NoSuchId)
+
+            else -> throw IllegalArgumentException()
+        }
+    }
+
+    private fun getProductEntity(id: Long): ProductEntity? {
+        return productDataSource.getProductEntity(id)
     }
 
     override fun addRecentlyViewedProduct(productId: Long, unit: Int): Long {

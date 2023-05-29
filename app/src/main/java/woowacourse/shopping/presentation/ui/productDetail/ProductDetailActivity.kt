@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.ui.productDetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.product.ProductDao
 import woowacourse.shopping.data.product.ProductRepositoryImpl
@@ -10,6 +11,8 @@ import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
 import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.util.WoowaResult
 import woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailContract
 import woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailPresenter
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
@@ -19,6 +22,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override val presenter: ProductDetailContract.Presenter by lazy { initPresenter() }
     private fun initPresenter(): ProductDetailPresenter {
         return ProductDetailPresenter(
+            this,
             ProductRepositoryImpl(
                 productDataSource = ProductDao(this),
                 recentlyViewedDataSource = RecentlyViewedDao(this),
@@ -28,6 +32,21 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 productDataSource = ProductDao(this),
             ),
         )
+    }
+
+    override fun setProduct(product: Product) {
+        binding.product = product
+    }
+
+    override fun setLastViewedProduct(result: WoowaResult<Product>) {
+        when (result) {
+            is WoowaResult.SUCCESS -> {
+                binding.clDetailLastViewed.visibility = View.VISIBLE
+                binding.lastViewedProduct = result.data
+            }
+
+            is WoowaResult.FAIL -> binding.clDetailLastViewed.visibility = View.INVISIBLE
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,8 +62,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initView(productId: Long) {
-        presenter.getProduct(productId)
-        binding.presenter = presenter as ProductDetailPresenter
+        presenter.fetchProduct(productId)
+        presenter.fetchLastViewedProduct()
     }
 
     private fun addRecentlyViewedProduct(productId: Long) =
@@ -52,18 +71,23 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setClickEvent() {
         setClickEventOnCloseButton()
-        setClickEventOnDibsButton()
+        setClickEventOnToShoppingCartButton()
     }
 
     private fun setClickEventOnCloseButton() {
         binding.ivDetailCloseButton.setOnClickListener { finish() }
     }
 
-    private fun setClickEventOnDibsButton() {
+    private fun setClickEventOnToShoppingCartButton() {
         binding.btnDetailAddButton.setOnClickListener {
             presenter.addProductInCart()
             startActivity(Intent(this, ShoppingCartActivity::class.java))
         }
+    }
+
+    private fun setClickEventOnLastViewed() {
+//        val intent = getIntent(this, productId)
+//        startActivity(intent)
     }
 
     companion object {

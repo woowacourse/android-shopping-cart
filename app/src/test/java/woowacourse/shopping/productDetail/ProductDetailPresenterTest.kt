@@ -38,7 +38,7 @@ class ProductDetailPresenterTest {
         every { productRepository.getProduct(any()) } returns WoowaResult.SUCCESS(product)
 
         // when
-        presenter.getProduct(0)
+        presenter.fetchProduct(0)
 
         // then
         verify { productRepository.getProduct(any()) }

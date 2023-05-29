@@ -9,4 +9,5 @@ interface ProductRepository {
     fun getProducts(unit: Int, lastIndex: Int): List<Product>
     fun getRecentlyViewedProducts(unit: Int): List<Product>
     fun addRecentlyViewedProduct(productId: Long, unit: Int): Long
+    fun getLastViewedProduct(): WoowaResult<Product>
 }

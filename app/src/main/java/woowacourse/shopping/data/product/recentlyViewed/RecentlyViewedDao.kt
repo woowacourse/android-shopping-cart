@@ -22,6 +22,17 @@ class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
         return itemContainer.reversed()
     }
 
+    override fun getLastViewedProduct(): List<RecentlyViewedEntity> {
+        val query = "SELECT * FROM $TABLE_NAME"
+        val cursor = shoppingDb.rawQuery(query, null)
+        val itemContainer = mutableListOf<RecentlyViewedEntity>()
+        while (cursor.moveToNext()) {
+            itemContainer.add(readRecentlyViewed(cursor))
+        }
+        cursor.close()
+        return itemContainer.reversed()
+    }
+
     override fun addRecentlyViewedProduct(productId: Long, unit: Int): Long {
         val data = ContentValues()
         data.put(TABLE_COLUMN_PRODUCT_ID, productId)
@@ -31,7 +42,7 @@ class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
             DELETE FROM $TABLE_NAME WHERE ${BaseColumns._ID} NOT IN (
             SELECT ${BaseColumns._ID} FROM $TABLE_NAME ORDER BY ${BaseColumns._ID} DESC LIMIT $unit
             )
-            """
+        """.trimIndent()
         shoppingDb.execSQL(query)
         return id
     }
