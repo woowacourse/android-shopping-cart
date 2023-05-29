@@ -14,7 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.list.CartRecyclerViewAdapter
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.datas.CartDBHelper
-import woowacourse.shopping.datas.CartDBRepository
+import woowacourse.shopping.datas.CartRepositoryImpl
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
@@ -29,7 +29,7 @@ class CartActivity :
     private val adapter: CartRecyclerViewAdapter =
         CartRecyclerViewAdapter(this, this, this)
     private lateinit var presenter: CartContract.Presenter
-    private val repository: CartRepository by lazy { CartDBRepository(CartDBHelper(this).writableDatabase) }
+    private val repository: CartRepository by lazy { CartRepositoryImpl(CartDBHelper(this).writableDatabase) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

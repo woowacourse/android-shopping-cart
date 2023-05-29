@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductReadMoreBinding
-import woowacourse.shopping.datas.ProductDataRepository
+import woowacourse.shopping.datas.ProductRepositoryImpl
 
 class ReadMoreViewHolder(
     binding: ItemProductReadMoreBinding,
@@ -15,7 +15,7 @@ class ReadMoreViewHolder(
         binding.btReadMore.setOnClickListener {
             readMoreOnClick(
                 PRODUCT_UNIT_SIZE,
-                ProductDataRepository.productCataloguePageNumber
+                ProductRepositoryImpl.productCataloguePageNumber
             )
         }
     }

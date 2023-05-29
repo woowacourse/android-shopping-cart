@@ -15,9 +15,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.datas.CartDBHelper
-import woowacourse.shopping.datas.CartDBRepository
+import woowacourse.shopping.datas.CartRepositoryImpl
 import woowacourse.shopping.datas.RecentProductDBHelper
-import woowacourse.shopping.datas.RecentProductDBRepository
+import woowacourse.shopping.datas.RecentRepositoryImpl
 import woowacourse.shopping.getSerializableCompat
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
@@ -35,8 +35,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val productData =
             intent.getSerializableCompat(BundleKeys.KEY_PRODUCT) ?: ProductUIModel.dummy
         val recentRepository: RecentRepository =
-            RecentProductDBRepository(RecentProductDBHelper(this).writableDatabase)
-        val cartRepository: CartRepository = CartDBRepository(CartDBHelper(this).writableDatabase)
+            RecentRepositoryImpl(RecentProductDBHelper(this).writableDatabase)
+        val cartRepository: CartRepository = CartRepositoryImpl(CartDBHelper(this).writableDatabase)
 
         presenter = ProductDetailPresenter(this, productData, recentRepository, cartRepository)
         binding.presenter = presenter

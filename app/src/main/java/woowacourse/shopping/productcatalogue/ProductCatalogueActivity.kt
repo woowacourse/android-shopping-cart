@@ -13,10 +13,10 @@ import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
 import woowacourse.shopping.datas.CartDBHelper
-import woowacourse.shopping.datas.CartDBRepository
-import woowacourse.shopping.datas.ProductDataRepository
+import woowacourse.shopping.datas.CartRepositoryImpl
+import woowacourse.shopping.datas.ProductRepositoryImpl
 import woowacourse.shopping.datas.RecentProductDBHelper
-import woowacourse.shopping.datas.RecentProductDBRepository
+import woowacourse.shopping.datas.RecentRepositoryImpl
 import woowacourse.shopping.productcatalogue.list.MainProductCatalogueAdapter
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.uimodel.CartProductUIModel
@@ -46,15 +46,15 @@ class ProductCatalogueActivity :
         setSupportActionBar(binding.tbProductCatalogue)
 
         val recentDataRepository: RecentRepository =
-            RecentProductDBRepository(RecentProductDBHelper(this).writableDatabase)
-        val cartDBRepository: CartRepository =
-            CartDBRepository(CartDBHelper(this).writableDatabase)
+            RecentRepositoryImpl(RecentProductDBHelper(this).writableDatabase)
+        val cartRepositoryImpl: CartRepository =
+            CartRepositoryImpl(CartDBHelper(this).writableDatabase)
 
         presenter = ProductCataloguePresenter(
             this,
-            ProductDataRepository,
+            ProductRepositoryImpl,
             recentDataRepository,
-            cartDBRepository
+            cartRepositoryImpl
         )
 
         presenter.getRecentProduct()
@@ -65,7 +65,7 @@ class ProductCatalogueActivity :
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 if (position == 0) return 2
-                if (ProductDataRepository.products.size + 1 == position) return 2
+                if (ProductRepositoryImpl.products.size + 1 == position) return 2
                 return 1
             }
         }

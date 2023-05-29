@@ -15,7 +15,7 @@ import woowacourse.shopping.datas.RecentProductDBHelper.Companion.TABLE_NAME
 import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.uimodel.ProductUIModel
 
-class RecentProductDBRepository(private val database: SQLiteDatabase) : RecentRepository {
+class RecentRepositoryImpl(private val database: SQLiteDatabase) : RecentRepository {
     override fun getAll(): List<RecentProduct> {
         val products = mutableListOf<RecentProduct>()
         database.rawQuery("SELECT * FROM $TABLE_NAME", null).use {

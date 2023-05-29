@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.databinding.RecentProductCatalogueBinding
-import woowacourse.shopping.datas.ProductDataRepository
+import woowacourse.shopping.datas.ProductRepositoryImpl
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.productcatalogue.ProductCountClickListener
 import woowacourse.shopping.productcatalogue.list.ProductViewType.MAIN_PRODUCTS
@@ -27,13 +27,13 @@ class MainProductCatalogueAdapter(
     val recentAdapter by lazy { RecentProductCatalogueAdapter(productOnClick) }
 
     init {
-        ProductDataRepository.getUnitData(PRODUCT_UNIT_SIZE, FIRST_PAGE)
+        ProductRepositoryImpl.getUnitData(PRODUCT_UNIT_SIZE, FIRST_PAGE)
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (position) {
             0 -> RECENT_PRODUCTS.ordinal
-            ProductDataRepository.products.size + FIRST_PAGE -> READ_MORE.ordinal
+            ProductRepositoryImpl.products.size + FIRST_PAGE -> READ_MORE.ordinal
             else -> MAIN_PRODUCTS.ordinal
         }
     }
@@ -64,13 +64,13 @@ class MainProductCatalogueAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             MAIN_PRODUCTS.ordinal -> (holder as MainProductCatalogueViewHolder).bind(
-                ProductDataRepository.products[position - 1].toUIModel(),
-                getProductCount(ProductDataRepository.products[position - 1].toUIModel())
+                ProductRepositoryImpl.products[position - 1].toUIModel(),
+                getProductCount(ProductRepositoryImpl.products[position - 1].toUIModel())
             )
         }
     }
 
-    override fun getItemCount(): Int = ProductDataRepository.products.size + 2
+    override fun getItemCount(): Int = ProductRepositoryImpl.products.size + 2
 
     fun setRecentProductsVisibility(parent: ViewGroup) {
         val inflater = LayoutInflater.from(parent.context)

@@ -14,7 +14,7 @@ import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_NAME
 import woowacourse.shopping.datas.CartDBHelper.Companion.KEY_PRICE
 import woowacourse.shopping.datas.CartDBHelper.Companion.TABLE_NAME
 
-class CartDBRepository(private val database: SQLiteDatabase) : CartRepository {
+class CartRepositoryImpl(private val database: SQLiteDatabase) : CartRepository {
     override fun getAll(): List<CartProduct> {
         val products = mutableListOf<CartProduct>()
         database.rawQuery("SELECT * FROM $TABLE_NAME", null).use {

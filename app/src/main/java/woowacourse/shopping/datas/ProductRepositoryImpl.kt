@@ -4,7 +4,7 @@ import com.shopping.domain.Price
 import com.shopping.domain.Product
 import com.shopping.domain.ProductRepository
 
-object ProductDataRepository : ProductRepository {
+object ProductRepositoryImpl : ProductRepository {
     private val baseProducts = listOf(
         Product(
             0,
