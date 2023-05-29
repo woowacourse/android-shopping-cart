@@ -31,7 +31,7 @@ class BasketPresenter(
     }
 
     private fun getTotalIsChecked(): Boolean =
-        basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE).products.none { !it.checked }
+        basket.getSubBasketByStartId(startId, BASKET_PAGING_SIZE).allItemIsChecked()
 
     private fun updateOrderInformation() {
         view.updateTotalPrice(basket.getCheckedProductsTotalPrice())

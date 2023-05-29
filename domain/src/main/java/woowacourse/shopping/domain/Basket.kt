@@ -53,4 +53,7 @@ data class Basket(val products: List<BasketProduct>) {
     fun toggleAllCheck(isChecked: Boolean) {
         products.map { it.checked = isChecked }
     }
+
+    fun allItemIsChecked(): Boolean =
+        products.none { !it.checked }
 }
