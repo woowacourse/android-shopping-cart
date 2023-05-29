@@ -16,20 +16,23 @@ class CartPresenter(
     private var initialCart: Cart = Cart(emptyList()),
     private var cart: Cart = Cart(emptyList())
 ) : CartContract.Presenter {
-    private var cartTotalPrice: Int = 0
-    private var cartTotalAmount: Int = 0
+    private var totalCount: Int = 0
+    private var selectedCartTotalPrice: Int = 0
+    private var selectedCartTotalAmount: Int = 0
 
     init {
-        view.updateNavigationVisibility(determineNavigationVisibility())
-        updateCartPage()
+        setupTotalCount()
         setupTotalPrice()
         setupTotalAmount()
+        view.updateNavigationVisibility(determineNavigationVisibility())
+        updateCartPage()
     }
 
     override fun removeCartProduct(cartProductModel: CartProductModel) {
         val cartProduct = cartProductModel.toDomain()
         cartRepository.deleteCartProduct(cartProduct)
         cart = cart.removeCartProduct(cartProduct)
+        totalCount--
 
         view.updateNavigationVisibility(determineNavigationVisibility())
         updateCartPage()
@@ -123,24 +126,26 @@ class CartPresenter(
         }
     }
 
+    private fun setupTotalCount() {
+        totalCount = cartRepository.getAllCount()
+    }
+
     private fun setupTotalPrice() {
-        cartTotalPrice = cartRepository.getTotalPrice()
-        view.updateCartTotalPrice(cartTotalPrice)
+        selectedCartTotalPrice = cartRepository.getTotalPrice()
+        view.updateCartTotalPrice(selectedCartTotalPrice)
     }
 
     private fun setupTotalAmount() {
-        cartTotalAmount = cartRepository.getTotalAmount()
-        view.updateCartTotalAmount(cartTotalAmount)
+        selectedCartTotalAmount = cartRepository.getTotalAmount()
+        view.updateCartTotalAmount(selectedCartTotalAmount)
     }
 
     private fun isLastPageCart(cart: Cart): Boolean {
-        val cartCount = cartRepository.getAllCount()
-        return (currentPage.value * sizePerPage) + cart.cartProducts.size >= cartCount
+        return (currentPage.value * sizePerPage) + cart.cartProducts.size >= totalCount
     }
 
     private fun determineNavigationVisibility(): Boolean {
-        val cartCount = cartRepository.getAllCount()
-        return cartCount > sizePerPage || !currentPage.isFirstPage()
+        return totalCount > sizePerPage || !currentPage.isFirstPage()
     }
 
     private fun applyCartProductCheckedChange(cartProduct: CartProduct, isChecked: Boolean) {
@@ -155,21 +160,21 @@ class CartPresenter(
     private fun applyProductTotalPriceToCartTotalPrice(cartProduct: CartProduct) {
         val productTotalPrice = cartProduct.product.price * cartProduct.amount
         if (cartProduct.isChecked) {
-            cartTotalPrice += productTotalPrice
-            view.updateCartTotalPrice(cartTotalPrice)
+            selectedCartTotalPrice += productTotalPrice
+            view.updateCartTotalPrice(selectedCartTotalPrice)
         } else {
-            cartTotalPrice -= productTotalPrice
-            view.updateCartTotalPrice(cartTotalPrice)
+            selectedCartTotalPrice -= productTotalPrice
+            view.updateCartTotalPrice(selectedCartTotalPrice)
         }
     }
 
     private fun applyProductAmountToCartTotalAmount(cartProduct: CartProduct) {
         if (cartProduct.isChecked) {
-            cartTotalAmount += cartProduct.amount
-            view.updateCartTotalAmount(cartTotalAmount)
+            selectedCartTotalAmount += cartProduct.amount
+            view.updateCartTotalAmount(selectedCartTotalAmount)
         } else {
-            cartTotalAmount -= cartProduct.amount
-            view.updateCartTotalAmount(cartTotalAmount)
+            selectedCartTotalAmount -= cartProduct.amount
+            view.updateCartTotalAmount(selectedCartTotalAmount)
         }
     }
 
@@ -180,22 +185,22 @@ class CartPresenter(
     }
 
     private fun subtractProductPriceToCartTotalPrice(cartProductModel: CartProductModel) {
-        cartTotalPrice -= cartProductModel.product.price
-        view.updateCartTotalPrice(cartTotalPrice)
+        selectedCartTotalPrice -= cartProductModel.product.price
+        view.updateCartTotalPrice(selectedCartTotalPrice)
     }
 
     private fun decreaseTotalAmount() {
-        cartTotalAmount -= 1
-        view.updateCartTotalAmount(cartTotalAmount)
+        selectedCartTotalAmount -= 1
+        view.updateCartTotalAmount(selectedCartTotalAmount)
     }
 
     private fun addProductPriceToCartTotalPrice(cartProductModel: CartProductModel) {
-        cartTotalPrice += cartProductModel.product.price
-        view.updateCartTotalPrice(cartTotalPrice)
+        selectedCartTotalPrice += cartProductModel.product.price
+        view.updateCartTotalPrice(selectedCartTotalPrice)
     }
 
     private fun increaseTotalAmount() {
-        cartTotalAmount += 1
-        view.updateCartTotalAmount(cartTotalAmount)
+        selectedCartTotalAmount += 1
+        view.updateCartTotalAmount(selectedCartTotalAmount)
     }
 }
