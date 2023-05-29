@@ -6,6 +6,8 @@ import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.repository.RecentProductRepository
+import woowacourse.shopping.ui.productdetail.ProductDetailContract
+import woowacourse.shopping.ui.productdetail.ProductDetailPresenter
 
 class ProductDetailPresenterTest {
     private lateinit var presenter: ProductDetailPresenter

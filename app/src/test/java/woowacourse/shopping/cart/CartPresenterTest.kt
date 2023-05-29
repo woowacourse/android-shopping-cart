@@ -7,14 +7,17 @@ import io.mockk.runs
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.common.model.CartProductModel
-import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
 import woowacourse.shopping.createCartProductModel
 import woowacourse.shopping.createProduct
 import woowacourse.shopping.createProductModel
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.ui.cart.CartContract
+import woowacourse.shopping.ui.cart.CartPresenter
+import woowacourse.shopping.ui.cart.Page
+import woowacourse.shopping.ui.model.CartProductModel
+import woowacourse.shopping.ui.model.mapper.CartProductMapper.toView
 import java.time.LocalDateTime
 
 class CartPresenterTest {

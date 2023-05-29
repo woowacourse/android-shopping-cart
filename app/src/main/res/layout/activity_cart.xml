@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".cart.CartActivity">
+        tools:context=".ui.cart.CartActivity">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/cart_toolbar"

@@ -1,6 +1,7 @@
 package woowacourse.shopping.cart
 
 import org.junit.Test
+import woowacourse.shopping.ui.cart.Page
 
 class PageTest {
     @Test(expected = IllegalArgumentException::class)

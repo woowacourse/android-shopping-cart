@@ -1,12 +1,12 @@
 package woowacourse.shopping
 
-import woowacourse.shopping.common.model.CartProductModel
-import woowacourse.shopping.common.model.ProductModel
-import woowacourse.shopping.common.model.ShoppingProductModel
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.RecentProduct
 import woowacourse.shopping.domain.URL
+import woowacourse.shopping.ui.model.CartProductModel
+import woowacourse.shopping.ui.model.ProductModel
+import woowacourse.shopping.ui.model.ShoppingProductModel
 import java.time.LocalDateTime
 
 fun createProductModel(): ProductModel = ProductModel("", "", 1000)
