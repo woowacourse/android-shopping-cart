@@ -1,14 +1,14 @@
 package woowacourse.shopping.data.mapper
 
-import org.json.JSONObject
 import woowacourse.shopping.Price
 import woowacourse.shopping.Product
+import woowacourse.shopping.data.product.ProductDataModel
 
-fun JSONObject.toProduct(): Product {
+fun ProductDataModel.toDomain(): Product {
     return Product(
-        id = getInt("id"),
-        imageUrl = getString("imageUrl"),
-        name = getString("name"),
-        price = Price(getInt("price")),
+        id = id,
+        imageUrl = imageUrl,
+        name = name,
+        price = Price(value = price),
     )
 }

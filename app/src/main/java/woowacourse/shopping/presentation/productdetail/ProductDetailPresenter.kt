@@ -14,22 +14,24 @@ class ProductDetailPresenter(
     private val cartRepository: CartRepository,
     private val productModel: ProductModel,
 ) : ProductDetailContract.Presenter {
-    private val mostRecentProductModel =
-        recentProductRepository.getMostRecentProduct().toPresentation()
-
     override fun checkCurrentProductIsMostRecent() {
-        if (productModel == mostRecentProductModel) {
-            view.setMostRecentProductVisible(
-                false,
-                mostRecentProductModel,
-            )
-        } else {
-            view.setMostRecentProductVisible(true, mostRecentProductModel)
+        recentProductRepository.getMostRecentProduct {
+            val mostRecentProductModel = it.toPresentation()
+            if (productModel == mostRecentProductModel) {
+                view.setMostRecentProductVisible(
+                    false,
+                    mostRecentProductModel,
+                )
+            } else {
+                view.setMostRecentProductVisible(true, mostRecentProductModel)
+            }
         }
     }
 
     override fun showMostRecentProductDetail() {
-        view.navigateToMostRecent(mostRecentProductModel)
+        recentProductRepository.getMostRecentProduct {
+            view.navigateToMostRecent(it.toPresentation())
+        }
     }
 
     override fun showProductCart() {
