@@ -71,14 +71,14 @@ class ProductCataloguePresenterTest {
             productRepository.getUnitData(capture(slotUnitSize), capture(slotPageSize))
         } returns products
 
-        every { view.notifyDataChanged() } just runs
+        every { view.attachNewProducts() } just runs
 
         // when
-        presenter.readMoreOnClick(unitSize, page)
+        presenter.getNewProducts(unitSize, page)
 
         // then
         verify { productRepository.getUnitData(unitSize, page) }
-        verify { view.notifyDataChanged() }
+        verify { view.attachNewProducts() }
         assertEquals(unitSize, slotUnitSize.captured)
         assertEquals(page, slotPageSize.captured)
     }

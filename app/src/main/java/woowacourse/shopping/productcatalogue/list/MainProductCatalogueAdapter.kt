@@ -5,8 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.ProductClickListener
 import woowacourse.shopping.databinding.RecentProductCatalogueBinding
-import woowacourse.shopping.datas.ProductRepositoryImpl
-import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.productcatalogue.ProductCountClickListener
 import woowacourse.shopping.productcatalogue.list.ProductViewType.MAIN_PRODUCTS
 import woowacourse.shopping.productcatalogue.list.ProductViewType.READ_MORE
@@ -23,17 +21,18 @@ class MainProductCatalogueAdapter(
     private val getProductCount: (ProductUIModel) -> Int,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val recentProducts = mutableListOf<RecentProductUIModel>()
-
+    val products = mutableListOf<ProductUIModel>()
     val recentAdapter by lazy { RecentProductCatalogueAdapter(productOnClick) }
 
-    init {
-        ProductRepositoryImpl.getUnitData(PRODUCT_UNIT_SIZE, FIRST_PAGE)
+    fun updateProducts(newProducts: List<ProductUIModel>) {
+        products.addAll(newProducts)
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (position) {
             0 -> RECENT_PRODUCTS.ordinal
-            ProductRepositoryImpl.products.size + FIRST_PAGE -> READ_MORE.ordinal
+            products.size + FIRST_PAGE -> READ_MORE.ordinal
             else -> MAIN_PRODUCTS.ordinal
         }
     }
@@ -56,7 +55,7 @@ class MainProductCatalogueAdapter(
                 )
             }
             READ_MORE.ordinal -> {
-                ReadMoreViewHolder(ReadMoreViewHolder.getView(parent), readMoreOnClick)
+                ReadMoreViewHolder(ReadMoreViewHolder.getView(parent), readMoreOnClick, products)
             }
             else -> throw IllegalArgumentException("잘못된 값: $viewType 유효하지 않은 ViewType 입니다.")
         }
@@ -64,13 +63,13 @@ class MainProductCatalogueAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             MAIN_PRODUCTS.ordinal -> (holder as MainProductCatalogueViewHolder).bind(
-                ProductRepositoryImpl.products[position - 1].toUIModel(),
-                getProductCount(ProductRepositoryImpl.products[position - 1].toUIModel())
+                products[position - 1],
+                getProductCount(products[position - 1])
             )
         }
     }
 
-    override fun getItemCount(): Int = ProductRepositoryImpl.products.size + 2
+    override fun getItemCount(): Int = products.size + 2
 
     fun setRecentProductsVisibility(parent: ViewGroup) {
         val inflater = LayoutInflater.from(parent.context)

@@ -4,18 +4,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductReadMoreBinding
-import woowacourse.shopping.datas.ProductRepositoryImpl
+import woowacourse.shopping.uimodel.ProductUIModel
 
 class ReadMoreViewHolder(
     binding: ItemProductReadMoreBinding,
-    readMoreOnClick: (Int, Int) -> Unit
+    readMoreOnClick: (Int, Int) -> Unit,
+    products: MutableList<ProductUIModel>
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.btReadMore.setOnClickListener {
             readMoreOnClick(
                 PRODUCT_UNIT_SIZE,
-                ProductRepositoryImpl.productCataloguePageNumber
+                products.size / PRODUCT_UNIT_SIZE + 1
             )
         }
     }

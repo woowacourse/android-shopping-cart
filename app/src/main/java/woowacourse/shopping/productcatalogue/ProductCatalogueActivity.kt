@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.shopping.domain.CartRepository
+import com.shopping.domain.ProductRepository
 import com.shopping.domain.RecentRepository
 import woowacourse.shopping.BundleKeys
 import woowacourse.shopping.ProductClickListener
@@ -14,7 +15,7 @@ import woowacourse.shopping.cart.CartActivity
 import woowacourse.shopping.databinding.ActivityProductCatalogueBinding
 import woowacourse.shopping.datas.CartDBHelper
 import woowacourse.shopping.datas.CartRepositoryImpl
-import woowacourse.shopping.datas.ProductRepositoryImpl
+import woowacourse.shopping.datas.MockServerProductRepositoryImpl
 import woowacourse.shopping.datas.RecentProductDBHelper
 import woowacourse.shopping.datas.RecentRepositoryImpl
 import woowacourse.shopping.productcatalogue.list.MainProductCatalogueAdapter
@@ -45,6 +46,7 @@ class ProductCatalogueActivity :
 
         setSupportActionBar(binding.tbProductCatalogue)
 
+        val productRepositoryServerImpl: ProductRepository = MockServerProductRepositoryImpl()
         val recentDataRepository: RecentRepository =
             RecentRepositoryImpl(RecentProductDBHelper(this).writableDatabase)
         val cartRepositoryImpl: CartRepository =
@@ -52,27 +54,16 @@ class ProductCatalogueActivity :
 
         presenter = ProductCataloguePresenter(
             this,
-            ProductRepositoryImpl,
+            productRepositoryServerImpl,
             recentDataRepository,
             cartRepositoryImpl
         )
 
-        presenter.getRecentProduct()
-
         binding.rvProductCatalogue.adapter = adapter
+        presenter.getRecentProduct()
+        presenter.getNewProducts(20, 1)
 
-        val gridLayoutManager = GridLayoutManager(binding.root.context, 2)
-        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                if (position == 0) return 2
-                if (ProductRepositoryImpl.products.size + 1 == position) return 2
-                return 1
-            }
-        }
-
-        binding.rvProductCatalogue.layoutManager = gridLayoutManager
-
-        notifyDataChanged()
+        presenter.getSpanSize()
 
         presenter.updateCartCount()
 
@@ -81,8 +72,20 @@ class ProductCatalogueActivity :
         }
     }
 
+    override fun setGridLayoutManager(productsSize: Int) {
+        val gridLayoutManager = GridLayoutManager(binding.root.context, 2)
+        gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                if (position == 0) return 2
+                if (productsSize + 1 == position) return 2
+                return 1
+            }
+        }
+        binding.rvProductCatalogue.layoutManager = gridLayoutManager
+    }
+
     private fun readMore(unitSize: Int, page: Int) {
-        presenter.readMoreOnClick(unitSize, page)
+        presenter.getNewProducts(unitSize, page)
     }
 
     override fun setRecentProductList(recentProducts: List<RecentProductUIModel>) {
@@ -97,8 +100,8 @@ class ProductCatalogueActivity :
         binding.tvCartCount.text = count.toString()
     }
 
-    override fun notifyDataChanged() {
-        adapter.notifyDataSetChanged()
+    override fun attachNewProducts(loadedNewProducts: List<ProductUIModel>) {
+        runOnUiThread { adapter.updateProducts(loadedNewProducts) }
     }
 
     override fun onProductClick(productUIModel: ProductUIModel) {
