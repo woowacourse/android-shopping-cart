@@ -53,9 +53,13 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            presenter.updateBasket()
-            presenter.fetchRecentProducts()
+            refreshData()
         }
+    }
+
+    private fun refreshData() {
+        presenter.updateBasket()
+        presenter.fetchRecentProducts()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
