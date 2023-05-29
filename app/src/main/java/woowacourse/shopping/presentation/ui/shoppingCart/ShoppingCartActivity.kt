@@ -103,13 +103,21 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             productInCart: ProductInCartUiState,
         ) {
             val request = if (operator) PLUS else MINUS
-            if (productInCart.quantity == 1 && !operator) {
-                setEventOnDelete(productInCart)
-                return
-            }
+            if (checkCountUnderMinimum(productInCart, operator)) return
 
             presenter.addCountOfProductInCart(request, productInCart)
             presenter.fetchTotalPrice()
+        }
+
+        private fun checkCountUnderMinimum(
+            productInCart: ProductInCartUiState,
+            operator: Boolean,
+        ): Boolean {
+            if (productInCart.quantity == MINIMUM && !operator) {
+                setEventOnDelete(productInCart)
+                return true
+            }
+            return false
         }
 
         override fun setClickEventOnCheckBox(
@@ -147,6 +155,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     companion object {
         private const val INIT_PAGE = 1
+        private const val MINIMUM = 1
         fun getIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }

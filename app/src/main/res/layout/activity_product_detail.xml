@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/woowa_dealer_blue_600"
                 android:gravity="center"
-                android:onClick="@{() -> setClickListener.setClickEventOnToShoppingCart(product,setClickListener)}"
+                android:onClick="@{() -> setClickListener.setClickEventOnToShoppingCart(product)}"
                 android:paddingTop="14dp"
                 android:paddingBottom="16dp"
                 android:text="@string/btn_detail_add_button"

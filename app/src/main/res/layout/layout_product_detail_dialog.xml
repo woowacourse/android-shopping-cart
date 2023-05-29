@@ -6,8 +6,12 @@
     <data>
 
         <variable
+            name="productCount"
+            type="woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState" />
+
+        <variable
             name="setClickListener"
-            type="woowacourse.shopping.presentation.ui.productDetail.ProductDetailClickListener" />
+            type="woowacourse.shopping.presentation.ui.productDetail.dialog.ProductDetailDialogClickListener" />
 
 
         <variable
@@ -55,6 +59,7 @@
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/rectangle_radius_4dp_mint"
+            android:onClick="@{() -> setClickListener.setClickEventOnToShoppingCart(product)}"
             android:text="@string/btn_detail_dialog_select"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
