@@ -64,7 +64,7 @@ class CartRepositoryImpl(private val database: SQLiteDatabase) : CartRepository 
         if (getProductCount(cartProduct.product.id) != 0) return
         val record = ContentValues().apply {
             put(KEY_IS_CHECKED, if (cartProduct.isPicked) TRUE else FALSE)
-            put(KEY_COUNT, 1)
+            put(KEY_COUNT, cartProduct.count)
             put(KEY_ID, cartProduct.product.id)
             put(KEY_NAME, cartProduct.product.name)
             put(KEY_IMAGE, cartProduct.product.imageUrl)

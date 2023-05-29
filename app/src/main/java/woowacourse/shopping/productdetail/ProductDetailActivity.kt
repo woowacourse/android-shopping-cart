@@ -19,6 +19,7 @@ import woowacourse.shopping.datas.CartRepositoryImpl
 import woowacourse.shopping.datas.RecentProductDBHelper
 import woowacourse.shopping.datas.RecentRepositoryImpl
 import woowacourse.shopping.getSerializableCompat
+import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 import woowacourse.shopping.uimodel.RecentProductUIModel
 
@@ -39,9 +40,14 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         val cartRepository: CartRepository = CartRepositoryImpl(CartDBHelper(this).writableDatabase)
 
         presenter = ProductDetailPresenter(this, productData, recentRepository, cartRepository)
-        binding.presenter = presenter
+        presenter.attachCartProductData()
+        binding.showAddCartDialog = ::navigateToAddToCartDialog
         presenter.getMostRecentProduct()
         presenter.insertRecentRepository(System.currentTimeMillis())
+    }
+
+    override fun setCartProductData(cartProduct: CartProductUIModel) {
+        binding.cartProduct = cartProduct
     }
 
     override fun showCartPage() {
@@ -54,6 +60,16 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun showRecentProduct(recentProduct: RecentProductUIModel) {
         binding.recentProduct = recentProduct
+    }
+
+    override fun navigateToAddToCartDialog(cartProduct: CartProductUIModel) {
+        AddCartDialog(this, cartProduct) { count ->
+            presenter.addToCart(count)
+        }.apply {
+            val density = resources.displayMetrics.density * 1.2
+            window?.setLayout((314 * density).toInt(), (150 * density).toInt())
+            show()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
