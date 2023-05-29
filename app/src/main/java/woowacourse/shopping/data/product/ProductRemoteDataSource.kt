@@ -1,8 +1,9 @@
 package woowacourse.shopping.data.product
 
-import woowacourse.shopping.Product
+import retrofit2.Call
 
 interface ProductRemoteDataSource {
-    fun findProductById(id: Int): Product
-    fun getProductsWithRange(startIndex: Int, size: Int): List<Product>
+
+    fun getProductById(id: Int): Call<ProductDataModel>
+    fun getProductsWithRange(startIndex: Int, size: Int): Call<List<ProductDataModel>>
 }

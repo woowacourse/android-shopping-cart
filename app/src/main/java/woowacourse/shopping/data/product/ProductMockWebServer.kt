@@ -31,7 +31,13 @@ object ProductMockWebServer {
                     val range = findParameterValue(path, "range").toInt()
                     MockResponse().setHeader("Content-Type", "application/json")
                         .setResponseCode(200)
-                        .setBody(ProductMockWebServer.getDummyProducts(start, range))
+                        .setBody(getDummyProducts(start, range))
+                }
+                path.contains("/product?") -> {
+                    val id = findParameterValue(path, "id").toInt()
+                    MockResponse().setHeader("Content-Type", "application/json")
+                        .setResponseCode(200)
+                        .setBody(getDummyProduct(id))
                 }
                 else -> {
                     MockResponse().setResponseCode(404)
@@ -54,5 +60,18 @@ object ProductMockWebServer {
                 }
     """
         }.joinToString(",", prefix = "[", postfix = "]").trimIndent()
+    }
+
+    private fun getDummyProduct(
+        id: Int,
+    ): String {
+        return """
+                {
+                    "id": $id,
+                    "name": "상품$id",
+                    "imageUrl": "https://mediahub.seoul.go.kr/uploads/2016/09/952e8925ec41cc06e6164d695d776e51.jpg",
+                    "price": ${(id) * 1000}
+                }
+        """.trimIndent()
     }
 }
