@@ -45,7 +45,23 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     }
 
     private fun setAdapter() {
-        adapter = ShoppingCartAdapter(emptyList(), setOnClickRemove(), setOnClickCheckBox(), setOnClickCountButton())
+        val shoppingCartClickListener = object : ShoppingCartClickListener {
+            override fun onClickRemove(cartProductUIModel: CartProductUIModel) {
+                presenter.removeCartProduct(cartProductUIModel)
+            }
+
+            override fun onClickCheckBox(cartProductUIModel: CartProductUIModel) {
+                presenter.updateCartProductChecked(cartProductUIModel)
+            }
+
+            override fun onClickCountButton(
+                cartProductUIModel: CartProductUIModel,
+                textView: TextView
+            ) {
+                presenter.updateCartProductCount(cartProductUIModel, textView)
+            }
+        }
+        adapter = ShoppingCartAdapter(emptyList(), shoppingCartClickListener)
     }
 
     private fun setViewSettings() {
@@ -61,18 +77,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         binding.tvPageDown.setOnClickListener {
             presenter.loadPreviousPage(it.isActivated)
         }
-    }
-
-    private fun setOnClickRemove(): (CartProductUIModel) -> Unit = { product ->
-        presenter.removeCartProduct(product)
-    }
-
-    private fun setOnClickCheckBox(): (CartProductUIModel) -> Unit = { product ->
-        presenter.updateCartProductChecked(product)
-    }
-
-    private fun setOnClickCountButton(): (CartProductUIModel, TextView) -> Unit = { product, tvPrice ->
-        presenter.updateCartProductCount(product, tvPrice)
     }
 
     override fun updateProductItemPrice(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {

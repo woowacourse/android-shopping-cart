@@ -2,7 +2,6 @@ package woowacourse.shopping.view.shoppingcart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.shopping.domain.Count
 import woowacourse.shopping.R
@@ -13,9 +12,7 @@ import woowacourse.shopping.view.customview.CounterViewEventListener
 
 class ShoppingCartViewHolder(
     parent: ViewGroup,
-    private val onClickRemove: (CartProductUIModel) -> Unit,
-    private val onClickCheckBox: (CartProductUIModel) -> Unit,
-    private val onClickCountButton: (CartProductUIModel, TextView) -> Unit
+    private val clickListener: ShoppingCartClickListener
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_cart_product, parent, false)
 ) {
@@ -24,13 +21,13 @@ class ShoppingCartViewHolder(
 
     init {
         binding.ivCancel.setOnClickListener {
-            onClickRemove(cartProduct)
+            clickListener.onClickRemove(cartProduct)
         }
 
         binding.cbProduct.setOnClickListener {
             val changedState = binding.cbProduct.isChecked
             cartProduct = CartProductUIModel(cartProduct.productUIModel, cartProduct.count, changedState)
-            onClickCheckBox(cartProduct)
+            clickListener.onClickCheckBox(cartProduct)
         }
 
         binding.counterView.listener = object : CounterViewEventListener {
@@ -39,7 +36,7 @@ class ShoppingCartViewHolder(
                     return MINIMUM_COUNT_VALUE
                 }
                 cartProduct = CartProductUIModel(cartProduct.productUIModel, Count(count), cartProduct.isSelected)
-                onClickCountButton(cartProduct, binding.tvPrice)
+                clickListener.onClickCountButton(cartProduct, binding.tvPrice)
                 return count
             }
         }

@@ -50,17 +50,17 @@ class ShoppingMainPresenter(
         view.updateCartBadgeCount(cartProductRepository.getAllProductsCount())
     }
 
-    override fun updateProductCartCount(): (ProductUIModel) -> Int = { product ->
-        cartProductRepository.findCountById(product.id)
+    override fun updateProductCartCount(productUIModel: ProductUIModel): Int {
+        return cartProductRepository.findCountById(productUIModel.id)
     }
 
-    override fun addToCart(): (ProductUIModel) -> Unit = { product ->
-        cartProductRepository.add(CartProduct(product.toDomain(), Count(1), false))
+    override fun addToCart(productUIModel: ProductUIModel) {
+        cartProductRepository.add(CartProduct(productUIModel.toDomain(), Count(1), false))
         updateCartBadge()
     }
 
-    override fun updateCart(): (ProductUIModel, Int) -> Unit = { product, count ->
-        cartProductRepository.updateCount(product.toDomain(), count)
+    override fun updateCart(productUIModel: ProductUIModel, count: Int) {
+        cartProductRepository.updateCount(productUIModel.toDomain(), count)
         updateCartBadge()
     }
 

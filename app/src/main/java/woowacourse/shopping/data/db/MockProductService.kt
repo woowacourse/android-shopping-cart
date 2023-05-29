@@ -1,7 +1,11 @@
 package woowacourse.shopping.data.db
 
 import com.shopping.domain.Product
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -18,9 +22,9 @@ class MockProductService {
     private val dispatcher: Dispatcher
 
     init {
-        dispatcher = object: Dispatcher() {
+        dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
-                return when(request.path) {
+                return when (request.path) {
                     "/products" -> {
                         MockResponse()
                             .setHeader("Content-Type", "application/json")
@@ -30,7 +34,6 @@ class MockProductService {
                     else -> MockResponse().setResponseCode(404)
                 }
             }
-
         }
     }
 
@@ -89,5 +92,4 @@ class MockProductService {
 
         return productList
     }
-
 }

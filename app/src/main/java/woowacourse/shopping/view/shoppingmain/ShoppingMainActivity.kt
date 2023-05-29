@@ -65,12 +65,27 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     }
 
     private fun setAdapters() {
+        val shoppingMainClickListener = object : ShoppingMainClickListener {
+            override fun productOnClick(productUIModel: ProductUIModel) {
+                showProductDetailPage()(productUIModel)
+            }
+
+            override fun findCartCountById(productUIModel: ProductUIModel): Int {
+                return presenter.updateProductCartCount(productUIModel)
+            }
+
+            override fun addToCartOnClick(productUIModel: ProductUIModel) {
+                presenter.addToCart(productUIModel)
+            }
+
+            override fun saveCartProductCount(productUIModel: ProductUIModel, count: Int) {
+                presenter.updateCart(productUIModel, count)
+            }
+        }
+
         productAdapter = ProductAdapter(
             presenter.loadProducts(),
-            showProductDetailPage(),
-            presenter.updateProductCartCount(),
-            presenter.addToCart(),
-            presenter.updateCart()
+            shoppingMainClickListener
         )
         recentProductAdapter = RecentProductAdapter(
             presenter.getRecentProducts(),

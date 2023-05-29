@@ -9,11 +9,11 @@ class ProductRepositoryImpl(
 ) : ProductRepository {
     private val products = emptyList<Product>()
 
-    override fun getAllProducts(
+    fun getAllProducts(
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit
     ) {
-        if(products.isEmpty()) {
+        if (products.isEmpty()) {
             Thread {
                 service.request(
                     onSuccess = onSuccess,

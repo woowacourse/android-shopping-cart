@@ -12,10 +12,7 @@ import woowacourse.shopping.view.customview.ProductCounterViewEventListener
 
 class ProductViewHolder(
     parent: ViewGroup,
-    private val productOnClick: (ProductUIModel) -> Unit,
-    private val findCartCountById: (ProductUIModel) -> Int,
-    private val addToCartOnClick: (ProductUIModel) -> Unit,
-    private val saveCartProductCount: (ProductUIModel, Int) -> Unit
+    private val shoppingMainClickListener: ShoppingMainClickListener
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_product_main, parent, false)
 ) {
@@ -24,19 +21,19 @@ class ProductViewHolder(
 
     init {
         itemView.setOnClickListener {
-            productOnClick(product)
+            shoppingMainClickListener.productOnClick(product)
         }
 
         binding.counterMainProduct.counterListener = object : CounterViewEventListener {
             override fun updateCount(counterView: CounterView, count: Int): Int {
-                saveCartProductCount(product, count)
+                shoppingMainClickListener.saveCartProductCount(product, count)
                 return count
             }
         }
 
         binding.counterMainProduct.productCounterListener = object : ProductCounterViewEventListener {
             override fun onAddToCartButtonClick() {
-                addToCartOnClick(product)
+                shoppingMainClickListener.addToCartOnClick(product)
             }
         }
     }
@@ -44,7 +41,7 @@ class ProductViewHolder(
     fun bind(item: ProductUIModel) {
         product = item
         binding.product = product
-        binding.counterMainProduct.setViewVisibility(findCartCountById(product))
-        binding.counterMainProduct.initCountView(findCartCountById(product))
+        binding.counterMainProduct.setViewVisibility(shoppingMainClickListener.findCartCountById(product))
+        binding.counterMainProduct.initCountView(shoppingMainClickListener.findCartCountById(product))
     }
 }
