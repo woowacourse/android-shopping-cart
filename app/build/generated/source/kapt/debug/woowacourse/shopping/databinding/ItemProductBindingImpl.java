@@ -26,7 +26,7 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
     private final androidx.constraintlayout.widget.ConstraintLayout mboundView1;
     // variables
     @Nullable
-    private final android.view.View.OnClickListener mCallback7;
+    private final android.view.View.OnClickListener mCallback6;
     // values
     // listeners
     // Inverse Binding Event Handlers
@@ -53,7 +53,7 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
         this.tvItemProductPrice.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback7 = new woowacourse.shopping.generated.callback.OnClickListener(this, 1);
+        mCallback6 = new woowacourse.shopping.generated.callback.OnClickListener(this, 1);
         invalidateAll();
     }
 
@@ -231,7 +231,7 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
         if ((dirtyFlags & 0x10L) != 0) {
             // api target 1
 
-            this.mboundView0.setOnClickListener(mCallback7);
+            this.mboundView0.setOnClickListener(mCallback6);
         }
         executeBindingsOn(layoutQuantity);
     }

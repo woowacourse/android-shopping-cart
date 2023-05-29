@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import android.view.View;
 @SuppressWarnings("unchecked")
-public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductBinding implements woowacourse.shopping.generated.callback.OnClickListener.Listener, woowacourse.shopping.generated.callback.OnCheckedChangeListener.Listener {
+public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductBinding implements woowacourse.shopping.generated.callback.OnCheckedChangeListener.Listener, woowacourse.shopping.generated.callback.OnClickListener.Listener {
 
     @Nullable
     private static final androidx.databinding.ViewDataBinding.IncludedLayouts sIncludes;
@@ -26,9 +26,9 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
     private final androidx.constraintlayout.widget.ConstraintLayout mboundView1;
     // variables
     @Nullable
-    private final android.view.View.OnClickListener mCallback5;
+    private final android.widget.CompoundButton.OnCheckedChangeListener mCallback5;
     @Nullable
-    private final android.widget.CompoundButton.OnCheckedChangeListener mCallback6;
+    private final android.view.View.OnClickListener mCallback3;
     @Nullable
     private final android.view.View.OnClickListener mCallback4;
     // values
@@ -59,9 +59,9 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
         this.tvCartProductPrice.setTag(null);
         setRootTag(root);
         // listeners
-        mCallback5 = new woowacourse.shopping.generated.callback.OnClickListener(this, 2);
-        mCallback6 = new woowacourse.shopping.generated.callback.OnCheckedChangeListener(this, 3);
-        mCallback4 = new woowacourse.shopping.generated.callback.OnClickListener(this, 1);
+        mCallback5 = new woowacourse.shopping.generated.callback.OnCheckedChangeListener(this, 3);
+        mCallback3 = new woowacourse.shopping.generated.callback.OnClickListener(this, 1);
+        mCallback4 = new woowacourse.shopping.generated.callback.OnClickListener(this, 2);
         invalidateAll();
     }
 
@@ -197,9 +197,9 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
         if ((dirtyFlags & 0x8L) != 0) {
             // api target 1
 
-            androidx.databinding.adapters.CompoundButtonBindingAdapter.setListeners(this.cbCartProduct, mCallback6, (androidx.databinding.InverseBindingListener)null);
-            this.ivCartProductDelete.setOnClickListener(mCallback5);
-            this.mboundView1.setOnClickListener(mCallback4);
+            androidx.databinding.adapters.CompoundButtonBindingAdapter.setListeners(this.cbCartProduct, mCallback5, (androidx.databinding.InverseBindingListener)null);
+            this.ivCartProductDelete.setOnClickListener(mCallback4);
+            this.mboundView1.setOnClickListener(mCallback3);
         }
         if ((dirtyFlags & 0xcL) != 0) {
             // api target 1
@@ -210,28 +210,28 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
     }
     // Listener Stub Implementations
     // callback impls
+    public final void _internalCallbackOnCheckedChanged(int sourceId , android.widget.CompoundButton callbackArg_0, boolean callbackArg_1) {
+        // localize variables for thread safety
+        // setClickListener != null
+        boolean setClickListenerJavaLangObjectNull = false;
+        // shoppingCart
+        woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
+        // setClickListener
+        woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener setClickListener = mSetClickListener;
+
+
+
+        setClickListenerJavaLangObjectNull = (setClickListener) != (null);
+        if (setClickListenerJavaLangObjectNull) {
+
+
+
+
+            setClickListener.setClickEventOnCheckBox(callbackArg_1, shoppingCart);
+        }
+    }
     public final void _internalCallbackOnClick(int sourceId , android.view.View callbackArg_0) {
         switch(sourceId) {
-            case 2: {
-                // localize variables for thread safety
-                // setClickListener != null
-                boolean setClickListenerJavaLangObjectNull = false;
-                // shoppingCart
-                woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
-                // setClickListener
-                woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener setClickListener = mSetClickListener;
-
-
-
-                setClickListenerJavaLangObjectNull = (setClickListener) != (null);
-                if (setClickListenerJavaLangObjectNull) {
-
-
-
-                    setClickListener.setClickEventOnDeleteButton(shoppingCart);
-                }
-                break;
-            }
             case 1: {
                 // localize variables for thread safety
                 // setClickListener != null
@@ -252,26 +252,26 @@ public class ItemShoppingCartProductBindingImpl extends ItemShoppingCartProductB
                 }
                 break;
             }
-        }
-    }
-    public final void _internalCallbackOnCheckedChanged(int sourceId , android.widget.CompoundButton callbackArg_0, boolean callbackArg_1) {
-        // localize variables for thread safety
-        // setClickListener != null
-        boolean setClickListenerJavaLangObjectNull = false;
-        // shoppingCart
-        woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
-        // setClickListener
-        woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener setClickListener = mSetClickListener;
+            case 2: {
+                // localize variables for thread safety
+                // setClickListener != null
+                boolean setClickListenerJavaLangObjectNull = false;
+                // shoppingCart
+                woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState shoppingCart = mShoppingCart;
+                // setClickListener
+                woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartSetClickListener setClickListener = mSetClickListener;
 
 
 
-        setClickListenerJavaLangObjectNull = (setClickListener) != (null);
-        if (setClickListenerJavaLangObjectNull) {
+                setClickListenerJavaLangObjectNull = (setClickListener) != (null);
+                if (setClickListenerJavaLangObjectNull) {
 
 
 
-
-            setClickListener.setClickEventOnCheckBox(callbackArg_1, shoppingCart);
+                    setClickListener.setClickEventOnDeleteButton(shoppingCart);
+                }
+                break;
+            }
         }
     }
     // dirty flag

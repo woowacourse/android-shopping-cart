@@ -34,7 +34,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun setTotalPrice(shoppingCart: ShoppingCartUiState) {
         binding.shoppingCart = shoppingCart
-        binding.setClickListener = setUpClickListener()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +60,8 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private fun initClickListeners() {
         clickNextPage()
         clickPreviousPage()
+        setClickEventOnBack()
+        setClickEventOnCheckAll()
     }
 
     override fun setShoppingCart(shoppingCart: List<ProductInCartUiState>) {
@@ -115,11 +116,18 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
             isChecked: Boolean,
             productInCart: ProductInCartUiState,
         ) {
-            presenter.calculateTotalWithCheck(isChecked, productInCart)
+            presenter.fetchCheckState(isChecked, productInCart)
+            presenter.fetchTotalPrice()
         }
+    }
 
-        override fun setClickEventOnCheckAll(isChecked: Boolean) {
-            presenter.fetchTotalPriceByCheckAll(isChecked)
+    private fun setClickEventOnBack() {
+        binding.ivShoppingCartBackButton.setOnClickListener { finish() }
+    }
+
+    private fun setClickEventOnCheckAll() {
+        binding.cbShoppingCartAllCheck.setOnClickListener {
+            presenter.fetchTotalPriceByCheckAll(binding.cbShoppingCartAllCheck.isChecked)
         }
     }
 

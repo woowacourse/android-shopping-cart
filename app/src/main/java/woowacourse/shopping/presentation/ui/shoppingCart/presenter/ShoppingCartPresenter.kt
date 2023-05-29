@@ -14,19 +14,15 @@ class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ShoppingCartContract.Presenter {
-    private val checkState: MutableMap<ProductInCart, Boolean> = saveProductCheckState()
+    private val checkState: MutableMap<Long, Boolean> = saveProductCheckState()
     private var pageNumber = PageNumber()
 
-    init {
-        saveProductCheckState()
-    }
-
-    private fun saveProductCheckState(): MutableMap<ProductInCart, Boolean> {
+    private fun saveProductCheckState(): MutableMap<Long, Boolean> {
         val shoppingCart = shoppingCartRepository.getShoppingCart()
-        val productCheckState: MutableMap<ProductInCart, Boolean> = mutableMapOf()
+        val productCheckState: MutableMap<Long, Boolean> = mutableMapOf()
 
         shoppingCart.forEach {
-            productCheckState[it] = it.isChecked
+            productCheckState[it.product.id] = it.isChecked
         }
 
         return productCheckState
@@ -40,10 +36,9 @@ class ShoppingCartPresenter(
     }
 
     override fun fetchTotalPrice() {
-        val productCheckState = saveProductCheckState()
-        val isCheckedAll = productCheckState.values.all { it }
-        val totalPrice = productCheckState.getSumOf(PRICE)
-        val amount = productCheckState.getSumOf(AMOUNT)
+        val isCheckedAll = checkState.values.all { it }
+        val totalPrice = getSumOf(PRICE)
+        val amount = getSumOf(AMOUNT)
 
         view.setTotalPrice(
             ShoppingCartUiState(
@@ -54,42 +49,40 @@ class ShoppingCartPresenter(
         )
     }
 
-    override fun fetchTotalPriceByCheckAll(isChecked: Boolean) {
-        val productCheckState = saveProductCheckState()
-        val totalPrice = if (isChecked) productCheckState.getSumOf(PRICE) else NOTHING
-        val amount = if (isChecked) productCheckState.getSumOf(AMOUNT) else NOTHING
+    override fun fetchCheckState(isChecked: Boolean, productInCart: ProductInCartUiState) {
+        checkState[productInCart.product.id] = isChecked
+    }
 
+    override fun fetchTotalPriceByCheckAll(isChecked: Boolean) {
         checkState.replaceAll { _, _ -> isChecked }
 
-        view.setTotalPrice(
-            ShoppingCartUiState(
-                isCheckedAll = isChecked,
-                totalPrice = totalPrice,
-                amount = amount,
-            ),
-        )
         view.setShoppingCart(
             shoppingCartRepository.getShoppingCart().map { it.toProductInCartUiState() },
         )
     }
 
     override fun addCountOfProductInCart(request: Operator, productInCart: ProductInCartUiState) {
+        shoppingCartRepository.addProductInCart(
+            ProductInCart(
+                productInCart.product,
+                getQuantity(request),
+                productInCart.isChecked,
+            ),
+        )
+
+        val shoppingCart =
+            shoppingCartRepository.getShoppingCart().map { it.toProductInCartUiState() }
+
+        view.setShoppingCart(shoppingCart)
+    }
+
+    private fun getQuantity(request: Operator): Int {
         val quantity = Quantity()
         when (request) {
             PLUS -> quantity.add()
             MINUS -> quantity.subtract()
         }
-
-        shoppingCartRepository.addProductInCart(
-            ProductInCart(
-                productInCart.product,
-                quantity.amount,
-                false,
-            ),
-        )
-        val shoppingCart = shoppingCartRepository.getShoppingCart()
-
-        view.setShoppingCart(shoppingCart.map { it.toProductInCartUiState() })
+        return quantity.amount
     }
 
     override fun deleteProductInCart(productId: Long) {
@@ -101,13 +94,16 @@ class ShoppingCartPresenter(
         view.deleteItemInCart(result, productId)
     }
 
-    override fun calculateTotalWithCheck(isChecked: Boolean, productInCart: ProductInCartUiState) {
-        val shoppingCart = shoppingCartRepository.getShoppingCart()
+    private fun getSumOf(demand: String): Int {
+        val shoppingCart = shoppingCartRepository.getShoppingCart().filter {
+            checkState[it.product.id] == true
+        }
 
-        // 체크 분기처리하기
-        // 전체체크 해제 시, 0원 else max
-        // 단일 체크 해제 시, delete와 같은 효과
-        // 단일 체크 해제 시, 전체 체크해제
+        return when (demand) {
+            PRICE -> shoppingCart.sumOf { it.getTotalPriceOfProduct() }
+            AMOUNT -> shoppingCart.sumOf { it.quantity }
+            else -> throw IllegalArgumentException()
+        }
     }
 
     override fun setPageNumber() {
@@ -150,20 +146,9 @@ class ShoppingCartPresenter(
         isChecked = checkState.values.all { it },
     )
 
-    private fun MutableMap<ProductInCart, Boolean>.getSumOf(demand: String): Int {
-        val sequence = this.asSequence().filter { it.value }
-
-        return when (demand) {
-            PRICE -> sequence.sumOf { it.key.getTotalPriceOfProduct() }
-            AMOUNT -> sequence.sumOf { it.key.quantity }
-            else -> throw IllegalArgumentException()
-        }
-    }
-
     companion object {
         private const val PRICE = "price"
         private const val AMOUNT = "amount"
-        private const val NOTHING = 0
         private const val SHOPPING_CART_ITEM_COUNT = 5
     }
 }
