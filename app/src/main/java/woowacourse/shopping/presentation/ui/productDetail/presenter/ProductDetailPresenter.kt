@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.util.WoowaResult.FAIL
 import woowacourse.shopping.domain.util.WoowaResult.SUCCESS
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
@@ -16,7 +17,7 @@ class ProductDetailPresenter(
 
     override fun fetchProduct(id: Long) {
         when (val result = productRepository.getProduct(id)) {
-            is SUCCESS -> view.setProduct(result.data)
+            is SUCCESS -> view.setProduct(result.data.toProductInCartUiState())
             is FAIL -> Log.d("ERROR", result.error.errorMessage)
         }
     }
@@ -33,4 +34,10 @@ class ProductDetailPresenter(
     override fun addProductInCart(product: Product) {
         shoppingCartRepository.addProductInCart(ProductInCart(product, 1, true))
     }
+
+    private fun Product.toProductInCartUiState(): ProductInCartUiState = ProductInCartUiState(
+        product = this,
+        quantity = 1,
+        isChecked = true,
+    )
 }

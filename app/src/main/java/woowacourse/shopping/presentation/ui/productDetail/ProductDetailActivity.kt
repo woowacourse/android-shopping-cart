@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.ui.productDetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.product.ProductDao
@@ -16,9 +17,11 @@ import woowacourse.shopping.domain.util.WoowaResult
 import woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailContract
 import woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailPresenter
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
+    private val dialog by lazy { ProductDetailCustomDialog(this) }
     override val presenter: ProductDetailContract.Presenter by lazy { initPresenter() }
     private fun initPresenter(): ProductDetailPresenter {
         return ProductDetailPresenter(
@@ -34,7 +37,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         )
     }
 
-    override fun setProduct(product: Product) {
+    override fun setProduct(product: ProductInCartUiState) {
         binding.product = product
     }
 
@@ -89,15 +92,30 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setClickEventOnToShoppingCartButton() {
         binding.setClickListener = object : ProductDetailClickListener {
-            override fun setClickEventOnToShoppingCart(product: Product) {
-                presenter.addProductInCart(product)
-                navigateToShoppingCartActivity()
+            override fun setClickEventOnToShoppingCart(
+                product: ProductInCartUiState,
+                onClick: ProductDetailClickListener,
+            ) {
+                initDialog(product, onClick)
+//                presenter.addProductInCart(product)
+                // navigateToShoppingCartActivity()
             }
 
             override fun setClickEventOnLastViewed(lastViewedProduct: Product) {
                 navigateToNewProductDetailActivity(lastViewedProduct)
             }
+
+            override fun setClickEventOnOperatorButton(
+                operator: Boolean,
+                productInCart: ProductInCartUiState,
+            ) {
+                Log.d("123123", "123123")
+            }
         }
+    }
+
+    private fun initDialog(product: ProductInCartUiState, onClick: ProductDetailClickListener) {
+        dialog.onCreate(product, onClick)
     }
 
     private fun navigateToShoppingCartActivity() =

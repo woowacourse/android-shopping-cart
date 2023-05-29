@@ -15,7 +15,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            type="woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState" />
 
     </data>
 
@@ -50,7 +50,7 @@
             android:id="@+id/iv_detail_product"
             android:layout_width="0dp"
             android:layout_height="360dp"
-            app:glideSrc="@{product.itemImage}"
+            app:glideSrc="@{product.product.itemImage}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cl_detail_toolbar"
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/woowa_dealer_blue_600"
                 android:gravity="center"
-                android:onClick="@{() -> setClickListener.setClickEventOnToShoppingCart(product)}"
+                android:onClick="@{() -> setClickListener.setClickEventOnToShoppingCart(product,setClickListener)}"
                 android:paddingTop="14dp"
                 android:paddingBottom="16dp"
                 android:text="@string/btn_detail_add_button"
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="16dp"
-                android:text="@{product.name}"
+                android:text="@{product.product.name}"
                 android:textColor="@color/woowa_dealer_black_400"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="18dp"
-                android:text="@{String.format(@string/price_format, product.price)}"
+                android:text="@{String.format(@string/price_format, product.product.price)}"
                 android:textColor="@color/woowa_dealer_black_400"
                 android:textSize="20sp"
                 android:textStyle="normal"
