@@ -42,7 +42,7 @@ class ProductListPresenterTest {
     @Test
     fun `데이터를 받아와 상품 목록 어댑터를 설정한다`() {
         // given
-        every { productRepository.getData(0, 20) } returns dummyData
+        justRun { productRepository.getData(0, 20, {}) }
         val slotId = slot<Long>()
         val slotProduct = slot<List<ProductModel>>()
         justRun { view.setProductItemsView(capture(slotProduct), capture(slotId)) }
@@ -56,7 +56,7 @@ class ProductListPresenterTest {
         val expected = dummyData
 
         assertEquals(expected, actualProduct)
-        verify { productRepository.getData(0, 20) }
+        verify { productRepository.getData(0, 20, {}) }
         verify { view.setProductItemsView(actualProduct, actualId) }
     }
 
@@ -99,7 +99,13 @@ class ProductListPresenterTest {
     @Test
     fun `데이터가 더 존재한다면 추가 데이터를 가져와 갱신한다`() {
         // given
-        every { productRepository.getData(0, 20) } returns dummyData
+        val data = mockk<(List<ProductModel>) -> Unit>()
+        justRun {
+            productRepository.getData(
+                0, 20,
+                data
+            )
+        }
         val slotProducts = slot<List<ProductModel>>()
         justRun { view.updateMoreProductsView(capture(slotProducts)) }
 
@@ -109,7 +115,7 @@ class ProductListPresenterTest {
         // then
         val actual = slotProducts.captured
         assertEquals(1, actual.size)
-        verify { productRepository.getData(0, 20) }
+        verify { productRepository.getData(0, 20, {}) }
         verify { view.updateMoreProductsView(actual) }
     }
 

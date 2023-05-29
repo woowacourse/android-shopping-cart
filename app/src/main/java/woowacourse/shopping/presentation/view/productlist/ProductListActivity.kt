@@ -186,7 +186,9 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     override fun updateMoreProductsView(newProducts: List<ProductModel>) {
-        productListAdapter.updateDataSet(newProducts)
+        runOnUiThread {
+            productListAdapter.updateDataSet(newProducts)
+        }
     }
 
     override fun updateProductsCount(counts: List<Int>) {

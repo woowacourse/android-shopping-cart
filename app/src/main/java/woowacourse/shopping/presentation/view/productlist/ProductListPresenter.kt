@@ -52,7 +52,7 @@ class ProductListPresenter(
     }
 
     override fun loadMoreData(startPosition: Int) {
-        productRepository.getData(startPosition, LOAD_PRODUCT_COUNT) { newProducts ->
+        productRepository.getData(startPosition + 1, LOAD_PRODUCT_COUNT) { newProducts ->
             products.addAll(newProducts)
             view.updateMoreProductsView(newProducts)
         }

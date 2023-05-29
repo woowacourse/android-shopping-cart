@@ -198,11 +198,6 @@ class ProductsDao {
         ),
     )
 
-    fun getData(startPosition: Int, count: Int): List<ProductEntity> {
-        val endIndex = if (items.size > startPosition + count) count else items.size - 1
-        return items.subList(startPosition, endIndex)
-    }
-
     fun getDataById(id: Long): ProductEntity? = items.find {
         it.id == id
     }
