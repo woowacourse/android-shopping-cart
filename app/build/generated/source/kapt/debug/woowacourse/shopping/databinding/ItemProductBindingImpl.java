@@ -157,12 +157,11 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
         java.lang.String tvItemProductPriceAndroidStringPriceFormatProductPrice = null;
         woowacourse.shopping.presentation.ui.home.HomeSetClickListener setClickListener = mSetClickListener;
         java.lang.String productName = null;
+        boolean shoppingCartContained = false;
         java.lang.String productItemImage = null;
-        int shoppingCartContainedViewVISIBLEViewINVISIBLE = 0;
-        int shoppingCartContainedViewINVISIBLEViewVISIBLE = 0;
         woowacourse.shopping.domain.model.Product product = mProduct;
         int productPrice = 0;
-        boolean shoppingCartContained = false;
+        boolean ShoppingCartContained1 = false;
 
         if ((dirtyFlags & 0x12L) != 0) {
 
@@ -170,24 +169,12 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
 
                 if (shoppingCart != null) {
                     // read shoppingCart.contained
-                    shoppingCartContained = shoppingCart.isContained();
+                    ShoppingCartContained1 = shoppingCart.isContained();
                 }
-            if((dirtyFlags & 0x12L) != 0) {
-                if(shoppingCartContained) {
-                        dirtyFlags |= 0x40L;
-                        dirtyFlags |= 0x100L;
-                }
-                else {
-                        dirtyFlags |= 0x20L;
-                        dirtyFlags |= 0x80L;
-                }
-            }
 
 
-                // read shoppingCart.contained ? View.VISIBLE : View.INVISIBLE
-                shoppingCartContainedViewVISIBLEViewINVISIBLE = ((shoppingCartContained) ? (android.view.View.VISIBLE) : (android.view.View.INVISIBLE));
-                // read shoppingCart.contained ? View.INVISIBLE : View.VISIBLE
-                shoppingCartContainedViewINVISIBLEViewVISIBLE = ((shoppingCartContained) ? (android.view.View.INVISIBLE) : (android.view.View.VISIBLE));
+                // read !shoppingCart.contained
+                shoppingCartContained = !ShoppingCartContained1;
         }
         if ((dirtyFlags & 0x14L) != 0) {
         }
@@ -212,8 +199,8 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
         if ((dirtyFlags & 0x12L) != 0) {
             // api target 1
 
-            this.fabItemProductQuantity.setVisibility(shoppingCartContainedViewINVISIBLEViewVISIBLE);
-            this.layoutQuantity.getRoot().setVisibility(shoppingCartContainedViewVISIBLEViewINVISIBLE);
+            woowacourse.shopping.util.BindingAdapter.isVisible(this.fabItemProductQuantity, shoppingCartContained);
+            woowacourse.shopping.util.BindingAdapter.isVisible(this.layoutQuantity.getRoot(), ShoppingCartContained1);
             this.layoutQuantity.setProductInCart(shoppingCart);
         }
         if ((dirtyFlags & 0x18L) != 0) {
@@ -264,10 +251,6 @@ public class ItemProductBindingImpl extends ItemProductBinding implements woowac
         flag 2 (0x3L): setClickListener
         flag 3 (0x4L): product
         flag 4 (0x5L): null
-        flag 5 (0x6L): shoppingCart.contained ? View.VISIBLE : View.INVISIBLE
-        flag 6 (0x7L): shoppingCart.contained ? View.VISIBLE : View.INVISIBLE
-        flag 7 (0x8L): shoppingCart.contained ? View.INVISIBLE : View.VISIBLE
-        flag 8 (0x9L): shoppingCart.contained ? View.INVISIBLE : View.VISIBLE
     flag mapping end*/
     //end
 }
