@@ -44,9 +44,7 @@ class CartPresenterTest {
 
     @Test
     fun 프레젠터가_생성되면_뷰의_장바구니를_갱신한다() {
-        // given
-
-        // when
+        // given, when : nothing
 
         // then
         verify {
@@ -57,9 +55,7 @@ class CartPresenterTest {
 
     @Test
     fun 프레젠터가_생성되면_총_가격을_업데이트_한다() {
-        // given
-
-        // when
+        // given, when : nothing
 
         // then
         verify { view.updateCartTotalPrice(any()) }
@@ -67,9 +63,7 @@ class CartPresenterTest {
 
     @Test
     fun 프레젠터가_생성되면_총_수량을_업데이트_한다() {
-        // given
-
-        // when
+        // given, when : nothing
 
         // then
         verify { view.updateCartTotalAmount(any()) }
