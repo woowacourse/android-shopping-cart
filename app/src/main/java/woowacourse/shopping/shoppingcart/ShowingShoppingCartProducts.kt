@@ -1,18 +1,19 @@
 package woowacourse.shopping.shoppingcart
 
+import woowacourse.shopping.model.CartProductUiModel
 import woowacourse.shopping.model.Page
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 
 class ShowingShoppingCartProducts : ShowingRule {
 
-    override fun of(products: List<ProductUiModel>, page: Page): List<ProductUiModel> {
-        val shoppingCartProducts = mutableListOf<ProductUiModel>()
-        var currentIndex = page.value * COUNT_TO_READ
+    override fun of(products: List<CartProductUiModel>, page: Page): List<CartProductUiModel> {
+        val shoppingCartProducts = mutableListOf<CartProductUiModel>()
+        var currentIndex = page.value * CART_PRODUCT_TO_READ
 
         if (currentIndex >= products.size) {
             return listOf()
         }
-        repeat(COUNT_TO_READ) {
+        repeat(CART_PRODUCT_TO_READ) {
             shoppingCartProducts.add(products[currentIndex])
             if (products.lastIndex == currentIndex) {
                 return shoppingCartProducts.toList()
@@ -20,9 +21,5 @@ class ShowingShoppingCartProducts : ShowingRule {
             currentIndex++
         }
         return shoppingCartProducts.toList()
-    }
-
-    companion object {
-        private const val COUNT_TO_READ = 3
     }
 }

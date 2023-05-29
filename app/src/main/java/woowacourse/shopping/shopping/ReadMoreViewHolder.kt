@@ -16,6 +16,7 @@ class ReadMoreViewHolder(
     }
 
     companion object {
+        const val READ_MORE_ITEM_TYPE = 2
 
         fun from(parent: ViewGroup): ReadMoreViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)

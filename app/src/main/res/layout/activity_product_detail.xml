@@ -8,6 +8,10 @@
         <variable
             name="presenter"
             type="woowacourse.shopping.productdetail.ProductDetailContract.Presenter" />
+
+        <variable
+            name="recentProduct"
+            type="woowacourse.shopping.model.ProductUiModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -82,12 +86,62 @@
             app:layout_constraintTop_toBottomOf="@id/view_separator"
             tools:text="99,800원" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recent_viewed_product"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="29dp"
+            android:background="@drawable/item_round"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_product_price">
+
+            <TextView
+                android:id="@+id/text_recent_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/detail_recent_description"
+                android:textColor="@color/button_color"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_recent_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="@{recentProduct.name}"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="@id/text_recent_description"
+                app:layout_constraintTop_toBottomOf="@id/text_recent_description"
+                tools:text="상품명" />
+
+            <TextView
+                android:id="@+id/text_recent_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:text="@{@string/price_format(recentProduct.toPriceFormat())}"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_recent_product_name"
+                tools:text="12,333원" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/button_put_to_shopping_cart"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@color/button_color"
-            android:onClick="@{()->presenter.addToShoppingCart()}"
+            android:onClick="@{()->presenter.onClickShoppingCartBtn()}"
             android:text="@string/put_to_shopping_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

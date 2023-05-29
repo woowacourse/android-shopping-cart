@@ -26,6 +26,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <woowacourse.shopping.common.ProductCountView
+            android:id="@+id/main_count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp"
+            app:layout_constraintBottom_toBottomOf="@id/image_product"
+            app:layout_constraintEnd_toEndOf="@id/image_product"
+            app:layout_constraintStart_toStartOf="@id/image_product" />
+
         <TextView
             android:id="@+id/text_product_name"
             android:layout_width="140dp"

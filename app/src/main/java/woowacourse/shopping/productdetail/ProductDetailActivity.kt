@@ -3,23 +3,28 @@ package woowacourse.shopping.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.databinding.DialogCountViewBinding
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.util.generateProductDetailPresenter
 import woowacourse.shopping.util.getSerializableCompat
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private lateinit var binding: ActivityProductDetailBinding
 
-    private val product: ProductUiModel by lazy { intent.getSerializableCompat(PRODUCT_KEY)!! }
+    private val product: ProductUiModel? by lazy { intent.getSerializableCompat(PRODUCT_KEY) }
     private val presenter: ProductDetailPresenter by lazy {
-        ProductDetailPresenter.of(this, product, this)
+        generateProductDetailPresenter(this, product, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +33,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
 
         binding.presenter = presenter
+        presenter.setUpView()
         setUpProductDetailToolbar()
     }
 
@@ -52,8 +58,40 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onDestroy() {
         super.onDestroy()
-        setResult(ACTIVITY_RESULT_CODE)
+        setResult(DETAIL_ACTIVITY_RESULT_CODE)
     }
+
+    override fun setUpRecentViewedProduct(product: ProductUiModel?) {
+        if (this.product == null || product == null) {
+            binding.recentViewedProduct.visibility = View.GONE
+        } else {
+            binding.recentProduct = product
+            binding.recentViewedProduct.setOnClickListener {
+                startActivity(Intent(this, ProductDetailActivity::class.java))
+                finish()
+            }
+        }
+    }
+
+    override fun showCountProductView() {
+        val binding = DialogCountViewBinding.inflate(LayoutInflater.from(this))
+        binding.presenter = presenter
+        val dialog: AlertDialog = createCountDialog(binding)
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
+    private fun createCountDialog(binding: DialogCountViewBinding) =
+        AlertDialog.Builder(this).apply {
+            setView(binding.root)
+            binding.countView.count = presenter.count
+            binding.countView.plusClickListener = {
+                presenter.changeCount(true)
+            }
+            binding.countView.minusClickListenerInCart = {
+                presenter.changeCount(false)
+            }
+        }.create()
 
     override fun navigateToShoppingCartView() {
         val intent = Intent(this, ShoppingCartActivity::class.java)
@@ -63,7 +101,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val PRODUCT_KEY = "product"
-        const val ACTIVITY_RESULT_CODE = 0
+        const val DETAIL_ACTIVITY_RESULT_CODE = 0
 
         fun getIntent(context: Context, product: ProductUiModel): Intent {
             val intent = Intent(context, ProductDetailActivity::class.java).apply {

@@ -33,19 +33,21 @@
 
         <LinearLayout
             android:id="@+id/button_page"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="25dp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/button_order"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/recycler_view_cart">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_previous_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@color/button_color"
+                android:background="@drawable/cart_page_button_left"
                 android:text="@string/previous_page"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
@@ -63,11 +65,54 @@
                 android:id="@+id/button_next_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@color/button_color"
+                android:background="@drawable/cart_page_button_right"
                 android:text="@string/next_page"
                 android:textColor="@color/white"
                 android:textSize="22sp" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/text_total_price"
+            android:layout_width="0dp"
+            android:layout_height="78dp"
+            android:background="#555555"
+            android:gravity="end|center_vertical"
+            android:paddingHorizontal="12dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_order"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="123,000원" />
+
+        <CheckBox
+            android:id="@+id/checkbox_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_checkout_description"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@id/checkbox_total"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkbox_total" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_order"
+            android:layout_width="122dp"
+            android:layout_height="78dp"
+            android:background="@color/button_color"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="주문하기" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

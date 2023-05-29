@@ -1,10 +1,9 @@
 package woowacourse.shopping.shoppingcart
 
-import android.content.Context
-import woowacourse.shopping.database.ShoppingDBRepository
+import model.Price
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.database.product.ShoppingDao
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
+import woowacourse.shopping.util.CART_PRODUCT_TO_READ
 import woowacourse.shopping.util.toUiModel
 
 class ShoppingCartPresenter(
@@ -12,40 +11,78 @@ class ShoppingCartPresenter(
     private val repository: ShoppingRepository,
 ) : ShoppingCartContract.Presenter {
 
-    private var numberOfReadShoppingCartProduct: Int = 0
+    private var readPageNumber: Int = 1
 
-    private fun selectShoppingCartProducts(): List<ProductUiModel> {
-        val products = repository.selectShoppingCartProducts(numberOfReadShoppingCartProduct, 3)
-            .map { it.toUiModel() }
-        numberOfReadShoppingCartProduct += 3
+    private fun loadRangeOfShoppingCartProducts(): List<CartProductUiModel> {
+        val cartProducts = repository.selectShoppingCartProducts(
+            0,
+            readPageNumber * CART_PRODUCT_TO_READ,
+        ).map { it.toUiModel() }
+        readPageNumber++
 
-        return products
+        return cartProducts
     }
 
     override fun loadShoppingCartProducts() {
-        val products = selectShoppingCartProducts()
+        val products = loadRangeOfShoppingCartProducts()
         val productsSize = repository.getShoppingCartProductsSize()
 
-        view.setUpShoppingCartView(products, ::removeShoppingCartProduct, productsSize)
+        updateOrderInfo()
+        view.setUpShoppingCartView(products, productsSize)
+        view.checkAllBtnOrNot()
     }
 
     override fun removeShoppingCartProduct(id: Int) {
         repository.deleteFromShoppingCart(id)
+        updateOrderInfo()
     }
 
     override fun readMoreShoppingCartProducts() {
-        val products = selectShoppingCartProducts()
+        val products = loadRangeOfShoppingCartProducts()
         view.showMoreShoppingCartProducts(products)
     }
 
-    companion object {
-        fun of(view: ShoppingCartContract.View, context: Context): ShoppingCartPresenter {
-            return ShoppingCartPresenter(
-                view,
-                ShoppingDBRepository(
-                    ShoppingDao(context),
-                ),
-            )
+    override fun changeShoppingCartProductCount(id: Int, isAdd: Boolean) {
+        val product = repository.selectShoppingCartProductById(id)
+        val calculateAmount = if (isAdd) PLUS_AMOUNT else MINUS_AMOUNT
+        repository.updateShoppingCartCount(id, product.count + calculateAmount)
+        updateOrderInfo()
+    }
+
+    override fun changeShoppingCartProductSelection(id: Int, isSelected: Boolean) {
+        repository.updateShoppingCartSelection(id, isSelected)
+        updateOrderInfo()
+        view.checkAllBtnOrNot()
+    }
+
+    override fun checkAllBox(products: List<CartProductUiModel>, isSelected: Boolean) {
+        products.forEach {
+            repository.updateShoppingCartSelection(it.product.id, isSelected)
         }
+        updateOrderInfo()
+    }
+
+    override fun checkAllShoppingCartProducts() {
+        val products = repository.selectAllShoppingCartProducts()
+        products.forEach {
+            repository.updateShoppingCartSelection(it.product.id, true)
+        }
+    }
+
+    private fun updateOrderInfo() {
+        var totalPrice = Price()
+        var selectedProductsSize = 0
+        val selectedProducts = repository.getSelectedShoppingCartProducts()
+        selectedProducts.forEach {
+            totalPrice += (it.product.price * it.count)
+            selectedProductsSize += it.count
+        }
+
+        view.updateTotalInfo(totalPrice.value, selectedProductsSize)
+    }
+
+    companion object {
+        private const val PLUS_AMOUNT = 1
+        private const val MINUS_AMOUNT = -1
     }
 }

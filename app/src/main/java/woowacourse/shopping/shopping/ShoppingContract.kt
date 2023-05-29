@@ -16,9 +16,13 @@ interface ShoppingContract {
             toReplace: List<ProductUiModel>,
         )
 
-        fun refreshShoppingProductsView(
+        fun refreshMoreShoppingProductsView(
             toAdd: List<ProductUiModel>,
         )
+
+        fun refreshShoppingProductsView(products: List<ProductUiModel>)
+
+        fun updateToolbar(count: Int)
     }
 
     interface Presenter {
@@ -30,5 +34,11 @@ interface ShoppingContract {
         fun readMoreShoppingProducts()
 
         fun updateRecentViewedProducts()
+
+        fun changeShoppingCartProductCount(id: Int, isAdd: Boolean)
+
+        fun updateToolbar()
+
+        fun refreshView()
     }
 }

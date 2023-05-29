@@ -1,18 +1,21 @@
 package woowacourse.shopping.shoppingcart
 
-import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.model.CartProductUiModel
 
 interface ShoppingCartContract {
 
     interface View {
 
         fun setUpShoppingCartView(
-            products: List<ProductUiModel>,
-            onRemoved: (id: Int) -> Unit,
+            products: List<CartProductUiModel>,
             totalSize: Int,
         )
 
-        fun showMoreShoppingCartProducts(products: List<ProductUiModel>)
+        fun showMoreShoppingCartProducts(products: List<CartProductUiModel>)
+
+        fun updateTotalInfo(price: Int, count: Int)
+
+        fun checkAllBtnOrNot()
     }
 
     interface Presenter {
@@ -22,5 +25,13 @@ interface ShoppingCartContract {
         fun removeShoppingCartProduct(id: Int)
 
         fun readMoreShoppingCartProducts()
+
+        fun changeShoppingCartProductCount(id: Int, isAdd: Boolean)
+
+        fun changeShoppingCartProductSelection(id: Int, isSelected: Boolean)
+
+        fun checkAllBox(products: List<CartProductUiModel>, isSelected: Boolean)
+
+        fun checkAllShoppingCartProducts()
     }
 }

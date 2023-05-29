@@ -1,18 +1,19 @@
 package woowacourse.shopping.shopping
 
-import android.content.Context
-import woowacourse.shopping.database.ShoppingDBRepository
+import model.Product
 import woowacourse.shopping.database.ShoppingRepository
-import woowacourse.shopping.database.product.ShoppingDao
+import woowacourse.shopping.database.product.ProductRepository
 import woowacourse.shopping.model.ProductUiModel
 import woowacourse.shopping.util.toUiModel
+import java.util.concurrent.CountDownLatch
 
 class ShoppingPresenter(
     private val view: ShoppingContract.View,
     private val repository: ShoppingRepository,
+    private val productRepository: ProductRepository,
 ) : ShoppingContract.Presenter {
 
-    private var numberOfReadProduct: Int = 0
+    private var numberOfReadProduct: Long = 0
 
     override fun loadProducts() {
         val products = selectProducts()
@@ -28,28 +29,38 @@ class ShoppingPresenter(
     override fun readMoreShoppingProducts() {
         val products = selectProducts()
 
-        view.refreshShoppingProductsView(products)
+        view.refreshMoreShoppingProductsView(products)
     }
 
     private fun selectProducts(): List<ProductUiModel> {
-        val products = repository.selectProducts(
-            from = numberOfReadProduct,
-            count = COUNT_TO_READ,
-        ).map { it.toUiModel() }
-
-        numberOfReadProduct += products.size
+        var products = listOf<ProductUiModel>()
+        val latch = CountDownLatch(1)
+        productRepository.loadProducts(
+            lastProductId = numberOfReadProduct,
+            onSuccess = {
+                products = synchronizeWithCartProducts(it)
+                numberOfReadProduct += it.size
+                latch.countDown()
+            },
+            onFailure = {
+                products = listOf()
+                latch.countDown()
+            },
+        )
+        latch.await()
 
         return products
     }
 
-    override fun addToRecentViewedProduct(id: Int) {
-        val product = repository.selectProductById(id)
-        val recentViewedProducts = repository.selectRecentViewedProducts()
-        val isDuplicated = recentViewedProducts.contains(product)
-        if (isDuplicated) {
-            repository.deleteFromRecentViewedProducts(id)
+    private fun synchronizeWithCartProducts(products: List<Product>): List<ProductUiModel> {
+        val cartProducts = repository.selectAllShoppingCartProducts()
+        return products.map { product ->
+            val count = cartProducts.find { it.product.id == product.id }?.count ?: 0
+            product.toUiModel(count)
         }
+    }
 
+    override fun addToRecentViewedProduct(id: Int) {
         repository.insertToRecentViewedProducts(id)
     }
 
@@ -58,16 +69,49 @@ class ShoppingPresenter(
         view.refreshRecentViewedProductsView(recentViewedProducts)
     }
 
-    companion object {
-        private const val COUNT_TO_READ = 20
+    override fun changeShoppingCartProductCount(id: Int, isAdd: Boolean) {
+        val cartProducts = repository.selectAllShoppingCartProducts()
+        val productCount = cartProducts.find { it.product.id == id }?.count ?: 0
 
-        fun of(view: ShoppingContract.View, context: Context): ShoppingPresenter {
-            return ShoppingPresenter(
-                view,
-                ShoppingDBRepository(
-                    ShoppingDao(context),
-                ),
+        if (productCount == 1 && !isAdd) {
+            repository.deleteFromShoppingCart(id)
+        } else if (productCount == 0 && isAdd) {
+            repository.insertToShoppingCart(id, 1, true)
+        } else {
+            val amountToCalculate = if (isAdd) PLUS_AMOUNT else MINUS_AMOUNT
+            repository.updateShoppingCartCount(id, productCount + amountToCalculate)
+            repository.updateShoppingCartSelection(id, true)
+        }
+        updateToolbar()
+    }
+
+    override fun updateToolbar() {
+        var totalCount = 0
+        val shoppingCartProducts = repository.selectAllShoppingCartProducts()
+        shoppingCartProducts.forEach { totalCount += it.count }
+        view.updateToolbar(totalCount)
+    }
+
+    override fun refreshView() {
+        val products = mutableListOf<ProductUiModel>()
+        val latch = CountDownLatch(1)
+        repeat(numberOfReadProduct.toInt()) { repeatNum ->
+            productRepository.loadProducts(
+                lastProductId = repeatNum.toLong(),
+                onSuccess = {
+                    products.addAll(synchronizeWithCartProducts(it))
+                    latch.countDown()
+                },
+                onFailure = { latch.countDown() },
             )
         }
+        latch.await()
+
+        view.refreshShoppingProductsView(products)
+    }
+
+    companion object {
+        private const val PLUS_AMOUNT = 1
+        private const val MINUS_AMOUNT = -1
     }
 }

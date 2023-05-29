@@ -1,10 +1,11 @@
 package woowacourse.shopping.database.product
 
 import woowacourse.shopping.model.ProductUiModel
+import woowacourse.shopping.util.toDomainModel
 
 object MockProduct {
 
-    val products = listOf<ProductUiModel>(
+    val products = listOf(
         ProductUiModel(
             id = 0,
             name = "돌체 콜드 브루",
@@ -203,5 +204,107 @@ object MockProduct {
             imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2023/04/[11141873]_20230428125930267.jpg",
             price = 45000,
         ),
-    )
+        ProductUiModel(
+            id = 33,
+            name = "플러피 판다 핫 초콜릿",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000002594]_20210422080327783.jpg",
+            price = 6000,
+        ),
+        ProductUiModel(
+            id = 34,
+            name = "아이스 제주 까망 라떼",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2020/09/[9200000001302]_20200921171804529.jpg",
+            price = 8000,
+        ),
+        ProductUiModel(
+            id = 35,
+            name = "우유",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[18]_20210426095514018.jpg",
+            price = 3000,
+        ),
+        ProductUiModel(
+            id = 36,
+            name = "스타벅스 슬래머",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9200000003659]_20210428134252131.jpg",
+            price = 6500,
+        ),
+        ProductUiModel(
+            id = 37,
+            name = "제주 한라봉 말차 블렌디드",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2023/04/[9200000004565]_20230414131720416.jpg",
+            price = 7000,
+        ),
+        ProductUiModel(
+            id = 38,
+            name = "플럼 선셋 유스베리 티",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2023/04/[9200000004564]_20230414131633174.jpg",
+            price = 7000,
+        ),
+        ProductUiModel(
+            id = 39,
+            name = "말차 샷 아포가토",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2022/09/[9200000004305]_20220902105142976.jpg",
+            price = 5500,
+        ),
+        ProductUiModel(
+            id = 40,
+            name = "아이스 유자 민트 티",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2022/04/[9200000002959]_20220411155904911.jpg",
+            price = 4500,
+        ),
+        ProductUiModel(
+            id = 41,
+            name = "망고 용과 레모네이드 스타벅스 리프레셔",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2023/04/[9200000004439]_20230413152833643.jpg",
+            price = 8000,
+        ),
+        ProductUiModel(
+            id = 42,
+            name = "딸기 아사이 레모네이드 스타벅스 리프레셔",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2022/08/[9200000003763]_20220803131322551.jpg",
+            price = 8000,
+        ),
+        ProductUiModel(
+            id = 43,
+            name = "스파클링 시트러스 에스프레소",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/03/[9200000003506]_20210322093317854.jpg",
+            price = 5000,
+        ),
+        ProductUiModel(
+            id = 44,
+            name = "얼 그레이 바닐라 티 라떼",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2023/01/[9200000004285]_20230118084943128.jpg",
+            price = 4500,
+        ),
+        ProductUiModel(
+            id = 45,
+            name = "리저브 나이트로",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/02/[9200000002407]_20210225095106743.jpg",
+            price = 6000,
+        ),
+        ProductUiModel(
+            id = 46,
+            name = "레드벨벳 크림치즈 케이크",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[5110007192]_20210421153949029.jpg",
+            price = 5000,
+        ),
+        ProductUiModel(
+            id = 47,
+            name = "당근 현무암 케이크",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2021/04/[9300000001055]_20210421133631796.jpg",
+            price = 7000,
+        ),
+        ProductUiModel(
+            id = 48,
+            name = "슈크림 가득 바움쿠헨",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2023/01/[9300000002448]_20230102083308549.jpg",
+            price = 6000,
+        ),
+        ProductUiModel(
+            id = 49,
+            name = "백년초콜릿 크런치 케이크",
+            imageUrl = "https://image.istarbucks.co.kr/upload/store/skuimg/2020/06/[9300000002856]_20200626140039590.jpg",
+            price = 7000,
+        ),
+    ).map { it.toDomainModel() }
 }

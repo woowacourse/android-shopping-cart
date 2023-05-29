@@ -1,15 +1,9 @@
 package model
 
 @JvmInline
-value class Price(val value: Int) {
+value class Price(val value: Int = 0) {
 
-    init {
-        require(value > 0) {
-            PRICE_AMOUNT_ERROR
-        }
-    }
-
-    companion object {
-        private const val PRICE_AMOUNT_ERROR = "가격은 0원보다 커야합니다."
-    }
+    operator fun plus(other: Price): Price = Price(value + other.value)
+    operator fun minus(other: Price): Price = Price(value - other.value)
+    operator fun times(count: Int): Price = Price(value * count)
 }

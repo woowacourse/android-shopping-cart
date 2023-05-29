@@ -16,8 +16,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/menu_shopping"
-            app:title="@string/shopping"
             app:titleTextColor="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
