@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    private var currentPage: Int = 0,
+    private var currentPage: Page = Page(0),
     private val sizePerPage: Int,
     private var initialCart: Cart = Cart(emptyList()),
     private var cart: Cart = Cart(emptyList())
@@ -35,14 +35,16 @@ class CartPresenter(
     }
 
     override fun goToPreviousPage() {
-        currentPage--
-        updateCartPage()
+        if (!currentPage.isFirstPage()) {
+            currentPage = currentPage.moveToPreviousPage()
+            updateCartPage()
 
-        if (currentPage == 0) view.updateNavigationVisibility(determineNavigationVisibility())
+            if (currentPage.isFirstPage()) view.updateNavigationVisibility(determineNavigationVisibility())
+        }
     }
 
     override fun goToNextPage() {
-        currentPage++
+        currentPage = currentPage.moveToNextPage()
         updateCartPage()
     }
 
@@ -100,18 +102,18 @@ class CartPresenter(
         val newCart = getCartInPage()
         view.updateCart(
             cartProducts = newCart.cartProducts.map { it.toView() },
-            currentPage = currentPage + 1,
+            currentPage = currentPage.value + 1,
             isLastPage = isLastPageCart(newCart)
         )
         updateAllChecked()
     }
 
     private fun getCartInPage(): Cart {
-        val startIndex = currentPage * sizePerPage
+        val startIndex = currentPage.value * sizePerPage
         return if (startIndex < cart.cartProducts.size) {
             cart.getSubCart(startIndex, startIndex + sizePerPage)
         } else {
-            cartRepository.getPage(currentPage, sizePerPage).apply {
+            cartRepository.getPage(currentPage.value, sizePerPage).apply {
                 initialCart = Cart(initialCart.cartProducts + cartProducts)
                 cart = Cart(cart.cartProducts + cartProducts)
             }
@@ -130,12 +132,12 @@ class CartPresenter(
 
     private fun isLastPageCart(cart: Cart): Boolean {
         val cartCount = cartRepository.getAllCount()
-        return (currentPage * sizePerPage) + cart.cartProducts.size >= cartCount
+        return (currentPage.value * sizePerPage) + cart.cartProducts.size >= cartCount
     }
 
     private fun determineNavigationVisibility(): Boolean {
         val cartCount = cartRepository.getAllCount()
-        return cartCount > sizePerPage || currentPage != 0
+        return cartCount > sizePerPage || !currentPage.isFirstPage()
     }
 
     private fun applyCartProductCheckedChange(cartProduct: CartProduct, isChecked: Boolean) {

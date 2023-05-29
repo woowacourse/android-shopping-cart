@@ -35,7 +35,7 @@ class CartPresenterTest {
         every { view.updateAllChecked(any()) } just runs
 
         presenter = CartPresenter(
-            view, cartRepository, 0, 0
+            view, cartRepository, Page(0), 0
         )
     }
 
@@ -277,7 +277,7 @@ class CartPresenterTest {
         val initialCart = Cart(listOf(CartProduct(time, 2, true, createProduct())))
         val cart = Cart(listOf(CartProduct(time, 1, true, createProduct())))
         presenter = CartPresenter(
-            view, cartRepository, 0, 0, initialCart, cart
+            view, cartRepository, Page(0), 0, initialCart, cart
         )
         every { view.notifyCartChanged() } just runs
 
@@ -297,7 +297,7 @@ class CartPresenterTest {
         val initialCart = Cart(listOf(CartProduct(time, 2, true, createProduct())))
         val cart = Cart(listOf(CartProduct(time, 2, true, createProduct())))
         presenter = CartPresenter(
-            view, cartRepository, 0, 0, initialCart, cart
+            view, cartRepository, Page(0), 0, initialCart, cart
         )
         every { view.notifyCartChanged() } just runs
 
@@ -317,7 +317,7 @@ class CartPresenterTest {
         val initialCart = Cart(listOf(CartProduct(time, 2, true, createProduct())))
         val cart = Cart(listOf(CartProduct(time, 2, false, createProduct())))
         presenter = CartPresenter(
-            view, cartRepository, 0, 0, initialCart, cart
+            view, cartRepository, Page(0), 0, initialCart, cart
         )
         every { view.notifyCartChanged() } just runs
 
@@ -337,7 +337,7 @@ class CartPresenterTest {
         val initialCart = Cart(listOf(cartProduct))
         val cart = Cart(listOf(cartProduct))
         presenter = CartPresenter(
-            view, cartRepository, 0, 0, initialCart, cart
+            view, cartRepository, Page(0), 0, initialCart, cart
         )
         every { view.notifyCartChanged() } just runs
         every { cartRepository.deleteCartProduct(any()) } just runs
@@ -350,5 +350,40 @@ class CartPresenterTest {
         verify(exactly = 1) {
             view.notifyCartChanged()
         }
+    }
+
+    @Test
+    fun 페이지가_첫_페이지라면_이전_페이지로_이동할_수_없다() {
+        // given
+        val page: Page = mockk()
+        every { page.isFirstPage() } returns true
+        every { page.value } returns 0
+        presenter = CartPresenter(
+            view, cartRepository, page, 0
+        )
+
+        // when
+        presenter.goToPreviousPage()
+
+        // then
+        verify(exactly = 0) { page.moveToPreviousPage() }
+    }
+
+    @Test
+    fun 페이지가_첫_페이지가_아니라면_이전_페이지로_이동할_수_있다() {
+        // given
+        val page: Page = mockk()
+        every { page.isFirstPage() } returns false
+        every { page.value } returns 1
+        every { page.moveToPreviousPage() } returns Page(0)
+        presenter = CartPresenter(
+            view, cartRepository, page, 0
+        )
+
+        // when
+        presenter.goToPreviousPage()
+
+        // then
+        verify(exactly = 1) { page.moveToPreviousPage() }
     }
 }
