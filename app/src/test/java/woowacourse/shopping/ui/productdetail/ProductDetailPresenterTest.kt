@@ -45,7 +45,7 @@ class ProductDetailPresenterTest() {
     }
 
     @Test
-    fun `장바구니 항목 선택 다이얼로그의 데이터 및 관련 데이터 수정 리스너들을 전달한다`() {
+    fun `장바구니 항목 선택 다이얼로그의 데이터를 전달한다`() {
         // given
         every { view.showBasketDialog(any()) } just runs
         every { view.updateProductCount(any()) } just runs
@@ -58,7 +58,7 @@ class ProductDetailPresenterTest() {
     }
 
     @Test
-    fun `최근 본 상품을 클릭한다면 현재 상품이 최근본 상품으로 변경되고 현재 화면의 데이터가 변경된 현재상품(최근본상품)으로 업데이트된다`() {
+    fun `최근 본 상품을 선택한다면 현재 상품이 최근본 상품으로 변경되고 데이터가 변경된 현재상품(최근본상품)으로 업데이트된다`() {
         // given
         val currentProductSlot = slot<UiProduct>()
         every {
