@@ -6,7 +6,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.CartNavigationItemBinding
-import woowacourse.shopping.model.CartUIModel
+import woowacourse.shopping.model.CartNavigationUIModel
 
 class CartNavigationViewHolder private constructor(
     private val binding: CartNavigationItemBinding,
@@ -18,7 +18,7 @@ class CartNavigationViewHolder private constructor(
         binding.pageDown.setOnClickListener { onPageDown() }
     }
 
-    fun bind(cart: CartUIModel) {
+    fun bind(cart: CartNavigationUIModel) {
         binding.cartNavigation.visibility = when {
             cart.pageUp -> VISIBLE
             cart.pageDown -> VISIBLE

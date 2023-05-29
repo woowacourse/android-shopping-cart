@@ -44,7 +44,7 @@ class ProductDetailPresenterTest {
         val slot = slot<ProductUIModel>()
         every { view.setProductDetail(capture(slot)) } answers { nothing }
         // when
-        presenter.setUpProductDetail()
+        presenter.setUp()
 
         // then
         assertEquals(slot.captured, fakeProduct.toUIModel())
@@ -54,11 +54,11 @@ class ProductDetailPresenterTest {
     @Test
     fun `상품을 장바구니에 추가한다`() {
         // given
-        every { cartRepository.insert(any()) } answers { nothing }
+        every { cartRepository.insert(any(), 1) } answers { nothing }
         // when
-        presenter.addProductToCart()
+        presenter.addCart()
         // then
-        verify(exactly = 1) { cartRepository.insert(fakeProduct) }
+        verify(exactly = 1) { cartRepository.insert(fakeProduct, 1) }
     }
 
     @Test
@@ -66,8 +66,32 @@ class ProductDetailPresenterTest {
         // given
         every { recentRepository.insert(any()) } answers { nothing }
         // when
-        presenter.addProductToRecent()
+        presenter.setUp()
         // then
         verify(exactly = 1) { recentRepository.insert(fakeProduct) }
+    }
+
+    @Test
+    fun `최근_본_상품이_없으면_최근_상품을_띄우지_않는다`() {
+        // given
+        every { recentRepository.getRecent(10) } answers { listOf() }
+
+        // when
+        presenter.manageRecentView()
+
+        // then
+        verify(exactly = 1) { view.disappearRecent() }
+    }
+
+    @Test
+    fun `최근_본_상품이_있으면_최근_상품을_띄운다`() {
+        // given
+        every { recentRepository.getRecent(10) } answers { List(10) { fakeProduct } }
+
+        // when
+        presenter.manageRecentView()
+
+        // then
+        verify(exactly = 1) { view.displayRecent(any()) }
     }
 }

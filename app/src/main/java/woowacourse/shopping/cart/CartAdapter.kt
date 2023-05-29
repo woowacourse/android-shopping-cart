@@ -3,16 +3,26 @@ package woowacourse.shopping.cart
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.viewHolder.CartViewHolder
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartProductUIModel
 
 class CartAdapter(
     private val cartItems: List<CartItem>,
-    private val onItemClick: (ProductUIModel) -> Unit,
+    private val onItemClick: (CartProductUIModel) -> Unit,
     private val onItemRemove: (Int) -> Unit,
+    private val onIncreaseCount: (Int, CartProductUIModel) -> Unit,
+    private val onDecreaseCount: (Int, CartProductUIModel) -> Unit,
+    private val onChecked: (Boolean, CartProductUIModel) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        return CartViewHolder.from(parent, onItemClick, onItemRemove)
+        return CartViewHolder.from(
+            parent,
+            onItemClick,
+            onItemRemove,
+            { count, index -> onIncreaseCount(count, cartItems[index].cartProduct) },
+            { count, index -> onDecreaseCount(count, cartItems[index].cartProduct) },
+            { checked, index -> onChecked(checked, cartItems[index].cartProduct) },
+        )
     }
 
     override fun getItemCount(): Int {

@@ -4,8 +4,8 @@ import com.domain.model.CartRepository
 import woowacourse.shopping.cart.CartItem
 import woowacourse.shopping.cart.contract.CartContract
 import woowacourse.shopping.mapper.toUIModel
-import woowacourse.shopping.model.CartUIModel
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartNavigationUIModel
+import woowacourse.shopping.model.CartProductUIModel
 
 class CartPresenter(
     val view: CartContract.View,
@@ -18,13 +18,15 @@ class CartPresenter(
         }
 
     override fun setUpCarts() {
-        val lastItemOffset = offset + STEP
+        val isNotLastPage = offset + STEP < repository.getAll().size
+        val isNotFirstPage = 0 < offset
+        val pageNumber = offset / STEP + 1
         view.setCarts(
             repository.getSubList(offset, STEP).map { CartItem(it.toUIModel()) },
-            CartUIModel(
-                lastItemOffset < repository.getAll().size,
-                0 < offset,
-                offset / STEP + 1,
+            CartNavigationUIModel(
+                isNotLastPage,
+                isNotFirstPage,
+                pageNumber,
             ),
         )
     }
@@ -40,19 +42,53 @@ class CartPresenter(
     }
 
     override fun removeItem(id: Int) {
+        var price = 0
         repository.remove(id)
         if (offset == repository.getAll().size) {
             offset -= STEP
         }
+        val checkedProducts = repository.getChecked()
+        checkedProducts.forEach {
+            price += it.count * it.product.price
+        }
+        view.updatePrice(price)
+        view.updateOrderCount(checkedProducts.size)
         setUpCarts()
     }
 
-    override fun navigateToItemDetail(product: ProductUIModel) {
-        view.navigateToItemDetail(product)
+    override fun navigateToItemDetail(cartProduct: CartProductUIModel) {
+        view.navigateToItemDetail(cartProduct)
     }
 
     override fun getOffset(): Int {
         return offset
+    }
+
+    override fun increaseCount(count: Int, cartProduct: CartProductUIModel) {
+        repository.updateCount(cartProduct.product.id, count + 1)
+    }
+
+    override fun decreaseCount(count: Int, cartProduct: CartProductUIModel) {
+        repository.updateCount(cartProduct.product.id, count - 1)
+    }
+
+    override fun updateChecked(checked: Boolean, cartProduct: CartProductUIModel) {
+        var price = 0
+        repository.updateChecked(cartProduct.product.id, checked)
+        val checkedProducts = repository.getChecked()
+        checkedProducts.forEach {
+            price += it.count * it.product.price
+        }
+        view.updatePrice(price)
+        view.updateOrderCount(checkedProducts.size)
+    }
+
+    override fun updateTotalChecked(checked: Boolean) {
+        val products = repository.getSubList(offset, STEP)
+        products.forEach {
+            repository.updateChecked(it.product.id, checked)
+        }
+        setUpCarts()
     }
 
     companion object {

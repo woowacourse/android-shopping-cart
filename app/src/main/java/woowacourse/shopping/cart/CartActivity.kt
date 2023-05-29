@@ -10,12 +10,13 @@ import androidx.recyclerview.widget.ConcatAdapter
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.contract.CartContract
 import woowacourse.shopping.cart.contract.presenter.CartPresenter
-import woowacourse.shopping.database.cart.CartDBHelper
-import woowacourse.shopping.database.cart.CartDatabase
+import woowacourse.shopping.database.cart.CartDao
+import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.CartUIModel
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartNavigationUIModel
+import woowacourse.shopping.model.CartProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import java.text.DecimalFormat
 
 class CartActivity : AppCompatActivity(), CartContract.View {
 
@@ -28,10 +29,13 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
         presenter = CartPresenter(
             this,
-            CartDatabase(CartDBHelper(this).writableDatabase),
+            CartRepositoryImpl(CartDao(this)),
             savedInstanceState?.getInt(KEY_OFFSET) ?: 0,
         )
         presenter.setUpCarts()
+        binding.checkbox.setOnCheckedChangeListener { _, checked ->
+            presenter.updateTotalChecked(checked)
+        }
         setToolbar()
     }
 
@@ -48,20 +52,38 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         return true
     }
 
-    override fun setCarts(products: List<CartItem>, cartUIModel: CartUIModel) {
+    override fun setCarts(products: List<CartItem>, cartNavigationUIModel: CartNavigationUIModel) {
         val cartAdapter = CartAdapter(
             products.map { it },
             presenter::navigateToItemDetail,
             presenter::removeItem,
+            presenter::increaseCount,
+            presenter::decreaseCount,
+            presenter::updateChecked,
         )
         binding.cartRecyclerview.adapter = ConcatAdapter(
             cartAdapter,
-            CartNavigationAdapter(cartUIModel, presenter::pageUp, presenter::pageDown),
+            CartNavigationAdapter(cartNavigationUIModel, presenter::pageUp, presenter::pageDown),
         )
+        binding.tvPrice.text = getString(R.string.product_price, "0")
+        binding.tvOrder.text = getString(R.string.zero_order_text)
     }
 
-    override fun navigateToItemDetail(product: ProductUIModel) {
-        startActivity(ProductDetailActivity.from(this, product))
+    override fun navigateToItemDetail(cartProduct: CartProductUIModel) {
+        startActivity(ProductDetailActivity.from(this, cartProduct.product))
+    }
+
+    override fun updatePrice(price: Int) {
+        binding.tvPrice.text =
+            getString(R.string.product_price, DecimalFormat("#,###").format(price))
+    }
+
+    override fun updateOrderCount(count: Int) {
+        if (count == 0) {
+            binding.tvOrder.text = getString(R.string.zero_order_text)
+        } else {
+            binding.tvOrder.text = getString(R.string.order_text, count)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

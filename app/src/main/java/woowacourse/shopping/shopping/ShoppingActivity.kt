@@ -2,8 +2,7 @@ package woowacourse.shopping.shopping
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -11,9 +10,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartActivity
-import woowacourse.shopping.data.ProductFakeRepository
 import woowacourse.shopping.data.ProductFakeRepository.KEY_PRODUCT_OFFSET
-import woowacourse.shopping.database.recentProduct.RecentProductDatabase
+import woowacourse.shopping.data.ProductRepository
+import woowacourse.shopping.database.cart.CartDao
+import woowacourse.shopping.database.cart.CartRepositoryImpl
+import woowacourse.shopping.database.recentProduct.RecentProductDao
+import woowacourse.shopping.database.recentProduct.RecentRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.model.ProductUIModel
 import woowacourse.shopping.productdetail.ProductDetailActivity
@@ -36,28 +38,22 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping)
-        setSupportActionBar(binding.toolbar)
         presenter = ShoppingPresenter(
             this,
             savedInstanceState?.getInt(KEY_PRODUCT_OFFSET) ?: 20,
-            ProductFakeRepository,
-            RecentProductDatabase(this),
+            ProductRepository(),
+            RecentRepositoryImpl(RecentProductDao(this)),
+            CartRepositoryImpl(CartDao(this)),
         )
+        binding.cartIcon.setOnClickListener { navigateToCart() }
         initLayoutManager()
         presenter.setUpProducts()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.cart_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cart -> navigateToCart()
-            else -> super.onOptionsItemSelected(item)
-        }
-        return true
+    override fun onResume() {
+        super.onResume()
+        presenter.setUpCarts()
+        presenter.setUpProducts()
     }
 
     private fun initLayoutManager() {
@@ -90,6 +86,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
             data,
             presenter::navigateToItemDetail,
             presenter::fetchMoreProducts,
+            presenter::addCart,
+            presenter::addOneInCart,
+            presenter::removeOneInCart,
+            presenter::loadCartCount,
         )
     }
 
@@ -103,6 +103,17 @@ class ShoppingActivity : AppCompatActivity(), ShoppingContract.View {
 
     override fun updateRecentProducts(products: List<ProductsItemType>) {
         updateProductsAdapterItem { updateRecentProducts(products) }
+    }
+
+    override fun setUpCarts(count: Int) {
+        binding.ivCartCount.apply {
+            if (count == 0) {
+                visibility = View.GONE
+            } else {
+                visibility = View.VISIBLE
+                text = count.toString()
+            }
+        }
     }
 
     private fun updateProductsAdapterItem(action: ProductsAdapter.() -> Unit) {

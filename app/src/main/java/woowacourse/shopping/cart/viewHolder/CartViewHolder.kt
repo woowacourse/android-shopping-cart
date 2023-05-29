@@ -5,28 +5,55 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.cart.CartItem
 import woowacourse.shopping.databinding.CartItemBinding
-import woowacourse.shopping.model.ProductUIModel
+import woowacourse.shopping.model.CartProductUIModel
 
 class CartViewHolder private constructor(
     val binding: CartItemBinding,
-    val onClick: (ProductUIModel) -> Unit,
+    val onItemClick: (CartProductUIModel) -> Unit,
     val onRemove: (Int) -> Unit,
+    onIncreaseCount: (Int, Int) -> Unit,
+    onDecreaseCount: (Int, Int) -> Unit,
+    onChecked: (Boolean, Int) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
+    init {
+        binding.customCountView.plusClickListener = {
+            onIncreaseCount(binding.customCountView.count, bindingAdapterPosition)
+        }
+        binding.customCountView.minusClickListener = {
+            onDecreaseCount(binding.customCountView.count, bindingAdapterPosition)
+        }
+        binding.checkbox.setOnCheckedChangeListener { _, checked ->
+            onChecked(checked, bindingAdapterPosition)
+        }
+    }
+
     fun bind(cart: CartItem) {
-        binding.product = cart.product
-        binding.root.setOnClickListener { onClick(cart.product) }
-        binding.removeButton.setOnClickListener { onRemove(cart.product.id) }
+        binding.customCountView.count = cart.cartProduct.count
+        binding.cartProduct = cart.cartProduct
+        binding.root.setOnClickListener { onItemClick(cart.cartProduct) }
+        binding.removeButton.setOnClickListener { onRemove(cart.cartProduct.product.id) }
+        binding.checkbox.isChecked = cart.cartProduct.isChecked
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            onClick: (ProductUIModel) -> Unit,
+            onClick: (CartProductUIModel) -> Unit,
             onRemove: (Int) -> Unit,
+            onIncreaseCount: (Int, Int) -> Unit,
+            onDecreaseCount: (Int, Int) -> Unit,
+            onChecked: (Boolean, Int) -> Unit,
         ): CartViewHolder {
-            val binding = CartItemBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
-            return CartViewHolder(binding, onClick, onRemove)
+            val binding =
+                CartItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return CartViewHolder(
+                binding,
+                onClick,
+                onRemove,
+                onIncreaseCount,
+                onDecreaseCount,
+                onChecked,
+            )
         }
     }
 }
