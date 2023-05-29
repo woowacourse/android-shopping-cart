@@ -20,7 +20,7 @@ interface CartContract {
 
         fun changeAllChecked(isChecked: Boolean)
 
-        fun checkCartChanged()
+        fun checkProductsChanged()
     }
 
     interface View {
@@ -32,7 +32,7 @@ interface CartContract {
 
         fun updateCartTotalAmount(amount: Int)
 
-        fun notifyCartChanged()
+        fun notifyProductsChanged()
 
         fun updateCartProduct(prev: CartProductModel, new: CartProductModel)
 

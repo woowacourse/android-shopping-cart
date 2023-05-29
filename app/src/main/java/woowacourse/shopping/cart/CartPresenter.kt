@@ -5,6 +5,7 @@ import woowacourse.shopping.common.model.mapper.CartProductMapper.toDomain
 import woowacourse.shopping.common.model.mapper.CartProductMapper.toView
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.ShoppingProduct
 import woowacourse.shopping.domain.repository.CartRepository
 
 class CartPresenter(
@@ -90,10 +91,13 @@ class CartPresenter(
         }
     }
 
-    override fun checkCartChanged() {
-        val cartProducts = cart.cartProducts.map { it.copy(isChecked = true) }
-        if (cartProducts != initialCart.cartProducts) {
-            view.notifyCartChanged()
+    override fun checkProductsChanged() {
+        val initialShoppingProducts =
+            initialCart.cartProducts.map { ShoppingProduct(it.product, it.amount) }
+        val shoppingProducts =
+            cart.cartProducts.map { ShoppingProduct(it.product, it.amount) }
+        if (initialShoppingProducts != shoppingProducts) {
+            view.notifyProductsChanged()
         }
     }
 

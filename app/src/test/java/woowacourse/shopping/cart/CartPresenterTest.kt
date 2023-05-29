@@ -279,14 +279,14 @@ class CartPresenterTest {
         presenter = CartPresenter(
             view, cartRepository, Page(0), 0, initialCart, cart
         )
-        every { view.notifyCartChanged() } just runs
+        every { view.notifyProductsChanged() } just runs
 
         // when
-        presenter.checkCartChanged()
+        presenter.checkProductsChanged()
 
         // then
         verify(exactly = 1) {
-            view.notifyCartChanged()
+            view.notifyProductsChanged()
         }
     }
 
@@ -299,14 +299,14 @@ class CartPresenterTest {
         presenter = CartPresenter(
             view, cartRepository, Page(0), 0, initialCart, cart
         )
-        every { view.notifyCartChanged() } just runs
+        every { view.notifyProductsChanged() } just runs
 
         // when
-        presenter.checkCartChanged()
+        presenter.checkProductsChanged()
 
         // then
         verify(exactly = 0) {
-            view.notifyCartChanged()
+            view.notifyProductsChanged()
         }
     }
 
@@ -319,14 +319,14 @@ class CartPresenterTest {
         presenter = CartPresenter(
             view, cartRepository, Page(0), 0, initialCart, cart
         )
-        every { view.notifyCartChanged() } just runs
+        every { view.notifyProductsChanged() } just runs
 
         // when
-        presenter.checkCartChanged()
+        presenter.checkProductsChanged()
 
         // then
         verify(exactly = 0) {
-            view.notifyCartChanged()
+            view.notifyProductsChanged()
         }
     }
 
@@ -339,16 +339,16 @@ class CartPresenterTest {
         presenter = CartPresenter(
             view, cartRepository, Page(0), 0, initialCart, cart
         )
-        every { view.notifyCartChanged() } just runs
+        every { view.notifyProductsChanged() } just runs
         every { cartRepository.deleteCartProduct(any()) } just runs
 
         // when
         presenter.removeCartProduct(cartProduct.toView())
-        presenter.checkCartChanged()
+        presenter.checkProductsChanged()
 
         // then
         verify(exactly = 1) {
-            view.notifyCartChanged()
+            view.notifyProductsChanged()
         }
     }
 

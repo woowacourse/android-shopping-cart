@@ -90,7 +90,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartOrderButton.text = getString(R.string.order_button, amount)
     }
 
-    override fun notifyCartChanged() {
+    override fun notifyProductsChanged() {
         setResult(Activity.RESULT_OK)
     }
 
@@ -124,7 +124,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     }
 
     override fun finish() {
-        presenter.checkCartChanged()
+        presenter.checkProductsChanged()
         super.finish()
     }
 
