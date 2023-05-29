@@ -9,5 +9,5 @@ data class BasketProduct(
     fun getTotalPrice(): Price = product.price * count
 
     fun compareWithProductId(other: BasketProduct): Boolean =
-        this.id == other.id
+        this.product.id == other.product.id
 }
