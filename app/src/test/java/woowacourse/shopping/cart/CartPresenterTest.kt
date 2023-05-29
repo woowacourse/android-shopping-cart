@@ -17,6 +17,7 @@ import woowacourse.shopping.ui.cart.CartContract
 import woowacourse.shopping.ui.cart.CartPresenter
 import woowacourse.shopping.ui.cart.Page
 import woowacourse.shopping.ui.model.CartProductModel
+import woowacourse.shopping.ui.model.mapper.CartProductMapper.toDomain
 import woowacourse.shopping.ui.model.mapper.CartProductMapper.toView
 import java.time.LocalDateTime
 
@@ -80,7 +81,7 @@ class CartPresenterTest {
 
         // then
         verify {
-            cartRepository.deleteCartProduct(any())
+            cartRepository.deleteCartProduct(cartProductModel.toDomain())
         }
     }
 
@@ -98,16 +99,34 @@ class CartPresenterTest {
     }
 
     @Test
-    fun 카트_상품의_체크_상태를_업데이트_하면_카트_상품이_교체되고_뷰에_업데이트_된다() {
+    fun 카트_상품이_체크되어_있을_때_체크_상태를_뒤집으면_카트_상품은_체크되지_않은_상태로_변경된다() {
         // given
         every { view.updateCartProduct(any(), any()) } just runs
 
         // when
-        presenter.reverseCartProductChecked(createCartProductModel())
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, isChecked = true, createProductModel())
+        presenter.reverseCartProductChecked(cartProductModel)
 
         // then
+        val expected = cartProductModel.copy(isChecked = false)
         verify {
-            view.updateCartProduct(any(), any())
+            view.updateCartProduct(cartProductModel, expected)
+        }
+    }
+
+    @Test
+    fun 카트_상품이_체크되어_있지_않을_때_체크_상태를_뒤집으면_카트_상품은_체크된_상태로_변경된다() {
+        // given
+        every { view.updateCartProduct(any(), any()) } just runs
+
+        // when
+        val cartProductModel = CartProductModel(LocalDateTime.now(), 0, isChecked = false, createProductModel())
+        presenter.reverseCartProductChecked(cartProductModel)
+
+        // then
+        val expected = cartProductModel.copy(isChecked = true)
+        verify {
+            view.updateCartProduct(cartProductModel, expected)
         }
     }
 
@@ -151,7 +170,7 @@ class CartPresenterTest {
     }
 
     @Test
-    fun 카트_상품_수량을_증가시키면_레포지토리의_카트_상품을_수정_및_교체하고_뷰의_카트_상품을_업데이트_한다() {
+    fun 카트_상품_수량이_0일_때_상품을_증가시키면_카트_상품_수량은_1개로_변경된다() {
         // given
         every { cartRepository.modifyCartProduct(any()) } just runs
         every { view.updateCartProduct(any(), any()) } just runs
@@ -161,9 +180,10 @@ class CartPresenterTest {
         presenter.increaseCartProductAmount(cartProductModel)
 
         // then
+        val expected = cartProductModel.copy(amount = 1)
         verify {
-            cartRepository.modifyCartProduct(any())
-            view.updateCartProduct(any(), any())
+            cartRepository.modifyCartProduct(expected.toDomain())
+            view.updateCartProduct(cartProductModel, expected)
         }
     }
 
@@ -202,7 +222,7 @@ class CartPresenterTest {
     }
 
     @Test
-    fun 카트_상품_수량이_1_보다_작거나_같으면_수량을_감소시켜도_레포지토리의_카트_상품을_수정_및_교체하지_않고_뷰의_카트_상품을_업데이트_하지_않는다() {
+    fun 카트_상품_수량이_1_보다_작거나_같으면_수량을_감소시켜도_카트_상품_수량은_변경되지_않는다() {
         // given
 
         // when
@@ -217,7 +237,7 @@ class CartPresenterTest {
     }
 
     @Test
-    fun 카트_상품_수량을_감소시키면_레포지토리의_카트_상품을_수정_및_교체하고_뷰의_카트_상품을_업데이트_한다() {
+    fun 카트_상품_수량이_2개일_때_상품을_감소시키면_카트_상품_수량은_1개로_변경된다() {
         // given
         every { cartRepository.modifyCartProduct(any()) } just runs
         every { view.updateCartProduct(any(), any()) } just runs
@@ -227,9 +247,10 @@ class CartPresenterTest {
         presenter.decreaseCartProductAmount(cartProductModel)
 
         // then
+        val expected = cartProductModel.copy(amount = 1)
         verify {
-            cartRepository.modifyCartProduct(any())
-            view.updateCartProduct(any(), any())
+            cartRepository.modifyCartProduct(expected.toDomain())
+            view.updateCartProduct(cartProductModel, expected)
         }
     }
 
