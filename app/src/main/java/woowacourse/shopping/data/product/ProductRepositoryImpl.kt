@@ -22,7 +22,7 @@ class ProductRepositoryImpl(
     }
 
     private fun getProductsFromServer(path: Int): Products {
-        val products = productRemoteDataSource.getProducts(path)
+        val products = productRemoteDataSource.getProducts(path.toString())
         val shoppingProducts = products.map {
             productDao.insertProduct(it)
             ShoppingProduct(product = it, amount = 0)
