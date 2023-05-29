@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -76,45 +77,18 @@
             android:text="@{@string/product_price(cartProduct.product.price)}"
             android:textColor="#333333"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@id/cart_product_amount"
+            app:layout_constraintBottom_toTopOf="@id/cart_product_counter"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />
 
-        <Button
-            android:id="@+id/cart_product_amount_minus_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="42dp"
+        <include
+            android:id="@+id/cart_product_counter"
+            layout="@layout/product_counter"
+            android:layout_width="wrap_content"
             android:layout_height="42dp"
-            android:background="@drawable/cart_product_amount_bar_minus_background"
-            android:text="@string/minus"
-            android:textColor="#555555"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toStartOf="@id/cart_product_amount"
-            app:layout_constraintTop_toTopOf="@id/cart_product_amount" />
-
-        <TextView
-            android:id="@+id/cart_product_amount"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:gravity="center"
-            android:text="@{Integer.toString(cartProduct.amount)}"
-            android:textColor="#555555"
-            android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cart_product_amount_plus_button"
-            tools:text="1" />
-
-        <Button
-            android:id="@+id/cart_product_amount_plus_button"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/cart_product_amount_bar_plus_background"
-            android:text="@string/plus"
-            android:textColor="#555555"
-            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/cart_product_amount" />
+            bind:amount="@{cartProduct.amount}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

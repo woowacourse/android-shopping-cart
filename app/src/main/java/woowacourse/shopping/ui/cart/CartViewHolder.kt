@@ -16,8 +16,8 @@ class CartViewHolder(
 
         binding.cartProductCheckbox.setOnClickListener { onCheckBoxViewClick(bindingAdapterPosition) }
 
-        binding.cartProductAmountMinusButton.setOnClickListener { onMinusAmountButtonViewClick(bindingAdapterPosition) }
-        binding.cartProductAmountPlusButton.setOnClickListener { onPlusAmountButtonViewClick(bindingAdapterPosition) }
+        binding.cartProductCounter.productAmountMinusButton.setOnClickListener { onMinusAmountButtonViewClick(bindingAdapterPosition) }
+        binding.cartProductCounter.productAmountPlusButton.setOnClickListener { onPlusAmountButtonViewClick(bindingAdapterPosition) }
     }
 
     fun bind(cartProduct: CartProductModel) {

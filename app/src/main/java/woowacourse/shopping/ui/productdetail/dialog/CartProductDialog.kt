@@ -45,7 +45,7 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
     }
 
     override fun updateCartProductAmount(amount: Int) {
-        binding.dialogCartProductAmount.text = amount.toString()
+        binding.dialogProductCounter.productAmountText.text = amount.toString()
     }
 
     override fun notifyAddToCartCompleted() {
@@ -74,13 +74,13 @@ class CartProductDialog : DialogFragment(), CartProductDialogContract.View {
     }
 
     private fun setupCartProductAmountDecreaseButton() {
-        binding.dialogCartProductAmountMinusButton.setOnClickListener {
+        binding.dialogProductCounter.productAmountMinusButton.setOnClickListener {
             presenter.decreaseCartProductAmount()
         }
     }
 
     private fun setupCartProductAmountIncreaseButton() {
-        binding.dialogCartProductAmountPlusButton.setOnClickListener {
+        binding.dialogProductCounter.productAmountPlusButton.setOnClickListener {
             presenter.increaseCartProductAmount()
         }
     }

@@ -12,9 +12,9 @@ class ProductViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.root.setOnClickListener { onItemViewClick(bindingAdapterPosition) }
-        binding.cartProductAmountMinusButton.setOnClickListener { onMinusAmountButtonViewClick(bindingAdapterPosition) }
+        binding.shoppingProductCounter.productAmountMinusButton.setOnClickListener { onMinusAmountButtonViewClick(bindingAdapterPosition) }
         binding.newCartProductAmountPlusButton.setOnClickListener { onPlusAmountButtonViewClick(bindingAdapterPosition) }
-        binding.cartProductAmountPlusButton.setOnClickListener { onPlusAmountButtonViewClick(bindingAdapterPosition) }
+        binding.shoppingProductCounter.productAmountPlusButton.setOnClickListener { onPlusAmountButtonViewClick(bindingAdapterPosition) }
     }
 
     fun bind(product: ShoppingProductModel) {
