@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.entity
 
 data class ProductEntity(
     val id: Long,

@@ -1,14 +1,15 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.dataSource.local.product
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
-import woowacourse.shopping.data.WoowaShoppingContract.Product.TABLE_COLUMN_ITEM_IMAGE
-import woowacourse.shopping.data.WoowaShoppingContract.Product.TABLE_COLUMN_NAME
-import woowacourse.shopping.data.WoowaShoppingContract.Product.TABLE_COLUMN_PRICE
-import woowacourse.shopping.data.WoowaShoppingContract.Product.TABLE_NAME
-import woowacourse.shopping.data.WoowaShoppingDbHelper
+import woowacourse.shopping.data.db.WoowaShoppingContract.Product.TABLE_COLUMN_ITEM_IMAGE
+import woowacourse.shopping.data.db.WoowaShoppingContract.Product.TABLE_COLUMN_NAME
+import woowacourse.shopping.data.db.WoowaShoppingContract.Product.TABLE_COLUMN_PRICE
+import woowacourse.shopping.data.db.WoowaShoppingContract.Product.TABLE_NAME
+import woowacourse.shopping.data.db.WoowaShoppingDbHelper
+import woowacourse.shopping.data.entity.ProductEntity
 
 class ProductDao(context: Context) : ProductDataSource {
     private val shoppingDb by lazy { WoowaShoppingDbHelper(context).readableDatabase }

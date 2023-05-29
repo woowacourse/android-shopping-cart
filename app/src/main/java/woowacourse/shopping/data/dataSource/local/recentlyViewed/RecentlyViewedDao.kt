@@ -1,12 +1,13 @@
-package woowacourse.shopping.data.product.recentlyViewed
+package woowacourse.shopping.data.dataSource.local.recentlyViewed
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
-import woowacourse.shopping.data.WoowaShoppingContract.RecentlyViewed.TABLE_COLUMN_PRODUCT_ID
-import woowacourse.shopping.data.WoowaShoppingContract.RecentlyViewed.TABLE_NAME
-import woowacourse.shopping.data.WoowaShoppingDbHelper
+import woowacourse.shopping.data.db.WoowaShoppingContract.RecentlyViewed.TABLE_COLUMN_PRODUCT_ID
+import woowacourse.shopping.data.db.WoowaShoppingContract.RecentlyViewed.TABLE_NAME
+import woowacourse.shopping.data.db.WoowaShoppingDbHelper
+import woowacourse.shopping.data.entity.RecentlyViewedEntity
 
 class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
     private val shoppingDb by lazy { WoowaShoppingDbHelper(context).readableDatabase }

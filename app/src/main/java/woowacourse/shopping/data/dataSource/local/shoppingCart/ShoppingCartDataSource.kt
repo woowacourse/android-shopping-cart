@@ -1,4 +1,6 @@
-package woowacourse.shopping.data.shoppingCart
+package woowacourse.shopping.data.dataSource.local.shoppingCart
+
+import woowacourse.shopping.data.entity.ProductInCartEntity
 
 interface ShoppingCartDataSource {
 

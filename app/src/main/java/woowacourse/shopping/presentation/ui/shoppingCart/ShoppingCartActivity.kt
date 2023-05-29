@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
-import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.dataSource.local.product.ProductDao
+import woowacourse.shopping.data.dataSource.local.shoppingCart.ShoppingCartDao
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator.MINUS
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator.PLUS

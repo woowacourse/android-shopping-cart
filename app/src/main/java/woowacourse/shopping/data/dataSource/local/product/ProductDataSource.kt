@@ -1,4 +1,6 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.dataSource.local.product
+
+import woowacourse.shopping.data.entity.ProductEntity
 
 interface ProductDataSource {
     fun getProductEntity(id: Long): ProductEntity?

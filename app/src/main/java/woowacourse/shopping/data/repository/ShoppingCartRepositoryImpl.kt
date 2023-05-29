@@ -1,7 +1,9 @@
-package woowacourse.shopping.data.shoppingCart
+package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.product.ProductDataSource
-import woowacourse.shopping.data.product.ProductMapper.toDomainModel
+import woowacourse.shopping.data.dataSource.local.product.ProductDataSource
+import woowacourse.shopping.data.dataSource.local.shoppingCart.ShoppingCartDataSource
+import woowacourse.shopping.data.entity.ProductInCartEntity
+import woowacourse.shopping.data.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 

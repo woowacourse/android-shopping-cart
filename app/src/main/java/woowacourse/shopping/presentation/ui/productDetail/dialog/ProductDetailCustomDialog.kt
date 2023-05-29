@@ -6,9 +6,9 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.Window
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
-import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.dataSource.local.product.ProductDao
+import woowacourse.shopping.data.dataSource.local.shoppingCart.ShoppingCartDao
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.LayoutProductDetailDialogBinding
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.productDetail.dialog.presenter.ProductDetailDialogContract

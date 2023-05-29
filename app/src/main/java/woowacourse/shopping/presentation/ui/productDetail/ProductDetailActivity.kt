@@ -5,9 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.dataSource.local.product.ProductDao
+import woowacourse.shopping.data.dataSource.local.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.util.WoowaResult

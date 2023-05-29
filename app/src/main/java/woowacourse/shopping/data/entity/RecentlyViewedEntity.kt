@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.product.recentlyViewed
+package woowacourse.shopping.data.entity
 
 data class RecentlyViewedEntity(
     val id: Long,

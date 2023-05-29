@@ -1,8 +1,10 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.repository
 
-import woowacourse.shopping.data.product.ProductMapper.toDomainModel
-import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDataSource
-import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedEntity
+import woowacourse.shopping.data.dataSource.local.product.ProductDataSource
+import woowacourse.shopping.data.dataSource.local.recentlyViewed.RecentlyViewedDataSource
+import woowacourse.shopping.data.entity.ProductEntity
+import woowacourse.shopping.data.entity.RecentlyViewedEntity
+import woowacourse.shopping.data.mapper.ProductMapper.toDomainModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.util.Error

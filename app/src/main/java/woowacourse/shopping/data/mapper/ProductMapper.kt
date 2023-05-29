@@ -1,5 +1,6 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.mapper
 
+import woowacourse.shopping.data.entity.ProductEntity
 import woowacourse.shopping.domain.model.Product
 
 object ProductMapper {

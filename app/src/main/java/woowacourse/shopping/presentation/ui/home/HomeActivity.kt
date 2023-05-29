@@ -3,11 +3,11 @@ package woowacourse.shopping.presentation.ui.home
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
-import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
-import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.dataSource.local.product.ProductDao
+import woowacourse.shopping.data.dataSource.local.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.dataSource.local.shoppingCart.ShoppingCartDao
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.BindingActivity
