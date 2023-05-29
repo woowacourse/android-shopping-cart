@@ -24,7 +24,7 @@ interface BasketRepository {
 
     fun minus(basketProduct: BasketProduct)
 
-    fun overWriteUpdate(basketProduct: BasketProduct)
+    fun update(basketProduct: BasketProduct)
 
     fun remove(basketProduct: BasketProduct)
 }

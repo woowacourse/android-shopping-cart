@@ -19,9 +19,7 @@ interface BasketDao {
 
     fun minus(basketProduct: DataBasketProduct)
 
-    fun overWriteUpdate(basketProduct: DataBasketProduct)
+    fun update(basketProduct: DataBasketProduct)
 
     fun remove(basketProduct: DataBasketProduct)
-
-    fun removeByProductId(productId: Int)
 }

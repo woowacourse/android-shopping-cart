@@ -38,8 +38,8 @@ class BasketRepositoryImpl(private val localBasketDataSource: BasketDataSource.L
         localBasketDataSource.minus(basketProduct.toData())
     }
 
-    override fun overWriteUpdate(basketProduct: BasketProduct) {
-        localBasketDataSource.overWriteUpdate(basketProduct.toData())
+    override fun update(basketProduct: BasketProduct) {
+        localBasketDataSource.update(basketProduct.toData())
     }
 
     override fun remove(basketProduct: BasketProduct) {

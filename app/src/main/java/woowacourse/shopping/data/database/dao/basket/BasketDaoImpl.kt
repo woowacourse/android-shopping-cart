@@ -265,7 +265,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         }
     }
 
-    override fun overWriteUpdate(basketProduct: DataBasketProduct) {
+    override fun update(basketProduct: DataBasketProduct) {
         val whereClause = "${ProductContract.TABLE_NAME}${BaseColumns._ID} = ?"
         val whereArgs = arrayOf(basketProduct.product.id.toString())
 
@@ -310,7 +310,7 @@ class BasketDaoImpl(private val database: ShoppingDatabase) : BasketDao {
         }
     }
 
-    override fun removeByProductId(productId: Int) {
+    private fun removeByProductId(productId: Int) {
         database.writableDatabase.use { db ->
             db.delete(
                 BasketContract.TABLE_NAME,
