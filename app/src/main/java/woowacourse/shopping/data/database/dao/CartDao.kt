@@ -15,12 +15,17 @@ import java.time.LocalDateTime
 class CartDao(private val db: SQLiteDatabase) {
     fun insertCartProduct(cartProduct: CartProduct) {
         val productId = getProductId(cartProduct.product)
+        val prevCartProduct = selectByProductId(productId)
 
-        val row = ContentValues()
-        row.put(SqlCart.TIME, cartProduct.time.toString())
-        row.put(SqlCart.PRODUCT_ID, productId)
-        row.put(SqlCart.AMOUNT, cartProduct.amount)
-        db.insert(SqlCart.name, null, row)
+        if (prevCartProduct == null) {
+            val row = ContentValues()
+            row.put(SqlCart.TIME, cartProduct.time.toString())
+            row.put(SqlCart.PRODUCT_ID, productId)
+            row.put(SqlCart.AMOUNT, cartProduct.amount)
+            db.insert(SqlCart.name, null, row)
+        } else {
+            updateCartProduct(prevCartProduct.copy(amount = prevCartProduct.amount + cartProduct.amount))
+        }
     }
 
     fun selectAll(): Cart {

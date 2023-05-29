@@ -36,18 +36,8 @@ class CartProductDialogPresenter(
     }
 
     override fun addToCart() {
-        val prevCartProduct = cartRepository.getCartProductByProduct(cartProduct.product)
-        if (prevCartProduct == null) {
-            cartRepository.addCartProduct(cartProduct)
-        } else {
-            updateCartProduct(prevCartProduct)
-        }
+        cartRepository.addCartProduct(cartProduct)
         view.notifyAddToCartCompleted()
-    }
-
-    private fun updateCartProduct(prevCartProduct: CartProduct) {
-        cartProduct = prevCartProduct.copy(amount = prevCartProduct.amount + cartProduct.amount)
-        cartRepository.modifyCartProduct(cartProduct)
     }
 
     companion object {
