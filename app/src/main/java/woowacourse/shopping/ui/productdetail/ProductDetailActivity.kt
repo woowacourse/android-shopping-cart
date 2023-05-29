@@ -20,16 +20,14 @@ import woowacourse.shopping.ui.shopping.ShoppingActivity
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
-    private lateinit var productModel: ProductModel
-    private var recentProductModel: ProductModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initExtras()
-
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        initPresenter()
 
         setSupportActionBar(findViewById(R.id.product_detail_toolbar))
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -37,8 +35,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         setBackButtonPressedCallback()
 
         setupProductDetailCartButton()
-
-        initPresenter()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -75,11 +71,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         startProductDetailActivity(productModel, recentProductModel)
     }
 
-    private fun initExtras() {
-        productModel = intent.getSerializable(EXTRA_KEY_PRODUCT) ?: return finish()
-        recentProductModel = intent.getSerializable(EXTRA_KEY_RECENT_PRODUCT)
-    }
-
     private fun setBackButtonPressedCallback() {
         onBackPressedDispatcher.addCallback(
             this,
@@ -98,6 +89,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     private fun initPresenter() {
+        val productModel = intent.getSerializable<ProductModel>(EXTRA_KEY_PRODUCT) ?: return finish()
+        val recentProductModel = intent.getSerializable<ProductModel>(EXTRA_KEY_RECENT_PRODUCT)
         val db = ShoppingDBOpenHelper(this).writableDatabase
         presenter = ProductDetailPresenter(
             this,
