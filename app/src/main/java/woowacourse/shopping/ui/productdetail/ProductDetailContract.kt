@@ -4,7 +4,7 @@ import woowacourse.shopping.ui.model.ProductModel
 
 interface ProductDetailContract {
     interface Presenter {
-        fun setupCartProductDialog()
+        fun addToCart()
 
         fun openProduct(productModel: ProductModel)
     }
@@ -14,7 +14,7 @@ interface ProductDetailContract {
 
         fun setupRecentProductDetail(recentProductModel: ProductModel?)
 
-        fun showCartProductDialog(productModel: ProductModel)
+        fun showCartProductCounter(productModel: ProductModel)
 
         fun showProductDetail(productModel: ProductModel, recentProductModel: ProductModel?)
     }

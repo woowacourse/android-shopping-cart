@@ -57,10 +57,10 @@ class ProductDetailPresenterTest {
         // given
 
         // when
-        presenter.setupCartProductDialog()
+        presenter.addToCart()
 
         // then
-        verify { view.showCartProductDialog(any()) }
+        verify { view.showCartProductCounter(any()) }
     }
 
     @Test

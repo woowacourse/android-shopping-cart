@@ -24,8 +24,8 @@ class ProductDetailPresenter(
         view.setupRecentProductDetail(recentProduct?.toView())
     }
 
-    override fun setupCartProductDialog() {
-        view.showCartProductDialog(product.toView())
+    override fun addToCart() {
+        view.showCartProductCounter(product.toView())
     }
 
     override fun openProduct(productModel: ProductModel) {

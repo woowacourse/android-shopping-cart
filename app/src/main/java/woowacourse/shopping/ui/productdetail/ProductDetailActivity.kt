@@ -62,7 +62,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         }
     }
 
-    override fun showCartProductDialog(productModel: ProductModel) {
+    override fun showCartProductCounter(productModel: ProductModel) {
         val dialog = CartProductDialog.createDialog(productModel)
         dialog.show(supportFragmentManager, "CartProductDialog")
     }
@@ -84,7 +84,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     private fun setupProductDetailCartButton() {
         binding.productDetailCartButton.setOnClickListener {
-            presenter.setupCartProductDialog()
+            presenter.addToCart()
         }
     }
 
