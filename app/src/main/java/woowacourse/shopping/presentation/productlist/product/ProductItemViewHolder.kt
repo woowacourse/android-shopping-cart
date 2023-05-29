@@ -59,8 +59,8 @@ class ProductItemViewHolder(
 
     private fun addButtonClick() {
         presenter.putProductInCart(cartProductModel)
-        presenter.updateCartCount()
         presenter.refreshProductItems()
+        presenter.updateCartCount()
     }
 
     private fun addButtonVisibility(): Int {

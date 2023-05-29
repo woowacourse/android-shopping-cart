@@ -7,6 +7,12 @@ interface RecentProductRepository {
     fun addRecentProductId(recentProductId: Int)
 
     fun deleteRecentProductId(recentProductId: Int)
-    fun getRecentProducts(size: Int): List<Product>
-    fun getMostRecentProduct(): Product
+    fun getRecentProducts(
+        size: Int,
+        onSuccess: (List<Product>) -> Unit,
+    )
+
+    fun getMostRecentProduct(
+        onSuccess: (Product) -> Unit,
+    )
 }

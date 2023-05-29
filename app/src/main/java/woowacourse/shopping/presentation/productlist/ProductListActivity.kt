@@ -12,13 +12,14 @@ import woowacourse.shopping.data.cart.CartDbHelper
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRemoteDataSource
 import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.data.product.ProductService
+import woowacourse.shopping.data.product.ProductServiceHelper
 import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.databinding.BadgeCartBinding
 import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.model.CartProductInfoListModel
 import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productdetail.ProductDetailActivity
@@ -33,14 +34,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private lateinit var recentProductAdapter: RecentProductAdapter
     private lateinit var cartMenuItem: MenuItem
 
-    private val productRemoteDataSource: ProductRemoteDataSource by lazy { ProductService }
+    private val productRemoteDataSource: ProductRemoteDataSource by lazy { ProductServiceHelper }
     private val presenter: ProductListPresenter by lazy {
         ProductListPresenter(
             this,
             ProductRepositoryImpl(productRemoteDataSource),
             RecentProductRepositoryImpl(
                 RecentProductDao(RecentProductDbHelper(this)),
-                ProductService,
+                ProductServiceHelper,
             ),
             CartRepositoryImpl(CartDao(CartDbHelper(this)), productRemoteDataSource),
         )
@@ -133,9 +134,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             )
         cartMenuItem.actionView = cartIconBinding?.root
         cartIconBinding?.iconCartMenu?.setOnClickListener {
-            startActivity(CartActivity.getIntent(this))
+            presenter.showMyCart()
         }
         presenter.updateCartCount()
+    }
+
+    override fun navigateToCart(cartProductInfoModels: List<CartProductInfoModel>) {
+        startActivity(CartActivity.getIntent(this, CartProductInfoListModel(cartProductInfoModels)))
     }
 
     companion object {

@@ -11,11 +11,13 @@ interface ProductListContract {
         fun updateCartCount()
         fun loadMoreProductItems()
         fun updateCartProductCount(cartProductModel: CartProductInfoModel, count: Int)
+        fun showMyCart()
     }
 
     interface View {
         fun loadProductItems(cartProductModels: List<CartProductInfoModel>)
         fun loadRecentProductItems(productModels: List<ProductModel>)
         fun showCartCount(count: Int)
+        fun navigateToCart(cartProductInfoModels: List<CartProductInfoModel>)
     }
 }

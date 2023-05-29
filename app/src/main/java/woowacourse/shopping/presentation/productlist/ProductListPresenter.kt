@@ -1,12 +1,11 @@
 package woowacourse.shopping.presentation.productlist
 
+import android.util.Log
 import woowacourse.shopping.CartProductInfo
 import woowacourse.shopping.CartProductInfoList
 import woowacourse.shopping.Product
-import woowacourse.shopping.Products
 import woowacourse.shopping.presentation.mapper.toPresentation
 import woowacourse.shopping.presentation.model.CartProductInfoModel
-import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentProductRepository
@@ -20,31 +19,43 @@ class ProductListPresenter(
 
     private var size = PRODUCTS_SIZE
     override fun refreshProductItems() {
-        view.loadProductItems(getCartItems().map { it.toPresentation() })
+        productRepository.getProductsWithRange(0, size) { products ->
+            val cartProducts = mutableListOf<CartProductInfoModel>()
+            getCartProducts(0, cartProducts, products)
+        }
+    }
+
+    private fun getCartProducts(
+        index: Int,
+        cartProducts: MutableList<CartProductInfoModel>,
+        receivedProducts: List<Product>,
+    ) {
+        cartRepository.getCartProductInfoById(receivedProducts[index].id) {
+            if (it != null) {
+                cartProducts.add(it.toPresentation())
+            } else {
+                cartProducts.add(CartProductInfo(receivedProducts[index], 0).toPresentation())
+            }
+            if (index == receivedProducts.lastIndex) view.loadProductItems(cartProducts)
+            if (index + 1 <= receivedProducts.lastIndex) {
+                getCartProducts(
+                    index + 1,
+                    cartProducts,
+                    receivedProducts,
+                )
+            }
+        }
     }
 
     override fun loadMoreProductItems() {
         size += PRODUCTS_SIZE
-        view.loadProductItems(getCartItems().map { it.toPresentation() })
-    }
-
-    private fun getCartItems(): List<CartProductInfo> {
-        val receivedProducts = productRepository.getProductsWithRange(0, size)
-        return getCartProductsByProducts(receivedProducts)
-    }
-
-    private fun getCartProductsByProducts(products: List<Product>): List<CartProductInfo> {
-        return products.map {
-            cartRepository.getCartProductInfoById(it.id) ?: CartProductInfo(
-                it,
-                0,
-            )
-        }
+        refreshProductItems()
     }
 
     override fun loadRecentProductItems() {
-        val recentProducts = getRecentProducts()
-        view.loadRecentProductItems(recentProducts.toPresentation())
+        recentProductRepository.getRecentProducts(RECENT_PRODUCTS_SIZE) { products ->
+            view.loadRecentProductItems(products.map { it.toPresentation() })
+        }
     }
 
     override fun putProductInCart(cartProductModel: CartProductInfoModel) {
@@ -63,21 +74,16 @@ class ProductListPresenter(
     }
 
     override fun updateCartCount() {
-        view.showCartCount(
-            cartRepository.getAllCartProductsInfo().count,
-        )
+        cartRepository.getAllCartProductsInfo {
+            view.showCartCount(CartProductInfoList(it).count)
+        }
     }
 
-    private fun getRecentProducts(): Products {
-        return Products(recentProductRepository.getRecentProducts(RECENT_PRODUCTS_SIZE))
-    }
-
-    private fun Products.toPresentation(): List<ProductModel> {
-        return items.map { it.toPresentation() }
-    }
-
-    private fun CartProductInfoList.toPresentation(): List<CartProductInfoModel> {
-        return items.map { it.toPresentation() }
+    override fun showMyCart() {
+        cartRepository.getAllCartProductsInfo { cartProducts ->
+            Log.d("wooseok", cartProducts.toString())
+            view.navigateToCart(cartProducts.map { it.toPresentation() })
+        }
     }
 
     companion object {
