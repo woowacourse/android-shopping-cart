@@ -52,7 +52,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         runOnUiThread {
             binding.product = productUIModel
             binding.loLatestRecent.visibility = GONE
+        }
+    }
 
+    override fun setRecentProductView(productUIModel: ProductUIModel) {
+        runOnUiThread {
             val depth = intent.getSerializableCompat<Int>(BundleKeys.KEY_DEPTH)
                 ?: throw IllegalStateException(NON_FOUND_KEY_ERROR)
             if (presenter.isRecentProductExist() && depth == DEPTH_PARENT) {
@@ -66,11 +70,15 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun hideLatestProduct() {
-        binding.loLatestRecent.visibility = GONE
+        runOnUiThread {
+            binding.loLatestRecent.visibility = GONE
+        }
     }
 
     override fun showLatestProduct() {
-        binding.loLatestRecent.visibility = VISIBLE
+        runOnUiThread {
+            binding.loLatestRecent.visibility = VISIBLE
+        }
     }
 
     private fun setAddToCartClick() {

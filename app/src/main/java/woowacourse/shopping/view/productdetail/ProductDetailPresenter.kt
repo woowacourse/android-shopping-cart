@@ -22,7 +22,7 @@ class ProductDetailPresenter(
             onSuccess = {
                 product = it.toUIModel()
                 view.setProductDetailView(product)
-                recentProductsRepository.insert(RecentProduct(product.toDomain()))
+                view.setRecentProductView(product)
             },
             onFailure = {}
         )
@@ -44,6 +44,7 @@ class ProductDetailPresenter(
         } else {
             view.showLatestProduct()
         }
+        recentProductsRepository.insert(RecentProduct(product.toDomain()))
         return latestRecentProduct.toUIModel()
     }
 

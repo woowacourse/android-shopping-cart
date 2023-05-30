@@ -10,6 +10,7 @@ interface ProductDetailContract {
         fun hideLatestProduct()
         fun showLatestProduct()
         fun showDetailProduct(productUIModel: ProductUIModel)
+        fun setRecentProductView(productUIModel: ProductUIModel)
     }
 
     interface Presenter {
