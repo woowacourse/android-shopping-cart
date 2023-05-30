@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.home.presenter
 
+import android.util.Log
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
@@ -42,6 +43,7 @@ class HomePresenter(
     }
 
     override fun fetchMoreProducts() {
+        Log.d("123123123", productsCount.toString())
         val products = productRepository.getProducts(20, productsCount).toProductsByView()
 
         productsCount += products.size

@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.dataSource.local.product.ProductDao
 import woowacourse.shopping.data.dataSource.local.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.dataSource.remote.ProductRemoteDataSourceImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.model.Product
@@ -20,7 +21,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private lateinit var binding: ActivityProductDetailBinding
     override val presenter: ProductDetailContract.Presenter by lazy { initPresenter() }
     private var _dialog: ProductDetailCustomDialog? = null
-    val dialog: ProductDetailCustomDialog get() = _dialog ?: error("Dialog leak")
+    private val dialog: ProductDetailCustomDialog get() = _dialog ?: error("Dialog leak")
 
     private fun initPresenter(): ProductDetailPresenter {
         return ProductDetailPresenter(
@@ -28,6 +29,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             ProductRepositoryImpl(
                 productDataSource = ProductDao(this),
                 recentlyViewedDataSource = RecentlyViewedDao(this),
+                productRemoteDataSource = ProductRemoteDataSourceImpl(),
             ),
         )
     }

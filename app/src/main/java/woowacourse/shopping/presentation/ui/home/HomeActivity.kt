@@ -6,6 +6,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.dataSource.local.product.ProductDao
 import woowacourse.shopping.data.dataSource.local.recentlyViewed.RecentlyViewedDao
 import woowacourse.shopping.data.dataSource.local.shoppingCart.ShoppingCartDao
+import woowacourse.shopping.data.dataSource.remote.ProductRemoteDataSourceImpl
+import woowacourse.shopping.data.remote.ProductMockServer
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
@@ -27,6 +29,9 @@ class HomeActivity :
     HomeContract.View {
     override val presenter: HomeContract.Presenter by lazy { initPresenter() }
     private lateinit var homeAdapter: HomeAdapter
+    private var _mockWebServer: ProductMockServer? = null
+    private val mockWebServer: ProductMockServer
+        get() = _mockWebServer ?: error("MockWebServer Leak")
 
     private fun initPresenter(): HomePresenter {
         return HomePresenter(
@@ -34,6 +39,7 @@ class HomeActivity :
             ProductRepositoryImpl(
                 productDataSource = ProductDao(this),
                 recentlyViewedDataSource = RecentlyViewedDao(this),
+                productRemoteDataSource = ProductRemoteDataSourceImpl(),
             ),
             ShoppingCartRepositoryImpl(
                 shoppingCartDataSource = ShoppingCartDao(this),
@@ -46,13 +52,23 @@ class HomeActivity :
         super.onCreate(savedInstanceState)
         // 목 데이터 추가 함수 :
         // initProducts(this)
-
+        initMockServer()
         setClickEventOnShoppingCartButton()
+    }
+
+    private fun initMockServer() {
+        _mockWebServer = ProductMockServer()
+        mockWebServer.initMockWebServer()
     }
 
     override fun onStart() {
         super.onStart()
         presenter.fetchAllProductsOnHome()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _mockWebServer = null
     }
 
     override fun setUpCountOfProductInCart(productInCart: List<ProductInCartUiState>) {

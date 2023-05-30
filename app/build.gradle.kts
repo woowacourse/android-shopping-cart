@@ -57,5 +57,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
 
+    implementation("com.google.code.gson:gson:2.8.7")
+
     implementation(project(":domain"))
 }
