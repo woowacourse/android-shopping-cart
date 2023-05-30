@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="product"
-            type="woowacourse.shopping.feature.model.ProductState" />
+            type="woowacourse.shopping.feature.list.item.ProductView.CartProductItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +28,7 @@
 
         <TextView
             android:id="@+id/product_name"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
             android:text="@{product.name}"
@@ -40,7 +41,7 @@
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +52,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_medium"
-            android:text="금액"
+            android:text="@string/price_text"
             android:textColor="@color/black"
             android:textSize="@dimen/product_detail_item_medium_text_size"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,13 +69,58 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recent_info_box_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_medium"
+            android:background="@drawable/recent_info_box_background"
+            android:padding="@dimen/margin_medium"
+            app:layout_constraintEnd_toEndOf="@id/product_image"
+            app:layout_constraintStart_toStartOf="@id/product_name"
+            app:layout_constraintTop_toBottomOf="@id/product_price">
+
+            <TextView
+                android:id="@+id/recent_product_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/last_product_text"
+                android:textColor="@color/button_background"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/recent_product_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toStartOf="@id/recent_product_price"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recent_product_text"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <TextView
+                android:id="@+id/recent_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/recent_product_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/recent_product_name"
+                tools:text="99,800원" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
-            android:id="@+id/navigate_cart_tv"
+            android:id="@+id/add_to_cart_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/teal_200"
             android:padding="@dimen/margin_small"
-            android:text="장바구니 담기"
+            android:text="@string/add_to_cart_text"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="@dimen/product_detail_item_medium_text_size"
