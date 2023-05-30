@@ -8,4 +8,10 @@ interface ProductRepository {
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit
     )
+
+    fun getProductById(
+        index: Int,
+        onSuccess: (Product) -> Unit,
+        onFailure: () -> Unit
+    )
 }

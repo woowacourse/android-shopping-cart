@@ -34,7 +34,7 @@ class ShoppingMainPresenter(
 
                 view.showMoreProducts(products.toUIModel())
             },
-            onFailure = {  }
+            onFailure = { }
         )
     }
 

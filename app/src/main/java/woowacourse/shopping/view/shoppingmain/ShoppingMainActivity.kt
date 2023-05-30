@@ -111,7 +111,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
 
     override fun showProductDetailPage(): (ProductUIModel) -> Unit = {
         val intent = ProductDetailActivity.intent(this)
-        intent.putExtra(BundleKeys.KEY_PRODUCT, it)
+        intent.putExtra(BundleKeys.KEY_PRODUCT, it.id)
         intent.putExtra(BundleKeys.KEY_DEPTH, DEPTH_PARENT)
         startActivity(intent)
     }

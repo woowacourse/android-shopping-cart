@@ -6,18 +6,17 @@ import woowacourse.shopping.model.uimodel.RecentProductUIModel
 interface ProductDetailContract {
     interface View {
         var presenter: Presenter
-        fun setProductDetailView()
+        fun setProductDetailView(productUIModel: ProductUIModel)
         fun hideLatestProduct()
         fun showLatestProduct()
-        fun showDetailProduct(recentProductUIModel: RecentProductUIModel)
+        fun showDetailProduct(productUIModel: ProductUIModel)
     }
 
     interface Presenter {
-        val product: ProductUIModel
-        fun saveRecentProduct()
         fun showDialog(dialog: CountSelectDialog)
         fun isRecentProductsEmpty(): Boolean
         fun isRecentProductExist(): Boolean
         fun setRecentProductView(product: ProductUIModel): RecentProductUIModel
+        fun loadProduct(productId: Int)
     }
 }

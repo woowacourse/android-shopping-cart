@@ -35,7 +35,7 @@ class CounterView @JvmOverloads constructor(
         }
 
         binding.btnMinus.setOnClickListener {
-            count = maxOf(count-1, INIT_COUNT)
+            count = maxOf(count - 1, INIT_COUNT)
             listener?.updateCount(this, count)
             updateCountView()
         }

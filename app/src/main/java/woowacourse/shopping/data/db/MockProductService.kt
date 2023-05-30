@@ -14,7 +14,7 @@ import org.json.JSONArray
 import woowacourse.shopping.data.mockProducts
 import java.io.IOException
 
-class MockProductService: ProductService {
+class MockProductService : ProductService {
     private var _mockWebServer: MockWebServer? = null
     private val mockWebServer: MockWebServer
         get() = _mockWebServer!!
