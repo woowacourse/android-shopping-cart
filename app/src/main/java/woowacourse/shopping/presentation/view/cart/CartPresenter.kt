@@ -1,33 +1,45 @@
 package woowacourse.shopping.presentation.view.cart
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.data.respository.cart.CartRepository
-import woowacourse.shopping.presentation.model.CartModel
+import woowacourse.shopping.domain.CartPage
+import woowacourse.shopping.presentation.model.CartProductModel
 
 class CartPresenter(
     private val view: CartContract.View,
     private val cartRepository: CartRepository,
-    private var currentPage: Int = 0
+    private var cartPage: CartPage = CartPage()
 ) : CartContract.Presenter {
+    private val _totalPrice = MutableLiveData<Int>()
+    override val totalPrice: LiveData<Int>
+        get() = _totalPrice
+
     override fun loadCartItems() {
-        var newCarts = getNewCarts()
-        view.setEnableLeftButton(currentPage != FIRST_PAGE_NUMBER)
+        var newCarts = getNewCarts(GET_CART_ITEM_COUNT)
+        view.setEnableLeftButton(cartPage.currentPage != FIRST_PAGE_NUMBER)
         view.setEnableRightButton(newCarts.size > DISPLAY_CART_COUNT_CONDITION)
 
         newCarts = submitNewCarts(newCarts)
-        view.setCartItemsView(newCarts, (currentPage+1).toString())
+        view.setCartItemsView(newCarts)
+        view.setCurrentPage(cartPage.currentPage)
+        _totalPrice.value = cartRepository.getTotalPrice()
     }
 
-    private fun submitNewCarts(newCarts: List<CartModel>): List<CartModel> {
+    private fun submitNewCarts(newCarts: List<CartProductModel>): List<CartProductModel> {
         var newCarts1 = newCarts
         val subToIndex =
-            if (newCarts1.size > DISPLAY_CART_COUNT_CONDITION) newCarts1.lastIndex else newCarts1.size
+            getCurrentPageLastCartIndex(newCarts1)
         newCarts1 = newCarts1.subList(CART_LIST_FIRST_INDEX, subToIndex)
         return newCarts1
     }
 
-    private fun getNewCarts(): List<CartModel> {
-        val startPosition = getStartItemPosition()
-        return cartRepository.getCarts(startPosition, GET_CART_ITEM_COUNT)
+    private fun getCurrentPageLastCartIndex(newCarts1: List<CartProductModel>) =
+        if (newCarts1.size > DISPLAY_CART_COUNT_CONDITION) newCarts1.lastIndex else newCarts1.size
+
+    private fun getNewCarts(itemCount: Int): List<CartProductModel> {
+        val startPosition = cartPage.getStartItemPosition()
+        return cartRepository.getCarts(startPosition, itemCount)
     }
 
     override fun deleteCartItem(itemId: Long) {
@@ -35,17 +47,37 @@ class CartPresenter(
         loadCartItems()
     }
 
-    private fun getStartItemPosition(): Int =
-        (currentPage) * DISPLAY_CART_COUNT_CONDITION
-
     override fun decrementPage() {
-        currentPage--
+        cartPage = cartPage.decrementPage()
         loadCartItems()
     }
 
     override fun incrementPage() {
-        currentPage++
+        cartPage = cartPage.incrementPage()
         loadCartItems()
+    }
+
+    override fun changeAllCartSelectedStatus(cartsId: List<Long>, isSelected: Boolean) {
+        cartRepository.updateCartsSelected(cartsId, isSelected)
+        _totalPrice.value = cartRepository.getTotalPrice()
+    }
+
+    override fun changeCartSelectedStatus(productId: Long, isSelected: Boolean) {
+        cartRepository.updateCartSelected(productId, isSelected)
+        updateTotalPrice()
+    }
+
+    override fun updateProductCount(productId: Long, productCount: Int) {
+        cartRepository.insertCart(productId, productCount)
+        updateTotalPrice()
+    }
+
+    override fun updateCheckAllStatus(isCartsChecked: List<Boolean>) {
+        view.updateCheckAllView(isCartsChecked.all { it })
+    }
+
+    private fun updateTotalPrice() {
+        _totalPrice.value = cartRepository.getTotalPrice()
     }
 
     companion object {

@@ -1,14 +1,20 @@
 package woowacourse.shopping.presentation.view.productlist
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.database.RecentProductDao
+import woowacourse.shopping.data.local.database.CartDao
+import woowacourse.shopping.data.local.database.RecentProductDao
+import woowacourse.shopping.data.respository.cart.CartRepositoryImpl
+import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.model.ProductModel
@@ -22,11 +28,22 @@ import woowacourse.shopping.presentation.view.productlist.adpater.RecentProductW
 
 class ProductListActivity : AppCompatActivity(), ProductContract.View {
     private lateinit var binding: ActivityProductListBinding
+    private var cartCountTextView: TextView? = null
+
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            presenter.loadCartCount()
+        }
+    }
 
     private val presenter: ProductContract.Presenter by lazy {
         ProductListPresenter(
             this,
-            recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this))
+            productRepository = ProductRepositoryImpl(CartDao(this)),
+            recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this)),
+            cartRepository = CartRepositoryImpl(CartDao(this))
         )
     }
 
@@ -56,29 +73,38 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_list)
-
         initLayoutManager()
+
         presenter.deleteNotTodayRecentProducts()
-        presenter.loadProductItems()
         presenter.loadRecentProductItems()
+        presenter.loadProductItems()
         setMoreProductListAdapter()
-        setConcatAdapter()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_list_toolbar, menu)
-
+        menu?.findItem(R.id.action_cart)?.actionView?.let { view ->
+            setMenuView(view)
+        }
+        observeCartCount()
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_cart -> {
-                startActivity(CartActivity.createIntent(this))
-            }
+    private fun setMenuView(view: View) {
+        view.setOnClickListener {
+            activityResultLauncher.launch(CartActivity.createIntent(this))
         }
+        view.findViewById<TextView>(R.id.tv_cart_badge)?.let {
+            cartCountTextView = it
+        }
+    }
 
-        return super.onOptionsItemSelected(item)
+    private fun observeCartCount() {
+        presenter.cartCount.observe(
+            this
+        ) {
+            cartCountTextView?.text = it.toString()
+        }
     }
 
     private fun initLayoutManager() {
@@ -95,8 +121,19 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         binding.rvProductList.layoutManager = layoutManager
     }
 
-    override fun setProductItemsView(products: List<ProductModel>) {
-        productListAdapter = ProductListAdapter(products, ::onProductClickEvent)
+    override fun setProductItemsView(products: List<ProductModel>, recentProductId: Long) {
+        productListAdapter =
+            ProductListAdapter(
+                products,
+                {
+                    updateRecentProduct(it)
+                    startProductDetailActivity(it, recentProductId)
+                },
+                ::updateCartProductCount
+            )
+        runOnUiThread {
+            setConcatAdapter()
+        }
     }
 
     override fun setRecentProductItemsView(recentProducts: List<RecentProductModel>) {
@@ -105,7 +142,7 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
     }
 
     private fun setMoreProductListAdapter() {
-        moreProductListAdapter = MoreProductListAdapter(::onMoreProductList)
+        moreProductListAdapter = MoreProductListAdapter(::getMoreProductList)
     }
 
     private fun setConcatAdapter() {
@@ -120,22 +157,41 @@ class ProductListActivity : AppCompatActivity(), ProductContract.View {
         recentProductListAdapter.updateDataSet()
     }
 
-    private fun onProductClickEvent(product: ProductModel) {
+    private fun startProductDetailActivity(product: ProductModel, recentProductId: Long) {
+        moveToActivityWithRecentProduct(
+            product.id, recentProductId
+        )
+    }
+
+    private fun updateRecentProduct(product: ProductModel) {
         presenter.saveRecentProduct(product.id)
         presenter.updateRecentProductItems()
-        moveToActivity(product.id)
+    }
+
+    private fun updateCartProductCount(id: Long, Count: Int, position: Int) {
+        presenter.updateCartProduct(id, Count, position)
     }
 
     private fun moveToActivity(productId: Long) {
-        val intent = ProductDetailActivity.createIntent(this, productId)
-        startActivity(intent)
+        activityResultLauncher.launch(ProductDetailActivity.createIntent(this, productId))
     }
 
-    private fun onMoreProductList() {
+    private fun moveToActivityWithRecentProduct(productId: Long, recentProductId: Long) {
+        val intent = ProductDetailActivity.createIntent(this, productId, recentProductId)
+        activityResultLauncher.launch(intent)
+    }
+
+    private fun getMoreProductList() {
         presenter.loadMoreData(productListAdapter.itemCount - 1)
     }
 
     override fun updateMoreProductsView(newProducts: List<ProductModel>) {
-        productListAdapter.updateDataSet(newProducts)
+        runOnUiThread {
+            productListAdapter.updateDataSet(newProducts)
+        }
+    }
+
+    override fun updateProductsCount(counts: List<Int>) {
+        productListAdapter.updateProductCounts(counts)
     }
 }

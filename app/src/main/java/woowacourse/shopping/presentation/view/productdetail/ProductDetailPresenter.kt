@@ -2,11 +2,10 @@ package woowacourse.shopping.presentation.view.productdetail
 
 import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
-import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
-    private val productRepository: ProductRepository = ProductRepositoryImpl(),
+    private val productRepository: ProductRepository,
     private val cartRepository: CartRepository
 ) :
     ProductDetailContract.Presenter {
@@ -19,8 +18,14 @@ class ProductDetailPresenter(
         view.showProductInfoView(product)
     }
 
-    override fun addCart(productId: Long) {
-        cartRepository.addCart(productId)
+    override fun loadRecentProductById(id: Long) {
+        val recentProduct = productRepository.getDataById(id)
+        view.showRecentProductById(recentProduct)
+    }
+
+    override fun addCart(productId: Long, count: Int) {
+        val productCount = productRepository.getProductCount(productId)
+        cartRepository.insertCart(productId, productCount + count)
         view.addCartSuccessView()
     }
 }

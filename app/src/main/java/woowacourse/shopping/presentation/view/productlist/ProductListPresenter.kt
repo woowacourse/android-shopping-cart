@@ -1,7 +1,9 @@
 package woowacourse.shopping.presentation.view.productlist
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
-import woowacourse.shopping.data.respository.product.ProductRepositoryImpl
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.model.RecentProductModel
@@ -10,11 +12,15 @@ import java.time.format.DateTimeFormatter
 
 class ProductListPresenter(
     private val view: ProductContract.View,
-    private val productRepository: ProductRepository = ProductRepositoryImpl(),
-    private val recentProductRepository: RecentProductRepository
+    private val productRepository: ProductRepository,
+    private val recentProductRepository: RecentProductRepository,
+    private val cartRepository: CartRepository
 ) : ProductContract.Presenter {
     private val products = mutableListOf<ProductModel>()
     private val recentProducts = mutableListOf<RecentProductModel>()
+    private val _cartCount = MutableLiveData<Int>()
+    override val cartCount: LiveData<Int>
+        get() = _cartCount
 
     override fun deleteNotTodayRecentProducts() {
         val today = LocalDateTime.now().format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN))
@@ -22,8 +28,12 @@ class ProductListPresenter(
     }
 
     override fun loadProductItems() {
-        products.addAll(productRepository.getData(0, LOAD_PRODUCT_COUNT))
-        view.setProductItemsView(products.toList())
+        val recentProduct = recentProducts.lastOrNull()
+        productRepository.getData(0, LOAD_PRODUCT_COUNT) {
+            products.addAll(it)
+            view.setProductItemsView(products.toList(), recentProduct?.id ?: -1)
+        }
+        updateCartCount()
     }
 
     override fun loadRecentProductItems() {
@@ -42,9 +52,30 @@ class ProductListPresenter(
     }
 
     override fun loadMoreData(startPosition: Int) {
-        val newProducts = productRepository.getData(startPosition, LOAD_PRODUCT_COUNT)
-        products.addAll(newProducts)
-        view.updateMoreProductsView(newProducts)
+        productRepository.getData(startPosition + 1, LOAD_PRODUCT_COUNT) { newProducts ->
+            products.addAll(newProducts)
+            view.updateMoreProductsView(newProducts)
+        }
+    }
+
+    override fun updateCartProduct(productId: Long, count: Int, position: Int) {
+        cartRepository.insertCart(productId, count)
+        products[position] = products[position].copy(count = count)
+        updateCartCount()
+    }
+
+    private fun updateCartCount() {
+        _cartCount.value = products.sumOf {
+            it.count
+        }
+    }
+
+    override fun loadCartCount() {
+        val products = products.map {
+            productRepository.getProductCount(it.id)
+        }
+        view.updateProductsCount(products)
+        _cartCount.value = products.sum()
     }
 
     companion object {

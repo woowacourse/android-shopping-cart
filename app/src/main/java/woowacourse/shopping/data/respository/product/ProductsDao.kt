@@ -2,7 +2,7 @@ package woowacourse.shopping.data.respository.product
 
 import woowacourse.shopping.data.model.ProductEntity
 
-object ProductsDao {
+class ProductsDao {
     private val items = listOf(
         ProductEntity(
             id = 0,
@@ -197,11 +197,6 @@ object ProductsDao {
             imageUrl = "https://product-image.kurly.com/product/image/6223f13f-df91-4445-a7d1-0b4461e3079a.jpg"
         ),
     )
-
-    fun getData(startPosition: Int, count: Int): List<ProductEntity> {
-        val endIndex = if (items.size > startPosition + count) count else items.size - 1
-        return items.subList(startPosition, endIndex)
-    }
 
     fun getDataById(id: Long): ProductEntity? = items.find {
         it.id == id

@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.productlist
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -7,7 +8,9 @@ import io.mockk.slot
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import woowacourse.shopping.data.respository.cart.CartRepository
 import woowacourse.shopping.data.respository.product.ProductRepository
 import woowacourse.shopping.data.respository.recentproduct.RecentProductRepository
 import woowacourse.shopping.presentation.model.ProductModel
@@ -20,33 +23,41 @@ class ProductListPresenterTest {
     private lateinit var view: ProductContract.View
     private lateinit var productRepository: ProductRepository
     private lateinit var recentProductRepository: RecentProductRepository
+    private lateinit var cartRepository: CartRepository
+
+    @get:Rule
+    val instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk()
         recentProductRepository = mockk()
+        cartRepository = mockk()
 
-        presenter = ProductListPresenter(view, productRepository, recentProductRepository)
+        presenter =
+            ProductListPresenter(view, productRepository, recentProductRepository, cartRepository)
     }
 
     @Test
     fun `데이터를 받아와 상품 목록 어댑터를 설정한다`() {
         // given
-        every { productRepository.getData(0, 20) } returns dummyData
-        val slot = slot<List<ProductModel>>()
-        justRun { view.setProductItemsView(capture(slot)) }
+        justRun { productRepository.getData(0, 20, {}) }
+        val slotId = slot<Long>()
+        val slotProduct = slot<List<ProductModel>>()
+        justRun { view.setProductItemsView(capture(slotProduct), capture(slotId)) }
 
         // when
         presenter.loadProductItems()
 
         // then
-        val actual = slot.captured
+        val actualProduct = slotProduct.captured
+        val actualId = slotId.captured
         val expected = dummyData
 
-        assertEquals(expected, actual)
-        verify { productRepository.getData(0, 20) }
-        verify { view.setProductItemsView(actual) }
+        assertEquals(expected, actualProduct)
+        verify { productRepository.getData(0, 20, {}) }
+        verify { view.setProductItemsView(actualProduct, actualId) }
     }
 
     @Test
@@ -88,7 +99,13 @@ class ProductListPresenterTest {
     @Test
     fun `데이터가 더 존재한다면 추가 데이터를 가져와 갱신한다`() {
         // given
-        every { productRepository.getData(0, 20) } returns dummyData
+        val data = mockk<(List<ProductModel>) -> Unit>()
+        justRun {
+            productRepository.getData(
+                0, 20,
+                data
+            )
+        }
         val slotProducts = slot<List<ProductModel>>()
         justRun { view.updateMoreProductsView(capture(slotProducts)) }
 
@@ -98,7 +115,7 @@ class ProductListPresenterTest {
         // then
         val actual = slotProducts.captured
         assertEquals(1, actual.size)
-        verify { productRepository.getData(0, 20) }
+        verify { productRepository.getData(0, 20, {}) }
         verify { view.updateMoreProductsView(actual) }
     }
 

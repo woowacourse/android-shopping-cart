@@ -52,6 +52,8 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:mockwebserver:4.11.0")
     implementation("androidx.appcompat:appcompat:1.6.0")
     implementation("com.google.android.material:material:1.7.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -64,4 +66,8 @@ dependencies {
 
     testImplementation("io.mockk:mockk-android:1.13.5")
     testImplementation("io.mockk:mockk-agent:1.13.5")
+
+    implementation(project(":domain"))
+
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
 }

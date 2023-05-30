@@ -20,10 +20,10 @@
             android:id="@+id/linearlayout_cart_list_pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="25dp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toTopOf="@id/cl_order_info">
 
             <Button
                 android:id="@+id/bt_cart_list_page_left"
@@ -45,9 +45,68 @@
                 android:layout_width="43dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/drawable_right_button" />
-
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_order_info"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/toolbar_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,360:78"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <CheckBox
+                android:id="@+id/checkbox_cart_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="23dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_cart_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/cart_select_all_text"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/checkbox_cart_all"
+                app:layout_constraintStart_toStartOf="@id/checkbox_cart_all" />
+
+            <TextView
+                android:id="@+id/tv_cart_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/bt_cart_order"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="3,000원" />
+
+            <Button
+                android:id="@+id/bt_cart_order"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/product_button_color"
+                android:gravity="center"
+                android:text="@string/cart_order_text"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="W,122:78"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
