@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
 import woowacourse.shopping.data.db.CartProductDao
+import woowacourse.shopping.data.db.MockProductService
 import woowacourse.shopping.data.db.RecentProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
-import woowacourse.shopping.data.repository.ProductMockRepository
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingMainBinding
 import woowacourse.shopping.model.uimodel.ProductUIModel
@@ -58,7 +59,7 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
     private fun setPresenter() {
         presenter = ShoppingMainPresenter(
             view = this,
-            productsRepository = ProductMockRepository,
+            productsRepository = ProductRepositoryImpl(MockProductService()),
             cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
             recentProductsRepository = RecentProductRepositoryImpl(RecentProductDao(this))
         )
@@ -84,9 +85,10 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         }
 
         productAdapter = ProductAdapter(
-            presenter.loadProducts(),
+            emptyList(),
             shoppingMainClickListener
         )
+        presenter.loadProducts()
         recentProductAdapter = RecentProductAdapter(
             presenter.getRecentProducts(),
             showProductDetailPage()
@@ -143,9 +145,10 @@ class ShoppingMainActivity : AppCompatActivity(), ShoppingMainContract.View {
         })
     }
 
-    override fun showMoreProducts() {
-        val updatedProducts = presenter.loadProducts()
-        productAdapter.update(updatedProducts)
+    override fun showMoreProducts(products: List<ProductUIModel>) {
+        runOnUiThread {
+            productAdapter.update(products)
+        }
     }
 
     override fun deactivateButton() {

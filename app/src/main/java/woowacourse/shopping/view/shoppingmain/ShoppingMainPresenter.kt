@@ -21,16 +21,21 @@ class ShoppingMainPresenter(
     override val isPossibleLoad
         get() = _isPossibleLoad
 
-    override fun loadProducts(): List<ProductUIModel> {
-        val loadedProducts = productsRepository.loadProducts(index)
-        index = Pair(index.first + PRODUCT_LOAD_UNIT, index.second + PRODUCT_LOAD_UNIT)
+    override fun loadProducts() {
+        productsRepository.loadProducts(
+            index,
+            onSuccess = { products ->
+                index = Pair(index.first + PRODUCT_LOAD_UNIT, index.second + PRODUCT_LOAD_UNIT)
 
-        if (loadedProducts.size < PRODUCT_LOAD_UNIT) {
-            view.deactivateButton()
-            _isPossibleLoad = IMPOSSIBLE_LOAD
-        }
+                if (products.size < PRODUCT_LOAD_UNIT) {
+                    view.deactivateButton()
+                    _isPossibleLoad = IMPOSSIBLE_LOAD
+                }
 
-        return loadedProducts.toUIModel()
+                view.showMoreProducts(products.toUIModel())
+            },
+            onFailure = {  }
+        )
     }
 
     override fun getRecentProducts(): List<RecentProductUIModel> {
@@ -42,7 +47,7 @@ class ShoppingMainPresenter(
     }
 
     override fun loadMoreScroll() {
-        view.showMoreProducts()
+        loadProducts()
         view.deactivateButton()
     }
 

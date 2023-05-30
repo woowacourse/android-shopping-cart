@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.db
 
+import android.util.Log
 import com.shopping.domain.Product
 import okhttp3.Call
 import okhttp3.Callback
@@ -11,7 +12,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
 import org.json.JSONArray
-import woowacourse.shopping.data.repository.mockProducts
+import woowacourse.shopping.data.mockProducts
 import java.io.IOException
 
 class MockProductService {
@@ -42,10 +43,15 @@ class MockProductService {
         onFailure: () -> Unit
     ) {
         synchronized(this) {
+
             if (_mockWebServer == null) {
-                _mockWebServer = MockWebServer()
-                _mockWebServer?.url("/")
-                _mockWebServer?.dispatcher = dispatcher
+                val thread = Thread {
+                    _mockWebServer = MockWebServer()
+                    _mockWebServer?.url("/")
+                    _mockWebServer?.dispatcher = dispatcher
+                }
+                thread.start()
+                thread.join()
             }
 
             val baseUrl = String.format("http://localhost:%s", mockWebServer.port)
@@ -83,10 +89,10 @@ class MockProductService {
             val jsonProduct = jsonArray.getJSONObject(i)
             val id = jsonProduct.getInt("id")
             val name = jsonProduct.getString("name")
-            val imageUrl = jsonProduct.getString("imageUrl")
+            val url = jsonProduct.getString("image_url")
             val price = jsonProduct.getInt("price")
 
-            val product = Product(id, name, imageUrl, price)
+            val product = Product(id, name, url, price)
             productList.add(product)
         }
 

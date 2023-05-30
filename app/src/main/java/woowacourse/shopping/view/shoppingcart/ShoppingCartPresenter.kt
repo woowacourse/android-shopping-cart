@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.shoppingcart
 
+import android.util.Log
 import android.widget.TextView
 import com.shopping.domain.CartProduct
 import com.shopping.repository.CartProductRepository

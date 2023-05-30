@@ -7,7 +7,7 @@ interface ShoppingMainContract {
     interface View {
         var presenter: Presenter
         fun showProductDetailPage(): (ProductUIModel) -> Unit
-        fun showMoreProducts()
+        fun showMoreProducts(products: List<ProductUIModel>)
         fun deactivateButton()
         fun activateButton()
         fun updateCartBadgeCount(count: Int)
@@ -15,7 +15,7 @@ interface ShoppingMainContract {
 
     interface Presenter {
         val isPossibleLoad: Boolean
-        fun loadProducts(): List<ProductUIModel>
+        fun loadProducts()
         fun getRecentProducts(): List<RecentProductUIModel>
         fun loadProductDetailPage()
         fun loadMoreScroll()
