@@ -6,12 +6,13 @@ import com.shopping.repository.CartProductRepository
 import woowacourse.shopping.model.Paging
 import woowacourse.shopping.model.uimodel.CartProductUIModel
 import woowacourse.shopping.model.uimodel.mapper.toDomain
+import woowacourse.shopping.model.uimodel.mapper.toUIModel
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
     private val cartProductRepository: CartProductRepository
 ) : ShoppingCartContract.Presenter {
-    override val paging: Paging = Paging(cartProductRepository)
+    override val paging: Paging = Paging(cartProductRepository.getAll())
 
     init {
         view.updateCartProduct(loadCartProducts())
@@ -19,10 +20,11 @@ class ShoppingCartPresenter(
     }
 
     override fun loadCartProducts(): List<CartProductUIModel> =
-        paging.loadPageProducts()
+        paging.loadPageProducts().map { it.toUIModel() }
 
     override fun removeCartProduct(cartProductUIModel: CartProductUIModel) {
         cartProductRepository.remove(cartProductUIModel.toDomain())
+        paging.updateCartProducts(cartProductRepository.getAll())
 
         if (paging.isLastIndexOfCurrentPage()) {
             paging.subPage()
@@ -68,9 +70,9 @@ class ShoppingCartPresenter(
     }
 
     override fun changeProductsCheckedState(isSelected: Boolean) {
-        paging.loadPageProducts().forEach { product ->
+        paging.loadPageProducts().forEach { cartProduct ->
             cartProductRepository.update(
-                CartProduct(product.productUIModel.toDomain(), product.count, isSelected)
+                CartProduct(cartProduct.product, cartProduct.count, isSelected)
             )
         }
         updateSelectedTotal()

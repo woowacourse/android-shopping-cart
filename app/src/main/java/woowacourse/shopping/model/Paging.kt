@@ -1,24 +1,24 @@
 package woowacourse.shopping.model
 
-import com.shopping.repository.CartProductRepository
-import woowacourse.shopping.model.uimodel.CartProductUIModel
-import woowacourse.shopping.model.uimodel.mapper.toUIModel
+import com.shopping.domain.CartProduct
 
-class Paging(private val cartProductRepository: CartProductRepository) {
-    private val cartProducts: List<CartProductUIModel>
-        get() = cartProductRepository.getAll().map { it.toUIModel() }
-    private val presentPageProducts: List<CartProductUIModel>
+class Paging(private var cartProducts: List<CartProduct>) {
+    private val presentPageProducts: List<CartProduct>
         get() = loadPageProducts()
 
     private var index: PageIndex = PageIndex()
 
     fun getPageCount() = (index.fromIndex / PAGE_PRODUCT_UNIT) + PAGE_STEP
 
-    fun loadPageProducts(): List<CartProductUIModel> {
+    fun loadPageProducts(): List<CartProduct> {
         if (cartProducts.isEmpty()) {
             return emptyList()
         }
         return cartProducts.subList(index.fromIndex, index.getToIndex(cartProducts.size))
+    }
+
+    fun updateCartProducts(updatedCartProducts: List<CartProduct>) {
+        cartProducts = updatedCartProducts
     }
 
     fun isPossiblePageUp() = index.isLastIndex(cartProducts.size)
