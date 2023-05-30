@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.db
 
-import android.util.Log
 import com.shopping.domain.Product
 import okhttp3.Call
 import okhttp3.Callback
@@ -15,7 +14,7 @@ import org.json.JSONArray
 import woowacourse.shopping.data.mockProducts
 import java.io.IOException
 
-class MockProductService {
+class MockProductService: ProductService {
     private var _mockWebServer: MockWebServer? = null
     private val mockWebServer: MockWebServer
         get() = _mockWebServer!!
@@ -38,7 +37,7 @@ class MockProductService {
         }
     }
 
-    fun request(
+    override fun request(
         onSuccess: (List<Product>) -> Unit,
         onFailure: () -> Unit
     ) {

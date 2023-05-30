@@ -3,10 +3,10 @@ package woowacourse.shopping.data.repository
 import android.util.Log
 import com.shopping.domain.Product
 import com.shopping.repository.ProductRepository
-import woowacourse.shopping.data.db.MockProductService
+import woowacourse.shopping.data.db.ProductService
 
 class ProductRepositoryImpl(
-    private val service: MockProductService
+    private val service: ProductService
 ) : ProductRepository {
 
     override fun loadProducts(
