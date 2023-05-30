@@ -5,11 +5,13 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import java.lang.String.valueOf
 
-class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepository {
+class RecentProductDao(db: RecentProductDbHelper) : RecentProductLocalDataSource {
 
     private val writableDb: SQLiteDatabase = db.writableDatabase
+    private fun Cursor.getRecentProductId(): Int =
+        getInt(getColumnIndexOrThrow(RecentProductDbContract.PRODUCT_ID))
 
-    override fun getRecentProductIds(size: Int): List<Int> {
+    override fun getRecentProductIdList(size: Int): List<Int> {
         val productIds = mutableListOf<Int>()
 
         val cursor = writableDb.query(
@@ -35,10 +37,13 @@ class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepos
         return productIds
     }
 
-    private fun Cursor.getRecentProductId(): Int =
-        getInt(getColumnIndexOrThrow(RecentProductDbContract.PRODUCT_ID))
+    override fun getMostRecentProductId(): Int {
+        val list = getRecentProductIdList(1)
+        if (list.isEmpty()) return -1
+        return getRecentProductIdList(1).first()
+    }
 
-    override fun addRecentProductId(recentProductId: Int) {
+    override fun addRecentProduct(recentProductId: Int) {
         val values = ContentValues().apply {
             put(RecentProductDbContract.PRODUCT_ID, recentProductId)
             put(RecentProductDbContract.TIMESTAMP, System.currentTimeMillis())
@@ -47,7 +52,7 @@ class RecentProductIdDbAdapter(db: RecentProductDbHelper) : RecentProductIdRepos
         writableDb.insert(RecentProductDbContract.TABLE_NAME, null, values)
     }
 
-    override fun deleteRecentProductId(recentProductId: Int) {
+    override fun deleteRecentProduct(recentProductId: Int) {
         writableDb.delete(
             RecentProductDbContract.TABLE_NAME,
             "${RecentProductDbContract.PRODUCT_ID}=?",

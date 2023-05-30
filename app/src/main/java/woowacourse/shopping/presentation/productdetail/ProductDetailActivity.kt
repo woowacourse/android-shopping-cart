@@ -5,37 +5,109 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDbAdapter
+import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.ProductServiceHelper
+import woowacourse.shopping.data.recentproduct.RecentProductDao
+import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
+import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.productdetail.dialog.ProductDetailDialog
 import woowacourse.shopping.util.getParcelableExtraCompat
 import woowacourse.shopping.util.noIntentExceptionHandler
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
-    private lateinit var binding: ActivityProductDetailBinding
+    private lateinit var activityBinding: ActivityProductDetailBinding
     private lateinit var presenter: ProductDetailContract.Presenter
+    private lateinit var productModel: ProductModel
+    private lateinit var productDetailDialog: ProductDetailDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        initProductModel()
         initPresenter()
+        setUpBinding()
         initView()
+    }
+
+    private fun initProductModel() {
+        intent.getParcelableExtraCompat<ProductModel>(CART_PRODUCT_KEY_VALUE)
+            ?.let { receivedProduct ->
+                productModel = receivedProduct
+            } ?: noIntentExceptionHandler(getString(R.string.product_model_null_error_message))
+    }
+
+    private fun initPresenter() {
+        presenter = ProductDetailPresenter(
+            view = this,
+            cartRepository = CartRepositoryImpl(CartDao(CartDbHelper(this)), ProductServiceHelper),
+            productModel = productModel,
+            recentProductRepository = RecentProductRepositoryImpl(
+                RecentProductDao(
+                    RecentProductDbHelper(this),
+                ),
+                ProductServiceHelper,
+            ),
+        )
+    }
+
+    private fun setUpBinding() {
+        activityBinding = ActivityProductDetailBinding.inflate(layoutInflater)
+        setContentView(activityBinding.root)
+        activityBinding.productModel = productModel
+        presenter.checkCurrentProductIsMostRecent()
     }
 
     private fun initView() {
         setToolbar()
-        binding.presenter = presenter
-        binding.productModel = presenter.productModel
+        presenter.saveRecentProduct()
+        mostRectProductClick()
+        putInCartButtonClick()
     }
 
     private fun setToolbar() {
-        setSupportActionBar(binding.toolbarProductDetail.toolbar)
+        setSupportActionBar(activityBinding.toolbarProductDetail.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun mostRectProductClick() {
+        activityBinding.cardProductDetailMostRecent.setOnClickListener {
+            presenter.showMostRecentProductDetail()
+        }
+    }
+
+    private fun putInCartButtonClick() {
+        activityBinding.buttonPutInCart.setOnClickListener {
+            presenter.showProductCart()
+        }
+    }
+
+    override fun navigateToMostRecent(productModel: ProductModel) {
+        val intent = getIntent(
+            this,
+            productModel,
+        )
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        startActivity(intent)
+    }
+
+    override fun showProductCart(cartProductModel: CartProductInfoModel) {
+        productDetailDialog = ProductDetailDialog(
+            cartProductModel = cartProductModel,
+            presenter = presenter,
+        )
+        productDetailDialog.show(supportFragmentManager, "ProductDetailDialog")
+    }
+
+    override fun setTotalPrice(totalPrice: Int) {
+        productDetailDialog.setTotalPrice(totalPrice)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,22 +133,23 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         ).show()
     }
 
-    private fun initPresenter() {
-        intent.getParcelableExtraCompat<ProductModel>(PRODUCT_KEY_VALUE)?.let {
-            presenter = ProductDetailPresenter(
-                this,
-                CartDbAdapter(CartDbHelper(this)),
-                it,
-            )
-        } ?: noIntentExceptionHandler(getString(R.string.product_model_null_error_message))
+    override fun setMostRecentProductVisible(
+        visible: Boolean,
+        mostRecentProductModel: ProductModel,
+    ) {
+        if (visible) {
+            activityBinding.mostRecentProductModel = mostRecentProductModel
+        } else {
+            activityBinding.cardProductDetailMostRecent.visibility = View.GONE
+        }
     }
 
     companion object {
-        private const val PRODUCT_KEY_VALUE = "PRODUCT_KEY_VALUE"
+        private const val CART_PRODUCT_KEY_VALUE = "CART_PRODUCT_KEY_VALUE"
 
         fun getIntent(context: Context, productModel: ProductModel): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
-                putExtra(PRODUCT_KEY_VALUE, productModel)
+                putExtra(CART_PRODUCT_KEY_VALUE, productModel)
             }
         }
     }

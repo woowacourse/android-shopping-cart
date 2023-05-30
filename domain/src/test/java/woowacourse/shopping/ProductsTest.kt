@@ -11,7 +11,6 @@ class ProductsTest {
         val productItems = listOf(
             Product(1, "test.com", "햄버거", Price(10000)),
         )
-
         // when
         products.addProducts(productItems)
 

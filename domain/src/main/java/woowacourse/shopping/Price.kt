@@ -1,6 +1,6 @@
 package woowacourse.shopping
 
-class Price(val value: Int) {
+data class Price(val value: Int) {
     init {
         require(value >= 0) { PRICE_ERROR_MESSAGE }
     }

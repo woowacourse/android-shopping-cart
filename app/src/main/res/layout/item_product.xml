@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="productModel"
-            type="woowacourse.shopping.presentation.model.ProductModel" />
+            name="cartProductModel"
+            type="woowacourse.shopping.presentation.model.CartProductInfoModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
             android:id="@+id/image_product_list_poster"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:imageUrl="@{productModel.imageUrl}"
+            app:imageUrl="@{cartProductModel.productModel.imageUrl}"
             app:error="@{@drawable/default_image}"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -33,7 +33,7 @@
             android:layout_marginHorizontal="7dp"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
-            android:text="@{productModel.name}"
+            android:text="@{cartProductModel.productModel.name}"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -50,10 +50,32 @@
             android:layout_marginBottom="14dp"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:text="@{@string/price_format(productModel.price)}"
+            android:text="@{@string/price_format(cartProductModel.productModel.price)}"
             app:layout_constraintEnd_toEndOf="@+id/text_product_list_name"
             app:layout_constraintStart_toStartOf="@+id/text_product_list_name"
             app:layout_constraintTop_toBottomOf="@id/text_product_list_name"
             tools:text="10,000원" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:visibility="gone"
+            android:id="@+id/button_product_list_add_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/add"
+            android:padding="10dp"
+            android:background="@drawable/round_button_background"
+            android:layout_margin="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/image_product_list_poster"
+            app:layout_constraintBottom_toBottomOf="@+id/image_product_list_poster" />
+
+        <woowacourse.shopping.presentation.common.CounterView
+            android:id="@+id/counter_product_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:counterText="@{cartProductModel.count}"
+            android:layout_marginBottom="11dp"
+            app:layout_constraintEnd_toEndOf="@+id/image_product_list_poster"
+            app:layout_constraintStart_toStartOf="@+id/image_product_list_poster"
+            app:layout_constraintBottom_toBottomOf="@+id/image_product_list_poster" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

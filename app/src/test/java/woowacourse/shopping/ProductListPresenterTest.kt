@@ -5,32 +5,47 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.recentproduct.RecentProductIdRepository
+import woowacourse.shopping.presentation.mapper.toDomain
 import woowacourse.shopping.presentation.mapper.toPresentation
+import woowacourse.shopping.presentation.model.CartProductInfoModel
+import woowacourse.shopping.presentation.model.ProductModel
 import woowacourse.shopping.presentation.productlist.ProductListContract
 import woowacourse.shopping.presentation.productlist.ProductListPresenter
+import woowacourse.shopping.repository.CartRepository
+import woowacourse.shopping.repository.ProductRepository
+import woowacourse.shopping.repository.RecentProductRepository
 
 class ProductListPresenterTest {
     private lateinit var presenter: ProductListContract.Presenter
     private lateinit var view: ProductListContract.View
     private val productRepository: ProductRepository = mockk(relaxed = true)
-    private val recentProductRepository: RecentProductIdRepository = mockk(relaxed = true)
+    private val recentProductRepository: RecentProductRepository = mockk(relaxed = true)
+    private val cartRepository: CartRepository = mockk(relaxed = true)
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        presenter = ProductListPresenter(view, productRepository, recentProductRepository)
+        presenter =
+            ProductListPresenter(view, productRepository, recentProductRepository, cartRepository)
     }
 
     @Test
     fun 상품_목록을_업데이트한다() {
         // given
-        every { productRepository.getProductsWithRange(20, 20) } returns listOf()
+        val product = Product(1, "", "", Price(100))
+        val productModels = List(10) { product.toPresentation() }
+        every {
+            productRepository.getProductsWithRange(
+                0,
+                20,
+            )
+        } returns productModels.map { it.toDomain() }
+        every { cartRepository.getCartProductInfoById(1) } returns CartProductInfo(product, 1)
         // when
-        presenter.updateProducts()
+        presenter.refreshProductItems()
         // then
-        verify { view.loadProductModels(listOf()) }
+        val expected = List(10) { CartProductInfo(product, 1).toPresentation() }
+        verify { view.loadProductItems(expected) }
     }
 
     @Test
@@ -38,21 +53,47 @@ class ProductListPresenterTest {
         // given
         val product = Product(1, "", "", Price(100))
         val productModels = List(10) { product.toPresentation() }
-        every { recentProductRepository.getRecentProductIds(10) } returns List(10) { return@List 10 }
-        every { productRepository.findProductById(10) } returns Product(1, "", "", Price(100))
+        every { recentProductRepository.getRecentProducts(10) } returns productModels.map { it.toDomain() }
         // when
-        presenter.updateRecentProducts()
+        presenter.loadRecentProductItems()
         // then
-        verify { view.loadRecentProductModels(productModels) }
+        verify { view.loadRecentProductItems(productModels) }
     }
 
     @Test
-    fun 최근_상품_목록_아이디를_저장한다() {
+    fun 카트정보를_불러와_카트_갯수를_표시한다() {
         // given
-        val id = 10
+        every { cartRepository.getAllCartProductsInfo() } returns makeTestCartProductInfoList()
         // when
-        presenter.saveRecentProductId(id)
+        presenter.updateCartCount()
         // then
-        verify { recentProductRepository.addRecentProductId(id) }
+        verify { view.showCartCount(10) }
+    }
+
+    @Test
+    fun 카트_상품의_개수가_0이라면_상품을_삭제한다() {
+        // given
+        val productModel = ProductModel(1, "", "", 1000)
+        val cartModel = CartProductInfoModel(productModel, 2)
+        // when
+        presenter.updateCartProductCount(cartModel, 0)
+        // then
+        verify { cartRepository.deleteCartProductId(1) }
+    }
+
+    @Test
+    fun 카트_상품의_개수가_0이_아니라면_상품개수를_업데이트한다() {
+        // given
+        val productModel = ProductModel(1, "", "", 1000)
+        val cartModel = CartProductInfoModel(productModel, 2)
+        // when
+        presenter.updateCartProductCount(cartModel, 1)
+        // then
+        verify { cartRepository.updateCartProductCount(1, 1) }
+    }
+
+    private fun makeTestCartProductInfoList(): CartProductInfoList {
+        val product = Product(1, "", "", Price(100))
+        return CartProductInfoList(List(5) { CartProductInfo(product, 2) })
     }
 }

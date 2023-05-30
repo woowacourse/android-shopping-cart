@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="productModel"
-            type="woowacourse.shopping.presentation.model.ProductModel" />
+            name="cartProduct"
+            type="woowacourse.shopping.presentation.model.CartProductInfoModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,15 +28,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <CheckBox
+                    android:checked="@{cartProduct.ordered}"
+                    android:id="@+id/checkbox_product_cart"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp" />
+
                 <TextView
                     android:id="@+id/text_cart_product_name"
                     android:layout_width="266dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/checkbox_product_cart"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="13dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="10dp"
-                    android:text="@{productModel.name}"
+                    android:text="@{cartProduct.productModel.name}"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="18sp"
@@ -44,18 +54,18 @@
 
                 <ImageView
                     android:id="@+id/image_cart_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:src="@drawable/close_16"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/text_cart_product_name"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="22dp"
-                    android:layout_marginEnd="22dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginEnd="13dp"
                     android:layout_marginStart="7dp" />
 
                 <ImageView
-                    app:imageUrl="@{productModel.imageUrl}"
+                    app:imageUrl="@{cartProduct.productModel.imageUrl}"
                     app:error="@{@drawable/default_image}"
                     android:id="@+id/image_cart_product_poster"
                     android:layout_width="136dp"
@@ -72,13 +82,20 @@
                     android:id="@+id/text_cart_product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toEndOf="@id/image_cart_product_poster"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/image_cart_product_poster"
+                    app:layout_constraintBottom_toTopOf="@id/counter_cart_product"
                     android:layout_marginEnd="13dp"
-                    android:text="@{@string/price_format(productModel.price)}"
-                    android:layout_marginStart="94dp"
                     tools:text="99000원" />
+
+                <woowacourse.shopping.presentation.common.CounterView
+                    android:id="@+id/counter_cart_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:counterText="@{cartProduct.count}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginBottom="18dp"
+                    android:layout_marginEnd="13dp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,21 +1,34 @@
 package woowacourse.shopping.presentation.cart
 
-import woowacourse.shopping.presentation.model.ProductModel
+import woowacourse.shopping.presentation.model.CartProductInfoModel
 
 interface CartContract {
     interface Presenter {
-        fun updateCart()
-        fun deleteProduct(productModel: ProductModel)
+
+        fun checkPlusPageAble()
+        fun checkMinusPageAble()
+        fun addProductInOrder(cartProductModel: CartProductInfoModel)
+        fun deleteProductInOrder(cartProductModel: CartProductInfoModel)
+        fun updateProductCount(cartProductModel: CartProductInfoModel, count: Int)
+        fun deleteProductItem(cartProductModel: CartProductInfoModel)
         fun plusPage()
         fun minusPage()
-        fun updatePlusButtonState()
-        fun updateMinusButtonState()
+        fun refreshCurrentPage()
+        fun changeCurrentPageProductsOrder(isOrdered: Boolean)
+        fun checkCurrentPageProductsOrderState()
+        fun updateOrderPrice()
+        fun updateOrderCount()
+        fun updateProductPrice(cartProductModel: CartProductInfoModel)
     }
 
     interface View {
-        fun setCartItems(productModels: List<ProductModel>)
-        fun setPage(count: Int)
-        fun setUpPlusPageButtonState(isEnable: Boolean)
-        fun setUpMinusPageButtonState(isEnable: Boolean)
+        fun setCartItems(productModels: List<CartProductInfoModel>)
+        fun setUpPlusPageState(isEnable: Boolean)
+        fun setUpMinusPageState(isEnable: Boolean)
+        fun setOrderPrice(totalPrice: Int)
+        fun setOrderCount(count: Int)
+        fun setAllOrderState(isAllOrder: Boolean)
+        fun setProductPrice(price: Int)
+        fun setPage(page: String)
     }
 }

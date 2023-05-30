@@ -4,8 +4,9 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import woowacourse.shopping.presentation.common.CounterView
 
-object ViewBinding {
+object DataBindingAdapter {
 
     @JvmStatic
     @BindingAdapter("imageUrl", "error")
@@ -15,5 +16,11 @@ object ViewBinding {
             .error(error)
             .centerCrop()
             .into(view)
+    }
+
+    @JvmStatic
+    @BindingAdapter("counterText")
+    fun setCounterText(view: CounterView, count: Int) {
+        view.setCountText(count)
     }
 }
