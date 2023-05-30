@@ -35,8 +35,8 @@ class CounterView @JvmOverloads constructor(
         }
 
         binding.btnMinus.setOnClickListener {
-            count = maxOf(count - 1, INIT_COUNT)
-            listener?.updateCount(this, count)
+            count = maxOf(count - 1, ZERO_COUNT)
+            count = listener?.updateCount(this, count)!!
             updateCountView()
         }
     }
@@ -47,5 +47,6 @@ class CounterView @JvmOverloads constructor(
 
     companion object {
         private const val INIT_COUNT = 1
+        private const val ZERO_COUNT = 0
     }
 }
