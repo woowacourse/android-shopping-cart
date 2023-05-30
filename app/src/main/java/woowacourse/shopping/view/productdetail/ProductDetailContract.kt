@@ -15,7 +15,6 @@ interface ProductDetailContract {
 
     interface Presenter {
         fun showDialog(dialog: CountSelectDialog)
-        fun isRecentProductsEmpty(): Boolean
         fun isRecentProductExist(): Boolean
         fun setRecentProductView(product: ProductUIModel): RecentProductUIModel
         fun loadProduct(productId: Int)

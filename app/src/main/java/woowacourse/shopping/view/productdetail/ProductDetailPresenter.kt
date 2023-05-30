@@ -48,10 +48,6 @@ class ProductDetailPresenter(
         return latestRecentProduct.toUIModel()
     }
 
-    override fun isRecentProductsEmpty(): Boolean {
-        return recentProductsRepository.isEmpty()
-    }
-
     override fun showDialog(dialog: CountSelectDialog) {
         dialog.show(product)
     }
