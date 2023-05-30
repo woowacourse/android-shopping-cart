@@ -26,7 +26,7 @@
             android:layout_margin="20dp"
             android:background="@drawable/textview_border"
             android:gravity="center"
-            android:text="더보기"
+            android:text="@string/more_button_text"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="@dimen/product_cart_item_text_size"
