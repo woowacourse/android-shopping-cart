@@ -2,11 +2,11 @@ package woowacourse.shopping.feature.list.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.feature.list.item.ProductView
+import woowacourse.shopping.feature.list.item.ProductView.RecentProductsItem
 import woowacourse.shopping.feature.list.viewholder.RecentProductViewHolder
 
 class RecentProductsAdapter(
-    private var items: ProductView.RecentProductsItem,
+    private var items: RecentProductsItem,
 ) : RecyclerView.Adapter<RecentProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {

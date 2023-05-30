@@ -1,11 +1,11 @@
-package woowacourse.shopping.data.recentproduct
+package woowacourse.shopping.data.database.recentproduct
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class RecentProductDbHelper(
-    context: Context
+    context: Context,
 ) : SQLiteOpenHelper(context, DATABASE_NAME, null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -17,7 +17,7 @@ class RecentProductDbHelper(
                     ${RecentProductContract.TABLE_COLUMN_NAME} TEXT, 
                     ${RecentProductContract.TABLE_COLUMN_PRICE} INTEGER
                 )
-            """.trimIndent()
+            """.trimIndent(),
         )
     }
 
