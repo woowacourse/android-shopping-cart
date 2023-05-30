@@ -1,56 +1,82 @@
 package woowacourse.shopping.feature.cart
 
 import com.example.domain.CartProduct
-import woowacourse.shopping.data.cart.CartDbHandler
-import woowacourse.shopping.feature.list.item.CartProductItem
+import woowacourse.shopping.data.repository.cart.source.local.CartLocalDataSourceImpl
+import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.model.mapper.toDomain
-import woowacourse.shopping.feature.model.mapper.toItem
+import woowacourse.shopping.feature.model.mapper.toUi
 
 class CartActivityPresenter(
     private val view: CartActivityContract.View,
-    private val db: CartDbHandler,
+    private val db: CartLocalDataSourceImpl,
 ) : CartActivityContract.Presenter {
-    private val cartItems: List<CartProductItem> = db.getAll().map(CartProduct::toItem)
     private var page = 1
+    private val selectedItem: MutableList<CartProductItem> = mutableListOf()
 
-    override fun setUpData() {
+    override fun loadInitialData() {
         val items = getItems(page)
         view.setPage(page)
-        view.setUpRecyclerView(items)
+        view.setUpAdapterData(items)
         view.updateButtonsEnabledState(page, getMaxPage())
     }
 
-    override fun updateData() {
-        val items = getItems(page)
-        view.setPage(page)
-        view.updateAdapterData(items)
-        view.updateButtonsEnabledState(page, getMaxPage())
-    }
+    override fun removeItem(item: CartProductItem) {
+        selectedItem.remove(item)
+        setBottomView()
 
-    override fun deleteData(item: CartProductItem) {
         db.deleteColumn(item.toDomain())
         val items = getItems(page)
-        view.updateAdapterData(items)
+        val selectedState = getSelectedStateEachPage()
+        view.updateAdapterData(items, selectedState)
+    }
+
+    override fun selectAllItems(isChecked: Boolean) {
+        val items = getItems(page)
+        if (isChecked) {
+            selectedItem.addAll(items)
+        } else {
+            selectedItem.removeAll(items)
+        }
+        val selectedState = getSelectedStateEachPage()
+        view.updateAdapterData(items, selectedState)
+
+        setBottomView()
     }
 
     private fun getItems(page: Int): List<CartProductItem> {
         return db.getCartProducts(
             limit = ITEM_COUNT_EACH_PAGE,
             offset = (page - 1) * ITEM_COUNT_EACH_PAGE,
-        ).map(CartProduct::toItem)
+        ).map(CartProduct::toUi)
+    }
+
+    private fun getSelectedStateEachPage(): List<Boolean> {
+        val items = getItems(page)
+        val result = mutableListOf<Boolean>()
+
+        items.forEach { cartProductItem ->
+            result.add(selectedItem.contains(cartProductItem))
+        }
+        return result
     }
 
     override fun setUpButton() {
         val maxPage = getMaxPage()
-        view.setButtonListener(maxPage)
+        view.setButtonClickListener(maxPage)
+    }
+
+    private fun isAllSelected(): Boolean {
+        val items = getItems(page)
+        return selectedItem.containsAll(items)
     }
 
     private fun getMaxPage(): Int {
-        if (cartItems.isEmpty()) return 1
-        return (cartItems.size - 1) / ITEM_COUNT_EACH_PAGE + 1
+        val entireData = db.getAll()
+        if (entireData.isEmpty()) return 1
+        return (entireData.size - 1) / ITEM_COUNT_EACH_PAGE + 1
     }
 
-    override fun nextPage() {
+    override fun onNextPage() {
         val maxPage = getMaxPage()
         if (page < maxPage) {
             ++page
@@ -58,11 +84,76 @@ class CartActivityPresenter(
         updateData()
     }
 
-    override fun previousPage() {
+    override fun onPreviousPage() {
         if (page > MIN_PAGE) {
             --page
         }
         updateData()
+    }
+
+    private fun updateData() {
+        val items = getItems(page)
+        view.setPage(page)
+        val selected = getSelectedStateEachPage()
+        view.updateAdapterData(items, selected)
+        view.updateButtonsEnabledState(page, getMaxPage())
+        view.setAllSelected(isAllSelected())
+    }
+
+    override fun updateItem(item: CartProductItem, isPlus: Boolean) {
+        if (!selectedItem.contains(item)) {
+            if (isPlus) {
+                item.updateCount(item.count + 1)
+            } else {
+                item.updateCount(item.count - 1)
+            }
+            updateDbAndView(item)
+            return
+        }
+
+        if (cannotMinus(isPlus, item.count)) return
+        selectedItem.remove(item)
+
+        if (isPlus) {
+            selectedItem.add(item.updateCount(item.count + 1))
+        } else {
+            selectedItem.add(item.updateCount(item.count - 1))
+        }
+        updateDbAndView(item)
+        setBottomView()
+    }
+
+    private fun updateDbAndView(item: CartProductItem) {
+        db.updateColumn(item)
+        val items = getItems(page)
+        val selected = getSelectedStateEachPage()
+        view.updateAdapterData(items, selected)
+    }
+
+    private fun cannotMinus(isPlus: Boolean, oldCount: Int): Boolean {
+        return !isPlus && oldCount == 1
+    }
+
+    override fun toggleItemChecked(item: CartProductItem) {
+        if (selectedItem.contains(item)) {
+            selectedItem.remove(item)
+        } else {
+            selectedItem.add(item)
+        }
+        setBottomView()
+    }
+
+    override fun setBottomView() {
+        val totalPrice = getSelectedItemTotalPrice()
+        view.setPrice(totalPrice)
+        view.setAllSelected(isAllSelected())
+        view.setOrderNumber(selectedItem.size)
+    }
+
+    private fun getSelectedItemTotalPrice(): Int {
+        return selectedItem.fold(0) { total, product ->
+            total + (product.price * product.count)
+        }
     }
 
     companion object {

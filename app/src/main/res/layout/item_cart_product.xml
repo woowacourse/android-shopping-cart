@@ -4,7 +4,7 @@
     <data>
         <variable
             name="cartProduct"
-            type="woowacourse.shopping.feature.list.item.CartProductItem" />
+            type="woowacourse.shopping.feature.list.item.ProductView.CartProductItem" />
     </data>
 
     <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -18,51 +18,91 @@
         app:strokeWidth="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/item_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/margin_large">
+
+            <CheckBox
+                android:id="@+id/cart_product_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBaseline_toBaselineOf="@id/cart_product_name_tv"
+                app:layout_constraintEnd_toStartOf="@id/cart_product_name_tv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/cart_product_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{cartProduct.productName}"
+                android:text="@{cartProduct.name}"
                 android:textColor="@color/black"
                 android:textSize="@dimen/product_cart_item_large_text_size"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/cart_product_check_box"
+                app:layout_constraintStart_toEndOf="@id/cart_product_check_box"
+                app:layout_constraintTop_toTopOf="@id/cart_product_check_box"
                 tools:text="[든든] 동원 스위트콘" />
 
-            <ImageView
-                android:id="@+id/cart_clear_image_view"
+            <ImageButton
+                android:id="@+id/cart_product_delete_image_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
                 android:src="@drawable/icon_clear"
                 app:layout_constraintBottom_toBottomOf="@id/cart_product_name_tv"
-                app:layout_constraintEnd_toEndOf="@id/item_layout"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@id/cart_product_name_tv" />
 
             <ImageView
                 android:id="@+id/cart_product_image_view"
+                imageUrl="@{cartProduct.imageUrl}"
                 android:layout_width="136dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="@dimen/margin_small"
-                imageUrl="@{cartProduct.productImageUrl}"
-                app:layout_constraintStart_toStartOf="@id/cart_product_name_tv"
+                android:scaleType="centerCrop"
+                app:layout_constraintStart_toStartOf="@id/cart_product_check_box"
                 app:layout_constraintTop_toBottomOf="@id/cart_product_name_tv"
-                tools:src="@drawable/ic_launcher_background" />
+                tools:src="@mipmap/ic_launcher_round" />
 
             <TextView
                 android:id="@+id/cart_product_price_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/price_format(cartProduct.productPrice)}"
+                android:text="@{@string/price_format(cartProduct.price)}"
                 android:textSize="@dimen/product_cart_item_text_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/item_layout"
+                app:layout_constraintBottom_toTopOf="@id/cart_product_plus_tv"
+                app:layout_constraintEnd_toEndOf="parent"
                 tools:text="99,800원" />
 
+            <TextView
+                android:id="@+id/cart_product_plus_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:text="@string/plus_text"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <TextView
+                android:id="@+id/cart_product_count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:text="@{String.valueOf(cartProduct.count)}"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="@id/cart_product_plus_tv"
+                app:layout_constraintEnd_toStartOf="@id/cart_product_plus_tv" />
+
+            <TextView
+                android:id="@+id/cart_product_minus_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:text="@string/minus_text"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="@id/cart_product_plus_tv"
+                app:layout_constraintEnd_toStartOf="@id/cart_product_count_tv" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -13,19 +13,19 @@
             android:layout_height="0dp"
             android:padding="@dimen/margin_large"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/page_number_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/page_number_tv"
             tools:listitem="@layout/item_cart_product" />
 
         <TextView
             android:id="@+id/page_number_tv"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:gravity="center"
             android:layout_marginBottom="@dimen/margin_small"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@id/total_price_tv"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cart_product_rv"
@@ -53,7 +53,53 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@id/page_number_tv"
-            app:layout_constraintTop_toTopOf="@id/page_number_tv"/>
+            app:layout_constraintTop_toTopOf="@id/page_number_tv" />
+
+        <CheckBox
+            android:id="@+id/all_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="78dp"
+            android:background="@color/cart_price_background"
+            android:text="@string/all_checked_box_text"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/total_price_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/total_price_tv" />
+
+
+        <TextView
+            android:id="@+id/total_price_tv"
+            android:layout_width="0dp"
+            android:layout_height="78dp"
+            android:background="@color/cart_price_background"
+            android:gravity="center|end"
+            android:padding="14dp"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/order_tv"
+            app:layout_constraintStart_toEndOf="@id/all_check_box"
+            app:layout_constraintTop_toBottomOf="@id/page_number_tv"
+            tools:text="354,600원" />
+
+        <TextView
+            android:id="@+id/order_tv"
+            android:layout_width="122dp"
+            android:layout_height="78dp"
+            android:background="@color/button_background"
+            android:gravity="center"
+            android:padding="14dp"
+            android:text="@string/order_text"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/total_price_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/total_price_tv"
+            app:layout_constraintTop_toTopOf="@id/total_price_tv" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

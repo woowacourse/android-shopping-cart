@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.cart.CartDbHandler
-import woowacourse.shopping.data.cart.CartDbHelper
+import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.cart.source.local.CartLocalDataSourceImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.list.adapter.CartProductsAdapter
-import woowacourse.shopping.feature.list.item.CartProductItem
+import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 
 class CartActivity : AppCompatActivity(), CartActivityContract.View {
     private lateinit var binding: ActivityCartBinding
@@ -20,27 +20,40 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val db = CartDbHandler(CartDbHelper(this).writableDatabase)
+        val db = CartLocalDataSourceImpl(this)
         presenter = CartActivityPresenter(this, db)
-        presenter.setUpButton()
-        presenter.setUpData()
+        setUpView()
     }
 
-    override fun setUpRecyclerView(cartItems: List<CartProductItem>) {
+    private fun setUpView() {
+        presenter.setUpButton()
+        presenter.setBottomView()
+        presenter.loadInitialData()
+    }
+
+    override fun setUpAdapterData(cartItems: List<CartProductItem>) {
         adapter = CartProductsAdapter(
-            onDeleteItem = { item -> onDeleteItem(item) },
+            onDeleteItem = { item -> presenter.removeItem(item) },
+            onCheckItem = { item -> presenter.toggleItemChecked(item) },
+            onPlusItem = { item -> presenter.updateItem(item, true) },
+            onMinusItem = { item -> presenter.updateItem(item, false) },
         )
         binding.cartProductRv.adapter = adapter
         adapter.setItems(cartItems)
     }
 
-    override fun setButtonListener(maxPage: Int) {
+    override fun setButtonClickListener(maxPage: Int) {
         binding.pageAfterTv.setOnClickListener {
-            presenter.nextPage()
+            presenter.onNextPage()
         }
 
         binding.pageBeforeTv.setOnClickListener {
-            presenter.previousPage()
+            presenter.onPreviousPage()
+        }
+
+        binding.allCheckBox.setOnClickListener {
+            val isChecked = binding.allCheckBox.isChecked
+            presenter.selectAllItems(isChecked)
         }
     }
 
@@ -49,16 +62,27 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
         binding.pageAfterTv.isEnabled = page < maxPage
     }
 
-    override fun updateAdapterData(cartItems: List<CartProductItem>) {
-        adapter.setItems(cartItems)
+    override fun updateAdapterData(
+        cartItems: List<CartProductItem>,
+        selectedStates: List<Boolean>,
+    ) {
+        adapter.setItems(cartItems, selectedStates)
     }
 
     override fun setPage(page: Int) {
         binding.pageNumberTv.text = "$page"
     }
 
-    private fun onDeleteItem(item: CartProductItem) {
-        presenter.deleteData(item)
+    override fun setPrice(totalPrice: Int) {
+        binding.totalPriceTv.text = getString(R.string.price_format, totalPrice)
+    }
+
+    override fun setOrderNumber(number: Int) {
+        binding.orderTv.text = getString(R.string.order_format, number)
+    }
+
+    override fun setAllSelected(isChecked: Boolean) {
+        binding.allCheckBox.isChecked = isChecked
     }
 
     companion object {

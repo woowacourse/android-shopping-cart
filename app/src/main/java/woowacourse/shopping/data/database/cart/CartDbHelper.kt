@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.cart
+package woowacourse.shopping.data.database.cart
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
@@ -12,10 +12,11 @@ class CartDbHelper(
         db.execSQL(
             """
                 CREATE TABLE ${CartContract.TABLE_NAME} (
-                    ${CartContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
-                    ${CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL} TEXT,
-                    ${CartContract.TABLE_COLUMN_PRODUCT_NAME} TEXT, 
-                    ${CartContract.TABLE_COLUMN_PRODUCT_PRICE} INTEGER
+                    ${CartContract.TABLE_COLUMN_ID} INTEGER,
+                    ${CartContract.TABLE_COLUMN_IMAGE_URL} TEXT,
+                    ${CartContract.TABLE_COLUMN_NAME} TEXT, 
+                    ${CartContract.TABLE_COLUMN_PRICE} INTEGER,
+                    ${CartContract.TABLE_COLUMN_COUNT} INTEGER
                 )
             """.trimIndent(),
         )
