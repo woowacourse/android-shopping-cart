@@ -1,8 +1,8 @@
 package woowacourse.shopping.feature.main
 
+import com.example.data.repository.ProductRepository
 import com.example.domain.Product
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
-import woowacourse.shopping.data.datasource.productdatasource.ProductLocalDataSourceImpl
 import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.list.item.ProductView.RecentProductsItem
@@ -13,18 +13,18 @@ import kotlin.properties.Delegates
 
 class MainPresenter(
     val view: MainContract.View,
-    private val productDb: ProductLocalDataSourceImpl,
+    private val productRepository: ProductRepository,
     private val recentProductDb: RecentProductLocalDataSourceImpl,
     private val cartProductDb: CartLocalDataSourceImpl,
 ) : MainContract.Presenter {
 
-    private val products: List<Product> = productDb.getAll()
+    private val products: List<Product> = productRepository.requestAll()
     private var currentItemIndex by Delegates.notNull<Int>()
 
     override fun loadInitialData() {
         currentItemIndex = START_INDEX
         val products: MutableList<CartProductItem> =
-            productDb.getAll().subList(currentItemIndex, ADD_SIZE).map { product ->
+            productRepository.requestAll().subList(currentItemIndex, ADD_SIZE).map { product ->
                 product.toCartUi()
             }.toMutableList()
         currentItemIndex = ADD_SIZE

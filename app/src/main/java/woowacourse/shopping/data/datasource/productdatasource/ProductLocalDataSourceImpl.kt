@@ -11,7 +11,7 @@ class ProductLocalDataSourceImpl(
 ) : ProductDataSource {
     private val db = ProductDbHelper(context).writableDatabase
 
-    override fun getAll(): List<Product> {
+    override fun requestAllData(): List<Product> {
         val cursor = getCursor()
         val list = mutableListOf<Product>()
 
@@ -51,14 +51,6 @@ class ProductLocalDataSourceImpl(
             null,
             null,
             "",
-        )
-    }
-
-    override fun deleteColumn(product: Product) {
-        db.delete(
-            ProductContract.TABLE_NAME,
-            ProductContract.TABLE_COLUMN_ID + "=" + product.id,
-            null,
         )
     }
 }

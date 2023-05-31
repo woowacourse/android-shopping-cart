@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
-import woowacourse.shopping.data.datasource.productdatasource.ProductLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.productdatasource.ProductRemoteDataSourceImpl
 import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductsAdapter
@@ -31,10 +32,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val productDb = ProductLocalDataSourceImpl(this)
+        val productDataSourceImpl = ProductRemoteDataSourceImpl()
+        val productRepository = ProductRepositoryImpl(productDataSourceImpl)
         val recentDb = RecentProductLocalDataSourceImpl(this)
         val cartDb = CartLocalDataSourceImpl(this)
-        presenter = MainPresenter(this, productDb, recentDb, cartDb)
+        presenter = MainPresenter(this, productRepository, recentDb, cartDb)
 
         initAdapter()
         initListener()

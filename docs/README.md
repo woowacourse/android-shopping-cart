@@ -47,6 +47,7 @@
 
 
 ## Step4
-- [ ] HTTP 요청을 보내 데이터를 불러올 수 있다.
-  - [ ] HTTP Client를 구현한다.
-  - [ ] MockWebServer를 사용하여 테스트 환경을 만든다.
+- [x] HTTP 요청을 보내 데이터를 불러올 수 있다.
+  - [x] HTTP Client를 구현한다.
+    - [x] 상품 목록 데이터를 불러온다.
+  - [x] MockWebServer를 사용하여 테스트 환경을 만든다.
