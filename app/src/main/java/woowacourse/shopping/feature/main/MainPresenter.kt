@@ -1,9 +1,9 @@
 package woowacourse.shopping.feature.main
 
 import com.example.data.repository.ProductRepository
+import com.example.data.repository.RecentProductRepository
 import com.example.domain.Product
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
-import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.list.item.ProductView.RecentProductsItem
 import woowacourse.shopping.feature.model.mapper.toCartUi
@@ -14,7 +14,7 @@ import kotlin.properties.Delegates
 class MainPresenter(
     val view: MainContract.View,
     private val productRepository: ProductRepository,
-    private val recentProductDb: RecentProductLocalDataSourceImpl,
+    private val recentProductDb: RecentProductRepository,
     private val cartProductDb: CartLocalDataSourceImpl,
 ) : MainContract.Presenter {
 

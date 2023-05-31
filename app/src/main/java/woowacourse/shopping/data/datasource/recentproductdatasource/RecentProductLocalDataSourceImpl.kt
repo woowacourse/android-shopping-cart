@@ -10,27 +10,10 @@ import woowacourse.shopping.data.db.recentproduct.RecentProductDbHelper
 
 class RecentProductLocalDataSourceImpl(
     context: Context,
-) {
+) : RecentProductSource {
     private val db = RecentProductDbHelper(context).writableDatabase
 
-    private fun getCursor(): Cursor {
-        return db.query(
-            RecentProductContract.TABLE_NAME,
-            arrayOf(
-                RecentProductContract.TABLE_COLUMN_ID,
-                RecentProductContract.TABLE_COLUMN_IMAGE_URL,
-                RecentProductContract.TABLE_COLUMN_NAME,
-                RecentProductContract.TABLE_COLUMN_PRICE,
-            ),
-            "",
-            arrayOf(),
-            null,
-            null,
-            "",
-        )
-    }
-
-    fun getRecentProducts(): RecentProducts {
+    override fun getRecentProducts(): RecentProducts {
         val cursor = getCursor()
         val recentProducts = RecentProducts()
 
@@ -49,7 +32,24 @@ class RecentProductLocalDataSourceImpl(
         return recentProducts
     }
 
-    fun getLastProduct(): Product? {
+    private fun getCursor(): Cursor {
+        return db.query(
+            RecentProductContract.TABLE_NAME,
+            arrayOf(
+                RecentProductContract.TABLE_COLUMN_ID,
+                RecentProductContract.TABLE_COLUMN_IMAGE_URL,
+                RecentProductContract.TABLE_COLUMN_NAME,
+                RecentProductContract.TABLE_COLUMN_PRICE,
+            ),
+            "",
+            arrayOf(),
+            null,
+            null,
+            "",
+        )
+    }
+
+    override fun getLastProduct(): Product? {
         val cursor = getCursor()
 
         if (cursor.moveToLast().not()) return null
@@ -64,7 +64,7 @@ class RecentProductLocalDataSourceImpl(
         }
     }
 
-    fun addColumn(product: Product) {
+    override fun addColumn(product: Product) {
         findProductById(product.id)?.let {
             deleteColumn(it)
         }
@@ -79,7 +79,7 @@ class RecentProductLocalDataSourceImpl(
         db.insert(RecentProductContract.TABLE_NAME, null, values)
     }
 
-    fun findProductById(id: Int): Product? {
+    private fun findProductById(id: Int): Product? {
         val cursor = db.rawQuery(
             "SELECT * FROM ${RecentProductContract.TABLE_NAME} WHERE id = $id",
             null,
@@ -105,7 +105,7 @@ class RecentProductLocalDataSourceImpl(
         }
     }
 
-    fun deleteColumn(product: Product) {
+    private fun deleteColumn(product: Product) {
         db.delete(
             RecentProductContract.TABLE_NAME,
             RecentProductContract.TABLE_COLUMN_ID + "=" + product.id,

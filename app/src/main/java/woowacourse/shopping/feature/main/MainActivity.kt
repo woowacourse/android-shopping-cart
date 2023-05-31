@@ -14,6 +14,7 @@ import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceIm
 import woowacourse.shopping.data.datasource.productdatasource.ProductRemoteDataSourceImpl
 import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductsAdapter
@@ -32,11 +33,14 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val productDataSourceImpl = ProductRemoteDataSourceImpl()
-        val productRepository = ProductRepositoryImpl(productDataSourceImpl)
-        val recentDb = RecentProductLocalDataSourceImpl(this)
-        val cartDb = CartLocalDataSourceImpl(this)
-        presenter = MainPresenter(this, productRepository, recentDb, cartDb)
+        val productDataSource = ProductRemoteDataSourceImpl()
+        val productRepository = ProductRepositoryImpl(productDataSource)
+
+        val recentProductSource = RecentProductLocalDataSourceImpl(this)
+        val recentProductRepository = RecentProductRepositoryImpl(recentProductSource)
+
+        val cartDataSource = CartLocalDataSourceImpl(this)
+        presenter = MainPresenter(this, productRepository, recentProductRepository, cartDataSource)
 
         initAdapter()
         initListener()
