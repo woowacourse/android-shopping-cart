@@ -39,6 +39,10 @@ class RecentProductDao(context: Context) :
         return products.reversed().subList(0, minOf(products.size, 10))
     }
 
+    fun getFirst(): RecentProduct {
+        return getAll().first()
+    }
+
     fun insert(recentProduct: RecentProduct) {
         if (exist(recentProduct)) {
             remove(recentProduct)
@@ -67,6 +71,9 @@ class RecentProductDao(context: Context) :
     fun remove(recentProduct: RecentProduct) {
         writableDatabase.execSQL("DELETE FROM $TABLE_NAME WHERE $KEY_ID='${recentProduct.product.id}';")
     }
+
+    fun isEmpty(): Boolean =
+        writableDatabase.rawQuery("SELECT * FROM $TABLE_NAME", null).use { it.count == 0 }
 
     companion object {
         const val DB_NAME = "RecentProductDB"

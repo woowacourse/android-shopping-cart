@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.uimodel.ProductUIModel" />
+            type="woowacourse.shopping.model.uimodel.ProductUIModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,6 +27,14 @@
             imageSrc="@{product.url}"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
+
+        <woowacourse.shopping.view.customview.ProductCounterView
+            android:id="@+id/counter_main_product"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintStart_toStartOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
 
         <TextView
             android:id="@+id/tv_product_name"

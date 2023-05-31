@@ -5,68 +5,93 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.BundleKeys
 import woowacourse.shopping.data.db.CartProductDao
+import woowacourse.shopping.data.db.MockProductService
 import woowacourse.shopping.data.db.RecentProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.getSerializableCompat
-import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.view.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.model.uimodel.ProductUIModel
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     override lateinit var presenter: ProductDetailContract.Presenter
-
-    private var _binding: ActivityProductDetailBinding? = null
-    private val binding
-        get() = _binding!!
+    private lateinit var binding: ActivityProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        _binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+        binding.product = ProductUIModel(-1, "", "", 0)
         setSupportActionBar(binding.tbProductDetail)
         setPresenter()
-        setProductDetailView()
-        saveRecentProduct()
         setAddToCartClick()
     }
 
     private fun setPresenter() {
-        val product = intent.getSerializableCompat<ProductUIModel>(BundleKeys.KEY_PRODUCT)
-            ?: throw IllegalStateException(NON_FOUND_KEY_ERROR)
+        val productId = intent.getIntExtra(BundleKeys.KEY_PRODUCT, NONE_VALUE)
 
         presenter =
             ProductDetailPresenter(
-                view = this,
-                product = product,
-                cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
-                recentProductsRepository = RecentProductRepositoryImpl(RecentProductDao(this))
+                this,
+                recentProductsRepository = RecentProductRepositoryImpl(RecentProductDao(this)),
+                productRepository = ProductRepositoryImpl(MockProductService())
             )
+
+        presenter.loadProduct(productId)
     }
 
-    override fun setProductDetailView() {
-        binding.product = presenter.product
-    }
-
-    private fun saveRecentProduct() {
-        presenter.saveRecentProduct()
-    }
-
-    private fun setAddToCartClick() {
-        val db = CartProductDao(this).writableDatabase
-        binding.btnAddToCart.setOnClickListener {
-            presenter.saveCartProduct()
+    override fun setProductDetailView(productUIModel: ProductUIModel) {
+        runOnUiThread {
+            binding.product = productUIModel
+            binding.loLatestRecent.visibility = GONE
         }
     }
 
-    override fun showCartPage() {
-        startActivity(ShoppingCartActivity.intent(binding.root.context))
+    override fun setRecentProductView(productUIModel: ProductUIModel) {
+        runOnUiThread {
+            val depth = intent.getSerializableCompat<Int>(BundleKeys.KEY_DEPTH)
+                ?: throw IllegalStateException(NON_FOUND_KEY_ERROR)
+            if (presenter.isRecentProductExist() && depth == DEPTH_PARENT) {
+                val recentProduct = presenter.setRecentProductView(productUIModel)
+                binding.recentProduct = recentProduct
+                binding.loLatestRecent.setOnClickListener {
+                    showDetailProduct(recentProduct.productUIModel)
+                }
+            }
+        }
+    }
+
+    override fun hideLatestProduct() {
+        runOnUiThread {
+            binding.loLatestRecent.visibility = GONE
+        }
+    }
+
+    override fun showLatestProduct() {
+        runOnUiThread {
+            binding.loLatestRecent.visibility = VISIBLE
+        }
+    }
+
+    private fun setAddToCartClick() {
+        binding.btnAddToCart.setOnClickListener {
+            val dialog = CountSelectDialog(this, CartProductRepositoryImpl(CartProductDao(this)))
+            presenter.showDialog(dialog)
+        }
+    }
+
+    override fun showDetailProduct(productUIModel: ProductUIModel) {
+        intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel.id)
+        intent.putExtra(BundleKeys.KEY_DEPTH, DEPTH_CHILD)
+        startActivity(intent)
         finish()
     }
 
@@ -87,6 +112,9 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     companion object {
         private const val NON_FOUND_KEY_ERROR = "일치하는 키가 없습니다."
+        private const val DEPTH_PARENT = 0
+        private const val DEPTH_CHILD = 1
+        private const val NONE_VALUE = -1
         fun intent(context: Context): Intent {
             return Intent(context, ProductDetailActivity::class.java)
         }

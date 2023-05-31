@@ -4,34 +4,32 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.data.db.CartProductDao
 import woowacourse.shopping.data.repository.CartProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.uimodel.CartProductUIModel
-import woowacourse.shopping.uimodel.PageCounter
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.CartProductUIModel
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     override lateinit var presenter: ShoppingCartContract.Presenter
     private lateinit var adapter: ShoppingCartAdapter
 
-    private var _binding: ActivityShoppingCartBinding? = null
-    private val binding
-        get() = _binding!!
+    private lateinit var binding: ActivityShoppingCartBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        _binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_shopping_cart)
 
         setToolBar()
         setAdapter()
         setPresenter()
         setViewSettings()
         setPageMoveClick()
+        setTotalCheckBoxClick()
     }
 
     private fun setToolBar() {
@@ -42,31 +40,49 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private fun setPresenter() {
         presenter = ShoppingCartPresenter(
             view = this,
-            cartProductRepository = CartProductRepositoryImpl(CartProductDao(this)),
-            pageCounter = PageCounter()
+            cartProductRepository = CartProductRepositoryImpl(CartProductDao(this))
         )
     }
 
     private fun setAdapter() {
-        adapter = ShoppingCartAdapter(emptyList(), setOnClickRemove())
+        val shoppingCartClickListener = object : ShoppingCartClickListener {
+            override fun onClickRemove(cartProductUIModel: CartProductUIModel) {
+                presenter.removeCartProduct(cartProductUIModel)
+            }
+
+            override fun onClickCheckBox(cartProductUIModel: CartProductUIModel) {
+                presenter.updateCartProductChecked(cartProductUIModel)
+            }
+
+            override fun onClickCountButton(
+                cartProductUIModel: CartProductUIModel,
+                textView: TextView
+            ) {
+                presenter.updateCartProductCount(cartProductUIModel, textView)
+            }
+        }
+        adapter = ShoppingCartAdapter(emptyList(), shoppingCartClickListener)
     }
 
     private fun setViewSettings() {
         binding.rvCartList.adapter = adapter
         updatePageCounter(INIT_PAGE_COUNTER_VIEW)
+        presenter.updateSelectedTotal()
     }
 
     private fun setPageMoveClick() {
         binding.tvPageUp.setOnClickListener {
-            presenter.pageUpClick(it.isActivated)
+            presenter.loadNextPage(it.isActivated)
         }
         binding.tvPageDown.setOnClickListener {
-            presenter.pageDownClick(it.isActivated)
+            presenter.loadPreviousPage(it.isActivated)
         }
     }
 
-    private fun setOnClickRemove(): (ProductUIModel) -> Unit = { product ->
-        presenter.removeCartProduct(product)
+    override fun updateProductItemPrice(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {
+        tvPrice.text = getText(R.string.price_format).toString().format(
+            cartProductUIModel.productUIModel.price * cartProductUIModel.count.value
+        )
     }
 
     override fun updateCartProduct(cartProducts: List<CartProductUIModel>) {
@@ -91,6 +107,25 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
     override fun updatePageCounter(count: Int) {
         binding.tvPageCounter.text = count.toString()
+    }
+
+    override fun updateTotalCheckbox(totalCheckBoxState: Boolean) {
+        binding.checkBoxAll.isChecked = totalCheckBoxState
+    }
+
+    override fun updateTotalPrice(totalPrice: Int) {
+        binding.tvTotalPrice.text = getText(R.string.price_format).toString().format(totalPrice)
+    }
+
+    override fun updateTotalCount(totalCount: Int) {
+        binding.btnOrder.text = getText(R.string.order_format).toString().format(totalCount)
+    }
+
+    private fun setTotalCheckBoxClick() {
+        binding.checkBoxAll.setOnClickListener {
+            presenter.changeProductsCheckedState(binding.checkBoxAll.isChecked)
+            adapter.update(presenter.loadCartProducts())
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

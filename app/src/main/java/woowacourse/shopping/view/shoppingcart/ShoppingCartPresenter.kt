@@ -1,87 +1,112 @@
 package woowacourse.shopping.view.shoppingcart
 
+import android.widget.TextView
+import com.shopping.domain.CartProduct
 import com.shopping.repository.CartProductRepository
-import woowacourse.shopping.uimodel.CartProductUIModel
-import woowacourse.shopping.uimodel.PageCounter
-import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.mapper.toDomain
-import woowacourse.shopping.uimodel.mapper.toUIModel
+import woowacourse.shopping.model.Paging
+import woowacourse.shopping.model.uimodel.CartProductUIModel
+import woowacourse.shopping.model.uimodel.mapper.toDomain
+import woowacourse.shopping.model.uimodel.mapper.toUIModel
 
 class ShoppingCartPresenter(
     private val view: ShoppingCartContract.View,
-    private val cartProductRepository: CartProductRepository,
-    private val pageCounter: PageCounter
+    private val cartProductRepository: CartProductRepository
 ) : ShoppingCartContract.Presenter {
-    private var index: Pair<Int, Int> = Pair(INIT_INDEX, PRODUCT_COUNT_UNIT)
-    override val cartProducts: List<CartProductUIModel>
-        get() = cartProductRepository.getAll().map { it.toUIModel() }
+    override val paging: Paging = Paging(cartProductRepository.getAll())
 
     init {
         view.updateCartProduct(loadCartProducts())
         setButtonViews()
     }
 
-    override fun loadCartProducts(): List<CartProductUIModel> {
-        if (cartProducts.isEmpty()) {
-            return emptyList()
+    override fun loadCartProducts(): List<CartProductUIModel> =
+        paging.loadPageProducts().map { it.toUIModel() }
+
+    override fun removeCartProduct(cartProductUIModel: CartProductUIModel) {
+        cartProductRepository.remove(cartProductUIModel.toDomain())
+        paging.updateCartProducts(cartProductRepository.getAll())
+
+        if (paging.isLastIndexOfCurrentPage()) {
+            paging.subPage()
+            view.updatePageCounter(paging.getPageCount())
         }
-        return cartProducts.subList(index.first, minOf(index.second, cartProducts.size))
+        setButtonViews()
+        view.updateCartProduct(loadCartProducts())
+        updateSelectedTotal()
     }
 
-    override fun removeCartProduct(productUIModel: ProductUIModel) {
-        cartProductRepository.remove(CartProductUIModel(productUIModel).toDomain())
+    override fun loadNextPage(isActivated: Boolean) {
+        if (!isActivated) {
+            return
+        }
+        paging.addPage()
+        updatePageMove()
+    }
 
-        if (index.first == cartProducts.size) {
-            index = Pair(
-                maxOf(INIT_INDEX, index.first - PRODUCT_COUNT_UNIT),
-                minOf(index.first, cartProducts.size)
+    override fun loadPreviousPage(isActivated: Boolean) {
+        if (!isActivated) {
+            return
+        }
+        paging.subPage()
+        updatePageMove()
+    }
+
+    private fun updatePageMove() {
+        setButtonViews()
+        view.updateCartProduct(loadCartProducts())
+        view.updatePageCounter(paging.getPageCount())
+        view.updateTotalCheckbox(paging.isAllItemProductSelected())
+    }
+
+    override fun updateCartProductCount(cartProductUIModel: CartProductUIModel, tvPrice: TextView) {
+        cartProductRepository.update(cartProductUIModel.toDomain())
+        view.updateProductItemPrice(cartProductUIModel, tvPrice)
+        updateSelectedTotal()
+    }
+
+    override fun updateCartProductChecked(cartProductUIModel: CartProductUIModel) {
+        cartProductRepository.update(cartProductUIModel.toDomain())
+        updateSelectedTotal()
+    }
+
+    override fun changeProductsCheckedState(isSelected: Boolean) {
+        paging.loadPageProducts().forEach { cartProduct ->
+            cartProductRepository.update(
+                CartProduct(cartProduct.product, cartProduct.count, isSelected)
             )
-            view.updatePageCounter(pageCounter.sub())
         }
-
-        setButtonViews()
-        view.updateCartProduct(loadCartProducts())
+        updateSelectedTotal()
     }
 
-    override fun pageUpClick(isActivated: Boolean) {
-        if (!isActivated) {
-            return
-        }
-        index = Pair(index.first + PRODUCT_COUNT_UNIT, minOf(index.second + PRODUCT_COUNT_UNIT, cartProducts.size))
-        setButtonViews()
-        view.updateCartProduct(loadCartProducts())
-        view.updatePageCounter(pageCounter.add())
+    override fun updateSelectedTotal() {
+        view.updateTotalCheckbox(paging.isAllItemProductSelected())
+        view.updateTotalPrice(getTotalPrice())
+        view.updateTotalCount(getTotalCount())
     }
 
-    override fun pageDownClick(isActivated: Boolean) {
-        if (!isActivated) {
-            return
-        }
-        index = Pair(index.first - PRODUCT_COUNT_UNIT, minOf(index.first, cartProducts.size))
-        setButtonViews()
-        view.updateCartProduct(loadCartProducts())
-        view.updatePageCounter(pageCounter.sub())
+    override fun getTotalPrice(): Int {
+        return cartProductRepository.getAll()
+            .filter { product -> product.isSelected }
+            .sumOf { product -> product.product.price * product.count.value }
+    }
+
+    override fun getTotalCount(): Int {
+        return cartProductRepository.getAll()
+            .filter { product -> product.isSelected }
+            .sumOf { product -> product.count.value }
     }
 
     private fun setButtonViews() {
-        if (isPossiblePageUp()) {
+        if (paging.isPossiblePageUp()) {
             view.activatePageUpCounter()
         } else {
             view.deactivatePageUpCounter()
         }
 
-        if (isPossiblePageDown()) {
+        if (paging.isPossiblePageDown()) {
             view.activatePageDownCounter()
         } else {
             view.deactivatePageDownCounter()
         }
-    }
-
-    private fun isPossiblePageUp() = index.second < cartProducts.size
-    private fun isPossiblePageDown() = index.first != INIT_INDEX
-
-    companion object {
-        private const val INIT_INDEX = 0
-        private const val PRODUCT_COUNT_UNIT = 3
     }
 }

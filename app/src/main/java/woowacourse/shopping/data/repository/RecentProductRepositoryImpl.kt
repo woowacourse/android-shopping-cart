@@ -11,11 +11,26 @@ class RecentProductRepositoryImpl(
         return recentProductDao.getAll()
     }
 
+    override fun getFirst(): RecentProduct? {
+        if (recentProductDao.isEmpty()) {
+            return null
+        }
+        return recentProductDao.getFirst()
+    }
+
+    override fun isEmpty(): Boolean {
+        return recentProductDao.isEmpty()
+    }
+
     override fun insert(recentProduct: RecentProduct) {
         recentProductDao.insert(recentProduct)
     }
 
     override fun remove(recentProduct: RecentProduct) {
         recentProductDao.remove(recentProduct)
+    }
+
+    companion object {
+        private const val NULL_ERROR = "찾는 값이 없습니다."
     }
 }

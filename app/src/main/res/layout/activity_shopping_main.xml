@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.uimodel.ProductUIModel" />
+            type="woowacourse.shopping.model.uimodel.ProductUIModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +19,7 @@
             android:id="@+id/tb_product_catalogue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/tool_bar"
+            android:background="@color/background_main_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

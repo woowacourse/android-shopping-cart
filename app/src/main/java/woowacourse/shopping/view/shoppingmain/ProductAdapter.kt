@@ -2,16 +2,16 @@ package woowacourse.shopping.view.shoppingmain
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.uimodel.ProductUIModel
+import woowacourse.shopping.model.uimodel.ProductUIModel
 
 class ProductAdapter(
     private var products: List<ProductUIModel>,
-    private val productOnClick: (ProductUIModel) -> Unit
+    private val shoppingMainClickListener: ShoppingMainClickListener
 ) :
     RecyclerView.Adapter<ProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        return ProductViewHolder(parent, productOnClick)
+        return ProductViewHolder(parent, shoppingMainClickListener)
     }
 
     override fun getItemViewType(position: Int): Int {

@@ -3,8 +3,14 @@
     <string name="add_to_cart_button_name">장바구니 담기</string>
     <string name="price">금액</string>
 
-    <string name="price_format">"%d원"</string>
+    <string name="price_format">"%,d원"</string>
     <string name="load_more">더보기</string>
     <string name="page_count_button"><![CDATA[<]]></string>
     <string name="page_up_button"><![CDATA[>]]></string>
+    <string name="product_counter_plus">+</string>
+    <string name="product_count_minus">-</string>
+    <string name="add_to_cart">담기</string>
+    <string name="latest_product_description">마지막으로 본 상품</string>
+    <string name="order_format">주문하기(%d)</string>
+    <string name="select_all">전체</string>
 </resources>
