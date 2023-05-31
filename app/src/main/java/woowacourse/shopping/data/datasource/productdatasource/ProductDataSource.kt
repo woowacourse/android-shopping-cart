@@ -1,8 +1,8 @@
-package woowacourse.shopping.data.repository.product.source.local
+package woowacourse.shopping.data.datasource.productdatasource
 
 import com.example.domain.Product
 
-interface ProductLocalDataSource {
+interface ProductDataSource {
     fun getAll(): List<Product>
     fun deleteColumn(product: Product)
 }

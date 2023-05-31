@@ -1,12 +1,12 @@
-package woowacourse.shopping.data.repository.cart.source.local
+package woowacourse.shopping.data.datasource.cartdatasource
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import com.example.domain.CartProduct
 import com.example.domain.Product
-import woowacourse.shopping.data.database.cart.CartContract
-import woowacourse.shopping.data.database.cart.CartDbHelper
+import woowacourse.shopping.data.db.cart.CartContract
+import woowacourse.shopping.data.db.cart.CartDbHelper
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.model.mapper.toUi
 

@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.database.recentproduct
+package woowacourse.shopping.data.db.recentproduct
 
 object RecentProductContract {
     const val TABLE_NAME = "recent_product"

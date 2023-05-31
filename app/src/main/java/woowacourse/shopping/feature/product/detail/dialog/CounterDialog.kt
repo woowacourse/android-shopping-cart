@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import woowacourse.shopping.data.repository.cart.source.local.CartLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.databinding.FragmentCounterDialogBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.extension.getParcelableCompat

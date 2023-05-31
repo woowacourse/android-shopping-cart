@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView.GONE
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.VISIBLE
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repository.cart.source.local.CartLocalDataSourceImpl
-import woowacourse.shopping.data.repository.product.source.local.ProductLocalDataSourceImpl
-import woowacourse.shopping.data.repository.recentproduct.source.local.RecentProductLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.productdatasource.ProductLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductsAdapter

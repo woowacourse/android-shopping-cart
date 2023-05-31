@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.database.recentproduct
+package woowacourse.shopping.data.db.recentproduct
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

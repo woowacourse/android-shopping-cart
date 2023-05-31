@@ -1,6 +1,6 @@
 package woowacourse.shopping.feature.product.detail.dialog
 
-import woowacourse.shopping.data.repository.cart.source.local.CartLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.model.mapper.toProductDomain
 

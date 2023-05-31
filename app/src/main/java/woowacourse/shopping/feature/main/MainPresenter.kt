@@ -1,9 +1,9 @@
 package woowacourse.shopping.feature.main
 
 import com.example.domain.Product
-import woowacourse.shopping.data.repository.cart.source.local.CartLocalDataSourceImpl
-import woowacourse.shopping.data.repository.product.source.local.ProductLocalDataSourceImpl
-import woowacourse.shopping.data.repository.recentproduct.source.local.RecentProductLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.productdatasource.ProductLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.list.item.ProductView.RecentProductsItem
 import woowacourse.shopping.feature.model.mapper.toCartUi

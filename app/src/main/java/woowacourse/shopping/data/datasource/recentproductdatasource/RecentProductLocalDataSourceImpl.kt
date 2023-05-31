@@ -1,12 +1,12 @@
-package woowacourse.shopping.data.repository.recentproduct.source.local
+package woowacourse.shopping.data.datasource.recentproductdatasource
 
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import com.example.domain.Product
 import com.example.domain.RecentProducts
-import woowacourse.shopping.data.database.recentproduct.RecentProductContract
-import woowacourse.shopping.data.database.recentproduct.RecentProductDbHelper
+import woowacourse.shopping.data.db.recentproduct.RecentProductContract
+import woowacourse.shopping.data.db.recentproduct.RecentProductDbHelper
 
 class RecentProductLocalDataSourceImpl(
     context: Context,

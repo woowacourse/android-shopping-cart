@@ -1,14 +1,14 @@
-package woowacourse.shopping.data.repository.product.source.local
+package woowacourse.shopping.data.datasource.productdatasource
 
 import android.content.Context
 import android.database.Cursor
 import com.example.domain.Product
-import woowacourse.shopping.data.database.product.ProductContract
-import woowacourse.shopping.data.database.product.ProductDbHelper
+import woowacourse.shopping.data.db.product.ProductContract
+import woowacourse.shopping.data.db.product.ProductDbHelper
 
 class ProductLocalDataSourceImpl(
     context: Context,
-) : ProductLocalDataSource {
+) : ProductDataSource {
     private val db = ProductDbHelper(context).writableDatabase
 
     override fun getAll(): List<Product> {
