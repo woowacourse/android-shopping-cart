@@ -9,6 +9,7 @@ import woowacourse.shopping.feature.list.item.ProductView.RecentProductsItem
 import woowacourse.shopping.feature.model.mapper.toCartUi
 import woowacourse.shopping.feature.model.mapper.toProductDomain
 import woowacourse.shopping.feature.model.mapper.toUi
+import kotlin.properties.Delegates
 
 class MainPresenter(
     val view: MainContract.View,
@@ -18,9 +19,10 @@ class MainPresenter(
 ) : MainContract.Presenter {
 
     private val products: List<Product> = productDb.getAll()
-    private var currentItemIndex = START_INDEX
+    private var currentItemIndex by Delegates.notNull<Int>()
 
     override fun loadInitialData() {
+        currentItemIndex = START_INDEX
         val products: MutableList<CartProductItem> =
             productDb.getAll().subList(currentItemIndex, ADD_SIZE).map { product ->
                 product.toCartUi()
