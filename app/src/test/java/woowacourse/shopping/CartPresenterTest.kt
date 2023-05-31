@@ -38,7 +38,7 @@ class CartPresenterTest {
         every { view.removeAdapterData(cartProductUIModel, position) } just runs
 
         // when
-        presenter.removeProduct(cartProductUIModel, position)
+        presenter.removeProduct(cartProductUIModel)
 
         // then
         verify { cartRepository.remove(cartProductUIModel.product.id) }
@@ -52,7 +52,7 @@ class CartPresenterTest {
         every { view.setCartProducts(any()) } just runs
 
         // when
-        presenter.getCartProducts()
+        presenter.fetchCartProducts()
 
         // then
         verify { cartRepository.getUnitData(any(), any()) }
@@ -70,7 +70,7 @@ class CartPresenterTest {
         presenter.goNextPage()
 
         // then
-        verify(inverse = true) { presenter.setPageNumber() }
+        verify(inverse = true) { presenter.updatePageNumber() }
         verify(inverse = true) { pageNumber.nextPage() }
     }
 
@@ -89,7 +89,7 @@ class CartPresenterTest {
         presenter.goNextPage()
 
         // then
-        verify { presenter.setPageNumber() }
+        verify { presenter.updatePageNumber() }
         verify { view.showPageNumber(any()) }
     }
 

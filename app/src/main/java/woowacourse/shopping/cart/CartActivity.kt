@@ -62,8 +62,8 @@ class CartActivity :
     }
 
     private fun initCartList() {
-        presenter.getCartProducts()
-        presenter.setPageNumber()
+        presenter.fetchCartProducts()
+        presenter.updatePageNumber()
     }
 
     private fun initSetOnClickListener() {
@@ -80,8 +80,8 @@ class CartActivity :
         adapter.notifyDataSetChanged()
     }
 
-    override fun clickDeleteButton(cartProduct: CartProductUIModel, position: Int) {
-        presenter.removeProduct(cartProduct, position)
+    override fun clickDeleteButton(cartProduct: CartProductUIModel) {
+        presenter.removeProduct(cartProduct)
     }
 
     override fun onMinusClick(cartProduct: CartProductUIModel, count: Int, countView: TextView) {
@@ -116,7 +116,7 @@ class CartActivity :
         adapter.notifyItemRemoved(position)
     }
 
-    override fun refreshAllChecked(isChecked: Boolean) {
+    override fun setAllChecked(isChecked: Boolean) {
         binding.cbAllChecked.isChecked = isChecked
     }
 
@@ -145,7 +145,7 @@ class CartActivity :
 
     private fun onChangedIsAllPicked(isAllChecked: Boolean) {
         presenter.updateIsPickAllProduct(isAllChecked)
-        presenter.getCartProducts()
+        presenter.fetchCartProducts()
     }
 
     companion object {

@@ -13,43 +13,46 @@ class CartPresenter(
 ) : CartContract.Presenter {
     private var pageNumber = PageNumber()
     private var cart = Cart()
-    private var recentPageProducts = Cart()
+    private var currentPageProducts = Cart()
 
-    override fun getCartProducts() {
+    override fun fetchCartProducts() {
         val cartProducts = cartRepository.getUnitData(CART_UNIT_SIZE, pageNumber.value)
         cart = cart.addAll(cartProducts)
-        recentPageProducts = Cart(cartProducts)
+        currentPageProducts = Cart(cartProducts)
         calculateTotalPrice()
         view.setCartProducts(cartProducts.map { it.toUIModel() })
-        updateAllChecked()
+        view.setAllChecked(currentPageProducts.isAllPicked())
         updateCountOfProductType()
     }
 
-    override fun removeProduct(cartProductUIModel: CartProductUIModel, position: Int) {
+    override fun removeProduct(cartProductUIModel: CartProductUIModel) {
         cartRepository.remove(cartProductUIModel.product.id)
         cart = cart.remove(cartProductUIModel.toDomain())
-        recentPageProducts = recentPageProducts.remove(cartProductUIModel.toDomain())
-        view.removeAdapterData(cartProductUIModel, position)
-        updateAllChecked()
+        view.removeAdapterData(
+            cartProductUIModel,
+            currentPageProducts.products.indexOf(cartProductUIModel.toDomain())
+        )
+        currentPageProducts = currentPageProducts.remove(cartProductUIModel.toDomain())
+        view.setAllChecked(currentPageProducts.isAllPicked())
         updateCountOfProductType()
     }
 
     override fun goNextPage() {
         if (cartRepository.getSize() + CART_UNIT_SIZE <= CART_UNIT_SIZE * (pageNumber.value + 1)) return
         pageNumber = pageNumber.nextPage()
-        setPageNumber()
+        updatePageNumber()
         changePage(pageNumber.value)
-        updateAllChecked()
+        view.setAllChecked(currentPageProducts.isAllPicked())
     }
 
     override fun goPreviousPage() {
         pageNumber = pageNumber.previousPage()
-        setPageNumber()
+        updatePageNumber()
         changePage(pageNumber.value)
-        updateAllChecked()
+        view.setAllChecked(currentPageProducts.isAllPicked())
     }
 
-    override fun setPageNumber() {
+    override fun updatePageNumber() {
         view.showPageNumber(pageNumber.value)
     }
 
@@ -58,16 +61,16 @@ class CartPresenter(
         val unitSize =
             if (size / CART_UNIT_SIZE < page) size - (CART_UNIT_SIZE * page) else CART_UNIT_SIZE
         val cartProducts = cartRepository.getUnitData(unitSize, page)
-        recentPageProducts = Cart(cartProducts)
+        currentPageProducts = Cart(cartProducts)
         view.setCartProducts(cartProducts.map { it.toUIModel() })
     }
 
     override fun updateProductIsPicked(product: CartProductUIModel, isPicked: Boolean) {
         cartRepository.updateProductIsPicked(product.product.id, isPicked)
         cart = cart.updateIsPicked(product.toDomain(), isPicked)
-        recentPageProducts = recentPageProducts.updateIsPicked(product.toDomain(), isPicked)
+        currentPageProducts = currentPageProducts.updateIsPicked(product.toDomain(), isPicked)
         calculateTotalPrice()
-        updateAllChecked()
+        view.setAllChecked(currentPageProducts.isAllPicked())
         updateCountOfProductType()
     }
 
@@ -76,19 +79,15 @@ class CartPresenter(
     }
 
     override fun updateIsPickAllProduct(isPicked: Boolean) {
-        cart = cart.removeAll(recentPageProducts)
-        recentPageProducts = recentPageProducts.setIsPickAllProduct(isPicked)
-        recentPageProducts.products.forEach {
+        cart = cart.removeAll(currentPageProducts)
+        currentPageProducts = currentPageProducts.setIsPickAllProduct(isPicked)
+        currentPageProducts.products.forEach {
             cartRepository.updateProductIsPicked(it.product.id, isPicked)
         }
-        cart = cart.addAll(recentPageProducts)
-        updateAllChecked()
+        cart = cart.addAll(currentPageProducts)
+        view.setAllChecked(currentPageProducts.isAllPicked())
         updateCountOfProductType()
         calculateTotalPrice()
-    }
-
-    override fun updateAllChecked() {
-        view.refreshAllChecked(recentPageProducts.isAllPicked())
     }
 
     override fun updateCountOfProductType() {
@@ -98,7 +97,7 @@ class CartPresenter(
     override fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int) {
         if (count <= 0) return
         cart = cart.updateProductCount(cartProduct.toDomain(), count)
-        recentPageProducts = recentPageProducts.updateProductCount(cartProduct.toDomain(), count)
+        currentPageProducts = currentPageProducts.updateProductCount(cartProduct.toDomain(), count)
         cartRepository.updateProductCount(cartProduct.product.id, count)
         calculateTotalPrice()
     }

@@ -25,8 +25,7 @@ class CartRecyclerViewHolder(
 
         binding.ivCancel.setOnClickListener {
             itemClickListener.clickDeleteButton(
-                cartProducts.products[adapterPosition],
-                adapterPosition
+                cartProducts.products[adapterPosition]
             )
         }
 

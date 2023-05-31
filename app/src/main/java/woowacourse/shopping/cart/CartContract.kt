@@ -7,22 +7,21 @@ interface CartContract {
         fun setCartProducts(newCartProducts: List<CartProductUIModel>)
         fun showPageNumber(page: Int)
         fun removeAdapterData(cartProductUIModel: CartProductUIModel, position: Int)
-        fun refreshAllChecked(isChecked: Boolean)
+        fun setAllChecked(isChecked: Boolean)
         fun setTotalPrice(price: Int)
         fun setOrderProductTypeCount(productTypeCount: Int)
     }
 
     interface Presenter {
-        fun getCartProducts()
-        fun removeProduct(cartProductUIModel: CartProductUIModel, position: Int)
+        fun fetchCartProducts()
+        fun removeProduct(cartProductUIModel: CartProductUIModel)
         fun goNextPage()
         fun goPreviousPage()
-        fun setPageNumber()
+        fun updatePageNumber()
         fun changePage(page: Int)
         fun updateProductIsPicked(product: CartProductUIModel, isPicked: Boolean)
         fun calculateTotalPrice()
         fun updateIsPickAllProduct(isPicked: Boolean)
-        fun updateAllChecked()
         fun updateCountOfProductType()
         fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int)
     }
