@@ -16,9 +16,9 @@ class ProductCataloguePresenter(
     private val recentProductRepository: RecentRepository,
     private val cartRepository: CartRepository,
 ) : ProductCatalogueContract.Presenter {
-    private var productsSize = 20
+    private var productsSize = MAIN_PRODUCT_UNIT_SIZE
 
-    override fun getRecentProduct() {
+    override fun fetchRecentProduct() {
         val recentProducts =
             recentProductRepository.getAll()
                 .sortedBy { it.time }
@@ -27,7 +27,7 @@ class ProductCataloguePresenter(
         view.setRecentProductList(recentProducts)
     }
 
-    override fun getNewProducts(unitSize: Int, page: Int) {
+    override fun fetchMoreProducts(unitSize: Int, page: Int) {
         Thread {
             productRepository.getUnitData(
                 unitSize,
@@ -35,35 +35,37 @@ class ProductCataloguePresenter(
                 onFailure = {},
                 onSuccess = {
                     view.attachNewProducts(it.map { product: Product -> product.toUIModel() })
-                    productsSize += 20
+                    productsSize += MAIN_PRODUCT_UNIT_SIZE
                 }
             )
         }.start()
-        getSpanSize()
+        fetchSpanSize()
     }
 
-    override fun updateCartCount() {
+    override fun fetchCartCount() {
         view.setCartCountCircle(cartRepository.getSize())
     }
 
     override fun decreaseCartProductCount(cartProduct: CartProductUIModel, count: Int) {
-        if (count == 0) {
+        val decreasedCount = count - 1
+        if (decreasedCount == 0) {
             deleteCartProduct(cartProduct)
             return
         }
-        if (count < 0) return
-        updateCartProductCount(cartProduct, count)
+        if (decreasedCount < 0) return
+        updateCartProductCount(cartProduct, decreasedCount)
     }
 
     override fun increaseCartProductCount(cartProduct: CartProductUIModel, count: Int) {
-        if (count == 1) {
+        val increasedCount = count + 1
+        if (increasedCount == 1) {
             cartRepository.insert(CartProduct(true, 1, cartProduct.product.toDomain()))
             return
         }
-        updateCartProductCount(cartProduct, count)
+        updateCartProductCount(cartProduct, increasedCount)
     }
 
-    override fun getSpanSize() {
+    override fun fetchSpanSize() {
         view.setGridLayoutManager(productsSize)
     }
 
@@ -82,6 +84,7 @@ class ProductCataloguePresenter(
     }
 
     companion object {
+        private const val MAIN_PRODUCT_UNIT_SIZE = 20
         private const val RECENT_PRODUCT_UNIT_SIZE = 10
     }
 }

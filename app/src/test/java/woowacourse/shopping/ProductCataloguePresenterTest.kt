@@ -51,7 +51,7 @@ class ProductCataloguePresenterTest {
         every { view.setRecentProductList(capture(slot)) } just runs
 
         // when
-        presenter.getRecentProduct()
+        presenter.fetchRecentProduct()
 
         // then
         verify { view.setRecentProductList(slot.captured) }
@@ -74,7 +74,7 @@ class ProductCataloguePresenterTest {
         every { view.attachNewProducts() } just runs
 
         // when
-        presenter.getNewProducts(unitSize, page)
+        presenter.fetchMoreProducts(unitSize, page)
 
         // then
         verify { productRepository.getUnitData(unitSize, page) }
@@ -89,7 +89,7 @@ class ProductCataloguePresenterTest {
         every { cartRepository.getSize() } returns 3
 
         // when
-        presenter.updateCartCount()
+        presenter.fetchCartCount()
 
         // then
         verify(exactly = 1) { view.setCartCountCircle(any()) }

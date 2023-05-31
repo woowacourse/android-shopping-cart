@@ -121,7 +121,10 @@ class CartActivity :
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) finish()
+        if (item.itemId == android.R.id.home) {
+            setResult(RESULT_OK)
+            finish()
+        }
         return super.onOptionsItemSelected(item)
     }
 

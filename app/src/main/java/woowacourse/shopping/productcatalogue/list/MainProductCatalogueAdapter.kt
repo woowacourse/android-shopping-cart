@@ -96,7 +96,6 @@ class MainProductCatalogueAdapter(
     }
 
     companion object {
-        private const val PRODUCT_UNIT_SIZE = 20
         private const val FIRST_PAGE = 1
     }
 }

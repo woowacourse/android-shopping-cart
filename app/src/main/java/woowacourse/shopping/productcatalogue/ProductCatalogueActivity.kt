@@ -2,6 +2,8 @@ package woowacourse.shopping.productcatalogue
 
 import android.os.Bundle
 import android.widget.TextView
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
@@ -29,6 +31,7 @@ class ProductCatalogueActivity :
     ProductCatalogueContract.View,
     ProductClickListener,
     ProductCountClickListener {
+
     private lateinit var binding: ActivityProductCatalogueBinding
     private lateinit var presenter: ProductCatalogueContract.Presenter
     private val adapter: MainProductCatalogueAdapter by lazy {
@@ -38,6 +41,17 @@ class ProductCatalogueActivity :
             ::readMore,
             ::getProductCount,
         )
+    }
+
+    private val startForResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            presenter.fetchRecentProduct()
+            adapter.recentAdapter.notifyDataSetChanged()
+            adapter.setRecentProductsVisibility(binding.clProductCatalogue)
+            presenter.fetchCartCount()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,16 +74,14 @@ class ProductCatalogueActivity :
         )
 
         binding.rvProductCatalogue.adapter = adapter
-        presenter.getRecentProduct()
-        presenter.getNewProducts(20, 1)
+        presenter.fetchRecentProduct()
+        presenter.fetchMoreProducts(20, 1)
 
-        presenter.getSpanSize()
+        presenter.fetchSpanSize()
 
-        presenter.updateCartCount()
+        presenter.fetchCartCount()
 
-        binding.ivCart.setOnClickListener {
-            startActivity(CartActivity.getIntent(this))
-        }
+        setToolbarClickListener()
     }
 
     override fun setGridLayoutManager(productsSize: Int) {
@@ -85,14 +97,14 @@ class ProductCatalogueActivity :
     }
 
     private fun readMore(unitSize: Int, page: Int) {
-        presenter.getNewProducts(unitSize, page)
+        presenter.fetchMoreProducts(unitSize, page)
     }
 
     override fun setRecentProductList(recentProducts: List<RecentProductUIModel>) {
         adapter.updateRecentProducts(recentProducts)
     }
 
-    override fun updateProductList(recentProducts: List<RecentProductUIModel>) {
+    override fun initProductList(recentProducts: List<RecentProductUIModel>) {
         adapter.initRecentAdapterData(recentProducts)
     }
 
@@ -107,30 +119,28 @@ class ProductCatalogueActivity :
     override fun onProductClick(productUIModel: ProductUIModel) {
         val intent = ProductDetailActivity.getIntent(this)
         intent.putExtra(BundleKeys.KEY_PRODUCT, productUIModel)
-        startActivity(intent)
+        startForResult.launch(intent)
     }
 
     override fun onDownClicked(cartProduct: CartProductUIModel, countView: TextView) {
-        val count = countView.text.toString().toInt() - 1
+        val count = countView.text.toString().toInt()
         presenter.decreaseCartProductCount(cartProduct, count)
-        presenter.updateCartCount()
+        presenter.fetchCartCount()
     }
 
     override fun onUpClicked(cartProduct: CartProductUIModel, countView: TextView) {
-        val count = countView.text.toString().toInt() + 1
+        val count = countView.text.toString().toInt()
         presenter.increaseCartProductCount(cartProduct, count)
-        presenter.updateCartCount()
+        presenter.fetchCartCount()
     }
 
     private fun getProductCount(product: ProductUIModel): Int {
         return presenter.getProductCount(product)
     }
 
-    override fun onResume() {
-        presenter.getRecentProduct()
-        adapter.recentAdapter.notifyDataSetChanged()
-        adapter.setRecentProductsVisibility(binding.clProductCatalogue)
-        presenter.updateCartCount()
-        super.onResume()
+    private fun setToolbarClickListener() {
+        binding.ivCart.setOnClickListener {
+            startForResult.launch(CartActivity.getIntent(this))
+        }
     }
 }
