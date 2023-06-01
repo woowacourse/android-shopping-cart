@@ -1,11 +1,13 @@
 package woowacourse.shopping.presentation.ui.home.presenter
 
-import android.util.Log
+import androidx.annotation.WorkerThread
 import woowacourse.shopping.domain.Quantity
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.util.WoowaResult.FAIL
+import woowacourse.shopping.domain.util.WoowaResult.SUCCESS
 import woowacourse.shopping.presentation.ui.common.uimodel.Operator
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
@@ -21,15 +23,34 @@ class HomePresenter(
     override fun fetchAllProductsOnHome() {
         val recentlyViewedProducts =
             productRepository.getRecentlyViewedProducts(10).toRecentProductsByView()
-        val products = productRepository.getProducts(20, 0).toProductsByView()
+        val productsFromRemote = getProductsFromRemote().toProductsByView()
+        val productsFromLocal = productRepository.getProductsFromLocal(20, 0).toProductsByView()
         val showMoreButton = ShowMoreProducts
         val shoppingCart = shoppingCartRepository.getShoppingCart().map {
             it.toUiState()
         }
-        val productsByView = getProductsByViews(recentlyViewedProducts, products, showMoreButton)
+        val productsByView =
+            getProductsByViews(recentlyViewedProducts, productsFromRemote, showMoreButton)
 
-        productsCount = products.size
+        productsCount = productsFromRemote.size
         view.setUpProductsOnHome(productsByView, shoppingCart)
+    }
+
+    @WorkerThread
+    private fun getProductsFromRemote(): List<Product> {
+        var result: List<Product> = emptyList()
+
+        val thread = Thread {
+            result = when (val state = productRepository.getProductsFromRemote(20, 0)) {
+                is SUCCESS -> state.data
+                is FAIL -> emptyList()
+            }
+        }
+
+        thread.start()
+        thread.join()
+
+        return result
     }
 
     private fun getProductsByViews(
@@ -43,8 +64,7 @@ class HomePresenter(
     }
 
     override fun fetchMoreProducts() {
-        Log.d("123123123", productsCount.toString())
-        val products = productRepository.getProducts(20, productsCount).toProductsByView()
+        val products = productRepository.getProductsFromLocal(20, productsCount).toProductsByView()
 
         productsCount += products.size
         view.setUpMoreProducts(products)

@@ -4,8 +4,6 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
-import org.json.JSONArray
-import org.json.JSONObject
 import woowacourse.shopping.util.mockData
 
 class ProductMockServer {
@@ -13,11 +11,12 @@ class ProductMockServer {
     private val productDispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
             val path = request.path ?: return MockResponse().setResponseCode(FAIL_CODE)
+
             return when (path) {
                 "/products" -> {
                     val parameters = parseParameters(request.body.readUtf8())
-                    val unit = parameters["unit"]?.toIntOrNull()
-                    val lastIndex = parameters["lastIndex"]?.toIntOrNull()
+                    val unit = parameters[parameters.keys.first()]?.toIntOrNull()
+                    val lastIndex = parameters[parameters.keys.last()]?.toIntOrNull()
                     if (unit == null || lastIndex == null) {
                         return MockResponse().setResponseCode(FAIL_CODE)
                     }
@@ -35,18 +34,9 @@ class ProductMockServer {
 
     private fun getProducts(unit: Int, startIndex: Int): String {
         val endIndex = minOf(startIndex + unit, mockData.size)
-
         val products = mockData.subList(startIndex, endIndex)
 
-        val jsonArray = JSONArray(
-            products.map { product ->
-                JSONObject().apply {
-                    put("product", product)
-                }
-            },
-        )
-
-        return jsonArray.toString()
+        return products.joinToString(",\n", prefix = "[\n", postfix = "\n]") { it }
     }
 
     private fun parseParameters(requestParams: String): Map<String, String> {
@@ -68,7 +58,10 @@ class ProductMockServer {
                 start(PORT)
                 dispatcher = productDispatcher
             }
-        }.start()
+        }.apply {
+            start()
+            join()
+        }
     }
 
     companion object {

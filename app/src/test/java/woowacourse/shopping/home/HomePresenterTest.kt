@@ -42,7 +42,7 @@ class HomePresenterTest {
     fun DB로부터_가져온_상품목록을_뷰로_넘겨준다() {
         // given
         every { productRepository.getRecentlyViewedProducts(any()) } returns recentlyViewProducts
-        every { productRepository.getProducts(any(), any()) } returns products
+        every { productRepository.getProductsFromLocal(any(), any()) } returns products
 
         val slot = slot<List<HomeAdapter.ProductsByView>>()
         every { view.setUpProductsOnHome(capture(slot), shoppingCart) } answers { nothing }
@@ -53,7 +53,7 @@ class HomePresenterTest {
         // then
         val actual = slot.captured
         verify { productRepository.getRecentlyViewedProducts(any()) }
-        verify { productRepository.getProducts(any(), any()) }
+        verify { productRepository.getProductsFromLocal(any(), any()) }
         verify { view.setUpProductsOnHome(actual, shoppingCart) }
 
         assertEquals(listOf(wrappedRecentProducts) + wrappedProducts + showMoreButton, actual)
@@ -62,7 +62,7 @@ class HomePresenterTest {
     @Test
     fun 추가_데이터_요청_시_DB에서_데이터를_뷰로_넘겨준다() {
         // given
-        every { productRepository.getProducts(any(), any()) } returns products
+        every { productRepository.getProductsFromLocal(any(), any()) } returns products
 
         val slot = slot<List<HomeAdapter.ProductsByView>>()
         every { view.setUpMoreProducts(capture(slot)) } answers { nothing }
@@ -72,7 +72,7 @@ class HomePresenterTest {
 
         // then
         val actual = slot.captured
-        verify { productRepository.getProducts(any(), any()) }
+        verify { productRepository.getProductsFromLocal(any(), any()) }
         verify { view.setUpMoreProducts(wrappedProducts) }
 
         assertEquals(wrappedProducts, actual)
