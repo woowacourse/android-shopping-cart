@@ -10,7 +10,7 @@ class CartActivityPresenter(
     private val view: CartActivityContract.View,
     private val db: CartLocalDataSourceImpl,
 ) : CartActivityContract.Presenter {
-    private var page = 1
+    private var page = MIN_PAGE
     private val selectedItem: MutableList<CartProductItem> = mutableListOf()
 
     override fun loadInitialData() {
@@ -72,7 +72,7 @@ class CartActivityPresenter(
 
     private fun getMaxPage(): Int {
         val entireData = db.getAll()
-        if (entireData.isEmpty()) return 1
+        if (entireData.isEmpty()) return MIN_PAGE
         return (entireData.size - 1) / ITEM_COUNT_EACH_PAGE + 1
     }
 
@@ -135,7 +135,7 @@ class CartActivityPresenter(
     }
 
     private fun cannotMinus(isPlus: Boolean, oldCount: Int): Boolean {
-        return !isPlus && oldCount <= 1
+        return !isPlus && oldCount <= MIN_COUNT
     }
 
     override fun toggleItemChecked(item: CartProductItem) {
@@ -162,6 +162,7 @@ class CartActivityPresenter(
 
     companion object {
         private const val ITEM_COUNT_EACH_PAGE = 5
-        const val MIN_PAGE = 1
+        private const val MIN_PAGE = 1
+        private const val MIN_COUNT = 1
     }
 }
