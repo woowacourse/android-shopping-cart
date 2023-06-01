@@ -7,6 +7,7 @@ import com.shopping.domain.RecentProduct
 import com.shopping.domain.RecentRepository
 import io.mockk.every
 import io.mockk.just
+import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
@@ -16,6 +17,7 @@ import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.productdetail.ProductDetailPresenter
+import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
 
 class ProductDetailPresenterTest {
@@ -64,16 +66,56 @@ class ProductDetailPresenterTest {
     }
 
     @Test
-    fun `장바구니에 추가하는 버튼이 클릭 될 때 데이터를 레포지토리에 저장하고 장바구니 페이지를 보여준다`() {
+    fun `장바구니 상품을 만들어 뷰에게 전달한다`() {
         // given
-        every { cartRepository.insert(CartProduct(true, 1, product)) } just runs
-        every { view.showCartPage() } just runs
+        every { cartRepository.getProductCount(product.id) } returns 2
+        justRun {
+            view.setCartProductData(
+                CartProductUIModel(true, 2, product.toUIModel())
+            )
+        }
 
         // when
-        presenter.addToCart()
+        presenter.attachCartProductData()
 
         // then
-        verify { cartRepository.insert(CartProduct(true, 1, product)) }
+        verify { cartRepository.getProductCount(product.id) }
+        verify {
+            view.setCartProductData(
+                CartProductUIModel(true, 2, product.toUIModel())
+            )
+        }
+    }
+
+    @Test
+    fun `장바구니에 상품을 추가하려 할 때 원래 장바구니에 없는 상품이라면 장바구니 레포지토리에 추가시키고 장바구니 화면을 표시한다`() {
+        // given
+        every { cartRepository.getProductCount(product.id) } returns 0
+        justRun { cartRepository.insert(CartProduct(true, 5, product)) }
+        justRun { view.showCartPage() }
+
+        // when
+        presenter.addToCart(5)
+
+        // then
+        verify { cartRepository.insert(CartProduct(true, 5, product)) }
+        verify { view.showCartPage() }
+        verify(inverse = true) { cartRepository.updateProductCount(any(), any()) }
+    }
+
+    @Test
+    fun `장바구니에 상품을 추가하려 할 때 원래 장바구니에 있는 상품이라면 수량을 변경시키고 장바구니 화면을 표시한다`() {
+        // given
+        every { cartRepository.getProductCount(product.id) } returns 1
+        justRun { cartRepository.updateProductCount(product.id, 5) }
+        justRun { view.showCartPage() }
+
+        // when
+        presenter.addToCart(4)
+
+        // then
+        verify(inverse = true) { cartRepository.insert(any()) }
+        verify { cartRepository.updateProductCount(product.id, 5) }
         verify { view.showCartPage() }
     }
 }
