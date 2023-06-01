@@ -20,7 +20,7 @@ class ProductDetailPresenter(
         recentRepository.insert(RecentProduct(currentTime, product.toDomain()))
     }
 
-    override fun getMostRecentProduct() {
+    override fun fetchMostRecentProduct() {
         val recentProduct = recentRepository.getLatestProduct().toUIModel()
         if (product.id != recentProduct.product.id) {
             view.setLatestProductVisibility()

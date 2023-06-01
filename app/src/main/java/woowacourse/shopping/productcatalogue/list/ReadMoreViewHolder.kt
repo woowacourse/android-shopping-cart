@@ -8,16 +8,13 @@ import woowacourse.shopping.uimodel.ProductUIModel
 
 class ReadMoreViewHolder(
     binding: ItemProductReadMoreBinding,
-    readMoreOnClick: (Int, Int) -> Unit,
+    readMoreOnClick: (unitSize: Int, page: Int) -> Unit,
     products: MutableList<ProductUIModel>
 ) : RecyclerView.ViewHolder(binding.root) {
 
     init {
         binding.btReadMore.setOnClickListener {
-            readMoreOnClick(
-                PRODUCT_UNIT_SIZE,
-                products.size / PRODUCT_UNIT_SIZE + 1
-            )
+            readMoreOnClick(PRODUCT_UNIT_SIZE, products.size / PRODUCT_UNIT_SIZE + 1)
         }
     }
 

@@ -17,7 +17,7 @@ import woowacourse.shopping.uimodel.RecentProductUIModel
 class MainProductCatalogueAdapter(
     private val productOnClick: ProductClickListener,
     private val productCountOnClick: ProductCountClickListener,
-    private val readMoreOnClick: (Int, Int) -> Unit,
+    private val readMoreOnClick: (unitSize: Int, page: Int) -> Unit,
     private val getProductCount: (ProductUIModel) -> Int,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val recentProducts = mutableListOf<RecentProductUIModel>()

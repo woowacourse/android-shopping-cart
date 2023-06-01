@@ -14,7 +14,7 @@ interface ProductDetailContract {
 
     interface Presenter {
         fun insertRecentRepository(currentTime: Long)
-        fun getMostRecentProduct()
+        fun fetchMostRecentProduct()
         fun addToCart(count: Int)
         fun attachCartProductData()
     }

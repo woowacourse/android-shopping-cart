@@ -57,7 +57,7 @@ class ProductDetailPresenterTest {
         every { recentRepository.getLatestProduct() } returns dummyRecentProduct
 
         // when
-        presenter.getMostRecentProduct()
+        presenter.fetchMostRecentProduct()
 
         // then
         verify(exactly = 1) { view.showRecentProduct(any()) }

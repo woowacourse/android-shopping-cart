@@ -54,7 +54,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(this, productData, recentRepository, cartRepository)
         presenter.attachCartProductData()
         binding.showAddCartDialog = ::navigateToAddToCartDialog
-        presenter.getMostRecentProduct()
+        presenter.fetchMostRecentProduct()
         presenter.insertRecentRepository(System.currentTimeMillis())
 
         this.onBackPressedDispatcher.addCallback(this, callback)
