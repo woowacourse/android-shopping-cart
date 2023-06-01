@@ -77,7 +77,7 @@ class ProductCatalogueActivity :
         presenter.fetchRecentProduct()
         presenter.fetchMoreProducts(20, 1)
 
-        presenter.fetchSpanSize()
+        presenter.fetchProductsSizeForUpdateLayoutManager()
 
         presenter.fetchCartCount()
 

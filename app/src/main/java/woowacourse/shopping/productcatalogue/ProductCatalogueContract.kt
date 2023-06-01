@@ -18,9 +18,8 @@ interface ProductCatalogueContract {
         fun fetchMoreProducts(unitSize: Int, page: Int)
         fun fetchCartCount()
         fun getProductCount(product: ProductUIModel): Int
-        fun deleteCartProduct(cartProduct: CartProductUIModel)
         fun decreaseCartProductCount(cartProduct: CartProductUIModel, count: Int)
         fun increaseCartProductCount(cartProduct: CartProductUIModel, count: Int)
-        fun fetchSpanSize()
+        fun fetchProductsSizeForUpdateLayoutManager()
     }
 }

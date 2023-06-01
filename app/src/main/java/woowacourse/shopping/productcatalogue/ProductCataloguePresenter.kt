@@ -39,7 +39,7 @@ class ProductCataloguePresenter(
                 }
             )
         }.start()
-        fetchSpanSize()
+        fetchProductsSizeForUpdateLayoutManager()
     }
 
     override fun fetchCartCount() {
@@ -49,11 +49,11 @@ class ProductCataloguePresenter(
     override fun decreaseCartProductCount(cartProduct: CartProductUIModel, count: Int) {
         val decreasedCount = count - 1
         if (decreasedCount == 0) {
-            deleteCartProduct(cartProduct)
+            cartRepository.remove(cartProduct.product.id)
             return
         }
         if (decreasedCount < 0) return
-        updateCartProductCount(cartProduct, decreasedCount)
+        cartRepository.updateProductCount(cartProduct.product.id, decreasedCount)
     }
 
     override fun increaseCartProductCount(cartProduct: CartProductUIModel, count: Int) {
@@ -62,25 +62,17 @@ class ProductCataloguePresenter(
             cartRepository.insert(CartProduct(true, 1, cartProduct.product.toDomain()))
             return
         }
-        updateCartProductCount(cartProduct, increasedCount)
+        cartRepository.updateProductCount(cartProduct.product.id, increasedCount)
     }
 
-    override fun fetchSpanSize() {
+    override fun fetchProductsSizeForUpdateLayoutManager() {
         view.setGridLayoutManager(productsSize)
     }
 
     override fun getProductCount(product: ProductUIModel): Int {
-        val count = cartRepository.getProductCount(product.id) // 조회 했을 떄 없다면 0을 리턴
+        val count = cartRepository.getProductCount(product.id)
         if (count == 1) cartRepository.insert(CartProduct(true, 1, product.toDomain()))
         return count
-    }
-
-    override fun deleteCartProduct(cartProduct: CartProductUIModel) {
-        cartRepository.remove(cartProduct.product.id)
-    }
-
-    private fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int) {
-        cartRepository.updateProductCount(cartProduct.product.id, count)
     }
 
     companion object {
