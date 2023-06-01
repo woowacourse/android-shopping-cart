@@ -19,10 +19,10 @@ class CartPresenter(
         val cartProducts = cartRepository.getUnitData(CART_UNIT_SIZE, pageNumber.value)
         cart = cart.addAll(cartProducts)
         currentPageProducts = Cart(cartProducts)
-        calculateTotalPrice()
+        view.setTotalPrice(cart.getPickedProductsTotalPrice())
         view.setCartProducts(cartProducts.map { it.toUIModel() })
         view.setAllChecked(currentPageProducts.isAllPicked())
-        updateCountOfProductType()
+        view.setOrderProductTypeCount(cart.getTotalPickedProductsCount())
     }
 
     override fun removeProduct(cartProductUIModel: CartProductUIModel) {
@@ -34,7 +34,7 @@ class CartPresenter(
         )
         currentPageProducts = currentPageProducts.remove(cartProductUIModel.toDomain())
         view.setAllChecked(currentPageProducts.isAllPicked())
-        updateCountOfProductType()
+        view.setOrderProductTypeCount(cart.getTotalPickedProductsCount())
     }
 
     override fun goNextPage() {
@@ -56,7 +56,7 @@ class CartPresenter(
         view.showPageNumber(pageNumber.value)
     }
 
-    override fun changePage(page: Int) {
+    private fun changePage(page: Int) {
         val size = cartRepository.getSize()
         val unitSize =
             if (size / CART_UNIT_SIZE < page) size - (CART_UNIT_SIZE * page) else CART_UNIT_SIZE
@@ -69,13 +69,9 @@ class CartPresenter(
         cartRepository.updateProductIsPicked(product.product.id, isPicked)
         cart = cart.updateIsPicked(product.toDomain(), isPicked)
         currentPageProducts = currentPageProducts.updateIsPicked(product.toDomain(), isPicked)
-        calculateTotalPrice()
-        view.setAllChecked(currentPageProducts.isAllPicked())
-        updateCountOfProductType()
-    }
-
-    override fun calculateTotalPrice() {
         view.setTotalPrice(cart.getPickedProductsTotalPrice())
+        view.setAllChecked(currentPageProducts.isAllPicked())
+        view.setOrderProductTypeCount(cart.getTotalPickedProductsCount())
     }
 
     override fun updateIsPickAllProduct(isPicked: Boolean) {
@@ -86,12 +82,8 @@ class CartPresenter(
         }
         cart = cart.addAll(currentPageProducts)
         view.setAllChecked(currentPageProducts.isAllPicked())
-        updateCountOfProductType()
-        calculateTotalPrice()
-    }
-
-    override fun updateCountOfProductType() {
         view.setOrderProductTypeCount(cart.getTotalPickedProductsCount())
+        view.setTotalPrice(cart.getPickedProductsTotalPrice())
     }
 
     override fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int) {
@@ -99,7 +91,7 @@ class CartPresenter(
         cart = cart.updateProductCount(cartProduct.toDomain(), count)
         currentPageProducts = currentPageProducts.updateProductCount(cartProduct.toDomain(), count)
         cartRepository.updateProductCount(cartProduct.product.id, count)
-        calculateTotalPrice()
+        view.setTotalPrice(cart.getPickedProductsTotalPrice())
     }
 
     companion object {

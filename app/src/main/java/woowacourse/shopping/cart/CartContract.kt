@@ -18,11 +18,8 @@ interface CartContract {
         fun goNextPage()
         fun goPreviousPage()
         fun updatePageNumber()
-        fun changePage(page: Int)
         fun updateProductIsPicked(product: CartProductUIModel, isPicked: Boolean)
-        fun calculateTotalPrice()
         fun updateIsPickAllProduct(isPicked: Boolean)
-        fun updateCountOfProductType()
         fun updateCartProductCount(cartProduct: CartProductUIModel, count: Int)
     }
 }
