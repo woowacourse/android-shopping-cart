@@ -32,7 +32,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="25dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/tv_current_page"
+            app:layout_constraintBottom_toTopOf="@id/tv_current_page"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_cart" />
@@ -60,7 +60,7 @@
             android:gravity="center"
             android:text="@string/first_page"
             android:textSize="22sp"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -75,7 +75,7 @@
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_current_page"
-            app:layout_constraintStart_toEndOf="@+id/tv_current_page"
+            app:layout_constraintStart_toEndOf="@id/tv_current_page"
             app:layout_constraintTop_toTopOf="@id/tv_current_page" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,9 +94,9 @@
                 android:layout_marginTop="-15dp"
                 android:text="@string/cart_total_check_box_description"
                 android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/cb_all_checked"
-                app:layout_constraintStart_toStartOf="@+id/cb_all_checked"
-                app:layout_constraintTop_toBottomOf="@+id/cb_all_checked" />
+                app:layout_constraintEnd_toEndOf="@id/cb_all_checked"
+                app:layout_constraintStart_toStartOf="@id/cb_all_checked"
+                app:layout_constraintTop_toBottomOf="@id/cb_all_checked" />
 
             <CheckBox
                 android:id="@+id/cb_all_checked"

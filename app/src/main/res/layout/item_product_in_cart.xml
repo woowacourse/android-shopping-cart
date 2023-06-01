@@ -45,10 +45,10 @@
             android:text="@{cartProduct.product.name}"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/checkBox"
-            app:layout_constraintEnd_toStartOf="@+id/iv_cancel"
-            app:layout_constraintStart_toEndOf="@+id/checkBox"
-            app:layout_constraintTop_toTopOf="@+id/checkBox"
+            app:layout_constraintBottom_toBottomOf="@id/checkBox"
+            app:layout_constraintEnd_toStartOf="@id/iv_cancel"
+            app:layout_constraintStart_toEndOf="@id/checkBox"
+            app:layout_constraintTop_toTopOf="@id/checkBox"
             tools:text="[든든] 동원 콘샐러드" />
 
         <ImageView
@@ -82,9 +82,9 @@
             android:layout_marginEnd="20dp"
             android:text="@{@string/formatted_price(cartProduct.product.price)}"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/bt_plus"
+            app:layout_constraintBottom_toTopOf="@id/bt_plus"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cancel"
+            app:layout_constraintTop_toBottomOf="@id/iv_cancel"
             tools:text="10,000원" />
 
         <TextView
@@ -105,8 +105,8 @@
             android:gravity="center"
             android:text="@{String.valueOf(cartProduct.count)}"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="@+id/bt_plus"
-            app:layout_constraintEnd_toStartOf="@+id/bt_plus"
+            app:layout_constraintBottom_toBottomOf="@id/bt_plus"
+            app:layout_constraintEnd_toStartOf="@id/bt_plus"
             tools:text="1" />
 
         <TextView

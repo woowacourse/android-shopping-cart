@@ -51,7 +51,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_title"
             tools:text="99,800원" />
 
         <woowacourse.shopping.view.CounterView
@@ -59,9 +59,9 @@
             android:layout_width="126dp"
             android:layout_height="42dp"
             app:cartProductUIModel="@{cartProduct}"
-            app:layout_constraintBottom_toTopOf="@+id/btn_add_to_cart"
+            app:layout_constraintBottom_toTopOf="@id/btn_add_to_cart"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_product_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_title"
             app:productCountClickListener="@{productCountClickListener}" />
 
         <androidx.appcompat.widget.AppCompatButton

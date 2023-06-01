@@ -94,7 +94,7 @@
             app:cartProductUIModel="@{cartProduct}"
             app:productCountClickListener="@{countClickListener}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
-            app:layout_constraintEnd_toEndOf="@+id/iv_product_image"
-            app:layout_constraintStart_toStartOf="@+id/iv_product_image" />
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image"
+            app:layout_constraintStart_toStartOf="@id/iv_product_image" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

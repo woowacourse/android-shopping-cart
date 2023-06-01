@@ -118,7 +118,7 @@
             android:background="@drawable/solid_box"
             android:padding="12dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/bt_add_to_cart"
+            app:layout_constraintBottom_toTopOf="@id/bt_add_to_cart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
@@ -139,7 +139,7 @@
                 android:text="@{recentProduct.product.name}"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_last_product"
+                app:layout_constraintTop_toBottomOf="@id/tv_last_product"
                 tools:text="[든든] 동원 스위트콘" />
 
             <TextView
