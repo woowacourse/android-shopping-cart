@@ -24,18 +24,11 @@ class CounterView @JvmOverloads constructor(
             binding.tvProductCount.text = field.toString()
         }
 
-    var minCountValue: Int = DEFAULT_MIN_COUNT_VALUE
-        set(value) {
-            require(DEFAULT_MAX_COUNT_VALUE > value) {}
-            field = value
-        }
-
     val countTextView: TextView by lazy { binding.tvProductCount }
     val countUpButton: TextView by lazy { binding.btCountUp }
     val countDownButton: TextView by lazy { binding.btCountDown }
 
     companion object {
         private const val DEFAULT_MIN_COUNT_VALUE = 0
-        private const val DEFAULT_MAX_COUNT_VALUE = 99
     }
 }
