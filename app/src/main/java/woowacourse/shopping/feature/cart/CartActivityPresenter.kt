@@ -101,29 +101,33 @@ class CartActivityPresenter(
     }
 
     override fun updateItem(item: CartProductItem, isPlus: Boolean) {
+        var newCartProduct: CartProduct = item.toDomain()
+
+        if (cannotMinus(isPlus, item.count)) return
+
         if (!selectedItem.contains(item)) {
             if (isPlus) {
-                item.updateCount(item.count + 1)
+                newCartProduct = newCartProduct.updateCount(item.count + 1)
             } else {
-                item.updateCount(item.count - 1)
+                newCartProduct = newCartProduct.updateCount(item.count - 1)
             }
-            updateDbAndView(item)
+            updateDbAndView(newCartProduct)
             return
         }
 
-        if (cannotMinus(isPlus, item.count)) return
         selectedItem.remove(item)
 
         if (isPlus) {
-            selectedItem.add(item.updateCount(item.count + 1))
+            newCartProduct = newCartProduct.updateCount(item.count + 1)
         } else {
-            selectedItem.add(item.updateCount(item.count - 1))
+            newCartProduct = newCartProduct.updateCount(item.count - 1)
         }
-        updateDbAndView(item)
+        selectedItem.add(newCartProduct.toUi())
+        updateDbAndView(newCartProduct)
         setBottomView()
     }
 
-    private fun updateDbAndView(item: CartProductItem) {
+    private fun updateDbAndView(item: CartProduct) {
         db.updateColumn(item)
         val items = getItems(page)
         val selected = getSelectedStateEachPage()
@@ -131,7 +135,7 @@ class CartActivityPresenter(
     }
 
     private fun cannotMinus(isPlus: Boolean, oldCount: Int): Boolean {
-        return !isPlus && oldCount == 1
+        return !isPlus && oldCount <= 1
     }
 
     override fun toggleItemChecked(item: CartProductItem) {

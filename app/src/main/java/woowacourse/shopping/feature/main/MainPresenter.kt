@@ -68,9 +68,9 @@ class MainPresenter(
         val changeWidth = if (isPlus) 1 else -1
 
         cartProductDb.findProductById(product.id)?.let { cartProduct ->
-            cartProduct.updateCount(cartProduct.count + changeWidth)
-            cartProductDb.updateColumn(cartProduct)
-            view.setProduct(cartProduct)
+            val newCartProduct = cartProduct.updateCount(cartProduct.count + changeWidth)
+            cartProductDb.updateColumn(newCartProduct)
+            view.setProduct(newCartProduct.toUi())
         } ?: cartProductDb.addColumn(product.toProductDomain())
     }
 

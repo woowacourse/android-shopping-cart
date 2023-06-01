@@ -7,15 +7,13 @@ import com.example.domain.CartProduct
 import com.example.domain.Product
 import woowacourse.shopping.data.db.cart.CartContract
 import woowacourse.shopping.data.db.cart.CartDbHelper
-import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
-import woowacourse.shopping.feature.model.mapper.toUi
 
 class CartLocalDataSourceImpl(
     context: Context,
-) {
+) : CartDataSource {
     private val db = CartDbHelper(context).writableDatabase
 
-    fun getAll(): List<CartProduct> {
+    override fun getAll(): List<CartProduct> {
         val cursor = db.rawQuery(
             "SELECT * FROM ${CartContract.TABLE_NAME}",
             null,
@@ -31,7 +29,7 @@ class CartLocalDataSourceImpl(
         return cartProducts
     }
 
-    fun getCartProducts(limit: Int, offset: Int): List<CartProduct> {
+    override fun getCartProducts(limit: Int, offset: Int): List<CartProduct> {
         val cursor = getCursor(limit, offset)
         val cartProducts = mutableListOf<CartProduct>()
 
@@ -71,7 +69,7 @@ class CartLocalDataSourceImpl(
         }
     }
 
-    fun addColumn(product: Product, count: Int = DEFAULT_COUNT) {
+    override fun addColumn(product: Product, count: Int) {
         val values = ContentValues().apply {
             put(CartContract.TABLE_COLUMN_ID, product.id)
             put(CartContract.TABLE_COLUMN_IMAGE_URL, product.imageUrl)
@@ -83,24 +81,24 @@ class CartLocalDataSourceImpl(
         db.insert(CartContract.TABLE_NAME, null, values)
     }
 
-    fun updateColumn(item: CartProductItem) {
+    override fun updateColumn(item: CartProduct) {
         val values = ContentValues().apply {
-            put(CartContract.TABLE_COLUMN_ID, item.id)
-            put(CartContract.TABLE_COLUMN_IMAGE_URL, item.imageUrl)
-            put(CartContract.TABLE_COLUMN_NAME, item.name)
-            put(CartContract.TABLE_COLUMN_PRICE, item.price)
+            put(CartContract.TABLE_COLUMN_ID, item.productId)
+            put(CartContract.TABLE_COLUMN_IMAGE_URL, item.productImageUrl)
+            put(CartContract.TABLE_COLUMN_NAME, item.productName)
+            put(CartContract.TABLE_COLUMN_PRICE, item.productPrice)
             put(CartContract.TABLE_COLUMN_COUNT, item.count)
         }
 
         db.update(
             CartContract.TABLE_NAME,
             values,
-            "${CartContract.TABLE_COLUMN_ID} = ${item.id}",
+            "${CartContract.TABLE_COLUMN_ID} = ${item.productId}",
             null,
         )
     }
 
-    fun deleteColumn(cartProduct: CartProduct) {
+    override fun deleteColumn(cartProduct: CartProduct) {
         db.delete(
             CartContract.TABLE_NAME,
             CartContract.TABLE_COLUMN_ID + "=" + cartProduct.productId,
@@ -108,17 +106,13 @@ class CartLocalDataSourceImpl(
         )
     }
 
-    fun findProductById(id: Int): CartProductItem? {
+    override fun findProductById(id: Int): CartProduct? {
         val cursor = db.rawQuery(
             "SELECT * FROM ${CartContract.TABLE_NAME} WHERE id = $id",
             null,
         )
 
         if (cursor.moveToFirst().not()) return null
-        return getCartProduct(cursor).toUi()
-    }
-
-    companion object {
-        private const val DEFAULT_COUNT = 1
+        return getCartProduct(cursor)
     }
 }

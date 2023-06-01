@@ -2,6 +2,7 @@ package woowacourse.shopping.feature.product.detail.dialog
 
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
+import woowacourse.shopping.feature.model.mapper.toDomain
 import woowacourse.shopping.feature.model.mapper.toProductDomain
 
 class CounterDialogPresenter(
@@ -20,7 +21,8 @@ class CounterDialogPresenter(
     override fun addCart() {
         cartDb.findProductById(product.id)?.let {
             count += it.count
-            cartDb.updateColumn(product.updateCount(count))
+            val newCartProduct = product.toDomain().updateCount(count)
+            cartDb.updateColumn(newCartProduct)
         } ?: cartDb.addColumn(product.toProductDomain(), count)
         view.exit()
     }
