@@ -4,16 +4,18 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.json.JSONObject
 import woowacourse.shopping.util.mockData
 
 class ProductMockServer {
     private lateinit var mockWebServer: MockWebServer
     private val productDispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
-            val path = request.path ?: return MockResponse().setResponseCode(FAIL_CODE)
+            val url = request.requestUrl ?: return MockResponse().setResponseCode(FAIL_CODE)
+            val path = url.encodedPath
 
-            return when (path) {
-                "/products" -> {
+            return when {
+                path.startsWith("/products") -> {
                     val parameters = parseParameters(request.body.readUtf8())
                     val unit = parameters[parameters.keys.first()]?.toIntOrNull()
                     val lastIndex = parameters[parameters.keys.last()]?.toIntOrNull()
@@ -25,11 +27,30 @@ class ProductMockServer {
                         .setResponseCode(SUCCESS_CODE).setBody(getProducts(unit, lastIndex))
                 }
 
+                path.startsWith("/product/") -> {
+                    val productId = path.substringAfter("/product/").toIntOrNull()
+                        ?: return MockResponse().setResponseCode(FAIL_CODE)
+
+                    MockResponse().setHeader("Content-Type", "application/json")
+                        .setResponseCode(SUCCESS_CODE).setBody(getProduct(productId))
+                }
+
                 else -> {
                     MockResponse().setResponseCode(FAIL_CODE)
                 }
             }
         }
+    }
+
+    private fun getProduct(productId: Int): String {
+        for (product in mockData) {
+            val json = JSONObject(product)
+            val id = json.getInt("id")
+            if (id == productId) {
+                return product
+            }
+        }
+        return ""
     }
 
     private fun getProducts(unit: Int, startIndex: Int): String {
