@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.provider.BaseColumns
+import android.util.Log
 import woowacourse.shopping.data.db.WoowaShoppingContract.RecentlyViewed.TABLE_COLUMN_PRODUCT_ID
 import woowacourse.shopping.data.db.WoowaShoppingContract.RecentlyViewed.TABLE_NAME
 import woowacourse.shopping.data.db.WoowaShoppingDbHelper
@@ -45,6 +46,7 @@ class RecentlyViewedDao(context: Context) : RecentlyViewedDataSource {
             )
         """.trimIndent()
         shoppingDb.execSQL(query)
+        Log.d("1231234444444", id.toString())
         return id
     }
 

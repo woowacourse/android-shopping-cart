@@ -1,21 +1,5 @@
 package woowacourse.shopping.util
 
-val mockData2 = """
-    [
-    {
-                    "id" : 1,
-                    "name" : "BMW i8",
-                    "price" : 13000,
-                    "itemImage" : "https://search.pstatic.net/common?quality=75&direct=true&src=https%3A%2F%2Fimgauto-phinf.pstatic.net%2F20190529_183%2Fauto_1559133035619Mrf6z_PNG%2F20190529212501_Y1nsyfUj.png"   
-                     },{
-                "id" : 2,
-                "name" : "포르쉐 카이엔",
-                "price" : 7000,
-                "itemImage" : "https://search.pstatic.net/common?quality=75&direct=true&src=https%3A%2F%2Fimgauto-phinf.pstatic.net%2F20220712_52%2Fauto_1657592866600a8C4k_PNG%2F20220712112738_wVnAbAoZ.png"}
-    
-    ]
-""".trimIndent()
-
 val mockData = listOf(
     """
 {

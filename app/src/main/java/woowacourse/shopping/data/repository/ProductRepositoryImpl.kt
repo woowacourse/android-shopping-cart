@@ -19,11 +19,11 @@ class ProductRepositoryImpl(
     private val recentlyViewedDataSource: RecentlyViewedDataSource,
 ) : ProductRepository {
 
-    override fun getProductFromLocal(id: Long): WoowaResult<Product> {
-        val productEntity: ProductEntity = getProductEntity(id) ?: return FAIL(Error.NoSuchId)
-
-        return SUCCESS(productEntity.toDomainModel())
-    }
+//    override fun getProductFromLocal(id: Long): WoowaResult<Product> {
+//        val productEntity: ProductEntity = getProductEntity(id) ?: return FAIL(Error.NoSuchId)
+//
+//        return SUCCESS(productEntity.toDomainModel())
+//    }
 
     override fun getProductFromRemote(id: Long): WoowaResult<Product> {
         return when (val result = productRemoteDataSource.getProduct(id)) {
@@ -32,11 +32,11 @@ class ProductRepositoryImpl(
         }
     }
 
-    override fun getProductsFromLocal(unit: Int, lastIndex: Int): List<Product> {
-        return productDataSource.getProductEntities(unit, lastIndex).map { productEntity ->
-            productEntity.toDomainModel()
-        }
-    }
+//    override fun getProductsFromLocal(unit: Int, lastIndex: Int): List<Product> {
+//        return productDataSource.getProductEntities(unit, lastIndex).map { productEntity ->
+//            productEntity.toDomainModel()
+//        }
+//    }
 
     override fun getProductsFromRemote(unit: Int, lastIndex: Int): WoowaResult<List<Product>> {
         return when (val result = productRemoteDataSource.getAllProducts(unit, lastIndex)) {

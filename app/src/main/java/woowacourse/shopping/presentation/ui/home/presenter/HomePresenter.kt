@@ -23,8 +23,7 @@ class HomePresenter(
     override fun fetchAllProductsOnHome() {
         val recentlyViewedProducts =
             productRepository.getRecentlyViewedProducts(10).toRecentProductsByView()
-        val productsFromRemote = getProductsFromRemote().toProductsByView()
-        val productsFromLocal = productRepository.getProductsFromLocal(20, 0).toProductsByView()
+        val productsFromRemote = getProductsFromRemote(20, 0).toProductsByView()
         val showMoreButton = ShowMoreProducts
         val shoppingCart = shoppingCartRepository.getShoppingCart().map {
             it.toUiState()
@@ -37,11 +36,11 @@ class HomePresenter(
     }
 
     @WorkerThread
-    private fun getProductsFromRemote(): List<Product> {
+    private fun getProductsFromRemote(unit: Int, lastIndex: Int): List<Product> {
         var result: List<Product> = emptyList()
 
         val thread = Thread {
-            result = when (val state = productRepository.getProductsFromRemote(20, 0)) {
+            result = when (val state = productRepository.getProductsFromRemote(unit, lastIndex)) {
                 is SUCCESS -> state.data
                 is FAIL -> emptyList()
             }
@@ -64,7 +63,8 @@ class HomePresenter(
     }
 
     override fun fetchMoreProducts() {
-        val products = productRepository.getProductsFromLocal(20, productsCount).toProductsByView()
+        val products =
+            getProductsFromRemote(20, productsCount).toProductsByView()
 
         productsCount += products.size
         view.setUpMoreProducts(products)

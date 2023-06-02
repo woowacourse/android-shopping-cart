@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.productDetail.presenter
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -45,6 +46,7 @@ class ProductDetailPresenter(
     }
 
     override fun addRecentlyViewedProduct(id: Long, unit: Int) {
+        Log.d("123123", id.toString())
         productRepository.addRecentlyViewedProduct(id, unit)
     }
 
