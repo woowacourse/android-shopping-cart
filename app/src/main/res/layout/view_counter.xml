@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="countClickListener"
+            type="woowacourse.shopping.productcatalogue.ProductCountClickListener" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/ll_counter"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/bt_count_down"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_product_count_down"
+            android:gravity="center"
+            android:text="@string/minus"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tv_product_count"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:gravity="center"
+            android:textSize="22sp"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/bt_count_up"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_product_count_up"
+            android:gravity="center"
+            android:text="@string/plus"
+            android:textSize="22sp" />
+
+    </LinearLayout>
+</layout>

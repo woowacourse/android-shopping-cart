@@ -2,31 +2,35 @@ package woowacourse.shopping.datas
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import com.shopping.domain.Price
+import com.shopping.domain.Product
+import com.shopping.domain.RecentProduct
+import com.shopping.domain.RecentRepository
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_ID
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_IMAGE
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_NAME
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_PRICE
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.KEY_TIME
 import woowacourse.shopping.datas.RecentProductDBHelper.Companion.TABLE_NAME
+import woowacourse.shopping.mapper.toDomain
 import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductUIModel
 
-class RecentProductDBRepository(private val database: SQLiteDatabase) : RecentRepository {
-    override fun getAll(): List<RecentProductUIModel> {
-        val products = mutableListOf<RecentProductUIModel>()
+class RecentRepositoryImpl(private val database: SQLiteDatabase) : RecentRepository {
+    override fun getAll(): List<RecentProduct> {
+        val products = mutableListOf<RecentProduct>()
         database.rawQuery("SELECT * FROM $TABLE_NAME", null).use {
             while (it.moveToNext()) {
-                val recentProductUIModel =
-                    RecentProductUIModel(
+                val recentProduct =
+                    RecentProduct(
                         time = it.getLong(it.getColumnIndexOrThrow(KEY_TIME)),
-                        ProductUIModel(
+                        Product(
                             id = it.getInt(it.getColumnIndexOrThrow(KEY_ID)),
                             name = it.getString(it.getColumnIndexOrThrow(KEY_NAME)),
                             imageUrl = it.getString(it.getColumnIndexOrThrow(KEY_IMAGE)),
-                            price = it.getInt(it.getColumnIndexOrThrow(KEY_PRICE)),
+                            price = Price(it.getInt(it.getColumnIndexOrThrow(KEY_PRICE))),
                         )
                     )
-                products.add(recentProductUIModel)
+                products.add(recentProduct)
             }
         }
         return products.distinctBy { it.product }.sortedBy { it.time }.takeLast(
@@ -34,7 +38,24 @@ class RecentProductDBRepository(private val database: SQLiteDatabase) : RecentRe
         ).reversed()
     }
 
-    override fun insert(recentProduct: RecentProductUIModel) {
+    override fun getLatestProduct(): RecentProduct {
+        database.rawQuery("SELECT * FROM $TABLE_NAME ORDER BY $KEY_TIME DESC LIMIT 1", null).use {
+            if (it.moveToFirst()) {
+                return RecentProduct(
+                    time = it.getLong(it.getColumnIndexOrThrow(KEY_TIME)),
+                    Product(
+                        id = it.getInt(it.getColumnIndexOrThrow(KEY_ID)),
+                        name = it.getString(it.getColumnIndexOrThrow(KEY_NAME)),
+                        imageUrl = it.getString(it.getColumnIndexOrThrow(KEY_IMAGE)),
+                        price = Price(it.getInt(it.getColumnIndexOrThrow(KEY_PRICE))),
+                    )
+                )
+            }
+            return RecentProduct(0L, ProductUIModel.dummy.toDomain())
+        }
+    }
+
+    override fun insert(recentProduct: RecentProduct) {
         database.execSQL(
             "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '${recentProduct.product.id}' "
         )
@@ -44,12 +65,12 @@ class RecentProductDBRepository(private val database: SQLiteDatabase) : RecentRe
             put(KEY_ID, recentProduct.product.id)
             put(KEY_NAME, recentProduct.product.name)
             put(KEY_IMAGE, recentProduct.product.imageUrl)
-            put(KEY_PRICE, recentProduct.product.price)
+            put(KEY_PRICE, recentProduct.product.price.value)
         }
         database.insert(TABLE_NAME, null, record)
     }
 
-    override fun remove(recentProduct: RecentProductUIModel) {
+    override fun remove(recentProduct: RecentProduct) {
         database.execSQL(
             "DELETE FROM $TABLE_NAME WHERE $KEY_ID = '${recentProduct.product.id}' "
         )

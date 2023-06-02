@@ -5,20 +5,40 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="product"
-            type="woowacourse.shopping.uimodel.ProductUIModel" />
+            name="cartProduct"
+            type="woowacourse.shopping.uimodel.CartProductUIModel" />
+
+        <variable
+            name="count"
+            type="int" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ProductClickListener" />
+
+        <variable
+            name="countClickListener"
+            type="woowacourse.shopping.productcatalogue.ProductCountClickListener" />
+
+        <variable
+            name="counterShowClickListener"
+            type="woowacourse.shopping.productcatalogue.list.MainProductCatalogueViewHolder.OnCounterShowButtonClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="180dp"
-        android:layout_height="220dp"
-        android:paddingHorizontal="20dp">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{()->listener.onProductClick(cartProduct.product)}"
+        android:padding="20dp">
 
         <ImageView
             android:id="@+id/iv_product_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:glideImgUrl="@{cartProduct.product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +52,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{cartProduct.product.name}"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,10 +64,37 @@
             android:id="@+id/tv_product_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{@string/formatted_price(cartProduct.product.price)}"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10,000원" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_show"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:onClick="@{() -> counterShowClickListener.onClick(cvCounter,fabShow)}"
+            android:src="@drawable/baseline_add_24"
+            android:visibility="@{count > 0? View.GONE : View.VISIBLE}"
+            app:backgroundTint="@color/white"
+            app:fabCustomSize="48dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
+
+        <woowacourse.shopping.view.CounterView
+            android:id="@+id/cv_counter"
+            android:layout_width="126dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="@{count > 0? View.VISIBLE : View.GONE}"
+            app:cartProductUIModel="@{cartProduct}"
+            app:productCountClickListener="@{countClickListener}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image"
+            app:layout_constraintStart_toStartOf="@id/iv_product_image" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

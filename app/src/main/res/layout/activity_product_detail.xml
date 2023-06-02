@@ -3,6 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.uimodel.CartProductUIModel" />
+
+        <variable
+            name="recentProduct"
+            type="woowacourse.shopping.uimodel.RecentProductUIModel" />
+
+        <variable
+            name="showAddCartDialog"
+            type="kotlin.jvm.functions.Function1" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +36,7 @@
 
         <ImageView
             android:id="@+id/iv_product_image"
+            glideImgUrl="@{cartProduct.product.imageUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1:1"
@@ -35,6 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="16dp"
+            android:text="@{cartProduct.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -71,6 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
+            android:text="@{@string/formatted_price(cartProduct.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -82,6 +100,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="@color/add_to_cart_button_color"
+            android:onClick="@{()-> showAddCartDialog.invoke(cartProduct)}"
             android:text="@string/add_to_cart_button_name"
             android:textColor="@color/white"
             android:textSize="20sp"
@@ -89,6 +108,51 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_recent_product_box"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="33dp"
+            android:background="@drawable/solid_box"
+            android:padding="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/bt_add_to_cart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tv_last_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/last_product"
+                android:textColor="@color/product_detail_last_product_title"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/cl_recent_product_box" />
+
+            <TextView
+                android:id="@+id/tv_recent_product_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{recentProduct.product.name}"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_last_product"
+                tools:text="[든든] 동원 스위트콘" />
+
+            <TextView
+                android:id="@+id/tv_recent_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/formatted_price(recentProduct.product.price)}"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_last_product"
+                tools:text="99,000원" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

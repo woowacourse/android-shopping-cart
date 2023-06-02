@@ -3,30 +3,64 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="cartProduct"
+            type="woowacourse.shopping.uimodel.CartProductUIModel" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.ProductClickListener" />
+
+        <variable
+            name="cartItemListener"
+            type="woowacourse.shopping.cart.ItemClickListener" />
+
+        <variable
+            name="onCheckedChangeListener"
+            type="woowacourse.shopping.cart.OnCheckedChangedListener" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_margin="15dp"
-        android:background="@drawable/solid_box"
-        android:padding="20dp">
+        android:background="@drawable/solid_box">
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="@{cartProduct.picked}"
+            android:onCheckedChanged="@{(_, isChecked) -> onCheckedChangeListener.onChangedIsPicked(cartProduct, isChecked)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_product_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="29dp"
+            android:onClick="@{()->listener.onProductClick(cartProduct.product)}"
+            android:text="@{cartProduct.product.name}"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/checkBox"
+            app:layout_constraintEnd_toStartOf="@id/iv_cancel"
+            app:layout_constraintStart_toEndOf="@id/checkBox"
+            app:layout_constraintTop_toTopOf="@id/checkBox"
             tools:text="[든든] 동원 콘샐러드" />
 
         <ImageView
             android:id="@+id/iv_product_image"
+            glideImgUrl="@{cartProduct.product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
+            android:onClick="@{()->listener.onProductClick(cartProduct.product)}"
             android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="@id/tv_product_name"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:src="@drawable/ic_launcher_background" />
 
@@ -34,6 +68,8 @@
             android:id="@+id/iv_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
             android:src="@drawable/cancel_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -43,11 +79,48 @@
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="@{@string/formatted_price(cartProduct.product.price)}"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bt_plus"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_cancel"
             tools:text="10,000원" />
 
+        <TextView
+            android:id="@+id/bt_count_down"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:onClick="@{()-> cartItemListener.onMinusClick(cartProduct, Integer.parseInt(String.valueOf(tvProductCount.getText()))-1, tvProductCount)}"
+            android:text="-"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_count"
+            app:layout_constraintEnd_toStartOf="@id/tv_product_count" />
+
+        <TextView
+            android:id="@+id/tv_product_count"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:text="@{String.valueOf(cartProduct.count)}"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="@id/bt_plus"
+            app:layout_constraintEnd_toStartOf="@id/bt_plus"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/bt_plus"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:onClick="@{()-> cartItemListener.onPlusClick(cartProduct, Integer.parseInt(String.valueOf(tvProductCount.getText()))+1, tvProductCount)}"
+            android:text="+"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

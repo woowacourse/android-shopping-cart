@@ -4,12 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class CartDBHelper(context: Context) : SQLiteOpenHelper(
-    context,
-    DB_NAME,
-    null,
-    DB_VERSION
-) {
+class CartDBHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
     override fun onCreate(db: SQLiteDatabase?) {
         db?.execSQL(CREATE_TABLE_QUERY)
     }
@@ -23,6 +18,7 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(
         private const val DB_VERSION: Int = 1
         const val TABLE_NAME = "cartProducts"
         const val KEY_COUNT = "count"
+        const val KEY_IS_CHECKED = "isChecked"
         const val KEY_ID = "id"
         const val KEY_NAME = "name"
         const val KEY_IMAGE = "image"
@@ -30,6 +26,7 @@ class CartDBHelper(context: Context) : SQLiteOpenHelper(
 
         private const val CREATE_TABLE_QUERY = "CREATE TABLE $TABLE_NAME (" +
             "$KEY_COUNT INTEGER," +
+            "$KEY_IS_CHECKED INTEGER," +
             "$KEY_ID INTEGER," +
             "$KEY_NAME text," +
             "$KEY_IMAGE text," +

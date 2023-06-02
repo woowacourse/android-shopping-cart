@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="onCheckedChangedListener"
+            type="kotlin.jvm.functions.Function1" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,9 +30,9 @@
             android:id="@+id/rv_cart_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginBottom="60dp"
+            android:layout_marginBottom="25dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@+id/tv_current_page"
+            app:layout_constraintBottom_toTopOf="@id/tv_current_page"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_cart" />
@@ -41,20 +48,21 @@
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_current_page"
-            app:layout_constraintEnd_toEndOf="@id/tv_current_page"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_current_page" />
+            app:layout_constraintEnd_toStartOf="@id/tv_current_page"
+            app:layout_constraintTop_toTopOf="@id/tv_current_page"
+            tools:layout_editor_absoluteX="165dp" />
 
         <TextView
             android:id="@+id/tv_current_page"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="25dp"
+            android:gravity="center"
+            android:text="@string/first_page"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/constraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="@string/first_page" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/bt_next"
@@ -67,9 +75,68 @@
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_current_page"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/tv_current_page"
+            app:layout_constraintStart_toEndOf="@id/tv_current_page"
             app:layout_constraintTop_toTopOf="@id/tv_current_page" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="0dp"
+            android:layout_height="78dp"
+            android:background="@color/cart_info_box_color"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.7">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-15dp"
+                android:text="@string/cart_total_check_box_description"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/cb_all_checked"
+                app:layout_constraintStart_toStartOf="@id/cb_all_checked"
+                app:layout_constraintTop_toBottomOf="@id/cb_all_checked" />
+
+            <CheckBox
+                android:id="@+id/cb_all_checked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:onCheckedChanged="@{(_, isChecked)-> onCheckedChangedListener.invoke(isChecked)}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_totalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="38,900원" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/bt_order"
+            android:layout_width="0dp"
+            android:layout_height="78dp"
+            android:background="@color/cart_order_button"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/constraintLayout"
+            app:layout_constraintWidth_percent="0.3"
+            tools:text="주문하기(1)" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

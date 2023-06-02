@@ -1,26 +1,29 @@
 package woowacourse.shopping
 
+import com.shopping.domain.CartProduct
+import com.shopping.domain.CartRepository
+import com.shopping.domain.Product
+import com.shopping.domain.RecentProduct
+import com.shopping.domain.RecentRepository
 import io.mockk.every
 import io.mockk.just
+import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.runs
-import io.mockk.slot
 import io.mockk.verify
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import woowacourse.shopping.datas.CartRepository
-import woowacourse.shopping.datas.RecentRepository
+import woowacourse.shopping.mapper.toDomain
+import woowacourse.shopping.mapper.toUIModel
 import woowacourse.shopping.productdetail.ProductDetailContract
 import woowacourse.shopping.productdetail.ProductDetailPresenter
 import woowacourse.shopping.uimodel.CartProductUIModel
 import woowacourse.shopping.uimodel.ProductUIModel
-import woowacourse.shopping.uimodel.RecentProductUIModel
 
 class ProductDetailPresenterTest {
 
     private lateinit var view: ProductDetailContract.View
-    private lateinit var productUIModel: ProductUIModel
+    private lateinit var product: Product
     private lateinit var recentRepository: RecentRepository
     private lateinit var cartRepository: CartRepository
     private lateinit var presenter: ProductDetailContract.Presenter
@@ -28,24 +31,11 @@ class ProductDetailPresenterTest {
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
-        productUIModel = ProductUIModel.dummy
+        product = ProductUIModel.dummy.toDomain()
         recentRepository = mockk()
         cartRepository = mockk()
-        presenter = ProductDetailPresenter(view, productUIModel, recentRepository, cartRepository)
-    }
-
-    @Test
-    fun `초기화면을 그릴 때 필요한 데이터를 넘겨준다`() {
-        // given
-        val slot = slot<ProductUIModel>()
-        every { view.setViews(productUIModel) } just runs
-
-        // when
-        presenter.initPage()
-
-        // then
-        verify { view.setViews(capture(slot)) }
-        assertEquals(productUIModel, slot.captured)
+        presenter =
+            ProductDetailPresenter(view, product.toUIModel(), recentRepository, cartRepository)
     }
 
     @Test
@@ -53,40 +43,79 @@ class ProductDetailPresenterTest {
         val currentTime = 1000L
 
         // given
-        every {
-            recentRepository.insert(
-                RecentProductUIModel(
-                    currentTime,
-                    productUIModel
-                )
-            )
-        } just runs
+        every { recentRepository.insert(RecentProduct(currentTime, product)) } just runs
 
         // when
         presenter.insertRecentRepository(currentTime)
 
         // then
+        verify { recentRepository.insert(RecentProduct(currentTime, product)) }
+    }
+
+    @Test
+    fun `가장 최근 본 상품을 가져온다`() {
+        // given
+        val dummyRecentProduct = RecentProduct(10000L, product)
+        every { recentRepository.getLatestProduct() } returns dummyRecentProduct
+
+        // when
+        presenter.fetchMostRecentProduct()
+
+        // then
+        verify(exactly = 1) { view.showRecentProduct(any()) }
+    }
+
+    @Test
+    fun `장바구니 상품을 만들어 뷰에게 전달한다`() {
+        // given
+        every { cartRepository.getProductCount(product.id) } returns 2
+        justRun {
+            view.setCartProductData(
+                CartProductUIModel(true, 2, product.toUIModel())
+            )
+        }
+
+        // when
+        presenter.attachCartProductData()
+
+        // then
+        verify { cartRepository.getProductCount(product.id) }
         verify {
-            recentRepository.insert(
-                RecentProductUIModel(
-                    currentTime,
-                    productUIModel
-                )
+            view.setCartProductData(
+                CartProductUIModel(true, 2, product.toUIModel())
             )
         }
     }
 
     @Test
-    fun `장바구니에 추가하는 버튼이 클릭 될 때 데이터를 레포지토리에 저장하고 장바구니 페이지를 보여준다`() {
+    fun `장바구니에 상품을 추가하려 할 때 원래 장바구니에 없는 상품이라면 장바구니 레포지토리에 추가시키고 장바구니 화면을 표시한다`() {
         // given
-        every { cartRepository.insert(CartProductUIModel(1, productUIModel)) } just runs
-        every { view.showCartPage() } just runs
+        every { cartRepository.getProductCount(product.id) } returns 0
+        justRun { cartRepository.insert(CartProduct(true, 5, product)) }
+        justRun { view.showCartPage() }
 
         // when
-        presenter.onClickAddToCart()
+        presenter.addToCart(5)
 
         // then
-        verify { cartRepository.insert(CartProductUIModel(1, productUIModel)) }
+        verify { cartRepository.insert(CartProduct(true, 5, product)) }
+        verify { view.showCartPage() }
+        verify(inverse = true) { cartRepository.updateProductCount(any(), any()) }
+    }
+
+    @Test
+    fun `장바구니에 상품을 추가하려 할 때 원래 장바구니에 있는 상품이라면 수량을 변경시키고 장바구니 화면을 표시한다`() {
+        // given
+        every { cartRepository.getProductCount(product.id) } returns 1
+        justRun { cartRepository.updateProductCount(product.id, 5) }
+        justRun { view.showCartPage() }
+
+        // when
+        presenter.addToCart(4)
+
+        // then
+        verify(inverse = true) { cartRepository.insert(any()) }
+        verify { cartRepository.updateProductCount(product.id, 5) }
         verify { view.showCartPage() }
     }
 }
