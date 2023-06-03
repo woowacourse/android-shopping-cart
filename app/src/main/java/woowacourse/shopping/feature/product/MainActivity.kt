@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.domain.CartProduct
 import com.example.domain.Product
 import com.example.domain.RecentProduct
 import com.example.domain.repository.CartRepository
@@ -39,13 +38,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     private val binding: ActivityMainBinding
         get() = _binding!!
 
-    private val cartRepository: CartRepository by lazy {
-        CartRepositoryImpl(
-            MockProductRemoteService(),
-            CartDao(this)
-        )
-    }
     private val presenter: MainContract.Presenter by lazy {
+        val cartRepository: CartRepository by lazy {
+            CartRepositoryImpl(MockProductRemoteService(), CartDao(this))
+        }
         val productRepository: ProductRepository =
             MockRemoteProductRepositoryImpl(MockProductRemoteService())
         val recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this))
@@ -53,7 +49,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
     private val productListAdapter: ProductListAdapter by lazy {
         ProductListAdapter(
-            cartProductStates = cartRepository.getAll().map(CartProduct::toUi),
             onProductClick = presenter::showProductDetail,
             cartProductAddFab = { Thread { presenter.storeCartProduct(it) }.start() },
             cartProductCountMinus = presenter::minusCartProductCount,
