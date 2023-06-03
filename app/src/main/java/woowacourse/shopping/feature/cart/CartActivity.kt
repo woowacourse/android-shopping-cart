@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import com.example.domain.Cart
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
@@ -22,7 +23,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
 
     private val presenter: CartContract.Presenter by lazy {
         val cartRepo: CartRepository = CartRepositoryImpl(MockProductRemoteService(), CartDao(this))
-        CartPresenter(this, cartRepo)
+        CartPresenter(this, cartRepo, Cart())
     }
     private val adapter: CartProductListAdapter by lazy {
         CartProductListAdapter(
