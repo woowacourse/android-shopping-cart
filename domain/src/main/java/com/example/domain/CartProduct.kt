@@ -5,8 +5,8 @@ class CartProduct(
     val productImageUrl: String,
     val productName: String,
     val productPrice: Int,
-    val count: Int,
-    val checked: Boolean
+    var count: Int,
+    var checked: Boolean
 ) {
     companion object {
         const val MIN_COUNT_VALUE = 1
