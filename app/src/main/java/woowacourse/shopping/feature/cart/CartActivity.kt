@@ -32,7 +32,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
             minusCount = presenter::minusCount,
             updateChecked = { productId: Int, checked: Boolean ->
                 presenter.updateChecked(productId, checked)
-                presenter.loadCheckedCartProductCount()
             }
         )
     }

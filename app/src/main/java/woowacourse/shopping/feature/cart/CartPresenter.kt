@@ -76,6 +76,7 @@ class CartPresenter(
         cartRepository.updateCartProductChecked(productId, checked)
         cart.updateCheckedByProductId(productId, checked)
         view.setTotalCost(PaymentCalculator.totalPaymentAmount(cart.products).toInt())
+        loadCheckedCartProductCount()
     }
 
     override fun deleteCartProduct(cartProductState: CartProductState) {
