@@ -22,7 +22,7 @@ class CartPresenter(
 
     override fun loadCart() {
         val fromIndex = pageNumber * maxProductsPerPage - maxProductsPerPage
-        val toIndex = pageNumber * maxProductsPerPage - 1
+        val toIndex = pageNumber * maxProductsPerPage
 
         cart.updateAll(cartRepository.getAll())
 
@@ -54,9 +54,21 @@ class CartPresenter(
         loadCart()
     }
 
-    override fun updateCount(productId: Int, count: Int) {
-        cartRepository.updateCartProductCount(productId, count)
-        cart.updateCountByProductId(productId, count)
+    override fun plusCount(cartProductState: CartProductState) {
+        val cartProduct: CartProduct = cart.getByProductId(cartProductState.productId) ?: return
+
+        cartProduct.plusCount()
+        cartProductState.count = cartProduct.count
+        cartRepository.updateCartProductCount(cartProduct.productId, cartProduct.count)
+        view.setTotalCost(PaymentCalculator.totalPaymentAmount(cart.products).toInt())
+    }
+
+    override fun minusCount(cartProductState: CartProductState) {
+        val cartProduct: CartProduct = cart.getByProductId(cartProductState.productId) ?: return
+
+        cartProduct.minusCount()
+        cartProductState.count = cartProduct.count
+        cartRepository.updateCartProductCount(cartProduct.productId, cartProduct.count)
         view.setTotalCost(PaymentCalculator.totalPaymentAmount(cart.products).toInt())
     }
 
@@ -88,6 +100,8 @@ class CartPresenter(
             }
         }
         view.setTotalCost(PaymentCalculator.totalPaymentAmount(cart.products).toInt())
+        loadCart()
+        loadCheckedCartProductCount()
     }
 
     private fun getMaxPageNumber(cartsSize: Int): Int {

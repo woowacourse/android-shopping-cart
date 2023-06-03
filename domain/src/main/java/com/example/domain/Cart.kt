@@ -27,16 +27,16 @@ class Cart(
         _products[index].checked = checked
     }
 
-    fun updateCountByProductId(productId: Int, count: Int) {
-        val index = getIndexByProductId(productId)
-        _products[index].count = count
-    }
+    fun getByProductId(productId: Int): CartProduct? = _products.find { it.productId == productId }
 
     fun isAllChecked(): Boolean = products.count() == products.count { it.checked }
 
     fun setAllChecked(checked: Boolean) = _products.map { it.checked = checked }
 
-    fun subList(fromIndex: Int, toIndex: Int) = _products.subList(fromIndex, toIndex)
+    fun subList(fromIndex: Int, toIndex: Int): List<CartProduct> {
+        return if (toIndex < _products.size) _products.subList(fromIndex, toIndex)
+        else _products.subList(fromIndex, _products.size)
+    }
 
     private fun getIndexByProductId(productId: Int): Int = _products.indexOfFirst { it.productId == productId }
 }

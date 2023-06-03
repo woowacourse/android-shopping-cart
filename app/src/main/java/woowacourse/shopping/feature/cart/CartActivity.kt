@@ -28,7 +28,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val adapter: CartProductListAdapter by lazy {
         CartProductListAdapter(
             onCartProductDeleteClick = presenter::deleteCartProduct,
-            updateCount = { productId: Int, count: Int -> presenter.updateCount(productId, count) },
+            plusCount = presenter::plusCount,
+            minusCount = presenter::minusCount,
             updateChecked = { productId: Int, checked: Boolean ->
                 presenter.updateChecked(productId, checked)
                 presenter.loadCheckedCartProductCount()
@@ -46,11 +47,8 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.pageNumberMinusTv.setOnClickListener { presenter.minusPageNumber() }
         binding.allCheckBox.setOnCheckedChangeListener { compoundButton, b ->
             presenter.checkAll()
-            presenter.loadCart()
-            presenter.loadCheckedCartProductCount()
         }
         presenter.loadCart()
-        presenter.loadCheckedCartProductCount()
     }
 
     override fun setCartProducts(cartProducts: List<CartProductState>) {

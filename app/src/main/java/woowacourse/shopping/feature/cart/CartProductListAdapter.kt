@@ -7,13 +7,14 @@ import woowacourse.shopping.model.CartProductState
 class CartProductListAdapter(
     private var cartProductStates: List<CartProductState> = listOf(),
     private val onCartProductDeleteClick: (cartProductState: CartProductState) -> Unit,
-    private val updateCount: (productId: Int, count: Int) -> Unit,
+    private val plusCount: (cartProductState: CartProductState) -> Unit,
+    private val minusCount: (cartProductState: CartProductState) -> Unit,
     private val updateChecked: (productId: Int, checked: Boolean) -> Unit
 ) : RecyclerView.Adapter<CartProductViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartProductViewHolder {
         return CartProductViewHolder.createInstance(
-            parent, onCartProductDeleteClick, updateCount, updateChecked
+            parent, onCartProductDeleteClick, plusCount, minusCount, updateChecked
         )
     }
 
