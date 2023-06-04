@@ -1,11 +1,11 @@
 package woowacourse.shopping.shoppingCart
 
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.slot
-import io.mockk.unmockkAll
 import io.mockk.verify
-import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -15,6 +15,7 @@ import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartContract
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartPresenter
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class ShoppingCartPresenterTest {
     private lateinit var presenter: ShoppingCartContract.Presenter
@@ -30,21 +31,20 @@ class ShoppingCartPresenterTest {
         presenter = ShoppingCartPresenter(view, shoppingCartRepository)
     }
 
-    @After
-    fun tearDown() {
-        unmockkAll()
-    }
+    //    fun fetchTotalPrice()
+//    fun fetchTotalPriceByCheckAll(isChecked: Boolean)
 
+//    fun addCountOfProductInCart(request: Operator, productInCart: ProductInCartUiState)
+//    fun fetchCheckState(isChecked: Boolean, productInCart: ProductInCartUiState)
     @Test
-    fun 장바구니를_가져와_뷰로_넘겨준다() {
+    fun testFetchProductsInCartByPage() {
         // given
-        val productCart = ProductInCart(product, QUANTITY)
         every { shoppingCartRepository.getShoppingCartByPage(any(), PAGE_NUMBER) } returns listOf(
             productCart,
         )
 
-        val slot = slot<List<ProductInCart>>()
-        every { view.setShoppingCart(capture(slot)) } answers { nothing }
+        val slot = slot<List<ProductInCartUiState>>()
+        every { view.setShoppingCart(capture(slot)) } just runs
 
         // when
         presenter.fetchProductsInCartByPage(PAGE_NUMBER)
@@ -53,11 +53,11 @@ class ShoppingCartPresenterTest {
         val actual = slot.captured
         verify { view.setShoppingCart(actual) }
 
-        Assert.assertEquals(listOf(productCart), actual)
+        Assert.assertEquals(wrappedShoppingCart, actual)
     }
 
     @Test
-    fun 시작_페이지번호를_가져와_뷰로_넘겨준다() {
+    fun testSetPageNumber() {
         // given
         val slot = slot<Int>()
         every { view.setPage(capture(slot)) } answers { nothing }
@@ -73,7 +73,7 @@ class ShoppingCartPresenterTest {
     }
 
     @Test
-    fun 데이터는_8개이며_첫_페이지에선_다음페이지로만_갈_수_있다() {
+    fun testCheckPageMovement() {
         // given
         every { shoppingCartRepository.getShoppingCartSize() } returns 8
         val previousSlot = slot<Boolean>()
@@ -98,7 +98,7 @@ class ShoppingCartPresenterTest {
     }
 
     @Test
-    fun 장바구니에서_특정_아이템을_삭제한다() {
+    fun testDeleteProductInCart() {
         // given
         val productId = 1L
         val slot = slot<Long>()
@@ -119,5 +119,7 @@ class ShoppingCartPresenterTest {
         private const val QUANTITY = 1
         private const val PAGE_NUMBER = 1
         private val product = Product(0, "", "test", 999)
+        private val productCart = ProductInCart(product, QUANTITY, true)
+        private val wrappedShoppingCart = listOf(ProductInCartUiState(product, 1, true))
     }
 }
