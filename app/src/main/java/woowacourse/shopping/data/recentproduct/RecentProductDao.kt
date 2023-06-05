@@ -6,16 +6,11 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.example.domain.Product
 import com.example.domain.RecentProduct
-import com.example.domain.repository.ProductRepository
-import woowacourse.shopping.data.product.MockProductRemoteService
-import woowacourse.shopping.data.product.MockRemoteProductRepositoryImpl
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 class RecentProductDao(context: Context) {
 
-    private val productRepository: ProductRepository =
-        MockRemoteProductRepositoryImpl(MockProductRemoteService())
     private val recentDb: SQLiteDatabase = RecentProductDbHelper(context).writableDatabase
 
     private fun getCursor(selection: String? = ""): Cursor {
@@ -109,28 +104,25 @@ class RecentProductDao(context: Context) {
         ) else recentProducts
     }
 
-    fun addColumn(productId: Int, viewedDateTime: LocalDateTime) {
+    fun addColumn(product: Product, viewedDateTime: LocalDateTime) {
         val deleteQuery =
             """
                 DELETE FROM ${RecentProductContract.TABLE_NAME}
-                WHERE ${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} = $productId;
+                WHERE ${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} = ${product.id};
             """.trimIndent()
         recentDb.execSQL(deleteQuery)
 
-        val product: Product? = productRepository.getProduct(productId)
-        product?.let {
-            val values = ContentValues().apply {
-                put(RecentProductContract.TABLE_COLUMN_PRODUCT_ID, it.id)
-                put(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, it.imageUrl)
-                put(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME, it.name)
-                put(RecentProductContract.TABLE_COLUMN_PRODUCT_PRICE, it.price)
-                put(
-                    RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME,
-                    viewedDateTime.toEpochSecond(ZoneOffset.UTC)
-                )
-            }
-            recentDb.insert(RecentProductContract.TABLE_NAME, null, values)
+        val values = ContentValues().apply {
+            put(RecentProductContract.TABLE_COLUMN_PRODUCT_ID, product.id)
+            put(RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL, product.imageUrl)
+            put(RecentProductContract.TABLE_COLUMN_PRODUCT_NAME, product.name)
+            put(RecentProductContract.TABLE_COLUMN_PRODUCT_PRICE, product.price)
+            put(
+                RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME,
+                viewedDateTime.toEpochSecond(ZoneOffset.UTC)
+            )
         }
+        recentDb.insert(RecentProductContract.TABLE_NAME, null, values)
     }
 
     fun deleteColumn(productId: Int) {

@@ -57,7 +57,7 @@ class MainPresenter(
 
     override fun addRecentProduct(product: Product) {
         val nowDateTime: LocalDateTime = LocalDateTime.now()
-        storeRecentProduct(product.id, nowDateTime)
+        storeRecentProduct(product, nowDateTime)
         view.setRecentProducts(recentProductRepository.getAll())
     }
 
@@ -87,7 +87,7 @@ class MainPresenter(
         cartRepository.updateCartProductCount(productState.id, cartProductCount)
     }
 
-    private fun storeRecentProduct(productId: Int, viewedDateTime: LocalDateTime) {
-        recentProductRepository.addRecentProduct(productId, viewedDateTime)
+    private fun storeRecentProduct(product: Product, viewedDateTime: LocalDateTime) {
+        recentProductRepository.addRecentProduct(product, viewedDateTime)
     }
 }

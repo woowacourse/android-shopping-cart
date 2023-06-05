@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.recentproduct
 
+import com.example.domain.Product
 import com.example.domain.RecentProduct
 import com.example.domain.repository.RecentProductRepository
 import java.time.LocalDateTime
@@ -20,7 +21,7 @@ class RecentProductRepositoryImpl(
         return recentProductDao.getRecentProduct(productId)
     }
 
-    override fun addRecentProduct(productId: Int, viewedDateTime: LocalDateTime) {
-        recentProductDao.addColumn(productId, viewedDateTime)
+    override fun addRecentProduct(product: Product, viewedDateTime: LocalDateTime) {
+        recentProductDao.addColumn(product, viewedDateTime)
     }
 }
