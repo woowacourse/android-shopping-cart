@@ -6,7 +6,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import com.example.domain.CartProduct
 import com.example.domain.Product
-import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
 
 class CartDao(context: Context) {
     private val cartDb: SQLiteDatabase = CartDbHelper(context).writableDatabase

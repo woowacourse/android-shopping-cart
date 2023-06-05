@@ -1,4 +1,4 @@
-package woowacourse.shopping.model
+package woowacourse.shopping.feature.product.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

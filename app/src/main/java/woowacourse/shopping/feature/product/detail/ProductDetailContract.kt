@@ -1,8 +1,8 @@
 package woowacourse.shopping.feature.product.detail
 
 import woowacourse.shopping.databinding.DialogSelectCountBinding
-import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.RecentProductState
+import woowacourse.shopping.feature.product.model.ProductState
+import woowacourse.shopping.feature.product.recent.model.RecentProductState
 
 interface ProductDetailContract {
 

@@ -7,11 +7,11 @@
     <data>
         <variable
             name="product"
-            type="woowacourse.shopping.model.ProductState" />
+            type="woowacourse.shopping.feature.product.model.ProductState" />
 
         <variable
             name="mostRecentProduct"
-            type="woowacourse.shopping.model.RecentProductState" />
+            type="woowacourse.shopping.feature.product.recent.model.RecentProductState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -15,9 +15,9 @@ import woowacourse.shopping.data.product.MockProductRemoteService
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
-import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.RecentProductState
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
+import woowacourse.shopping.feature.product.model.ProductState
+import woowacourse.shopping.feature.product.recent.model.RecentProductState
 import woowacourse.shopping.util.extension.showToast
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {

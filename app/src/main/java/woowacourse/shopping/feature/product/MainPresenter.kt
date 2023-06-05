@@ -6,11 +6,12 @@ import com.example.domain.Product
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
-import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
-import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.RecentProductState
-import woowacourse.shopping.model.mapper.toDomain
-import woowacourse.shopping.model.mapper.toUi
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
+import woowacourse.shopping.feature.product.model.ProductState
+import woowacourse.shopping.feature.product.model.toDomain
+import woowacourse.shopping.feature.product.model.toUi
+import woowacourse.shopping.feature.product.recent.model.RecentProductState
+import woowacourse.shopping.feature.product.recent.model.toUi
 import java.time.LocalDateTime
 
 class MainPresenter(

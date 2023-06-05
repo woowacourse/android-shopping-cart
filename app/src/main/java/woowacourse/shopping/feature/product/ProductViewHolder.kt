@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.model.CartProductState
-import woowacourse.shopping.model.CartProductState.Companion.MAX_COUNT_VALUE
-import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
-import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.feature.cart.model.CartProductState
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MAX_COUNT_VALUE
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
+import woowacourse.shopping.feature.product.model.ProductState
 
 class ProductViewHolder(
     binding: ViewBinding

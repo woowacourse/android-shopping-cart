@@ -2,8 +2,8 @@ package woowacourse.shopping.feature.product
 
 import com.example.domain.Product
 import com.example.domain.RecentProduct
-import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.RecentProductState
+import woowacourse.shopping.feature.product.model.ProductState
+import woowacourse.shopping.feature.product.recent.model.RecentProductState
 
 interface MainContract {
 

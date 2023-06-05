@@ -1,6 +1,6 @@
 package woowacourse.shopping.feature.cart
 
-import woowacourse.shopping.model.CartProductState
+import woowacourse.shopping.feature.cart.model.CartProductState
 
 interface CartContract {
 

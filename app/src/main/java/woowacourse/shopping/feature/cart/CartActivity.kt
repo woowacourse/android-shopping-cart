@@ -13,7 +13,7 @@ import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.MockProductRemoteService
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.CartProductState
+import woowacourse.shopping.feature.cart.model.CartProductState
 import woowacourse.shopping.util.extension.formatPriceWon
 
 class CartActivity : AppCompatActivity(), CartContract.View {

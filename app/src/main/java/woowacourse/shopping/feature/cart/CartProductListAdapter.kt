@@ -2,7 +2,7 @@ package woowacourse.shopping.feature.cart
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.model.CartProductState
+import woowacourse.shopping.feature.cart.model.CartProductState
 
 class CartProductListAdapter(
     private var cartProductStates: List<CartProductState> = listOf(),

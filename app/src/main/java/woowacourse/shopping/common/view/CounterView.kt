@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import woowacourse.shopping.databinding.ViewCounterBinding
-import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
 
 class CounterView @JvmOverloads constructor(
     context: Context,

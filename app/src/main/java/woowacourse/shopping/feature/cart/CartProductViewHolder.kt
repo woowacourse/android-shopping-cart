@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.model.CartProductState
+import woowacourse.shopping.feature.cart.model.CartProductState
 
 class CartProductViewHolder(
     binding: ViewDataBinding,

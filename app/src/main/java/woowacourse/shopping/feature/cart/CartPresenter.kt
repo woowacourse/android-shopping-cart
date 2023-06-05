@@ -4,8 +4,8 @@ import com.example.domain.Cart
 import com.example.domain.CartProduct
 import com.example.domain.PaymentCalculator
 import com.example.domain.repository.CartRepository
-import woowacourse.shopping.model.CartProductState
-import woowacourse.shopping.model.mapper.toUi
+import woowacourse.shopping.feature.cart.model.CartProductState
+import woowacourse.shopping.feature.cart.model.toUi
 
 class CartPresenter(
     private val view: CartContract.View,

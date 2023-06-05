@@ -12,7 +12,7 @@
 
         <variable
             name="product"
-            type="woowacourse.shopping.model.ProductState" />
+            type="woowacourse.shopping.feature.product.model.ProductState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

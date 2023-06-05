@@ -3,7 +3,7 @@ package woowacourse.shopping.feature.product.recent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.ViewType
-import woowacourse.shopping.model.RecentProductState
+import woowacourse.shopping.feature.product.recent.model.RecentProductState
 
 class RecentProductListAdapter(
     private var recentProductStates: List<RecentProductState> = listOf(),

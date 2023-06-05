@@ -1,7 +1,6 @@
-package woowacourse.shopping.model.mapper
+package woowacourse.shopping.feature.cart.model
 
 import com.example.domain.CartProduct
-import woowacourse.shopping.model.CartProductState
 
 fun CartProduct.toUi(): CartProductState {
     return CartProductState(productId, productImageUrl, productName, productPrice, count, checked)

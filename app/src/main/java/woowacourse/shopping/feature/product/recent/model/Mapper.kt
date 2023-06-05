@@ -1,8 +1,7 @@
-package woowacourse.shopping.model.mapper
+package woowacourse.shopping.feature.product.recent.model
 
 import com.example.domain.Product
 import com.example.domain.RecentProduct
-import woowacourse.shopping.model.RecentProductState
 
 fun RecentProduct.toUi(): RecentProductState {
     return RecentProductState(productId, productImageUrl, productPrice, productName)

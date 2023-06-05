@@ -2,12 +2,13 @@ package woowacourse.shopping.feature.product.detail
 
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.databinding.DialogSelectCountBinding
-import woowacourse.shopping.model.CartProductState.Companion.MAX_COUNT_VALUE
-import woowacourse.shopping.model.CartProductState.Companion.MIN_COUNT_VALUE
-import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.RecentProductState
-import woowacourse.shopping.model.mapper.toProduct
-import woowacourse.shopping.model.mapper.toUi
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MAX_COUNT_VALUE
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
+import woowacourse.shopping.feature.cart.model.toUi
+import woowacourse.shopping.feature.product.model.ProductState
+import woowacourse.shopping.feature.product.model.toUi
+import woowacourse.shopping.feature.product.recent.model.RecentProductState
+import woowacourse.shopping.feature.product.recent.model.toProduct
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,

@@ -23,12 +23,14 @@ import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
+import woowacourse.shopping.feature.cart.model.toUi
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
+import woowacourse.shopping.feature.product.model.ProductState
+import woowacourse.shopping.feature.product.model.toUi
 import woowacourse.shopping.feature.product.recent.RecentProductListAdapter
 import woowacourse.shopping.feature.product.recent.RecentProductListWrapperAdapter
-import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.RecentProductState
-import woowacourse.shopping.model.mapper.toUi
+import woowacourse.shopping.feature.product.recent.model.RecentProductState
+import woowacourse.shopping.feature.product.recent.model.toUi
 import woowacourse.shopping.util.SpanSizeLookUpManager
 import woowacourse.shopping.util.extension.showToast
 

@@ -3,8 +3,8 @@ package woowacourse.shopping.feature.product
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.common.ViewType
-import woowacourse.shopping.model.CartProductState
-import woowacourse.shopping.model.ProductState
+import woowacourse.shopping.feature.cart.model.CartProductState
+import woowacourse.shopping.feature.product.model.ProductState
 
 class ProductListAdapter(
     private var productStates: List<ProductState> = listOf(),

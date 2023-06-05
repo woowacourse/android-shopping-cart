@@ -1,8 +1,7 @@
-package woowacourse.shopping.model.mapper
+package woowacourse.shopping.feature.product.model
 
 import com.example.domain.Product
 import com.example.domain.RecentProduct
-import woowacourse.shopping.model.ProductState
 import java.time.LocalDateTime
 
 fun Product.toUi(): ProductState {
