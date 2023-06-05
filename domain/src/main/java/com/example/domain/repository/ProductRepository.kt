@@ -11,10 +11,4 @@ interface ProductRepository {
     )
 
     fun getProduct(productId: Int): Product? = Product(0, "", "test product", 1_000)
-
-//    fun getProduct(productId: Int): Product?
-
-//    fun getAll(): List<Product>
-
-//    fun get(fromIndex: Int, ToIndex: Int): List<Product>
 }

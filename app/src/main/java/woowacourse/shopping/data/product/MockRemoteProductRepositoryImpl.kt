@@ -20,12 +20,4 @@ class MockRemoteProductRepositoryImpl(
             )
         }.start()
     }
-
-//    override fun getAll(): List<Product> {
-//        TODO("Not yet implemented")
-//    }
-//
-//    override fun getProduct(productId: Int): Product? {
-//        TODO("Not yet implemented")
-//    }
 }

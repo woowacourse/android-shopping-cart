@@ -9,7 +9,4 @@ interface CartRepository {
     fun deleteCartProduct(productId: Int)
     fun updateCartProductCount(productId: Int, count: Int)
     fun updateCartProductChecked(productId: Int, checked: Boolean)
-
-//    fun get(fromIndex: Int, ToIndex: Int): List<CartProduct>
-//    fun getAllSize(): Int
 }
