@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.product
 
+import com.example.domain.Cart
 import com.example.domain.CartProduct
 import com.example.domain.Product
 import com.example.domain.repository.CartRepository
@@ -14,14 +15,18 @@ import java.time.LocalDateTime
 
 class MainPresenter(
     private val view: MainContract.View,
+    private val cart: Cart = Cart(),
     private val productRepository: ProductRepository,
     private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository
-
 ) : MainContract.Presenter {
 
     private val loadItemCountUnit = 20
     private var loadItemFromIndex = 0
+
+    override fun loadCart() {
+        cart.updateAll(cartRepository.getAll())
+    }
 
     override fun loadMoreProducts() {
         productRepository.fetchNextProducts(
@@ -30,8 +35,8 @@ class MainPresenter(
                 view.showEmptyProducts()
                 view.setProducts(listOf())
             },
-            onSuccess = {
-                view.addProductItems(it.map(Product::toUi))
+            onSuccess = { products ->
+                view.addProductItems(products.map(Product::toUi))
             }
         )
         loadItemFromIndex += loadItemCountUnit
@@ -41,11 +46,12 @@ class MainPresenter(
         view.setRecentProducts(recentProductRepository.getAll())
     }
 
-    override fun loadCartProductCount() {
-        val cartProductCount = cartRepository.getAll().size
-        view.showCartProductCount()
-        if (cartProductCount >= MIN_COUNT_VALUE) view.setCartProductCount(cartProductCount)
-        else view.hideCartProductCount()
+    override fun loadCartSize() {
+        val cartProductCount = cart.products.size
+        if (cartProductCount >= MIN_COUNT_VALUE) {
+            view.setCartSize(cartProductCount)
+            view.showCartSizeBadge()
+        } else view.hideCartSizeBadge()
     }
 
     override fun addRecentProduct(product: Product) {
@@ -63,14 +69,15 @@ class MainPresenter(
 
     override fun storeCartProduct(productState: ProductState) {
         cartRepository.addProduct(productState.id, MIN_COUNT_VALUE)
-        loadCartProductCount()
+        cart.addProduct(productState.toDomain())
+        loadCartSize()
     }
 
     override fun minusCartProductCount(productState: ProductState) {
         val cartProduct: CartProduct? = cartRepository.getCartProduct(productState.id)
         val cartProductCount: Int = (cartProduct?.count ?: MIN_COUNT_VALUE) - 1
         cartRepository.updateCartProductCount(productState.id, cartProductCount)
-        loadCartProductCount()
+        loadCartSize()
     }
 
     override fun plusCartProductCount(productState: ProductState) {

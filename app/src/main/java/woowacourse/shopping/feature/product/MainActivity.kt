@@ -45,7 +45,12 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         val productRepository: ProductRepository =
             MockRemoteProductRepositoryImpl(MockProductRemoteService())
         val recentProductRepository = RecentProductRepositoryImpl(RecentProductDao(this))
-        MainPresenter(this, productRepository, recentProductRepository, cartRepository)
+        MainPresenter(
+            view = this,
+            productRepository = productRepository,
+            recentProductRepository = recentProductRepository,
+            cartRepository = cartRepository
+        )
     }
     private val productListAdapter: ProductListAdapter by lazy {
         ProductListAdapter(
@@ -85,8 +90,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     override fun onResume() {
         super.onResume()
         runOnUiThread {
+            presenter.loadCart()
             presenter.loadRecentProducts()
-            presenter.loadCartProductCount()
+            presenter.loadCartSize()
         }
     }
 
@@ -99,7 +105,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         menuInflater.inflate(R.menu.actionbar_menu, menu)
         cartCountBadge =
             menu?.findItem(R.id.cart_count_badge)?.actionView?.findViewById(R.id.badge)
-        presenter.loadCartProductCount()
+        presenter.loadCartSize()
         return true
     }
 
@@ -122,7 +128,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         runOnUiThread { recentProductListAdapter.setItems(recentProducts.map(RecentProduct::toUi)) }
     }
 
-    override fun setCartProductCount(count: Int) {
+    override fun setCartSize(count: Int) {
         runOnUiThread { cartCountBadge?.text = count.toString() }
     }
 
@@ -135,11 +141,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
     override fun showEmptyProducts() = showToast("제품이 없습니다.")
 
-    override fun showCartProductCount() {
+    override fun showCartSizeBadge() {
         runOnUiThread { cartCountBadge?.visibility = VISIBLE }
     }
 
-    override fun hideCartProductCount() {
+    override fun hideCartSizeBadge() {
         runOnUiThread { cartCountBadge?.visibility = GONE }
     }
 

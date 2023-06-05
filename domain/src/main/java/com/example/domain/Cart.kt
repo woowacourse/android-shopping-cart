@@ -8,13 +8,9 @@ class Cart(
     val products: List<CartProduct>
         get() = _products.toList()
 
-    fun updateAll(cartProducts: List<CartProduct>) {
-        _products = cartProducts.toMutableList()
-    }
+    fun isAllChecked(): Boolean = products.count() == products.count { it.checked }
 
-    fun removeByProductId(productId: Int): Boolean = _products.removeIf { it.productId == productId }
-
-    fun removeByIndex(index: Int): CartProduct = _products.removeAt(index)
+    fun getByProductId(productId: Int): CartProduct? = _products.find { it.productId == productId }
 
     fun getCheckedItemCount(): Int = _products.count { it.checked }
 
@@ -22,14 +18,26 @@ class Cart(
         .filter { it.checked }
         .sumOf { it.count * it.productPrice }
 
+    fun addProduct(product: Product) = _products.add(
+        CartProduct(
+            productId = product.id, productImageUrl = product.imageUrl, productName = product.name,
+            productPrice = product.price, count = 1, checked = false
+        )
+    )
+
+    fun updateAll(cartProducts: List<CartProduct>) {
+        _products = cartProducts.toMutableList()
+    }
+
+    fun removeByProductId(productId: Int): Boolean =
+        _products.removeIf { it.productId == productId }
+
+    fun removeByIndex(index: Int): CartProduct = _products.removeAt(index)
+
     fun updateCheckedByProductId(productId: Int, checked: Boolean) {
         val index = getIndexByProductId(productId)
         _products[index].checked = checked
     }
-
-    fun getByProductId(productId: Int): CartProduct? = _products.find { it.productId == productId }
-
-    fun isAllChecked(): Boolean = products.count() == products.count { it.checked }
 
     fun setAllChecked(checked: Boolean) = _products.map { it.checked = checked }
 
@@ -38,5 +46,6 @@ class Cart(
         else _products.subList(fromIndex, _products.size)
     }
 
-    private fun getIndexByProductId(productId: Int): Int = _products.indexOfFirst { it.productId == productId }
+    private fun getIndexByProductId(productId: Int): Int =
+        _products.indexOfFirst { it.productId == productId }
 }
