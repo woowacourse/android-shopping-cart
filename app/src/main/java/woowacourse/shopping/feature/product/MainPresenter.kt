@@ -75,15 +75,15 @@ class MainPresenter(
     }
 
     override fun minusCartProductCount(productState: ProductState) {
-        val cartProduct: CartProduct? = cartRepository.getCartProduct(productState.id)
-        val cartProductCount: Int = (cartProduct?.count ?: MIN_COUNT_VALUE) - 1
+        val cartProduct: CartProduct = cart.getByProductId(productState.id) ?: return
+        val cartProductCount: Int = cartProduct.count - 1
         cartRepository.updateCartProductCount(productState.id, cartProductCount)
         loadCartSize()
     }
 
     override fun plusCartProductCount(productState: ProductState) {
-        val cartProduct: CartProduct? = cartRepository.getCartProduct(productState.id)
-        val cartProductCount: Int = (cartProduct?.count ?: MIN_COUNT_VALUE) + 1
+        val cartProduct: CartProduct = cart.getByProductId(productState.id) ?: return
+        val cartProductCount: Int = cartProduct.count + 1
         cartRepository.updateCartProductCount(productState.id, cartProductCount)
     }
 
