@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         initAdapterLayout()
     }
 
-    override fun startActivity(product: CartProductItem, lastProduct: CartProductItem) {
+    override fun startActivity(product: CartProductItem, lastProduct: CartProductItem?) {
         startActivity(ProductDetailActivity.getIntent(this@MainActivity, product, lastProduct))
     }
 

@@ -59,9 +59,9 @@ class MainPresenter(
     }
 
     override fun saveRecentProduct(product: CartProductItem) {
-        val lastProduct = recentProductDb.getLastProduct() ?: return
+        val lastProduct = recentProductDb.getLastProduct()
         recentProductDb.addColumn(product.toProductDomain())
-        view.startActivity(product, lastProduct.toCartUi())
+        view.startActivity(product, lastProduct?.toCartUi())
     }
 
     override fun updateProductCount(product: CartProductItem, isPlus: Boolean) {

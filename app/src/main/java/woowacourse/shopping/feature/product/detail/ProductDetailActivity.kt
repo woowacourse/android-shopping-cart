@@ -35,6 +35,12 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             finish()
         }
 
+        initPresenter()
+        presenter.initScreen()
+        setView()
+    }
+
+    private fun initPresenter() {
         val cartDbHelper = CartDbHelper(this)
         val cartLocalDataSource = CartLocalDataSourceImpl(cartDbHelper)
 
@@ -48,8 +54,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             product!!,
             lastProduct,
         )
-        presenter.initScreen()
-        setView()
     }
 
     private fun setView() {
@@ -91,7 +95,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         fun getIntent(
             context: Context,
             product: CartProductItem,
-            lastProduct: CartProductItem,
+            lastProduct: CartProductItem?,
         ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_KEY, product)

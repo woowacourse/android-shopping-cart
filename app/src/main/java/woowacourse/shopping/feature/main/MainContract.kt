@@ -11,7 +11,7 @@ interface MainContract {
         fun setInitialProducts(products: List<CartProductItem>, recentProducts: RecentProductsItem)
         fun setProduct(product: CartProductItem)
         fun addProducts(products: List<CartProductItem>)
-        fun startActivity(product: CartProductItem, lastProduct: CartProductItem)
+        fun startActivity(product: CartProductItem, lastProduct: CartProductItem?)
     }
 
     interface Presenter {
