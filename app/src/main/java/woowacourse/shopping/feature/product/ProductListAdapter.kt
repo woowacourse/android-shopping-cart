@@ -51,4 +51,13 @@ class ProductListAdapter(
         this.cartProductStates = items.toList()
         notifyDataSetChanged()
     }
+
+    fun changeCartProduct(item: CartProductState) {
+        val productPosition: Int = this.productStates.indexOfFirst { it.id == item.productId }
+        val cartPosition: Int = this.cartProductStates.indexOfFirst { it.productId == item.productId }
+        if (cartPosition != -1) {
+            this.cartProductStates.toMutableList()[cartPosition].count = item.count
+            notifyItemChanged(productPosition)
+        }
+    }
 }

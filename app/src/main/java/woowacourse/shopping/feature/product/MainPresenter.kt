@@ -79,15 +79,17 @@ class MainPresenter(
 
     override fun minusCartProductCount(cartProductState: CartProductState) {
         val cartProduct: CartProduct = cart.getByProductId(cartProductState.productId) ?: return
-        val cartProductCount: Int = cartProduct.count - 1
-        cartRepository.updateCartProductCount(cartProductState.productId, cartProductCount)
+        cartProduct.minusCount()
+        view.setCartProduct(cartProduct.toUi())
+        cartRepository.updateCartProductCount(cartProduct.productId, cartProduct.count)
         loadCartSize()
     }
 
     override fun plusCartProductCount(cartProductState: CartProductState) {
         val cartProduct: CartProduct = cart.getByProductId(cartProductState.productId) ?: return
-        val cartProductCount: Int = cartProduct.count + 1
-        cartRepository.updateCartProductCount(cartProductState.productId, cartProductCount)
+        cartProduct.plusCount()
+        view.setCartProduct(cartProduct.toUi())
+        cartRepository.updateCartProductCount(cartProduct.productId, cartProduct.count)
     }
 
     private fun storeRecentProduct(product: Product, viewedDateTime: LocalDateTime) {

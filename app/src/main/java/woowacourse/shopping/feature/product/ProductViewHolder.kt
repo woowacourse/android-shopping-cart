@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.feature.cart.model.CartProductState
-import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MAX_COUNT_VALUE
 import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
 import woowacourse.shopping.feature.product.model.ProductState
 
@@ -42,13 +41,11 @@ class ProductViewHolder(
         binding.counterView.minusClickListener = {
             if (binding.counterView.count <= MIN_COUNT_VALUE) hideCounterView()
             if (cartProductState != null) {
-                binding.counterView.count = (--binding.counterView.count).coerceAtLeast(MIN_COUNT_VALUE)
                 cartProductCountMinus(cartProductState)
             }
         }
         binding.counterView.plusClickListener = {
             if (cartProductState != null) {
-                binding.counterView.count = (++binding.counterView.count).coerceAtMost(MAX_COUNT_VALUE)
                 cartProductCountPlus(cartProductState)
             }
         }

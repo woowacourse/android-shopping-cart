@@ -13,6 +13,7 @@ interface MainContract {
         fun setRecentProducts(recentProducts: List<RecentProduct>)
         fun setCartSize(count: Int)
         fun setCartProducts(cartProducts: List<CartProductState>)
+        fun setCartProduct(cartProduct: CartProductState)
         fun addProductItems(products: List<ProductState>)
         fun showProductDetail(productState: ProductState, recentProductState: RecentProductState?)
         fun showEmptyProducts()

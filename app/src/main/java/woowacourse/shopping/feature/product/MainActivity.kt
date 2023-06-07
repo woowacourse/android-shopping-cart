@@ -128,6 +128,10 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         runOnUiThread { productListAdapter.setCartProducts(cartProducts) }
     }
 
+    override fun setCartProduct(cartProduct: CartProductState) {
+        runOnUiThread { productListAdapter.changeCartProduct(cartProduct) }
+    }
+
     override fun setRecentProducts(recentProducts: List<RecentProduct>) {
         runOnUiThread { recentProductListAdapter.setItems(recentProducts.map(RecentProduct::toUi)) }
     }
