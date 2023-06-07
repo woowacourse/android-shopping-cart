@@ -10,17 +10,17 @@ import woowacourse.shopping.ui.products.uistate.ProductUIState.Companion.MINIMUM
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class ProductDetailPresenter(
+    productId: Long,
     private val view: ProductDetailContract.View,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ProductDetailContract.Presenter {
-    override fun loadProduct(productId: Long) {
-        val count = cartRepository.findById(productId)?.count
 
-        productRepository.findById(productId)?.run {
-            view.setProduct(ProductDetailUIState.from(this, count ?: MINIMUM_COUNT))
-        }
+    init {
+        loadProduct(productId)
+        showLastlyViewedProduct(productId)
+        addRecentlyViewedProduct(productId)
     }
 
     override fun addProductToCart(productId: Long, count: Int) {
@@ -39,24 +39,6 @@ class ProductDetailPresenter(
         }
     }
 
-    override fun addRecentlyViewedProduct(productId: Long) {
-        productRepository.findById(productId)?.run {
-            recentlyViewedProductRepository.save(
-                RecentlyViewedProduct(this.id, this.imageUrl, this.name, this.price),
-            )
-        }
-    }
-
-    override fun showLastlyViewedProduct(productId: Long) {
-        recentlyViewedProductRepository.findLast()?.run {
-            if (this.id != productId) {
-                view.showLastlyViewedProduct(RecentlyViewedProductUIState.from(this))
-            } else {
-                view.hideLastlyViewedProduct()
-            }
-        } ?: view.hideLastlyViewedProduct()
-    }
-
     override fun addDialogCount(count: Int) {
         view.updateCount(count + 1)
     }
@@ -64,5 +46,31 @@ class ProductDetailPresenter(
     override fun minusDialogCount(count: Int) {
         if (count <= MINIMUM_COUNT) return
         view.updateCount(count - 1)
+    }
+
+    private fun loadProduct(productId: Long) {
+        val count = cartRepository.findById(productId)?.count
+
+        productRepository.findById(productId)?.run {
+            view.setProduct(ProductDetailUIState.from(this, count ?: MINIMUM_COUNT))
+        }
+    }
+
+    private fun addRecentlyViewedProduct(productId: Long) {
+        productRepository.findById(productId)?.run {
+            recentlyViewedProductRepository.save(
+                RecentlyViewedProduct(this.id, this.imageUrl, this.name, this.price),
+            )
+        }
+    }
+
+    private fun showLastlyViewedProduct(productId: Long) {
+        recentlyViewedProductRepository.findLast()?.run {
+            if (this.id != productId) {
+                view.showLastlyViewedProduct(RecentlyViewedProductUIState.from(this))
+            } else {
+                view.hideLastlyViewedProduct()
+            }
+        } ?: view.hideLastlyViewedProduct()
     }
 }

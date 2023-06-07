@@ -27,24 +27,14 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private val dialogBinding: DialogAddCartBinding by lazy {
         DialogAddCartBinding.inflate(layoutInflater)
     }
-    private val presenter: ProductDetailContract.Presenter by lazy {
-        ProductDetailPresenter(
-            this,
-            ProductRepositoryImpl,
-            CartRepositoryImpl(this, ProductRepositoryImpl),
-            RecentlyViewedProductRepositoryImpl(this, ProductRepositoryImpl),
-        )
-    }
+    private lateinit var presenter: ProductDetailContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setActionBar()
 
-        val productId = intent.getLongExtra(PRODUCT_ID, -1)
-        presenter.loadProduct(productId)
-        presenter.showLastlyViewedProduct(productId)
-        presenter.addRecentlyViewedProduct(productId)
+        initPresenter()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -66,6 +56,18 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun setActionBar() {
         setSupportActionBar(binding.toolbarProductDetail)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun initPresenter() {
+        val productId = intent.getLongExtra(PRODUCT_ID, -1)
+
+        ProductDetailPresenter(
+            productId,
+            this,
+            ProductRepositoryImpl,
+            CartRepositoryImpl(this, ProductRepositoryImpl),
+            RecentlyViewedProductRepositoryImpl(this, ProductRepositoryImpl),
+        )
     }
 
     override fun setProduct(product: ProductDetailUIState) {
