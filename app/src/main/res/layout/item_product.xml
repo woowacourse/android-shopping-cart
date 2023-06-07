@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+
+        <variable
+            name="shoppingCart"
+            type="woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
+            name="setClickListener"
+            type="woowacourse.shopping.presentation.ui.home.HomeSetClickListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> setClickListener.setClickEventOnProduct(product)}"
+        android:paddingHorizontal="8dp"
+        android:paddingTop="20dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_item_product_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/woowa_dealer_gray_200"
+                android:onClick="@{()-> setClickListener.setClickEventOnPlusButton(shoppingCart)}"
+                android:src="@drawable/icon_quantity_button"
+                app:borderWidth="0dp"
+                app:isVisible="@{!shoppingCart.contained}"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_item_product_image"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+
+            <ImageView
+                android:id="@+id/iv_item_product_image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:glideSrc="@{product.itemImage}"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_item_product_name"
+                style="@style/Woowa_pro_16"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@{product.name}"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_item_product_image"
+                tools:text="[든든] 제네시스" />
+
+            <TextView
+                android:id="@+id/tv_item_product_price"
+                style="@style/Woowa_air_16"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rectangle_radius_4dp_blue"
+                android:gravity="center"
+                android:paddingHorizontal="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="8dp"
+                android:text="@{@string/price_format(product.price)}"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_item_product_name"
+                tools:text="10,000원" />
+
+            <include
+                android:id="@+id/layout_quantity"
+                layout="@layout/layout_control_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:isVisible="@{shoppingCart.contained}"
+                app:layout_constraintBottom_toBottomOf="@+id/fab_item_product_quantity"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/fab_item_product_quantity"
+                app:productInCart="@{shoppingCart}"
+                app:setQuantityClickListener="@{setClickListener}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
