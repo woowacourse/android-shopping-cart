@@ -23,7 +23,7 @@ class ProductListPresenter(
     }
 
     override fun loadProducts(limit: Int, offset: Int) {
-        val cartProducts = cartRepository.findAll()
+        val cartProducts = cartRepository.findAll().map(CartUIState::from)
         val products = productRepository.findAll(limit, offset).map(ProductUIState::from)
         products.forEach { product ->
             cartProducts.find { it.id == product.id }?.let {
@@ -34,12 +34,20 @@ class ProductListPresenter(
     }
 
     override fun loadProductsCartCount() {
-        view.updateCartCount(cartRepository.findAll().map(CartUIState::from))
+        val cartProducts = cartRepository.findAll()
+        view.updateProductsCartCount(cartProducts.map(CartUIState::from))
+    }
+
+    override fun loadCartItemCount() {
+        val cartSize = cartRepository.findAll()
+            .fold(0) { count, cartProduct -> count + cartProduct.count }
+        view.updateCartItemCount(cartSize >= MINIMUM_COUNT, cartSize)
     }
 
     override fun plusCount(productId: Long, oldCount: Int) {
         cartRepository.updateCount(productId, oldCount + 1)
         view.updateCartItem(productId, oldCount + 1)
+        loadCartItemCount()
     }
 
     override fun minusCount(productId: Long, oldCount: Int) {
@@ -50,6 +58,7 @@ class ProductListPresenter(
             cartRepository.updateCount(productId, oldCount - 1)
             view.updateCartItem(productId, oldCount - 1)
         }
+        loadCartItemCount()
     }
 
     override fun startCount(product: ProductUIState) {
@@ -58,6 +67,7 @@ class ProductListPresenter(
             CartProduct(product.id, product.imageUrl, product.name, product.price, product.count),
         )
         view.updateCartItem(product.id, product.count)
+        loadCartItemCount()
     }
 
     companion object {

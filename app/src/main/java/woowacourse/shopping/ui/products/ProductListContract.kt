@@ -9,6 +9,7 @@ interface ProductListContract {
         fun loadRecentlyViewedProducts()
         fun loadProducts(limit: Int, offset: Int)
         fun loadProductsCartCount()
+        fun loadCartItemCount()
         fun plusCount(productId: Long, oldCount: Int)
         fun minusCount(productId: Long, oldCount: Int)
         fun startCount(product: ProductUIState)
@@ -19,6 +20,7 @@ interface ProductListContract {
         fun addProducts(products: List<ProductUIState>)
         fun updateCartItem(productId: Long, count: Int)
         fun deleteCartItem(productId: Long)
-        fun updateCartCount(cartProducts: List<CartUIState>)
+        fun updateProductsCartCount(cartProducts: List<CartUIState>)
+        fun updateCartItemCount(isVisible: Boolean, itemCount: Int)
     }
 }

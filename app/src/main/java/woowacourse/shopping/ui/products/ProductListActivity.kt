@@ -46,6 +46,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
 
         initRecentlyViewedProductList()
         initProductsCartCount()
+        initCartItemCount()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -94,6 +95,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         presenter.loadProductsCartCount()
     }
 
+    private fun initCartItemCount() {
+        presenter.loadCartItemCount()
+    }
+
     private fun loadMorePage() {
         offset += PAGE_SIZE
         presenter.loadProducts(PAGE_SIZE, offset)
@@ -128,9 +133,14 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         adapter.deleteCount(productId)
     }
 
-    override fun updateCartCount(cartProducts: List<CartUIState>) {
+    override fun updateProductsCartCount(cartProducts: List<CartUIState>) {
         val adapter = binding.rvMainProduct.adapter as ProductListAdapter
         adapter.notifyCountUpdated(cartProducts)
+    }
+
+    override fun updateCartItemCount(isVisible: Boolean, itemCount: Int) {
+        binding.tvCartCount.isVisible = isVisible
+        binding.tvCartCount.text = "$itemCount"
     }
 
     private fun moveToProductDetailActivity(productId: Long) {
