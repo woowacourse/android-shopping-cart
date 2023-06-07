@@ -23,7 +23,7 @@ import woowacourse.shopping.data.recentproduct.RecentProductDao
 import woowacourse.shopping.data.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.feature.cart.model.toUi
+import woowacourse.shopping.feature.cart.model.CartProductState
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 import woowacourse.shopping.feature.product.model.ProductState
 import woowacourse.shopping.feature.product.model.toUi
@@ -62,9 +62,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
             cartProductCountPlus = presenter::plusCartProductCount,
         )
     }
-    private val recentProductListAdapter by lazy {
-        RecentProductListAdapter(emptyList())
-    }
+    private val recentProductListAdapter by lazy { RecentProductListAdapter(emptyList()) }
     private val recentProductListWrapperAdapter: RecentProductListWrapperAdapter by lazy {
         RecentProductListWrapperAdapter(recentProductListAdapter)
     }
@@ -123,7 +121,11 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun setProducts(products: List<Product>) {
-        runOnUiThread { productListAdapter.setItems(products.map(Product::toUi)) }
+        runOnUiThread { productListAdapter.setProducts(products.map(Product::toUi)) }
+    }
+
+    override fun setCartProducts(cartProducts: List<CartProductState>) {
+        runOnUiThread { productListAdapter.setCartProducts(cartProducts) }
     }
 
     override fun setRecentProducts(recentProducts: List<RecentProduct>) {

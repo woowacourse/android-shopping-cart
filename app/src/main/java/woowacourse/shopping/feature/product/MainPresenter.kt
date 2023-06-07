@@ -6,7 +6,9 @@ import com.example.domain.Product
 import com.example.domain.repository.CartRepository
 import com.example.domain.repository.ProductRepository
 import com.example.domain.repository.RecentProductRepository
+import woowacourse.shopping.feature.cart.model.CartProductState
 import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
+import woowacourse.shopping.feature.cart.model.toUi
 import woowacourse.shopping.feature.product.model.ProductState
 import woowacourse.shopping.feature.product.model.toDomain
 import woowacourse.shopping.feature.product.model.toUi
@@ -71,20 +73,21 @@ class MainPresenter(
     override fun storeCartProduct(productState: ProductState) {
         cartRepository.addProduct(productState.id, MIN_COUNT_VALUE)
         cart.addProduct(productState.toDomain())
+        view.setCartProducts(cart.products.map(CartProduct::toUi))
         loadCartSize()
     }
 
-    override fun minusCartProductCount(productState: ProductState) {
-        val cartProduct: CartProduct = cart.getByProductId(productState.id) ?: return
+    override fun minusCartProductCount(cartProductState: CartProductState) {
+        val cartProduct: CartProduct = cart.getByProductId(cartProductState.productId) ?: return
         val cartProductCount: Int = cartProduct.count - 1
-        cartRepository.updateCartProductCount(productState.id, cartProductCount)
+        cartRepository.updateCartProductCount(cartProductState.productId, cartProductCount)
         loadCartSize()
     }
 
-    override fun plusCartProductCount(productState: ProductState) {
-        val cartProduct: CartProduct = cart.getByProductId(productState.id) ?: return
+    override fun plusCartProductCount(cartProductState: CartProductState) {
+        val cartProduct: CartProduct = cart.getByProductId(cartProductState.productId) ?: return
         val cartProductCount: Int = cartProduct.count + 1
-        cartRepository.updateCartProductCount(productState.id, cartProductCount)
+        cartRepository.updateCartProductCount(cartProductState.productId, cartProductCount)
     }
 
     private fun storeRecentProduct(product: Product, viewedDateTime: LocalDateTime) {

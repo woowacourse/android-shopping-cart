@@ -9,10 +9,10 @@ import woowacourse.shopping.feature.product.model.ProductState
 class ProductListAdapter(
     private var productStates: List<ProductState> = listOf(),
     private var cartProductStates: List<CartProductState> = listOf(),
-    private val onProductClick: (ProductState) -> Unit,
-    private val cartProductAddFab: (ProductState) -> Unit,
-    private val cartProductCountMinus: (ProductState) -> Unit,
-    private val cartProductCountPlus: (ProductState) -> Unit
+    private val onProductClick: (productState: ProductState) -> Unit,
+    private val cartProductAddFab: (productState: ProductState) -> Unit,
+    private val cartProductCountMinus: (cartProductState: CartProductState) -> Unit,
+    private val cartProductCountPlus: (cartProductState: CartProductState) -> Unit
 ) : RecyclerView.Adapter<ProductViewHolder>() {
 
     override fun getItemCount(): Int {
@@ -42,8 +42,13 @@ class ProductListAdapter(
         notifyItemRangeInserted(items.size, newItems.size)
     }
 
-    fun setItems(items: List<ProductState>) {
+    fun setProducts(items: List<ProductState>) {
         this.productStates = items.toList()
+        notifyDataSetChanged()
+    }
+
+    fun setCartProducts(items: List<CartProductState>) {
+        this.cartProductStates = items.toList()
         notifyDataSetChanged()
     }
 }

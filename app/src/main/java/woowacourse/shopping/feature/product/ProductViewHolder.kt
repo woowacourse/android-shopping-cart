@@ -14,15 +14,16 @@ import woowacourse.shopping.feature.product.model.ProductState
 class ProductViewHolder(
     binding: ViewBinding
 ) : RecyclerView.ViewHolder(binding.root) {
+
     private val binding = binding as ItemProductBinding
 
     fun bind(
         productState: ProductState,
         cartProductState: CartProductState?,
-        onProductClick: (ProductState) -> Unit,
-        cartProductAddFab: (ProductState) -> Unit,
-        cartProductCountMinus: (ProductState) -> Unit,
-        cartProductCountPlus: (ProductState) -> Unit
+        onProductClick: (productState: ProductState) -> Unit,
+        cartProductAddFab: (productState: ProductState) -> Unit,
+        cartProductCountMinus: (cartProductState: CartProductState) -> Unit,
+        cartProductCountPlus: (cartProductState: CartProductState) -> Unit
     ) {
         binding.product = productState
         hideCounterView()
@@ -40,12 +41,16 @@ class ProductViewHolder(
         }
         binding.counterView.minusClickListener = {
             if (binding.counterView.count <= MIN_COUNT_VALUE) hideCounterView()
-            binding.counterView.count = (--binding.counterView.count).coerceAtLeast(MIN_COUNT_VALUE)
-            cartProductCountMinus(productState)
+            if (cartProductState != null) {
+                binding.counterView.count = (--binding.counterView.count).coerceAtLeast(MIN_COUNT_VALUE)
+                cartProductCountMinus(cartProductState)
+            }
         }
         binding.counterView.plusClickListener = {
-            binding.counterView.count = (++binding.counterView.count).coerceAtMost(MAX_COUNT_VALUE)
-            cartProductCountPlus(productState)
+            if (cartProductState != null) {
+                binding.counterView.count = (++binding.counterView.count).coerceAtMost(MAX_COUNT_VALUE)
+                cartProductCountPlus(cartProductState)
+            }
         }
     }
 
