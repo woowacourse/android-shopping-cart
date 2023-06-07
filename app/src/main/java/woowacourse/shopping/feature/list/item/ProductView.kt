@@ -21,7 +21,6 @@ sealed interface ProductView {
         }
 
         companion object {
-            const val NO_COUNT = 0
             const val DEFAULT_COUNT = 1
         }
     }

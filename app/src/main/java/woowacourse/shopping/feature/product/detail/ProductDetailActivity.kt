@@ -10,6 +10,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.data.db.cart.CartDbHelper
+import woowacourse.shopping.data.db.recentproduct.RecentProductDbHelper
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
@@ -35,8 +37,17 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         val cartDbHelper = CartDbHelper(this)
         val cartLocalDataSource = CartLocalDataSourceImpl(cartDbHelper)
-        val recentDb = RecentProductLocalDataSourceImpl(this)
-        presenter = ProductDetailPresenter(this, recentDb, cartLocalDataSource, product!!, lastProduct)
+
+        val recentDbHelper = RecentProductDbHelper(this)
+        val recentProductLocalDataSource = RecentProductLocalDataSourceImpl(recentDbHelper)
+        val recentProductRepository = RecentProductRepositoryImpl(recentProductLocalDataSource)
+        presenter = ProductDetailPresenter(
+            this,
+            recentProductRepository,
+            cartLocalDataSource,
+            product!!,
+            lastProduct,
+        )
         presenter.initScreen()
         setView()
     }
@@ -77,7 +88,11 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         const val PRODUCT_KEY = "product"
         const val LAST_PRODUCT_KEY = "last_product"
 
-        fun getIntent(context: Context, product: CartProductItem, lastProduct: CartProductItem): Intent {
+        fun getIntent(
+            context: Context,
+            product: CartProductItem,
+            lastProduct: CartProductItem,
+        ): Intent {
             return Intent(context, ProductDetailActivity::class.java).apply {
                 putExtra(PRODUCT_KEY, product)
                 putExtra(LAST_PRODUCT_KEY, lastProduct)

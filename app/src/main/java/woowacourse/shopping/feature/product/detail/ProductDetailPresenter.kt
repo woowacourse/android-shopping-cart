@@ -1,14 +1,14 @@
 package woowacourse.shopping.feature.product.detail
 
-import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
-import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.cartdatasource.CartDataSource
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.model.mapper.toProductDomain
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
-    private val recentDb: RecentProductLocalDataSourceImpl,
-    private val cartDb: CartLocalDataSourceImpl,
+    private val recentProductRepository: RecentProductRepositoryImpl,
+    private val cartDataSource: CartDataSource,
     product: CartProductItem,
     private val lastProduct: CartProductItem?,
 ) : ProductDetailContract.Presenter {
@@ -30,11 +30,11 @@ class ProductDetailPresenter(
     override fun navigateRecentProductDetail() {
         if (lastProduct == null) return
 
-        recentDb.addColumn(lastProduct.toProductDomain())
+        recentProductRepository.addColumn(lastProduct.toProductDomain())
         view.showRecentProductDetail(lastProduct)
     }
 
     override fun addProduct(product: CartProductItem) {
-        cartDb.addColumn(product.toProductDomain())
+        cartDataSource.addColumn(product.toProductDomain())
     }
 }

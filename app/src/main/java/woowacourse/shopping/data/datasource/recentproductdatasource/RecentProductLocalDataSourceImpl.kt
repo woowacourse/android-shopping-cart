@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.datasource.recentproductdatasource
 
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import com.example.domain.Product
 import com.example.domain.RecentProducts
@@ -9,9 +8,9 @@ import woowacourse.shopping.data.db.recentproduct.RecentProductContract
 import woowacourse.shopping.data.db.recentproduct.RecentProductDbHelper
 
 class RecentProductLocalDataSourceImpl(
-    context: Context,
+    recentProductDbHelper: RecentProductDbHelper,
 ) : RecentProductSource {
-    private val db = RecentProductDbHelper(context).writableDatabase
+    private val db = recentProductDbHelper.writableDatabase
 
     override fun getRecentProducts(): RecentProducts {
         val cursor = getCursor()

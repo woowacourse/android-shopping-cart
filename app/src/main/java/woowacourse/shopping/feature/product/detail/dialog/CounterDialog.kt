@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
+import woowacourse.shopping.data.db.cart.CartDbHelper
 import woowacourse.shopping.databinding.FragmentCounterDialogBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.extension.getParcelableCompat
@@ -32,8 +33,9 @@ class CounterDialog : DialogFragment(), CounterDialogContract.View {
 
         val product =
             arguments?.getParcelableCompat<CartProductItem>(PRODUCT_KEY) ?: return dismiss()
-        val cartDb = CartLocalDataSourceImpl(requireContext())
-        presenter = CounterDialogPresenter(this, cartDb, product)
+        val cartDbHelper = CartDbHelper(requireContext())
+        val cartLocalDataSource = CartLocalDataSourceImpl(cartDbHelper)
+        presenter = CounterDialogPresenter(this, cartLocalDataSource, product)
         binding.product = product
         setListener()
 
