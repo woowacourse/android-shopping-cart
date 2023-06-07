@@ -39,6 +39,7 @@
             android:id="@+id/iv_product_detail"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            app:ImageBinding="@{detail_product.imageUrl}"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintTop_toBottomOf="@id/toolbar_product_detail"
             tools:src="@mipmap/ic_launcher_round" />

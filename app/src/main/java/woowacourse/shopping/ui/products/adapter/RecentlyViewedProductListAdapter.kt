@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.products.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentlyViewedProductBinding
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
@@ -46,10 +45,6 @@ class RecentlyViewedProductListAdapter(
 
         fun bind(recentlyViewedProduct: RecentlyViewedProductUIState) {
             binding.item = recentlyViewedProduct
-            binding.tvRecentlyViewedName.text = recentlyViewedProduct.name
-            Glide.with(itemView)
-                .load(recentlyViewedProduct.imageUrl)
-                .into(binding.ivRecentlyViewed)
         }
     }
 }

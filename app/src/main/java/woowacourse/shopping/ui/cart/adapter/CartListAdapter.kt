@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.listener.CartItemListener
@@ -51,12 +50,6 @@ class CartListAdapter(
 
         fun bind(product: CartUIState) {
             binding.item = product
-
-            binding.cbCart.isChecked = product.isChecked
-
-            Glide.with(itemView)
-                .load(product.imageUrl)
-                .into(binding.ivCart)
         }
     }
 }

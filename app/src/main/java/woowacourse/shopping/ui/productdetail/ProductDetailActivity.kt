@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
@@ -65,10 +64,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     override fun setProduct(product: ProductDetailUIState) {
-        Glide.with(this)
-            .load(product.imageUrl)
-            .into(binding.ivProductDetail)
-
         binding.detailProduct = product
         binding.btnProductDetailAdd.setOnClickListener {
             makeDialog(product).show()

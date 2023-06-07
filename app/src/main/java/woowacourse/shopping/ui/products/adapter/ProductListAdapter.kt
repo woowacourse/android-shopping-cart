@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.listener.ProductItemListener
@@ -87,13 +86,6 @@ class ProductListAdapter(
 
         fun bind(product: ProductUIState) {
             binding.product = product
-
-            Glide.with(itemView)
-                .load(product.imageUrl)
-                .into(binding.ivProduct)
-
-            binding.tvProductCount.text = product.count.toString()
-
             setCountButtonVisibility(product.count != ProductUIState.NO_COUNT)
         }
 
