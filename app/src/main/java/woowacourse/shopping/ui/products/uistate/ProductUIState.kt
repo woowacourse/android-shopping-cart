@@ -17,6 +17,7 @@ data class ProductUIState(
 
     companion object {
         const val NO_COUNT = 0
+        const val MINIMUM_COUNT = 1
 
         fun from(product: Product): ProductUIState =
             ProductUIState(product.imageUrl, product.name, product.price, product.id)

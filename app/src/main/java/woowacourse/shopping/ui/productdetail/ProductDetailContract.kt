@@ -9,12 +9,15 @@ interface ProductDetailContract {
         fun addProductToCart(productId: Long, count: Int)
         fun addRecentlyViewedProduct(productId: Long)
         fun showLastlyViewedProduct(productId: Long)
+        fun addDialogCount(count: Int)
+        fun minusDialogCount(count: Int)
     }
 
     interface View {
         fun setProduct(product: ProductDetailUIState)
         fun showLastlyViewedProduct(product: RecentlyViewedProductUIState)
         fun hideLastlyViewedProduct()
+        fun updateCount(count: Int)
         fun showErrorMessage()
     }
 }

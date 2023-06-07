@@ -10,6 +10,7 @@
     <string name="price_title">금액</string>
     <string name="lastly_viewed_title">마지막으로 본 상품</string>
     <string name="error_not_found">존재하지 않는 상품입니다</string>
+    <string name="dialog_add_cart_positive">담기</string>
 
     <!-- 장바구니 -->
     <string name="checkbox_cart_total">전체</string>
@@ -21,4 +22,5 @@
     <string name="button_load_more">더보기</string>
     <string name="text_minus">-</string>
     <string name="text_plus">+</string>
+
 </resources>

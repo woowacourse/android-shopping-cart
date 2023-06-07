@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp">
+
+        <TextView
+            android:id="@+id/tv_dialog_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:text="@{@string/product_price(product.price)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="99,000원" />
+
+        <Button
+            android:id="@+id/btn_dialog_minus_count"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@android:color/transparent"
+            android:includeFontPadding="false"
+            android:text="@string/text_minus"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toStartOf="@id/tv_dialog_count"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_dialog_plus_count"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:background="@android:color/transparent"
+            android:includeFontPadding="false"
+            android:text="@string/text_plus"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_dialog_count"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:gravity="center"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            android:text="@{Integer.toString(product.cartCount)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toStartOf="@id/btn_dialog_plus_count"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -14,12 +15,18 @@ import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.databinding.DialogAddCartBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.productdetail.uistate.ProductDetailUIState
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
-    private lateinit var binding: ActivityProductDetailBinding
+    private val binding: ActivityProductDetailBinding by lazy {
+        ActivityProductDetailBinding.inflate(layoutInflater)
+    }
+    private val dialogBinding: DialogAddCartBinding by lazy {
+        DialogAddCartBinding.inflate(layoutInflater)
+    }
     private val presenter: ProductDetailContract.Presenter by lazy {
         ProductDetailPresenter(
             this,
@@ -31,7 +38,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setActionBar()
 
@@ -52,6 +58,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -68,9 +75,32 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
         binding.detailProduct = product
         binding.btnProductDetailAdd.setOnClickListener {
-            // TODO : 초기 수량은 1, 추후에 수량 결정할 버튼 추가 예정
-            presenter.addProductToCart(product.id, 1)
-            moveToCartActivity()
+            makeDialog(product).show()
+        }
+    }
+
+    private fun makeDialog(product: ProductDetailUIState): AlertDialog.Builder {
+        dialogBinding.product = product
+        setDialogCountButtonListener()
+
+        return AlertDialog.Builder(this)
+            .setTitle(product.name)
+            .setView(dialogBinding.root)
+            .setPositiveButton(getString(R.string.dialog_add_cart_positive)) { _, _ ->
+                presenter.addProductToCart(
+                    product.id,
+                    dialogBinding.tvDialogCount.text.toString().toInt(),
+                )
+                moveToCartActivity()
+            }
+    }
+
+    private fun setDialogCountButtonListener() {
+        dialogBinding.btnDialogPlusCount.setOnClickListener {
+            presenter.addDialogCount(dialogBinding.tvDialogCount.text.toString().toInt())
+        }
+        dialogBinding.btnDialogMinusCount.setOnClickListener {
+            presenter.minusDialogCount(dialogBinding.tvDialogCount.text.toString().toInt())
         }
     }
 
@@ -83,6 +113,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun hideLastlyViewedProduct() {
         binding.layoutLastlyViewed.isVisible = false
+    }
+
+    override fun updateCount(count: Int) {
+        dialogBinding.tvDialogCount.text = count.toString()
     }
 
     override fun showErrorMessage() {

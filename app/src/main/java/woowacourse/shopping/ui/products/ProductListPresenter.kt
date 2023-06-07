@@ -6,6 +6,7 @@ import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentlyViewedProductRepository
 import woowacourse.shopping.ui.cart.uistate.CartUIState
 import woowacourse.shopping.ui.products.uistate.ProductUIState
+import woowacourse.shopping.ui.products.uistate.ProductUIState.Companion.MINIMUM_COUNT
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class ProductListPresenter(
@@ -72,6 +73,5 @@ class ProductListPresenter(
 
     companion object {
         private const val MAX_SIZE_RECENTLY_VIEWED_PRODUCTS = 10
-        private const val MINIMUM_COUNT = 1
     }
 }
