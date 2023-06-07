@@ -10,7 +10,7 @@ import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class RecentlyViewedProductListAdapter(
     private val recentlyViewedProducts: List<RecentlyViewedProductUIState>,
-    private val onClick: (Int) -> Unit,
+    private val onClick: (Long) -> Unit,
 ) : RecyclerView.Adapter<RecentlyViewedProductListAdapter.RecentlyViewedProductListViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -37,14 +37,15 @@ class RecentlyViewedProductListAdapter(
 
     class RecentlyViewedProductListViewHolder(
         private val binding: ItemRecentlyViewedProductBinding,
-        private val onClick: (Int) -> Unit,
+        onClick: (Long) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.root.setOnClickListener { onClick(adapterPosition) }
+            binding.onItemClick = onClick
         }
 
         fun bind(recentlyViewedProduct: RecentlyViewedProductUIState) {
+            binding.item = recentlyViewedProduct
             binding.tvRecentlyViewedName.text = recentlyViewedProduct.name
             Glide.with(itemView)
                 .load(recentlyViewedProduct.imageUrl)

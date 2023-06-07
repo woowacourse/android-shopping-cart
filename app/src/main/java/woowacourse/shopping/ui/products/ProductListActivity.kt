@@ -58,7 +58,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
-                moveToCartActivity()
+                presenter.navigateToCart()
                 true
             }
 
@@ -80,7 +80,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             mutableListOf<ProductUIState>(),
             object : ProductItemListener {
                 override fun onItemClick(productId: Long) {
-                    moveToProductDetailActivity(productId)
+                    presenter.navigateToProductDetail(productId)
                 }
 
                 override fun onPlusCountButtonClick(productId: Long, oldCount: Int) {
@@ -125,10 +125,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
 
         binding.layoutRecentlyViewed.isVisible = true
-        binding.rvRecentlyViewed.adapter =
-            RecentlyViewedProductListAdapter(recentlyViewedProducts) {
-                moveToProductDetailActivity(recentlyViewedProducts[it].id)
-            }
+        binding.rvRecentlyViewed.adapter = RecentlyViewedProductListAdapter(recentlyViewedProducts, presenter::navigateToProductDetail)
     }
 
     override fun addProducts(products: List<ProductUIState>) {
@@ -157,13 +154,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         binding.tvCartCount.text = "$itemCount"
     }
 
-    private fun moveToProductDetailActivity(productId: Long) {
+    override fun moveToProductDetailActivity(productId: Long) {
         startActivity(
             ProductDetailActivity.getIntent(this, productId),
         )
     }
 
-    private fun moveToCartActivity() {
+    override fun moveToCartActivity() {
         startActivity(
             CartActivity.getIntent(this),
         )

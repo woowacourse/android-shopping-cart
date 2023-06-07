@@ -10,14 +10,13 @@ import woowacourse.shopping.ui.products.uistate.ProductUIState.Companion.MINIMUM
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
 class ProductDetailPresenter(
-    productId: Long,
     private val view: ProductDetailContract.View,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
     private val recentlyViewedProductRepository: RecentlyViewedProductRepository,
 ) : ProductDetailContract.Presenter {
 
-    init {
+    override fun init(productId: Long) {
         loadProduct(productId)
         showLastlyViewedProduct(productId)
         addRecentlyViewedProduct(productId)
@@ -46,6 +45,14 @@ class ProductDetailPresenter(
     override fun minusDialogCount(count: Int) {
         if (count <= MINIMUM_COUNT) return
         view.updateCount(count - 1)
+    }
+
+    override fun navigateToCart() {
+        view.moveToCartActivity()
+    }
+
+    override fun navigateToProductDetail(productId: Long) {
+        view.moveToProductDetailActivity(productId)
     }
 
     private fun loadProduct(productId: Long) {

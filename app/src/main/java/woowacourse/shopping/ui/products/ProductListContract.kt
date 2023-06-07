@@ -13,6 +13,8 @@ interface ProductListContract {
         fun plusCount(productId: Long, oldCount: Int)
         fun minusCount(productId: Long, oldCount: Int)
         fun startCount(product: ProductUIState)
+        fun navigateToCart()
+        fun navigateToProductDetail(productId: Long)
     }
 
     interface View {
@@ -22,5 +24,7 @@ interface ProductListContract {
         fun deleteCartItem(productId: Long)
         fun updateProductsCartCount(cartProducts: List<CartUIState>)
         fun updateCartItemCount(isVisible: Boolean, itemCount: Int)
+        fun moveToCartActivity()
+        fun moveToProductDetailActivity(productId: Long)
     }
 }

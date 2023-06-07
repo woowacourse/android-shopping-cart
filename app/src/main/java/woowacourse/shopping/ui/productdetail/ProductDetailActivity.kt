@@ -27,14 +27,20 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private val dialogBinding: DialogAddCartBinding by lazy {
         DialogAddCartBinding.inflate(layoutInflater)
     }
-    private lateinit var presenter: ProductDetailContract.Presenter
+    private val presenter: ProductDetailContract.Presenter by lazy {
+        ProductDetailPresenter(
+            this,
+            ProductRepositoryImpl,
+            CartRepositoryImpl(this, ProductRepositoryImpl),
+            RecentlyViewedProductRepositoryImpl(this, ProductRepositoryImpl),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setActionBar()
-
-        initPresenter()
+        presenter.init(intent.getLongExtra(PRODUCT_ID, -1))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -56,18 +62,6 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun setActionBar() {
         setSupportActionBar(binding.toolbarProductDetail)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    private fun initPresenter() {
-        val productId = intent.getLongExtra(PRODUCT_ID, -1)
-
-        ProductDetailPresenter(
-            productId,
-            this,
-            ProductRepositoryImpl,
-            CartRepositoryImpl(this, ProductRepositoryImpl),
-            RecentlyViewedProductRepositoryImpl(this, ProductRepositoryImpl),
-        )
     }
 
     override fun setProduct(product: ProductDetailUIState) {
@@ -93,7 +87,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
                     product.id,
                     dialogBinding.tvDialogCount.text.toString().toInt(),
                 )
-                moveToCartActivity()
+                presenter.navigateToCart()
             }
     }
 
@@ -108,9 +102,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
 
     override fun showLastlyViewedProduct(product: RecentlyViewedProductUIState) {
         binding.recentProduct = product
-        binding.layoutLastlyViewed.setOnClickListener {
-            moveToProductDetailActivity(product.id)
-        }
+        binding.onRecentProductClick = presenter::navigateToProductDetail
     }
 
     override fun hideLastlyViewedProduct() {
@@ -125,7 +117,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         Toast.makeText(this, getString(R.string.error_not_found), Toast.LENGTH_SHORT).show()
     }
 
-    private fun moveToProductDetailActivity(productId: Long) {
+    override fun moveToProductDetailActivity(productId: Long) {
         startActivity(
             ProductDetailActivity.getIntent(this, productId).apply {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -133,7 +125,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         )
     }
 
-    private fun moveToCartActivity() {
+    override fun moveToCartActivity() {
         finish()
         startActivity(
             CartActivity.getIntent(this),

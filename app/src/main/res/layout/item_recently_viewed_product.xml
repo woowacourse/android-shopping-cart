@@ -3,10 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="item"
+            type="woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState" />
+
+        <variable
+            name="onItemClick"
+            type="kotlin.jvm.functions.Function1" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:layout_marginEnd="12dp">
+        android:layout_marginEnd="12dp"
+        android:onClick="@{() -> onItemClick.invoke(item.id)}">
 
         <ImageView
             android:id="@+id/iv_recently_viewed"

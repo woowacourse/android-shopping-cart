@@ -12,6 +12,10 @@
         <variable
             name="recent_product"
             type="woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState" />
+
+        <variable
+            name="onRecentProductClick"
+            type="kotlin.jvm.functions.Function1" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,6 +106,7 @@
             android:layout_marginHorizontal="18dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/shape_border_grey_1dp"
+            android:onClick="@{()->onRecentProductClick.invoke(recent_product.id)}"
             android:paddingHorizontal="18dp"
             android:paddingVertical="12dp"
             app:layout_constraintBottom_toTopOf="@id/btn_product_detail_add">

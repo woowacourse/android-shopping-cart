@@ -71,6 +71,14 @@ class ProductListPresenter(
         loadCartItemCount()
     }
 
+    override fun navigateToCart() {
+        view.moveToCartActivity()
+    }
+
+    override fun navigateToProductDetail(productId: Long) {
+        view.moveToProductDetailActivity(productId)
+    }
+
     companion object {
         private const val MAX_SIZE_RECENTLY_VIEWED_PRODUCTS = 10
     }
