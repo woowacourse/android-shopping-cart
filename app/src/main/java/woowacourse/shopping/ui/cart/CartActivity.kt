@@ -12,6 +12,7 @@ import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
+import woowacourse.shopping.ui.cart.adapter.CartListener
 import woowacourse.shopping.ui.cart.uistate.CartUIState
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -35,6 +36,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -61,10 +63,23 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initCartAdapter() {
         binding.rvCart.adapter = CartListAdapter(
             mutableListOf<CartUIState>(),
-            presenter::deleteCartItem,
-            presenter::plusItemCount,
-            presenter::minusItemCount,
-            presenter::updateCheckbox,
+            object : CartListener {
+                override fun onCloseButtonClick(productId: Long) {
+                    presenter.deleteCartItem(productId)
+                }
+
+                override fun onPlusCountButtonClick(productId: Long, oldCount: Int) {
+                    presenter.plusItemCount(productId, oldCount)
+                }
+
+                override fun onMinusCountButtonClick(productId: Long, oldCount: Int) {
+                    presenter.minusItemCount(productId, oldCount)
+                }
+
+                override fun onCheckboxClick(isChecked: Boolean, item: CartUIState) {
+                    presenter.updateCheckbox(isChecked, item)
+                }
+            },
         )
     }
 

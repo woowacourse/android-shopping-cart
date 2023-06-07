@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -10,20 +11,8 @@ import woowacourse.shopping.ui.cart.uistate.CartUIState
 
 class CartListAdapter(
     private val cartItems: MutableList<CartUIState>,
-    private val onCloseButtonClick: (productId: Long) -> Unit,
-    private val onPlusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
-    private val onMinusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
-    private val onCheckboxClick: (Boolean, CartUIState) -> Unit,
+    private val cartListener: CartListener,
 ) : RecyclerView.Adapter<CartListAdapter.CartListViewHolder>() {
-
-    private val countChangeListener: (isPlusButton: Boolean, position: Int) -> Unit =
-        { isPlus: Boolean, position: Int ->
-            if (isPlus) {
-                onPlusCountButtonClick(cartItems[position].id, cartItems[position].count)
-            } else {
-                onMinusCountButtonClick(cartItems[position].id, cartItems[position].count)
-            }
-        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -34,9 +23,7 @@ class CartListAdapter(
 
         return CartListViewHolder(
             ItemCartBinding.bind(view),
-            { position: Int -> onCloseButtonClick(cartItems[position].id) },
-            countChangeListener,
-            { isChecked: Boolean, position: Int -> onCheckboxClick(isChecked, cartItems[position]) },
+            cartListener,
         )
     }
 
@@ -46,6 +33,7 @@ class CartListAdapter(
         holder.bind(cartItems[position])
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateItems(newItems: List<CartUIState>) {
         cartItems.clear()
         cartItems.addAll(newItems)
@@ -54,23 +42,10 @@ class CartListAdapter(
 
     class CartListViewHolder(
         private val binding: ItemCartBinding,
-        onCloseButtonClick: (Int) -> Unit,
-        onCountButtonsClick: (Boolean, Int) -> Unit,
-        onCheckboxClick: (Boolean, Int) -> Unit,
+        cartListener: CartListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.btnCartClose.setOnClickListener {
-                onCloseButtonClick(position)
-            }
-            binding.btnCartPlusCount.setOnClickListener {
-                onCountButtonsClick(isPlusButton, position)
-            }
-            binding.btnCartMinusCount.setOnClickListener {
-                onCountButtonsClick(isMinusButton, position)
-            }
-            binding.cbCart.setOnCheckedChangeListener { _, isChecked ->
-                onCheckboxClick(isChecked, position)
-            }
+            binding.listener = cartListener
         }
 
         fun bind(product: CartUIState) {
@@ -81,11 +56,6 @@ class CartListAdapter(
             Glide.with(itemView)
                 .load(product.imageUrl)
                 .into(binding.ivCart)
-        }
-
-        companion object {
-            private const val isPlusButton = true
-            private const val isMinusButton = false
         }
     }
 }
