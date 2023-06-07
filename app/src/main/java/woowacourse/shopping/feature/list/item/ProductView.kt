@@ -11,9 +11,8 @@ sealed interface ProductView {
         val imageUrl: String,
         val name: String,
         val price: Int,
+        var count: Int = DEFAULT_COUNT,
     ) : ProductView, Parcelable {
-        var count: Int = DEFAULT_COUNT
-            private set
 
         fun updateCount(count: Int): CartProductItem {
             this.count = count
@@ -21,7 +20,7 @@ sealed interface ProductView {
         }
 
         companion object {
-            const val DEFAULT_COUNT = 1
+            private const val DEFAULT_COUNT = 1
         }
     }
 

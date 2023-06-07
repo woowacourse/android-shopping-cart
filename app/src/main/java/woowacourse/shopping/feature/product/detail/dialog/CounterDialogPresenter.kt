@@ -1,13 +1,13 @@
 package woowacourse.shopping.feature.product.detail.dialog
 
-import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
+import com.example.data.repository.CartRepository
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.model.mapper.toDomain
 import woowacourse.shopping.feature.model.mapper.toProductDomain
 
 class CounterDialogPresenter(
     private val view: CounterDialogContract.View,
-    private val cartDb: CartLocalDataSourceImpl,
+    private val cartRepository: CartRepository,
     product: CartProductItem,
 ) : CounterDialogContract.Presenter {
     override val product: CartProductItem = product
@@ -19,11 +19,11 @@ class CounterDialogPresenter(
     }
 
     override fun addCart() {
-        cartDb.findProductById(product.id)?.let {
+        cartRepository.findProductById(product.id)?.let {
             count += it.count
             val newCartProduct = product.toDomain().updateCount(count)
-            cartDb.updateColumn(newCartProduct)
-        } ?: cartDb.addColumn(product.toProductDomain(), count)
+            cartRepository.updateColumn(newCartProduct)
+        } ?: cartRepository.addColumn(product.toProductDomain(), count)
         view.exit()
     }
 
