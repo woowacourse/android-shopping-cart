@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.datasource.cartdatasource
+package com.example.data.repository
 
 import com.example.domain.CartProduct
 import com.example.domain.Product
 
-interface CartDataSource {
+interface CartRepository {
     fun getAll(): List<CartProduct>
     fun getCartProducts(limit: Int, offset: Int): List<CartProduct>
     fun addColumn(product: Product, count: Int)

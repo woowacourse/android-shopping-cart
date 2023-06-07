@@ -1,9 +1,9 @@
 package woowacourse.shopping.feature.main
 
+import com.example.data.repository.CartRepository
 import com.example.data.repository.ProductRepository
 import com.example.data.repository.RecentProductRepository
 import com.example.domain.Product
-import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.list.item.ProductView.RecentProductsItem
 import woowacourse.shopping.feature.model.mapper.toCartUi
@@ -14,8 +14,8 @@ import kotlin.properties.Delegates
 class MainPresenter(
     val view: MainContract.View,
     private val productRepository: ProductRepository,
-    private val recentProductDb: RecentProductRepository,
-    private val cartProductDb: CartLocalDataSourceImpl,
+    private val recentProductRepository: RecentProductRepository,
+    private val cartRepository: CartRepository,
 ) : MainContract.Presenter {
 
     private val products: List<Product> = productRepository.requestAll()
@@ -29,8 +29,8 @@ class MainPresenter(
             }.toMutableList()
         currentItemIndex = ADD_SIZE
 
-        val recentProducts: RecentProductsItem = recentProductDb.getRecentProducts().toUi()
-        val cartProducts = cartProductDb.getAll().map { it.toUi() }
+        val recentProducts: RecentProductsItem = recentProductRepository.getRecentProducts().toUi()
+        val cartProducts = cartRepository.getAll().map { it.toUi() }
 
         cartProducts.forEach { cartProduct ->
             if (products.contains(cartProduct)) {
@@ -59,28 +59,29 @@ class MainPresenter(
     }
 
     override fun saveRecentProduct(product: CartProductItem) {
-        val lastProduct = recentProductDb.getLastProduct()
-        recentProductDb.addColumn(product.toProductDomain())
+        val lastProduct = recentProductRepository.getLastProduct()
+        recentProductRepository.addColumn(product.toProductDomain())
         view.startActivity(product, lastProduct?.toCartUi())
     }
 
     override fun updateProductCount(product: CartProductItem, isPlus: Boolean) {
         val changeWidth = if (isPlus) 1 else -1
 
-        cartProductDb.findProductById(product.id)?.let { cartProduct ->
+        cartRepository.findProductById(product.id)?.let { cartProduct ->
             val newCartProduct = cartProduct.updateCount(cartProduct.count + changeWidth)
-            cartProductDb.updateColumn(newCartProduct)
+            cartRepository.updateColumn(newCartProduct)
             view.setProduct(newCartProduct.toUi())
-        } ?: cartProductDb.addColumn(product.toProductDomain())
+        } ?: cartRepository.addColumn(product.toProductDomain(), DEFAULT_COUNT)
     }
 
     override fun addProduct(product: CartProductItem) {
-        cartProductDb.findProductById(product.id)
-            ?: cartProductDb.addColumn(product.toProductDomain())
+        cartRepository.findProductById(product.id)
+            ?: cartRepository.addColumn(product.toProductDomain(), DEFAULT_COUNT)
     }
 
     companion object {
         private const val ADD_SIZE = 20
         private const val START_INDEX = 0
+        private const val DEFAULT_COUNT = 1
     }
 }

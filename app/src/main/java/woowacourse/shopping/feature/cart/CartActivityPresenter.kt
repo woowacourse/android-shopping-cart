@@ -1,14 +1,14 @@
 package woowacourse.shopping.feature.cart
 
+import com.example.data.repository.CartRepository
 import com.example.domain.CartProduct
-import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 import woowacourse.shopping.feature.model.mapper.toDomain
 import woowacourse.shopping.feature.model.mapper.toUi
 
 class CartActivityPresenter(
     private val view: CartActivityContract.View,
-    private val db: CartLocalDataSourceImpl,
+    private val cartRepository: CartRepository,
 ) : CartActivityContract.Presenter {
     private var page = MIN_PAGE
     private val selectedItem: MutableList<CartProductItem> = mutableListOf()
@@ -24,7 +24,7 @@ class CartActivityPresenter(
         selectedItem.remove(item)
         setBottomView()
 
-        db.deleteColumn(item.toDomain())
+        cartRepository.deleteColumn(item.toDomain())
         val items = getItems(page)
         val selectedState = getSelectedStateEachPage()
         view.updateAdapterData(items, selectedState)
@@ -44,7 +44,7 @@ class CartActivityPresenter(
     }
 
     private fun getItems(page: Int): List<CartProductItem> {
-        return db.getCartProducts(
+        return cartRepository.getCartProducts(
             limit = ITEM_COUNT_EACH_PAGE,
             offset = (page - 1) * ITEM_COUNT_EACH_PAGE,
         ).map(CartProduct::toUi)
@@ -71,7 +71,7 @@ class CartActivityPresenter(
     }
 
     private fun getMaxPage(): Int {
-        val entireData = db.getAll()
+        val entireData = cartRepository.getAll()
         if (entireData.isEmpty()) return MIN_PAGE
         return (entireData.size - 1) / ITEM_COUNT_EACH_PAGE + 1
     }
@@ -128,7 +128,7 @@ class CartActivityPresenter(
     }
 
     private fun updateDbAndView(item: CartProduct) {
-        db.updateColumn(item)
+        cartRepository.updateColumn(item)
         val items = getItems(page)
         val selected = getSelectedStateEachPage()
         view.updateAdapterData(items, selected)

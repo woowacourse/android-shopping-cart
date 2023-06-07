@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.data.db.cart.CartDbHelper
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.list.adapter.CartProductsAdapter
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
@@ -23,7 +24,8 @@ class CartActivity : AppCompatActivity(), CartActivityContract.View {
 
         val cartDbHelper = CartDbHelper(this)
         val cartLocalDataSource = CartLocalDataSourceImpl(cartDbHelper)
-        presenter = CartActivityPresenter(this, cartLocalDataSource)
+        val cartRepository = CartRepositoryImpl(cartLocalDataSource)
+        presenter = CartActivityPresenter(this, cartRepository)
         setUpView()
     }
 

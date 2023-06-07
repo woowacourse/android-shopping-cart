@@ -11,6 +11,7 @@ import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceIm
 import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
 import woowacourse.shopping.data.db.cart.CartDbHelper
 import woowacourse.shopping.data.db.recentproduct.RecentProductDbHelper
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.extension.showToast
@@ -43,6 +44,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     private fun initPresenter() {
         val cartDbHelper = CartDbHelper(this)
         val cartLocalDataSource = CartLocalDataSourceImpl(cartDbHelper)
+        val cartRepository = CartRepositoryImpl(cartLocalDataSource)
 
         val recentDbHelper = RecentProductDbHelper(this)
         val recentProductLocalDataSource = RecentProductLocalDataSourceImpl(recentDbHelper)
@@ -50,7 +52,7 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
         presenter = ProductDetailPresenter(
             this,
             recentProductRepository,
-            cartLocalDataSource,
+            cartRepository,
             product!!,
             lastProduct,
         )
