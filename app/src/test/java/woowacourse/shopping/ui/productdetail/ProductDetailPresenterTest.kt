@@ -34,7 +34,7 @@ class ProductDetailPresenterTest {
 
     @Test
     fun 상품을_선택하면_최근_조회한_상품_목록에_해당_상품이_추가된다() {
-        presenter.addRecentlyViewedProduct(1)
+        presenter.init(1)
 
         val actual = FakeRecentlyViewedProductRepository.findAll().map { it.id }.contains(1)
         assertTrue(actual)

@@ -14,9 +14,14 @@ object FakeCartRepository : CartRepository {
         return products.values.toList().subList(offset, offset + limit)
     }
 
+    override fun findById(productId: Long): CartProduct? {
+        return products[productId]
+    }
+
     override fun save(product: CartProduct) {
         with(product) {
-            products[this.id] = CartProduct(this.id, this.imageUrl, this.name, this.price, this.count)
+            products[this.id] =
+                CartProduct(this.id, this.imageUrl, this.name, this.price, this.count)
         }
     }
 

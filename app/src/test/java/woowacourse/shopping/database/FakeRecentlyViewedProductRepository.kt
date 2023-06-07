@@ -11,6 +11,7 @@ object FakeRecentlyViewedProductRepository : RecentlyViewedProductRepository {
     }
 
     override fun findLast(): RecentlyViewedProduct? {
+        if (products.isEmpty()) return null
         return products.values.last()
     }
 
