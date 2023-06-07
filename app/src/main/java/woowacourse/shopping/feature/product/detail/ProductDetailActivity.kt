@@ -91,8 +91,8 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
     }
 
     companion object {
-        const val PRODUCT_KEY = "product"
-        const val LAST_PRODUCT_KEY = "last_product"
+        private const val PRODUCT_KEY = "product"
+        private const val LAST_PRODUCT_KEY = "last_product"
 
         fun getIntent(
             context: Context,

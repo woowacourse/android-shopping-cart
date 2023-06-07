@@ -71,11 +71,11 @@ class CounterDialog : DialogFragment(), CounterDialogContract.View {
     }
 
     companion object {
-        const val PRODUCT_KEY = "product"
-        const val COUNTER_DIALOG_TAG = "counter_dialog"
+        private const val PRODUCT_KEY = "product"
         private const val MIN_COUNT = "1"
         private const val PLUS = 1
         private const val MINUS = -1
+        const val COUNTER_DIALOG_TAG = "counter_dialog"
 
         @JvmStatic
         fun newInstance(product: CartProductItem) =
