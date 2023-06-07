@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.product.detail
 
-import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.feature.product.model.ProductState
 import woowacourse.shopping.feature.product.recent.model.RecentProductState
 
@@ -9,10 +8,10 @@ interface ProductDetailContract {
     interface View {
         fun setViewContent(product: ProductState)
         fun setMostRecentViewContent(recentProductState: RecentProductState?)
-        fun setCount(selectCountDialogBinding: DialogSelectCountBinding, count: Int)
+        fun setDialogCount(count: Int)
         fun showCart()
         fun showAccessError()
-        fun showSelectCountDialog()
+        fun showSelectCountDialog(productState: ProductState)
         fun showProductDetail(product: ProductState)
         fun closeProductDetail()
     }
@@ -23,10 +22,10 @@ interface ProductDetailContract {
 
         fun loadProduct()
         fun loadRecentProduct()
-        fun selectCount()
+        fun navigateSelectCountDialog()
         fun addCartProduct(count: Int)
-        fun plusCount(selectCountDialogBinding: DialogSelectCountBinding)
-        fun minusCount(selectCountDialogBinding: DialogSelectCountBinding)
+        fun plusCount()
+        fun minusCount()
         fun navigateProductDetail()
     }
 }

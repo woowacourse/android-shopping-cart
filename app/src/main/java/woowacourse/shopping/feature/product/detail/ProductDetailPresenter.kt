@@ -1,10 +1,8 @@
 package woowacourse.shopping.feature.product.detail
 
 import com.example.domain.repository.CartRepository
-import woowacourse.shopping.databinding.DialogSelectCountBinding
 import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MAX_COUNT_VALUE
 import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
-import woowacourse.shopping.feature.cart.model.toUi
 import woowacourse.shopping.feature.product.model.ProductState
 import woowacourse.shopping.feature.product.model.toUi
 import woowacourse.shopping.feature.product.recent.model.RecentProductState
@@ -30,9 +28,9 @@ class ProductDetailPresenter(
         view.setMostRecentViewContent(recentProduct)
     }
 
-    override fun selectCount() {
+    override fun navigateSelectCountDialog() {
         count = MIN_COUNT_VALUE
-        view.showSelectCountDialog()
+        view.showSelectCountDialog(product!!)
     }
 
     override fun addCartProduct(count: Int) {
@@ -43,18 +41,18 @@ class ProductDetailPresenter(
         view.showCart()
     }
 
-    override fun minusCount(selectCountDialogBinding: DialogSelectCountBinding) {
+    override fun minusCount() {
         count = (--count).coerceAtLeast(MIN_COUNT_VALUE)
-        view.setCount(selectCountDialogBinding, count)
+        view.setDialogCount(count)
     }
 
     override fun navigateProductDetail() {
         view.showProductDetail(recentProduct!!.toProduct().toUi())
     }
 
-    override fun plusCount(selectCountDialogBinding: DialogSelectCountBinding) {
+    override fun plusCount() {
         count = (++count).coerceAtMost(MAX_COUNT_VALUE)
-        view.setCount(selectCountDialogBinding, count)
+        view.setDialogCount(count)
     }
 
     private fun isValidProduct(): Boolean {
