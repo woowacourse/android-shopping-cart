@@ -13,6 +13,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.data.datasource.productdatasource.ProductRemoteDataSourceImpl
 import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
+import woowacourse.shopping.data.db.cart.CartDbHelper
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
@@ -39,8 +40,9 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         val recentProductSource = RecentProductLocalDataSourceImpl(this)
         val recentProductRepository = RecentProductRepositoryImpl(recentProductSource)
 
-        val cartDataSource = CartLocalDataSourceImpl(this)
-        presenter = MainPresenter(this, productRepository, recentProductRepository, cartDataSource)
+        val cartDbHelper = CartDbHelper(this)
+        val cartLocalDataSource = CartLocalDataSourceImpl(cartDbHelper)
+        presenter = MainPresenter(this, productRepository, recentProductRepository, cartLocalDataSource)
 
         initAdapter()
         initListener()

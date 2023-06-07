@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
 import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
+import woowacourse.shopping.data.db.cart.CartDbHelper
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.extension.showToast
 import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
@@ -32,9 +33,10 @@ class ProductDetailActivity : AppCompatActivity(), ProductDetailContract.View {
             finish()
         }
 
-        val cartDb = CartLocalDataSourceImpl(this)
+        val cartDbHelper = CartDbHelper(this)
+        val cartLocalDataSource = CartLocalDataSourceImpl(cartDbHelper)
         val recentDb = RecentProductLocalDataSourceImpl(this)
-        presenter = ProductDetailPresenter(this, recentDb, cartDb, product!!, lastProduct)
+        presenter = ProductDetailPresenter(this, recentDb, cartLocalDataSource, product!!, lastProduct)
         presenter.initScreen()
         setView()
     }

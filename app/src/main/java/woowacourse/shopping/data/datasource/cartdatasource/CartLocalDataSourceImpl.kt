@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.datasource.cartdatasource
 
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import com.example.domain.CartProduct
 import com.example.domain.Product
@@ -9,9 +8,9 @@ import woowacourse.shopping.data.db.cart.CartContract
 import woowacourse.shopping.data.db.cart.CartDbHelper
 
 class CartLocalDataSourceImpl(
-    context: Context,
+    dbHelper: CartDbHelper,
 ) : CartDataSource {
-    private val db = CartDbHelper(context).writableDatabase
+    private val db = dbHelper.writableDatabase
 
     override fun getAll(): List<CartProduct> {
         val cursor = db.rawQuery(
