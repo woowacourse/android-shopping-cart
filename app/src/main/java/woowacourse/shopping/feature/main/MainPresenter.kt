@@ -23,11 +23,12 @@ class MainPresenter(
 
     override fun loadInitialData() {
         currentItemIndex = START_INDEX
+        val lastIndex = if (products.size > ADD_SIZE) ADD_SIZE else products.size
         val products: MutableList<CartProductItem> =
-            productRepository.requestAll().subList(currentItemIndex, ADD_SIZE).map { product ->
+            productRepository.requestAll().subList(currentItemIndex, lastIndex).map { product ->
                 product.toCartUi()
             }.toMutableList()
-        currentItemIndex = ADD_SIZE
+        currentItemIndex = lastIndex
 
         val recentProducts: RecentProductsItem = recentProductRepository.getRecentProducts().toUi()
         val cartProducts = cartRepository.getAll().map { it.toUi() }
