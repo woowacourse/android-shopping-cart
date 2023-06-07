@@ -1,31 +1,17 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.datasource.productdatasource
 
+import android.content.Context
 import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import com.example.domain.Product
+import woowacourse.shopping.data.db.product.ProductContract
+import woowacourse.shopping.data.db.product.ProductDbHelper
 
-class ProductDbHandler(
-    private val db: SQLiteDatabase,
-) {
+class ProductLocalDataSourceImpl(
+    context: Context,
+) : ProductDataSource {
+    private val db = ProductDbHelper(context).writableDatabase
 
-    private fun getCursor(): Cursor {
-        return db.query(
-            ProductContract.TABLE_NAME,
-            arrayOf(
-                ProductContract.TABLE_COLUMN_ID,
-                ProductContract.TABLE_COLUMN_IMAGE_URL,
-                ProductContract.TABLE_COLUMN_NAME,
-                ProductContract.TABLE_COLUMN_PRICE,
-            ),
-            "",
-            arrayOf(),
-            null,
-            null,
-            "",
-        )
-    }
-
-    fun getAll(): List<Product> {
+    override fun requestAllData(): List<Product> {
         val cursor = getCursor()
         val list = mutableListOf<Product>()
 
@@ -51,11 +37,20 @@ class ProductDbHandler(
         return list
     }
 
-    fun deleteColumn(product: Product) {
-        db.delete(
+    private fun getCursor(): Cursor {
+        return db.query(
             ProductContract.TABLE_NAME,
-            ProductContract.TABLE_COLUMN_ID + "=" + product.id,
+            arrayOf(
+                ProductContract.TABLE_COLUMN_ID,
+                ProductContract.TABLE_COLUMN_IMAGE_URL,
+                ProductContract.TABLE_COLUMN_NAME,
+                ProductContract.TABLE_COLUMN_PRICE,
+            ),
+            "",
+            arrayOf(),
             null,
+            null,
+            "",
         )
     }
 }

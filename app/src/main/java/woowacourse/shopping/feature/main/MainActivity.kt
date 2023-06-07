@@ -9,55 +9,92 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.GONE
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.VISIBLE
-import com.example.domain.Product
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductDbHandler
-import woowacourse.shopping.data.product.ProductDbHelper
-import woowacourse.shopping.data.recentproduct.RecentProductDbHandler
-import woowacourse.shopping.data.recentproduct.RecentProductDbHelper
+import woowacourse.shopping.data.datasource.cartdatasource.CartLocalDataSourceImpl
+import woowacourse.shopping.data.datasource.productdatasource.ProductRemoteDataSourceImpl
+import woowacourse.shopping.data.datasource.recentproductdatasource.RecentProductLocalDataSourceImpl
+import woowacourse.shopping.data.db.cart.CartDbHelper
+import woowacourse.shopping.data.db.recentproduct.RecentProductDbHelper
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.list.adapter.ProductsAdapter
-import woowacourse.shopping.feature.list.item.ProductView
-import woowacourse.shopping.feature.model.mapper.toItem
-import woowacourse.shopping.feature.model.mapper.toUi
+import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
+import woowacourse.shopping.feature.list.item.ProductView.RecentProductsItem
 import woowacourse.shopping.feature.product.detail.ProductDetailActivity
 import woowacourse.shopping.feature.util.SpanSizeLookUpManager
 
 class MainActivity : AppCompatActivity(), MainContract.View {
     private lateinit var binding: ActivityMainBinding
     private lateinit var productsAdapter: ProductsAdapter
-    override lateinit var presenter: MainPresenter
+    override lateinit var presenter: MainContract.Presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val productDb = ProductDbHandler(ProductDbHelper(this).writableDatabase)
-        val recentDb = RecentProductDbHandler(RecentProductDbHelper(this).writableDatabase)
-        presenter = MainPresenter(this, productDb, recentDb)
-
+        initPresenter()
         initAdapter()
         initListener()
+    }
 
-        presenter.addProducts()
+    private fun initPresenter() {
+        val productDataSource = ProductRemoteDataSourceImpl()
+        val productRepository = ProductRepositoryImpl(productDataSource)
+
+        val recentDbHelper = RecentProductDbHelper(this)
+        val recentProductSource = RecentProductLocalDataSourceImpl(recentDbHelper)
+        val recentProductRepository = RecentProductRepositoryImpl(recentProductSource)
+
+        val cartDbHelper = CartDbHelper(this)
+        val cartLocalDataSource = CartLocalDataSourceImpl(cartDbHelper)
+        val cartRepository = CartRepositoryImpl(cartLocalDataSource)
+        presenter = MainPresenter(this, productRepository, recentProductRepository, cartRepository)
+    }
+
+    override fun onResume() {
+        presenter.loadInitialData()
+        super.onResume()
     }
 
     private fun initAdapter() {
         productsAdapter = ProductsAdapter(
-            onItemClick = { listItem ->
-                when (listItem) {
-                    is ProductView.ProductItem -> {
-                        presenter.storeRecentProduct(listItem)
-                        ProductDetailActivity.startActivity(this@MainActivity, listItem.toUi())
+            onItemClick = { item ->
+                when (item) {
+                    is CartProductItem -> {
+                        presenter.saveRecentProduct(item)
                     }
-                    is ProductView.RecentProductsItem -> Unit
+                    is RecentProductsItem -> Unit
+                }
+            },
+            onAddClick = { item ->
+                when (item) {
+                    is CartProductItem -> { presenter.addProduct(item) }
+                    is RecentProductsItem -> Unit
+                }
+            },
+            onPlusClick = { item ->
+                when (item) {
+                    is CartProductItem -> { presenter.updateProductCount(item, true) }
+                    is RecentProductsItem -> Unit
+                }
+            },
+            onMinusClick = { item ->
+                when (item) {
+                    is CartProductItem -> { presenter.updateProductCount(item, false) }
+                    is RecentProductsItem -> Unit
                 }
             },
         )
         binding.productRv.adapter = productsAdapter
         initAdapterLayout()
+    }
+
+    override fun startActivity(product: CartProductItem, lastProduct: CartProductItem?) {
+        startActivity(ProductDetailActivity.getIntent(this@MainActivity, product, lastProduct))
     }
 
     private fun initAdapterLayout() {
@@ -79,22 +116,24 @@ class MainActivity : AppCompatActivity(), MainContract.View {
 
         binding.mainMoreButton.setOnClickListener {
             binding.mainMoreButton.visibility = GONE
-            presenter.addProducts()
+            presenter.loadMoreProducts()
         }
     }
 
-    override fun addProducts(products: List<Product>) {
-        productsAdapter.addItems(
-            products.map { it.toUi().toItem() },
-        )
-    }
-
-    override fun setProducts(
-        products: List<ProductView.ProductItem>,
-        recentProducts: ProductView.RecentProductsItem,
+    override fun setInitialProducts(
+        products: List<CartProductItem>,
+        recentProducts: RecentProductsItem,
     ) {
         val list = listOf(recentProducts) + products
         productsAdapter.setItems(list)
+    }
+
+    override fun setProduct(product: CartProductItem) {
+        productsAdapter.setItem(product)
+    }
+
+    override fun addProducts(products: List<CartProductItem>) {
+        productsAdapter.addItems(products)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

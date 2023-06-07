@@ -1,4 +1,4 @@
-package woowacourse.shopping.data.product
+package woowacourse.shopping.data.db.product
 
 import android.content.ContentValues
 import android.content.Context

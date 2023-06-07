@@ -4,4 +4,15 @@
     <string name="left_charactor"><![CDATA[<]]></string>
     <string name="right_charactor"><![CDATA[>]]></string>
     <string name="price_format">%,d원</string>
+    <string name="order_format">주문하기(%d)</string>
+    <string name="add_to_cart_text">장바구니 담기</string>
+    <string name="price_text">금액</string>
+    <string name="all_checked_box_text">전체</string>
+    <string name="order_text">주문하기</string>
+    <string name="plus_text">+</string>
+    <string name="minus_text">-</string>
+    <string name="default_count_text">1</string>
+    <string name="recent_product_text">최근 본 상품</string>
+    <string name="more_button_text">더보기</string>
+    <string name="last_product_text">마지막으로 본 상품</string>
 </resources>

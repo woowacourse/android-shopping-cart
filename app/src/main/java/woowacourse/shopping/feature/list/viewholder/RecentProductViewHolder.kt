@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentBinding
 import woowacourse.shopping.feature.list.item.ProductView
+import woowacourse.shopping.feature.list.item.ProductView.CartProductItem
 
 class RecentProductViewHolder(
     parent: ViewGroup,
@@ -15,7 +16,7 @@ class RecentProductViewHolder(
     private val binding = ItemRecentBinding.bind(itemView)
 
     override fun bind(productView: ProductView) {
-        val productItem = productView as ProductView.ProductItem
+        val productItem = productView as CartProductItem
         binding.product = productItem
     }
 }

@@ -6,6 +6,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemRecentProductListBinding
 import woowacourse.shopping.feature.list.adapter.RecentProductsAdapter
 import woowacourse.shopping.feature.list.item.ProductView
+import woowacourse.shopping.feature.list.item.ProductView.RecentProductsItem
 
 class RecentProductsViewHolder(
     parent: ViewGroup,
@@ -16,6 +17,6 @@ class RecentProductsViewHolder(
     private val binding = ItemRecentProductListBinding.bind(itemView)
 
     override fun bind(productView: ProductView) {
-        binding.recentListRv.adapter = RecentProductsAdapter(productView as ProductView.RecentProductsItem)
+        binding.recentListRv.adapter = RecentProductsAdapter(productView as RecentProductsItem)
     }
 }

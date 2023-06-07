@@ -4,7 +4,7 @@
     <data>
         <variable
             name="product"
-            type="woowacourse.shopping.feature.list.item.ProductView.ProductItem" />
+            type="woowacourse.shopping.feature.list.item.ProductView.CartProductItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,6 +24,55 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
 
+        <ImageButton
+            android:id="@+id/product_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/icon_plus"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="@id/product_image" />
+
+        <LinearLayout
+            android:id="@+id/product_amount_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/product_image"
+            app:layout_constraintEnd_toEndOf="@id/product_image"
+            app:layout_constraintStart_toStartOf="@id/product_image">
+
+            <TextView
+                android:id="@+id/product_minus_tv"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:text="@string/minus_text"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/product_count_tv"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:text="@{String.valueOf(product.count)}"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/product_plus_tv"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:text="@string/plus_text"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/product_name"
             android:layout_width="wrap_content"
@@ -42,7 +91,7 @@
             android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-                android:text="@{@string/price_format(product.price)}"
+            android:text="@{@string/price_format(product.price)}"
             android:textSize="@dimen/product_main_item_text_size"
             app:layout_constraintEnd_toEndOf="@id/product_image"
             app:layout_constraintStart_toStartOf="@id/product_image"
