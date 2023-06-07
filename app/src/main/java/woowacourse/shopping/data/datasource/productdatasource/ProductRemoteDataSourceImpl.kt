@@ -5,13 +5,13 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
+import woowacourse.shopping.data.mock.ProductMockWebServer
 import woowacourse.shopping.data.mock.ProductMockWebServer.PORT
-import woowacourse.shopping.data.mock.ProductMockWebServer.startMockWebServer
 
 class ProductRemoteDataSourceImpl : ProductDataSource {
 
     init {
-        startMockWebServer()
+        ProductMockWebServer.startMockWebServer()
     }
 
     override fun requestAllData(): List<Product> {
