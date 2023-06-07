@@ -1,4 +1,4 @@
-package woowacourse.shopping.utils
+package woowacourse.shopping.mock
 
 import woowacourse.shopping.domain.Product
 

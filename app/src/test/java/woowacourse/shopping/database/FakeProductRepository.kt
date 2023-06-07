@@ -1,8 +1,8 @@
 package woowacourse.shopping.database
 
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.mock.MockData
 import woowacourse.shopping.repository.ProductRepository
-import woowacourse.shopping.utils.MockData
 
 object FakeProductRepository : ProductRepository {
     private val products: Map<Long, Product> = MockData.getProductList().associateBy { it.id }
