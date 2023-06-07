@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.listener.CartItemListener
 import woowacourse.shopping.ui.cart.uistate.CartUIState
 
 class CartListAdapter(
     private val cartItems: MutableList<CartUIState>,
-    private val cartListener: CartListener,
+    private val cartListener: CartItemListener,
 ) : RecyclerView.Adapter<CartListAdapter.CartListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListViewHolder {
@@ -42,7 +43,7 @@ class CartListAdapter(
 
     class CartListViewHolder(
         private val binding: ItemCartBinding,
-        cartListener: CartListener,
+        cartListener: CartItemListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.listener = cartListener

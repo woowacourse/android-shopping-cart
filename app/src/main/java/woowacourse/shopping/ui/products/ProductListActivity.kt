@@ -10,6 +10,7 @@ import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.listener.ProductItemListener
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.cart.uistate.CartUIState
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
@@ -77,10 +78,23 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     private fun initProductList() {
         binding.rvMainProduct.adapter = ProductListAdapter(
             mutableListOf<ProductUIState>(),
-            { moveToProductDetailActivity(it) },
-            presenter::plusCount,
-            presenter::minusCount,
-            presenter::startCount,
+            object : ProductItemListener {
+                override fun onItemClick(productId: Long) {
+                    moveToProductDetailActivity(productId)
+                }
+
+                override fun onPlusCountButtonClick(productId: Long, oldCount: Int) {
+                    presenter.plusCount(productId, oldCount)
+                }
+
+                override fun onMinusCountButtonClick(productId: Long, oldCount: Int) {
+                    presenter.minusCount(productId, oldCount)
+                }
+
+                override fun onStartCountButtonClick(product: ProductUIState) {
+                    presenter.startCount(product)
+                }
+            },
         )
         presenter.loadProducts(PAGE_SIZE, offset)
     }

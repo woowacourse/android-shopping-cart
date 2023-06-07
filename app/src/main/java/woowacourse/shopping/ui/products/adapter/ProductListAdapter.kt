@@ -7,42 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.listener.ProductItemListener
 import woowacourse.shopping.ui.cart.uistate.CartUIState
 import woowacourse.shopping.ui.products.uistate.ProductUIState
 
 class ProductListAdapter(
     private val products: MutableList<ProductUIState>,
-    private val onItemClick: (Long) -> Unit,
-    private val onPlusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
-    private val onMinusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
-    private val onStartCountButtonClick: (product: ProductUIState) -> Unit,
+    private val productListener: ProductItemListener,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
-
-    private val buttonClickListener: (option: Int, position: Int) -> Unit = { option, position ->
-        when (option) {
-            CLICK_ITEM -> onItemClick(products[position].id)
-            CLICK_COUNT_PLUS -> {
-                onPlusCountButtonClick(
-                    products[position].id,
-                    products[position].count,
-                )
-                notifyItemChanged(position)
-            }
-
-            CLICK_COUNT_MINUS -> {
-                onMinusCountButtonClick(
-                    products[position].id,
-                    products[position].count,
-                )
-                notifyItemChanged(position)
-            }
-
-            CLICK_COUNT_START -> {
-                onStartCountButtonClick(products[position])
-                notifyItemChanged(position)
-            }
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -53,7 +25,7 @@ class ProductListAdapter(
 
         return ProductListViewHolder(
             ItemProductBinding.bind(view),
-            buttonClickListener,
+            productListener,
         )
     }
 
@@ -68,11 +40,17 @@ class ProductListAdapter(
     }
 
     fun updateCount(productId: Long, count: Int) {
-        products.find { it.id == productId }?.updateCount(count)
+        products.find { it.id == productId }?.let {
+            it.updateCount(count)
+            notifyItemChanged(products.indexOf(it))
+        }
     }
 
     fun deleteCount(productId: Long) {
-        products.find { it.id == productId }?.updateCount()
+        products.find { it.id == productId }?.let {
+            it.updateCount()
+            notifyItemChanged(products.indexOf(it))
+        }
     }
 
     fun notifyCountUpdated(cartProducts: List<CartUIState>) {
@@ -101,21 +79,10 @@ class ProductListAdapter(
 
     class ProductListViewHolder(
         private val binding: ItemProductBinding,
-        private val onButtonClick: (Int, Int) -> Unit,
+        productListener: ProductItemListener,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.root.setOnClickListener { onButtonClick(CLICK_ITEM, position) }
-
-            binding.btnProductAdd.setOnClickListener {
-                onButtonClick(CLICK_COUNT_START, position)
-            }
-
-            binding.btnProductPlusCount.setOnClickListener {
-                onButtonClick(CLICK_COUNT_PLUS, position)
-            }
-            binding.btnProductMinusCount.setOnClickListener {
-                onButtonClick(CLICK_COUNT_MINUS, position)
-            }
+            binding.listener = productListener
         }
 
         fun bind(product: ProductUIState) {
@@ -136,12 +103,5 @@ class ProductListAdapter(
             binding.btnProductMinusCount.isVisible = isCountChanging
             binding.tvProductCount.isVisible = isCountChanging
         }
-    }
-
-    companion object {
-        private const val CLICK_ITEM = 0
-        private const val CLICK_COUNT_PLUS = 1
-        private const val CLICK_COUNT_MINUS = 2
-        private const val CLICK_COUNT_START = 3
     }
 }

@@ -11,8 +11,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.listener.CartItemListener
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
-import woowacourse.shopping.ui.cart.adapter.CartListener
 import woowacourse.shopping.ui.cart.uistate.CartUIState
 
 class CartActivity : AppCompatActivity(), CartContract.View {
@@ -63,7 +63,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private fun initCartAdapter() {
         binding.rvCart.adapter = CartListAdapter(
             mutableListOf<CartUIState>(),
-            object : CartListener {
+            object : CartItemListener {
                 override fun onCloseButtonClick(productId: Long) {
                     presenter.deleteCartItem(productId)
                 }
