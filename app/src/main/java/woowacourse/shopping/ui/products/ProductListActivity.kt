@@ -11,6 +11,7 @@ import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.cart.uistate.CartUIState
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductListAdapter
 import woowacourse.shopping.ui.products.adapter.RecentlyViewedProductListAdapter
@@ -36,13 +37,15 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         setContentView(binding.root)
         setActionBar()
 
-        initProductList()
         initLoadingButton()
+        initProductList()
     }
 
     override fun onStart() {
         super.onStart()
+
         initRecentlyViewedProductList()
+        initProductsCartCount()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -56,6 +59,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
                 moveToCartActivity()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -77,7 +81,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             presenter::minusCount,
             presenter::startCount,
         )
-        loadMorePage()
+        presenter.loadProducts(PAGE_SIZE, offset)
     }
 
     private fun initLoadingButton() {
@@ -86,9 +90,13 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
     }
 
+    private fun initProductsCartCount() {
+        presenter.loadProductsCartCount()
+    }
+
     private fun loadMorePage() {
-        presenter.loadProducts(PAGE_SIZE, offset)
         offset += PAGE_SIZE
+        presenter.loadProducts(PAGE_SIZE, offset)
     }
 
     override fun setRecentlyViewedProducts(recentlyViewedProducts: List<RecentlyViewedProductUIState>) {
@@ -118,6 +126,11 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun deleteCartItem(productId: Long) {
         val adapter = binding.rvMainProduct.adapter as ProductListAdapter
         adapter.deleteCount(productId)
+    }
+
+    override fun updateCartCount(cartProducts: List<CartUIState>) {
+        val adapter = binding.rvMainProduct.adapter as ProductListAdapter
+        adapter.notifyCountUpdated(cartProducts)
     }
 
     private fun moveToProductDetailActivity(productId: Long) {

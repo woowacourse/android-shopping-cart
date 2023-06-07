@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.ui.cart.uistate.CartUIState
 import woowacourse.shopping.ui.products.uistate.ProductUIState
 
 class ProductListAdapter(
@@ -16,6 +17,7 @@ class ProductListAdapter(
     private val onMinusCountButtonClick: (productId: Long, oldCount: Int) -> Unit,
     private val onStartCountButtonClick: (product: ProductUIState) -> Unit,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
+
     private val buttonClickListener: (option: Int, position: Int) -> Unit = { option, position ->
         when (option) {
             CLICK_ITEM -> onItemClick(products[position].id)
@@ -26,6 +28,7 @@ class ProductListAdapter(
                 )
                 notifyItemChanged(position)
             }
+
             CLICK_COUNT_MINUS -> {
                 onMinusCountButtonClick(
                     products[position].id,
@@ -33,6 +36,7 @@ class ProductListAdapter(
                 )
                 notifyItemChanged(position)
             }
+
             CLICK_COUNT_START -> {
                 onStartCountButtonClick(products[position])
                 notifyItemChanged(position)
@@ -71,6 +75,30 @@ class ProductListAdapter(
         products.find { it.id == productId }?.updateCount()
     }
 
+    fun notifyCountUpdated(cartProducts: List<CartUIState>) {
+        products.forEach { product ->
+            val cartProduct: CartUIState? = cartProducts.find { it.id == product.id }
+            updateDeletedItemCount(cartProduct, product)
+            updateChangedItemCount(cartProduct, product)
+        }
+    }
+
+    private fun updateDeletedItemCount(cartProduct: CartUIState?, product: ProductUIState) {
+        if (cartProduct == null && product.count > 0) {
+            deleteCount(product.id)
+            notifyItemChanged(products.indexOf(product))
+        }
+    }
+
+    private fun updateChangedItemCount(cartProduct: CartUIState?, product: ProductUIState) {
+        if (cartProduct == null) return
+
+        if (product.count != cartProduct.count) {
+            updateCount(product.id, cartProduct.count)
+            notifyItemChanged(products.indexOf(product))
+        }
+    }
+
     class ProductListViewHolder(
         private val binding: ItemProductBinding,
         private val onButtonClick: (Int, Int) -> Unit,
@@ -88,7 +116,6 @@ class ProductListAdapter(
             binding.btnProductMinusCount.setOnClickListener {
                 onButtonClick(CLICK_COUNT_MINUS, position)
             }
-            binding.tvProductCount.setOnClickListener { } // Nothing
         }
 
         fun bind(product: ProductUIState) {

@@ -4,6 +4,7 @@ import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 import woowacourse.shopping.repository.RecentlyViewedProductRepository
+import woowacourse.shopping.ui.cart.uistate.CartUIState
 import woowacourse.shopping.ui.products.uistate.ProductUIState
 import woowacourse.shopping.ui.products.uistate.RecentlyViewedProductUIState
 
@@ -22,27 +23,22 @@ class ProductListPresenter(
     }
 
     override fun loadProducts(limit: Int, offset: Int) {
-        view.addProducts(productRepository.findAll(limit, offset).map(ProductUIState::from))
+        val cartProducts = cartRepository.findAll()
+        val products = productRepository.findAll(limit, offset).map(ProductUIState::from)
+        products.forEach { product ->
+            cartProducts.find { it.id == product.id }?.let {
+                product.updateCount(it.count)
+            }
+        }
+        view.addProducts(products)
+    }
+
+    override fun loadProductsCartCount() {
+        view.updateCartCount(cartRepository.findAll().map(CartUIState::from))
     }
 
     override fun plusCount(productId: Long, oldCount: Int) {
         cartRepository.updateCount(productId, oldCount + 1)
-/*        val isExistingItem: Boolean = cartRepository.findById(productId) != null
-        val product: Product = productRepository.findById(productId) ?: return
-
-        if (isExistingItem) {
-            cartRepository.updateCount(productId, oldCount + 1)
-        } else {
-            cartRepository.save(
-                CartProduct(
-                    product.id,
-                    product.imageUrl,
-                    product.name,
-                    product.price,
-                    oldCount,
-                ),
-            )
-        }*/
         view.updateCartItem(productId, oldCount + 1)
     }
 
@@ -54,22 +50,6 @@ class ProductListPresenter(
             cartRepository.updateCount(productId, oldCount - 1)
             view.updateCartItem(productId, oldCount - 1)
         }
-        /*val isExistingItem: Boolean = cartRepository.findById(productId) != null
-        val product: Product = productRepository.findById(productId) ?: return
-
-        if (isExistingItem) {
-            cartRepository.updateCount(productId, oldCount - 1)
-        } *//*else {
-            cartRepository.save(
-                CartProduct(
-                    product.id,
-                    product.imageUrl,
-                    product.name,
-                    product.price,
-                    oldCount,
-                ),
-            )
-        }*/
     }
 
     override fun startCount(product: ProductUIState) {
