@@ -104,24 +104,16 @@ class CartActivityPresenter(
         var newCartProduct: CartProduct = item.toDomain()
 
         if (cannotMinus(isPlus, item.count)) return
+        val changeWidth = if (isPlus) 1 else -1
 
         if (!selectedItem.contains(item)) {
-            if (isPlus) {
-                newCartProduct = newCartProduct.updateCount(item.count + 1)
-            } else {
-                newCartProduct = newCartProduct.updateCount(item.count - 1)
-            }
+            newCartProduct = newCartProduct.updateCount(item.count + changeWidth)
             updateDbAndView(newCartProduct)
             return
         }
 
         selectedItem.remove(item)
-
-        if (isPlus) {
-            newCartProduct = newCartProduct.updateCount(item.count + 1)
-        } else {
-            newCartProduct = newCartProduct.updateCount(item.count - 1)
-        }
+        newCartProduct = newCartProduct.updateCount(item.count + changeWidth)
         selectedItem.add(newCartProduct.toUi())
         updateDbAndView(newCartProduct)
         setBottomView()
