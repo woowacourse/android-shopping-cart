@@ -1,11 +1,12 @@
 package woowacourse.shopping.ui.productdetail
 
 import io.mockk.mockk
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.database.FakeCartRepository
 import woowacourse.shopping.database.FakeProductRepository
+import woowacourse.shopping.database.FakeRecentlyViewedProductRepository
 
 class ProductDetailPresenterTest {
     private lateinit var presenter: ProductDetailContract.Presenter
@@ -13,16 +14,29 @@ class ProductDetailPresenterTest {
 
     @Before
     fun setUp() {
-        view = mockk()
+        view = mockk(relaxed = true)
         presenter =
-            ProductDetailPresenter(view, FakeProductRepository, FakeCartRepository)
+            ProductDetailPresenter(
+                view,
+                FakeProductRepository,
+                FakeCartRepository,
+                FakeRecentlyViewedProductRepository,
+            )
     }
 
     @Test
     fun 장바구니에_상품을_담으면_장바구니_목록에_해당_상품이_추가된다() {
-        presenter.addProductToCart(2)
-        val product = FakeProductRepository.findById(2)
+        presenter.addProductToCart(2, 1)
 
-        assertEquals(true, FakeCartRepository.findAll().contains(product))
+        val actual = FakeCartRepository.findAll().map { it.id }.contains(2)
+        assertTrue(actual)
+    }
+
+    @Test
+    fun 상품을_선택하면_최근_조회한_상품_목록에_해당_상품이_추가된다() {
+        presenter.init(1)
+
+        val actual = FakeRecentlyViewedProductRepository.findAll().map { it.id }.contains(1)
+        assertTrue(actual)
     }
 }

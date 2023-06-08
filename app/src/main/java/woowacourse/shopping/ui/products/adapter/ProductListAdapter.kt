@@ -2,16 +2,17 @@ package woowacourse.shopping.ui.products.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.listener.ProductItemListener
+import woowacourse.shopping.ui.cart.uistate.CartUIState
 import woowacourse.shopping.ui.products.uistate.ProductUIState
-import woowacourse.shopping.utils.PRICE_FORMAT
 
 class ProductListAdapter(
     private val products: MutableList<ProductUIState>,
-    private val onClick: (Long) -> Unit,
+    private val productListener: ProductItemListener,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductListViewHolder {
@@ -21,7 +22,10 @@ class ProductListAdapter(
             false,
         )
 
-        return ProductListViewHolder(ItemProductBinding.bind(view), onClick)
+        return ProductListViewHolder(
+            ItemProductBinding.bind(view),
+            productListener,
+        )
     }
 
     override fun getItemCount(): Int = products.size
@@ -34,19 +38,62 @@ class ProductListAdapter(
         products.addAll(newProducts)
     }
 
+    fun updateCount(productId: Long, count: Int) {
+        products.find { it.id == productId }?.let {
+            it.updateCount(count)
+            notifyItemChanged(products.indexOf(it))
+        }
+    }
+
+    fun deleteCount(productId: Long) {
+        products.find { it.id == productId }?.let {
+            it.updateCount()
+            notifyItemChanged(products.indexOf(it))
+        }
+    }
+
+    fun notifyCountUpdated(cartProducts: List<CartUIState>) {
+        products.forEach { product ->
+            val cartProduct: CartUIState? = cartProducts.find { it.id == product.id }
+            updateDeletedItemCount(cartProduct, product)
+            updateChangedItemCount(cartProduct, product)
+        }
+    }
+
+    private fun updateDeletedItemCount(cartProduct: CartUIState?, product: ProductUIState) {
+        if (cartProduct == null && product.count > 0) {
+            deleteCount(product.id)
+            notifyItemChanged(products.indexOf(product))
+        }
+    }
+
+    private fun updateChangedItemCount(cartProduct: CartUIState?, product: ProductUIState) {
+        if (cartProduct == null) return
+
+        if (product.count != cartProduct.count) {
+            updateCount(product.id, cartProduct.count)
+            notifyItemChanged(products.indexOf(product))
+        }
+    }
+
     class ProductListViewHolder(
         private val binding: ItemProductBinding,
-        private val onClick: (Long) -> Unit,
+        productListener: ProductItemListener,
     ) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.listener = productListener
+        }
 
         fun bind(product: ProductUIState) {
             binding.product = product
-            binding.tvProductPrice.text = itemView.context.getString(R.string.product_price)
-                .format(PRICE_FORMAT.format(product.price))
-            Glide.with(itemView)
-                .load(product.imageUrl)
-                .into(binding.ivProduct)
-            binding.root.setOnClickListener { onClick(product.id) }
+            setCountButtonVisibility(product.count != ProductUIState.NO_COUNT)
+        }
+
+        private fun setCountButtonVisibility(isCountChanging: Boolean) {
+            binding.btnProductAdd.isVisible = !isCountChanging
+            binding.btnProductPlusCount.isVisible = isCountChanging
+            binding.btnProductMinusCount.isVisible = isCountChanging
+            binding.tvProductCount.isVisible = isCountChanging
         }
     }
 }

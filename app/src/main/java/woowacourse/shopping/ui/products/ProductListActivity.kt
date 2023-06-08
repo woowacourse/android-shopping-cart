@@ -6,10 +6,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
+import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.database.recentlyviewedproduct.RecentlyViewedProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.listener.ProductItemListener
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.cart.uistate.CartUIState
 import woowacourse.shopping.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductListAdapter
 import woowacourse.shopping.ui.products.adapter.RecentlyViewedProductListAdapter
@@ -24,6 +27,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
             this,
             RecentlyViewedProductRepositoryImpl(this, ProductRepositoryImpl),
             ProductRepositoryImpl,
+            CartRepositoryImpl(this, ProductRepositoryImpl),
         )
     }
     private var offset: Int = 0
@@ -34,13 +38,16 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         setContentView(binding.root)
         setActionBar()
 
-        initProductList()
         initLoadingButton()
+        initProductList()
     }
 
     override fun onStart() {
         super.onStart()
+
         initRecentlyViewedProductList()
+        initProductsCartCount()
+        initCartItemCount()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -51,9 +58,10 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_cart -> {
-                moveToCartActivity()
+                presenter.navigateToCart()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -68,11 +76,27 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
     }
 
     private fun initProductList() {
-        binding.recyclerViewMainProduct.adapter = ProductListAdapter(mutableListOf()) {
-            presenter.addRecentlyViewedProduct(it)
-            moveToProductDetailActivity(it)
-        }
-        loadMorePage()
+        binding.rvMainProduct.adapter = ProductListAdapter(
+            mutableListOf<ProductUIState>(),
+            object : ProductItemListener {
+                override fun onItemClick(productId: Long) {
+                    presenter.navigateToProductDetail(productId)
+                }
+
+                override fun onPlusCountButtonClick(productId: Long, oldCount: Int) {
+                    presenter.plusCount(productId, oldCount)
+                }
+
+                override fun onMinusCountButtonClick(productId: Long, oldCount: Int) {
+                    presenter.minusCount(productId, oldCount)
+                }
+
+                override fun onStartCountButtonClick(product: ProductUIState) {
+                    presenter.startCount(product)
+                }
+            },
+        )
+        presenter.loadProducts(PAGE_SIZE, offset)
     }
 
     private fun initLoadingButton() {
@@ -81,9 +105,17 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
     }
 
+    private fun initProductsCartCount() {
+        presenter.loadProductsCartCount()
+    }
+
+    private fun initCartItemCount() {
+        presenter.loadCartItemCount()
+    }
+
     private fun loadMorePage() {
-        presenter.loadProducts(PAGE_SIZE, offset)
         offset += PAGE_SIZE
+        presenter.loadProducts(PAGE_SIZE, offset)
     }
 
     override fun setRecentlyViewedProducts(recentlyViewedProducts: List<RecentlyViewedProductUIState>) {
@@ -93,24 +125,45 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.View {
         }
 
         binding.layoutRecentlyViewed.isVisible = true
-        binding.recyclerViewRecentlyViewed.adapter =
-            RecentlyViewedProductListAdapter(recentlyViewedProducts) {
-                moveToProductDetailActivity(recentlyViewedProducts[it].id)
-            }
+        binding.rvRecentlyViewed.adapter = RecentlyViewedProductListAdapter(recentlyViewedProducts, presenter::navigateToProductDetail)
     }
 
     override fun addProducts(products: List<ProductUIState>) {
-        val adapter = binding.recyclerViewMainProduct.adapter as ProductListAdapter
+        val adapter = binding.rvMainProduct.adapter as ProductListAdapter
         adapter.addItems(products)
         adapter.notifyItemRangeInserted(adapter.itemCount, products.size)
     }
 
-    private fun moveToProductDetailActivity(productId: Long) {
-        ProductDetailActivity.startActivity(this, productId)
+    override fun updateCartItem(productId: Long, count: Int) {
+        val adapter = binding.rvMainProduct.adapter as ProductListAdapter
+        adapter.updateCount(productId, count)
     }
 
-    private fun moveToCartActivity() {
-        CartActivity.startActivity(this)
+    override fun deleteCartItem(productId: Long) {
+        val adapter = binding.rvMainProduct.adapter as ProductListAdapter
+        adapter.deleteCount(productId)
+    }
+
+    override fun updateProductsCartCount(cartProducts: List<CartUIState>) {
+        val adapter = binding.rvMainProduct.adapter as ProductListAdapter
+        adapter.notifyCountUpdated(cartProducts)
+    }
+
+    override fun updateCartItemCount(isVisible: Boolean, itemCount: Int) {
+        binding.tvCartCount.isVisible = isVisible
+        binding.tvCartCount.text = "$itemCount"
+    }
+
+    override fun moveToProductDetailActivity(productId: Long) {
+        startActivity(
+            ProductDetailActivity.getIntent(this, productId),
+        )
+    }
+
+    override fun moveToCartActivity() {
+        startActivity(
+            CartActivity.getIntent(this),
+        )
     }
 
     companion object {

@@ -5,7 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import woowacourse.shopping.database.ProductContract
 import woowacourse.shopping.database.ProductDBHelper
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.repository.CartRepository
 import woowacourse.shopping.repository.ProductRepository
 
@@ -15,39 +15,71 @@ class CartRepositoryImpl(
 ) : CartRepository {
     private val db = ProductDBHelper(context).writableDatabase
 
-    override fun findAll(): List<Product> {
-        val products = mutableListOf<Product>()
+    override fun findAll(): List<CartProduct> {
+        val products = mutableListOf<CartProduct>()
         val cursor: Cursor = db.rawQuery(
             "SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME}",
             null,
         )
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(0)
-            productRepository.findById(id)?.let { products.add(it) }
+            val id =
+                cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID))
+            val count =
+                cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
+            productRepository.findById(id)?.let {
+                products.add(CartProduct(it.id, it.imageUrl, it.name, it.price, count))
+            }
         }
 
         cursor.close()
         return products
     }
 
-    override fun findAll(limit: Int, offset: Int): List<Product> {
-        val products = mutableListOf<Product>()
+    override fun findAll(limit: Int, offset: Int): List<CartProduct> {
+        val products = mutableListOf<CartProduct>()
         val cursor: Cursor = db.rawQuery(
             """SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME} LIMIT $limit OFFSET $offset""",
             null,
         )
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(0)
-            productRepository.findById(id)?.let { products.add(it) }
+            val id =
+                cursor.getLong(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID))
+            val count =
+                cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
+            productRepository.findById(id)?.let {
+                products.add(CartProduct(it.id, it.imageUrl, it.name, it.price, count))
+            }
         }
 
         cursor.close()
         return products
     }
 
-    override fun save(product: Product) {
+    override fun findById(productId: Long): CartProduct? {
+        var product: CartProduct? = null
+        val cursor: Cursor = db.rawQuery(
+            """
+                SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME} 
+                WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = $productId
+            """.trimIndent(),
+            null,
+        )
+
+        while (cursor.moveToNext()) {
+            val count =
+                cursor.getInt(cursor.getColumnIndexOrThrow(ProductContract.CartEntry.COLUMN_NAME_COUNT))
+            productRepository.findById(productId)?.let {
+                product = CartProduct(it.id, it.imageUrl, it.name, it.price, count)
+            }
+        }
+
+        cursor.close()
+        return product
+    }
+
+    override fun save(product: CartProduct) {
         val cursor =
             db.rawQuery(
                 "SELECT * FROM ${ProductContract.CartEntry.TABLE_NAME} WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = ${product.id}",
@@ -60,6 +92,7 @@ class CartRepositoryImpl(
 
         val value = ContentValues().apply {
             put(ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID, product.id)
+            put(ProductContract.CartEntry.COLUMN_NAME_COUNT, product.count)
         }
 
         db.insert(ProductContract.CartEntry.TABLE_NAME, null, value)
@@ -70,5 +103,15 @@ class CartRepositoryImpl(
         val selection = "${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = ?"
         val selectionArgs = arrayOf(productId.toString())
         db.delete(ProductContract.CartEntry.TABLE_NAME, selection, selectionArgs)
+    }
+
+    override fun updateCount(productId: Long, count: Int) {
+        db.execSQL(
+            """
+                UPDATE ${ProductContract.CartEntry.TABLE_NAME}
+                SET ${ProductContract.CartEntry.COLUMN_NAME_COUNT} = $count
+                WHERE ${ProductContract.CartEntry.COLUMN_NAME_PRODUCT_ID} = $productId;
+                """,
+        )
     }
 }

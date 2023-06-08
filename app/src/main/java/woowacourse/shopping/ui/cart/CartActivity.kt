@@ -7,9 +7,11 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import woowacourse.shopping.R
 import woowacourse.shopping.database.cart.CartRepositoryImpl
 import woowacourse.shopping.database.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.listener.CartItemListener
 import woowacourse.shopping.ui.cart.adapter.CartListAdapter
 import woowacourse.shopping.ui.cart.uistate.CartUIState
 
@@ -18,7 +20,6 @@ class CartActivity : AppCompatActivity(), CartContract.View {
     private val presenter: CartPresenter by lazy {
         CartPresenter(this, CartRepositoryImpl(this, ProductRepositoryImpl))
     }
-    private var page: Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +27,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         setContentView(binding.root)
         setActionBar()
 
-        initCartList()
-        initBottomField()
+        initView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -36,6 +36,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -52,57 +53,100 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.toolbarCart.navigationIcon = navigationIcon
     }
 
+    private fun initView() {
+        initCartAdapter()
+        initCartList()
+        initPageControlField()
+        initCartTotalItemControlField()
+    }
+
+    private fun initCartAdapter() {
+        binding.rvCart.adapter = CartListAdapter(
+            mutableListOf<CartUIState>(),
+            object : CartItemListener {
+                override fun onCloseButtonClick(productId: Long) {
+                    presenter.deleteCartItem(productId)
+                }
+
+                override fun onPlusCountButtonClick(productId: Long, oldCount: Int) {
+                    presenter.plusItemCount(productId, oldCount)
+                }
+
+                override fun onMinusCountButtonClick(productId: Long, oldCount: Int) {
+                    presenter.minusItemCount(productId, oldCount)
+                }
+
+                override fun onCheckboxClick(isChecked: Boolean, item: CartUIState) {
+                    presenter.updateCheckbox(isChecked, item)
+                }
+            },
+        )
+    }
+
     private fun initCartList() {
-        presenter.loadCartItems(limit = PAGE_SIZE, page = (page - 1) * PAGE_SIZE)
+        presenter.loadCartItemsOfCurrentPage()
     }
 
-    private fun initBottomField() {
-        binding.tvCartPage.text = "$page"
-        presenter.setPageButtons(PAGE_SIZE)
+    private fun initPageControlField() {
+        binding.tvCartPage.text = "1"
+        presenter.setPageButtons()
     }
 
-    override fun setButtonClickListener(maxOffset: Int) {
-        updateButtonsEnabledState(maxOffset)
+    private fun initCartTotalItemControlField() {
+        binding.tvCartTotalPrice.text = getString(R.string.product_price).format(0)
+        binding.btnCartPurchase.text = getString(R.string.button_purchase).format(0)
+        setCartTotalCheckboxListener()
+    }
 
+    override fun initPageButtonClickListener() {
         binding.btnPageDown.setOnClickListener {
-            if (page > 1) {
-                page--
-                updatePage()
-            }
-            updateButtonsEnabledState(maxOffset)
+            presenter.goLeftPage()
         }
         binding.btnPageUp.setOnClickListener {
-            if (page < maxOffset) {
-                page++
-                updatePage()
-            }
-            updateButtonsEnabledState(maxOffset)
+            presenter.goRightPage()
         }
+    }
+
+    override fun updateLeftButtonsEnabled(isEnabled: Boolean) {
+        binding.btnPageDown.isEnabled = isEnabled
+    }
+
+    override fun updateRightButtonsEnabled(isEnabled: Boolean) {
+        binding.btnPageUp.isEnabled = isEnabled
     }
 
     override fun setCartItems(cartItems: List<CartUIState>) {
-        binding.recyclerViewCart.adapter = CartListAdapter(cartItems) {
-            presenter.deleteCartItem(cartItems[it].id)
+        (binding.rvCart.adapter as CartListAdapter).updateItems(cartItems)
+    }
+
+    override fun updateTotalPrice(price: Int) {
+        binding.tvCartTotalPrice.text = getString(R.string.product_price).format(price)
+    }
+
+    override fun updateTotalPurchaseButton(amount: Int) {
+        binding.btnCartPurchase.text = getString(R.string.button_purchase).format(amount)
+    }
+
+    override fun updateTotalCheckbox(isAllChecked: Boolean) {
+        binding.cbCartTotal.setOnCheckedChangeListener(null)
+        binding.cbCartTotal.isChecked = isAllChecked
+        setCartTotalCheckboxListener()
+    }
+
+    private fun setCartTotalCheckboxListener() {
+        binding.cbCartTotal.setOnCheckedChangeListener { _, isChecked ->
+            presenter.setTotalItemsStateAtOnce(isChecked)
         }
     }
 
-    private fun updatePage() {
-        presenter.loadCartItems(PAGE_SIZE, page)
+    override fun updatePage(page: Int) {
+        presenter.loadCartItemsOfCurrentPage()
         binding.tvCartPage.text = "$page"
     }
 
-    private fun updateButtonsEnabledState(maxOffset: Int) {
-        binding.btnPageDown.isEnabled = page > 1
-        binding.btnPageUp.isEnabled = page < maxOffset
-    }
-
     companion object {
-        private const val PAGE_SIZE = 5
-
-        fun startActivity(context: Context) {
-            Intent(context, CartActivity::class.java).also {
-                context.startActivity(it)
-            }
+        fun getIntent(context: Context): Intent {
+            return Intent(context, CartActivity::class.java)
         }
     }
 }

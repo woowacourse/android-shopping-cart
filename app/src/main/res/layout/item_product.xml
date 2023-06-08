@@ -4,20 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.ui.products.uistate.ProductUIState" />
+
+        <variable
+            name="listener"
+            type="woowacourse.shopping.listener.ProductItemListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp">
+        android:layout_marginVertical="10dp"
+        android:onClick="@{() -> listener.onItemClick(product.id)}">
 
         <ImageView
             android:id="@+id/iv_product"
-            android:layout_width="155dp"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="155dp"
+            android:scaleType="centerCrop"
+            app:ImageBinding="@{product.imageUrl}"
             app:layout_constraintBottom_toTopOf="@id/tv_product_name"
             app:layout_constraintDimensionRatio="1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -45,12 +53,74 @@
             android:id="@+id/tv_product_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{@string/product_price(product.price)}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/iv_product"
             app:layout_constraintStart_toStartOf="@id/iv_product"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
-            tools:text="10000 won" />
+            tools:text="10,000원" />
+
+        <ImageButton
+            android:id="@+id/btn_product_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@android:color/transparent"
+            android:onClick="@{() -> listener.onStartCountButtonClick(product)}"
+            android:src="@drawable/icon_plus"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintEnd_toEndOf="@id/iv_product" />
+
+        <TextView
+            android:id="@+id/btn_product_minus_count"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:onClick="@{() -> listener.onMinusCountButtonClick(product.id, product.count)}"
+            android:text="@string/text_minus"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_count"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toStartOf="@id/tv_product_count" />
+
+        <TextView
+            android:id="@+id/btn_product_plus_count"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:onClick="@{() -> listener.onPlusCountButtonClick(product.id, product.count)}"
+            android:text="@string/text_plus"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/tv_product_count"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintStart_toEndOf="@id/tv_product_count" />
+
+        <TextView
+            android:id="@+id/tv_product_count"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:text="@{Integer.toString(product.count)}"
+            android:textColor="@color/grey_555"
+            android:textSize="22sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="@id/iv_product"
+            app:layout_constraintStart_toStartOf="@id/iv_product"
+            tools:text="3" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

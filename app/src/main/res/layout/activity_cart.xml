@@ -28,7 +28,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_cart"
+            android:id="@+id/rv_cart"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -43,13 +43,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
             android:layout_marginBottom="20dp"
             android:textColor="@color/black"
             android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_cart"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart"
             tools:text="3" />
 
         <ImageButton
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/icon_left_page"
+            android:src="@drawable/selector_left_page"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_page"
             app:layout_constraintEnd_toStartOf="@id/tv_cart_page"
             app:layout_constraintTop_toTopOf="@id/tv_cart_page" />
@@ -69,10 +69,64 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:background="@android:color/transparent"
-            android:src="@drawable/icon_right_page"
+            android:src="@drawable/selector_right_page"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_page"
             app:layout_constraintStart_toEndOf="@id/tv_cart_page"
             app:layout_constraintTop_toTopOf="@id/tv_cart_page" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="25dp"
+            android:background="@color/grey_555"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_page">
+
+            <CheckBox
+                android:id="@+id/cb_cart_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_checkbox_cart_total"
+                android:text="@string/checkbox_cart_total"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_cart_total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:textAlignment="textEnd"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_cart_purchase"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="354,600원" />
+
+            <Button
+                android:id="@+id/btn_cart_purchase"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:backgroundTint="@color/button_background"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:inset="0dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="구매하기(5)" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

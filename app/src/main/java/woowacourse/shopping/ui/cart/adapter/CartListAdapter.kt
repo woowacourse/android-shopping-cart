@@ -1,17 +1,17 @@
 package woowacourse.shopping.ui.cart.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.listener.CartItemListener
 import woowacourse.shopping.ui.cart.uistate.CartUIState
-import woowacourse.shopping.utils.PRICE_FORMAT
 
 class CartListAdapter(
-    private val cartItems: List<CartUIState>,
-    private val onCloseButtonClick: (Int) -> Unit,
+    private val cartItems: MutableList<CartUIState>,
+    private val cartListener: CartItemListener,
 ) : RecyclerView.Adapter<CartListAdapter.CartListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartListViewHolder {
@@ -21,7 +21,10 @@ class CartListAdapter(
             false,
         )
 
-        return CartListViewHolder(ItemCartBinding.bind(view), onCloseButtonClick)
+        return CartListViewHolder(
+            ItemCartBinding.bind(view),
+            cartListener,
+        )
     }
 
     override fun getItemCount(): Int = cartItems.size
@@ -30,25 +33,23 @@ class CartListAdapter(
         holder.bind(cartItems[position])
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItems(newItems: List<CartUIState>) {
+        cartItems.clear()
+        cartItems.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
     class CartListViewHolder(
         private val binding: ItemCartBinding,
-        private val onCloseButtonClick: (Int) -> Unit,
+        cartListener: CartItemListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-
         init {
-            binding.btnCartClose.setOnClickListener {
-                onCloseButtonClick(adapterPosition)
-            }
+            binding.listener = cartListener
         }
 
         fun bind(product: CartUIState) {
-            binding.tvCartName.text = product.name
-            binding.tvCartPrice.text = itemView.context.getString(R.string.product_price).format(
-                PRICE_FORMAT.format(product.price),
-            )
-            Glide.with(itemView)
-                .load(product.imageUrl)
-                .into(binding.ivCart)
+            binding.item = product
         }
     }
 }
