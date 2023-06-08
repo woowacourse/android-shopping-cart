@@ -3,13 +3,18 @@ package woowacourse.shopping.presentation.ui.home
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.data.product.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.dataSource.local.product.ProductDao
+import woowacourse.shopping.data.dataSource.local.recentlyViewed.RecentlyViewedDao
+import woowacourse.shopping.data.dataSource.local.shoppingCart.ShoppingCartDao
+import woowacourse.shopping.data.dataSource.remote.ProductRemoteDataSourceImpl
+import woowacourse.shopping.data.remote.ProductMockServer
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.ui.common.BindingActivity
-import woowacourse.shopping.presentation.ui.home.adapter.ClickListenerByViewType
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.MINUS
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.PLUS
 import woowacourse.shopping.presentation.ui.home.adapter.GridWeightLookedUp
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView
@@ -17,12 +22,16 @@ import woowacourse.shopping.presentation.ui.home.presenter.HomeContract
 import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.ShoppingCartActivity
-import woowacourse.shopping.util.initProducts
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class HomeActivity :
-    BindingActivity<ActivityHomeBinding>(R.layout.activity_home), HomeContract.View {
+    BindingActivity<ActivityHomeBinding>(R.layout.activity_home),
+    HomeContract.View {
     override val presenter: HomeContract.Presenter by lazy { initPresenter() }
     private lateinit var homeAdapter: HomeAdapter
+    private var _mockWebServer: ProductMockServer? = null
+    private val mockWebServer: ProductMockServer
+        get() = _mockWebServer ?: error("MockWebServer Leak")
 
     private fun initPresenter(): HomePresenter {
         return HomePresenter(
@@ -30,6 +39,11 @@ class HomeActivity :
             ProductRepositoryImpl(
                 productDataSource = ProductDao(this),
                 recentlyViewedDataSource = RecentlyViewedDao(this),
+                productRemoteDataSource = ProductRemoteDataSourceImpl(),
+            ),
+            ShoppingCartRepositoryImpl(
+                shoppingCartDataSource = ShoppingCartDao(this),
+                productDataSource = ProductDao(this),
             ),
         )
     }
@@ -37,9 +51,14 @@ class HomeActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // 목 데이터 추가 함수 :
-        initProducts(this)
-
+        // initProducts(this)
+        initMockServer()
         setClickEventOnShoppingCartButton()
+    }
+
+    private fun initMockServer() {
+        _mockWebServer = ProductMockServer()
+        mockWebServer.initMockWebServer()
     }
 
     override fun onStart() {
@@ -47,8 +66,20 @@ class HomeActivity :
         presenter.fetchAllProductsOnHome()
     }
 
-    override fun setUpProductsOnHome(products: List<ProductsByView>) {
-        homeAdapter = HomeAdapter(products, setUpClickListener())
+    override fun onDestroy() {
+        super.onDestroy()
+        _mockWebServer = null
+    }
+
+    override fun setUpCountOfProductInCart(productInCart: List<ProductInCartUiState>) {
+        homeAdapter.addCountOfProductInCart(productInCart)
+    }
+
+    override fun setUpProductsOnHome(
+        products: List<ProductsByView>,
+        shoppingCart: List<ProductInCartUiState>,
+    ) {
+        homeAdapter = HomeAdapter(shoppingCart, products, setUpClickListener())
         attachAdapter()
         setUpLayoutManager()
     }
@@ -68,18 +99,30 @@ class HomeActivity :
         }
     }
 
-    private fun setUpClickListener() = object : ClickListenerByViewType {
+    private fun setUpClickListener() = object : HomeSetClickListener {
         override fun setClickEventOnProduct(product: Product) {
             setEventOnProduct(product.id)
         }
 
-        override fun setClickEventOnShowMore() {
+        override fun setClickEventOnShowMoreButton() {
             setEventOnShowMoreButton()
+        }
+
+        override fun setClickEventOnPlusButton(productInCart: ProductInCartUiState) {
+            presenter.addCountOfProductInCart(PLUS, productInCart.product)
+        }
+
+        override fun setClickEventOnOperatorButton(
+            operator: Boolean,
+            productInCart: ProductInCartUiState,
+        ) {
+            val request = if (operator) PLUS else MINUS
+            presenter.addCountOfProductInCart(request, productInCart.product)
         }
     }
 
     private fun setEventOnProduct(productId: Long) {
-        val intent = ProductDetailActivity.getIntent(this, productId)
+        val intent = ProductDetailActivity.getIntent(this, productId, false)
         startActivity(intent)
     }
 

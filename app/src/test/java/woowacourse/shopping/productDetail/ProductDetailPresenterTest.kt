@@ -1,46 +1,82 @@
 package woowacourse.shopping.productDetail
 
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
-import io.mockk.unmockkAll
-import io.mockk.verify
-import org.junit.After
+import io.mockk.runs
+import io.mockk.slot
+import junit.framework.TestCase.assertEquals
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.domain.util.WoowaResult
+import woowacourse.shopping.domain.util.WoowaResult.SUCCESS
 import woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailContract
 import woowacourse.shopping.presentation.ui.productDetail.presenter.ProductDetailPresenter
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class ProductDetailPresenterTest {
     private lateinit var presenter: ProductDetailContract.Presenter
+    private lateinit var view: ProductDetailContract.View
     private lateinit var productRepository: ProductRepository
-    private lateinit var shoppingCartRepository: ShoppingCartRepository
 
     @Before
     fun setUp() {
+        view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
-        shoppingCartRepository = mockk(relaxed = true)
-        presenter = ProductDetailPresenter(productRepository, shoppingCartRepository)
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
+        presenter = ProductDetailPresenter(view, productRepository)
     }
 
     @Test
-    fun 선택한_제품의_아이디로_제품의_정보를_가져오는데_성공했다() {
-        // given
-        val product = Product(0, "", "test", 999)
-        every { productRepository.getProduct(any()) } returns WoowaResult.SUCCESS(product)
+    fun testFetchProduct() {
+        // given :
+        val id = 1L
+        every { productRepository.getProductFromRemote(id) } returns SUCCESS(product)
 
-        // when
-        presenter.getProduct(0)
+        val slot = slot<ProductInCartUiState>()
+        every { view.setProduct(capture(slot)) } just runs
 
-        // then
-        verify { productRepository.getProduct(any()) }
+        // when :
+        presenter.fetchProduct(id)
+
+        // then :
+        val actual = slot.captured
+        assertEquals(wrappedShoppingCart, actual)
+    }
+
+    @Test
+    fun testFetchLastViewedProduct() {
+        // given :
+        every { productRepository.getLastViewedProduct() } returns SUCCESS(product)
+
+        val slot = slot<WoowaResult<Product>>()
+        every { view.setLastViewedProduct(capture(slot)) } just runs
+
+        // when :
+        presenter.fetchLastViewedProduct()
+
+        // then :
+        val actual = slot.captured
+        assertEquals(SUCCESS(product), actual)
+    }
+
+    @Test
+    fun testAddRecentlyViewedProduct() {
+        // given :
+        val slot = slot<Long>()
+        every { productRepository.addRecentlyViewedProduct(capture(slot), any()) } returns -1
+
+        // when :
+        presenter.addRecentlyViewedProduct(2, 10)
+
+        // then :
+        val actual = slot.captured
+        assertEquals(2, actual)
+    }
+
+    companion object {
+        private val product = Product(0, "", "test", 999)
+        private val wrappedShoppingCart = ProductInCartUiState(product, 1, true)
     }
 }

@@ -1,84 +1,120 @@
 package woowacourse.shopping.home
 
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.slot
-import io.mockk.unmockkAll
 import io.mockk.verify
-import org.junit.After
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductInCart
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.util.WoowaResult
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator
+import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.Products
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.RecentlyViewedProducts
 import woowacourse.shopping.presentation.ui.home.adapter.HomeAdapter.ProductsByView.ShowMoreProducts
 import woowacourse.shopping.presentation.ui.home.presenter.HomeContract
 import woowacourse.shopping.presentation.ui.home.presenter.HomePresenter
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
 
 class HomePresenterTest {
     private lateinit var presenter: HomeContract.Presenter
     private lateinit var view: HomeContract.View
     private lateinit var productRepository: ProductRepository
+    private lateinit var shoppingCartRepository: ShoppingCartRepository
 
     @Before
     fun setUp() {
         view = mockk(relaxed = true)
         productRepository = mockk(relaxed = true)
-        presenter = HomePresenter(view, productRepository)
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
+        shoppingCartRepository = mockk(relaxed = true)
+        presenter = HomePresenter(view, productRepository, shoppingCartRepository)
     }
 
     @Test
-    fun DB로부터_가져온_상품목록을_뷰로_넘겨준다() {
-        // given
-        every { productRepository.getRecentlyViewedProducts(any()) } returns recentlyViewProducts
-        every { productRepository.getProducts(any(), any()) } returns products
+    fun testFetchAllProductsOnHome() {
+        // given :
+        every { productRepository.getRecentlyViewedProducts(10) } returns recentlyViewProducts
+        every { productRepository.getProductsFromRemote(any(), any()) } returns WoowaResult.SUCCESS(
+            products,
+        )
+        every { shoppingCartRepository.getShoppingCart() } returns shoppingCart
 
-        val slot = slot<List<HomeAdapter.ProductsByView>>()
-        every { view.setUpProductsOnHome(capture(slot)) } answers { nothing }
+        val slot = slot<List<ProductsByView>>()
+        every { view.setUpProductsOnHome(capture(slot), any()) } just runs
 
-        // when
+        // when :
         presenter.fetchAllProductsOnHome()
 
-        // then
+        // then :
         val actual = slot.captured
         verify { productRepository.getRecentlyViewedProducts(any()) }
-        verify { productRepository.getProducts(any(), any()) }
-        verify { view.setUpProductsOnHome(actual) }
+        verify { productRepository.getProductsFromRemote(any(), any()) }
+        verify { view.setUpProductsOnHome(actual, any()) }
 
-        assertEquals(listOf(wrappedRecentProducts) + wrappedProducts + showMoreButton, actual)
+        Assert.assertEquals(
+            listOf(wrappedRecentProducts) + wrappedProducts + showMoreButton,
+            actual,
+        )
     }
 
     @Test
-    fun 추가_데이터_요청_시_DB에서_데이터를_뷰로_넘겨준다() {
+    fun testFetchMoreProducts() {
         // given
-        every { productRepository.getProducts(any(), any()) } returns products
+        every { productRepository.getProductsFromRemote(any(), any()) } returns WoowaResult.SUCCESS(
+            products,
+        )
 
-        val slot = slot<List<HomeAdapter.ProductsByView>>()
-        every { view.setUpMoreProducts(capture(slot)) } answers { nothing }
+        val slot = slot<List<ProductsByView>>()
+        every { view.setUpMoreProducts(capture(slot)) } just runs
 
         // when
         presenter.fetchMoreProducts()
 
         // then
         val actual = slot.captured
-        verify { productRepository.getProducts(any(), any()) }
+        verify { productRepository.getProductsFromRemote(any(), any()) }
         verify { view.setUpMoreProducts(wrappedProducts) }
 
-        assertEquals(wrappedProducts, actual)
+        Assert.assertEquals(wrappedProducts, actual)
+    }
+
+    @Test
+    fun testAddCountOfProductInCart() {
+        // given :
+        val request = Operator.PLUS
+        every { shoppingCartRepository.getShoppingCart() } returns shoppingCart
+
+        val slotForAdd = slot<ProductInCart>()
+        every { shoppingCartRepository.addProductInCart(capture(slotForAdd)) } returns -1
+
+        val slotForView = slot<List<ProductInCartUiState>>()
+        every { view.setUpCountOfProductInCart(capture(slotForView)) } just runs
+
+        // when :
+        presenter.addCountOfProductInCart(request, product)
+
+        // then :
+        val actualForAdd = slotForAdd.captured
+        val actualForView = slotForView.captured
+        Assert.assertEquals(productInCart, actualForAdd)
+        Assert.assertEquals(wrappedShoppingCart, actualForView)
     }
 
     companion object {
-        private val recentlyViewProducts = listOf<Product>(Product(0, "", "test", 999))
+        private val product = Product(0, "", "test", 999)
+        private val recentlyViewProducts = listOf<Product>(product)
         private val products = listOf(Product(0, "", "test", 999))
         private val wrappedRecentProducts = RecentlyViewedProducts(recentlyViewProducts)
+        private val shoppingCart = listOf(ProductInCart(product, 3, false))
+        private val wrappedShoppingCart = listOf(ProductInCartUiState(product, 3, false))
+        private val productInCart = ProductInCart(product, 1, false)
         private val wrappedProducts = products.map { Products(it) }
         private val showMoreButton = ShowMoreProducts
     }

@@ -1,7 +1,7 @@
 package woowacourse.shopping.util
 
 import android.content.Context
-import woowacourse.shopping.data.product.ProductDao
+import woowacourse.shopping.data.dataSource.local.product.ProductDao
 
 fun initProducts(context: Context) {
     val productDao = ProductDao(context)

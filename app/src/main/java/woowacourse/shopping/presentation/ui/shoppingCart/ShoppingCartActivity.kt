@@ -4,20 +4,37 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.product.ProductDao
-import woowacourse.shopping.data.shoppingCart.ShoppingCartDao
-import woowacourse.shopping.data.shoppingCart.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.dataSource.local.product.ProductDao
+import woowacourse.shopping.data.dataSource.local.shoppingCart.ShoppingCartDao
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.domain.model.ProductInCart
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.MINUS
+import woowacourse.shopping.presentation.ui.common.uimodel.Operator.PLUS
 import woowacourse.shopping.presentation.ui.productDetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shoppingCart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartContract
 import woowacourse.shopping.presentation.ui.shoppingCart.presenter.ShoppingCartPresenter
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ProductInCartUiState
+import woowacourse.shopping.presentation.ui.shoppingCart.uiModel.ShoppingCartUiState
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private lateinit var binding: ActivityShoppingCartBinding
-    override val presenter: ShoppingCartContract.Presenter by lazy { initPresenter() }
-    private val shoppingCartAdapter = ShoppingCartAdapter(::clickItem, ::clickItemDelete)
+    override val presenter: ShoppingCartPresenter by lazy { initPresenter() }
+    private val shoppingCartAdapter = ShoppingCartAdapter(setUpClickListener())
+
+    private fun initPresenter(): ShoppingCartPresenter {
+        return ShoppingCartPresenter(
+            this,
+            ShoppingCartRepositoryImpl(
+                shoppingCartDataSource = ShoppingCartDao(this),
+                productDataSource = ProductDao(this),
+            ),
+        )
+    }
+
+    override fun setTotalPrice(shoppingCart: ShoppingCartUiState) {
+        binding.shoppingCart = shoppingCart
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +43,16 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
 
         initView()
         initClickListeners()
+        initAdapter()
+    }
+
+    private fun initAdapter() {
         binding.rvShoppingCart.adapter = shoppingCartAdapter
     }
 
     private fun initView() {
-        presenter.getShoppingCart(INIT_PAGE)
+        presenter.fetchProductsInCartByPage(INIT_PAGE)
+        presenter.fetchTotalPrice()
         presenter.setPageNumber()
         presenter.checkPageMovement()
     }
@@ -38,9 +60,11 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
     private fun initClickListeners() {
         clickNextPage()
         clickPreviousPage()
+        setClickEventOnBack()
+        setClickEventOnCheckAll()
     }
 
-    override fun setShoppingCart(shoppingCart: List<ProductInCart>) {
+    override fun setShoppingCart(shoppingCart: List<ProductInCartUiState>) {
         shoppingCartAdapter.initProducts(shoppingCart)
     }
 
@@ -65,28 +89,73 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartContract.View {
         binding.ivShoppingCartPreviousButton.isEnabled = previous
     }
 
-    private fun clickItem(productInCart: ProductInCart) {
-        val intent = ProductDetailActivity.getIntent(this, productInCart.product.id)
+    private fun setUpClickListener() = object : ShoppingCartSetClickListener {
+        override fun setClickEventOnItem(productInCart: ProductInCartUiState) {
+            setEventOnItem(productInCart)
+        }
+
+        override fun setClickEventOnDeleteButton(productInCart: ProductInCartUiState) {
+            setEventOnDelete(productInCart)
+        }
+
+        override fun setClickEventOnOperatorButton(
+            operator: Boolean,
+            productInCart: ProductInCartUiState,
+        ) {
+            val request = if (operator) PLUS else MINUS
+            if (checkCountUnderMinimum(productInCart, operator)) return
+
+            presenter.addCountOfProductInCart(request, productInCart)
+            presenter.fetchTotalPrice()
+        }
+
+        private fun checkCountUnderMinimum(
+            productInCart: ProductInCartUiState,
+            operator: Boolean,
+        ): Boolean {
+            if (productInCart.quantity == MINIMUM && !operator) {
+                setEventOnDelete(productInCart)
+                return true
+            }
+            return false
+        }
+
+        override fun setClickEventOnCheckBox(
+            isChecked: Boolean,
+            productInCart: ProductInCartUiState,
+        ) {
+            presenter.fetchCheckState(isChecked, productInCart)
+            presenter.fetchTotalPrice()
+        }
+    }
+
+    private fun setClickEventOnBack() {
+        binding.ivShoppingCartBackButton.setOnClickListener { finish() }
+    }
+
+    private fun setClickEventOnCheckAll() {
+        binding.cbShoppingCartAllCheck.setOnClickListener {
+            presenter.fetchTotalPriceByCheckAll(binding.cbShoppingCartAllCheck.isChecked)
+        }
+    }
+
+    private fun setEventOnItem(productInCart: ProductInCartUiState) {
+        val intent = ProductDetailActivity.getIntent(this, productInCart.product.id, false)
         startActivity(intent)
     }
 
-    private fun clickItemDelete(productInCart: ProductInCart): Boolean {
-        return presenter.deleteProductInCart(productInCart.product.id)
+    private fun setEventOnDelete(productInCart: ProductInCartUiState) {
+        presenter.deleteProductInCart(productInCart.product.id)
+        presenter.fetchTotalPrice()
     }
 
-    private fun initPresenter(): ShoppingCartPresenter {
-        return ShoppingCartPresenter(
-            this,
-            ShoppingCartRepositoryImpl(
-                shoppingCartDataSource = ShoppingCartDao(this),
-                productDataSource = ProductDao(this),
-            ),
-        )
+    override fun deleteItemInCart(result: Boolean, productId: Long) {
+        if (result) shoppingCartAdapter.deleteItem(productId)
     }
 
     companion object {
         private const val INIT_PAGE = 1
-
+        private const val MINIMUM = 1
         fun getIntent(context: Context): Intent = Intent(context, ShoppingCartActivity::class.java)
     }
 }
