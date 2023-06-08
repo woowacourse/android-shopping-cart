@@ -1,14 +1,21 @@
 package woowacourse.shopping.feature.product.detail
 
-import woowacourse.shopping.data.cart.CartDao
-import woowacourse.shopping.model.ProductState
-import woowacourse.shopping.model.mapper.toDomain
+import com.example.domain.repository.CartRepository
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MAX_COUNT_VALUE
+import woowacourse.shopping.feature.cart.model.CartProductState.Companion.MIN_COUNT_VALUE
+import woowacourse.shopping.feature.product.model.ProductState
+import woowacourse.shopping.feature.product.model.toUi
+import woowacourse.shopping.feature.product.recent.model.RecentProductState
+import woowacourse.shopping.feature.product.recent.model.toProduct
 
 class ProductDetailPresenter(
     private val view: ProductDetailContract.View,
     override val product: ProductState?,
-    private val cartDao: CartDao
+    override val recentProduct: RecentProductState?,
+    private val cartRepository: CartRepository
 ) : ProductDetailContract.Presenter {
+
+    private var count = MIN_COUNT_VALUE
 
     override fun loadProduct() {
         if (!isValidProduct()) return
@@ -17,12 +24,35 @@ class ProductDetailPresenter(
         view.setViewContent(product)
     }
 
-    override fun addCartProduct() {
+    override fun loadRecentProduct() {
+        view.setMostRecentViewContent(recentProduct)
+    }
+
+    override fun navigateSelectCountDialog() {
+        count = MIN_COUNT_VALUE
+        view.showSelectCountDialog(product!!)
+    }
+
+    override fun addCartProduct(count: Int) {
         if (!isValidProduct()) return
         product!!
 
-        cartDao.addColumn(product.toDomain())
+        cartRepository.addProduct(product.id, count)
         view.showCart()
+    }
+
+    override fun minusCount() {
+        count = (--count).coerceAtLeast(MIN_COUNT_VALUE)
+        view.setDialogCount(count)
+    }
+
+    override fun navigateProductDetail() {
+        view.showProductDetail(recentProduct!!.toProduct().toUi())
+    }
+
+    override fun plusCount() {
+        count = (++count).coerceAtMost(MAX_COUNT_VALUE)
+        view.setDialogCount(count)
     }
 
     private fun isValidProduct(): Boolean {

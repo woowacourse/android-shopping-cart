@@ -3,15 +3,18 @@ package woowacourse.shopping.feature.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
+import com.example.domain.Cart
 import com.example.domain.repository.CartRepository
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDao
 import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.product.MockProductRemoteService
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.list.adapter.CartProductListAdapter
-import woowacourse.shopping.model.CartProductState
-import woowacourse.shopping.model.mapper.toItem
+import woowacourse.shopping.feature.cart.model.CartProductState
+import woowacourse.shopping.util.extension.formatPriceWon
 
 class CartActivity : AppCompatActivity(), CartContract.View {
     private var _binding: ActivityCartBinding? = null
@@ -19,12 +22,18 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         get() = _binding!!
 
     private val presenter: CartContract.Presenter by lazy {
-        val cartRepo: CartRepository = CartRepositoryImpl(CartDao(this))
-        CartPresenter(this, cartRepo)
+        val cartRepo: CartRepository = CartRepositoryImpl(MockProductRemoteService(), CartDao(this))
+        CartPresenter(this, cartRepo, Cart())
     }
-
     private val adapter: CartProductListAdapter by lazy {
-        CartProductListAdapter(onXClick = { presenter.deleteCartProduct(it) })
+        CartProductListAdapter(
+            onCartProductDeleteClick = presenter::deleteCartProduct,
+            plusCount = presenter::plusCount,
+            minusCount = presenter::minusCount,
+            updateChecked = { productId: Int, checked: Boolean ->
+                presenter.updateChecked(productId, checked)
+            }
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +44,14 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         binding.cartProductRv.adapter = adapter
         binding.pageNumberPlusTv.setOnClickListener { presenter.plusPageNumber() }
         binding.pageNumberMinusTv.setOnClickListener { presenter.minusPageNumber() }
+        binding.allCheckBox.setOnCheckedChangeListener { compoundButton, b ->
+            presenter.checkAll()
+        }
         presenter.loadCart()
     }
 
     override fun setCartProducts(cartProducts: List<CartProductState>) {
-        adapter.setItems(cartProducts.map(CartProductState::toItem))
+        adapter.setItems(cartProducts)
     }
 
     override fun setCartPageNumber(number: Int) {
@@ -50,7 +62,7 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         if (isEnable) {
             binding.pageNumberPlusTv.setBackgroundColor(getColor(R.color.teal_200))
         } else {
-            binding.pageNumberPlusTv.setBackgroundColor(getColor(R.color.gray))
+            binding.pageNumberPlusTv.setBackgroundColor(getColor(R.color.light_gray))
         }
     }
 
@@ -58,8 +70,24 @@ class CartActivity : AppCompatActivity(), CartContract.View {
         if (isEnable) {
             binding.pageNumberMinusTv.setBackgroundColor(getColor(R.color.teal_200))
         } else {
-            binding.pageNumberMinusTv.setBackgroundColor(getColor(R.color.gray))
+            binding.pageNumberMinusTv.setBackgroundColor(getColor(R.color.light_gray))
         }
+    }
+
+    override fun setCartProductCount(count: Int) {
+        binding.orderBtn.text = getString(R.string.cart_order_btn_text).format(count)
+    }
+
+    override fun setTotalCost(paymentAmount: Int) {
+        binding.totalCostTv.formatPriceWon(paymentAmount)
+    }
+
+    override fun showPageSelectorView() {
+        binding.pageSelectorView.visibility = VISIBLE
+    }
+
+    override fun hidePageSelectorView() {
+        binding.pageSelectorView.visibility = GONE
     }
 
     companion object {

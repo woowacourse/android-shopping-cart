@@ -1,5 +1,3 @@
-
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -53,4 +51,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.15.1")
     implementation(project(":domain"))
     implementation("androidx.recyclerview:recyclerview:1.2.1")
+
+    implementation("com.squareup.okhttp3:mockwebserver:4.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 }

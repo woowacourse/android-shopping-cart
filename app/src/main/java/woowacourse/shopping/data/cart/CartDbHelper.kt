@@ -15,7 +15,9 @@ class CartDbHelper(
                     ${CartContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
                     ${CartContract.TABLE_COLUMN_PRODUCT_IMAGE_URL} TEXT,
                     ${CartContract.TABLE_COLUMN_PRODUCT_NAME} TEXT, 
-                    ${CartContract.TABLE_COLUMN_PRODUCT_PRICE} INTEGER
+                    ${CartContract.TABLE_COLUMN_PRODUCT_PRICE} INTEGER,
+                    ${CartContract.TABLE_COLUMN_COUNT} INTEGER,
+                    ${CartContract.TABLE_COLUMN_CHECKED} INTEGER
                 )
             """.trimIndent()
         )

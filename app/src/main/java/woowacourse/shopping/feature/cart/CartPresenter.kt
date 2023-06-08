@@ -1,71 +1,108 @@
 package woowacourse.shopping.feature.cart
 
+import com.example.domain.Cart
 import com.example.domain.CartProduct
+import com.example.domain.PaymentCalculator
 import com.example.domain.repository.CartRepository
-import woowacourse.shopping.list.item.CartProductListItem
-import woowacourse.shopping.list.item.ListItem
-import woowacourse.shopping.model.CartProductState
-import woowacourse.shopping.model.mapper.toDomain
-import woowacourse.shopping.model.mapper.toUi
+import woowacourse.shopping.feature.cart.model.CartProductState
+import woowacourse.shopping.feature.cart.model.toUi
 
 class CartPresenter(
     private val view: CartContract.View,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
+    private val cart: Cart
 ) : CartContract.Presenter {
 
     private val maxProductsPerPage: Int = 5
     private val minPageNumber: Int = 1
     private val maxPageNumber: Int
-        get() = getMaxPageNumber(cartProducts.size)
+        get() = getMaxPageNumber(cart.products.size)
 
-    private var cartProducts: List<CartProduct> = cartRepository.getAll()
     private var pageNumber: Int = 1
 
     override fun loadCart() {
-        val startIndex = pageNumber * maxProductsPerPage - maxProductsPerPage
-        val endIndex = pageNumber * maxProductsPerPage - 1
+        val fromIndex = pageNumber * maxProductsPerPage - maxProductsPerPage
+        val toIndex = pageNumber * maxProductsPerPage
 
-        val items: List<CartProductState> =
-            cartProducts.filterIndexed { index, _ ->
-                index in startIndex..endIndex
-            }.map(CartProduct::toUi)
+        cart.updateAll(cartRepository.getAll())
 
         view.setCartPageNumber(pageNumber)
-        view.setCartProducts(items)
+        view.setCartProducts(cart.subList(fromIndex, toIndex).map(CartProduct::toUi))
+        view.hidePageSelectorView()
+        if (minPageNumber < maxPageNumber) view.showPageSelectorView()
+    }
+
+    override fun loadCheckedCartProductCount() {
+        view.setCartProductCount(cart.getCheckedItemCount())
     }
 
     override fun plusPageNumber() {
-        val nextPage: Int = pageNumber + 1
+        val pageNumber = (++pageNumber).coerceAtMost(maxPageNumber)
 
         view.setCartPageNumberMinusEnable(true)
-        if (nextPage > maxPageNumber) return
-        if (nextPage < maxPageNumber) view.setCartPageNumberPlusEnable(true)
-        if (nextPage == maxPageNumber) view.setCartPageNumberPlusEnable(false)
-
-        pageNumber++
+        if (pageNumber < maxPageNumber) view.setCartPageNumberPlusEnable(true)
+        if (maxPageNumber <= pageNumber) view.setCartPageNumberPlusEnable(false)
         loadCart()
     }
 
     override fun minusPageNumber() {
-        val nextPage: Int = pageNumber - 1
+        val pageNumber = (--pageNumber).coerceAtLeast(minPageNumber)
 
         view.setCartPageNumberPlusEnable(true)
-        if (nextPage < minPageNumber) return
-        if (nextPage > minPageNumber) view.setCartPageNumberMinusEnable(true)
-        if (nextPage == minPageNumber) view.setCartPageNumberMinusEnable(false)
-
-        pageNumber--
+        if (minPageNumber < pageNumber) view.setCartPageNumberMinusEnable(true)
+        if (pageNumber <= minPageNumber) view.setCartPageNumberMinusEnable(false)
         loadCart()
     }
 
-    override fun deleteCartProduct(item: ListItem) {
-        when (item) {
-            is CartProductListItem -> {
-                cartRepository.deleteCartProduct(item.toDomain())
-                cartProducts = cartRepository.getAll()
-                loadCart()
+    override fun plusCount(cartProductState: CartProductState) {
+        val cartProduct: CartProduct = cart.getByProductId(cartProductState.productId) ?: return
+
+        cartProduct.plusCount()
+        cartProductState.count = cartProduct.count
+        cartRepository.updateCartProductCount(cartProduct.productId, cartProduct.count)
+        view.setTotalCost(PaymentCalculator.totalPaymentAmount(cart.products).toInt())
+    }
+
+    override fun minusCount(cartProductState: CartProductState) {
+        val cartProduct: CartProduct = cart.getByProductId(cartProductState.productId) ?: return
+
+        cartProduct.minusCount()
+        cartProductState.count = cartProduct.count
+        cartRepository.updateCartProductCount(cartProduct.productId, cartProduct.count)
+        view.setTotalCost(PaymentCalculator.totalPaymentAmount(cart.products).toInt())
+    }
+
+    override fun updateChecked(productId: Int, checked: Boolean) {
+        cartRepository.updateCartProductChecked(productId, checked)
+        cart.updateCheckedByProductId(productId, checked)
+        view.setTotalCost(PaymentCalculator.totalPaymentAmount(cart.products).toInt())
+        loadCheckedCartProductCount()
+    }
+
+    override fun deleteCartProduct(cartProductState: CartProductState) {
+        cartRepository.deleteCartProduct(cartProductState.productId)
+        cart.removeByProductId(cartProductState.productId)
+        loadCart()
+    }
+
+    override fun checkAll() {
+        when (cart.isAllChecked()) {
+            true -> {
+                cart.setAllChecked(false)
+                cart.products.forEach {
+                    cartRepository.updateCartProductChecked(it.productId, false)
+                }
+            }
+            false -> {
+                cart.setAllChecked(true)
+                cart.products.forEach {
+                    cartRepository.updateCartProductChecked(it.productId, true)
+                }
             }
         }
+        view.setTotalCost(PaymentCalculator.totalPaymentAmount(cart.products).toInt())
+        loadCart()
+        loadCheckedCartProductCount()
     }
 
     private fun getMaxPageNumber(cartsSize: Int): Int {

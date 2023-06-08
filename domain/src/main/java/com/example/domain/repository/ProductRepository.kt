@@ -4,7 +4,11 @@ import com.example.domain.Product
 
 interface ProductRepository {
 
-    fun getAll(): List<Product>
+    fun fetchNextProducts(
+        lastProductId: Long,
+        onSuccess: (List<Product>) -> Unit,
+        onFailure: () -> Unit
+    )
 
-//    fun get(fromIndex: Int, ToIndex: Int): List<Product>
+    fun getProduct(productId: Int): Product? = Product(0, "", "test product", 1_000)
 }

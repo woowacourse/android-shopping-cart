@@ -14,8 +14,9 @@ class RecentProductDbHelper(
                 CREATE TABLE ${RecentProductContract.TABLE_NAME} (
                     ${RecentProductContract.TABLE_COLUMN_PRODUCT_ID} INTEGER,
                     ${RecentProductContract.TABLE_COLUMN_PRODUCT_IMAGE_URL} TEXT,
-                    ${RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME} LONG,
-                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_NAME} TEXT
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_NAME} TEXT,
+                    ${RecentProductContract.TABLE_COLUMN_PRODUCT_PRICE} INTEGER,
+                    ${RecentProductContract.TABLE_COLUMN_VIEWED_DATE_TIME} LONG
                 )
             """.trimIndent()
         )
