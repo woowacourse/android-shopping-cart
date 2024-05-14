@@ -26,4 +26,9 @@ object DummyProductList : ProductListRepository {
     override fun getProductList(): List<Product> {
         return productList.toList()
     }
+
+    override fun findProductById(id: Int): Result<Product> =
+        runCatching {
+            productList.find { it.id == id } ?: throw NoSuchElementException()
+        }
 }

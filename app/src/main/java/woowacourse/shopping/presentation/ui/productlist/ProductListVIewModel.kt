@@ -13,11 +13,19 @@ class ProductListVIewModel(
     private val _productList: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val productList: LiveData<List<Product>> get() = _productList
 
+    private val _navigateAction: MutableLiveData<ProductListNavigateAction> = MutableLiveData(null)
+    val navigateAction: LiveData<ProductListNavigateAction> get() = _navigateAction
+
     init {
         getProductList()
     }
 
     private fun getProductList() {
         _productList.value = productListRepository.getProductList()
+    }
+
+    override fun onClickProduct(productId: Int) {
+        _navigateAction.value =
+            ProductListNavigateAction.NavigateToProductDetail(productId = productId)
     }
 }
