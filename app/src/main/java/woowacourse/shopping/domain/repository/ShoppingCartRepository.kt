@@ -6,4 +6,6 @@ interface ShoppingCartRepository {
     fun addOrder(order: Order)
 
     fun removeOrder(orderId: Int)
+
+    fun getOrderList(): Result<List<Order>>
 }
