@@ -4,5 +4,7 @@
     <string name="detail_price_title">가격</string>
     <string name="price_format_kor"> %,d원</string>
     <string name="shopping_cart_title">장바구니</string>
+    <string name="product_detail_close_title">닫기</string>
     <string name="cart_title">Cart</string>
+    <string name="product_detail_title"></string>
 </resources>

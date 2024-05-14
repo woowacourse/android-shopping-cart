@@ -3,8 +3,11 @@ package woowacourse.shopping.presentation.ui.productdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.R
 import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 
@@ -15,6 +18,9 @@ class ProductDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.apply {
+            title = getString(R.string.product_detail_title)
+        }
         viewModel =
             ViewModelProvider(
                 this,
@@ -27,6 +33,18 @@ class ProductDetailActivity : AppCompatActivity() {
                 lifecycleOwner = this@ProductDetailActivity
             }
         setContentView(binding.root)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.product_detail_menu_items, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_product_detai_closed -> finish()
+        }
+        return true
     }
 
     companion object {
