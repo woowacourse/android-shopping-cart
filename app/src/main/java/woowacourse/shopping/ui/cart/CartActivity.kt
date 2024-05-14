@@ -1,5 +1,7 @@
 package woowacourse.shopping.ui.cart
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -19,5 +21,12 @@ class CartActivity : AppCompatActivity() {
         val cartItems = CartsImpl.findAll()
         adapter = CartAdapter(cartItems)
         binding.rvCart.adapter = adapter
+    }
+
+    companion object {
+        fun startActivity(context: Context) =
+            Intent(context, CartActivity::class.java).run {
+                context.startActivity(this)
+            }
     }
 }
