@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <string name="price_format_kor"> %,d원</string>
 </resources>
