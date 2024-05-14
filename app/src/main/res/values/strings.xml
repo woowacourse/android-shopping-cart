@@ -3,4 +3,6 @@
     <string name="product_price">%,d원</string>
     <string name="exit_item_title">exit</string>
     <string name="cart_item_title">cart</string>
+    <string name="product_detail_price">가격</string>
+    <string name="product_detail_add_cart">장바구니 담기</string>
 </resources>
