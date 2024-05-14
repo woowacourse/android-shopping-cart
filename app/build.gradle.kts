@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("de.mannodermaus.android-junit5") version "1.10.0.0"
+    id("kotlin-kapt")
 }
 
 android {
@@ -60,4 +61,8 @@ dependencies {
     androidTestImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.3.0")
     androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.3.0")
+
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    implementation("com.google.code.gson:gson:2.8.8")
 }
