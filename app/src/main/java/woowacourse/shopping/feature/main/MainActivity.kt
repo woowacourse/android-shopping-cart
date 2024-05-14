@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
 import woowacourse.shopping.feature.main.adapter.ProductAdapter
 import woowacourse.shopping.viewmodel.ProductsViewModel
@@ -38,7 +40,8 @@ class MainActivity : AppCompatActivity() {
         binding.toolbarMain.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.item_cart -> {
-                    // TODO: 장바구니 화면 이동
+                    val intent = Intent(this, CartActivity::class.java)
+                    startActivity(intent)
                 }
             }
             false

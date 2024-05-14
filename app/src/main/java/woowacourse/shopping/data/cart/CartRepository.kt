@@ -7,5 +7,7 @@ interface CartRepository {
 
     fun delete(productId: Long)
 
+    fun deleteAll(productId: Long)
+
     fun findAll(): Map<Long, Quantity>
 }

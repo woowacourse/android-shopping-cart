@@ -20,6 +20,10 @@ object CartRepositoryImpl : CartRepository {
         cart[productId] = --quantity
     }
 
+    override fun deleteAll(productId: Long) {
+        cart.remove(productId)
+    }
+
     override fun findAll(): Map<Long, Quantity> {
         return cart.toMap()
     }

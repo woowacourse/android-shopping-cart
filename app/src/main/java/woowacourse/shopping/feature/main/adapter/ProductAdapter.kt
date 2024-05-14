@@ -19,15 +19,15 @@ class ProductAdapter(private val onClickProductItem: OnClickProductItem) : Recyc
         return ProductViewHolder(binding)
     }
 
-    override fun getItemCount(): Int {
-        return products.size
-    }
-
     override fun onBindViewHolder(
         holder: ProductViewHolder,
         position: Int,
     ) {
         holder.bind(onClickProductItem, products[position])
+    }
+
+    override fun getItemCount(): Int {
+        return products.size
     }
 
     @SuppressLint("NotifyDataSetChanged")

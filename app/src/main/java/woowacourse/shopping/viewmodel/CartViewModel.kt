@@ -16,4 +16,15 @@ class CartViewModel : ViewModel() {
     ) {
         cartRepository.add(productId)
     }
+
+    fun delete(
+        cartRepository: CartRepository,
+        productId: Long,
+    ) {
+        cartRepository.deleteAll(productId)
+    }
+
+    fun load(cartRepository: CartRepository) {
+        _cart.value = cartRepository.findAll()
+    }
 }
