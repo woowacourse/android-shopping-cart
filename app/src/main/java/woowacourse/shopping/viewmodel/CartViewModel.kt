@@ -10,7 +10,10 @@ class CartViewModel : ViewModel() {
     private val _cart = MutableLiveData<Map<Long, Quantity>>()
     val cart: LiveData<Map<Long, Quantity>> get() = _cart
 
-    fun add(cartRepository: CartRepository, productId: Long) {
+    fun add(
+        cartRepository: CartRepository,
+        productId: Long,
+    ) {
         cartRepository.add(productId)
     }
 }

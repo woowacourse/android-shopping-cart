@@ -5,4 +5,5 @@
     <string name="cart_item_title">cart</string>
     <string name="product_detail_price">가격</string>
     <string name="product_detail_add_cart">장바구니 담기</string>
+    <string name="cart_toolbar_title">Cart</string>
 </resources>
