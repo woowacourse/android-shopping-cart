@@ -9,4 +9,6 @@ interface CartRepository {
         productId: Long,
         quantity: Int,
     ): Long
+
+    fun removeCartItem(cartItemId: Long): Long
 }

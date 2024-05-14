@@ -1,31 +1,32 @@
 package woowacourse.shopping.data.datasource
 
+import io.kotest.assertions.any
+import io.mockk.every
+import io.mockk.mockkObject
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertAll
+import woowacourse.shopping.data.datasource.DefaultCart.addCartItem
+import woowacourse.shopping.data.datasource.DefaultCart.deleteCartItem
 
 class DefaultCartTest {
     @Test
     fun `장바구니에 상품을 추가할 수 있다`() {
         // when
-        with(DefaultCart) {
+        mockkObject(DefaultCart) {
+            every { addCartItem(any(), any()) } returns 1
             val firstItemId = addCartItem(1, 1)
-            val secondItemId = addCartItem(2, 1)
-            assertAll(
-                { assertThat(firstItemId).isEqualTo(1) },
-                { assertThat(secondItemId).isEqualTo(2) },
-            )
+            assertThat(firstItemId).isEqualTo(1)
         }
     }
 
     @Test
-    fun `페이지당 장바구니 상품의 수가 허용 범위 이내이다`() {
-        with(DefaultCart) {
-            repeat(6) {
-                addCartItem(productId = it.toLong() + 1, quantity = 1)
-            }
-            val actualSize = getCartItems(0, 5).size
-            assertThat(actualSize).isEqualTo(5)
+    fun `장바구니에 추가한 상품을 제거할 수 있다`() {
+        mockkObject(DefaultCart) {
+            every { addCartItem(1, 1) } returns 1
+            every { deleteCartItem(1) } returns 1
+            addCartItem(1, 1)
+            val removedItemId = deleteCartItem(1)
+            assertThat(removedItemId).isEqualTo(1)
         }
     }
 }

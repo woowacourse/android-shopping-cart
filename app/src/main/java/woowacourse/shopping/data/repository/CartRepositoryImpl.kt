@@ -18,6 +18,10 @@ class CartRepositoryImpl(
         return cartDataSource.addCartItem(productId, quantity)
     }
 
+    override fun removeCartItem(cartItemId: Long): Long {
+        return cartDataSource.deleteCartItem(cartItemId)
+    }
+
     companion object {
         private const val PAGE_SIZE = 5
     }
