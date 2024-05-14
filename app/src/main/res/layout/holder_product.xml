@@ -21,7 +21,7 @@
             android:layout_height="154dp"
             android:layout_margin="@dimen/text_margin"
             android:importantForAccessibility="no"
-            android:src="@{product.imgURL}"
+            imageUrl="@{product.imgUrl}"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
