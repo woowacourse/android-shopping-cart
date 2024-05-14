@@ -1,4 +1,4 @@
-package woowacourse.shopping.view
+package woowacourse.shopping.view.cart
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

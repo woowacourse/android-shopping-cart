@@ -1,11 +1,10 @@
-package woowacourse.shopping.view
+package woowacourse.shopping.view.products
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductListBinding
 
 class ProductListFragment : Fragment() {
