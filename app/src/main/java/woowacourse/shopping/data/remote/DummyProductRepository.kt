@@ -104,6 +104,7 @@ class DummyProductRepository : ProductRepository {
     ): Result<List<Product>> =
         runCatching {
             val startIndex = pageOffset * pageSize
-            products.subList(startIndex, startIndex + pageSize)
+            val endIndex = if (products.size < startIndex * pageSize) startIndex * pageSize else products.size
+            products.subList(startIndex, endIndex)
         }
 }

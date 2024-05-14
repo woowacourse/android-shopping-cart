@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.base
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,12 @@ import woowacourse.shopping.presentation.base.ShoppingViewHolder.ProductViewHold
 import woowacourse.shopping.presentation.ui.DisplayItem
 import woowacourse.shopping.presentation.ui.LoadingItem
 import woowacourse.shopping.presentation.ui.Product
+import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
 
-class ShoppingAdapter(private var items: List<DisplayItem> = emptyList()) :
-    RecyclerView.Adapter<ShoppingViewHolder>() {
+class ShoppingAdapter(
+    private val shoppingHandler: ShoppingHandler,
+    private var items: List<DisplayItem> = emptyList(),
+) : RecyclerView.Adapter<ShoppingViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is Product -> PRODUCT_VIEW_TYPE
@@ -30,12 +32,12 @@ class ShoppingAdapter(private var items: List<DisplayItem> = emptyList()) :
         return when (viewType) {
             PRODUCT_VIEW_TYPE -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ShoppingViewHolder.ProductViewHolder(binding)
+                ShoppingViewHolder.ProductViewHolder(binding, shoppingHandler)
             }
 
             else -> {
                 val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ShoppingViewHolder.ProductViewHolder(binding)
+                ShoppingViewHolder.ProductViewHolder(binding, shoppingHandler)
             }
         }
     }
@@ -57,7 +59,6 @@ class ShoppingAdapter(private var items: List<DisplayItem> = emptyList()) :
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateList(newItems: List<Product>) {
-        Log.d("테스트", "${newItems.size}")
         items = newItems
         notifyDataSetChanged()
     }
@@ -68,10 +69,18 @@ class ShoppingAdapter(private var items: List<DisplayItem> = emptyList()) :
 }
 
 sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    class ProductViewHolder(private val binding: ItemProductBinding) :
+    class ProductViewHolder(private val binding: ItemProductBinding, val shoppingHandler: ShoppingHandler) :
         ShoppingViewHolder(binding.root) {
+        private var id: Long = -1
+
+        init {
+            binding.root.setOnClickListener {
+                shoppingHandler.onClick(id)
+            }
+        }
+
         fun bind(item: Product) {
-            Log.d("테스트", "${item.name}")
+            id = item.id
             binding.tvName.text = item.name
             binding.tvPrice.text = item.price.toString()
         }

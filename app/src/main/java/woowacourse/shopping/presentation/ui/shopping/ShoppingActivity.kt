@@ -9,13 +9,14 @@ import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.ShoppingAdapter
 import woowacourse.shopping.presentation.ui.UiState
+import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
 
-class ShoppingActivity : BaseActivity<ActivityShoppingBinding>() {
+class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_shopping
 
     private val viewModel: ShoppingViewModel by viewModels()
-    private val adapter: ShoppingAdapter = ShoppingAdapter()
+    private val adapter: ShoppingAdapter = ShoppingAdapter(this)
 
     override fun initStartView() {
         binding.rvShopping.adapter = adapter
@@ -46,5 +47,9 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return true
+    }
+
+    override fun onClick(productId: Long) {
+        ProductDetailActivity.start(this, productId)
     }
 }
