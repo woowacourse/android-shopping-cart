@@ -1,17 +1,17 @@
-package woowacourse.shopping.presentation.base
+package woowacourse.shopping.presentation.ui.shopping
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.presentation.base.ShoppingViewHolder.LoadViewHolder.Companion.LOAD_VIEW_TYPE
-import woowacourse.shopping.presentation.base.ShoppingViewHolder.ProductViewHolder.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.presentation.ui.DisplayItem
 import woowacourse.shopping.presentation.ui.LoadingItem
 import woowacourse.shopping.presentation.ui.Product
-import woowacourse.shopping.presentation.ui.shopping.ShoppingHandler
+import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder.LoadViewHolder.Companion.LOAD_VIEW_TYPE
+import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder.ProductViewHolder.Companion.PRODUCT_VIEW_TYPE
 
 class ShoppingAdapter(
     private val shoppingHandler: ShoppingHandler,
@@ -80,6 +80,9 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         fun bind(item: Product) {
+            Glide.with(binding.root.context)
+                .load(item.imgUrl)
+                .into(binding.imgItem)
             id = item.id
             binding.tvName.text = item.name
             binding.tvPrice.text = item.price.toString()

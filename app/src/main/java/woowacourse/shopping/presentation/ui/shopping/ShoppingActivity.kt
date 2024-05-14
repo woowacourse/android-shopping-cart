@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.presentation.base.BaseActivity
-import woowacourse.shopping.presentation.base.ShoppingAdapter
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
 
@@ -41,7 +40,7 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandle
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
+        menuInflater.inflate(R.menu.shopping_menu, menu)
         return true
     }
 

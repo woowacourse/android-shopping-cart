@@ -7,4 +7,6 @@ interface ProductRepository {
         pageOffset: Int,
         pageSize: Int,
     ): Result<List<Product>>
+
+    fun loadById(id: Long): Result<Product>
 }
