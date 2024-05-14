@@ -11,6 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/item_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -41,7 +42,7 @@
 
         <TextView
             android:id="@+id/tv_product_price"
-            android:layout_width="66dp"
+            android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginTop="8dp"
             android:text="@{@string/product_price(product.price)}"
