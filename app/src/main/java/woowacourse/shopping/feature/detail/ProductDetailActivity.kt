@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.viewmodel.ProductViewModel
 import woowacourse.shopping.data.ProductRepository
 import woowacourse.shopping.data.ProductRepositoryImpl
@@ -22,9 +23,23 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
+        initializeProduct()
+        initializeToolbar()
+    }
+
+    private fun initializeProduct() {
         productViewModel.load(productRepository, productId())
         productViewModel.product.observe(this) {
             binding.product = it
+        }
+    }
+
+    private fun initializeToolbar() {
+        binding.toolbarDetail.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.item_exit -> finish()
+            }
+            false
         }
     }
 
@@ -37,7 +52,7 @@ class ProductDetailActivity : AppCompatActivity() {
         fun newIntent(
             context: Context,
             productId: Long,
-        ): Intent  {
+        ): Intent {
             return Intent(context, ProductDetailActivity::class.java)
                 .putExtra(PRODUCT_ID_KEY, productId)
         }
