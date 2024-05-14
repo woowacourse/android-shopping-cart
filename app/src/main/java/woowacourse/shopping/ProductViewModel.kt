@@ -5,10 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class ProductViewModel : ViewModel() {
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> get() = _products
+    private val _product = MutableLiveData<Product>()
+    val product: LiveData<Product> get() = _product
 
-    fun update(productRepository: ProductRepository) {
-        _products.value = productRepository.findAll()
+    fun load(
+        productRepository: ProductRepository,
+        productId: Long,
+    ) {
+        _product.value = productRepository.find(productId)
+        // TODO: 잘못된 id 넘어 왔을 때 예외 처리
     }
 }

@@ -8,7 +8,7 @@ import woowacourse.shopping.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var adapter: ProductAdapter
-    private val productViewModel by viewModels<ProductViewModel>()
+    private val productsViewModel by viewModels<ProductsViewModel>()
     private val productRepository: ProductRepository by lazy { ProductRepositoryImpl() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,14 +19,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeView() {
         adapter =
-            ProductAdapter(onClickProductItem = {
-                // TODO: 상품 상세 화면 이동
+            ProductAdapter(onClickProductItem = { productId ->
+                ProductDetailActivity.newIntent(this, productId)
+                    .also { startActivity(it) }
             })
         binding.rvMainProduct.adapter = adapter
-        productViewModel.products.observe(this) {
+        productsViewModel.products.observe(this) {
             adapter.updateProducts(it)
         }
-        productViewModel.update(productRepository) // TODO: 네이밍 고민. load vs update vs ...
+        productsViewModel.update(productRepository) // TODO: 네이밍 고민. load vs update vs ...
 
         binding.toolbarMain.setOnMenuItemClickListener {
             when (it.itemId) {
