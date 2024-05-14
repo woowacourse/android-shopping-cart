@@ -3,6 +3,8 @@ package woowacourse.shopping.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -37,6 +39,25 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
             .into(binding.ivProductImage)
     }
 
+    override fun onClick() {
+        CartsImpl.save(product)
+        toast?.cancel()
+        toast = Toast.makeText(this, "담겨짐!", Toast.LENGTH_SHORT)
+        toast?.show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_product_detail, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_close -> finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     companion object {
         private const val EXTRA_DEFAULT_VALUE = -1L
 
@@ -47,12 +68,5 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
             context.startActivity(this)
         }
-    }
-
-    override fun onClick() {
-        CartsImpl.save(product)
-        toast?.cancel()
-        toast = Toast.makeText(this, "담겨짐!", Toast.LENGTH_SHORT)
-        toast?.show()
     }
 }

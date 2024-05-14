@@ -30,20 +30,14 @@ class ProductContentsActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.cart_menu, menu)
+        menuInflater.inflate(R.menu.menu_product_contents, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_cart -> {
-                CartActivity.startActivity(this)
-                true
-            }
-
-            else -> {
-                super.onOptionsItemSelected(item)
-            }
+        when (item.itemId) {
+            R.id.menu_cart -> CartActivity.startActivity(this)
         }
+        return super.onOptionsItemSelected(item)
     }
 }
