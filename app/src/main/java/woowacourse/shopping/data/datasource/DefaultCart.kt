@@ -3,7 +3,7 @@ package woowacourse.shopping.data.datasource
 import woowacourse.shopping.data.model.CartItem
 import kotlin.math.min
 
-object Cart : CartDataSource {
+object DefaultCart : CartDataSource {
     private val cartItems: MutableList<CartItem> = mutableListOf()
     private var id: Long = 1
 

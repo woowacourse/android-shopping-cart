@@ -4,7 +4,7 @@ import woowacourse.shopping.data.local.PRODUCT_DATA
 import woowacourse.shopping.data.model.Product
 import kotlin.math.min
 
-object Products : ProductDataSource {
+object DefaultProducts : ProductDataSource {
     private val products: List<Product> = PRODUCT_DATA
 
     override fun getProducts(

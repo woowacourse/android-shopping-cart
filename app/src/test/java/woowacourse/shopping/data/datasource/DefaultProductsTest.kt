@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import woowacourse.shopping.data.model.Product
 
-class ProductsTest {
+class DefaultProductsTest {
     @Test
     fun `페이지당 상품의 수가 허용 범위 이내이다`() {
         // when
-        val actualData = Products.getProducts(0, 20).size
+        val actualData = DefaultProducts.getProducts(0, 20).size
 
         // then
         assertTrue { actualData in 1..20 }
@@ -19,7 +19,7 @@ class ProductsTest {
     @Test
     fun `올바른 페이지 상품들을 가져온다`() {
         // when
-        val actualData = Products.getProducts(0, 5)
+        val actualData = DefaultProducts.getProducts(0, 5)
 
         // then
         assertThat(actualData).isEqualTo(
@@ -61,7 +61,7 @@ class ProductsTest {
     @Test
     fun `상품 아이디에 부합하는 상품을 가져올 수 있다`() {
         // when
-        val actualData = Products.getProductById(1)
+        val actualData = DefaultProducts.getProductById(1)
 
         // then
         assertThat(actualData).isEqualTo(
@@ -76,6 +76,6 @@ class ProductsTest {
 
     @Test
     fun `유효하지 않은 상품 아이디로 상품 정보를 가져오면 예외를 발생시킨다`() {
-        assertThrows<NoSuchElementException> { Products.getProductById(0) }
+        assertThrows<NoSuchElementException> { DefaultProducts.getProductById(0) }
     }
 }
