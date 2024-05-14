@@ -29,6 +29,14 @@ class ProductDetailFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.productDetailToolbar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
