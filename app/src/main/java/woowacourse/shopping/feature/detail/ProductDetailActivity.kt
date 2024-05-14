@@ -1,10 +1,13 @@
-package woowacourse.shopping
+package woowacourse.shopping.feature.detail
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.viewmodel.ProductViewModel
+import woowacourse.shopping.data.ProductRepository
+import woowacourse.shopping.data.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 
 class ProductDetailActivity : AppCompatActivity() {

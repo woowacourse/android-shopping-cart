@@ -1,4 +1,6 @@
-package woowacourse.shopping
+package woowacourse.shopping.data
+
+import woowacourse.shopping.model.Product
 
 class ProductRepositoryImpl : ProductRepository {
     private val products: MutableMap<Long, Product> = mutableMapOf()

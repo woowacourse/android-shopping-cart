@@ -1,10 +1,11 @@
-package woowacourse.shopping
+package woowacourse.shopping.feature.main.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.model.Product
 
 class ProductAdapter(private val onClickProductItem: OnClickProductItem) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()

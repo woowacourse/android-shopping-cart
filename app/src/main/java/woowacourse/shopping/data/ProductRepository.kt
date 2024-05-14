@@ -1,4 +1,6 @@
-package woowacourse.shopping
+package woowacourse.shopping.data
+
+import woowacourse.shopping.model.Product
 
 interface ProductRepository {
     fun find(id: Long): Product

@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.common
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
