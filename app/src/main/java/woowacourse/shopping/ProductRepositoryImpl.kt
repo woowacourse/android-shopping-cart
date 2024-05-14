@@ -4,6 +4,10 @@ class ProductRepositoryImpl : ProductRepository {
     private val products: MutableMap<Long, Product> = mutableMapOf()
     private var id: Long = 0L
 
+    init {
+        dummyProducts.forEach { save(it.imageUrl, it.title, it.price) }
+    }
+
     override fun find(id: Long): Product {
         return products[id] ?: throw IllegalArgumentException(INVALID_ID_MESSAGE)
     }
