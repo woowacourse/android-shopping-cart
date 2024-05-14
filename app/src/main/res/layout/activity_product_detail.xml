@@ -44,7 +44,7 @@
             android:layout_height="1dp"
             android:layout_centerInParent="true"
             android:layout_marginTop="17dp"
-            android:background="@color/split_line"
+            android:background="@color/gray6"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name" />
 
         <TextView

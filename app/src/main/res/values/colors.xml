@@ -8,5 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray5">#FF555555</color>
-    <color name="split_line">#FFAAAAAA</color>
+    <color name="gray6">#FFAAAAAA</color>
 </resources>
