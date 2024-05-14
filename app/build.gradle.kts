@@ -60,6 +60,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.14.2")
     // unit test
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.fragment:fragment-ktx:1.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
