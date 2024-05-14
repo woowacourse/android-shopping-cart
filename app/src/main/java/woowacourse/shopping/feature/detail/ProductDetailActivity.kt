@@ -6,10 +6,10 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
-import woowacourse.shopping.viewmodel.ProductViewModel
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.viewmodel.ProductViewModel
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
