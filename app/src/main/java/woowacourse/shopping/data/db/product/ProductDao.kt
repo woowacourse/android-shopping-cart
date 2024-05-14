@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.db.product
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
 class ProductDao {
     private val products: List<Product> = ProductDatabase.products

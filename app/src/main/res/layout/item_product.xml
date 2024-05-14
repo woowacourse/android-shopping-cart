@@ -4,7 +4,7 @@
     <data>
         <variable
             name="product"
-            type="woowacourse.shopping.domain.Product" />
+            type="woowacourse.shopping.domain.model.Product" />
         <variable
             name="onClickProduct"
             type="woowacourse.shopping.view.products.OnClickProduct" />

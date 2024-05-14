@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.db.product.ProductDao
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
 class MainViewModel(
     private val productDao: ProductDao = ProductDao(),

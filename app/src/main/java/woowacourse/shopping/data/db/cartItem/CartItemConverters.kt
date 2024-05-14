@@ -2,7 +2,7 @@ package woowacourse.shopping.data.db.cartItem
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
 class CartItemConverters {
     private val gson = Gson()

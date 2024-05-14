@@ -12,7 +12,7 @@ import woowacourse.shopping.TestFixture.deleteAll
 import woowacourse.shopping.data.db.cartItem.CartItemDao
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.data.model.CartItemEntity
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
 @RunWith(AndroidJUnit4::class)
 class CartItemDaoTest {

@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.data.db.product.ProductDao
 import woowacourse.shopping.data.db.product.ProductDatabase
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.model.Product
 
 @RunWith(AndroidJUnit4::class)
 class ProductDaoTest {
