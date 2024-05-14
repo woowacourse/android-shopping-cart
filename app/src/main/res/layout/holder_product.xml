@@ -6,20 +6,22 @@
     <data>
 
         <variable
-            name="vm"
-            type="woowacourse.shopping.productList.ProductListViewModel" />
+            name="product"
+            type="woowacourse.shopping.db.Product" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/main_product_list_item_img"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="154dp"
+            android:layout_height="154dp"
             android:layout_margin="@dimen/text_margin"
             android:importantForAccessibility="no"
+            android:src="@{product.imgURL}"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,6 +33,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{product.name}"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@id/main_product_list_item_img"
@@ -44,6 +47,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{String.valueOf(product.price)}"
             android:textAppearance="?attr/textAppearanceListItem"
             app:layout_constraintEnd_toEndOf="@id/main_product_list_product_name"
             app:layout_constraintStart_toStartOf="@id/main_product_list_product_name"
