@@ -1,14 +1,14 @@
 package woowacourse.shopping.domain
 
 class ShoppingCart() {
-    private val _products: MutableList<Product> = mutableListOf()
-    val products: List<Product> get() = _products
+    private val _cartItems: MutableList<CartItem> = mutableListOf()
+    val cartItems: List<CartItem> get() = _cartItems
 
-    fun addProduct(product: Product) {
-        _products.add(product)
+    fun addProduct(cartItem: CartItem) {
+        _cartItems.add(cartItem)
     }
 
-    fun deleteProduct(itemPosition: Int) {
-        _products.removeAt(itemPosition)
+    fun deleteProduct(itemId: Long) {
+        _cartItems.removeIf { it.id == itemId }
     }
 }
