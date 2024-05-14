@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.model
 
-class Order(
+data class Order(
     val id: Int,
     val product: Product,
 )

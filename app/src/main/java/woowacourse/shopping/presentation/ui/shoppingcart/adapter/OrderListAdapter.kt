@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderOrderBinding
 import woowacourse.shopping.domain.model.Order
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActionHandler
+import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartViewModel
 
 class OrderListAdapter(
     private val actionHandler: ShoppingCartActionHandler,
@@ -31,7 +32,15 @@ class OrderListAdapter(
 
     fun updateOrderList(newOrderList: List<Order>) {
         orderList = newOrderList
-        notifyDataSetChanged()
+
+        if (orderList.size != ShoppingCartViewModel.PAGE_SIZE) {
+            notifyItemRangeRemoved(
+                orderList.size + 1,
+                orderList.size + 1 + ShoppingCartViewModel.PAGE_SIZE,
+            )
+        }
+
+        notifyItemRangeChanged(0, orderList.size)
     }
 
     class OrderViewHolder(
