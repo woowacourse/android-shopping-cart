@@ -22,17 +22,23 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         if (id == -1L) finish()
         viewModel.loadById(id)
 
-        viewModel.products.observe(this) {
-            when (it) {
+        viewModel.products.observe(this) { state ->
+            when (state) {
                 is UiState.Finish -> {
                     Glide.with(this)
-                        .load(it.data.imgUrl)
+                        .load(state.data.imgUrl)
                         .into(binding.ivProduct)
-                    binding.tvName.text = it.data.name
-                    binding.tvPriceValue.text = it.data.price.toString()
+                    binding.tvName.text = state.data.name
+                    binding.tvPriceValue.text = state.data.price.toString()
+                    binding.tvAddCart.setOnClickListener {
+                        finish()
+                        viewModel.saveCartItem(state.data.id)
+                    }
                 }
+
                 is UiState.None -> {
                 }
+
                 is UiState.Error -> {
                 }
             }

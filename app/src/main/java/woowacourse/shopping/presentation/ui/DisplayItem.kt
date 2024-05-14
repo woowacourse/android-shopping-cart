@@ -7,12 +7,7 @@ data class Product(
     val name: String,
     val imgUrl: String,
     val price: Long,
-    val count: Int = DEFAULT_PURCHASE_COUNT,
-) : DisplayItem {
-    companion object {
-        const val DEFAULT_PURCHASE_COUNT = 1
-    }
-}
+) : DisplayItem
 
 data class LoadingItem(
     val current: Int,

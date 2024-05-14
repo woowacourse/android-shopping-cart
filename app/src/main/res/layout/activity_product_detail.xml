@@ -68,6 +68,7 @@
             tools:text="팡태팡태" />
 
         <TextView
+            android:id="@+id/tv_add_cart"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:background="#04C09E"
