@@ -18,8 +18,11 @@ class CartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_cart)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-        val cartItems = CartsImpl.findAll()
-        adapter = CartAdapter(cartItems)
+        adapter =
+            CartAdapter(CartsImpl.findAll()) { productId ->
+                CartsImpl.delete(productId)
+                adapter.removeItem(CartsImpl.findAll())
+            }
         binding.rvCart.adapter = adapter
     }
 

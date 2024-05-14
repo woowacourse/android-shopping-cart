@@ -14,6 +14,10 @@ object CartsImpl : CartDao {
         cart.clear()
     }
 
+    override fun delete(id: Long) {
+        cart.remove(id)
+    }
+
     override fun find(id: Long): Product {
         return cart[id] ?: throw NoSuchElementException(invalidIdMessage(id))
     }

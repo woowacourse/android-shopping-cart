@@ -8,6 +8,7 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.Product" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,6 +33,7 @@
             tools:text="[든든] 동원 스위트콘" />
 
         <ImageView
+            android:id="@+id/iv_remove"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginTop="8dp"
