@@ -1,7 +1,6 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.datasource
 
-import woowacourse.shopping.domain.CartDataSource
-import woowacourse.shopping.domain.CartItem
+import woowacourse.shopping.data.model.CartItem
 import kotlin.math.min
 
 object Cart : CartDataSource {

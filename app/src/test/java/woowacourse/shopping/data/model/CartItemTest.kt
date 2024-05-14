@@ -1,9 +1,8 @@
-package woowacourse.shopping
+package woowacourse.shopping.data.model
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import woowacourse.shopping.domain.CartItem
 
 class CartItemTest {
     @Test

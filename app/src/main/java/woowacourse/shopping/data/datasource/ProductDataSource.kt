@@ -1,4 +1,6 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.data.datasource
+
+import woowacourse.shopping.data.model.Product
 
 interface ProductDataSource {
     fun getProducts(

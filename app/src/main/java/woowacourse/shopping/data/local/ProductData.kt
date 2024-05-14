@@ -1,27 +1,8 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.local
 
-import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ProductDataSource
-import kotlin.math.min
+import woowacourse.shopping.data.model.Product
 
-object Products : ProductDataSource {
-    private val products: List<Product> = PRODUCTS
-
-    override fun getProducts(
-        page: Int,
-        pageSize: Int,
-    ): List<Product> {
-        val fromIndex = page * pageSize
-        val toIndex = min(fromIndex + pageSize, products.size)
-        return products.subList(fromIndex, toIndex)
-    }
-
-    override fun getProductById(id: Long): Product {
-        return products.first { it.id == id }
-    }
-}
-
-private val PRODUCTS: List<Product> =
+val PRODUCT_DATA: List<Product> =
     listOf(
         Product(
             1,

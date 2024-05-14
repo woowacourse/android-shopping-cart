@@ -1,11 +1,10 @@
-package woowacourse.shopping
+package woowacourse.shopping.data.datasource
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import woowacourse.shopping.data.Products
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.data.model.Product
 
 class ProductsTest {
     @Test
