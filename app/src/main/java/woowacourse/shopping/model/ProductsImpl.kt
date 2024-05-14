@@ -16,6 +16,10 @@ object ProductsImpl : ProductDao {
         return id++
     }
 
+    override fun deleteAll() {
+        products.clear()
+    }
+
     override fun find(id: Long): Product {
         return products[id] ?: throw NoSuchElementException(invalidIdMessage(id))
     }
