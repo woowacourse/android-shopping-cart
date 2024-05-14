@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
+import woowacourse.shopping.cart.CartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.productDetail.ProductDetailFragment
 
@@ -29,6 +30,24 @@ class ProductListFragment : Fragment() {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.list.adapter = adapter
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.productListToolbar.setNavigationOnClickListener {
+            navigateToCart()
+        }
+    }
+
+    private fun navigateToCart() {
+        val cartFragment = CartFragment()
+
+        parentFragmentManager.beginTransaction().apply {
+            replace(R.id.container, cartFragment)
+            addToBackStack(null)
+            commit()
+        }
     }
 
     private fun navigateToProductDetail(id: Int) {
