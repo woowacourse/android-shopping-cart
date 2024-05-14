@@ -27,5 +27,14 @@ class MainActivity : AppCompatActivity() {
             adapter.updateProducts(it)
         }
         productViewModel.update(productRepository) // TODO: 네이밍 고민. load vs update vs ...
+
+        binding.toolbarMain.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.item_cart -> {
+                    // TODO: 장바구니 화면 이동
+                }
+            }
+            false
+        }
     }
 }
