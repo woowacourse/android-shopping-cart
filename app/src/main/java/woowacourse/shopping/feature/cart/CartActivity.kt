@@ -33,5 +33,9 @@ class CartActivity : AppCompatActivity() {
             adapter.updateCart(it.map { entry -> ProductRepositoryImpl.find(entry.key) })
         }
         cartViewModel.load(cartRepository)
+
+        binding.toolbarCart.setNavigationOnClickListener {
+            finish()
+        }
     }
 }
