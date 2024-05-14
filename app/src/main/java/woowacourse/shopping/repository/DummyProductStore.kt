@@ -7,7 +7,7 @@ class DummyProductStore : ProductStore {
         Product(i, "상품$i", i.toString(), i * 100)
     }
 
-    override fun loadData(currentIndex: Int): List<Product> {
+    override fun load20Data(currentIndex: Int): List<Product> {
         return products.subList(currentIndex, currentIndex + COUNT_PER_LOAD)
     }
 

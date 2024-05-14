@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
-import woowacourse.shopping.repository.DummyProductStore
 
 class ProductListFragment : Fragment() {
 
-    private val adapter: ProductRecyclerViewAdapter by lazy { ProductRecyclerViewAdapter(DummyProductStore().loadData(1)) }
+    private val viewModel: ProductListViewModel by lazy { ProductListViewModel() }
+    private val adapter: ProductRecyclerViewAdapter by lazy { ProductRecyclerViewAdapter(viewModel.loadProducts()) }
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding!!
 
