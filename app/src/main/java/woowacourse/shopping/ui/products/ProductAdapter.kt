@@ -24,6 +24,6 @@ class ProductAdapter(
         holder: ProductViewHolder,
         position: Int,
     ) {
-        return holder.bind(products[position])
+        holder.bind(products[position])
     }
 }
