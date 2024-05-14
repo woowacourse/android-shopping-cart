@@ -1,31 +1,36 @@
 package woowacourse.shopping.productDetail
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import woowacourse.shopping.R
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import woowacourse.shopping.databinding.FragmentProductDetailBinding
 
 class ProductDetailFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = ProductDetailFragment()
-    }
-
     private val viewModel: ProductDetailViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
-    }
+    private var _binding: FragmentProductDetailBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_blank, container, false)
+        _binding = FragmentProductDetailBinding.inflate(inflater)
+
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
+
+        arguments?.let {
+            viewModel.productId = it.getInt("productId")
+        }
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

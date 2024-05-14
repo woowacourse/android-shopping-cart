@@ -12,6 +12,7 @@ import woowacourse.shopping.productDetail.ProductDetailFragment
 class ProductListFragment : Fragment() {
 
     private val viewModel: ProductListViewModel by lazy { ProductListViewModel() }
+
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
             viewModel.loadProducts(),
@@ -38,7 +39,7 @@ class ProductListFragment : Fragment() {
         }
 
         parentFragmentManager.beginTransaction().apply {
-            add(R.id.container, productDetailFragment)
+            replace(R.id.container, productDetailFragment)
             addToBackStack(null)
             commit()
         }
