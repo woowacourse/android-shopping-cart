@@ -16,7 +16,9 @@ object DummyShoppingCart : ShoppingCartRepository {
             ),
         )
 
-    override fun addOrder(order: Order) {
+    override fun addOrder(product: Product) {
+        val id = orders.size + 1
+        val order = Order(id, product)
         orders.add(order)
     }
 

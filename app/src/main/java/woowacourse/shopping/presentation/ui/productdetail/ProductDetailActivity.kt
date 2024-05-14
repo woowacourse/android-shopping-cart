@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repsoitory.DummyProductList
+import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -24,7 +25,7 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel =
             ViewModelProvider(
                 this,
-                ProductDetailViewModelFactory(DummyProductList),
+                ProductDetailViewModelFactory(DummyProductList, DummyShoppingCart),
             )[ProductDetailViewModel::class.java]
 
         binding =
