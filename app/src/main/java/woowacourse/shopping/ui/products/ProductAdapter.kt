@@ -8,13 +8,14 @@ import woowacourse.shopping.model.Product
 
 class ProductAdapter(
     private val products: List<Product>,
+    private val itemClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ProductViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(binding)
+        return ProductViewHolder(binding, itemClickListener)
     }
 
     override fun getItemCount(): Int = products.size
