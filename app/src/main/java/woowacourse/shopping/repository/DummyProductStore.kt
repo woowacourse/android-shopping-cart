@@ -16,8 +16,8 @@ class DummyProductStore : ProductStore {
         return products.subList(currentIndex, currentIndex + COUNT_PER_LOAD)
     }
 
-    override fun findById(findId: Int): Product? {
-        return products.find { it.id == findId }
+    override fun findById(findId: Int): Product {
+        return products.find { it.id == findId } ?: throw IllegalArgumentException("해당하는 상품이 없습니다.")
     }
 
     companion object {

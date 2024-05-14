@@ -10,7 +10,7 @@ class ProductDetailViewModel : ViewModel() {
     private val productStore = DummyProductStore()
     var productId by Delegates.notNull<Int>()
 
-    val product: Product?
+    val product: Product
         get() = productStore.findById(productId)
 
     fun addProductToCart() {

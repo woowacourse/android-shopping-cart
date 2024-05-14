@@ -28,7 +28,7 @@ class ProductListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater)
-        binding.list.adapter = adapter
+        binding.productDetailList.adapter = adapter
         return binding.root
     }
 

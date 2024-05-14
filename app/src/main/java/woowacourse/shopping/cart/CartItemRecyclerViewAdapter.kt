@@ -1,49 +1,51 @@
 package woowacourse.shopping.cart
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import woowacourse.shopping.R
+import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.databinding.HolderCartBinding
+import woowacourse.shopping.db.Product
 
-import woowacourse.shopping.cart.placeholder.PlaceholderContent.PlaceholderItem
-import woowacourse.shopping.databinding.FragmentCartBinding
-
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
 class CartItemRecyclerViewAdapter(
-    private val values: List<PlaceholderItem>
+    private var values: List<Product>,
+    private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<CartItemRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
         return ViewHolder(
-            FragmentCartBinding.inflate(
+            HolderCartBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            )
+            ),
+            onClick = { id -> onClick(id) }
         )
 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(binding: FragmentCartBinding) : RecyclerView.ViewHolder(binding.root) {
-        val idView: TextView = binding.itemNumber
-        val contentView: TextView = binding.content
+    fun updateData(newData: List<Product>) {
+        this.values = newData
+        notifyDataSetChanged()
+    }
 
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+
+    inner class ViewHolder(
+        private val binding: HolderCartBinding,
+        private val onClick: (id: Int) -> Unit
+    ) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(product: Product) {
+            binding.product = product
+            binding.root.setOnClickListener { onClick(product.id) }
         }
     }
 

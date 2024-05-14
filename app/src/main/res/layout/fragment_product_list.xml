@@ -19,7 +19,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/cart_list"
+        android:id="@+id/product_detail_list"
         android:name="woowacourse.shopping.productList.ItemFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -17,7 +17,6 @@
         android:background="@drawable/grey_border"
         android:orientation="horizontal">
 
-
         <TextView
             android:id="@+id/cart_product_name"
             android:layout_width="0dp"
@@ -26,9 +25,9 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{product.name}"
+            android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -44,12 +43,12 @@
 
         <ImageView
             android:id="@+id/cart_product_image"
+            imageUrl="@{product.imgUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:src="@{product.imgUrl}"
             app:layout_constraintStart_toStartOf="@id/cart_product_name"
             app:layout_constraintTop_toBottomOf="@id/cart_product_name"
             tools:src="@drawable/ic_launcher_background" />
