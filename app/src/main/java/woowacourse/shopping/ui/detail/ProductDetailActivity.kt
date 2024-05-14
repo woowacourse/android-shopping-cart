@@ -3,15 +3,20 @@ package woowacourse.shopping.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.model.CartsImpl
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductsImpl
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
+    private lateinit var product: Product
+    private var toast: Toast? = null
     private val productKey by lazy {
         intent.getLongExtra(
             ProductDetailKey.EXTRA_PRODUCT_KEY,
@@ -24,8 +29,9 @@ class ProductDetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_product_detail)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        val product = ProductsImpl.find(productKey)
+        product = ProductsImpl.find(productKey)
         binding.product = product
+        binding.cartButtonClickListener = this
         Glide.with(this)
             .load(product.imageUrl)
             .into(binding.ivProductImage)
@@ -41,5 +47,12 @@ class ProductDetailActivity : AppCompatActivity() {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
             context.startActivity(this)
         }
+    }
+
+    override fun onClick() {
+        CartsImpl.save(product)
+        toast?.cancel()
+        toast = Toast.makeText(this, "담겨짐!", Toast.LENGTH_SHORT)
+        toast?.show()
     }
 }
