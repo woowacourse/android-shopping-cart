@@ -2,9 +2,11 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.model.Product
 
-class ProductRepositoryImpl : ProductRepository {
+object ProductRepositoryImpl : ProductRepository {
     private val products: MutableMap<Long, Product> = mutableMapOf()
     private var id: Long = 0L
+
+    private const val INVALID_ID_MESSAGE = "해당하는 id의 상품이 존재하지 않습니다."
 
     init {
         dummyProducts.forEach { save(it.imageUrl, it.title, it.price) }
@@ -25,9 +27,5 @@ class ProductRepositoryImpl : ProductRepository {
     ): Long {
         products[id] = Product(id, imageUrl, title, price)
         return id++
-    }
-
-    companion object {
-        private const val INVALID_ID_MESSAGE = "해당하는 id의 상품이 존재하지 않습니다."
     }
 }

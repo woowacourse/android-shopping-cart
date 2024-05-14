@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var adapter: ProductAdapter
     private val productsViewModel by viewModels<ProductsViewModel>()
-    private val productRepository: ProductRepository by lazy { ProductRepositoryImpl() }
+    private val productRepository: ProductRepository by lazy { ProductRepositoryImpl }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

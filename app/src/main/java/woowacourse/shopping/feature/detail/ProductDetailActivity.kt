@@ -14,7 +14,7 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
     private val productViewModel by viewModels<ProductViewModel>()
-    private val productRepository: ProductRepository = ProductRepositoryImpl()
+    private val productRepository: ProductRepository by lazy { ProductRepositoryImpl }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
