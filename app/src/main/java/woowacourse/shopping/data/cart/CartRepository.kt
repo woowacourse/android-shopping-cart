@@ -1,12 +1,11 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
 
 interface CartRepository {
-    fun add(product: Product)
+    fun add(productId: Long)
 
-    fun delete(product: Product)
+    fun delete(productId: Long)
 
-    fun findAll(): Map<Product, Quantity>
+    fun findAll(): Map<Long, Quantity>
 }
