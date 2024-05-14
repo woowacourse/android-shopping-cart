@@ -45,14 +45,3 @@ class ProductRecyclerViewAdapter(
         }
     }
 }
-
-@BindingAdapter("imageUrl")
-fun setImageViewResource(imageView: ImageView, resUrl: String) {
-    Glide.with(imageView.context)
-        .load(resUrl)
-        .placeholder(R.drawable.product1)
-        .fallback(android.R.drawable.ic_menu_report_image)
-        .error(android.R.drawable.ic_menu_report_image)
-        .thumbnail()
-        .into(imageView)
-}
