@@ -16,6 +16,10 @@ class DummyProductStore : ProductStore {
         return products.subList(currentIndex, currentIndex + COUNT_PER_LOAD)
     }
 
+    override fun findById(findId: Int): Product? {
+        return products.find { it.id == findId }
+    }
+
     companion object {
         private const val COUNT_PER_LOAD = 20
     }
