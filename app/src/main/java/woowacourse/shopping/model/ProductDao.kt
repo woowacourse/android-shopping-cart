@@ -5,7 +5,10 @@ interface ProductDao {
 
     fun find(id: Long): Product
 
-    fun findAll(): List<Product>
+    fun findAll(
+        offset: Int,
+        limit: Int,
+    ): List<Product>
 
     fun deleteAll()
 }

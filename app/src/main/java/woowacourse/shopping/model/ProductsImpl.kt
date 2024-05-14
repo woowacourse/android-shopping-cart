@@ -6,10 +6,13 @@ object ProductsImpl : ProductDao {
     private val products = mutableMapOf<Long, Product>()
 
     init {
-        save(MAC_BOOK)
-        save(IPHONE)
-        save(GALAXY_BOOK)
-        save(GRAM)
+        repeat(100) {
+
+            save(MAC_BOOK)
+            save(IPHONE)
+            save(GALAXY_BOOK)
+            save(GRAM)
+        }
     }
 
     override fun save(product: Product): Long {
@@ -25,8 +28,15 @@ object ProductsImpl : ProductDao {
         return products[id] ?: throw NoSuchElementException(invalidIdMessage(id))
     }
 
-    override fun findAll(): List<Product> {
-        return products.map { it.value }
+//    override fun findAll(): List<Product> {
+//        return products.map { it.value }
+//    }
+
+    override fun findAll(
+        offset: Int,
+        limit: Int,
+    ): List<Product> {
+        return products.values.toList().subList(offset, offset + limit)
     }
 
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)
