@@ -1,6 +1,6 @@
 package woowacourse.shopping
 
-import woowacourse.shopping.data.db.CartItemDatabase
+import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 
 object TestFixture {
     fun CartItemDatabase.deleteAll() {

@@ -9,6 +9,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.TestFixture.deleteAll
+import woowacourse.shopping.data.db.cartItem.CartItemDao
+import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.domain.Product
 

@@ -1,9 +1,9 @@
-package woowacourse.shopping.data.db
+package woowacourse.shopping.data.db.cartItem
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import woowacourse.shopping.data.db.CartItemDatabase.Companion.CART_ITEMS_DB_NAME
+import woowacourse.shopping.data.db.cartItem.CartItemDatabase.Companion.CART_ITEMS_DB_NAME
 import woowacourse.shopping.data.model.CartItemEntity
 
 @Dao
