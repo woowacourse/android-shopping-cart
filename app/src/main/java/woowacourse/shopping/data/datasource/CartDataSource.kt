@@ -8,5 +8,8 @@ interface CartDataSource {
         pageSize: Int,
     ): List<CartItem>
 
-    fun addCartItem(cartItem: CartItem): Long
+    fun addCartItem(
+        productId: Long,
+        quantity: Int,
+    ): Long
 }

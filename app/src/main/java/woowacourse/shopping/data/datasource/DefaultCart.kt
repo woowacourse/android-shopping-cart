@@ -7,8 +7,17 @@ object DefaultCart : CartDataSource {
     private val cartItems: MutableList<CartItem> = mutableListOf()
     private var id: Long = 1
 
-    override fun addCartItem(cartItem: CartItem): Long {
-        cartItems.add(cartItem.copy(id = id))
+    override fun addCartItem(
+        productId: Long,
+        quantity: Int,
+    ): Long {
+        cartItems.add(
+            CartItem(
+                id = id,
+                productId = productId,
+                quantity = quantity,
+            ),
+        )
         return id++
     }
 
