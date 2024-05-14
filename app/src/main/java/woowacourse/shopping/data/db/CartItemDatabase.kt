@@ -1,9 +1,19 @@
 package woowacourse.shopping.data.db
 
 import android.content.Context
+import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import woowacourse.shopping.data.model.CartItemEntity
 
+@Database(
+    entities = [
+        CartItemEntity::class,
+    ],
+    version = 1,
+)
+@TypeConverters(CartItemConverters::class)
 abstract class CartItemDatabase : RoomDatabase() {
     abstract fun cartItemDao(): CartItemDao
 
