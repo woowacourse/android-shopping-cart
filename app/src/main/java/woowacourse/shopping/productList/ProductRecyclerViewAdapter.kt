@@ -1,18 +1,14 @@
 package woowacourse.shopping.productList
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.db.Product
 
 class ProductRecyclerViewAdapter(
-    private val values: List<Product>
+    private val values: List<Product>,
+    private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -22,7 +18,7 @@ class ProductRecyclerViewAdapter(
                 parent,
                 false,
             ),
-            onClick = { id -> Log.d("clicked", "Clicked $id") }
+            onClick = { id -> onClick(id) }
         )
     }
 
