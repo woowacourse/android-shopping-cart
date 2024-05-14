@@ -6,9 +6,10 @@ object ProductsImpl : ProductDao {
     private val products = mutableMapOf<Long, Product>()
 
     init {
-        repeat(20) {
-            save(MAC_BOOK)
-        }
+        save(MAC_BOOK)
+        save(IPHONE)
+        save(GALAXY_BOOK)
+        save(GRAM)
     }
 
     override fun save(product: Product): Long {
