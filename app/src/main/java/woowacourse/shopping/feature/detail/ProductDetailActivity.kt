@@ -7,8 +7,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.viewmodel.ProductViewModel
-import woowacourse.shopping.data.ProductRepository
-import woowacourse.shopping.data.ProductRepositoryImpl
+import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -25,6 +25,7 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun initializeView() {
         initializeProduct()
         initializeToolbar()
+        initializeAddCardButton()
     }
 
     private fun initializeProduct() {
@@ -40,6 +41,12 @@ class ProductDetailActivity : AppCompatActivity() {
                 R.id.item_exit -> finish()
             }
             false
+        }
+    }
+
+    private fun initializeAddCardButton() {
+        binding.btnProductDetailAddCart.setOnClickListener {
+            // TODO: 장바구니
         }
     }
 

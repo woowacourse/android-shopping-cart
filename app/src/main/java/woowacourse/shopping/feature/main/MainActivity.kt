@@ -5,8 +5,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.feature.main.adapter.ProductAdapter
 import woowacourse.shopping.feature.detail.ProductDetailActivity
-import woowacourse.shopping.data.ProductRepository
-import woowacourse.shopping.data.ProductRepositoryImpl
+import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.viewmodel.ProductsViewModel
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityMainBinding
