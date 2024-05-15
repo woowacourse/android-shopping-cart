@@ -14,7 +14,7 @@ import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.MainActivity
 import woowacourse.shopping.view.MainViewModel
 
-class ProductDetailFragment : Fragment() {
+class ProductDetailFragment : Fragment(),OnClickDetail {
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
     private lateinit var mainViewModel: MainViewModel
@@ -58,5 +58,13 @@ class ProductDetailFragment : Fragment() {
         }
 
         private const val PRODUCT_ID = "productId"
+    }
+
+    override fun clickClose() {
+        parentFragmentManager.popBackStack()
+    }
+
+    override fun clickAddCart(product: Product) {
+        mainViewModel.addShoppingCartItem(product)
     }
 }

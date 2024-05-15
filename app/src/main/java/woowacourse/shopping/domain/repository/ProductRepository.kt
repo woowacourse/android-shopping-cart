@@ -8,7 +8,7 @@ interface ProductRepository {
 
     fun getProduct(productId: Long) : Product
 
-    fun addCartItem(cartItem: CartItem)
+    fun addCartItem(product: Product) : CartItem
 
     fun loadCartItems(): List<CartItem>
 

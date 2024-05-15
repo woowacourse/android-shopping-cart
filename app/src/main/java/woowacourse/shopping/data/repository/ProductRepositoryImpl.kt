@@ -3,6 +3,7 @@ package woowacourse.shopping.data.repository
 import android.content.Context
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.data.db.product.ProductDao
+import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -21,8 +22,9 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         return product ?: throw NoSuchDataException()
     }
 
-    override fun addCartItem(cartItem: CartItem) {
-        cartItemDao.saveCartItem(cartItem.toCartItemEntity())
+    override fun addCartItem(product: Product): CartItem {
+        val itemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
+        return CartItem(itemId,product)
     }
 
     override fun loadCartItems(): List<CartItem> {

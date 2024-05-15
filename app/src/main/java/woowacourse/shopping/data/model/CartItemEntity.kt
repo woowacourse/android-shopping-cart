@@ -11,11 +11,17 @@ data class CartItemEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val product: Product
-){
-    fun toCartItem(): CartItem{
+) {
+    fun toCartItem(): CartItem {
         return CartItem(
             id = id,
             product = product
         )
+    }
+
+    companion object {
+        fun makeCartItemEntity(product: Product): CartItemEntity {
+            return CartItemEntity(product = product)
+        }
     }
 }
