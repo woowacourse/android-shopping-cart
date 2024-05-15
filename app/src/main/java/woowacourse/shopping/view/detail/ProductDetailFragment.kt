@@ -39,6 +39,7 @@ class ProductDetailFragment : Fragment(),OnClickDetail {
     }
 
     private fun initView(product: Product){
+        binding.onClickDetail = this
         binding.product =  product
         Glide.with(requireActivity())
             .load(product.imageUrl)
@@ -52,19 +53,19 @@ class ProductDetailFragment : Fragment(),OnClickDetail {
     }
 
 
-    companion object {
-        fun createBundle(id: Long): Bundle {
-            return Bundle().apply { putLong(PRODUCT_ID, id) }
-        }
-
-        private const val PRODUCT_ID = "productId"
-    }
-
     override fun clickClose() {
         parentFragmentManager.popBackStack()
     }
 
     override fun clickAddCart(product: Product) {
         mainViewModel.addShoppingCartItem(product)
+    }
+
+    companion object {
+        fun createBundle(id: Long): Bundle {
+            return Bundle().apply { putLong(PRODUCT_ID, id) }
+        }
+
+        private const val PRODUCT_ID = "productId"
     }
 }

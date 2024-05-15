@@ -7,6 +7,9 @@
         <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
+        <variable
+            name="onClickDetail"
+            type="woowacourse.shopping.view.detail.OnClickDetail" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
+            android:onClick="@{()->onClickDetail.clickClose()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
@@ -91,6 +95,7 @@
             tools:text="10,000원" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:onClick="@{()->onClickDetail.clickAddCart(product)}"
             android:id="@+id/btn_add_cart"
             android:layout_width="0dp"
             android:layout_height="48dp"
