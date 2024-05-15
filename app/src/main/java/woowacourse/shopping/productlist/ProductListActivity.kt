@@ -16,7 +16,7 @@ class ProductListActivity : AppCompatActivity(), ProductListContract.ViewAction 
 
         binding.rcvProductList.adapter =
             ProductListAdapter(this).apply {
-                this.submitList(DummyShoppingRepository.products().map { it.toProductList() })
+                this.submitList(DummyShoppingRepository.products().map { it.toProductUiModel() })
             }
 
         supportActionBar?.title = "Shopping"

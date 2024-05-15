@@ -2,7 +2,7 @@ package woowacourse.shopping.productlist
 
 import woowacourse.shopping.domain.Product
 
-fun Product.toProductList(): ProductUiModel =
+fun Product.toProductUiModel(): ProductUiModel =
     ProductUiModel(
         id,
         name,
