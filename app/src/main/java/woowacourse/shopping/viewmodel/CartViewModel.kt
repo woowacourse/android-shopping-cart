@@ -17,14 +17,14 @@ class CartViewModel : ViewModel() {
         cartRepository: CartRepository,
         productId: Long,
     ) {
-        cartRepository.add(productId)
+        cartRepository.increaseQuantity(productId)
     }
 
     fun delete(
         cartRepository: CartRepository,
         productId: Long,
     ) {
-        cartRepository.deleteAll(productId)
+        cartRepository.deleteCartItem(productId)
     }
 
     fun loadCart(

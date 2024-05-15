@@ -11,7 +11,7 @@ object CartRepositoryImpl : CartRepository {
 
     private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
 
-    override fun add(productId: Long) {
+    override fun increaseQuantity(productId: Long) {
         val oldCartItem = cart.find { it.productId == productId }
         if (oldCartItem == null) {
             cart.add(CartItem(id++, productId, Quantity()))
@@ -22,7 +22,7 @@ object CartRepositoryImpl : CartRepository {
         cart.add(oldCartItem.copy(quantity = ++quantity))
     }
 
-    override fun delete(productId: Long) {
+    override fun decreaseQuantity(productId: Long) {
         val oldCartItem = cart.find { it.productId == productId }
         oldCartItem ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
         cart.remove(oldCartItem)
@@ -33,8 +33,12 @@ object CartRepositoryImpl : CartRepository {
         cart.add(oldCartItem.copy(quantity = --quantity))
     }
 
-    override fun deleteAll(productId: Long) {
+    override fun deleteCartItem(productId: Long) {
         cart.removeIf { it.productId == productId }
+    }
+
+    override fun deleteAll() {
+        cart.clear()
     }
 
     override fun findAll(): List<CartItem> {
