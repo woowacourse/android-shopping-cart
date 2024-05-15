@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 
-class ShoppingCartActivity: AppCompatActivity() {
+class ShoppingCartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingCartBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

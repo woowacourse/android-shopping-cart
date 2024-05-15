@@ -5,11 +5,73 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="woowacourse.shopping.shoppingcart.ShoppingCartViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingHorizontal="6dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcv_shopping_cart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="71dp"
+
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/tv_shopping_cart_page_count"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_cart" />
+
+        <Button
+            android:id="@+id/btn_shopping_cart_left"
+            android:layout_width="42dp"
+            android:layout_height="0dp"
+            android:background="@drawable/ic_left"
+            android:onClick="@{() -> vm.previousPage()}"
+            android:textColor="@color/white"
+            android:text="@string/btn_left_text"
+            app:layout_constraintBottom_toBottomOf="@id/tv_shopping_cart_page_count"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/tv_shopping_cart_page_count"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_shopping_cart_page_count" />
+
+        <TextView
+            android:id="@+id/tv_shopping_cart_page_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="62dp"
+            android:fontFamily="@font/roboto"
+            android:text="@{String.valueOf(vm.currentPage)}"
+            android:textColor="@color/gray_700"
+            android:textSize="22dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/btn_shopping_cart_right"
+            app:layout_constraintStart_toEndOf="@id/btn_shopping_cart_left"
+            tools:text="1" />
+
+
+        <Button
+            android:id="@+id/btn_shopping_cart_right"
+            android:layout_width="42dp"
+            android:layout_height="0dp"
+            android:background="@drawable/sel_shopping_cart_right_btn"
+            android:onClick="@{()-> vm.nextPage()}"
+            android:src="@drawable/ic_close"
+            android:text="@string/btn_right_text"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/tv_shopping_cart_page_count"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_shopping_cart_page_count"
+            app:layout_constraintTop_toTopOf="@id/tv_shopping_cart_page_count" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
