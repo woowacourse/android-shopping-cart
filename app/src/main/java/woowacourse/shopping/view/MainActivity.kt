@@ -3,6 +3,7 @@ package woowacourse.shopping.view
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.R
@@ -14,8 +15,10 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-    private val viewModelFactory = MainViewModelFactory(ProductRepositoryImpl(context = this@MainActivity))
-    val viewModel: MainViewModel = viewModelFactory.create(MainViewModel::class.java)
+    val viewModel: MainViewModel by lazy {
+        val viewModelFactory = MainViewModelFactory(ProductRepositoryImpl(context = this@MainActivity))
+        viewModelFactory.create(MainViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

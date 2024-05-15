@@ -9,6 +9,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.ProductRepository
+import kotlin.concurrent.thread
 
 class MainViewModel(
     private val repository: ProductRepository,
@@ -22,28 +23,28 @@ class MainViewModel(
 
     init {
         initializeProducts()
-        initializeShoppingCart()
+//        initializeShoppingCart()
     }
 
     private fun initializeProducts() {
         _products.value = repository.loadProducts()
     }
 
-    private fun initializeShoppingCart() = viewModelScope.launch {
+    private fun initializeShoppingCart() = thread {
         _shoppingCart.value?.initializeProducts(repository.loadCartItems())
-    }
+    }.start()
 
-    fun addShoppingCartItem(cartItem: CartItem) = viewModelScope.launch {
+    fun addShoppingCartItem(cartItem: CartItem) = thread {
         repository.addCartItem(cartItem)
         _shoppingCart.value?.addProduct(cartItem)
-    }
+    }.start()
 
-    fun deleteShoppingCartItem(itemId:Long) = viewModelScope.launch{
+    fun deleteShoppingCartItem(itemId: Long) = thread {
         repository.deleteCartItem(itemId)
         _shoppingCart.value?.deleteProduct(itemId)
-    }
+    }.start()
 
-    fun loadProductItem(productId: Long): Product{
+    fun loadProductItem(productId: Long): Product {
         return repository.getProduct(productId)
     }
 

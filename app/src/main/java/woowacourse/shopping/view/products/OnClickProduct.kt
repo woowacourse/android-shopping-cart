@@ -1,3 +1,5 @@
 package woowacourse.shopping.view.products
 
-interface OnClickProduct
+interface OnClickProduct{
+    fun clickItem(productId:Long)
+}

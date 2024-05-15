@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Shopping</string>
     <string name="formatted_price">%1$,d원</string>
+    <string name="add_cart_text">장바구니 담기</string>
 </resources>
