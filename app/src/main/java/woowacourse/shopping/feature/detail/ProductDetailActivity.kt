@@ -35,7 +35,7 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun updateProduct() {
-        productViewModel.load(productRepository, productId())
+        productViewModel.loadProduct(productRepository, productId())
         productViewModel.product.observe(this) {
             binding.product = it
         }
