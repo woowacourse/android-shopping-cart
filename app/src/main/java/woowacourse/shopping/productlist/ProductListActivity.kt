@@ -1,25 +1,40 @@
 package woowacourse.shopping.productlist
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.util.ViewModelFactory
 
 class ProductListActivity : AppCompatActivity(), ProductListContract.ViewAction {
     private lateinit var binding: ActivityProductListBinding
+    private lateinit var adapter: ProductListAdapter
+    private val viewModel: ProductListViewModel by viewModels { ViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.lifecycleOwner = this
 
-        binding.rcvProductList.adapter =
-            ProductListAdapter(this).apply {
-                this.submitList(DummyShoppingRepository.products().map { it.toProductUiModel() })
-            }
+        attachAdapter()
+        showProducts()
 
         supportActionBar?.title = "Shopping"
+    }
+
+    private fun attachAdapter() {
+        adapter = ProductListAdapter(this)
+        binding.rcvProductList.adapter = adapter
+    }
+
+    private fun showProducts() {
+        viewModel.loadProducts()
+        viewModel.products.observe(this) { products ->
+            adapter.submitList(products.map { it.toProductUiModel() })
+        }
     }
 
     override fun onProductClicked(id: Long) {
