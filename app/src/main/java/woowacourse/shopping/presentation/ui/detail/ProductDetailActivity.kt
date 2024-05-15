@@ -32,7 +32,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
                     binding.tvPriceValue.text = state.data.price.toString()
                     binding.tvAddCart.setOnClickListener {
                         finish()
-                        viewModel.saveCartItem(state.data.id)
+                        viewModel.saveCartItem(state.data)
                     }
                 }
 

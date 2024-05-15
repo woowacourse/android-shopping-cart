@@ -1,7 +1,11 @@
 package woowacourse.shopping.domain
 
+import woowacourse.shopping.presentation.ui.Product
+
 interface CartRepository {
-    fun addData(productId: Long): Result<Long>
+    fun addData(product: Product): Result<Long>
+
+    fun delete(product: Product): Result<Long>
 
     fun load(
         pageOffset: Int,

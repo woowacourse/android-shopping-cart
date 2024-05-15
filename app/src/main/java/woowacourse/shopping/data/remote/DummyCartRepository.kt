@@ -2,17 +2,21 @@ package woowacourse.shopping.data.remote
 
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.presentation.ui.Product
 
 object DummyCartRepository : CartRepository {
-    private val carts: MutableList<Cart> = mutableListOf()
+    private val cartMap: MutableMap<Product, Int> = mutableMapOf()
 
-    override fun addData(productId: Long): Result<Long> =
+    override fun addData(product: Product): Result<Long> =
         runCatching {
-            carts.add(Cart(productId, 1))
-//            if (carts.any { it.productId == productId }) {
-//                carts.add(Cart(productId, 1))
-//            }
-            productId
+            cartMap[product] = (cartMap[product] ?: 0) + 1
+            product.id
+        }
+
+    override fun delete(product: Product): Result<Long> =
+        runCatching {
+            cartMap.remove(product)
+            product.id
         }
 
     override fun load(
@@ -20,6 +24,7 @@ object DummyCartRepository : CartRepository {
         pageSize: Int,
     ): Result<List<Cart>> =
         runCatching {
+            val carts = cartMap.map { Cart(it.key, it.value) }.toList()
             val startIndex = pageOffset * pageSize
             val endIndex =
                 if (carts.size < startIndex * pageSize) startIndex * pageSize else carts.size

@@ -8,6 +8,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.ui.UiState
+import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
 
 class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandler {
@@ -45,6 +46,7 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandle
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        CartActivity.start(this)
         return true
     }
 

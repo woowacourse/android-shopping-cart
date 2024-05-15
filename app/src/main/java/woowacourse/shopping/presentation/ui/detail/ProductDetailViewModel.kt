@@ -22,7 +22,7 @@ class ProductDetailViewModel : ViewModel() {
         }
     }
 
-    fun saveCartItem(productId: Long) {
-        DummyCartRepository.addData(productId)
+    fun saveCartItem(product: Product) {
+        DummyCartRepository.addData(product)
     }
 }
