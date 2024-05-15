@@ -42,4 +42,8 @@ object ProductRepositoryImpl : ProductRepository {
         products[id] = Product(id, imageUrl, title, price)
         return id++
     }
+
+    override fun deleteAll() {
+        products.clear()
+    }
 }

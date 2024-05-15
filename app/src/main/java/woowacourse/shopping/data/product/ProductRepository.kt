@@ -17,4 +17,6 @@ interface ProductRepository {
         title: String,
         price: Int,
     ): Long
+
+    fun deleteAll()
 }
