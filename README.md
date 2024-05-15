@@ -32,15 +32,23 @@
 - [ ] 더보기 버튼 클릭시 products 들 리사이클러뷰에 추가하기
 - [ ] ui test
 
-### 
+## Data
+
+- ShoppingRepository
+  - [x]: 쇼핑상품들 불러오기
 
 # 고민 & 공부할 내용
 
 ## Domain
 삭제할 상품이 없을 때 상품을 삭제하면 에러?? Result? 아무 일도 없어, Boolean 반환?
 
-## App
+## UI
+
+- Fragment vs Activity
 
 상품 목록이나 상품 상세를 띄울 때 Activity 를 사용할 것인가? Fragment 를 사용할 것인가? 를 고민을 하였는데
 Fragment로 대체할 수 있다면 Fragment를 사용하는 것이 좋다고 생각한다
 Fragment 가 Activity에 비해 가볍다고 생각했기 때문이다. (지세한건 모름...)
+
+- 추후 SingleLiveData 적용하기
+
