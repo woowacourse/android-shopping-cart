@@ -6,20 +6,18 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.CartsImpl
-import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductsImpl
 
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
-    private lateinit var product: Product
     private var toast: Toast? = null
-    private val productKey by lazy {
+    private val viewModel: ProductDetailViewModel by viewModels()
+    private val productId by lazy {
         intent.getLongExtra(
             ProductDetailKey.EXTRA_PRODUCT_KEY,
             EXTRA_DEFAULT_VALUE,
@@ -31,18 +29,29 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         setContentView(R.layout.activity_product_detail)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-        product = ProductsImpl.find(productKey)
-        binding.product = product
+
+        showProductDetail()
+        setOnCartButtonClickListener()
+    }
+
+    private fun setOnCartButtonClickListener() {
         binding.cartButtonClickListener = this
-        Glide.with(this)
-            .load(product.imageUrl)
-            .into(binding.ivProductImage)
+    }
+
+    private fun showProductDetail() {
+        viewModel.loadProduct(productId)
+        viewModel.product.observe(this) {
+            binding.product = it
+            Glide.with(this)
+                .load(it.imageUrl)
+                .into(binding.ivProductImage)
+        }
     }
 
     override fun onClick() {
-        CartsImpl.save(product)
+        viewModel.addProductToCart()
         toast?.cancel()
-        toast = Toast.makeText(this, "담겨짐!", Toast.LENGTH_SHORT)
+        toast = Toast.makeText(this, getString(R.string.add_cart_complete), Toast.LENGTH_SHORT)
         toast?.show()
     }
 
