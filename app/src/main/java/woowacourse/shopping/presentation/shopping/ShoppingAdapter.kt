@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 
 class ShoppingAdapter(
-    private val clickListener: ProductClickListener,
+    private val clickListener: ShoppingClickListener,
 ) : RecyclerView.Adapter<ShoppingViewHolder>() {
     var products: List<Product> = emptyList()
 

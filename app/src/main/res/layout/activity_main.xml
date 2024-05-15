@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="visible"
+            type="int" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.shopping.ShoppingClickListener" />
 
         <variable
             name="vmProduct"
@@ -32,15 +39,32 @@
             android:id="@+id/rv_product_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="14dp"
             android:layout_margin="14dp"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_load_more"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_main"
             app:product="@{vmProduct.products}"
             tools:itemCount="10"
             tools:listitem="@layout/item_product" />
+
+        <TextView
+            android:id="@+id/btn_load_more"
+            android:text="Load More"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="@color/purple_200"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="@{visible}"
+            android:onClick="@{() -> clickListener.onLoadButtonClick()}"
+            android:layout_width="0dp"
+            android:layout_height="50dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

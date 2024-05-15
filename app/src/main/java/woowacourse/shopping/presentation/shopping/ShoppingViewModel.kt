@@ -15,16 +15,24 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
     val product: LiveData<Product>
         get() = _product
 
+    private val productsData: List<Product> by lazy { repository.getAllProducts() }
+
+    private var offset = 0
+
     init {
         loadProducts()
     }
 
-    private fun loadProducts() {
-        val productData = repository.getAllProducts()
-        _products.postValue(productData)
+    private fun getProducts(): List<Product> {
+        offset = Integer.min(offset + PAGE_SIZE, productsData.size)
+        return productsData.subList(0, offset)
     }
 
-    fun loadProductData(productId: Long) {
-        _product.postValue(repository.findProductItem(productId))
+    fun loadProducts() {
+        _products.postValue(getProducts())
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 10
     }
 }
