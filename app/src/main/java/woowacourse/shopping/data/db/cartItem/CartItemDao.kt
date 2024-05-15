@@ -14,6 +14,9 @@ interface CartItemDao {
     @Query("SELECT * FROM $CART_ITEMS_DB_NAME")
     fun findAll(): List<CartItemEntity>
 
+    @Query("SELECT * FROM $CART_ITEMS_DB_NAME LIMIT :pagingSize OFFSET :offset")
+    fun findPagingCartItem(offset: Int,pagingSize: Int) : List<CartItemEntity>
+
     @Query("SELECT * FROM $CART_ITEMS_DB_NAME WHERE id = :itemId")
     fun findCartItemById(itemId: Long): CartItemEntity?
 

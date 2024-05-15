@@ -14,5 +14,7 @@ interface ProductRepository {
 
     fun loadCartItems(): List<CartItem>
 
+    fun loadPagingCartItems(offset: Int):List<CartItem>
+
     fun deleteCartItem(itemId: Long)
 }

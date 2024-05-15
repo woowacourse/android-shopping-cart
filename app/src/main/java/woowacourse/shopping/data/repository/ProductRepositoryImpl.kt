@@ -35,11 +35,16 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         return cartItemDao.findAll().map { it.toCartItem() }
     }
 
+    override fun loadPagingCartItems(offset: Int): List<CartItem> {
+        return cartItemDao.findPagingCartItem(offset,CART_ITEM_PAGING_SIZE).map { it.toCartItem() }
+    }
+
     override fun deleteCartItem(itemId: Long) {
         cartItemDao.deleteCartItemById(itemId)
     }
 
     companion object {
-        private const val PRODUCT_PAGING_SIZE = 10
+        private const val PRODUCT_PAGING_SIZE = 20
+        private const val CART_ITEM_PAGING_SIZE = 5
     }
 }

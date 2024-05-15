@@ -4,22 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="onClickShoppingCart"
             type="woowacourse.shopping.view.cart.OnClickShoppingCart" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:clickable="true">
 
         <View
             android:id="@+id/vw_cart_top_bar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="@color/gray_5"
+            app:layout_constraintBottom_toTopOf="@id/rv_shopping_cart"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
@@ -49,24 +51,25 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_shopping_cart"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_margin="18dp"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/paging_buttons"
             app:layout_constraintTop_toBottomOf="@id/vw_cart_top_bar"
             tools:context=".view.cart.ShoppingCartFragment"
             tools:itemCount="3"
-            tools:layout_editor_absoluteX="19dp"
-            tools:layout_editor_absoluteY="0dp"
             tools:listitem="@layout/item_shopping_cart" />
 
         <LinearLayout
+            android:id="@+id/paging_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_shopping_cart">
 
             <ImageButton
                 android:layout_width="42dp"

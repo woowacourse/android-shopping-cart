@@ -7,8 +7,8 @@ class ShoppingCart {
     private val _cartItems: MutableLiveData<List<CartItem>> = MutableLiveData(listOf())
     val cartItems: LiveData<List<CartItem>> get() = _cartItems
 
-    fun addProduct(cartItem: CartItem) {
-        _cartItems.value = _cartItems.value?.plus(cartItem)
+    fun addProducts(cartItems: List<CartItem>){
+        _cartItems.value = _cartItems.value?.plus(cartItems)
     }
 
     fun deleteProduct(itemId: Long) {

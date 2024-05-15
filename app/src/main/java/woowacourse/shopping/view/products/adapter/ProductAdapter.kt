@@ -31,7 +31,6 @@ class ProductAdapter(
         if (position == itemCount - 1) {
             isLoadLastItem(true)
         } else {
-
             isLoadLastItem(false)
         }
     }

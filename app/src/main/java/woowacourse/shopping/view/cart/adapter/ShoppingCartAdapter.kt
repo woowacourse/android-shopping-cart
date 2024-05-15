@@ -1,6 +1,7 @@
 package woowacourse.shopping.view.cart.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -11,12 +12,14 @@ import woowacourse.shopping.view.cart.adapter.viewholder.ShoppingCartViewHolder
 
 class ShoppingCartAdapter(
     private val onClickShoppingCart: OnClickShoppingCart,
-): RecyclerView.Adapter<ShoppingCartViewHolder>() {
+    private val loadLastItem: () -> Unit,
+) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartViewHolder {
-        val view = ItemShoppingCartBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return ShoppingCartViewHolder(view,onClickShoppingCart)
+        val view =
+            ItemShoppingCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ShoppingCartViewHolder(view, onClickShoppingCart)
     }
 
     override fun getItemCount(): Int {
@@ -26,11 +29,18 @@ class ShoppingCartAdapter(
     override fun onBindViewHolder(holder: ShoppingCartViewHolder, position: Int) {
         val item = cartItems[position]
         holder.bind(item)
+
+        if (position == itemCount - 1) {
+
+            loadLastItem()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCartItems(cartItems: List<CartItem>){
-        this.cartItems = cartItems
-        notifyDataSetChanged()
+    fun updateCartItems(addedCartItems: List<CartItem>) {
+        val startPosition = cartItems.size
+        cartItems = cartItems + addedCartItems
+        notifyItemRangeInserted(startPosition, addedCartItems.size)
+
     }
 }

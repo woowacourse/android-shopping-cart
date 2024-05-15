@@ -8,7 +8,6 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.utils.NoSuchDataException
 import kotlin.concurrent.thread
 
 class MainViewModel(
@@ -18,7 +17,7 @@ class MainViewModel(
     val products: LiveData<List<Product>> get() = _products
 
     private var currentPage = 1
-    lateinit var shoppingCart: ShoppingCart
+    var shoppingCart =  ShoppingCart()
 
 
     init {
@@ -32,17 +31,13 @@ class MainViewModel(
         }
     }
 
-    fun loadShoppingCart() = thread {
-        val cartItems = repository.loadCartItems()
-        shoppingCart = ShoppingCart.makeShoppingCart(cartItems)
-    }.join()
+//    fun loadShoppingCart() = thread {
+//        val cartItems = repository.loadCartItems()
+//        shoppingCart = ShoppingCart.makeShoppingCart(cartItems)
+//    }.join()
 
-    fun addShoppingCartItem(product: Product) {
-        var newCartItem: CartItem? = null
-        thread {
-            newCartItem = repository.addCartItem(product)
-        }.join()
-        shoppingCart.addProduct(newCartItem ?: throw NoSuchDataException())
+    fun addShoppingCartItem(product: Product) = thread {
+        repository.addCartItem(product)
     }
 
     fun deleteShoppingCartItem(itemId: Long) {
@@ -56,4 +51,14 @@ class MainViewModel(
         return repository.getProduct(productId)
     }
 
+    fun loadPagingCartItem() {
+        var pagingData = emptyList<CartItem>()
+        thread {
+            pagingData = repository.loadPagingCartItems(shoppingCart.cartItems.value?.size ?: 0)
+        }.join()
+        Log.d("pagingData",pagingData.toString())
+        if (pagingData.isNotEmpty()) {
+            shoppingCart.addProducts(pagingData)
+        }
+    }
 }

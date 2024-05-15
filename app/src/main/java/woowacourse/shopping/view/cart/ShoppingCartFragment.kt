@@ -34,12 +34,16 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun initView() {
-        mainViewModel.loadShoppingCart()
+        mainViewModel.loadPagingCartItem()
         binding.onClickShoppingCart = this
-        adapter = ShoppingCartAdapter(onClickShoppingCart = this)
+        adapter = ShoppingCartAdapter(onClickShoppingCart = this){
+            mainViewModel.loadPagingCartItem()
+        }
         binding.rvShoppingCart.adapter = adapter
         mainViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { shoppingCart ->
-            adapter.updateCartItems(cartItems = shoppingCart)
+            view?.post{
+                adapter.updateCartItems(addedCartItems = shoppingCart)
+            }
         }
     }
 
