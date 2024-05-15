@@ -23,10 +23,9 @@ class HomeViewModel(
     fun loadProducts() {
         _loadingAvailable.value = false
         _products.value = productRepository.fetchSinglePage(page++)
+
         products.value?.let {
-            println(it.size)
-            _loadingAvailable.value = it.size >= 20
-            println(loadingAvailable.value)
+            _loadingAvailable.value = productRepository.fetchSinglePage(page).isNotEmpty()
         }
     }
 }

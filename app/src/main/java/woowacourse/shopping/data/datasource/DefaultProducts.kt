@@ -13,6 +13,9 @@ object DefaultProducts : ProductDataSource {
     ): List<Product> {
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, products.size)
+
+        if (fromIndex > toIndex) return emptyList()
+
         return products.subList(fromIndex, toIndex)
     }
 
