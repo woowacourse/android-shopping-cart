@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.product
+package woowacourse.shopping.presentation.shopping.product
 
 import android.graphics.Rect
 import android.view.View

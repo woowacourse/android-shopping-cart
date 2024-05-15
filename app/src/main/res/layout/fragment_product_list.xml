@@ -5,7 +5,7 @@
 
         <variable
             name="vm"
-            type="woowacourse.shopping.presentation.product.ProductListViewModel" />
+            type="woowacourse.shopping.presentation.shopping.product.ProductListViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="20dp"
-        tools:context=".presentation.product.ProductListFragment">
+        tools:context=".presentation.shopping.product.ProductListFragment">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_product_list"

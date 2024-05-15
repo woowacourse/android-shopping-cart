@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.product
+package woowacourse.shopping.presentation.shopping.product
 
 import android.os.Bundle
 import android.view.View
@@ -9,6 +9,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
+import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
 import woowacourse.shopping.presentation.util.dp
 
 class ProductListFragment :

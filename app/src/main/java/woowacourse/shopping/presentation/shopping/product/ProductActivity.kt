@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.product
+package woowacourse.shopping.presentation.shopping.product
 
 import android.os.Bundle
 import android.view.Menu
@@ -8,6 +8,7 @@ import androidx.fragment.app.replace
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
 
 class ProductActivity :
     BindingActivity<ActivityProductBinding>(R.layout.activity_product) {
