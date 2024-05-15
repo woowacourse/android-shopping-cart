@@ -47,6 +47,8 @@
 
         <TextView
             android:id="@+id/tv_pre_page"
+            currentPage="@{vm.uiState.pagingOrder.currentPage}"
+            orderList="@{vm.uiState.pagingOrder.orderList}"
             prePageBtnSelect="@{vm.uiState.pagingOrder.currentPage}"
             android:layout_width="42dp"
             android:layout_height="42dp"
@@ -63,6 +65,8 @@
 
         <TextView
             android:id="@+id/tv_page"
+            currentPage="@{vm.uiState.pagingOrder.currentPage}"
+            orderList="@{vm.uiState.pagingOrder.orderList}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="62dp"
@@ -77,7 +81,9 @@
 
         <TextView
             android:id="@+id/tv_next_page"
+            currentPage="@{vm.uiState.pagingOrder.currentPage}"
             nextPageBtnSelect="@{vm.uiState.pagingOrder.last}"
+            orderList="@{vm.uiState.pagingOrder.orderList}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="16dp"

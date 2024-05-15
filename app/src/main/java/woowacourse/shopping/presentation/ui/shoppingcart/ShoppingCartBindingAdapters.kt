@@ -33,3 +33,15 @@ fun TextView.bindPrePageBtnSelect(currentPage: Int) {
 fun TextView.bindNextPageBtnSelect(last: Boolean) {
     this.isEnabled = last != true
 }
+
+@BindingAdapter("currentPage", "orderList")
+fun TextView.bindPageNavigationTextVisible(
+    currentPage: Int,
+    orderList: List<Order>,
+) {
+    if (currentPage == 0 && orderList.size < ShoppingCartViewModel.PAGE_SIZE) {
+        this.visibility = View.GONE
+    } else {
+        this.visibility = View.VISIBLE
+    }
+}
