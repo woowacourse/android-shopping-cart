@@ -98,6 +98,7 @@ class MainActivity : AppCompatActivity() {
     private fun initializeSeeMoreButton() {
         binding.btnMainSeeMore.setOnClickListener {
             updateProducts()
+            it.visibility = View.GONE
         }
     }
 
