@@ -53,9 +53,9 @@ class ProductViewModelTest {
 
         // when
         viewModel.loadPage(productRepository, 0, pageSize)
-        val actual = viewModel.products.getOrAwaitValue()
 
         // then
+        val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(pageSize)
         assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
     }
@@ -69,9 +69,9 @@ class ProductViewModelTest {
 
         // when
         viewModel.loadPage(productRepository, 0, pageSize)
-        val actual = viewModel.products.getOrAwaitValue()
 
         // then
+        val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(pageSize)
         assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
     }
@@ -85,9 +85,9 @@ class ProductViewModelTest {
 
         // when
         viewModel.loadPage(productRepository, 0, pageSize)
-        val actual = viewModel.products.getOrAwaitValue()
 
         // then
+        val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(5)
         assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
     }
