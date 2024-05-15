@@ -4,26 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.repository.ProductListRepository
 
 class ProductListVIewModel(
     private val productListRepository: ProductListRepository = DummyProductList,
 ) : ViewModel(), ProductListActionHandler {
-    private val _productList: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
-    val productList: LiveData<List<Product>> get() = _productList
+    private val _pagingProduct: MutableLiveData<PagingProduct> = MutableLiveData(null)
+    val pagingProduct: LiveData<PagingProduct> get() = _pagingProduct
+
     private val _navigateAction: MutableLiveData<ProductListNavigateAction> = MutableLiveData(null)
     val navigateAction: LiveData<ProductListNavigateAction> get() = _navigateAction
 
-    private val _pageNum: MutableLiveData<Int> = MutableLiveData(INIT_PAGE_NUM)
-    val pageNum: LiveData<Int> get() = _pageNum
-
     init {
         getPagingProduct(INIT_PAGE_NUM)
-    }
-
-    private fun getProductList() {
-        _productList.value = productListRepository.getProductList()
     }
 
     override fun onClickProduct(productId: Int) {
@@ -36,16 +30,22 @@ class ProductListVIewModel(
         pageSize: Int = PAGING_SIZE,
     ) {
         productListRepository.getPagingProduct(page, pageSize).onSuccess { pagingProduct ->
-            _productList.value = _productList.value?.plus(pagingProduct.productList)
-            _pageNum.value = pagingProduct.currentPage
+            _pagingProduct.value =
+                PagingProduct(
+                    currentPage = pagingProduct.currentPage,
+                    productList =
+                        _pagingProduct.value?.productList?.plus(pagingProduct.productList)
+                            ?: pagingProduct.productList,
+                    last = pagingProduct.last,
+                )
         }.onFailure {
             // TODO 예외 처리 예정
         }
     }
 
     fun onClickLoadMoreButton() {
-        pageNum.value?.let { num ->
-            getPagingProduct(num + 1)
+        pagingProduct.value?.let { pagingProduct ->
+            getPagingProduct(pagingProduct.currentPage + 1)
         }
     }
 

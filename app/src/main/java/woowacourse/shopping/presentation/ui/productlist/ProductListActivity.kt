@@ -43,8 +43,8 @@ class ProductListActivity : AppCompatActivity() {
                     )
             }
         }
-        viewModel.productList.observe(this) { productList ->
-            adapter.updateProductList(productList)
+        viewModel.pagingProduct.observe(this) { pagingProduct ->
+            adapter.updateProductList(pagingProduct.productList)
         }
     }
 

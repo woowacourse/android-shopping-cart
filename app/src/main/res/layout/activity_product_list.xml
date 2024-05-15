@@ -31,19 +31,26 @@
                 android:clipToPadding="false"
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintBottom_toTopOf="@id/tv_show_more_products"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/btn_show_more_products"
                 app:spanCount="2"
                 tools:listitem="@layout/holder_product" />
 
-            <Button
-                android:id="@+id/btn_show_more_products"
+            <TextView
+                android:id="@+id/tv_show_more_products"
+                loadMoreBtnVisible="@{vm.pagingProduct.last}"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
+                android:background="@color/green"
+                android:gravity="center"
                 android:onClick="@{() -> vm.onClickLoadMoreButton()}"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                android:text="더보기"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

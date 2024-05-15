@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.ui.productlist
 
 import android.content.Context
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -29,5 +30,14 @@ fun Int.currency(context: Context): String {
     return when (Locale.getDefault().country) {
         Locale.KOREA.country -> context.getString(R.string.price_format_kor, this)
         else -> NumberFormat.getCurrencyInstance(Locale.getDefault()).format(this)
+    }
+}
+
+@BindingAdapter("loadMoreBtnVisible")
+fun TextView.binLoadMoreBtnVisible(last: Boolean) {
+    if (last) {
+        this.visibility = View.GONE
+    } else {
+        this.visibility = View.VISIBLE
     }
 }
