@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +13,7 @@ import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 
+// TODO RecyclerView에 로딩 아이템 추가
 class HomeActivity : AppCompatActivity(), ProductItemClickListener {
     private val binding: ActivityHomeBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_home)
@@ -30,11 +30,11 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener {
         super.onCreate(savedInstanceState)
 
         binding.productAdapter = adapter
+        binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
         viewModel.loadProducts()
         viewModel.products.observe(this) {
-            Log.i("HomeActivity", "onCreate: $it")
             adapter.addProducts(it)
         }
 

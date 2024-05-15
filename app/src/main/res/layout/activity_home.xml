@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-<variable
-    name="productAdapter"
-    type="woowacourse.shopping.presentation.home.ProductAdapter" />
+        <import type="android.view.View"/>
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.presentation.home.HomeViewModel" />
+
+        <variable
+            name="productAdapter"
+            type="woowacourse.shopping.presentation.home.ProductAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,18 +47,25 @@
             android:id="@+id/rv_home"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:adapter="@{productAdapter}"
             android:clipToPadding="false"
             android:padding="12dp"
-            android:adapter="@{productAdapter}"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appbar_home"
+            app:layout_constraintBottom_toTopOf="@id/btn_load_more"
             app:spanCount="2"
             tools:listitem="@layout/item_product" />
 
-
-
-
+        <Button
+            android:id="@+id/btn_load_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:onClick="@{() -> viewModel.loadProducts()}"
+            android:text="@string/home_load_more_button"
+            android:visibility="@{viewModel.loadingAvailable ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

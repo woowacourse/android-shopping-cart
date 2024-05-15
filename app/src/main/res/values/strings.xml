@@ -4,4 +4,5 @@
     <string name="description_thumbnail">thumbnail</string>
 
     <string name="format_price">%,d원</string>
+    <string name="home_load_more_button">더보기</string>
 </resources>

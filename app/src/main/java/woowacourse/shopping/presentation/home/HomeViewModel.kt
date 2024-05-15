@@ -16,15 +16,17 @@ class HomeViewModel(
     val products: LiveData<List<Product>>
         get() = _products
 
-    private val _productId: MutableLiveData<Long> = MutableLiveData()
-    val productId: LiveData<Long>
-        get() = _productId
+    private val _loadingAvailable: MutableLiveData<Boolean> = MutableLiveData(true)
+    val loadingAvailable: LiveData<Boolean>
+        get() = _loadingAvailable
 
     fun loadProducts() {
+        _loadingAvailable.value = false
         _products.value = productRepository.fetchSinglePage(page++)
-    }
-
-    fun navigateToProductDetail(id: Long) {
-        _productId.value = id
+        products.value?.let {
+            println(it.size)
+            _loadingAvailable.value = it.size >= 20
+            println(loadingAvailable.value)
+        }
     }
 }

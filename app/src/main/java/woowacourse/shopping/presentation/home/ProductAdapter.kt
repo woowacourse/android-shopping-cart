@@ -36,10 +36,10 @@ class ProductAdapter(
 
     override fun getItemCount(): Int = products.size
 
-    fun addProducts(products: List<Product>) {
-        val position = products.size
-        this.products += products
-        notifyItemInserted(position)
+    fun addProducts(insertedProducts: List<Product>) {
+        val previousSize = products.size
+        products += insertedProducts
+        notifyItemRangeInserted(previousSize, insertedProducts.size)
     }
 
     class ProductViewHolder(private val binding: ItemProductBinding, productItemClickListener: ProductItemClickListener) :
