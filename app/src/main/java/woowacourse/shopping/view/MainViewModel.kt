@@ -41,10 +41,12 @@ class MainViewModel(
         _shoppingCart.value?.addProduct(newCartItem ?: throw NoSuchDataException())
     }
 
-    fun deleteShoppingCartItem(itemId: Long) = thread {
-        repository.deleteCartItem(itemId)
+    fun deleteShoppingCartItem(itemId: Long) {
+        thread {
+            repository.deleteCartItem(itemId)
+        }.join()
         _shoppingCart.value?.deleteProduct(itemId)
-    }.start()
+    }
 
     fun loadProductItem(productId: Long): Product {
         return repository.getProduct(productId)

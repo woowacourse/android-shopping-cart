@@ -1,57 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginBottom="24dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/shape_border">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/tv_cart_item_name"
-        android:layout_width="0dp"
+    <data>
+        <variable
+            name="onClickShoppingCart"
+            type="woowacourse.shopping.view.cart.OnClickShoppingCart" />
+        <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.model.CartItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{()->onClickShoppingCart.clickCartItem(cartItem.product.id)}"
+        android:layout_marginBottom="24dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="14dp"
-        android:textColor="@color/gray_5"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/iv_cart_item_image"
-        app:layout_constraintEnd_toStartOf="@id/btn_close"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="PET-보틀" />
+        android:background="@drawable/shape_border">
 
-    <ImageButton
-        android:id="@+id/btn_close"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginEnd="8dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/ic_close_24"
-        app:layout_constraintBottom_toBottomOf="@id/tv_cart_item_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_cart_item_name" />
+        <TextView
+            android:text="@{cartItem.product.name}"
+            android:id="@+id/tv_cart_item_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="14dp"
+            android:textColor="@color/gray_5"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/iv_cart_item_image"
+            app:layout_constraintEnd_toStartOf="@id/btn_close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="PET-보틀" />
 
-    <ImageView
-        android:id="@+id/iv_cart_item_image"
-        android:layout_width="136dp"
-        android:layout_height="72dp"
-        android:layout_marginVertical="20dp"
-        android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_cart_item_name" />
+        <ImageButton
+            android:id="@+id/btn_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:onClick="@{()->onClickShoppingCart.clickRemoveCartItem(cartItem.id)}"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_close_24"
+            app:layout_constraintBottom_toBottomOf="@id/tv_cart_item_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_cart_item_name" />
 
-    <TextView
-        android:id="@+id/tv_cart_item_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:textColor="@color/gray_5"
-        app:layout_constraintBottom_toBottomOf="@id/iv_cart_item_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:text="10,000원" />
+        <ImageView
+            android:id="@+id/iv_cart_item_image"
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginVertical="20dp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_item_name" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:text="@{@string/formatted_price(cartItem.product.price)}"
+            android:id="@+id/tv_cart_item_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:textColor="@color/gray_5"
+            app:layout_constraintBottom_toBottomOf="@id/iv_cart_item_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="10,000원" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

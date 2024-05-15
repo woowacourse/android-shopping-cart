@@ -29,8 +29,8 @@ class ProductAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateProducts(products: List<Product>?){
-        this.products = products ?: emptyList()
+    fun updateProducts(products: List<Product>){
+        this.products = products
         notifyDataSetChanged()
     }
 }
