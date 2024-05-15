@@ -3,8 +3,6 @@ package woowacourse.shopping.view
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
@@ -23,16 +21,16 @@ class MainViewModel(
 
     init {
         initializeProducts()
-//        initializeShoppingCart()
     }
 
     private fun initializeProducts() {
         _products.value = repository.loadProducts()
     }
 
-    private fun initializeShoppingCart() = thread {
-        _shoppingCart.value?.initializeProducts(repository.loadCartItems())
-    }.start()
+    fun loadShoppingCart() = thread {
+        val cartItems = repository.loadCartItems()
+        _shoppingCart.postValue(ShoppingCart.makeShoppingCart(cartItems))
+    }.join()
 
     fun addShoppingCartItem(cartItem: CartItem) = thread {
         repository.addCartItem(cartItem)
