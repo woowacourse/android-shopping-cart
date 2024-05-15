@@ -27,25 +27,31 @@ class ProductDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        val initialState =
-            mutableMapOf<String, Int>(
-                ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to 1,
-            )
+        val initialState = mutableMapOf(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to 1)
         savedStateHandle = SavedStateHandle(initialState)
-        viewModel = ProductDetailViewModel(savedStateHandle, DummyProductList, shoppingCartRepository)
+        viewModel =
+            ProductDetailViewModel(savedStateHandle, DummyProductList, shoppingCartRepository)
     }
 
     @Test
     fun `선택한 상품의 상세 정보를 불러온다`() {
+        // given & when
         val actual = viewModel.product.getOrAwaitValue()
+
+        // then
         val expected = DummyProductList.findProductById(1).getOrThrow()
         assertThat(actual).isEqualTo(expected)
     }
 
     @Test
     fun `선택한 상품을 장바구니에 추가한다`() {
+        // given
         every { shoppingCartRepository.addOrder(any()) } just runs
+
+        // when
         viewModel.onAddToCartButtonClick()
+
+        // then
         val product = DummyProductList.findProductById(1).getOrThrow()
         verify { shoppingCartRepository.addOrder(product) }
     }
