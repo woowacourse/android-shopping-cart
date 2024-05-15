@@ -35,6 +35,10 @@ class CartActivity : AppCompatActivity() {
                 cartViewModel.load(cartRepository)
             })
         binding.rvCart.adapter = adapter
+
+        cartViewModel.cart.observe(this) {
+            adapter.updateCart(it.map { cartItem -> ProductRepositoryImpl.find(cartItem.productId) })
+        }
     }
 
     private fun initializeToolbar() {
@@ -44,9 +48,6 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun updateCart() {
-        cartViewModel.cart.observe(this) {
-            adapter.updateCart(it.map { cartItem -> ProductRepositoryImpl.find(cartItem.productId) })
-        }
         cartViewModel.load(cartRepository)
     }
 }
