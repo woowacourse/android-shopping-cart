@@ -22,6 +22,8 @@ class CartViewModel(
     val pageInformation: LiveData<PageInformation>
         get() = _pageInformation
 
+    private var hasNext: Boolean = true
+
     fun loadPreviousPageCartItems() {
         _currentPage.value = currentPage.value?.minus(1)
         loadCurrentPageCartItems()
@@ -45,6 +47,8 @@ class CartViewModel(
     fun loadCurrentPageCartItems() {
         // TODO return 대신 토스트 띄우기
         val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
+        hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
+
         val orders =
             cartItems.map {
                 val productInformation = productRepository.fetchProduct(it.productId)
@@ -61,13 +65,13 @@ class CartViewModel(
                 _pageInformation.value =
                     pageInformation.value?.copy(
                         previousPageEnabled = false,
-                        nextPageEnabled = false,
+                        nextPageEnabled = hasNext,
                     )
             } else {
                 _pageInformation.value =
                     pageInformation.value?.copy(
                         previousPageEnabled = false,
-                        nextPageEnabled = true,
+                        nextPageEnabled = hasNext,
                     )
             }
         } else {
@@ -75,13 +79,13 @@ class CartViewModel(
                 _pageInformation.value =
                     pageInformation.value?.copy(
                         previousPageEnabled = true,
-                        nextPageEnabled = false,
+                        nextPageEnabled = hasNext,
                     )
             } else {
                 _pageInformation.value =
                     pageInformation.value?.copy(
                         previousPageEnabled = true,
-                        nextPageEnabled = true,
+                        nextPageEnabled = hasNext,
                     )
             }
         }

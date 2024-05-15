@@ -33,6 +33,9 @@ object DefaultCart : CartDataSource {
     ): List<CartItem> {
         val fromIndex = page * pageSize
         val toIndex = min(fromIndex + pageSize, cartItems.size)
+
+        if (fromIndex > toIndex) return emptyList()
+
         return cartItems.subList(fromIndex, toIndex)
     }
 }
