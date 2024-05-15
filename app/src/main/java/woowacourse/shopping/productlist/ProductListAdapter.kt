@@ -20,7 +20,7 @@ class ProductListAdapter(
             with(binding) {
                 tvProductListName.text = item.name
                 tvProductListPrice.text =
-                    itemView.context.getString(R.string.product_price, item.price)
+                    itemView.context.getString(R.string.product_price_format, item.price)
                 Glide.with(itemView.context).load(item.imageUrl).into(ivProductItem)
                 root.setOnClickListener {
                     onClick.onProductClicked(item.id)
