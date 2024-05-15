@@ -19,7 +19,11 @@ class DetailViewModel(
         _productInformation.value = productRepository.fetchProduct(id)
     }
 
-    fun addToCart(id: Long) {
+    fun addToCart(
+        id: Long,
+        addCompleteListener: AddCompleteListener,
+    ) {
         cartRepository.addCartItem(productId = id, quantity = 1)
+        addCompleteListener.onAddComplete()
     }
 }

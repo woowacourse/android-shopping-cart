@@ -5,4 +5,8 @@
 
     <string name="format_price">%,d원</string>
     <string name="home_load_more_button">더보기</string>
+    <string name="detail_price_title">가격</string>
+    <string name="detail_add_to_cart_button">장바구니 담기</string>
+
+    <string name="message_add_to_cart_complete">장바구니에 상품을 추가했습니다.</string>
 </resources>
