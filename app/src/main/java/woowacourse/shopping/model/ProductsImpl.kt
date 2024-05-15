@@ -1,7 +1,11 @@
 package woowacourse.shopping.model
 
+import kotlin.math.min
+
 object ProductsImpl : ProductDao {
     private const val EXCEPTION_INVALID_ID = "Movie not found with id: %d"
+    private const val LOAD_LIMIT = 20
+    private var currentOffset = 0
     private var id: Long = 0
     private val products = mutableMapOf<Long, Product>()
 
@@ -28,15 +32,12 @@ object ProductsImpl : ProductDao {
         return products[id] ?: throw NoSuchElementException(invalidIdMessage(id))
     }
 
-//    override fun findAll(): List<Product> {
-//        return products.map { it.value }
-//    }
+    override fun findInRange(): List<Product> {
+        val endRange = min(currentOffset + LOAD_LIMIT, products.values.size)
+        val productsInRange = products.values.toList().subList(currentOffset, endRange)
+        currentOffset = endRange
 
-    override fun findAll(
-        offset: Int,
-        limit: Int,
-    ): List<Product> {
-        return products.values.toList().subList(offset, offset + limit)
+        return productsInRange
     }
 
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)

@@ -17,19 +17,19 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_products"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/btn_load_more"
-            app:layout_constraintBaseline_toTopOf="@id/btn_load_more"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_load_more"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:listitem="@layout/item_product" />
 
         <Button
             android:id="@+id/btn_load_more"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="더보기"
+            android:text="@string/load_more"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/rv_products" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
