@@ -19,12 +19,16 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
 
     override fun initStartView() {
+        initDataBinding()
+        initAdapter()
+        initObserve()
+    }
+
+    private fun initDataBinding() {
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@ProductListActivity
         }
-        initAdapter()
-        initObserve()
     }
 
     private fun initAdapter() {
