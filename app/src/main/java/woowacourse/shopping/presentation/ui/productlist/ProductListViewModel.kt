@@ -54,6 +54,6 @@ class ProductListViewModel(
 
     companion object {
         private const val INIT_PAGE_NUM = 0
-        private const val PAGING_SIZE = 8
+        private const val PAGING_SIZE = 20
     }
 }
