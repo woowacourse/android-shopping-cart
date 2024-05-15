@@ -7,16 +7,25 @@ import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import kotlin.math.min
 
 object DummyShoppingCart : ShoppingCartRepository {
-    private const val PAGE_SIZE = 1
-    private val STUB_IMAGE_URL_A =
-        "https://i.namu.wiki/i/VnSgJ92KZ4dSRF2_x3LAYiE-zafxvNochXYrt6QD88DNtVziOxYUVKploFydbFNY7rcmOBUEra42XObzSuBwww.webp"
-    private val STUB_PRODUCT_A = Product(1, "홍차", 10000, STUB_IMAGE_URL_A)
+    val order =
+        Order(
+            id = 1,
+            product = DummyData.STUB_PRODUCT_A,
+        )
+
     private val orders: MutableList<Order> =
         mutableListOf(
-            Order(
-                id = 1,
-                product = STUB_PRODUCT_A,
-            ),
+            order,
+            order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
+            order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
+            order.copy(id = 4, product = DummyData.STUB_PRODUCT_A),
+            order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
+            order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
+            order.copy(id = 7, product = DummyData.STUB_PRODUCT_A),
+            order.copy(id = 8, product = DummyData.STUB_PRODUCT_B),
+            order.copy(id = 9, product = DummyData.STUB_PRODUCT_C),
+            order.copy(id = 10, product = DummyData.STUB_PRODUCT_A),
+            order.copy(id = 11, product = DummyData.STUB_PRODUCT_B),
         )
 
     override fun addOrder(product: Product) {
