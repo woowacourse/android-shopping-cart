@@ -5,11 +5,11 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.base.ViewModelFactory
+import woowacourse.shopping.presentation.base.observeEvent
 
 class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
@@ -28,10 +28,18 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     }
 
     private fun initObserve() {
-        viewModel.message.observe(this) { message ->
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).apply {
-                anchorView = binding.tvAddToCart
-                show()
+        viewModel.message.observeEvent(this) { message ->
+            when (message) {
+                is ProductDetailMessage.DefaultErrorMessage ->
+                    showToastMessage(message.toString(this))
+
+                is ProductDetailMessage.NoSuchElementErrorMessage ->
+                    showToastMessage(message.toString(this))
+
+                is ProductDetailMessage.AddToCartSuccessMessage ->
+                    showSnackbar(message.toString(this)) {
+                        anchorView = binding.tvAddToCart
+                    }
             }
         }
     }
