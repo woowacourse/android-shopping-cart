@@ -54,13 +54,13 @@ class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onCartItemDelete(cartItemId: Long) {
+        viewModel.removeCartItem(cartItemId)
+    }
+
     companion object {
         fun newIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }
-    }
-
-    override fun onCartItemDelete(cartItemId: Long) {
-        viewModel.removeCartItem(cartItemId)
     }
 }
