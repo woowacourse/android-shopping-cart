@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.feature.cart
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
@@ -17,11 +17,15 @@ import org.hamcrest.CoreMatchers.allOf
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import woowacourse.shopping.R
+import woowacourse.shopping.RecyclerViewItemCountAssertion
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.feature.cart.CartActivity
+import woowacourse.shopping.imageUrl
+import woowacourse.shopping.price
+import woowacourse.shopping.title
 
 @RunWith(AndroidJUnit4::class)
 class CartActivityTest {

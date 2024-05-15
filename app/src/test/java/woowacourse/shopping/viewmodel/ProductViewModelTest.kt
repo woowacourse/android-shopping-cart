@@ -7,6 +7,9 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.imageUrl
+import woowacourse.shopping.price
+import woowacourse.shopping.title
 import java.lang.IllegalArgumentException
 
 @ExtendWith(InstantTaskExecutorExtension::class)

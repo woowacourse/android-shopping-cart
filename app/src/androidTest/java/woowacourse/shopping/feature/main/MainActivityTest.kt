@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.feature.main
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
@@ -18,9 +18,13 @@ import org.hamcrest.CoreMatchers.allOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import woowacourse.shopping.R
+import woowacourse.shopping.RecyclerViewItemCountAssertion
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.ProductRepositoryImpl
-import woowacourse.shopping.feature.main.MainActivity
+import woowacourse.shopping.imageUrl
+import woowacourse.shopping.price
+import woowacourse.shopping.title
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
