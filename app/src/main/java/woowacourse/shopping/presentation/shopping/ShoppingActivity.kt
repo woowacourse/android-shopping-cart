@@ -1,13 +1,16 @@
 package woowacourse.shopping.presentation.shopping
 
 import android.os.Bundle
-import android.util.Log
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.appbar.MaterialToolbar
+import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 
 class ShoppingActivity : AppCompatActivity(), ProductClickListener {
@@ -19,6 +22,8 @@ class ShoppingActivity : AppCompatActivity(), ProductClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setUpToolbar()
+
         binding.lifecycleOwner = this
 
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
@@ -31,10 +36,28 @@ class ShoppingActivity : AppCompatActivity(), ProductClickListener {
             this,
             Observer { products ->
                 adapter.loadData(products)
-                Log.d("crong", "$products")
             },
         )
         binding.vmProduct = viewModel
+    }
+
+    private fun setUpToolbar() {
+        val toolbar: MaterialToolbar = binding.toolbarMain
+        setSupportActionBar(toolbar)
+
+        toolbar.setOnMenuItemClickListener {
+            navigateToShoppingCart()
+            true
+        }
+    }
+
+    private fun navigateToShoppingCart() {
+        startActivity(CartActivity.createIntent(context = this))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onClick(productId: Long) {

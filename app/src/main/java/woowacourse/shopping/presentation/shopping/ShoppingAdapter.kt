@@ -16,7 +16,7 @@ class ShoppingAdapter(
         viewType: Int,
     ): ShoppingViewHolder {
         val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingViewHolder(binding, parent)
+        return ShoppingViewHolder(binding)
     }
 
     override fun onBindViewHolder(
