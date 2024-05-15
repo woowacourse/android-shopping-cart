@@ -14,6 +14,9 @@
     <string name="message_add_to_cart_complete">장바구니에 상품을 추가했습니다.</string>
 
     <string name="description_thumbnail">thumbnail</string>
+    <string name="description_delete_cart_item">delete_cart_item</string>
 
     <string name="format_price">%,d원</string>
+    <string name="navigation_previous_button"><![CDATA[<]]></string>
+    <string name="navigation_next_button"><![CDATA[>]]></string>
 </resources>

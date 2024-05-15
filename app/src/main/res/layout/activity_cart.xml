@@ -4,6 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <variable
+            name="adapter"
+            type="woowacourse.shopping.presentation.cart.CartAdapter" />
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.presentation.cart.CartViewModel" />
@@ -13,8 +18,8 @@
         android:id="@+id/cart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.cart.CartActivity"
-        android:theme="@style/Theme.Shopping">
+        android:theme="@style/Theme.Shopping"
+        tools:context=".presentation.cart.CartActivity">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar_cart"
@@ -32,14 +37,71 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/cart_appbar_title"
+                    android:textColor="@color/white"
                     android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textStyle="bold" />
 
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_cart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:adapter="@{adapter}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/btn_previous_page"
+            app:layout_constraintTop_toBottomOf="@id/appbar_cart"
+            tools:listitem="@layout/item_cart" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_previous_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/selector_page_navigation_button"
+            android:enabled="@{viewModel.pageInformation.previousPageEnabled}"
+            android:onClick="@{() -> viewModel.loadPreviousPageCartItems()}"
+            android:text="@string/navigation_previous_button"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_current_page"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_current_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:text="@{String.valueOf(viewModel.currentPage + 1)}"
+            android:textColor="@color/gray_500"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btn_previous_page"
+            app:layout_constraintEnd_toStartOf="@id/btn_next_page"
+            app:layout_constraintStart_toEndOf="@id/btn_previous_page"
+            app:layout_constraintTop_toTopOf="@id/btn_previous_page"
+            tools:text="1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_next_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/selector_page_navigation_button"
+            android:enabled="@{viewModel.pageInformation.nextPageEnabled}"
+            android:onClick="@{() -> viewModel.loadNextPageCartItems()}"
+            android:text="@string/navigation_next_button"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/btn_previous_page"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/tv_current_page"
+            app:layout_constraintTop_toTopOf="@id/btn_previous_page" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
