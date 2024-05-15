@@ -1,20 +1,21 @@
 package woowacourse.shopping.feature.cart
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.data.cart.CartRepository
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.viewmodel.CartViewModel
+import woowacourse.shopping.viewmodel.CartViewModelFactory
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
     private lateinit var adapter: CartAdapter
-    private val cartViewModel: CartViewModel by viewModels()
-    private val cartRepository: CartRepository by lazy { CartRepositoryImpl }
+    private val cartViewModel by lazy {
+        ViewModelProvider(this, CartViewModelFactory(CartRepositoryImpl))[CartViewModel::class.java]
+    }
     private var page: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +35,7 @@ class CartActivity : AppCompatActivity() {
     private fun initializeCartAdapter() {
         adapter =
             CartAdapter(onClickExit = {
-                cartViewModel.delete(cartRepository, it)
+                cartViewModel.delete(it)
                 updateCart()
             })
         binding.rvCart.adapter = adapter
@@ -79,8 +80,8 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun updateCart() {
-        cartViewModel.loadCart(cartRepository, page, PAGE_SIZE)
-        cartViewModel.loadCount(cartRepository)
+        cartViewModel.loadCart(page, PAGE_SIZE)
+        cartViewModel.loadCount()
     }
 
     companion object {

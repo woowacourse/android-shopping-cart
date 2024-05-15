@@ -3,24 +3,24 @@ package woowacourse.shopping.feature.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.viewmodel.CartViewModel
+import woowacourse.shopping.viewmodel.CartViewModelFactory
 import woowacourse.shopping.viewmodel.ProductViewModel
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
-    private val productViewModel by viewModels<ProductViewModel>()
-    private val productRepository: ProductRepository by lazy { ProductRepositoryImpl }
-
-    private val cartViewModel by viewModels<CartViewModel>()
-    private val cartRepository: CartRepository by lazy { CartRepositoryImpl }
+    private val productViewModel by lazy {
+        ViewModelProvider(this, ProductViewModelFactory(ProductRepositoryImpl))[ProductViewModel::class.java]
+    }
+    private val cartViewModel by lazy {
+        ViewModelProvider(this, CartViewModelFactory(CartRepositoryImpl))[CartViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +35,7 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun updateProduct() {
-        productViewModel.loadProduct(productRepository, productId())
+        productViewModel.loadProduct(productId())
         productViewModel.product.observe(this) {
             binding.product = it
         }
@@ -52,7 +52,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun initializeAddCardButton() {
         binding.btnProductDetailAddCart.setOnClickListener {
-            cartViewModel.add(cartRepository, productId())
+            cartViewModel.add(productId())
         }
     }
 

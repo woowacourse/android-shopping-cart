@@ -20,7 +20,7 @@ class ProductViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductViewModel()
+        viewModel = ProductViewModel(ProductRepositoryImpl)
         productRepository = ProductRepositoryImpl
         productRepository.deleteAll()
     }
@@ -31,7 +31,7 @@ class ProductViewModelTest {
         val id = productRepository.save(imageUrl, title, price)
 
         // when
-        viewModel.loadProduct(productRepository, id)
+        viewModel.loadProduct(id)
 
         // then
         val actual = viewModel.product.getOrAwaitValue()
@@ -43,7 +43,7 @@ class ProductViewModelTest {
     @Test
     fun `상품 id에 해당하는 상품이 없는 경우 예외가 발생한다`() {
         assertThrows<IllegalArgumentException> {
-            viewModel.loadProduct(productRepository, -1L)
+            viewModel.loadProduct(-1L)
         }
     }
 
@@ -55,7 +55,7 @@ class ProductViewModelTest {
         }
 
         // when
-        viewModel.loadPage(productRepository, 0, pageSize)
+        viewModel.loadPage(0, pageSize)
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
@@ -71,7 +71,7 @@ class ProductViewModelTest {
         }
 
         // when
-        viewModel.loadPage(productRepository, 0, pageSize)
+        viewModel.loadPage(0, pageSize)
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
@@ -87,7 +87,7 @@ class ProductViewModelTest {
         }
 
         // when
-        viewModel.loadPage(productRepository, 0, pageSize)
+        viewModel.loadPage(0, pageSize)
 
         // then
         val actual = viewModel.products.getOrAwaitValue()

@@ -14,7 +14,7 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = CartViewModel()
+        viewModel = CartViewModel(CartRepositoryImpl)
         cartRepository = CartRepositoryImpl
         cartRepository.deleteAll()
     }
@@ -22,8 +22,8 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 상품을 추가한다`() {
         // when
-        viewModel.add(cartRepository, 0)
-        viewModel.loadCount(cartRepository)
+        viewModel.add(0)
+        viewModel.loadCount()
 
         // then
         val actual = viewModel.cartSize.getOrAwaitValue()
@@ -33,11 +33,11 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품을 삭제한다`() {
         // given
-        viewModel.add(cartRepository, 0)
+        viewModel.add(0)
 
         // when
-        viewModel.delete(cartRepository, 0)
-        viewModel.loadCount(cartRepository)
+        viewModel.delete(0)
+        viewModel.loadCount()
 
         // then
         val actual = viewModel.cartSize.getOrAwaitValue()
@@ -52,7 +52,7 @@ class CartViewModelTest {
         }
 
         // when
-        viewModel.loadCart(cartRepository, 0, pageSize)
+        viewModel.loadCart(0, pageSize)
 
         // then
         val actual = viewModel.cart.getOrAwaitValue()
@@ -68,7 +68,7 @@ class CartViewModelTest {
         }
 
         // when
-        viewModel.loadCart(cartRepository, 0, pageSize)
+        viewModel.loadCart(0, pageSize)
 
         // then
         val actual = viewModel.cart.getOrAwaitValue()
@@ -84,7 +84,7 @@ class CartViewModelTest {
         }
 
         // when
-        viewModel.loadCount(cartRepository)
+        viewModel.loadCount()
 
         // then
         val actual = viewModel.cartSize.getOrAwaitValue()
