@@ -42,10 +42,12 @@ class CartActivity : AppCompatActivity() {
 
         viewModel.canMovePreviousPage.observe(this) {
             binding.btnLeft.isClickable = it
+            binding.btnLeft.isEnabled = it
         }
 
         viewModel.canMoveNextPage.observe(this) {
             binding.btnRight.isClickable = it
+            binding.btnRight.isEnabled = it
         }
     }
 
