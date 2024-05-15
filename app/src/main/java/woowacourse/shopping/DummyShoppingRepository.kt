@@ -1,18 +1,22 @@
 package woowacourse.shopping
 
+import android.util.Log
 import woowacourse.shopping.domain.ImageUrl
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingCart
+import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.domain.User
+import kotlin.math.min
 
 object DummyShoppingRepository : ShoppingRepository {
-    private var users = listOf(
-        User(
-            id = 0L,
-            shoppingCart = ShoppingCart(emptyList())
+    private var users =
+        listOf(
+            User(
+                id = 0L,
+                shoppingCart = ShoppingCart(emptyList()),
+            ),
         )
-    )
 
     private val products =
         listOf(
@@ -87,23 +91,44 @@ object DummyShoppingRepository : ShoppingRepository {
                 "PET보틀-단지(150ml)",
                 Price(12000),
                 ImageUrl("https://github.com/woowacourse/android-movie-theater/assets/92314556/0e4959a4-08a7-40e4-a876-a832495233be"),
-            )
+            ),
         )
 
     override fun products(): List<Product> = products
 
-    override fun productById(id: Long): Product = products.firstOrNull { it.id == id } ?: error(
-        "$id 에 해당하는 상품이 없습니다."
-    )
+    override fun productById(id: Long): Product =
+        products.firstOrNull { it.id == id } ?: error(
+            "$id 에 해당하는 상품이 없습니다.",
+        )
 
     override fun userId(): Long = users.first().id
 
     override fun shoppingCart(userId: Long): ShoppingCart =
         users.firstOrNull { it.id == userId }?.shoppingCart ?: error("$userId 에 해당하는 유저가 없습니다.")
 
+    override fun shoppingCartItems(
+        page: Int,
+        pageSize: Int,
+    ): List<ShoppingCartItem> {
+        val cartItems = users.first().shoppingCart.items
+        val fromIndex = page * pageSize
+        val toIndex = min(fromIndex + pageSize, cartItems.size)
+        return cartItems.subList(fromIndex, toIndex)
+    }
+
+    override fun deleteShoppingCartItem(productId: Long) {
+        val shoppingCart = users.first().shoppingCart
+        val updatedShoppingCart = shoppingCart.deleteItemById(productId)
+        updateShoppingCart(updatedShoppingCart)
+    }
+
+    override fun shoppingCartSize(): Int = users.first().shoppingCart.items.size
+
     override fun updateShoppingCart(shoppingCart: ShoppingCart) {
-       this.users = users.map {
-           if (it.id == userId()) it.copy(shoppingCart = shoppingCart) else it
-       }
+        this.users =
+            users.map {
+                if (it.id == userId()) it.copy(shoppingCart = shoppingCart) else it
+            }
+        Log.d("detail viewmodel", "repo ${users.first().shoppingCart}")
     }
 }
