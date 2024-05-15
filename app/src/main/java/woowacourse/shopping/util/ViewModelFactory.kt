@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.productdetail.ProductDetailViewModel
 import woowacourse.shopping.productlist.ProductListViewModel
+import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
 
 class ViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -17,6 +18,11 @@ class ViewModelFactory : ViewModelProvider.Factory {
             modelClass.isAssignableFrom(ProductListViewModel::class.java) -> {
                 val repository = DummyShoppingRepository
                 ProductListViewModel(repository) as T
+            }
+
+            modelClass.isAssignableFrom(ShoppingCartViewModel::class.java) -> {
+                val repository = DummyShoppingRepository
+                ShoppingCartViewModel(repository) as T
             }
 
             else -> error("Failed to create ViewModel : ${modelClass.name}")
