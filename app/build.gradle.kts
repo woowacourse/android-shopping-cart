@@ -52,6 +52,10 @@ dependencies {
     // android
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
+    implementation("androidx.fragment:fragment-ktx:1.7.0")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
@@ -59,10 +63,6 @@ dependencies {
     // third-party
     implementation("com.github.bumptech.glide:glide:4.14.2")
     // unit test
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("androidx.fragment:fragment-ktx:1.7.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
