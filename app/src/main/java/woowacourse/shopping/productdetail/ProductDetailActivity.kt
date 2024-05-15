@@ -16,7 +16,7 @@ import woowacourse.shopping.util.ViewModelFactory
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-    private val viewModel: ProductDetailViewModel by viewModels() { ViewModelFactory() }
+    private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

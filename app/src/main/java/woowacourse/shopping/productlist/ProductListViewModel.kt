@@ -8,8 +8,8 @@ import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.Product
 
 class ProductListViewModel(
-    private val repository: ShoppingRepository
-): ViewModel() {
+    private val repository: ShoppingRepository,
+) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
     val products: LiveData<List<Product>> get() = _products
 
