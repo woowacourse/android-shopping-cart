@@ -9,8 +9,8 @@ import woowacourse.shopping.R
 import java.text.NumberFormat
 import java.util.Locale
 
-@BindingAdapter("bindUrlToImage")
-fun ImageView.urlToImage(imageUrl: String?) {
+@BindingAdapter("urlToImage")
+fun ImageView.bindUrlToImage(imageUrl: String?) {
     imageUrl?.let { url ->
         Glide.with(context)
             .load(url)
@@ -18,8 +18,8 @@ fun ImageView.urlToImage(imageUrl: String?) {
     }
 }
 
-@BindingAdapter("bindPriceToCurrency")
-fun TextView.priceToCurrency(price: Int?) {
+@BindingAdapter("priceToCurrency")
+fun TextView.bindPriceToCurrency(price: Int?) {
     price?.let { priceValue ->
         this.text = priceValue.currency(context)
     }

@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="centerCrop"
-            bindUrlToImage="@{vm.product.imageUrl}"
+            urlToImage="@{vm.product.imageUrl}"
             tools:src="@drawable/img_dummy_product_thumbnail"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,7 +67,7 @@
             android:layout_marginEnd="18dp"
             android:textSize="20dp"
             android:textColor="@color/black"
-            bindPriceToCurrency="@{vm.product.price}"
+            priceToCurrency="@{vm.product.price}"
             tools:text="99,800"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line" />
