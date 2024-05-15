@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.utils.NoSuchDataException
 import kotlin.concurrent.thread
 
 class MainViewModel(
@@ -32,10 +33,13 @@ class MainViewModel(
         _shoppingCart.postValue(ShoppingCart.makeShoppingCart(cartItems))
     }.join()
 
-    fun addShoppingCartItem(cartItem: CartItem) = thread {
-        repository.addCartItem(cartItem)
-        _shoppingCart.value?.addProduct(cartItem)
-    }.start()
+    fun addShoppingCartItem(product: Product) {
+        var newCartItem: CartItem? = null
+        thread {
+            newCartItem = repository.addCartItem(product)
+        }.join()
+        _shoppingCart.value?.addProduct(newCartItem ?: throw NoSuchDataException())
+    }
 
     fun deleteShoppingCartItem(itemId: Long) = thread {
         repository.deleteCartItem(itemId)

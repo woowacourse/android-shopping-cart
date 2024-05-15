@@ -1,15 +1,11 @@
 package woowacourse.shopping.view
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.viewModelFactory
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
-import woowacourse.shopping.view.products.ProductListFragment
+import woowacourse.shopping.view.products.ProductsListFragment
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
@@ -25,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportFragmentManager.beginTransaction().replace(
             R.id.fragment_container,
-            ProductListFragment()
+            ProductsListFragment()
         ).commit()
     }
 }

@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.products
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +9,11 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.MainActivity
 import woowacourse.shopping.view.MainViewModel
+import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
 
-class ProductListFragment : Fragment(), OnClickProduct {
+class ProductsListFragment : Fragment(), OnClickProducts {
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private lateinit var mainViewModel: MainViewModel
@@ -31,7 +31,12 @@ class ProductListFragment : Fragment(), OnClickProduct {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = (requireActivity() as MainActivity).viewModel
-        adapter = ProductAdapter(onClickProduct = this)
+        initView()
+    }
+
+    private fun initView(){
+        binding.onClickProduct = this
+        adapter = ProductAdapter(onClickProducts = this)
 
         binding.rvProducts.adapter = adapter
         mainViewModel.products.observe(viewLifecycleOwner) { products ->
@@ -44,19 +49,25 @@ class ProductListFragment : Fragment(), OnClickProduct {
         _binding = null
     }
 
-    override fun clickItem(productId: Long) {
-        navigateDetail(productId)
-    }
-
-    private fun navigateDetail(productId: Long) {
+    override fun clickProductItem(productId: Long) {
         val productFragment = ProductDetailFragment().apply {
             arguments = ProductDetailFragment.createBundle(productId)
         }
+        changeFragment(productFragment)
+    }
+
+    override fun clickShoppingCart() {
+        val shoppingCartFragment = ShoppingCartFragment()
+        changeFragment(shoppingCartFragment)
+    }
+
+    private fun changeFragment(nextFragment: Fragment){
         parentFragmentManager
             .beginTransaction()
-            .add(R.id.fragment_container, productFragment)
+            .add(R.id.fragment_container, nextFragment)
             .addToBackStack(null)
             .commit()
     }
+
 
 }

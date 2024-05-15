@@ -6,17 +6,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.view.products.OnClickProduct
+import woowacourse.shopping.view.products.OnClickProducts
 import woowacourse.shopping.view.products.adapter.viewholder.ProductViewHolder
 
 class ProductAdapter(
-    private val onClickProduct: OnClickProduct,
+    private val onClickProducts: OnClickProducts,
 ): RecyclerView.Adapter<ProductViewHolder>() {
     private var products : List<Product> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
         val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return ProductViewHolder(view,onClickProduct)
+        return ProductViewHolder(view,onClickProducts)
     }
 
     override fun getItemCount(): Int {
