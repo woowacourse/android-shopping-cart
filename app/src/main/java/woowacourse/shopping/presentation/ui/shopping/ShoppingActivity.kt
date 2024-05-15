@@ -6,18 +6,23 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.presentation.base.BaseActivity
+import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
+import woowacourse.shopping.presentation.ui.ViewModelFactory
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder.ProductViewHolder.Companion.PRODUCT_VIEW_TYPE
 
-class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandler {
+class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_shopping
 
-    private val viewModel: ShoppingViewModel by viewModels()
+    private val viewModel: ShoppingViewModel by viewModels {
+        ViewModelFactory(DummyProductRepository())
+    }
+
     private val adapter: ShoppingAdapter = ShoppingAdapter(this)
 
     override fun initStartView() {

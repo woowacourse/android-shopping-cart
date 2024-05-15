@@ -7,11 +7,11 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.presentation.base.BaseActivity
+import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.Product
 import woowacourse.shopping.presentation.ui.UiState
 
-class CartActivity : BaseActivity<ActivityCartBinding>(), CartHandler {
+class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_cart
 
@@ -37,7 +37,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), CartHandler {
                     cartAdapter.updateList(it.data)
                     binding.tvPageCount.text = (viewModel.offSet + 1).toString()
 
-                    if (viewModel.maxOffset == 0) {
+                    if (viewModel.maxOffset <= 0) {
                         binding.layoutPage.isVisible = false
                     } else {
                         binding.layoutPage.isVisible = true

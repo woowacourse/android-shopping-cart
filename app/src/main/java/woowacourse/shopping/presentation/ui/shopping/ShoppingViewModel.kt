@@ -3,11 +3,12 @@ package woowacourse.shopping.presentation.ui.shopping
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.remote.DummyProductRepository
+import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.presentation.ui.Product
 import woowacourse.shopping.presentation.ui.UiState
 
-class ShoppingViewModel : ViewModel() {
-    private val repository = DummyProductRepository()
+class ShoppingViewModel(private val repository: ProductRepository = DummyProductRepository()) :
+    ViewModel() {
     private var offSet: Int = 0
 
     private val _products = MutableLiveData<UiState<List<Product>>>(UiState.None)

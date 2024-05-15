@@ -4,13 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.remote.DummyCartRepository
-import woowacourse.shopping.data.remote.DummyProductRepository
+import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.presentation.ui.Product
 import woowacourse.shopping.presentation.ui.UiState
 
-class ProductDetailViewModel : ViewModel() {
-    private val repository = DummyProductRepository()
-
+class ProductDetailViewModel(private val repository: ProductRepository) : ViewModel() {
     private val _products = MutableLiveData<UiState<Product>>(UiState.None)
     val products: LiveData<UiState<Product>> get() = _products
 
