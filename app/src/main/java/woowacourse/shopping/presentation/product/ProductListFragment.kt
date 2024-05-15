@@ -31,14 +31,29 @@ class ProductListFragment :
             productAdapter.updateProducts(
                 listOf(
                     ProductUi(
-                        "꼬우상2",
+                        "오둥이",
                         1000,
-                        "ddddd",
+                        "https://item.kakaocdn.net/do/8fb89536158119f901780df1ba18493182f3bd8c9735553d03f6f982e10ebe70",
                     ),
                     ProductUi(
-                        "꼬우상",
+                        "오둥둥",
                         1000,
-                        "ddddd",
+                        "https://item.kakaocdn.net/do/8fb89536158119f901780df1ba1849316fb33a4b4cf43b6605fc7a1e262f0845",
+                    ),
+                    ProductUi(
+                        "오둥2",
+                        1000,
+                        "https://item.kakaocdn.net/do/8fb89536158119f901780df1ba184931a88f7b2cbb72be0bdfff91ad65b168ab",
+                    ),
+                    ProductUi(
+                        "꼬상",
+                        1000,
+                        "https://w7.pngwing.com/pngs/921/264/png-transparent-chipmunk-chip-n-dale-sticker-the-walt-disney-company-goofy-others.png",
+                    ),
+                    ProductUi(
+                        "꼬상꼬상",
+                        1000,
+                        "https://i.namu.wiki/i/YvceZuAFsjYzbrTKYS09muExzVUw0f5JFBTAOLeCJbyeKghRLpkDnc5_XmQ9KvOpyRqz3zSWVZq5DpeW0HToWQ.webp",
                     ),
                 ),
             )
