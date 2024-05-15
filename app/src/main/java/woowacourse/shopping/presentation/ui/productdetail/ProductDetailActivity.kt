@@ -7,11 +7,11 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.ViewModelFactory
 import woowacourse.shopping.presentation.base.observeEvent
 
-class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
+class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override val layoutResourceId: Int

@@ -5,13 +5,13 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
-import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
 
-class ProductListActivity : BindingActivity<ActivityProductListBinding>() {
+class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_product_list
 
     private val viewModel: ProductListViewModel by viewModels()

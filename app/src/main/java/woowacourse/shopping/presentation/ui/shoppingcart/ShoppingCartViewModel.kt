@@ -3,10 +3,10 @@ package woowacourse.shopping.presentation.ui.shoppingcart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.presentation.base.StateViewModel
+import woowacourse.shopping.presentation.base.BaseViewModel
 
 class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
-    StateViewModel(),
+    BaseViewModel(),
     ShoppingCartActionHandler {
     private val _uiState: MutableLiveData<ShoppingCartUiState> =
         MutableLiveData(ShoppingCartUiState())

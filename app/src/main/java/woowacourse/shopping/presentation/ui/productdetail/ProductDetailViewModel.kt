@@ -6,14 +6,14 @@ import androidx.lifecycle.SavedStateHandle
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductListRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.presentation.base.StateViewModel
+import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity.Companion.PUT_EXTRA_PRODUCT_ID
 
 class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val productListRepository: ProductListRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
-) : StateViewModel() {
+) : BaseViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 

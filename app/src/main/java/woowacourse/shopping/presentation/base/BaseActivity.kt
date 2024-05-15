@@ -7,7 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.google.android.material.snackbar.Snackbar
 
-abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
+abstract class BaseActivity<T : ViewDataBinding> : AppCompatActivity() {
     abstract val layoutResourceId: Int
     private var _binding: T? = null
     val binding get() = requireNotNull(_binding)
@@ -34,10 +34,7 @@ abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
         action: Snackbar.() -> Unit = {},
     ) {
         snackbar?.dismiss()
-        snackbar =
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).apply {
-                action()
-            }
+        snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).apply { action() }
         snackbar?.show()
     }
 
