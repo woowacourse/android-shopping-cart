@@ -3,6 +3,7 @@ package woowacourse.shopping.data.remote
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.presentation.ui.Product
+import kotlin.math.min
 
 object DummyCartRepository : CartRepository {
     private val cartMap: MutableMap<Product, Int> = mutableMapOf()
@@ -26,8 +27,12 @@ object DummyCartRepository : CartRepository {
         runCatching {
             val carts = cartMap.map { Cart(it.key, it.value) }.toList()
             val startIndex = pageOffset * pageSize
-            val endIndex =
-                if (carts.size < startIndex * pageSize) startIndex * pageSize else carts.size
+            val endIndex = min(startIndex + pageSize, carts.size)
             carts.subList(startIndex, endIndex)
+        }
+
+    fun getMaxOffset() =
+        runCatching {
+            (cartMap.size / 3) - 1
         }
 }

@@ -1,8 +1,10 @@
 package woowacourse.shopping.presentation.ui.cart
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
@@ -15,18 +17,47 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), CartHandler {
 
     private val cartAdapter: CartAdapter = CartAdapter(this)
 
-    private val cartViewModel: CartViewModel by viewModels()
+    private val viewModel: CartViewModel by viewModels()
 
+    @SuppressLint("SetTextI18n")
     override fun initStartView() {
         binding.rvCarts.adapter = cartAdapter
 
-        cartViewModel.carts.observe(this) {
+        binding.btnLeft.setOnClickListener {
+            viewModel.minus()
+        }
+
+        binding.btnRight.setOnClickListener {
+            viewModel.plus()
+        }
+
+        viewModel.carts.observe(this) {
             when (it) {
                 is UiState.Finish -> {
                     cartAdapter.updateList(it.data)
+                    binding.tvPageCount.text = (viewModel.offSet + 1).toString()
+
+                    if (viewModel.maxOffset == 0) {
+                        binding.layoutPage.isVisible = false
+                    } else {
+                        binding.layoutPage.isVisible = true
+                        if (viewModel.offSet == viewModel.maxOffset) {
+                            binding.btnRight.isEnabled = false
+                        } else {
+                            binding.btnRight.isEnabled = true
+                        }
+
+                        if (viewModel.offSet == 0) {
+                            binding.btnLeft.isEnabled = false
+                        } else {
+                            binding.btnLeft.isEnabled = true
+                        }
+                    }
                 }
+
                 is UiState.None -> {
                 }
+
                 is UiState.Error -> {
                 }
             }
@@ -34,7 +65,7 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), CartHandler {
     }
 
     override fun onDeleteClick(product: Product) {
-        cartViewModel.deleteProduct(product)
+        viewModel.deleteProduct(product)
     }
 
     companion object {
