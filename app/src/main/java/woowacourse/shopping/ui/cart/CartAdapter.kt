@@ -7,9 +7,10 @@ import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.model.Product
 
 class CartAdapter(
-    private var cart: List<Product>,
     private val itemRemoveClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
+    private val cart: MutableList<Product> = mutableListOf()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -27,8 +28,9 @@ class CartAdapter(
 
     override fun getItemCount(): Int = cart.size
 
-    fun removeItem(products: List<Product>) {
-        this.cart = products
+    fun setData(products: List<Product>) {
+        cart.clear()
+        cart.addAll(products)
         notifyDataSetChanged()
     }
 }
