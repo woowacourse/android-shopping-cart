@@ -4,44 +4,56 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
-import woowacourse.shopping.model.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
 
 class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
     private lateinit var adapter: ProductAdapter
+    private val viewModel: ProductContentsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_contents)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_contents)
-        adapter =
-            ProductAdapter(
-                ProductsImpl.findInRange().toMutableList(),
-            ) { productId ->
-                ProductDetailActivity.startActivity(this, productId)
-            }
-        setAdapter()
+        setProductAdapter()
+        observeProductItems()
+        loadItems()
+
         setOnLoadMoreButtonListener()
         setOnRecyclerViewScrollListener()
     }
 
-    private fun setOnLoadMoreButtonListener() {
-        binding.btnLoadMore.setOnClickListener {
-            loadMoreProducts()
+    private fun setProductAdapter() {
+        binding.rvProducts.layoutManager = GridLayoutManager(this, 2)
+        adapter =
+            ProductAdapter { productId ->
+                ProductDetailActivity.startActivity(this, productId)
+            }
+        binding.rvProducts.adapter = adapter
+    }
+
+    private fun loadItems() {
+        viewModel.loadProducts()
+    }
+
+    private fun observeProductItems() {
+        viewModel.products.observe(this) {
+            adapter.setData(it)
         }
     }
 
-    private fun setAdapter() {
-        binding.rvProducts.layoutManager = GridLayoutManager(this, 2)
-        binding.rvProducts.adapter = adapter
+    private fun setOnLoadMoreButtonListener() {
+        binding.btnLoadMore.setOnClickListener {
+            viewModel.loadProducts()
+        }
     }
 
     private fun setOnRecyclerViewScrollListener() {
@@ -68,11 +80,6 @@ class ProductContentsActivity : AppCompatActivity() {
             .findLastCompletelyVisibleItemPosition() == adapterItemSize()
 
     private fun adapterItemSize() = adapter.itemCount - OFFSET
-
-    private fun loadMoreProducts() {
-        val newProducts = ProductsImpl.findInRange()
-        adapter.addProducts(newProducts)
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_contents, menu)

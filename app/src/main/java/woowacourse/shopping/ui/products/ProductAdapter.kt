@@ -7,9 +7,10 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.Product
 
 class ProductAdapter(
-    private val products: MutableList<Product>,
     private val itemClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
+    private val products: MutableList<Product> = mutableListOf()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -27,7 +28,7 @@ class ProductAdapter(
         holder.bind(products[position])
     }
 
-    fun addProducts(newProducts: List<Product>) {
+    fun setData(newProducts: List<Product>) {
         products.addAll(newProducts)
         notifyDataSetChanged()
     }
