@@ -12,14 +12,52 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="18dp"
+        android:paddingBottom="50dp"
         tools:context=".ui.cart.CartActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_cart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:paddingBottom="60dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/btn_left"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_cart" />
+
+        <Button
+            android:id="@+id/btn_left"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="115dp"
+            android:text="왼"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart" />
+
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="45dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:textColor="@color/gray5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_right"
+            app:layout_constraintStart_toEndOf="@id/btn_left"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart"
+            tools:text="1" />
+
+
+        <Button
+            android:id="@+id/btn_right"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:text="우"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_page_number"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
