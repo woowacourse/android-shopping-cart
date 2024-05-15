@@ -3,13 +3,51 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_products"
-        tools:listitem="@layout/item_product"
-        app:spanCount="2"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="14dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:context=".view.products.ProductListFragment" />
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/vw_product_list_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/gray_5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="26dp"
+            android:text="Shopping"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
+            app:layout_constraintStart_toStartOf="@id/vw_product_list_top_bar"
+            app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_cart"
+            app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
+            app:layout_constraintEnd_toEndOf="@id/vw_product_list_top_bar"
+            app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_products"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="14dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vw_product_list_top_bar"
+            app:spanCount="2"
+            tools:context=".view.products.ProductListFragment"
+            tools:listitem="@layout/item_product" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
+

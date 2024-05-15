@@ -58,4 +58,5 @@ class ProductListFragment : Fragment(), OnClickProduct {
             .addToBackStack(null)
             .commit()
     }
+
 }
