@@ -9,8 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:padding="14dp"
         android:layout_height="match_parent"
+        android:padding="14dp"
         tools:context=".productlist.ProductListActivity">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -20,9 +20,9 @@
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:spanCount="2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:spanCount="2"
             tools:listitem="@layout/item_product_list" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
