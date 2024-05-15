@@ -3,4 +3,6 @@
     <string name="product_price_message">가격</string>
     <string name="product_price_format">%,d원</string>
     <string name="product_detail_add_cart_btn">장바구니 담기</string>
+    <string name="btn_left_text"><![CDATA[<]]></string>
+    <string name="btn_right_text"><![CDATA[>]]></string>
 </resources>
