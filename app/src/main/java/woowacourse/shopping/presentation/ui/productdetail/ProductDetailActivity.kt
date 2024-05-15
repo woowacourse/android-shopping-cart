@@ -2,31 +2,28 @@ package woowacourse.shopping.presentation.ui.productdetail
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.base.ViewModelFactory
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
-    private lateinit var binding: ActivityProductDetailBinding
+    override val layoutResourceId: Int
+        get() = R.layout.activity_product_detail
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun initStartView() {
         supportActionBar?.title = getString(R.string.product_detail_title)
+        binding.apply {
+            vm = viewModel
+            lifecycleOwner = this@ProductDetailActivity
+        }
 
-        binding =
-            ActivityProductDetailBinding.inflate(layoutInflater).apply {
-                vm = viewModel
-                lifecycleOwner = this@ProductDetailActivity
-            }
-        setContentView(binding.root)
         initObserve()
     }
 

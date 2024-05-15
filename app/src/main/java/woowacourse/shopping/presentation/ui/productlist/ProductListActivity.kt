@@ -1,31 +1,28 @@
 package woowacourse.shopping.presentation.ui.productlist
 
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
+import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
 
-class ProductListActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityProductListBinding
+class ProductListActivity : BindingActivity<ActivityProductListBinding>() {
+    override val layoutResourceId: Int get() = R.layout.activity_product_list
+
     private val viewModel: ProductListViewModel by viewModels()
 
     private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding =
-            ActivityProductListBinding.inflate(layoutInflater).apply {
-                vm = viewModel
-                lifecycleOwner = this@ProductListActivity
-            }
-        setContentView(binding.root)
+    override fun initStartView() {
+        binding.apply {
+            vm = viewModel
+            lifecycleOwner = this@ProductListActivity
+        }
         initAdapter()
         initObserve()
     }
