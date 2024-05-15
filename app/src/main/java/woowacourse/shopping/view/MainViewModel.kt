@@ -16,8 +16,7 @@ class MainViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
-    private val _shoppingCart: MutableLiveData<ShoppingCart> = MutableLiveData(ShoppingCart())
-    val shoppingCart: LiveData<ShoppingCart> get() = _shoppingCart
+    lateinit var shoppingCart: ShoppingCart
 
 
     init {
@@ -30,7 +29,7 @@ class MainViewModel(
 
     fun loadShoppingCart() = thread {
         val cartItems = repository.loadCartItems()
-        _shoppingCart.postValue(ShoppingCart.makeShoppingCart(cartItems))
+        shoppingCart = ShoppingCart.makeShoppingCart(cartItems)
     }.join()
 
     fun addShoppingCartItem(product: Product) {
@@ -38,14 +37,14 @@ class MainViewModel(
         thread {
             newCartItem = repository.addCartItem(product)
         }.join()
-        _shoppingCart.value?.addProduct(newCartItem ?: throw NoSuchDataException())
+        shoppingCart.addProduct(newCartItem ?: throw NoSuchDataException())
     }
 
     fun deleteShoppingCartItem(itemId: Long) {
         thread {
             repository.deleteCartItem(itemId)
         }.join()
-        _shoppingCart.value?.deleteProduct(itemId)
+        shoppingCart.deleteProduct(itemId)
     }
 
     fun loadProductItem(productId: Long): Product {

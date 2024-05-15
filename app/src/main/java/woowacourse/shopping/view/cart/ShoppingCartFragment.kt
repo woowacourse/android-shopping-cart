@@ -38,8 +38,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         binding.onClickShoppingCart = this
         adapter = ShoppingCartAdapter(onClickShoppingCart = this)
         binding.rvShoppingCart.adapter = adapter
-        mainViewModel.shoppingCart.observe(viewLifecycleOwner) { shoppingCart ->
-            adapter.updateCartItems(cartItems = shoppingCart.cartItems)
+        mainViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { shoppingCart ->
+            adapter.updateCartItems(cartItems = shoppingCart)
         }
     }
 
