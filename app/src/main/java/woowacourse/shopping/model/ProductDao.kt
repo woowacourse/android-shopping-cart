@@ -5,7 +5,7 @@ interface ProductDao {
 
     fun find(id: Long): Product
 
-    fun findInRange(): List<Product>
+    fun findAll(): List<Product>
 
     fun deleteAll()
 }
