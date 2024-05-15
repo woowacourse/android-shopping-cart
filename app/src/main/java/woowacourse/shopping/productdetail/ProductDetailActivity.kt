@@ -16,24 +16,36 @@ import woowacourse.shopping.util.ViewModelFactory
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductDetailBinding
-
     private val viewModel: ProductDetailViewModel by viewModels() { ViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.lifecycleOwner = this
+
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
 
-        viewModel.loadProductDetail(productId)
+        showProductDetail(productId)
 
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun showProductDetail(productId: Long) {
+        viewModel.loadProductDetail(productId)
         viewModel.product.observe(this) {
             showProductDetailView(it.toProductUiModel())
         }
+    }
 
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+    private fun showProductDetailView(productUi: ProductUiModel) {
+        with(binding) {
+            Glide.with(this@ProductDetailActivity)
+                .load(productUi.imageUrl)
+                .into(ivProductDetailProduct)
+            tvProductDetailName.text = productUi.name
+            tvProductDetailPrice.text = getString(R.string.product_price_format, productUi.price)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -47,16 +59,6 @@ class ProductDetailActivity : AppCompatActivity() {
             else -> {}
         }
         return true
-    }
-
-    private fun showProductDetailView(productUi: ProductUiModel) {
-        with(binding) {
-            Glide.with(this@ProductDetailActivity)
-                .load(productUi.imageUrl)
-                .into(ivProductDetailProduct)
-            tvProductDetailName.text = productUi.name
-            tvProductDetailPrice.text = getString(R.string.product_price_format, productUi.price)
-        }
     }
 
     companion object {
