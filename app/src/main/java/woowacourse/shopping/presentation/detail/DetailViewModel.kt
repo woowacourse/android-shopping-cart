@@ -4,9 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
-class DetailViewModel(val repository: ShoppingItemsRepository, val productId: Long) : ViewModel() {
+class DetailViewModel(val cartRepository: CartRepository, val shoppingRepository: ShoppingItemsRepository, val productId: Long) : ViewModel() {
     private val _product = MutableLiveData<Product>()
     val product: LiveData<Product>
         get() = _product
@@ -16,6 +17,15 @@ class DetailViewModel(val repository: ShoppingItemsRepository, val productId: Lo
     }
 
     private fun loadProductData() {
-        _product.postValue(repository.findProductItem(productId))
+        _product.postValue(shoppingRepository.findProductItem(productId))
+    }
+
+    fun createShoppingCartItem() {
+        product.value?.let {
+            cartRepository.insert(
+                product = it,
+                quantity = 1,
+            )
+        }
     }
 }

@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.detail.DetailClickListener" />
+
+        <variable
             name="vmProduct"
             type="woowacourse.shopping.presentation.detail.DetailViewModel" />
     </data>
@@ -93,6 +97,7 @@
             android:text="장바구니 담기"
             android:textColor="@color/white"
             android:textSize="20dp"
+            android:onClick="@{() -> clickListener.onClick(vmProduct.product.id)}"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

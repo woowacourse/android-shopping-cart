@@ -4,14 +4,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
+import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.presentation.cart.CartActivity
 
-class DetailActivity : ComponentActivity() {
+class DetailActivity : AppCompatActivity(), DetailClickListener {
     private lateinit var binding: ActivityDetailBinding
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private lateinit var viewModel: DetailViewModel
@@ -20,18 +22,32 @@ class DetailActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setUpToolbar()
+        setUpViewModel()
 
         binding.lifecycleOwner = this
+        binding.clickListener = this
+    }
 
-        val factory = DetailViewModelFactory(ShoppingItemsRepositoryImpl(), productId = productId)
+    private fun setUpViewModel() {
+        val factory =
+            DetailViewModelFactory(
+                CartRepositoryImpl(),
+                ShoppingItemsRepositoryImpl(),
+                productId = productId,
+            )
         viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+        binding.vmProduct = viewModel
+    }
 
-        binding.toolbarDetail.setOnMenuItemClickListener {
+    private fun setUpToolbar() {
+        val toolbar: MaterialToolbar = binding.toolbarDetail
+        setSupportActionBar(toolbar)
+
+        toolbar.setOnMenuItemClickListener {
             finish()
             true
         }
-
-        binding.vmProduct = viewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -39,17 +55,15 @@ class DetailActivity : ComponentActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onMenuItemSelected(
-        featureId: Int,
-        item: MenuItem,
-    ): Boolean {
-        when (item.itemId) {
-            R.id.back_action -> {
-                finish()
-                return true
-            }
-        }
-        return super.onMenuItemSelected(featureId, item)
+    override fun onClick(productId: Long) {
+        viewModel.createShoppingCartItem()
+        navigate()
+    }
+
+    private fun navigate() {
+        startActivity(
+            CartActivity.createIntent(context = this),
+        )
     }
 
     companion object {
