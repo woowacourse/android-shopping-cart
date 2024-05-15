@@ -19,17 +19,24 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     private val adapter: OrderListAdapter by lazy { OrderListAdapter(viewModel) }
 
     override fun initStartView() {
+        initActionBar()
+        initDataBinding()
+        initAdapter()
+        initObserve()
+    }
+
+    private fun initActionBar() {
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = getString(R.string.cart_title)
         }
+    }
 
+    private fun initDataBinding() {
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@ShoppingCartActivity
         }
-        initAdapter()
-        initObserve()
     }
 
     private fun initAdapter() {
