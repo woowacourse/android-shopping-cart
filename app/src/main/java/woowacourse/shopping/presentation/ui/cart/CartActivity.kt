@@ -5,10 +5,12 @@ import android.content.Intent
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
+import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.Product
 import woowacourse.shopping.presentation.ui.UiState
+import woowacourse.shopping.presentation.ui.ViewModelFactory
 
 class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     override val layoutResourceId: Int
@@ -16,7 +18,8 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
 
     private val cartAdapter: CartAdapter = CartAdapter(this)
 
-    private val viewModel: CartViewModel by viewModels()
+
+    private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
         binding.rvCarts.adapter = cartAdapter

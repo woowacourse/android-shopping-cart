@@ -17,9 +17,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
         get() = R.layout.activity_product_detail
 
-    private val viewModel: ProductDetailViewModel by viewModels {
-        ViewModelFactory(DummyProductRepository())
-    }
+    private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
         val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)

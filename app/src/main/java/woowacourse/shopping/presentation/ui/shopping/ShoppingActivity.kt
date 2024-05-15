@@ -19,9 +19,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     override val layoutResourceId: Int
         get() = R.layout.activity_shopping
 
-    private val viewModel: ShoppingViewModel by viewModels {
-        ViewModelFactory(DummyProductRepository())
-    }
+    private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
     private val adapter: ShoppingAdapter = ShoppingAdapter(this)
 
