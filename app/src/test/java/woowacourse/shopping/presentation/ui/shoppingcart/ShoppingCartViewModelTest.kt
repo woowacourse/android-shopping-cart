@@ -23,7 +23,7 @@ class ShoppingCartViewModelTest {
     fun `첫 번째 페이지에 장바구니를 불러온다`() {
         val dummyPagingOrder = DummyShoppingCart.getPagingOrder(0, 5).getOrThrow()
 
-        val actual = viewModel.pagingOrder.getOrAwaitValue()
+        val actual = viewModel.uiState.getOrAwaitValue()
         val expected = dummyPagingOrder
 
         assertThat(actual).isEqualTo(expected)
@@ -36,7 +36,7 @@ class ShoppingCartViewModelTest {
 
         viewModel.onClickClose(closeOrder.id)
 
-        val actual = viewModel.pagingOrder.getOrAwaitValue()
+        val actual = viewModel.uiState.getOrAwaitValue()
         val expected =
             PagingOrder(
                 currentPage = 0,
@@ -56,7 +56,7 @@ class ShoppingCartViewModelTest {
     @Test
     fun `첫 번째 페이지에서 다음 페이지로 넘어가면 다음 페이지 장바구니를 불러온다`() {
         viewModel.onClickNextPage()
-        val actual = viewModel.pagingOrder.getOrAwaitValue()
+        val actual = viewModel.uiState.getOrAwaitValue()
         val expected =
             PagingOrder(
                 currentPage = 1,
@@ -78,7 +78,7 @@ class ShoppingCartViewModelTest {
         viewModel.onClickNextPage()
         viewModel.onClickPrePage()
 
-        val actual = viewModel.pagingOrder.getOrAwaitValue()
+        val actual = viewModel.uiState.getOrAwaitValue()
         val expected =
             PagingOrder(
                 currentPage = 0,

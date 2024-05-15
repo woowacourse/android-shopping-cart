@@ -20,7 +20,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_order_list"
-            recyclerViewVisible="@{vm.pagingOrder.orderList}"
+            recyclerViewVisible="@{vm.uiState.pagingOrder.orderList}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="71dp"
@@ -34,7 +34,7 @@
             tools:listitem="@layout/holder_order" />
 
         <TextView
-            emptyTextVisible="@{vm.pagingOrder.orderList}"
+            emptyTextVisible="@{vm.uiState.pagingOrder.orderList}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_shopping_cart_title"
@@ -47,7 +47,7 @@
 
         <TextView
             android:id="@+id/tv_pre_page"
-            prePageBtnSelect="@{vm.pagingOrder.currentPage}"
+            prePageBtnSelect="@{vm.uiState.pagingOrder.currentPage}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginEnd="16dp"
@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="62dp"
-            android:text="@{String.valueOf(vm.pagingOrder.currentPage + 1)}"
+            android:text="@{String.valueOf(vm.uiState.pagingOrder.currentPage + 1)}"
             android:textColor="@color/gray5"
             android:textSize="22dp"
             android:textStyle="bold"
@@ -77,7 +77,7 @@
 
         <TextView
             android:id="@+id/tv_next_page"
-            nextPageBtnSelect="@{vm.pagingOrder.last}"
+            nextPageBtnSelect="@{vm.uiState.pagingOrder.last}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="16dp"

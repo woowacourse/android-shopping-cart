@@ -2,19 +2,15 @@ package woowacourse.shopping.presentation.ui.shoppingcart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.model.PagingOrder
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.presentation.base.StateViewModel
 
 class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
-    ViewModel(),
+    StateViewModel(),
     ShoppingCartActionHandler {
-    private val _pagingOrder: MutableLiveData<PagingOrder> =
-        MutableLiveData(PagingOrder(INIT_PAGE, emptyList(), false))
-    val pagingOrder: LiveData<PagingOrder> get() = _pagingOrder
-
-    private val _message: MutableLiveData<String> = MutableLiveData()
-    val message: LiveData<String> get() = _message
+    private val _uiState: MutableLiveData<ShoppingCartUiState> =
+        MutableLiveData(ShoppingCartUiState())
+    val uiState: LiveData<ShoppingCartUiState> get() = _uiState
 
     init {
         getPagingOrder(INIT_PAGE)
@@ -25,28 +21,37 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
         pageSize: Int = PAGE_SIZE,
     ) {
         repository.getPagingOrder(page, pageSize).onSuccess { pagingOrder ->
-            _pagingOrder.value = pagingOrder
-        }.onFailure { e ->
-            _message.value = e.message
+            _uiState.value =
+                _uiState.value?.copy(
+                    pagingOrder = pagingOrder,
+                )
+        }.onFailure { _ ->
+            showMessage(ShoppingCartMessage.DefaultErrorMessage)
         }
     }
 
     override fun onClickClose(orderId: Int) {
         repository.removeOrder(orderId)
-        pagingOrder.value?.let { pagingOrder ->
-            getPagingOrder(pagingOrder.currentPage)
+        uiState.value?.let { state ->
+            state.pagingOrder?.let { pagingOrder ->
+                getPagingOrder(pagingOrder.currentPage)
+            }
         }
     }
 
     fun onClickNextPage() {
-        pagingOrder.value?.let { pagingOrder ->
-            getPagingOrder(pagingOrder.currentPage + 1)
+        uiState.value?.let { state ->
+            state.pagingOrder?.let { pagingOrder ->
+                getPagingOrder(pagingOrder.currentPage + 1)
+            }
         }
     }
 
     fun onClickPrePage() {
-        pagingOrder.value?.let { pagingOrder ->
-            getPagingOrder(pagingOrder.currentPage - 1)
+        uiState.value?.let { state ->
+            state.pagingOrder?.let { pagingOrder ->
+                getPagingOrder(pagingOrder.currentPage - 1)
+            }
         }
     }
 

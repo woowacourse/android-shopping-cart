@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
 import androidx.activity.viewModels
-import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.base.ViewModelFactory
+import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.OrderListAdapter
 
 class ShoppingCartActivity : BindingActivity<ActivityShoppingCartBinding>() {
@@ -37,12 +37,16 @@ class ShoppingCartActivity : BindingActivity<ActivityShoppingCartBinding>() {
     }
 
     private fun initObserve() {
-        viewModel.pagingOrder.observe(this) { orderList ->
-            adapter.updateOrderList(orderList.orderList)
+        viewModel.uiState.observe(this) { uiState ->
+            uiState.pagingOrder?.let { pagingOrder ->
+                adapter.updateOrderList(pagingOrder.orderList)
+            }
         }
 
-        viewModel.message.observe(this) { message ->
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+        viewModel.message.observeEvent(this) { message ->
+            when (message) {
+                is ShoppingCartMessage.DefaultErrorMessage -> showSnackbar(message.toString(this))
+            }
         }
     }
 
