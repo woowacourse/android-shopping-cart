@@ -1,12 +1,19 @@
 <resources>
     <string name="app_name">Shopping</string>
-    <string name="menu_shopping_cart">ShoppingCart</string>
-    <string name="description_thumbnail">thumbnail</string>
 
-    <string name="format_price">%,d원</string>
+    <string name="menu_shopping_cart">ShoppingCart</string>
+    <string name="menu_back">back</string>
+
     <string name="home_load_more_button">더보기</string>
+
     <string name="detail_price_title">가격</string>
     <string name="detail_add_to_cart_button">장바구니 담기</string>
 
+    <string name="cart_appbar_title">Cart</string>
+
     <string name="message_add_to_cart_complete">장바구니에 상품을 추가했습니다.</string>
+
+    <string name="description_thumbnail">thumbnail</string>
+
+    <string name="format_price">%,d원</string>
 </resources>
