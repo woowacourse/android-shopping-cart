@@ -2,7 +2,7 @@ package woowacourse.shopping.domain
 
 data class ShoppingCartItem(
     val product: Product,
-    val totalQuantity: Int,
+    val totalQuantity: Int = MIN_QUANTITY,
 ) {
     val totalPrice: Price = product.price.times(totalQuantity)
 
