@@ -4,12 +4,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
+import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder.ProductViewHolder.Companion.PRODUCT_VIEW_TYPE
 
 class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandler {
     override val layoutResourceId: Int
@@ -19,7 +21,20 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandle
     private val adapter: ShoppingAdapter = ShoppingAdapter(this)
 
     override fun initStartView() {
+        val layoutManager = GridLayoutManager(this, 2)
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return if (adapter.getItemViewType(position) == PRODUCT_VIEW_TYPE) {
+                        1
+                    } else {
+                        2
+                    }
+                }
+            }
+        binding.rvShopping.layoutManager = layoutManager
         binding.rvShopping.adapter = adapter
+
         viewModel.products.observe(this) {
             when (it) {
                 is UiState.Finish -> {
@@ -35,9 +50,6 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandle
                 }
             }
         }
-        binding.btnShowMore.setOnClickListener {
-            viewModel.loadProductByOffset()
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -52,5 +64,9 @@ class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(), ShoppingHandle
 
     override fun onClick(productId: Long) {
         ProductDetailActivity.start(this, productId)
+    }
+
+    override fun loadMore() {
+        viewModel.loadProductByOffset()
     }
 }

@@ -2,7 +2,6 @@ package woowacourse.shopping.presentation.ui.cart
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
@@ -35,7 +34,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>(), CartHandler {
     }
 
     override fun onDeleteClick(product: Product) {
-        Log.d("EE", "EEE")
         cartViewModel.deleteProduct(product)
     }
 

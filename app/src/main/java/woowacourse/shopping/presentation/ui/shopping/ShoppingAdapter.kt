@@ -1,14 +1,15 @@
 package woowacourse.shopping.presentation.ui.shopping
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.ui.DisplayItem
-import woowacourse.shopping.presentation.ui.LoadingItem
 import woowacourse.shopping.presentation.ui.Product
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder.LoadViewHolder.Companion.LOAD_VIEW_TYPE
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder.ProductViewHolder.Companion.PRODUCT_VIEW_TYPE
@@ -18,10 +19,8 @@ class ShoppingAdapter(
     private var items: List<DisplayItem> = emptyList(),
 ) : RecyclerView.Adapter<ShoppingViewHolder>() {
     override fun getItemViewType(position: Int): Int {
-        return when (items[position]) {
-            is Product -> PRODUCT_VIEW_TYPE
-            is LoadingItem -> LOAD_VIEW_TYPE
-        }
+        Log.d("itemCount", "$position")
+        return if (position == itemCount - 1) LOAD_VIEW_TYPE else PRODUCT_VIEW_TYPE
     }
 
     override fun onCreateViewHolder(
@@ -36,8 +35,8 @@ class ShoppingAdapter(
             }
 
             else -> {
-                val binding = ItemProductBinding.inflate(inflater, parent, false)
-                ShoppingViewHolder.ProductViewHolder(binding, shoppingHandler)
+                val binding = ItemLoadBinding.inflate(inflater, parent, false)
+                ShoppingViewHolder.LoadViewHolder(binding, shoppingHandler)
             }
         }
     }
@@ -52,7 +51,7 @@ class ShoppingAdapter(
             }
 
             is ShoppingViewHolder.LoadViewHolder -> {
-                holder.bind(items[position] as LoadingItem)
+                holder.bind()
             }
         }
     }
@@ -64,12 +63,15 @@ class ShoppingAdapter(
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return items.size + 1
     }
 }
 
 sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    class ProductViewHolder(private val binding: ItemProductBinding, val shoppingHandler: ShoppingHandler) :
+    class ProductViewHolder(
+        private val binding: ItemProductBinding,
+        val shoppingHandler: ShoppingHandler,
+    ) :
         ShoppingViewHolder(binding.root) {
         private var id: Long = -1
 
@@ -84,6 +86,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 .load(item.imgUrl)
                 .into(binding.imgItem)
             id = item.id
+            Log.d("Mnaa", "${item.name}")
             binding.tvName.text = item.name
             binding.tvPrice.text = item.price.toString()
         }
@@ -93,8 +96,14 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    class LoadViewHolder(view: View) : ShoppingViewHolder(view) {
-        fun bind(item: LoadingItem) {
+    class LoadViewHolder(
+        private val binding: ItemLoadBinding,
+        private val shoppingHandler: ShoppingHandler,
+    ) : ShoppingViewHolder(binding.root) {
+        fun bind() {
+            binding.btnShowMore.setOnClickListener {
+                shoppingHandler.loadMore()
+            }
         }
 
         companion object {

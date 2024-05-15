@@ -21,25 +21,11 @@
             android:id="@+id/rv_shopping"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
-            app:spanCount="2"
             tools:listitem="@layout/item_product" />
-
-
-
-        <Button
-            android:id="@+id/btn_show_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="상품 더보기"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
