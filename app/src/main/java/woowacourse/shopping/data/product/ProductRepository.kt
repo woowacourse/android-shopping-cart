@@ -7,6 +7,11 @@ interface ProductRepository {
 
     fun findAll(): List<Product>
 
+    fun findRange(
+        page: Int,
+        pageSize: Int,
+    ): List<Product>
+
     fun save(
         imageUrl: String,
         title: String,

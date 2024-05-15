@@ -10,7 +10,11 @@ class ProductsViewModel : ViewModel() {
     private val _products = MutableLiveData<List<Product>>()
     val products: LiveData<List<Product>> get() = _products
 
-    fun update(productRepository: ProductRepository) {
-        _products.value = productRepository.findAll()
+    fun loadPage(
+        productRepository: ProductRepository,
+        page: Int,
+        pageSize: Int,
+    ) {
+        _products.value = productRepository.findRange(page, pageSize)
     }
 }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.feature.main.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +7,7 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.Product
 
 class ProductAdapter(private val onClickProductItem: OnClickProductItem) : RecyclerView.Adapter<ProductViewHolder>() {
-    private var products: List<Product> = emptyList()
+    private val products: MutableList<Product> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,9 +29,12 @@ class ProductAdapter(private val onClickProductItem: OnClickProductItem) : Recyc
         return products.size
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateProducts(products: List<Product>) {
-        this.products = products
-        notifyDataSetChanged()
+    fun updateProducts(
+        newProducts: List<Product>,
+        positionStart: Int,
+        itemCount: Int,
+    ) {
+        products.addAll(newProducts)
+        notifyItemRangeChanged(positionStart, itemCount)
     }
 }
