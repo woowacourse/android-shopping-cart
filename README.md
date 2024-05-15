@@ -32,6 +32,12 @@
 - [ ] 더보기 버튼 클릭시 products 들 리사이클러뷰에 추가하기
 - [ ] ui test
 
+### ProductDetail
+- [x] 
+
+### ShoppingCart
+
+
 ## Data
 
 - ShoppingRepository

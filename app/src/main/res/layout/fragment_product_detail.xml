@@ -16,6 +16,7 @@
 
         <ImageView
             android:id="@+id/iv_product"
+            imageUrl="@{vm.product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="1"
@@ -28,6 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
+            android:text="@{vm.product.name}"
             android:textAppearance="@style/H1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,19 +50,18 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="33dp"
-            android:text="꼬상"
+            android:text="@string/price_title"
             android:textAppearance="@style/B2"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_product_title"
-            tools:text="가격" />
+            app:layout_constraintTop_toBottomOf="@id/tv_product_title" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
-            android:text="꼬상"
+            android:text="@{@string/price_format(vm.product.price)}"
             android:textAppearance="@style/B2"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_product_price_title"
