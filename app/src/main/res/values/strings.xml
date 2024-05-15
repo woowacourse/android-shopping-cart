@@ -1,10 +1,20 @@
 <resources>
     <string name="app_name">Shopping</string>
-    <!---->
-    <string name="detail_price_title">가격</string>
-    <string name="price_format_kor"> %,d원</string>
-    <string name="shopping_cart_title">장바구니</string>
-    <string name="product_detail_close_title">닫기</string>
-    <string name="cart_title">Cart</string>
+
+    <!--    상품 상세-->
     <string name="product_detail_title"></string>
+    <string name="detail_price_title">가격</string>
+    <string name="product_detail_close_title">닫기</string>
+
+    <!--    장바구니-->
+    <string name="cart_title">Cart</string>
+    <string name="shopping_cart_title">장바구니</string>
+    <string name="tv_pre_page_title"><![CDATA[<]]></string>
+    <string name="tv_next_page_title"><![CDATA[>]]></string>
+
+
+    <!--    공통-->
+    <string name="price_format_kor"> %,d원</string>
+    <string name="empty_shopping_cart_title">장바구니가 없습니다.</string>
+
 </resources>

@@ -8,7 +8,7 @@ interface ShoppingCartRepository {
 
     fun removeOrder(orderId: Int)
 
-    fun getOrderList(
+    fun getPagingOrder(
         page: Int,
         pageSize: Int,
     ): Result<PagingOrder>

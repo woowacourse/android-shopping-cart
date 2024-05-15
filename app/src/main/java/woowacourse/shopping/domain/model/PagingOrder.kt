@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.model
 
-class PagingOrder(
+data class PagingOrder(
     val currentPage: Int,
     val orderList: List<Order>,
     val last: Boolean,

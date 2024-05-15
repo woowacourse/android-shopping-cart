@@ -45,7 +45,7 @@
 
         <ImageView
             android:id="@+id/iv_product_thumbnail"
-            bindUrlToImage="@{order.product.imageUrl}"
+            urlToImage="@{order.product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/tv_product_price"
-            bindPriceToCurrency="@{order.product.price}"
+            priceToCurrency="@{order.product.price}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"

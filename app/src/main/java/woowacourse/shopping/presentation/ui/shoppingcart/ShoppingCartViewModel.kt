@@ -10,18 +10,18 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     ViewModel(),
     ShoppingCartActionHandler {
     private val _pagingOrder: MutableLiveData<PagingOrder> =
-        MutableLiveData(PagingOrder(1, emptyList(), false))
-    val pagingOrder: LiveData<PagingOrder> = _pagingOrder
+        MutableLiveData(PagingOrder(INIT_PAGE, emptyList(), false))
+    val pagingOrder: LiveData<PagingOrder> get() = _pagingOrder
 
     init {
-        getOrderList(0)
+        getPagingOrder(INIT_PAGE)
     }
 
-    private fun getOrderList(
+    private fun getPagingOrder(
         page: Int,
         pageSize: Int = PAGE_SIZE,
     ) {
-        repository.getOrderList(page, pageSize).onSuccess { pagingOrder ->
+        repository.getPagingOrder(page, pageSize).onSuccess { pagingOrder ->
             _pagingOrder.value = pagingOrder
         }.onFailure {
             // TODO 예외 처리 예정
@@ -31,24 +31,24 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     override fun onClickClose(orderId: Int) {
         repository.removeOrder(orderId)
         pagingOrder.value?.let { pagingOrder ->
-            getOrderList(pagingOrder.currentPage)
+            getPagingOrder(pagingOrder.currentPage)
         }
     }
 
     fun onClickNextPage() {
         pagingOrder.value?.let { pagingOrder ->
-            if (pagingOrder.last) return
-            getOrderList(pagingOrder.currentPage + 1)
+            getPagingOrder(pagingOrder.currentPage + 1)
         }
     }
 
     fun onClickPrePage() {
         pagingOrder.value?.let { pagingOrder ->
-            getOrderList(pagingOrder.currentPage - 1)
+            getPagingOrder(pagingOrder.currentPage - 1)
         }
     }
 
     companion object {
+        const val INIT_PAGE = 0
         const val PAGE_SIZE = 5
     }
 }

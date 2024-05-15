@@ -20,12 +20,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> actionHandler.onClickProduct(product.id)}"
-        android:layout_margin="6dp">
+        android:layout_margin="6dp"
+        android:onClick="@{() -> actionHandler.onClickProduct(product.id)}">
 
         <ImageView
-            bindUrlToImage = "@{product.imageUrl}"
             android:id="@+id/iv_product_thumbnail"
+            urlToImage="@{product.imageUrl}"
             android:layout_width="154dp"
             android:layout_height="154dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,11 +54,11 @@
 
         <TextView
             android:id="@+id/tv_product_price"
+            priceToCurrency="@{product.price}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            bindPriceToCurrency="@{product.price}"
             android:textColor="@color/gray5"
             android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="@+id/tv_product_name"

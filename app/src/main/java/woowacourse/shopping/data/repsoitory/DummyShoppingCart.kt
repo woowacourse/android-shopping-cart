@@ -29,7 +29,7 @@ object DummyShoppingCart : ShoppingCartRepository {
         orders.removeIf { it.id == orderId }
     }
 
-    override fun getOrderList(
+    override fun getPagingOrder(
         page: Int,
         pageSize: Int,
     ): Result<PagingOrder> =

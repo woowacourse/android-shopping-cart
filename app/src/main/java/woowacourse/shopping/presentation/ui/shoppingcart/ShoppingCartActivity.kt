@@ -42,14 +42,10 @@ class ShoppingCartActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         binding.rvOrderList.adapter = adapter
-        viewModel.pagingOrder.value?.let { orderList ->
-            adapter.updateOrderList(orderList.orderList)
-        }
     }
 
     private fun initObserve() {
         viewModel.pagingOrder.observe(this) { orderList ->
-            binding.tvPage.text = orderList.currentPage.toString()
             adapter.updateOrderList(orderList.orderList)
         }
     }
