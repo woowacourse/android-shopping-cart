@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
@@ -47,6 +48,10 @@ class ShoppingCartActivity : AppCompatActivity() {
     private fun initObserve() {
         viewModel.pagingOrder.observe(this) { orderList ->
             adapter.updateOrderList(orderList.orderList)
+        }
+
+        viewModel.message.observe(this) { message ->
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
         }
     }
 

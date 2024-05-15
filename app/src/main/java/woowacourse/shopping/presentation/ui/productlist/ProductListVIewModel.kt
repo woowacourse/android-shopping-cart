@@ -16,6 +16,9 @@ class ProductListVIewModel(
     private val _navigateAction: MutableLiveData<ProductListNavigateAction> = MutableLiveData(null)
     val navigateAction: LiveData<ProductListNavigateAction> get() = _navigateAction
 
+    private val _message: MutableLiveData<String> = MutableLiveData()
+    val message: LiveData<String> get() = _message
+
     init {
         getPagingProduct(INIT_PAGE_NUM)
     }
@@ -38,8 +41,8 @@ class ProductListVIewModel(
                             ?: pagingProduct.productList,
                     last = pagingProduct.last,
                 )
-        }.onFailure {
-            // TODO 예외 처리 예정
+        }.onFailure { e ->
+            _message.value = e.message
         }
     }
 

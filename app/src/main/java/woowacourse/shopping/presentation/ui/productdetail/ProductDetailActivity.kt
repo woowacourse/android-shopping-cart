@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.data.repsoitory.DummyShoppingCart
@@ -34,6 +35,16 @@ class ProductDetailActivity : AppCompatActivity() {
                 lifecycleOwner = this@ProductDetailActivity
             }
         setContentView(binding.root)
+        initObserve()
+    }
+
+    private fun initObserve() {
+        viewModel.message.observe(this) { message ->
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).apply {
+                anchorView = binding.tvAddToCart
+                show()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -73,6 +73,7 @@
             app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line" />
 
         <TextView
+            android:id="@+id/tv_add_to_cart"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/green"

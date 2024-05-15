@@ -17,6 +17,9 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
+    private val _message: MutableLiveData<String> = MutableLiveData()
+    val message: LiveData<String> get() = _message
+
     init {
         savedStateHandle.get<Int>(PUT_EXTRA_PRODUCT_ID)?.let { productId ->
             findByProductId(productId)
@@ -26,14 +29,19 @@ class ProductDetailViewModel(
     private fun findByProductId(id: Int) {
         productListRepository.findProductById(id).onSuccess { productValue ->
             _product.value = productValue
-        }.onFailure {
-            // TODO 예외 처리 예정
+        }.onFailure { e ->
+            _message.value = e.message
         }
     }
 
     fun onAddToCartButtonClick() {
         product.value?.let { product ->
             shoppingCartRepository.addOrder(product)
+            _message.value = SUCCESS_MESSAGE
         }
+    }
+
+    companion object {
+        const val SUCCESS_MESSAGE = "장바구니에 성공적으로 담았습니다."
     }
 }

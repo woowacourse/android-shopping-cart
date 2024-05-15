@@ -13,6 +13,9 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
         MutableLiveData(PagingOrder(INIT_PAGE, emptyList(), false))
     val pagingOrder: LiveData<PagingOrder> get() = _pagingOrder
 
+    private val _message: MutableLiveData<String> = MutableLiveData()
+    val message: LiveData<String> get() = _message
+
     init {
         getPagingOrder(INIT_PAGE)
     }
@@ -23,8 +26,8 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     ) {
         repository.getPagingOrder(page, pageSize).onSuccess { pagingOrder ->
             _pagingOrder.value = pagingOrder
-        }.onFailure {
-            // TODO 예외 처리 예정
+        }.onFailure { e ->
+            _message.value = e.message
         }
     }
 
