@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.model.Quantity
+import woowacourse.shopping.model.CartItem
 
 interface CartRepository {
     fun add(productId: Long)
@@ -9,5 +9,5 @@ interface CartRepository {
 
     fun deleteAll(productId: Long)
 
-    fun findAll(): Map<Long, Quantity>
+    fun findAll(): List<CartItem>
 }

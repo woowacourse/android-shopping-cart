@@ -1,30 +1,42 @@
 package woowacourse.shopping.data.cart
 
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 
-typealias Cart = MutableMap<Long, Quantity>
-
 object CartRepositoryImpl : CartRepository {
-    private val cart: Cart = mutableMapOf()
+    private val cart: MutableList<CartItem> = mutableListOf()
+    private var id: Long = 0L
 
     private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
 
     override fun add(productId: Long) {
-        var quantity = cart.getOrDefault(productId, Quantity(0))
-        cart[productId] = ++quantity
+        val oldCartItem = cart.find { it.productId == productId }
+        if (oldCartItem == null) {
+            cart.add(CartItem(id++, productId, Quantity()))
+            return
+        }
+        var quantity = oldCartItem.quantity
+        cart.remove(oldCartItem)
+        cart.add(oldCartItem.copy(quantity = ++quantity))
     }
 
     override fun delete(productId: Long) {
-        var quantity = cart[productId] ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
-        cart[productId] = --quantity
+        val oldCartItem = cart.find { it.productId == productId }
+        oldCartItem ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
+        cart.remove(oldCartItem)
+        if (oldCartItem.quantity.isMin()) {
+            return
+        }
+        var quantity = oldCartItem.quantity
+        cart.add(oldCartItem.copy(quantity = --quantity))
     }
 
     override fun deleteAll(productId: Long) {
-        cart.remove(productId)
+        cart.removeIf { it.productId == productId }
     }
 
-    override fun findAll(): Map<Long, Quantity> {
-        return cart.toMap()
+    override fun findAll(): List<CartItem> {
+        return cart.toList()
     }
 }

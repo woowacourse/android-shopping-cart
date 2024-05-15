@@ -45,7 +45,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun updateCart() {
         cartViewModel.cart.observe(this) {
-            adapter.updateCart(it.map { entry -> ProductRepositoryImpl.find(entry.key) })
+            adapter.updateCart(it.map { cartItem -> ProductRepositoryImpl.find(cartItem.productId) })
         }
         cartViewModel.load(cartRepository)
     }
