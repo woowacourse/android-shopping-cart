@@ -27,31 +27,31 @@ class DefaultProductsTest {
                 Product(
                     1,
                     "사과",
-                    "https://github.com/kmkim2689/woowacourse-practice2/assets/101035437/628e5826-37c5-4a6e-bd69-69d4fa088f8a",
+                    "https://img.hankyung.com/photo/202403/AA.36104679.1.jpg",
                     1000,
                 ),
                 Product(
                     2,
                     "바나나",
-                    "https://github.com/kmkim2689/woowacourse-practice2/assets/101035437/c95ca5cf-8302-4f66-bc86-05692f3d1a2e",
+                    "https://cdn.hankyung.com/photo/201803/AA.16218828.1.jpg",
                     2000,
                 ),
                 Product(
                     3,
                     "딸기",
-                    "https://github.com/kmkim2689/woowacourse-practice2/assets/101035437/628e5826-37c5-4a6e-bd69-69d4fa088f8a",
+                    "https://img.hankyung.com/photo/202403/AA.36104679.1.jpg",
                     3000,
                 ),
                 Product(
                     4,
                     "수박",
-                    "https://github.com/kmkim2689/woowacourse-practice2/assets/101035437/c95ca5cf-8302-4f66-bc86-05692f3d1a2e",
+                    "https://cdn.hankyung.com/photo/201803/AA.16218828.1.jpg",
                     4000,
                 ),
                 Product(
                     5,
                     "포도",
-                    "https://github.com/kmkim2689/woowacourse-practice2/assets/101035437/628e5826-37c5-4a6e-bd69-69d4fa088f8a",
+                    "https://img.hankyung.com/photo/202403/AA.36104679.1.jpg",
                     5000,
                 ),
             ),
@@ -68,7 +68,7 @@ class DefaultProductsTest {
             Product(
                 1,
                 "사과",
-                "https://github.com/kmkim2689/woowacourse-practice2/assets/101035437/628e5826-37c5-4a6e-bd69-69d4fa088f8a",
+                "https://img.hankyung.com/photo/202403/AA.36104679.1.jpg",
                 1000,
             ),
         )

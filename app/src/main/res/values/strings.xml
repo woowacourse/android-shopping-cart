@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="menu_shopping_cart">ShoppingCart</string>
+    <string name="description_thumbnail">thumbnail</string>
+
+    <string name="format_price">%,d원</string>
 </resources>

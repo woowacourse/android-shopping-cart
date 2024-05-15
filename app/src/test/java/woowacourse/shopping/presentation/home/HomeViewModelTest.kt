@@ -19,8 +19,8 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `페이지에 맞는 상품 데이터를 제공한다`() {
-        homeViewModel.loadProducts(0)
+    fun `첫 페이지의 상품 데이터를 제공한다`() {
+        homeViewModel.loadProducts()
 
         val actualResult = homeViewModel.products.getOrAwaitValue()
 
