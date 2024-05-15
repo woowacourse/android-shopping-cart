@@ -33,7 +33,7 @@ object ProductsImpl : ProductDao {
     }
 
     override fun findInRange(): List<Product> {
-        val endRange = min(currentOffset + LOAD_LIMIT, products.values.size)
+        val endRange = min(currentOffset + LOAD_LIMIT, products.size)
         val productsInRange = products.values.toList().subList(currentOffset, endRange)
         currentOffset = endRange
 

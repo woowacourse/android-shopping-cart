@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.cart
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -31,6 +32,7 @@ class CartAdapter(
     fun setData(products: List<Product>) {
         cart.clear()
         cart.addAll(products)
+        Log.e("seogi", "${cart.size}")
         notifyDataSetChanged()
     }
 }

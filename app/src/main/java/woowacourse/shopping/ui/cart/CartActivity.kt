@@ -21,10 +21,32 @@ class CartActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
+        viewModel.pageNumber.observe(this) {
+            binding.pageNumber = it.toString()
+        }
+
+        binding.btnLeft.setOnClickListener {
+            viewModel.minusPageNum()
+            viewModel.loadCartItems()
+        }
+
+        binding.btnRight.setOnClickListener {
+            viewModel.plusPageNum()
+            viewModel.loadCartItems()
+        }
+
         loadItems()
         setCartAdapter()
         observeCartItems()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        viewModel.canMovePreviousPage.observe(this) {
+            binding.btnLeft.isClickable = it
+        }
+
+        viewModel.canMoveNextPage.observe(this) {
+            binding.btnRight.isClickable = it
+        }
     }
 
     private fun loadItems() {
