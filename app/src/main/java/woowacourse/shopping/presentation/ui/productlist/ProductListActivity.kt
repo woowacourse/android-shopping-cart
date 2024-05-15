@@ -3,10 +3,10 @@ package woowacourse.shopping.presentation.ui.productlist
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
@@ -32,7 +32,7 @@ class ProductListActivity : BindingActivity<ActivityProductListBinding>() {
     }
 
     private fun initObserve() {
-        viewModel.navigateAction.observe(this) { navigateAction ->
+        viewModel.navigateAction.observeEvent(this) { navigateAction ->
             when (navigateAction) {
                 is ProductListNavigateAction.NavigateToProductDetail ->
                     ProductDetailActivity.startActivity(
@@ -41,12 +41,17 @@ class ProductListActivity : BindingActivity<ActivityProductListBinding>() {
                     )
             }
         }
-        viewModel.pagingProduct.observe(this) { pagingProduct ->
-            adapter.updateProductList(pagingProduct.productList)
+
+        viewModel.uiState.observe(this) { state ->
+            state.pagingProduct?.let { pagingProduct ->
+                adapter.updateProductList(pagingProduct.productList)
+            }
         }
 
-        viewModel.message.observe(this) { message ->
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+        viewModel.message.observeEvent(this) { message ->
+            when (message) {
+                is ProductListMessage.DefaultErrorMessage -> showToastMessage(message.toString(this))
+            }
         }
     }
 

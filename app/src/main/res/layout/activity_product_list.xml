@@ -40,7 +40,7 @@
 
             <TextView
                 android:id="@+id/tv_show_more_products"
-                loadMoreBtnVisible="@{vm.pagingProduct.last}"
+                loadMoreBtnVisible="@{vm.uiState.pagingProduct.last}"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@color/green"
