@@ -4,17 +4,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
+import woowacourse.shopping.presentation.base.factory.ViewModelFactory
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.OrderListAdapter
 
 class ShoppingCartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingCartBinding
-    private lateinit var viewModel: ShoppingCartViewModel
+    private val viewModel: ShoppingCartViewModel by viewModels { ViewModelFactory() }
 
     private val adapter: OrderListAdapter by lazy { OrderListAdapter(viewModel) }
 
@@ -26,12 +26,6 @@ class ShoppingCartActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             title = getString(R.string.cart_title)
         }
-
-        viewModel =
-            ViewModelProvider(
-                this,
-                ShoppingCartViewModelFactory(DummyShoppingCart),
-            )[ShoppingCartViewModel::class.java]
 
         binding.apply {
             vm = viewModel

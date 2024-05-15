@@ -5,29 +5,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.presentation.base.factory.ViewModelFactory
 
 class ProductDetailActivity : AppCompatActivity() {
-    private lateinit var viewModel: ProductDetailViewModel
+    private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     private lateinit var binding: ActivityProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.apply {
-            title = getString(R.string.product_detail_title)
-        }
-        viewModel =
-            ViewModelProvider(
-                this,
-                ProductDetailViewModelFactory(DummyProductList, DummyShoppingCart),
-            )[ProductDetailViewModel::class.java]
+        supportActionBar?.title = getString(R.string.product_detail_title)
 
         binding =
             ActivityProductDetailBinding.inflate(layoutInflater).apply {
