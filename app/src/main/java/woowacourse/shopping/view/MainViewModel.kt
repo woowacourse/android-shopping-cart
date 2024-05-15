@@ -1,5 +1,6 @@
 package woowacourse.shopping.view
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,15 +17,19 @@ class MainViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
+    private var currentPage = 1
     lateinit var shoppingCart: ShoppingCart
 
 
     init {
-        initializeProducts()
+        loadPagingProduct()
     }
 
-    private fun initializeProducts() {
-        _products.value = repository.loadProducts()
+    fun loadPagingProduct() {
+        val pagingData = repository.loadPagingProducts(products.value?.size ?: 0)
+        if (pagingData.isNotEmpty()) {
+            _products.value = _products.value?.plus(pagingData)
+        }
     }
 
     fun loadShoppingCart() = thread {

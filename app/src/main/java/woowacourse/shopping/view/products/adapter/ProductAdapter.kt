@@ -11,12 +11,13 @@ import woowacourse.shopping.view.products.adapter.viewholder.ProductViewHolder
 
 class ProductAdapter(
     private val onClickProducts: OnClickProducts,
-): RecyclerView.Adapter<ProductViewHolder>() {
-    private var products : List<Product> = emptyList()
+    private val isLoadLastItem: (Boolean) -> Unit,
+) : RecyclerView.Adapter<ProductViewHolder>() {
+    private var products: List<Product> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
-        val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return ProductViewHolder(view,onClickProducts)
+        val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProductViewHolder(view, onClickProducts)
     }
 
     override fun getItemCount(): Int {
@@ -26,12 +27,19 @@ class ProductAdapter(
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val item = products[position]
         holder.bind(item)
+
+        if (position == itemCount - 1) {
+            isLoadLastItem(true)
+        } else {
+
+            isLoadLastItem(false)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateProducts(products: List<Product>){
-        this.products = products
-        notifyDataSetChanged()
+    fun updateProducts(addedProducts: List<Product>) {
+        val startPosition = products.size
+        products = products + addedProducts
+        notifyItemRangeInserted(startPosition, addedProducts.size)
     }
 }
-

@@ -36,11 +36,15 @@ class ProductsListFragment : Fragment(), OnClickProducts {
 
     private fun initView(){
         binding.onClickProduct = this
-        adapter = ProductAdapter(onClickProducts = this)
+        adapter = ProductAdapter(
+            onClickProducts = this
+        ){ isLoadLastItem ->
+            binding.isVisible = isLoadLastItem
+        }
 
         binding.rvProducts.adapter = adapter
         mainViewModel.products.observe(viewLifecycleOwner) { products ->
-            adapter.updateProducts(products = products)
+            adapter.updateProducts(addedProducts = products)
         }
     }
 
@@ -59,6 +63,10 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     override fun clickShoppingCart() {
         val shoppingCartFragment = ShoppingCartFragment()
         changeFragment(shoppingCartFragment)
+    }
+
+    override fun clickLoadPagingData() {
+        mainViewModel.loadPagingProduct()
     }
 
     private fun changeFragment(nextFragment: Fragment){

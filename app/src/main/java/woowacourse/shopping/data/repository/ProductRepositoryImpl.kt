@@ -17,6 +17,10 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         return productDao.findAll()
     }
 
+    override fun loadPagingProducts(offset: Int): List<Product> {
+        return productDao.findPagingProducts(offset, PRODUCT_PAGING_SIZE)
+    }
+
     override fun getProduct(productId: Long): Product {
         val product = productDao.findProductById(productId)
         return product ?: throw NoSuchDataException()
@@ -33,5 +37,9 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
 
     override fun deleteCartItem(itemId: Long) {
         cartItemDao.deleteCartItemById(itemId)
+    }
+
+    companion object {
+        private const val PRODUCT_PAGING_SIZE = 10
     }
 }
