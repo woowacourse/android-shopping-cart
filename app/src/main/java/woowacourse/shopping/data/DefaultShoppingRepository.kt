@@ -36,4 +36,14 @@ class DefaultShoppingRepository : ShoppingRepository {
                 "https://i.namu.wiki/i/YvceZuAFsjYzbrTKYS09muExzVUw0f5JFBTAOLeCJbyeKghRLpkDnc5_XmQ9KvOpyRqz3zSWVZq5DpeW0HToWQ.webp",
             ),
         )
+
+    override fun productById(id: Long): Product {
+        return Product(
+            5,
+            1000,
+            "꼬상꼬상",
+            "https://i.namu.wiki/i/YvceZuAFsjYzbrTKYS09muExzVUw0f5JFBTAOLeCJbyeKghRLpkDnc5_XmQ9KvOpyRqz3zSWVZq5DpeW0HToWQ.webp",
+        )
+    }
+
 }
