@@ -12,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.productlist.toProductUiModel
+import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.ViewModelFactory
 
 class ProductDetailActivity : AppCompatActivity() {
@@ -29,6 +30,15 @@ class ProductDetailActivity : AppCompatActivity() {
         showProductDetail(productId)
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.btnProductDetailAddCart.setOnClickListener {
+            viewModel.addProductToCart()
+        }
+
+        viewModel.isAddSuccess.observe(this) {
+            if (it) {
+                startActivity(ShoppingCartActivity.newInstance(this))
+            }
+        }
     }
 
     private fun showProductDetail(productId: Long) {

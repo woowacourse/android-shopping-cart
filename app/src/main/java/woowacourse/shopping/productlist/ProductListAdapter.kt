@@ -8,13 +8,13 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductListAdapter(
-    private val onClick: ProductListContract.ViewAction,
+    private val onClick: ProductListClickAction,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
     private var items: MutableList<ProductUiModel> = mutableListOf()
 
     class ProductListViewHolder(
         private val binding: ItemProductListBinding,
-        private val onClick: ProductListContract.ViewAction,
+        private val onClick: ProductListClickAction,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(item: ProductUiModel) {
             with(binding) {

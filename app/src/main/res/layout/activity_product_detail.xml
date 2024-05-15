@@ -3,9 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -71,6 +68,7 @@
             tools:text="10,000원" />
 
         <Button
+            android:id="@+id/btn_product_detail_add_cart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/emerald"

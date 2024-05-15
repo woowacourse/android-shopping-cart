@@ -27,7 +27,7 @@ class ProductDetailViewModel(
         }
     }
 
-    fun addProductToCart(productId: Long) {
+    fun addProductToCart() {
         runCatching {
             val cartItem = ShoppingCartItem(_product.value!!)
             val userId = repository.userId()
