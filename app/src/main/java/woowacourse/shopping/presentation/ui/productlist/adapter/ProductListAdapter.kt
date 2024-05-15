@@ -30,8 +30,11 @@ class ProductListAdapter(
     }
 
     fun updateProductList(newProductList: List<Product>) {
+        val positionStart = productList.size
+        val itemCount = newProductList.size - productList.size
+
         productList = newProductList
-        notifyDataSetChanged()
+        notifyItemRangeChanged(positionStart, itemCount)
     }
 
     class ProductViewHolder(

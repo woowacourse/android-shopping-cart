@@ -10,6 +10,11 @@
             name="order"
             type="woowacourse.shopping.domain.model.Order" />
 
+
+        <variable
+            name="position"
+            type="int" />
+
         <variable
             name="actionHandler"
             type="woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActionHandler" />

@@ -31,7 +31,6 @@ class ProductListActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         binding.rvProductList.adapter = adapter
-        adapter.updateProductList(viewModel.productList.value!!)
     }
 
     private fun initObserve() {
@@ -43,6 +42,9 @@ class ProductListActivity : AppCompatActivity() {
                         navigateAction.productId,
                     )
             }
+        }
+        viewModel.productList.observe(this) { productList ->
+            adapter.updateProductList(productList)
         }
     }
 

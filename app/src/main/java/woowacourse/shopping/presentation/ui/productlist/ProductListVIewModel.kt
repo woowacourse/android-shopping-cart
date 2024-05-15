@@ -12,12 +12,14 @@ class ProductListVIewModel(
 ) : ViewModel(), ProductListActionHandler {
     private val _productList: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val productList: LiveData<List<Product>> get() = _productList
-
     private val _navigateAction: MutableLiveData<ProductListNavigateAction> = MutableLiveData(null)
     val navigateAction: LiveData<ProductListNavigateAction> get() = _navigateAction
 
+    private val _pageNum: MutableLiveData<Int> = MutableLiveData(INIT_PAGE_NUM)
+    val pageNum: LiveData<Int> get() = _pageNum
+
     init {
-        getProductList()
+        getPagingProduct(INIT_PAGE_NUM)
     }
 
     private fun getProductList() {
@@ -27,5 +29,28 @@ class ProductListVIewModel(
     override fun onClickProduct(productId: Int) {
         _navigateAction.value =
             ProductListNavigateAction.NavigateToProductDetail(productId = productId)
+    }
+
+    private fun getPagingProduct(
+        page: Int,
+        pageSize: Int = PAGING_SIZE,
+    ) {
+        productListRepository.getPagingProduct(page, pageSize).onSuccess { pagingProduct ->
+            _productList.value = _productList.value?.plus(pagingProduct.productList)
+            _pageNum.value = pagingProduct.currentPage
+        }.onFailure {
+            // TODO 예외 처리 예정
+        }
+    }
+
+    fun onClickLoadMoreButton() {
+        pageNum.value?.let { num ->
+            getPagingProduct(num + 1)
+        }
+    }
+
+    companion object {
+        private const val INIT_PAGE_NUM = 0
+        private const val PAGING_SIZE = 8
     }
 }

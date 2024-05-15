@@ -1,7 +1,9 @@
 package woowacourse.shopping.data.repsoitory
 
+import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductListRepository
+import kotlin.math.min
 
 object DummyProductList : ProductListRepository {
     private val STUB_IMAGE_URL_A =
@@ -21,6 +23,51 @@ object DummyProductList : ProductListRepository {
             STUB_PRODUCT_A,
             STUB_PRODUCT_B,
             STUB_PRODUCT_C,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_A,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
+            STUB_PRODUCT_B,
+            STUB_PRODUCT_C,
         )
 
     override fun getProductList(): List<Product> {
@@ -30,5 +77,29 @@ object DummyProductList : ProductListRepository {
     override fun findProductById(id: Int): Result<Product> =
         runCatching {
             productList.find { it.id == id } ?: throw NoSuchElementException()
+        }
+
+    override fun getProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<Product> {
+        val fromIndex = page * pageSize
+        val toIndex = min(fromIndex + pageSize, productList.size)
+        return productList.subList(fromIndex, toIndex)
+    }
+
+    override fun getPagingProduct(
+        page: Int,
+        pageSize: Int,
+    ): Result<PagingProduct> =
+        runCatching {
+            val fromIndex = page * pageSize
+            val toIndex = min(fromIndex + pageSize, DummyProductList.productList.size)
+            val last = toIndex == DummyProductList.productList.size
+            PagingProduct(
+                currentPage = page,
+                productList = DummyProductList.productList.subList(fromIndex, toIndex),
+                last = last,
+            )
         }
 }
