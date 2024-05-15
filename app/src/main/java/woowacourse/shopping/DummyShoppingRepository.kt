@@ -3,9 +3,18 @@ package woowacourse.shopping
 import woowacourse.shopping.domain.ImageUrl
 import woowacourse.shopping.domain.Price
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCart
+import woowacourse.shopping.domain.User
 
 object DummyShoppingRepository : ShoppingRepository {
-    val products =
+    private var users = listOf(
+        User(
+            id = 0L,
+            shoppingCart = ShoppingCart(emptyList())
+        )
+    )
+
+    private val products =
         listOf(
             Product(
                 0,
@@ -46,4 +55,19 @@ object DummyShoppingRepository : ShoppingRepository {
         )
 
     override fun products(): List<Product> = products
+
+    override fun productById(id: Long): Product = products.firstOrNull { it.id == id } ?: error(
+        "$id 에 해당하는 상품이 없습니다."
+    )
+
+    override fun userId(): Long = users.first().id
+
+    override fun shoppingCart(userId: Long): ShoppingCart =
+        users.firstOrNull { it.id == userId }?.shoppingCart ?: error("$userId 에 해당하는 유저가 없습니다.")
+
+    override fun updateShoppingCart(shoppingCart: ShoppingCart) {
+       this.users = users.map {
+           if (it.id == userId()) it.copy(shoppingCart = shoppingCart) else it
+       }
+    }
 }
