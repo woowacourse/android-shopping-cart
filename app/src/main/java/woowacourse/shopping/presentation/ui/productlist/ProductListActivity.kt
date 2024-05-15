@@ -14,7 +14,7 @@ import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
 
 class ProductListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductListBinding
-    private val viewModel: ProductListVIewModel by viewModels()
+    private val viewModel: ProductListViewModel by viewModels()
 
     private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
 

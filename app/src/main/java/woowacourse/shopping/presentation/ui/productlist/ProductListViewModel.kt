@@ -7,7 +7,7 @@ import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.repository.ProductListRepository
 
-class ProductListVIewModel(
+class ProductListViewModel(
     private val productListRepository: ProductListRepository = DummyProductList,
 ) : ViewModel(), ProductListActionHandler {
     private val _pagingProduct: MutableLiveData<PagingProduct> = MutableLiveData(null)
