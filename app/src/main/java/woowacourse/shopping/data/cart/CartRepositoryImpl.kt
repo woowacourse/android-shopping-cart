@@ -3,6 +3,7 @@ package woowacourse.shopping.data.cart
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
+import kotlin.math.min
 
 object CartRepositoryImpl : CartRepository {
     private val cart: MutableList<CartItem> = mutableListOf()
@@ -39,4 +40,15 @@ object CartRepositoryImpl : CartRepository {
     override fun findAll(): List<CartItem> {
         return cart.toList()
     }
+
+    override fun findRange(
+        page: Int,
+        pageSize: Int,
+    ): List<CartItem> {
+        val fromIndex = page * pageSize
+        val toIndex = min(fromIndex + pageSize, cart.size)
+        return cart.subList(fromIndex, toIndex)
+    }
+
+    override fun count(): Int = cart.size
 }

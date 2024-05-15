@@ -15,6 +15,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var adapter: CartAdapter
     private val cartViewModel: CartViewModel by viewModels()
     private val cartRepository: CartRepository by lazy { CartRepositoryImpl }
+    private var page: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +24,9 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
+        binding.page = page
         initializeCartAdapter()
+        initializePageButton()
         initializeToolbar()
         updateCart()
     }
@@ -32,12 +35,40 @@ class CartActivity : AppCompatActivity() {
         adapter =
             CartAdapter(onClickExit = {
                 cartViewModel.delete(cartRepository, it)
-                cartViewModel.load(cartRepository)
+                updateCart()
             })
         binding.rvCart.adapter = adapter
 
+        cartViewModel.cartSize.observe(this) {
+            binding.btnCartPreviousPage.isEnabled = hasPreviousPage(page, MIN_PAGE)
+            binding.btnCartNextPage.isEnabled = hasNextPage(page, (it - 1) / PAGE_SIZE)
+        }
+
         cartViewModel.cart.observe(this) {
             adapter.updateCart(it.map { cartItem -> ProductRepositoryImpl.find(cartItem.productId) })
+        }
+    }
+
+    private fun hasPreviousPage(
+        page: Int,
+        minPage: Int = MIN_PAGE,
+    ): Boolean = page > minPage
+
+    private fun hasNextPage(
+        page: Int,
+        maxPage: Int,
+    ): Boolean = page < maxPage
+
+    private fun initializePageButton() {
+        binding.btnCartNextPage.setOnClickListener {
+            page++
+            binding.page = page
+            updateCart()
+        }
+        binding.btnCartPreviousPage.setOnClickListener {
+            page--
+            binding.page = page
+            updateCart()
         }
     }
 
@@ -48,6 +79,12 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun updateCart() {
-        cartViewModel.load(cartRepository)
+        cartViewModel.loadCart(cartRepository, page, PAGE_SIZE)
+        cartViewModel.loadCount(cartRepository)
+    }
+
+    companion object {
+        private const val MIN_PAGE = 0
+        private const val PAGE_SIZE = 5
     }
 }

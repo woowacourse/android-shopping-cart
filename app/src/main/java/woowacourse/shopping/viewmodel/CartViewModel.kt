@@ -10,6 +10,9 @@ class CartViewModel : ViewModel() {
     private val _cart = MutableLiveData<List<CartItem>>()
     val cart: LiveData<List<CartItem>> get() = _cart
 
+    private val _cartSize = MutableLiveData<Int>()
+    val cartSize: LiveData<Int> get() = _cartSize
+
     fun add(
         cartRepository: CartRepository,
         productId: Long,
@@ -24,7 +27,15 @@ class CartViewModel : ViewModel() {
         cartRepository.deleteAll(productId)
     }
 
-    fun load(cartRepository: CartRepository) {
-        _cart.value = cartRepository.findAll()
+    fun loadCart(
+        cartRepository: CartRepository,
+        page: Int,
+        pageSize: Int,
+    ) {
+        _cart.value = cartRepository.findRange(page, pageSize)
+    }
+
+    fun loadCount(cartRepository: CartRepository) {
+        _cartSize.value = cartRepository.count()
     }
 }
