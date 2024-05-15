@@ -12,40 +12,47 @@ import woowacourse.shopping.getOrAwaitValue
 class ProductListViewModelTest {
     @Test
     fun `상품을 불러온다`() {
+        // given
         val productListViewModel: ProductListViewModel = ProductListViewModel(DummyProductList)
-        val dummyPagingProduct = DummyProductList.getPagingProduct(0, 20).getOrThrow()
 
-        val actual = productListViewModel.pagingProduct.getOrAwaitValue()
-        val expected = dummyPagingProduct
-        assertThat(actual).isEqualTo(expected)
+        // when
+        val actual = productListViewModel.uiState.getOrAwaitValue()
+
+        // then
+        val expected = DummyProductList.getPagingProduct(0, 20).getOrThrow()
+        assertThat(actual.pagingProduct).isEqualTo(expected)
     }
 
     @Test
     fun `더보기 버튼을 눌렀을 때 상품을 더 불러온다`() {
+        // given
         val dummyPagingProduct = DummyProductList.getPagingProduct(0, 20).getOrThrow()
         val nextDummyPagingProduct = DummyProductList.getPagingProduct(1, 20).getOrThrow()
 
+        // when
         val productListViewModel: ProductListViewModel = ProductListViewModel(DummyProductList)
         productListViewModel.onClickLoadMoreButton()
+        val actual = productListViewModel.uiState.getOrAwaitValue()
 
-        val actual = productListViewModel.pagingProduct.getOrAwaitValue()
+        // then
         val expected =
             PagingProduct(
                 currentPage = nextDummyPagingProduct.currentPage,
                 productList = dummyPagingProduct.productList + nextDummyPagingProduct.productList,
                 last = nextDummyPagingProduct.last,
             )
-        assertThat(actual).isEqualTo(expected)
+        assertThat(actual.pagingProduct).isEqualTo(expected)
     }
 
     @Test
     fun `상품을 누르면 상품의 상세 소개 화면으로 넘어간다`() {
+        // given & when
         val productListViewModel: ProductListViewModel = ProductListViewModel(DummyProductList)
-
         productListViewModel.onClickProduct(1)
-
         val actual = productListViewModel.navigateAction.getOrAwaitValue()
+
+        // then
         val expected = ProductListNavigateAction.NavigateToProductDetail(1)
-        assertThat(actual).isEqualTo(expected)
+        assertThat(actual.value).isEqualTo(expected)
     }
 }
