@@ -31,10 +31,13 @@ abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
 
     fun showSnackbar(
         message: String,
-        action: Snackbar.() -> Snackbar = { this },
+        action: Snackbar.() -> Unit = {},
     ) {
         snackbar?.dismiss()
-        snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).action()
+        snackbar =
+            Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).apply {
+                action()
+            }
         snackbar?.show()
     }
 
