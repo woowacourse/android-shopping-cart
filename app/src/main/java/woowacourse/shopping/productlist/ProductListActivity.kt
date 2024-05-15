@@ -3,12 +3,11 @@ package woowacourse.shopping.productlist
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
 import woowacourse.shopping.util.ViewModelFactory
 
-class ProductListActivity : AppCompatActivity(), ProductListContract.ViewAction {
+class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private lateinit var binding: ActivityProductListBinding
     private lateinit var adapter: ProductListAdapter
     private val viewModel: ProductListViewModel by viewModels { ViewModelFactory() }
