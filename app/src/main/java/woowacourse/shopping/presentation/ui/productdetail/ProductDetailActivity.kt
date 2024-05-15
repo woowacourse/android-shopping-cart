@@ -18,13 +18,20 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         get() = R.layout.activity_product_detail
 
     override fun initStartView() {
+        initActionBar()
+        initDataBinding()
+        initObserve()
+    }
+
+    private fun initActionBar() {
         supportActionBar?.title = getString(R.string.product_detail_title)
+    }
+
+    private fun initDataBinding() {
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@ProductDetailActivity
         }
-
-        initObserve()
     }
 
     private fun initObserve() {
