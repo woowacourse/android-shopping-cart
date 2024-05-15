@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.presentation.base.factory.ViewModelFactory
+import woowacourse.shopping.presentation.base.ViewModelFactory
 
 class ProductDetailActivity : AppCompatActivity() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
-import woowacourse.shopping.presentation.base.factory.ViewModelFactory
+import woowacourse.shopping.presentation.base.ViewModelFactory
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.OrderListAdapter
 
 class ShoppingCartActivity : AppCompatActivity() {
