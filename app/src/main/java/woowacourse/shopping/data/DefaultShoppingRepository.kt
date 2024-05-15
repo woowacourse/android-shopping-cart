@@ -6,11 +6,15 @@ class DefaultShoppingRepository : ShoppingRepository {
     override fun products(amount: Int): List<Product> =
         listOf(
             Product(
-                1, 1000, "오둥이",
+                1,
+                1000,
+                "오둥이",
                 "https://item.kakaocdn.net/do/8fb89536158119f901780df1ba18493182f3bd8c9735553d03f6f982e10ebe70",
             ),
             Product(
-                2, 1000, "오둥이",
+                2,
+                1000,
+                "오둥이",
                 "https://item.kakaocdn.net/do/8fb89536158119f901780df1ba18493182f3bd8c9735553d03f6f982e10ebe70",
             ),
             Product(
@@ -30,6 +34,6 @@ class DefaultShoppingRepository : ShoppingRepository {
                 1000,
                 "꼬상꼬상",
                 "https://i.namu.wiki/i/YvceZuAFsjYzbrTKYS09muExzVUw0f5JFBTAOLeCJbyeKghRLpkDnc5_XmQ9KvOpyRqz3zSWVZq5DpeW0HToWQ.webp",
-            )
+            ),
         )
 }

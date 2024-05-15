@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.title}"
+            android:text="@{product.name}"
             android:textAlignment="center"
             android:textAppearance="@style/H2"
             app:layout_constraintEnd_toEndOf="parent"

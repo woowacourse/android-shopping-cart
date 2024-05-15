@@ -24,5 +24,11 @@ class ProductDetailFragment :
 
     companion object {
         val TAG: String? = ProductDetailFragment::class.java.canonicalName
+        const val PRODUCT_ID = "PRODUCT_ID"
+
+        fun args(id: Long): Bundle =
+            Bundle().apply {
+                putLong(PRODUCT_ID, id)
+            }
     }
 }

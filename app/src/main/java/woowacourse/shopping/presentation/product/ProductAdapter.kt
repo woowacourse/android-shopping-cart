@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 
-class ProductAdapter(private val onClickItem: (position: Int) -> Unit) :
+class ProductAdapter(private val onClickItem: (id: Long) -> Unit) :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
     private var products: List<ProductUi> = emptyList()
 
@@ -40,11 +40,11 @@ class ProductAdapter(private val onClickItem: (position: Int) -> Unit) :
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,
-        private val onClickItem: (position: Int) -> Unit,
+        private val onClickItem: (id: Long) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(product: ProductUi) {
             binding.product = product
-            binding.root.setOnClickListener { onClickItem(absoluteAdapterPosition) }
+            binding.root.setOnClickListener { onClickItem(product.id) }
         }
     }
 }
