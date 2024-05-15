@@ -2,9 +2,11 @@ package woowacourse.shopping.presentation.bindingadapters
 
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.presentation.shopping.ShoppingAdapter
@@ -39,4 +41,12 @@ fun setPrice(
     price: Long,
 ) {
     view.text = view.context.getString(R.string.price_format, price)
+}
+
+@BindingAdapter("app:selectedBasedOn")
+fun setSelectedBasedOn(
+    button: AppCompatButton,
+    isSelected: Boolean,
+) {
+    button.isSelected = isSelected
 }

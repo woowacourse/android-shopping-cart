@@ -13,6 +13,8 @@ interface CartRepository {
     fun find(cartItemId: Long): CartItem
 
     fun findAll(): ShoppingCart
+    
+    fun findAllPagedItems(page: Int, pageSize: Int): ShoppingCart
 
     fun delete(cartItemId: Long)
 

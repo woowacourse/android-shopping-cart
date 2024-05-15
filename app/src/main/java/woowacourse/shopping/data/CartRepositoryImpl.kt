@@ -48,6 +48,21 @@ class CartRepositoryImpl : CartRepository {
         return ShoppingCart(cartItems)
     }
 
+    override fun findAllPagedItems(page: Int, pageSize: Int): ShoppingCart {
+        var cartItems: List<CartItem> = emptyList()
+        val offset = page * pageSize
+        
+        val thread =
+            Thread {
+                cartItems = dao.findAllPaged(offset = offset, limit = pageSize)
+                    .map { it.toDomainModel() }
+            }
+        thread.start()
+        thread.join()
+
+        return ShoppingCart(cartItems)
+    }
+
     override fun delete(cartItemId: Long) {
         val thread =
             Thread {
