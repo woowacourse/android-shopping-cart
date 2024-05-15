@@ -26,17 +26,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
+        initializeProductAdapter()
+        initializeToolbar()
+        updateProducts()
+    }
+
+    private fun initializeProductAdapter() {
         adapter =
             ProductAdapter(onClickProductItem = { productId ->
                 ProductDetailActivity.newIntent(this, productId)
                     .also { startActivity(it) }
             })
         binding.rvMainProduct.adapter = adapter
-        productsViewModel.products.observe(this) {
-            adapter.updateProducts(it)
-        }
-        productsViewModel.update(productRepository) // TODO: 네이밍 고민. load vs update vs ...
+    }
 
+    private fun initializeToolbar() {
         binding.toolbarMain.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.item_cart -> {
@@ -46,5 +50,12 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
+    }
+
+    private fun updateProducts() {
+        productsViewModel.products.observe(this) {
+            adapter.updateProducts(it)
+        }
+        productsViewModel.update(productRepository) // TODO: 네이밍 고민. load vs update vs ...
     }
 }

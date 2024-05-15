@@ -29,12 +29,12 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
-        initializeProduct()
         initializeToolbar()
         initializeAddCardButton()
+        updateProduct()
     }
 
-    private fun initializeProduct() {
+    private fun updateProduct() {
         productViewModel.load(productRepository, productId())
         productViewModel.product.observe(this) {
             binding.product = it

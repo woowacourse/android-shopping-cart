@@ -23,19 +23,30 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
+        initializeCartAdapter()
+        initializeToolbar()
+        updateCart()
+    }
+
+    private fun initializeCartAdapter() {
         adapter =
             CartAdapter(onClickExit = {
                 cartViewModel.delete(cartRepository, it)
                 cartViewModel.load(cartRepository)
             })
         binding.rvCart.adapter = adapter
+    }
+
+    private fun initializeToolbar() {
+        binding.toolbarCart.setNavigationOnClickListener {
+            finish()
+        }
+    }
+
+    private fun updateCart() {
         cartViewModel.cart.observe(this) {
             adapter.updateCart(it.map { entry -> ProductRepositoryImpl.find(entry.key) })
         }
         cartViewModel.load(cartRepository)
-
-        binding.toolbarCart.setNavigationOnClickListener {
-            finish()
-        }
     }
 }
