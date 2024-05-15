@@ -40,6 +40,8 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         binding.rvShopping.layoutManager = layoutManager
         binding.rvShopping.adapter = adapter
 
+        viewModel.loadProductByOffset()
+
         viewModel.products.observe(this) {
             when (it) {
                 is UiState.Finish -> {

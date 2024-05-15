@@ -14,10 +14,6 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
     private val _products = MutableLiveData<UiState<List<Product>>>(UiState.None)
     val products get() = _products
 
-    init {
-        loadProductByOffset()
-    }
-
     fun loadProductByOffset() {
         repository.load(offSet, 20).onSuccess {
             if (_products.value is UiState.None || _products.value is UiState.Error) {
@@ -27,7 +23,11 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
             }
             offSet++
         }.onFailure {
-            _products.value = UiState.Error("LOAD ERROR")
+            _products.value = UiState.Error(LOAD_ERROR)
         }
+    }
+
+    companion object {
+        const val LOAD_ERROR = "아이템을 끝까지 불러왔습니다"
     }
 }

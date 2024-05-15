@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.cart
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import androidx.activity.viewModels
@@ -19,7 +18,6 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
 
     private val viewModel: CartViewModel by viewModels()
 
-    @SuppressLint("SetTextI18n")
     override fun initStartView() {
         binding.rvCarts.adapter = cartAdapter
 
