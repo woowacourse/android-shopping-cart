@@ -16,6 +16,9 @@ interface CartDao {
         quantity: Int,
     )
 
+    @Query("SELECT COUNT(*) FROM cart_items")
+    fun size(): Int
+
     @Query("SELECT * FROM cart_items WHERE productId = :productId")
     fun findWithProductId(productId: Long): CartItemEntity
 

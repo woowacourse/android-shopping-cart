@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-class CartRepositoryImpl : CartRepository {
+object CartRepositoryImpl : CartRepository {
     private val dao = database.cartDao()
 
     override fun insert(
@@ -33,6 +33,14 @@ class CartRepositoryImpl : CartRepository {
         threadAction {
             dao.update(productId, currentQuantity + quantity)
         }
+    }
+
+    override fun size(): Int {
+        var size: Int = 0
+        threadAction {
+            size = dao.size()
+        }
+        return size
     }
 
     override fun findOrNullWithProductId(productId: Long): CartItem? {
