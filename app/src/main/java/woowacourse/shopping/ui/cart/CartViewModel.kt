@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.CartDao
+import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.Product
 import kotlin.math.min
 
 class CartViewModel(private val cartDao: CartDao) : ViewModel() {
-    private var pageNum = 1
+    private val cartPageManager by lazy { CartPageManager() }
     private val _pageNumber: MutableLiveData<Int> = MutableLiveData()
 
     private val _canMoveNextPage: MutableLiveData<Boolean> = MutableLiveData()
@@ -24,14 +25,14 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
     val cart: LiveData<List<Product>> get() = _cart
 
     fun loadCartItems() {
-        _pageNumber.value = pageNum
+        _pageNumber.value = cartPageManager.pageNum
 
         items.clear()
         items.addAll(cartDao.findAll())
         _cart.value = getProducts()
 
-        _canMovePreviousPage.value = canMovePreviousPage()
-        _canMoveNextPage.value = canMoveNextPage()
+        _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(items.size)
     }
 
     fun removeCartItem(productId: Long) {
@@ -41,30 +42,21 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
     }
 
     fun plusPageNum() {
-        pageNum += 1
+        cartPageManager.plusPageNum()
     }
 
     fun minusPageNum() {
-        pageNum -= 1
-    }
-
-    private fun canMovePreviousPage(): Boolean {
-        return pageNum != 1
-    }
-
-    private fun canMoveNextPage(): Boolean {
-        val fromIndex = (pageNum - 1) * PAGE_SIZE
-        val toIndex = min(fromIndex + PAGE_SIZE, items.size)
-        return toIndex != (items.size)
+        cartPageManager.minusPageNum()
     }
 
     private fun getProducts(): List<Product> {
-        val fromIndex = (pageNum - 1) * PAGE_SIZE
+        val fromIndex = (cartPageManager.pageNum - OFFSET) * PAGE_SIZE
         val toIndex = min(fromIndex + PAGE_SIZE, items.size)
         return items.toList().subList(fromIndex, toIndex)
     }
 
     companion object {
+        private const val OFFSET = 1
         private const val PAGE_SIZE = 5
     }
 }
