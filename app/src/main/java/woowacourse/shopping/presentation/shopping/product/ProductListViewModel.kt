@@ -5,34 +5,36 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.ShoppingRepository
-import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
+import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 
 class ProductListViewModel(
     private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<ProductUi>>(emptyList())
-    val products: LiveData<List<ProductUi>> get() = _products
+    private val _products = MutableLiveData<List<ShoppingUiModel>>(emptyList())
+    val products: LiveData<List<ShoppingUiModel>> = _products
 
     init {
         loadProducts()
     }
 
     fun loadProducts() {
-        val currentProductIds = _products.value.orEmpty().map { it.id }
-        _products.value =
-            shoppingRepository.products(currentProductIds, PRODUCT_AMOUNT).map { it.toUiModel() }
+        val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
+        val currentProductIds = currentProducts.map { it.id }
+
+        val newProducts = shoppingRepository.products(exceptProducts = currentProductIds)
+            .map { it.toShoppingUiModel() }
+
+        if (shoppingRepository.canLoadMoreProducts(currentProductIds)) {
+            _products.value = currentProducts + newProducts + ShoppingUiModel.Plus
+        } else {
+            _products.value = currentProducts + newProducts
+        }
     }
 
     companion object {
-        private const val PRODUCT_AMOUNT = 20
-
         fun factory(repository: ShoppingRepository): ViewModelProvider.Factory {
             return BaseViewModelFactory { ProductListViewModel(repository) }
         }
     }
-}
-
-fun Product.toUiModel(): ProductUi {
-    return ProductUi(id, name, price, imageUrl)
 }

@@ -51,4 +51,8 @@ object DummyProductDataSource : ProductDataSource {
     override fun productById(id: Long): Product? {
         return products.find { it.id == id }
     }
+
+    override fun canLoadMoreProducts(exceptProducts: List<Long>): Boolean {
+        return products.any { it.id !in exceptProducts }
+    }
 }

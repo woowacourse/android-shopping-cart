@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.shopping.product
+package woowacourse.shopping.presentation.shopping.detail
 
 data class ProductUi(
     val id: Long,

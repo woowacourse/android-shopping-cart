@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.CartRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
-import woowacourse.shopping.presentation.shopping.product.ProductUi
-import woowacourse.shopping.presentation.shopping.product.toUiModel
+import woowacourse.shopping.presentation.shopping.detail.ProductUi
+import woowacourse.shopping.presentation.shopping.toUiModel
 
 
 class ShoppingCartViewModel(

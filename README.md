@@ -24,12 +24,12 @@
 
 ### ProductList
 - Appbar 커스터 마이징
-  - [ ]: 장바구니 icon 클릭시 카트 화면으로 이동
+  - [x]: 장바구니 icon 클릭시 카트 화면으로 이동
 - [x] ProductList 화면 에서 item 클릭시 ProductDetail 화면으로 이동
 - [x] GridLayoutManager 적용한 리사이클러뷰 구현 (span 2)
 - [x] 리사이클러뷰에 ItemDecoratoion 적용
-- [ ] 더보기 버튼 추가
-- [ ] 더보기 버튼 클릭시 products 들 리사이클러뷰에 추가하기
+- [x] 더보기 버튼 추가
+- [x] 더보기 버튼 클릭시 products 들 리사이클러뷰에 추가하기
 - [ ] ui test
 
 ### ProductDetail

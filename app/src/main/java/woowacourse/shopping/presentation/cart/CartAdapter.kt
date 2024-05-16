@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.presentation.shopping.product.ProductUi
+import woowacourse.shopping.presentation.shopping.detail.ProductUi
 
 class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {

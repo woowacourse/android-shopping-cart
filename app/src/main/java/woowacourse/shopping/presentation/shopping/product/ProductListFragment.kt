@@ -11,12 +11,14 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.cart.ShoppingCartFragment
 import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
+import woowacourse.shopping.presentation.shopping.product.adpater.ProductAdapter
 import woowacourse.shopping.presentation.util.dp
 
 class ProductListFragment :
@@ -76,10 +78,15 @@ class ProductListFragment :
     private fun initViews() {
         binding?.apply {
             productAdapter =
-                ProductAdapter(onClickItem = {
-                    navigateToDetailView(it)
-                })
+                ProductAdapter(
+                    onClickItem = { navigateToDetailView(it) },
+                    onPlusItem = { viewModel.loadProducts() }
+                )
             rvProductList.adapter = productAdapter
+            rvProductList.layoutManager =
+                GridLayoutManager(requireContext(), SPAN_COUNT).apply {
+                    spanSizeLookup = spanSizeLookUp()
+                }
             rvProductList.addItemDecoration(ProductItemDecoration(12.dp))
         }
     }
@@ -101,7 +108,19 @@ class ProductListFragment :
         }
     }
 
+    private fun spanSizeLookUp() =
+        object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (productAdapter.getItemViewType(position) == ShoppingUiModel.ITEM_VIEW_TYPE_PLUS) {
+                    ShoppingUiModel.PLUS_SPAN_COUNT
+                } else {
+                    ShoppingUiModel.PRODUCT_SPAN_COUNT
+                }
+            }
+        }
+
     companion object {
         val TAG: String? = ProductListFragment::class.java.canonicalName
+        private const val SPAN_COUNT = 2
     }
 }

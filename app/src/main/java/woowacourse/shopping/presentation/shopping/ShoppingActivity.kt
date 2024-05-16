@@ -1,14 +1,15 @@
-package woowacourse.shopping.presentation.shopping.product
+package woowacourse.shopping.presentation.shopping
 
 import android.os.Bundle
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import woowacourse.shopping.R
-import woowacourse.shopping.databinding.ActivityProductBinding
+import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.presentation.base.BindingActivity
+import woowacourse.shopping.presentation.shopping.product.ProductListFragment
 
-class ProductActivity :
-    BindingActivity<ActivityProductBinding>(R.layout.activity_product) {
+class ShoppingActivity :
+    BindingActivity<ActivityShoppingBinding>(R.layout.activity_shopping) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
