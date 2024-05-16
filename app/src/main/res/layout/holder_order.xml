@@ -77,6 +77,7 @@
             tools:text="10,000원" />
 
         <ImageView
+            android:id="@+id/iv_closed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{() -> actionHandler.onClickClose(order.id)}"
