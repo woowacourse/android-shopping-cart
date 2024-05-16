@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.MainActivity
-import woowacourse.shopping.view.viewmodel.MainViewModel
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
+import woowacourse.shopping.view.viewmodel.MainViewModel
 
 class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private var _binding: FragmentShoppingCartBinding? = null
@@ -41,14 +41,14 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun initView() {
-        mainViewModel.loadPagingCartItem()
+        mainViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
         binding.onClickShoppingCart = this
         binding.currentPage = currentPage
         adapter =
             ShoppingCartAdapter(
                 onClickShoppingCart = this,
                 loadLastItem = {
-                    mainViewModel.loadPagingCartItem()
+                    mainViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
                 },
             )
         binding.rvShoppingCart.adapter = adapter
@@ -114,6 +114,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     companion object {
+        private const val CART_ITEM_LOAD_PAGING_SIZE = 5
         const val CART_ITEM_PAGE_SIZE = 3
         private const val MIN_PAGE_COUNT = 1
         const val DEFAULT_ITEM_SIZE = 0

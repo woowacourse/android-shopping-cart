@@ -17,12 +17,9 @@ class MainViewModel(
 
     var shoppingCart = ShoppingCart()
 
-    init {
-        loadPagingProduct()
-    }
-
-    fun loadPagingProduct() {
-        val pagingData = repository.loadPagingProducts(products.value?.size ?: DEFAULT_ITEM_SIZE)
+    fun loadPagingProduct(pagingSize:Int) {
+        val itemSize = products.value?.size ?: DEFAULT_ITEM_SIZE
+        val pagingData = repository.loadPagingProducts(itemSize, pagingSize)
         if (pagingData.isNotEmpty()) {
             _products.value = _products.value?.plus(pagingData)
         }
@@ -44,10 +41,11 @@ class MainViewModel(
         return repository.getProduct(productId)
     }
 
-    fun loadPagingCartItem() {
+    fun loadPagingCartItem(pagingSize:Int) {
         var pagingData = emptyList<CartItem>()
         thread {
-            pagingData = repository.loadPagingCartItems(shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE)
+            val itemSize = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
+            pagingData = repository.loadPagingCartItems(itemSize, pagingSize)
         }.join()
         if (pagingData.isNotEmpty()) {
             shoppingCart.addProducts(pagingData)

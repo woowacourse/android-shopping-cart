@@ -13,12 +13,9 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
     private val productDao = ProductDao()
     private val cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
 
-    override fun loadProducts(): List<Product> {
-        return productDao.findAll()
-    }
 
-    override fun loadPagingProducts(offset: Int): List<Product> {
-        return productDao.findPagingProducts(offset, PRODUCT_PAGING_SIZE)
+    override fun loadPagingProducts(offset: Int,pagingSize:Int): List<Product> {
+        return productDao.findPagingProducts(offset, pagingSize)
     }
 
     override fun getProduct(productId: Long): Product {
@@ -31,20 +28,11 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         return CartItem(itemId, product)
     }
 
-    override fun loadCartItems(): List<CartItem> {
-        return cartItemDao.findAll().map { it.toCartItem() }
-    }
-
-    override fun loadPagingCartItems(offset: Int): List<CartItem> {
-        return cartItemDao.findPagingCartItem(offset, CART_ITEM_PAGING_SIZE).map { it.toCartItem() }
+    override fun loadPagingCartItems(offset: Int,pagingSize:Int): List<CartItem> {
+        return cartItemDao.findPagingCartItem(offset, pagingSize).map { it.toCartItem() }
     }
 
     override fun deleteCartItem(itemId: Long) {
         cartItemDao.deleteCartItemById(itemId)
-    }
-
-    companion object {
-        private const val PRODUCT_PAGING_SIZE = 20
-        private const val CART_ITEM_PAGING_SIZE = 5
     }
 }

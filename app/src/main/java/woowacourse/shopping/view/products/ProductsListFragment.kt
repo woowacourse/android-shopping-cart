@@ -40,6 +40,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
 
     private fun initView() {
+        mainViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
         binding.onClickProduct = this
         adapter =
             ProductAdapter(
@@ -75,7 +76,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
 
     override fun clickLoadPagingData() {
-        mainViewModel.loadPagingProduct()
+        mainViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
     }
 
     private fun changeFragment(nextFragment: Fragment) {
@@ -84,5 +85,9 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             .add(R.id.fragment_container, nextFragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    companion object {
+        private const val PRODUCT_LOAD_PAGING_SIZE = 20
     }
 }

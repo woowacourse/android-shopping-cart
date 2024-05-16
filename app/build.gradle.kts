@@ -53,6 +53,7 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.test.ext:junit-ktx:1.1.5")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
@@ -72,4 +73,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     testImplementation("androidx.arch.core:core-testing:2.1.0")
+
+    testImplementation("io.mockk:mockk:1.9.3")
 }
