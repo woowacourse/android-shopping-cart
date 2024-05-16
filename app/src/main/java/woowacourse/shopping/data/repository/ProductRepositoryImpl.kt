@@ -23,9 +23,8 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         return product ?: throw NoSuchDataException()
     }
 
-    override fun addCartItem(product: Product): CartItem {
-        val itemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
-        return CartItem(itemId, product)
+    override fun addCartItem(product: Product): Long {
+        return cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
     }
 
     override fun loadPagingCartItems(offset: Int,pagingSize:Int): List<CartItem> {

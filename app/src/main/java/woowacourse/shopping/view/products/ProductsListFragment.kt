@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductListBinding
@@ -40,7 +41,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
 
     private fun initView() {
-        mainViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
+        loadPagingData()
         binding.onClickProduct = this
         adapter =
             ProductAdapter(
@@ -76,7 +77,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
 
     override fun clickLoadPagingData() {
-        mainViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
+        loadPagingData()
     }
 
     private fun changeFragment(nextFragment: Fragment) {
@@ -87,7 +88,19 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             .commit()
     }
 
+    private fun loadPagingData(){
+        runCatching {
+            mainViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
+        }.onFailure {
+            showMaxItemMessage()
+        }
+    }
+
+    private fun showMaxItemMessage() =
+        Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
+
     companion object {
         private const val PRODUCT_LOAD_PAGING_SIZE = 20
+        private const val MAX_PAGING_DATA = "모든 데이터가 로드 되었습니다."
     }
 }

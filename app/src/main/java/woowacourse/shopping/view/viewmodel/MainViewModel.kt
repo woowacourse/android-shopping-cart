@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.cart.ShoppingCartFragment.Companion.DEFAULT_ITEM_SIZE
 import kotlin.concurrent.thread
 
@@ -17,17 +18,17 @@ class MainViewModel(
 
     var shoppingCart = ShoppingCart()
 
-    fun loadPagingProduct(pagingSize:Int) {
+    fun loadPagingProduct(pagingSize: Int) {
         val itemSize = products.value?.size ?: DEFAULT_ITEM_SIZE
         val pagingData = repository.loadPagingProducts(itemSize, pagingSize)
-        if (pagingData.isNotEmpty()) {
-            _products.value = _products.value?.plus(pagingData)
-        }
+        if (pagingData.isEmpty()) throw NoSuchDataException()
+        _products.value = _products.value?.plus(pagingData)
     }
 
     fun addShoppingCartItem(product: Product) =
         thread {
-            repository.addCartItem(product)
+            val addedCartItemId = repository.addCartItem(product)
+            if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
         }
 
     fun deleteShoppingCartItem(itemId: Long) {
@@ -41,7 +42,7 @@ class MainViewModel(
         return repository.getProduct(productId)
     }
 
-    fun loadPagingCartItem(pagingSize:Int) {
+    fun loadPagingCartItem(pagingSize: Int) {
         var pagingData = emptyList<CartItem>()
         thread {
             val itemSize = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
@@ -50,5 +51,9 @@ class MainViewModel(
         if (pagingData.isNotEmpty()) {
             shoppingCart.addProducts(pagingData)
         }
+    }
+
+    companion object {
+        const val ERROR_SAVE_DATA_ID = -1L
     }
 }

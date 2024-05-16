@@ -4,7 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="onPrevButton"
+            type="java.lang.Boolean" />
+        <variable
+            name="onNextButton"
+            type="java.lang.Boolean" />
         <variable
             name="currentPage"
             type="java.lang.Integer" />
@@ -80,10 +85,10 @@
                 android:onClick="@{()->onClickShoppingCart.clickPrevPage()}"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@color/gray"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:padding="0dp"
+                android:background="@{onPrevButton ? @color/primary : @color/gray}"
                 android:src="@drawable/ic_arrow_back_24" />
 
             <TextView
@@ -100,10 +105,10 @@
                 android:onClick="@{()->onClickShoppingCart.clickNextPage()}"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:background="@color/gray"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:padding="0dp"
+                android:background="@{onNextButton ? @color/primary : @color/gray}"
                 android:src="@drawable/ic_arrow_forward_24" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
