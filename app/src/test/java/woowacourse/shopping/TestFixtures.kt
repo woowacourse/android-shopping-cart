@@ -15,7 +15,7 @@ val products =
 
 val product: Product = products.first()
 
-val dummyCarts =
+val dummyCarts: List<Cart> =
     List(3) {
         Cart(
             product = product,
