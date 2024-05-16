@@ -16,8 +16,7 @@ class MainViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
-    private var currentPage = 1
-    var shoppingCart =  ShoppingCart()
+    var shoppingCart = ShoppingCart()
 
 
     init {
@@ -30,11 +29,6 @@ class MainViewModel(
             _products.value = _products.value?.plus(pagingData)
         }
     }
-
-//    fun loadShoppingCart() = thread {
-//        val cartItems = repository.loadCartItems()
-//        shoppingCart = ShoppingCart.makeShoppingCart(cartItems)
-//    }.join()
 
     fun addShoppingCartItem(product: Product) = thread {
         repository.addCartItem(product)
@@ -56,7 +50,6 @@ class MainViewModel(
         thread {
             pagingData = repository.loadPagingCartItems(shoppingCart.cartItems.value?.size ?: 0)
         }.join()
-        Log.d("pagingData",pagingData.toString())
         if (pagingData.isNotEmpty()) {
             shoppingCart.addProducts(pagingData)
         }

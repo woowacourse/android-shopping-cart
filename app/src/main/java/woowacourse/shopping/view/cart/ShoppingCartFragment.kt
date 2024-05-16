@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.cart
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +17,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     val binding: FragmentShoppingCartBinding get() = _binding!!
     private lateinit var mainViewModel: MainViewModel
     private lateinit var adapter: ShoppingCartAdapter
+    private var currentPage = 1
+    private var totalItemSize = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,13 +37,19 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private fun initView() {
         mainViewModel.loadPagingCartItem()
         binding.onClickShoppingCart = this
-        adapter = ShoppingCartAdapter(onClickShoppingCart = this){
-            mainViewModel.loadPagingCartItem()
-        }
+        binding.currentPage = currentPage
+        adapter = ShoppingCartAdapter(
+            onClickShoppingCart = this,
+            loadLastItem = {
+                mainViewModel.loadPagingCartItem()
+            }
+        )
         binding.rvShoppingCart.adapter = adapter
-        mainViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { shoppingCart ->
-            view?.post{
-                adapter.updateCartItems(addedCartItems = shoppingCart)
+
+        mainViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { cartItems ->
+            totalItemSize = cartItems?.size ?: 0
+            view?.post {
+                updateRecyclerView()
             }
         }
     }
@@ -62,11 +69,41 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         mainViewModel.deleteShoppingCartItem(cartItemId)
     }
 
+    override fun clickPrevPage() {
+        if (currentPage > 1) {
+            binding.currentPage = --currentPage
+            updateRecyclerView()
+        }
+    }
+
+    override fun clickNextPage() {
+        if (currentPage * CART_ITEM_PAGE_SIZE < totalItemSize) {
+            binding.currentPage = ++currentPage
+            updateRecyclerView()
+        }
+    }
+
     private fun changeFragment(nextFragment: Fragment) {
         parentFragmentManager
             .beginTransaction()
             .add(R.id.fragment_container, nextFragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    private fun updateRecyclerView() {
+        val startIndex = (currentPage - 1) * CART_ITEM_PAGE_SIZE
+        val endIndex = minOf(currentPage * CART_ITEM_PAGE_SIZE, totalItemSize)
+        val newData =
+            mainViewModel.shoppingCart.cartItems.value?.subList(startIndex, endIndex) ?: emptyList()
+        adapter.updateCartItems(hasLastItem(endIndex), newData)
+    }
+
+    private fun hasLastItem(endIndex: Int): Boolean {
+        return endIndex >= (mainViewModel.shoppingCart.cartItems.value?.size ?: 0)
+    }
+
+    companion object {
+        const val CART_ITEM_PAGE_SIZE = 3
     }
 }

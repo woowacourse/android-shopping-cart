@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.cart.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -29,18 +28,17 @@ class ShoppingCartAdapter(
     override fun onBindViewHolder(holder: ShoppingCartViewHolder, position: Int) {
         val item = cartItems[position]
         holder.bind(item)
-
-        if (position == itemCount - 1) {
-
-            loadLastItem()
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCartItems(addedCartItems: List<CartItem>) {
-        val startPosition = cartItems.size
-        cartItems = cartItems + addedCartItems
-        notifyItemRangeInserted(startPosition, addedCartItems.size)
-
+    fun updateCartItems(
+        hasLastItem : Boolean,
+        cartItems: List<CartItem>,
+    ) {
+        if (hasLastItem){
+            loadLastItem()
+        }
+        this.cartItems = cartItems
+        notifyDataSetChanged()
     }
 }

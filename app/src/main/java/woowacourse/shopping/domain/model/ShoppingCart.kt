@@ -15,6 +15,7 @@ class ShoppingCart {
         _cartItems.value = _cartItems.value?.filter { it.id != itemId }
     }
 
+
     companion object {
         fun makeShoppingCart(cartItems: List<CartItem>): ShoppingCart {
             return ShoppingCart().apply {
