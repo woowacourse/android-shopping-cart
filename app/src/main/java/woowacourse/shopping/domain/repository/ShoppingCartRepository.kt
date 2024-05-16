@@ -8,6 +8,8 @@ interface ShoppingCartRepository {
 
     fun removeOrder(orderId: Int)
 
+    fun removeAllOrder()
+
     fun getPagingOrder(
         page: Int,
         pageSize: Int,

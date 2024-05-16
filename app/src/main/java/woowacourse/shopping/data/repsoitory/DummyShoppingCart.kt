@@ -38,6 +38,10 @@ object DummyShoppingCart : ShoppingCartRepository {
         orders.removeIf { it.id == orderId }
     }
 
+    override fun removeAllOrder() {
+        orders.clear()
+    }
+
     override fun getPagingOrder(
         page: Int,
         pageSize: Int,
