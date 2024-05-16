@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
@@ -11,7 +12,6 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
-import woowacourse.shopping.presentation.ui.getPriceText
 
 class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
@@ -20,30 +20,30 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
-        setTitle("Detail")
+        title = getString(R.string.detail_title)
+
         val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (id == -1L) finish()
-        viewModel.loadById(id)
 
+        viewModel.loadById(id)
         viewModel.products.observe(this) { state ->
             when (state) {
+                is UiState.None -> {
+                }
+
                 is UiState.Finish -> {
-                    Glide.with(this)
-                        .load(state.data.imgUrl)
-                        .into(binding.ivProduct)
                     binding.tvName.text = state.data.name
-                    val priceText = getPriceText(binding.root.context, state.data.price)
-                    binding.tvPriceValue.text = priceText
+                    binding.tvPriceValue.text = getString(R.string.won, state.data.price)
                     binding.tvAddCart.setOnClickListener {
                         finish()
                         viewModel.saveCartItem(state.data)
                     }
+                    Glide.with(this)
+                        .load(state.data.imgUrl)
+                        .into(binding.ivProduct)
                 }
-
-                is UiState.None -> {
-                }
-
                 is UiState.Error -> {
+                    Toast.makeText(this, getString(R.string.product_not_found), Toast.LENGTH_SHORT).show()
                 }
             }
         }

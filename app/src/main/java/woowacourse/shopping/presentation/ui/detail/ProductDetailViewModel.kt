@@ -16,7 +16,7 @@ class ProductDetailViewModel(private val productRepository: ProductRepository, p
         productRepository.loadById(productId).onSuccess {
             _products.value = UiState.Finish(it)
         }.onFailure {
-            _products.value = UiState.Error("PRODUCT NOT FOUND")
+            _products.value = UiState.Error(PRODUCT_NOT_FOUND)
         }
     }
 

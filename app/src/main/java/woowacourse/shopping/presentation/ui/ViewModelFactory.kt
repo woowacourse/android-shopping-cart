@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.remote.DummyCartRepository
 import woowacourse.shopping.data.remote.DummyProductRepository
-import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.presentation.ui.cart.CartViewModel
 import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel

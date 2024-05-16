@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.presentation.ui.getPriceText
 
 class CartAdapter(
     private val cartHandler: CartHandler,
@@ -58,6 +58,6 @@ class CartViewHolder(private val binding: ItemCartBinding, val cartHandler: Cart
             .load(item.product.imgUrl)
             .into(binding.ivCart)
         binding.tvName.text = item.product.name
-        binding.tvPrice.text = getPriceText(binding.root.context, item.product.price)
+        binding.tvPrice.text = binding.root.context.getString(R.string.won, item.product.price)
     }
 }
