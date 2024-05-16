@@ -15,14 +15,16 @@ class CartFragment : Fragment() {
             viewModel.itemsInShoppingCartPage.value ?: emptyList(),
             onClick = { deleteItemId ->
                 viewModel.deleteItem(deleteItemId)
-            }
+            },
         )
     }
     private var _binding: FragmentCartListBinding? = null
     private val binding get() = _binding!!
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentCartListBinding.inflate(inflater)
         binding.cartList.adapter = adapter
@@ -30,7 +32,10 @@ class CartFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.vm = viewModel

@@ -10,21 +10,24 @@ class CartItemRecyclerViewAdapter(
     private var values: List<Product>,
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<CartItemRecyclerViewAdapter.ViewHolder>() {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ViewHolder {
         return ViewHolder(
             HolderCartBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
+                false,
             ),
-            onClick = { id -> onClick(id) }
+            onClick = { id -> onClick(id) },
         )
-
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int,
+    ) {
         val item = values[position]
         holder.bind(item)
     }
@@ -36,17 +39,14 @@ class CartItemRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 
-
     inner class ViewHolder(
         private val binding: HolderCartBinding,
-        private val onClick: (id: Int) -> Unit
+        private val onClick: (id: Int) -> Unit,
     ) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(product: Product) {
             binding.product = product
             binding.cartProductDelete.setOnClickListener { onClick(product.id) }
         }
     }
-
 }
