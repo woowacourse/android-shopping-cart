@@ -1,13 +1,14 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
 
 interface CartRepository {
-    fun increaseQuantity(productId: Long)
+    fun increaseQuantity(product: Product)
 
-    fun decreaseQuantity(productId: Long)
+    fun decreaseQuantity(product: Product)
 
-    fun deleteCartItem(productId: Long)
+    fun deleteCartItem(product: Product)
 
     fun deleteAll()
 

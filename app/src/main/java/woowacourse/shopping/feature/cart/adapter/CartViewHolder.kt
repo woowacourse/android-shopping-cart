@@ -2,18 +2,19 @@ package woowacourse.shopping.feature.cart.adapter
 
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 
 class CartViewHolder(private val binding: ItemCartBinding) : ViewHolder(binding.root) {
     fun bind(
         onClickExit: OnClickExit,
-        product: Product,
+        cartItem: CartItem,
     ) {
-        binding.product = product
+        binding.cartItem = cartItem
         binding.ivCartExit.setOnClickListener {
-            onClickExit(product.id)
+            onClickExit(cartItem.product)
         }
     }
 }
 
-typealias OnClickExit = (productId: Long) -> Unit
+typealias OnClickExit = (product: Product) -> Unit

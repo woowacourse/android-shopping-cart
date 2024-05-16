@@ -22,7 +22,7 @@ class ProductDetailActivity : AppCompatActivity() {
         ViewModelProvider(this, ProductViewModelFactory(ProductDummyRepository))[ProductViewModel::class.java]
     }
     private val cartViewModel by lazy {
-        ViewModelProvider(this, CartViewModelFactory(CartDummyRepository))[CartViewModel::class.java]
+        ViewModelProvider(this, CartViewModelFactory(CartDummyRepository, ProductDummyRepository))[CartViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

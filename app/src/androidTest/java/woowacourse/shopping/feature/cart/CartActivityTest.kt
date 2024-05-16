@@ -19,10 +19,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.RecyclerViewItemCountAssertion
-import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.cart.CartDummyRepository
-import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
@@ -48,7 +48,8 @@ class CartActivityTest {
     @Test
     fun `장바구니의_상품_제목이_보인다`() {
         val id = productRepository.save(imageUrl, title, price)
-        cartRepository.increaseQuantity(id)
+        val product = productRepository.find(id)
+        cartRepository.increaseQuantity(product)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -60,7 +61,8 @@ class CartActivityTest {
     @Test
     fun `장바구니의_상품_가격이_보인다`() {
         val id = productRepository.save(imageUrl, title, price)
-        cartRepository.increaseQuantity(id)
+        val product = productRepository.find(id)
+        cartRepository.increaseQuantity(product)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -74,7 +76,8 @@ class CartActivityTest {
     fun `장바구니의_상품이_5개_이하인_경우_이전_페이지_버튼와_다음_페이지_버튼이_비활성화_된다`() {
         repeat(5) {
             val id = productRepository.save(imageUrl, title, price)
-            cartRepository.increaseQuantity(id)
+            val product = productRepository.find(id)
+            cartRepository.increaseQuantity(product)
         }
 
         ActivityScenario.launch(CartActivity::class.java)
@@ -89,7 +92,8 @@ class CartActivityTest {
     fun `장바구니의_상품이_6개_이상인_경우_다음_페이지_버튼이_활성화_된다`() {
         repeat(6) {
             val id = productRepository.save(imageUrl, title, price)
-            cartRepository.increaseQuantity(id)
+            val product = productRepository.find(id)
+            cartRepository.increaseQuantity(product)
         }
 
         ActivityScenario.launch(CartActivity::class.java)
@@ -102,7 +106,8 @@ class CartActivityTest {
     fun `장바구니의_상품이_6개인_경우_다음_페이지로_이동하면_하나의_상품이_보인다`() {
         repeat(6) {
             val id = productRepository.save(imageUrl, title, price)
-            cartRepository.increaseQuantity(id)
+            val product = productRepository.find(id)
+            cartRepository.increaseQuantity(product)
         }
 
         ActivityScenario.launch(CartActivity::class.java)
@@ -117,7 +122,8 @@ class CartActivityTest {
     fun `장바구니에_10개의_상품이_있고_다음_페이지로_이동하면_다음_페이지_버튼이_비활성화_된다`() {
         repeat(10) {
             val id = productRepository.save(imageUrl, title, price)
-            cartRepository.increaseQuantity(id)
+            val product = productRepository.find(id)
+            cartRepository.increaseQuantity(product)
         }
 
         ActivityScenario.launch(CartActivity::class.java)
@@ -132,7 +138,8 @@ class CartActivityTest {
     fun `장바구니에_10개의_상품이_있고_다음_페이지로_이동하면_이전_페이지_버튼이_활성화_된다`() {
         repeat(10) {
             val id = productRepository.save(imageUrl, title, price)
-            cartRepository.increaseQuantity(id)
+            val product = productRepository.find(id)
+            cartRepository.increaseQuantity(product)
         }
 
         ActivityScenario.launch(CartActivity::class.java)
@@ -146,10 +153,10 @@ class CartActivityTest {
     @Test
     fun `장바구니의_상품의_엑스_버튼을_누르면_장바구니_리스트에서_없어진다`() {
         val id = productRepository.save(imageUrl, title, price)
-        cartRepository.increaseQuantity(id)
+        val product = productRepository.find(id)
+        cartRepository.increaseQuantity(product)
 
         ActivityScenario.launch(CartActivity::class.java)
-
         onView(withId(R.id.iv_cart_exit))
             .perform(click())
 

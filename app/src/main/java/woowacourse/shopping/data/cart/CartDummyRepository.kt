@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.math.min
@@ -11,10 +12,10 @@ object CartDummyRepository : CartRepository {
 
     private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
 
-    override fun increaseQuantity(productId: Long) {
-        val oldCartItem = cart.find { it.productId == productId }
+    override fun increaseQuantity(product: Product) {
+        val oldCartItem = cart.find { it.product.id == product.id }
         if (oldCartItem == null) {
-            cart.add(CartItem(id++, productId, Quantity()))
+            cart.add(CartItem(id++, product, Quantity()))
             return
         }
         var quantity = oldCartItem.quantity
@@ -22,8 +23,8 @@ object CartDummyRepository : CartRepository {
         cart.add(oldCartItem.copy(quantity = ++quantity))
     }
 
-    override fun decreaseQuantity(productId: Long) {
-        val oldCartItem = cart.find { it.productId == productId }
+    override fun decreaseQuantity(product: Product) {
+        val oldCartItem = cart.find { it.product.id == product.id }
         oldCartItem ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
         cart.remove(oldCartItem)
         if (oldCartItem.quantity.isMin()) {
@@ -33,8 +34,8 @@ object CartDummyRepository : CartRepository {
         cart.add(oldCartItem.copy(quantity = --quantity))
     }
 
-    override fun deleteCartItem(productId: Long) {
-        cart.removeIf { it.productId == productId }
+    override fun deleteCartItem(product: Product) {
+        cart.removeIf { it.product.id == product.id }
     }
 
     override fun deleteAll() {

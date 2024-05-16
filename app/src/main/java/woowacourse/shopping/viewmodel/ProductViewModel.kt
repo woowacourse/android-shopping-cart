@@ -15,7 +15,6 @@ class ProductViewModel(private val productRepository: ProductRepository) : ViewM
 
     fun loadProduct(productId: Long) {
         _product.value = productRepository.find(productId)
-        // TODO: 잘못된 id 넘어 왔을 때 예외 처리
     }
 
     fun loadPage(

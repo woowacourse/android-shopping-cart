@@ -5,17 +5,20 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.data.cart.CartDummyRepository
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.product.ProductRepository
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
-    private lateinit var cartRepository: CartDummyRepository
+    private val cartRepository: CartRepository = CartDummyRepository
+    private val productRepository: ProductRepository = ProductDummyRepository
     private val pageSize: Int = 5
 
     @BeforeEach
     fun setUp() {
-        viewModel = CartViewModel(CartDummyRepository)
-        cartRepository = CartDummyRepository
+        viewModel = CartViewModel(cartRepository, productRepository)
         cartRepository.deleteAll()
     }
 
@@ -33,10 +36,11 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품을 삭제한다`() {
         // given
-        viewModel.add(0)
+        val product = productRepository.find(0L)
+        viewModel.add(product.id)
 
         // when
-        viewModel.delete(0)
+        viewModel.delete(product)
         viewModel.loadCount()
 
         // then
@@ -48,7 +52,8 @@ class CartViewModelTest {
     fun `한 페이지에는 5개의 장바구니 상품이 있다`() {
         // given
         repeat(pageSize) {
-            cartRepository.increaseQuantity(it.toLong())
+            val product = productRepository.find(it.toLong())
+            cartRepository.increaseQuantity(product)
         }
 
         // when
@@ -64,7 +69,8 @@ class CartViewModelTest {
     fun `장바구니 상품이 10개인 경우 5개의 상품을 불러온다`() {
         // given
         repeat(10) {
-            cartRepository.increaseQuantity(it.toLong())
+            val product = productRepository.find(it.toLong())
+            cartRepository.increaseQuantity(product)
         }
 
         // when
@@ -80,7 +86,8 @@ class CartViewModelTest {
     fun `장바구니에 6개의 상품을 담았다면 장바구니 상품 수는 6이다`() {
         // given
         repeat(6) {
-            cartRepository.increaseQuantity(it.toLong())
+            val product = productRepository.find(it.toLong())
+            cartRepository.increaseQuantity(product)
         }
 
         // when

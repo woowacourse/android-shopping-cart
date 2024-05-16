@@ -14,7 +14,10 @@ class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
     private lateinit var adapter: CartAdapter
     private val cartViewModel by lazy {
-        ViewModelProvider(this, CartViewModelFactory(CartDummyRepository))[CartViewModel::class.java]
+        ViewModelProvider(
+            this,
+            CartViewModelFactory(CartDummyRepository, ProductDummyRepository),
+        )[CartViewModel::class.java]
     }
     private var page: Int = 0
 
@@ -46,7 +49,7 @@ class CartActivity : AppCompatActivity() {
         }
 
         cartViewModel.cart.observe(this) {
-            adapter.updateCart(it.map { cartItem -> ProductDummyRepository.find(cartItem.productId) })
+            adapter.updateCart(it)
         }
     }
 
