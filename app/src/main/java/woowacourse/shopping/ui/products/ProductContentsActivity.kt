@@ -36,7 +36,7 @@ class ProductContentsActivity : AppCompatActivity() {
     }
 
     private fun setProductAdapter() {
-        binding.rvProducts.layoutManager = GridLayoutManager(this, 2)
+        binding.rvProducts.layoutManager = GridLayoutManager(this, SPAN_COUNT)
         adapter =
             ProductAdapter { productId ->
                 ProductDetailActivity.startActivity(this, productId)
@@ -98,6 +98,7 @@ class ProductContentsActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val SPAN_COUNT = 2
         private const val OFFSET = 1
     }
 }

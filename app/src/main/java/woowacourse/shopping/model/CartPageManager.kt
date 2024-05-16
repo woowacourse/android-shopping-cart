@@ -12,6 +12,7 @@ class CartPageManager {
 
     fun minusPageNum() {
         pageNum -= OFFSET
+        pageNum = pageNum.coerceAtLeast(DEFAULT_PAGE_NUM)
     }
 
     fun canMovePreviousPage(): Boolean {

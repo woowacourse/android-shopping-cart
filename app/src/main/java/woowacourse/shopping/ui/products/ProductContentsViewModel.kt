@@ -8,7 +8,7 @@ import woowacourse.shopping.model.ProductDao
 import kotlin.math.min
 
 class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel() {
-    private var currentOffset = 0
+    private var currentOffset = DEFAULT_OFFSET
     private val items: MutableList<Product> = mutableListOf()
 
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
@@ -29,6 +29,7 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
     }
 
     companion object {
+        private const val DEFAULT_OFFSET = 0
         private const val LOAD_LIMIT = 20
     }
 }
