@@ -11,7 +11,9 @@ import kotlin.math.min
 class CartViewModel : ViewModel() {
     private val productStore = DummyProductStore()
 
-    private val productIds: List<Int> = ShoppingCart.productIds
+    private var _productIds: List<Int> = ShoppingCart.productIds
+    private val productIds: List<Int>
+        get() = _productIds
 
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
@@ -30,6 +32,7 @@ class CartViewModel : ViewModel() {
         ShoppingCart.delete(productId)
         _itemsInShoppingCartPage.value =
             _itemsInShoppingCartPage.value?.filter { it.id != productId }?.toMutableList()
+        _productIds = ShoppingCart.productIds
     }
 
     fun nextPage() {
