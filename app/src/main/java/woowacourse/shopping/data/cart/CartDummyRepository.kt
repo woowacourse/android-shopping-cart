@@ -5,7 +5,7 @@ import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.math.min
 
-object CartRepositoryImpl : CartRepository {
+object CartDummyRepository : CartRepository {
     private val cart: MutableList<CartItem> = mutableListOf()
     private var id: Long = 0L
 

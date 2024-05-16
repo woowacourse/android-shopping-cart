@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var adapter: ProductAdapter
     private val productViewModel by lazy {
-        ViewModelProvider(this, ProductViewModelFactory(ProductRepositoryImpl))[ProductViewModel::class.java]
+        ViewModelProvider(this, ProductViewModelFactory(ProductDummyRepository))[ProductViewModel::class.java]
     }
     private var page: Int = 0
 

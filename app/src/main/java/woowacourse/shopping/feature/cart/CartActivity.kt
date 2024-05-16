@@ -3,8 +3,8 @@ package woowacourse.shopping.feature.cart
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.cart.CartDummyRepository
+import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.viewmodel.CartViewModel
@@ -14,7 +14,7 @@ class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
     private lateinit var adapter: CartAdapter
     private val cartViewModel by lazy {
-        ViewModelProvider(this, CartViewModelFactory(CartRepositoryImpl))[CartViewModel::class.java]
+        ViewModelProvider(this, CartViewModelFactory(CartDummyRepository))[CartViewModel::class.java]
     }
     private var page: Int = 0
 
@@ -46,7 +46,7 @@ class CartActivity : AppCompatActivity() {
         }
 
         cartViewModel.cart.observe(this) {
-            adapter.updateCart(it.map { cartItem -> ProductRepositoryImpl.find(cartItem.productId) })
+            adapter.updateCart(it.map { cartItem -> ProductDummyRepository.find(cartItem.productId) })
         }
     }
 

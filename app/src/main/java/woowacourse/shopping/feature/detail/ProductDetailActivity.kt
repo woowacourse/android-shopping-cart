@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartRepositoryImpl
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.cart.CartDummyRepository
+import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.viewmodel.CartViewModel
@@ -19,10 +19,10 @@ import woowacourse.shopping.viewmodel.ProductViewModel
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
     private val productViewModel by lazy {
-        ViewModelProvider(this, ProductViewModelFactory(ProductRepositoryImpl))[ProductViewModel::class.java]
+        ViewModelProvider(this, ProductViewModelFactory(ProductDummyRepository))[ProductViewModel::class.java]
     }
     private val cartViewModel by lazy {
-        ViewModelProvider(this, CartViewModelFactory(CartRepositoryImpl))[CartViewModel::class.java]
+        ViewModelProvider(this, CartViewModelFactory(CartDummyRepository))[CartViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

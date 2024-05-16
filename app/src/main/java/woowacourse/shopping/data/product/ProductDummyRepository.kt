@@ -3,7 +3,7 @@ package woowacourse.shopping.data.product
 import woowacourse.shopping.model.Product
 import kotlin.math.min
 
-object ProductRepositoryImpl : ProductRepository {
+object ProductDummyRepository : ProductRepository {
     private val products: MutableMap<Long, Product> = mutableMapOf()
     private var id: Long = 0L
 

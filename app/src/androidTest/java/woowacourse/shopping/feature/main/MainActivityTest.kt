@@ -21,7 +21,7 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.RecyclerViewItemCountAssertion
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.data.product.ProductRepositoryImpl
+import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
@@ -32,7 +32,7 @@ class MainActivityTest {
     val activityRule: ActivityScenarioRule<MainActivity>
 
     init {
-        val productRepository: ProductRepository = ProductRepositoryImpl
+        val productRepository: ProductRepository = ProductDummyRepository
         productRepository.deleteAll()
         repeat(30) {
             productRepository.save(imageUrl, "$title $it", price + it)

@@ -4,18 +4,18 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.cart.CartRepositoryImpl
+import woowacourse.shopping.data.cart.CartDummyRepository
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
-    private lateinit var cartRepository: CartRepositoryImpl
+    private lateinit var cartRepository: CartDummyRepository
     private val pageSize: Int = 5
 
     @BeforeEach
     fun setUp() {
-        viewModel = CartViewModel(CartRepositoryImpl)
-        cartRepository = CartRepositoryImpl
+        viewModel = CartViewModel(CartDummyRepository)
+        cartRepository = CartDummyRepository
         cartRepository.deleteAll()
     }
 
