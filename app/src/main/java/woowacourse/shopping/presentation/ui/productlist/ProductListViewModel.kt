@@ -2,7 +2,6 @@ package woowacourse.shopping.presentation.ui.productlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.repository.ProductListRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
@@ -11,7 +10,7 @@ import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
 
 class ProductListViewModel(
-    private val productListRepository: ProductListRepository = DummyProductList,
+    private val productListRepository: ProductListRepository,
 ) : BaseViewModel(), ProductListActionHandler {
     private val _uiState: MutableLiveData<ProductListUiState> =
         MutableLiveData(ProductListUiState())
