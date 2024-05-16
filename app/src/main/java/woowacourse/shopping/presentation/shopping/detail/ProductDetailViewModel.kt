@@ -13,7 +13,10 @@ class ProductDetailViewModel(private val shoppingRepository: ShoppingRepository)
     private val _product = MutableLiveData<ProductUi>()
     val product: LiveData<ProductUi> get() = _product
     fun loadProduct(id: Long) {
-        _product.value = shoppingRepository.productById(id).toUiModel()
+        val product = shoppingRepository.productById(id)
+        if (product != null) {
+            _product.value = product.toUiModel()
+        }
     }
 
     companion object {

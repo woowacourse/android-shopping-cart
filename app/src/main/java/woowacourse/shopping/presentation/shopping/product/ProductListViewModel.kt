@@ -19,11 +19,13 @@ class ProductListViewModel(
     }
 
     fun loadProducts() {
-        _products.value = shoppingRepository.products(PRODUCT_AMOUNT).map { it.toUiModel() }
+        val currentProductIds = _products.value.orEmpty().map { it.id }
+        _products.value =
+            shoppingRepository.products(currentProductIds, PRODUCT_AMOUNT).map { it.toUiModel() }
     }
 
     companion object {
-        private const val PRODUCT_AMOUNT = 10
+        private const val PRODUCT_AMOUNT = 20
 
         fun factory(repository: ShoppingRepository): ViewModelProvider.Factory {
             return BaseViewModelFactory { ProductListViewModel(repository) }
