@@ -1,12 +1,9 @@
 package woowacourse.shopping.domain
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class ImageUrlTest {
-
     @Test
     fun `ImageUrl은 url의 문자열 값을 갖는다`() {
         val imageUrl = ImageUrl(TEST_URL_STRING)

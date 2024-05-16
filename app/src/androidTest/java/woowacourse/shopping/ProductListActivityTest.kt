@@ -31,19 +31,19 @@ class ProductListActivityTest {
 
     @Test
     fun `상품_목록에는_상품의_이름과_가격이_나타난다`() {
-        repeat(4){
+        repeat(4) {
             onView(withId(R.id.rcv_product_list))
                 .perform(
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                         it,
-                        checkChildViewTextIsDisplayed(R.id.tv_product_list_name)
-                    )
+                        checkChildViewTextIsDisplayed(R.id.tv_product_list_name),
+                    ),
                 )
                 .perform(
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                         it,
-                        checkChildViewTextIsDisplayed(R.id.tv_product_list_price)
-                    )
+                        checkChildViewTextIsDisplayed(R.id.tv_product_list_price),
+                    ),
                 )
         }
     }
@@ -51,55 +51,53 @@ class ProductListActivityTest {
     @Test
     fun `상품_목록에는_상품의_이미지가_나타난다`() {
         Thread.sleep(5000) // 5초 대기
-        repeat(4){
+        repeat(4) {
             onView(withId(R.id.rcv_product_list))
                 .perform(
                     RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                         it,
-                        checkChildViewImageIsDisplayed(R.id.iv_product_item)
-                    )
+                        checkChildViewImageIsDisplayed(R.id.iv_product_item),
+                    ),
                 )
         }
     }
 
-    private fun checkChildViewTextIsDisplayed(
-        id: Int,
-    ) = object: ViewAction {
-        override fun getDescription(): String {
-            return "Check if text(id: $id) of child view is displayed"
+    private fun checkChildViewTextIsDisplayed(id: Int) =
+        object : ViewAction {
+            override fun getDescription(): String {
+                return "Check if text(id: $id) of child view is displayed"
+            }
+
+            override fun getConstraints(): Matcher<View> {
+                return allOf(isDisplayed(), isAssignableFrom(View::class.java))
+            }
+
+            override fun perform(
+                uiController: UiController,
+                view: View,
+            ) {
+                val textView = view.findViewById<TextView>(id)
+                assertThat(textView.text).isNotBlank()
+            }
         }
 
-        override fun getConstraints(): Matcher<View> {
-            return allOf(isDisplayed(), isAssignableFrom(View::class.java))
-        }
+    private fun checkChildViewImageIsDisplayed(id: Int) =
+        object : ViewAction {
+            override fun getDescription(): String {
+                return "Check if image(id: $id) of child view is displayed"
+            }
 
-        override fun perform(
-            uiController: UiController,
-            view: View,
-        ) {
-            val textView = view.findViewById<TextView>(id)
-            assertThat(textView.text).isNotBlank()
-        }
-    }
+            override fun getConstraints(): Matcher<View> {
+                return allOf(isDisplayed(), isAssignableFrom(View::class.java))
+            }
 
-    private fun checkChildViewImageIsDisplayed(
-        id: Int,
-    ) = object: ViewAction {
-        override fun getDescription(): String {
-            return "Check if image(id: $id) of child view is displayed"
+            override fun perform(
+                uiController: UiController,
+                view: View,
+            ) {
+                val imageView = view.findViewById<ImageView>(id)
+                assertThat(imageView).isNotNull()
+                assertThat(imageView.drawable).isNotNull()
+            }
         }
-
-        override fun getConstraints(): Matcher<View> {
-            return allOf(isDisplayed(), isAssignableFrom(View::class.java))
-        }
-
-        override fun perform(
-            uiController: UiController,
-            view: View,
-        ) {
-            val imageView = view.findViewById<ImageView>(id)
-            assertThat(imageView).isNotNull()
-            assertThat(imageView.drawable).isNotNull()
-        }
-    }
 }
