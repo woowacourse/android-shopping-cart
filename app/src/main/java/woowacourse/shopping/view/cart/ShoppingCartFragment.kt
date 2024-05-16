@@ -11,7 +11,6 @@ import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.MainActivity
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
-import woowacourse.shopping.view.products.ProductsListFragment
 import woowacourse.shopping.view.viewmodel.MainViewModel
 
 class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
@@ -92,7 +91,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         if (isExistNextPage()) {
             binding.currentPage = ++currentPage
             updateRecyclerView()
-        }else{
+        } else {
             showMaxItemMessage()
         }
     }
@@ -118,21 +117,20 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         return endIndex >= (mainViewModel.shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE)
     }
 
-    private fun isExistPrevPage(): Boolean{
+    private fun isExistPrevPage(): Boolean {
         return currentPage > MIN_PAGE_COUNT
     }
 
-    private fun isExistNextPage(): Boolean{
+    private fun isExistNextPage(): Boolean {
         return currentPage * CART_ITEM_PAGE_SIZE < totalItemSize
     }
 
-    private fun updateImageButtonColor(){
+    private fun updateImageButtonColor() {
         binding.onPrevButton = isExistPrevPage()
         binding.onNextButton = isExistNextPage()
     }
 
-    private fun showMaxItemMessage() =
-        Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
+    private fun showMaxItemMessage() = Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
 
     companion object {
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5

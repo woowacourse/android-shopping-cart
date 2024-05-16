@@ -84,14 +84,11 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         }
     }
 
-    private fun showLoadErrorMessage() =
-        Toast.makeText(this.context, ERROR_DATA_LOAD_MESSAGE, Toast.LENGTH_SHORT).show()
+    private fun showLoadErrorMessage() = Toast.makeText(this.context, ERROR_DATA_LOAD_MESSAGE, Toast.LENGTH_SHORT).show()
 
-    private fun showAddCartSuccessMessage() =
-        Toast.makeText(this.context, SUCCESS_SAVE_DATA, Toast.LENGTH_SHORT).show()
+    private fun showAddCartSuccessMessage() = Toast.makeText(this.context, SUCCESS_SAVE_DATA, Toast.LENGTH_SHORT).show()
 
-    private fun showAddCartErrorMessage() =
-        Toast.makeText(this.context, ERROR_SAVE_DATA, Toast.LENGTH_SHORT).show()
+    private fun showAddCartErrorMessage() = Toast.makeText(this.context, ERROR_SAVE_DATA, Toast.LENGTH_SHORT).show()
 
     companion object {
         fun createBundle(id: Long): Bundle {

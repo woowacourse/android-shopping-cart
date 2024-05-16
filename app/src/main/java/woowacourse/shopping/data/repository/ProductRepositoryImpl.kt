@@ -13,8 +13,10 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
     private val productDao = ProductDao()
     private val cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
 
-
-    override fun loadPagingProducts(offset: Int,pagingSize:Int): List<Product> {
+    override fun loadPagingProducts(
+        offset: Int,
+        pagingSize: Int,
+    ): List<Product> {
         return productDao.findPagingProducts(offset, pagingSize)
     }
 
@@ -27,7 +29,10 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         return cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
     }
 
-    override fun loadPagingCartItems(offset: Int,pagingSize:Int): List<CartItem> {
+    override fun loadPagingCartItems(
+        offset: Int,
+        pagingSize: Int,
+    ): List<CartItem> {
         return cartItemDao.findPagingCartItem(offset, pagingSize).map { it.toCartItem() }
     }
 

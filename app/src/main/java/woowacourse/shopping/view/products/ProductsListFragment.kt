@@ -88,7 +88,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             .commit()
     }
 
-    private fun loadPagingData(){
+    private fun loadPagingData() {
         runCatching {
             mainViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
         }.onFailure {
@@ -96,8 +96,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         }
     }
 
-    private fun showMaxItemMessage() =
-        Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
+    private fun showMaxItemMessage() = Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
 
     companion object {
         private const val PRODUCT_LOAD_PAGING_SIZE = 20
