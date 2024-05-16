@@ -26,8 +26,9 @@
         <activity
             android:name=".productdetail.ProductDetailActivity"
             android:exported="false" />
-        <activity android:name=".shoppingcart.ShoppingCartActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".shoppingcart.ShoppingCartActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="preloaded_fonts"

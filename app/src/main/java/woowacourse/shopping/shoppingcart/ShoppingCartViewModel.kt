@@ -21,19 +21,20 @@ class ShoppingCartViewModel(
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(DEFAULT_CURRENT_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
 
-    val isLeftBtnEnable = MediatorLiveData<Boolean>(false).apply {
-        addSource(_currentPage) { value = checkIsLeftBtnEnable() }
-    }
+    val isLeftBtnEnable =
+        MediatorLiveData(false).apply {
+            addSource(_currentPage) { value = checkIsLeftBtnEnable() }
+        }
 
-    val isRightBtnEnable = MediatorLiveData<Boolean>(false).apply {
-        addSource(_currentPage) { value = checkIsRightBtnEnable() }
-        addSource(totalSize) { value = checkIsRightBtnEnable() }
-    }
+    val isRightBtnEnable =
+        MediatorLiveData(false).apply {
+            addSource(_currentPage) { value = checkIsRightBtnEnable() }
+            addSource(totalSize) { value = checkIsRightBtnEnable() }
+        }
 
     private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(1)?.not() ?: false
 
-    private fun checkIsRightBtnEnable() =
-        (totalSize.value != 0) && (_currentPage.value?.equals(totalSize.value))?.not() ?: false
+    private fun checkIsRightBtnEnable() = (totalSize.value != 0) && (_currentPage.value?.equals(totalSize.value))?.not() ?: false
 
     fun updatePageSize() {
         val totalItemSize = repository.shoppingCartSize()
