@@ -12,7 +12,7 @@ class CartFragment : Fragment() {
     private val viewModel: CartViewModel by viewModels()
     private val adapter: CartItemRecyclerViewAdapter by lazy {
         CartItemRecyclerViewAdapter(
-            viewModel.itemsInShoppingCart.value ?: emptyList(),
+            viewModel.itemsInShoppingCartPage.value ?: emptyList(),
             onClick = { deleteItemId ->
                 viewModel.deleteItem(deleteItemId)
             }
@@ -27,8 +27,6 @@ class CartFragment : Fragment() {
         _binding = FragmentCartListBinding.inflate(inflater)
         binding.cartList.adapter = adapter
 
-
-
         return binding.root
     }
 
@@ -41,7 +39,13 @@ class CartFragment : Fragment() {
         binding.productDetailToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
-        viewModel.itemsInShoppingCart.observe(viewLifecycleOwner) {
+
+        viewModel.currentPage.observe(viewLifecycleOwner) {
+            viewModel.updateItemsInShoppingCart()
+            adapter.updateData(viewModel.itemsInShoppingCartPage.value ?: emptyList())
+        }
+
+        viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) {
             adapter.updateData(it)
         }
     }

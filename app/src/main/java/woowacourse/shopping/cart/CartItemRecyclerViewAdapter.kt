@@ -29,7 +29,7 @@ class CartItemRecyclerViewAdapter(
         holder.bind(item)
     }
 
-    override fun getItemCount(): Int = values.size.coerceAtMost(3)
+    override fun getItemCount(): Int = values.size.coerceAtMost(5)
 
     fun updateData(newData: List<Product>) {
         this.values = newData

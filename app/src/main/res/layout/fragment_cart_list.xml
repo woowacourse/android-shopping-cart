@@ -46,6 +46,7 @@
             app:layoutManager="LinearLayoutManager"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintTop_toBottomOf="@id/product_detail_toolbar"
+            app:layout_constraintBottom_toTopOf="@id/cart_list_page_number"
             tools:context=".cart.CartFragment"
             tools:itemCount="3"
             tools:listitem="@layout/holder_cart" />
@@ -67,7 +68,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="50dp"
             android:text="@{String.valueOf(vm.currentPage)}"
+            android:layout_marginTop="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cart_list"
             app:layout_constraintEnd_toStartOf="@id/cart_list_right_page_button"
             app:layout_constraintStart_toEndOf="@id/cart_list_left_page_button" />
 
