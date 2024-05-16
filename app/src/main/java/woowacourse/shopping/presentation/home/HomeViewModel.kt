@@ -16,16 +16,20 @@ class HomeViewModel(
     val products: LiveData<List<Product>>
         get() = _products
 
-    private val _loadingAvailable: MutableLiveData<Boolean> = MutableLiveData(true)
-    val loadingAvailable: LiveData<Boolean>
-        get() = _loadingAvailable
+    private val _loadStatus: MutableLiveData<LoadStatus> = MutableLiveData(LoadStatus())
+    val loadStatus: LiveData<LoadStatus>
+        get() = _loadStatus
 
     fun loadProducts() {
-        _loadingAvailable.value = false
+        _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
         _products.value = productRepository.fetchSinglePage(page++)
 
         products.value?.let {
-            _loadingAvailable.value = productRepository.fetchSinglePage(page).isNotEmpty()
+            _loadStatus.value =
+                loadStatus.value?.copy(
+                    loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
+                    isLoadingPage = false,
+                )
         }
     }
 }

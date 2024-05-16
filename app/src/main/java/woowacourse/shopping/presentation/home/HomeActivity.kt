@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.DefaultProducts
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
@@ -14,7 +15,7 @@ import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 
 // TODO RecyclerView에 로딩 아이템 추가
-class HomeActivity : AppCompatActivity(), ProductItemClickListener {
+class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickListener {
     private val binding: ActivityHomeBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_home)
     }
@@ -24,10 +25,25 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener {
             HomeViewModelFactory(ProductRepositoryImpl(DefaultProducts)),
         )[HomeViewModel::class.java]
     }
-    private val adapter = ProductAdapter(mutableListOf(), this)
+    private val adapter: ProductAdapter by lazy {
+        ProductAdapter(mutableListOf(), viewModel.loadStatus.value ?: LoadStatus(), this, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val layoutManager = GridLayoutManager(this, 2)
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (adapter.getItemViewType(position)) {
+                        ProductAdapter.TYPE_PRODUCT -> 1
+                        ProductAdapter.TYPE_LOAD -> 2
+                        else -> throw IllegalArgumentException("유효하지 않은 뷰 타입입니다.")
+                    }
+                }
+            }
+        binding.rvHome.layoutManager = layoutManager
 
         binding.productAdapter = adapter
         binding.viewModel = viewModel
@@ -36,6 +52,9 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener {
         viewModel.loadProducts()
         viewModel.products.observe(this) {
             adapter.addProducts(it)
+        }
+        viewModel.loadStatus.observe(this) {
+            adapter.updateLoadStatus(it)
         }
 
         setSupportActionBar(binding.toolbarHome)
@@ -58,5 +77,9 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener {
 
     override fun onProductItemClick(id: Long) {
         startActivity(DetailActivity.newIntent(this, id))
+    }
+
+    override fun onLoadClick() {
+        viewModel.loadProducts()
     }
 }
