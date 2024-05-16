@@ -27,11 +27,16 @@ class CartFragment : Fragment() {
         _binding = FragmentCartListBinding.inflate(inflater)
         binding.cartList.adapter = adapter
 
+
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
 
         binding.productDetailToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
