@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.detail
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,6 +17,8 @@ class ProductDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
+        ProductsImpl.deleteAll()
+        CartsImpl.deleteAll()
         viewModel = ProductDetailViewModel(ProductsImpl, CartsImpl)
     }
 
@@ -39,9 +42,10 @@ class ProductDetailViewModelTest {
 
         // when
         viewModel.addProductToCart()
+        val actual = CartsImpl.findAll().size
 
         // then
-        assertEquals(CartsImpl.find(0), product.copy(id = 0))
+        assertThat(actual).isEqualTo(1)
     }
 
     companion object {

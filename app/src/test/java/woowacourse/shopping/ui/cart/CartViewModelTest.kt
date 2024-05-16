@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.cart
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -16,6 +17,11 @@ class CartViewModelTest {
     @BeforeEach
     fun setUp() {
         viewModel = CartViewModel(CartsImpl)
+    }
+
+    @AfterEach
+    fun tearDown() {
+        CartsImpl.deleteAll()
     }
 
     @Test
@@ -47,12 +53,13 @@ class CartViewModelTest {
     fun `상품을 지울 수 있어야 한다`() {
         // given
         CartsImpl.save(CHAIR)
-        CartsImpl.save(CAR)
+        val productId = CartsImpl.save(CAR)
         CartsImpl.save(UMBRELLA)
 
         // when
         viewModel.loadCartItems()
-        viewModel.removeCartItem(1)
+        viewModel.removeCartItem(productId)
+        val actual = CartsImpl.findAll().size
 
         // then
         assertThat(viewModel.cart.getOrAwaitValue()[0].name).isEqualTo("의자")
