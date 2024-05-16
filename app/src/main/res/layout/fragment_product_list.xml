@@ -5,11 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
             name="isVisible"
             type="Boolean" />
+
         <variable
             name="onClickProduct"
             type="woowacourse.shopping.view.products.OnClickProducts" />

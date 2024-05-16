@@ -11,7 +11,6 @@ class ProductViewHolder(
     private val binding: ItemProductBinding,
     private val onClickProducts: OnClickProducts,
 ) : RecyclerView.ViewHolder(binding.root) {
-
     fun bind(product: Product) {
         binding.product = product
         binding.onClickProduct = onClickProducts

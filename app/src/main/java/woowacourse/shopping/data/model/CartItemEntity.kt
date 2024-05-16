@@ -10,12 +10,12 @@ import woowacourse.shopping.domain.model.Product
 data class CartItemEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val product: Product
+    val product: Product,
 ) {
     fun toCartItem(): CartItem {
         return CartItem(
             id = id,
-            product = product
+            product = product,
         )
     }
 

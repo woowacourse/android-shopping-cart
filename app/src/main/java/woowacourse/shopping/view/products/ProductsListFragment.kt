@@ -20,27 +20,32 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     private lateinit var adapter: ProductAdapter
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = (requireActivity() as MainActivity).viewModel
         initView()
     }
 
-    private fun initView(){
+    private fun initView() {
         binding.onClickProduct = this
-        adapter = ProductAdapter(
-            onClickProducts = this
-        ){ isLoadLastItem ->
-            binding.isVisible = isLoadLastItem
-        }
+        adapter =
+            ProductAdapter(
+                onClickProducts = this,
+            ) { isLoadLastItem ->
+                binding.isVisible = isLoadLastItem
+            }
 
         binding.rvProducts.adapter = adapter
         mainViewModel.products.observe(viewLifecycleOwner) { products ->
@@ -54,9 +59,10 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
 
     override fun clickProductItem(productId: Long) {
-        val productFragment = ProductDetailFragment().apply {
-            arguments = ProductDetailFragment.createBundle(productId)
-        }
+        val productFragment =
+            ProductDetailFragment().apply {
+                arguments = ProductDetailFragment.createBundle(productId)
+            }
         changeFragment(productFragment)
     }
 
@@ -69,13 +75,11 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         mainViewModel.loadPagingProduct()
     }
 
-    private fun changeFragment(nextFragment: Fragment){
+    private fun changeFragment(nextFragment: Fragment) {
         parentFragmentManager
             .beginTransaction()
             .add(R.id.fragment_container, nextFragment)
             .addToBackStack(null)
             .commit()
     }
-
-
 }

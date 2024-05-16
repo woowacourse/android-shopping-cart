@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="currentPage"
             type="java.lang.Integer" />
+
         <variable
             name="onClickShoppingCart"
             type="woowacourse.shopping.view.cart.OnClickShoppingCart" />

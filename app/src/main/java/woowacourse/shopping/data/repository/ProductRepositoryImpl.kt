@@ -28,7 +28,7 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
 
     override fun addCartItem(product: Product): CartItem {
         val itemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
-        return CartItem(itemId,product)
+        return CartItem(itemId, product)
     }
 
     override fun loadCartItems(): List<CartItem> {
@@ -36,7 +36,7 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
     }
 
     override fun loadPagingCartItems(offset: Int): List<CartItem> {
-        return cartItemDao.findPagingCartItem(offset,CART_ITEM_PAGING_SIZE).map { it.toCartItem() }
+        return cartItemDao.findPagingCartItem(offset, CART_ITEM_PAGING_SIZE).map { it.toCartItem() }
     }
 
     override fun deleteCartItem(itemId: Long) {

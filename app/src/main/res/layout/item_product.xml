@@ -2,9 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
+
         <variable
             name="onClickProduct"
             type="woowacourse.shopping.view.products.OnClickProducts" />
@@ -16,34 +18,38 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
         <ImageView
             android:id="@+id/iv_product_image"
             android:layout_gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="154dp"/>
+            android:layout_height="154dp" />
+
         <Space
             android:layout_width="0dp"
-            android:layout_height="8dp"/>
+            android:layout_height="8dp" />
+
         <TextView
             android:text="@{product.name}"
             android:maxLines="1"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="9dp"
-            tools:text = "상품상품상품상품상품상품상품상품상품상품"
+            tools:text="상품상품상품상품상품상품상품상품상품상품"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/black"
             android:ellipsize="end"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <TextView
             android:text="@{@string/formatted_price(product.price)}"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="9dp"
-            tools:text = "10,000원"
+            tools:text="10,000원"
             android:textSize="16sp"
             android:ellipsize="end"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </layout>

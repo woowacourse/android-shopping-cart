@@ -15,7 +15,10 @@ class ShoppingCartAdapter(
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingCartViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ShoppingCartViewHolder {
         val view =
             ItemShoppingCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ShoppingCartViewHolder(view, onClickShoppingCart)
@@ -25,17 +28,20 @@ class ShoppingCartAdapter(
         return cartItems.size
     }
 
-    override fun onBindViewHolder(holder: ShoppingCartViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ShoppingCartViewHolder,
+        position: Int,
+    ) {
         val item = cartItems[position]
         holder.bind(item)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateCartItems(
-        hasLastItem : Boolean,
+        hasLastItem: Boolean,
         cartItems: List<CartItem>,
     ) {
-        if (hasLastItem){
+        if (hasLastItem) {
             loadLastItem()
         }
         this.cartItems = cartItems

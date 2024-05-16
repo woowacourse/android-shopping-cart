@@ -1,6 +1,5 @@
 package woowacourse.shopping.view
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +17,6 @@ class MainViewModel(
 
     var shoppingCart = ShoppingCart()
 
-
     init {
         loadPagingProduct()
     }
@@ -30,9 +28,10 @@ class MainViewModel(
         }
     }
 
-    fun addShoppingCartItem(product: Product) = thread {
-        repository.addCartItem(product)
-    }
+    fun addShoppingCartItem(product: Product) =
+        thread {
+            repository.addCartItem(product)
+        }
 
     fun deleteShoppingCartItem(itemId: Long) {
         thread {

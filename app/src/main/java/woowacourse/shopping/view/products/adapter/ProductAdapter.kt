@@ -15,7 +15,10 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ProductViewHolder {
         val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ProductViewHolder(view, onClickProducts)
     }
@@ -24,7 +27,10 @@ class ProductAdapter(
         return products.size
     }
 
-    override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ProductViewHolder,
+        position: Int,
+    ) {
         val item = products[position]
         holder.bind(item)
 

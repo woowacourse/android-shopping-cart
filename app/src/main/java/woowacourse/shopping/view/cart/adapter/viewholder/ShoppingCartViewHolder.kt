@@ -11,8 +11,7 @@ class ShoppingCartViewHolder(
     private val binding: ItemShoppingCartBinding,
     private val onClickShoppingCart: OnClickShoppingCart,
 ) : RecyclerView.ViewHolder(binding.root) {
-
-    fun bind(cartItem: CartItem){
+    fun bind(cartItem: CartItem) {
         binding.cartItem = cartItem
         binding.onClickShoppingCart = onClickShoppingCart
         Glide.with(itemView.context)

@@ -21,14 +21,18 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private var totalItemSize = 0
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentShoppingCartBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = (requireActivity() as MainActivity).viewModel
         initView()
@@ -38,12 +42,13 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         mainViewModel.loadPagingCartItem()
         binding.onClickShoppingCart = this
         binding.currentPage = currentPage
-        adapter = ShoppingCartAdapter(
-            onClickShoppingCart = this,
-            loadLastItem = {
-                mainViewModel.loadPagingCartItem()
-            }
-        )
+        adapter =
+            ShoppingCartAdapter(
+                onClickShoppingCart = this,
+                loadLastItem = {
+                    mainViewModel.loadPagingCartItem()
+                },
+            )
         binding.rvShoppingCart.adapter = adapter
 
         mainViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { cartItems ->
@@ -59,9 +64,10 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     override fun clickCartItem(productId: Long) {
-        val productFragment = ProductDetailFragment().apply {
-            arguments = ProductDetailFragment.createBundle(productId)
-        }
+        val productFragment =
+            ProductDetailFragment().apply {
+                arguments = ProductDetailFragment.createBundle(productId)
+            }
         changeFragment(productFragment)
     }
 

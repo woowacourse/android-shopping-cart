@@ -15,7 +15,7 @@ class ProductDaoTest {
     private val products = ProductDatabase.products
 
     @Test
-    fun `상품_목록을_불러올_수_있다`(){
+    fun `상품_목록을_불러올_수_있다`() {
         val actual = dao.findAll().size
         val expected = products.size
         actual shouldBe expected
