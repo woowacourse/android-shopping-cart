@@ -12,18 +12,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
-import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 
 class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
     private lateinit var viewModel: ShoppingViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpToolbar()
 
