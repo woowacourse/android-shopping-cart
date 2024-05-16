@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.shopping.product
 
-
 sealed class ShoppingUiModel(val viewType: Int) {
     data class Product(
         val id: Long,

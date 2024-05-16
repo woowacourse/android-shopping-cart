@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 
-
 class ShoppingCartViewModel(
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _products = MutableLiveData<List<CartProductUi>>(emptyList())
     val products: LiveData<List<CartProductUi>> get() = _products
@@ -64,9 +63,9 @@ class ShoppingCartViewModel(
     companion object {
         private const val START_PAGE: Int = 1
         private const val INCREMENT_AMOUNT = 1
+
         fun factory(repository: CartRepository): ViewModelProvider.Factory {
             return BaseViewModelFactory { ShoppingCartViewModel(repository) }
         }
     }
 }
-

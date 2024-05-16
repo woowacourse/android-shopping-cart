@@ -9,4 +9,3 @@ interface ShoppingRepository {
 
     fun canLoadMoreProducts(exceptProducts: List<Long>): Boolean
 }
-

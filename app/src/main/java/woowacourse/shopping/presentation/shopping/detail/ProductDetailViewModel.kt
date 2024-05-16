@@ -11,7 +11,7 @@ import woowacourse.shopping.presentation.shopping.toUiModel
 
 class ProductDetailViewModel(
     private val shoppingRepository: ShoppingRepository,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _product = MutableLiveData<ProductUi>()
     val product: LiveData<ProductUi> get() = _product
@@ -41,12 +41,12 @@ class ProductDetailViewModel(
     companion object {
         fun factory(
             shoppingRepository: ShoppingRepository,
-            cartRepository: CartRepository
+            cartRepository: CartRepository,
         ): ViewModelProvider.Factory {
             return BaseViewModelFactory {
                 ProductDetailViewModel(
                     shoppingRepository,
-                    cartRepository
+                    cartRepository,
                 )
             }
         }

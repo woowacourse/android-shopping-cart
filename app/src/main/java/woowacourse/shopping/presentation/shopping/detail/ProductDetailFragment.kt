@@ -24,7 +24,7 @@ class ProductDetailFragment :
         val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
         ViewModelProvider(
             this,
-            ProductDetailViewModel.factory(DefaultShoppingRepository(), DefaultCartRepository())
+            ProductDetailViewModel.factory(DefaultShoppingRepository(), DefaultCartRepository()),
         )[ProductDetailViewModel::class.java]
             .apply { loadProduct(id) }
     }
@@ -59,7 +59,10 @@ class ProductDetailFragment :
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(
             object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                override fun onCreateMenu(
+                    menu: Menu,
+                    menuInflater: MenuInflater,
+                ) {
                     menuInflater.inflate(R.menu.detail_product_menu, menu)
                 }
 
@@ -70,7 +73,8 @@ class ProductDetailFragment :
                     }
                     return false
                 }
-            }, viewLifecycleOwner
+            },
+            viewLifecycleOwner,
         )
     }
 
@@ -78,7 +82,7 @@ class ProductDetailFragment :
         parentFragmentManager.commit {
             replace<ShoppingCartFragment>(
                 R.id.fragment_container_shopping,
-                ShoppingCartFragment.TAG
+                ShoppingCartFragment.TAG,
             )
             addToBackStack(TAG)
         }

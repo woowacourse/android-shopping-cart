@@ -20,11 +20,14 @@ class ShoppingCartFragment :
     private val viewModel: ShoppingCartViewModel by lazy {
         // TODO repository 싱글톤으로 바꾸기
         ViewModelProvider(this, ShoppingCartViewModel.factory(DefaultCartRepository())).get(
-            ShoppingCartViewModel::class.java
+            ShoppingCartViewModel::class.java,
         )
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
             vm = viewModel
@@ -43,7 +46,10 @@ class ShoppingCartFragment :
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(
             object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+                override fun onCreateMenu(
+                    menu: Menu,
+                    menuInflater: MenuInflater,
+                ) {}
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == android.R.id.home) {
@@ -52,7 +58,8 @@ class ShoppingCartFragment :
                     }
                     return false
                 }
-            }, viewLifecycleOwner
+            },
+            viewLifecycleOwner,
         )
     }
 
@@ -73,4 +80,3 @@ class ShoppingCartFragment :
         val TAG: String? = ShoppingCartFragment::class.java.canonicalName
     }
 }
-

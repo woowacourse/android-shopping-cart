@@ -6,7 +6,7 @@ import woowacourse.shopping.presentation.shopping.toUiModel
 
 data class CartProductUi(
     val product: ProductUi,
-    val count: Int
+    val count: Int,
 )
 
 fun CartProduct.toUiModel(): CartProductUi {

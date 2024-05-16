@@ -10,7 +10,7 @@ import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 
 class ProductAdapter(
     private val onClickItem: (id: Long) -> Unit,
-    private val onPlusItem: () -> Unit
+    private val onPlusItem: () -> Unit,
 ) :
     RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<ShoppingUiModel> = emptyList()
@@ -28,11 +28,12 @@ class ProductAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             ShoppingUiModel.ITEM_VIEW_TYPE_PRODUCT -> {
-                val view = ItemProductBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false,
-                )
+                val view =
+                    ItemProductBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false,
+                    )
                 ShoppingViewHolder.ProductViewHolder(view, onClickItem)
             }
 

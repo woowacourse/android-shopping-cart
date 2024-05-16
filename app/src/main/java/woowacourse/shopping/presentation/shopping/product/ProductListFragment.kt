@@ -54,7 +54,10 @@ class ProductListFragment :
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(
             object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                override fun onCreateMenu(
+                    menu: Menu,
+                    menuInflater: MenuInflater,
+                ) {
                     menuInflater.inflate(R.menu.shopping_menu, menu)
                 }
 
@@ -63,7 +66,7 @@ class ProductListFragment :
                         parentFragmentManager.commit {
                             replace<ShoppingCartFragment>(
                                 R.id.fragment_container_shopping,
-                                ShoppingCartFragment.TAG
+                                ShoppingCartFragment.TAG,
                             )
                             addToBackStack(TAG)
                         }
@@ -71,7 +74,8 @@ class ProductListFragment :
                     }
                     return false
                 }
-            }, viewLifecycleOwner
+            },
+            viewLifecycleOwner,
         )
     }
 
@@ -80,7 +84,7 @@ class ProductListFragment :
             productAdapter =
                 ProductAdapter(
                     onClickItem = { navigateToDetailView(it) },
-                    onPlusItem = { viewModel.loadProducts() }
+                    onPlusItem = { viewModel.loadProducts() },
                 )
             rvProductList.adapter = productAdapter
             rvProductList.layoutManager =

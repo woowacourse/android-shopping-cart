@@ -7,9 +7,10 @@ import woowacourse.shopping.domain.ShoppingCart
 
 object DummyCartDataSource : CartDataSource {
     private const val PRODUCT_AMOUNT = 5
-    private var cart = ShoppingCart(
-        DummyShoppingDataSource.products.take(30)
-    )
+    private var cart =
+        ShoppingCart(
+            DummyShoppingDataSource.products.take(30),
+        )
     private val products: List<CartProduct> get() = cart.cartProducts()
 
     override fun loadCartProducts(currentPage: Int): List<CartProduct> {
@@ -33,4 +34,3 @@ object DummyCartDataSource : CartDataSource {
         return loadCartProducts(currentPage + 1).isNotEmpty()
     }
 }
-

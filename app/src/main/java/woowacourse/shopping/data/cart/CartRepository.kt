@@ -11,4 +11,3 @@ interface CartRepository {
 
     fun canLoadMoreCartProducts(currentPage: Int): Boolean
 }
-

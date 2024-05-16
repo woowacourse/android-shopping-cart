@@ -11,16 +11,23 @@ class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
 
     override fun getItemCount(): Int = products.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        val binding = ItemCartProductBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false,
-        )
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): CartViewHolder {
+        val binding =
+            ItemCartProductBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
         return CartViewHolder(binding, onClickItem)
     }
 
-    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: CartViewHolder,
+        position: Int,
+    ) {
         holder.bind(products[position])
     }
 
@@ -31,10 +38,9 @@ class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
 
     class CartViewHolder(
         private val binding: ItemCartProductBinding,
-        private val onClickItem: (position: Int) -> Unit
+        private val onClickItem: (position: Int) -> Unit,
     ) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
             binding.ivShoopingCartClose.setOnClickListener {
