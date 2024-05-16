@@ -3,6 +3,7 @@ package woowacourse.shopping.common
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import woowacourse.shopping.R
 
 object CommonBindingAdapter {
     @BindingAdapter("imageUrl")
@@ -13,6 +14,9 @@ object CommonBindingAdapter {
     ) {
         Glide.with(imageView.context)
             .load(url)
+            .placeholder(R.drawable.img_default_product)
+            .fallback(R.drawable.img_default_product)
+            .error(R.drawable.img_error_product)
             .into(imageView)
     }
 }
