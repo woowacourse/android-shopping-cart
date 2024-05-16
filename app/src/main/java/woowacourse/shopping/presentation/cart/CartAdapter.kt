@@ -4,11 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
-import woowacourse.shopping.presentation.shopping.detail.ProductUi
 
 class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
-    private var products: List<ProductUi> = emptyList()
+    private var products: List<CartProductUi> = emptyList()
 
     override fun getItemCount(): Int = products.size
 
@@ -25,7 +24,7 @@ class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
         holder.bind(products[position])
     }
 
-    fun updateProduct(newProducts: List<ProductUi>) {
+    fun updateProduct(newProducts: List<CartProductUi>) {
         products = newProducts
         notifyDataSetChanged()
     }
@@ -36,8 +35,8 @@ class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(product: ProductUi) {
-            binding.product = product
+        fun bind(product: CartProductUi) {
+            binding.cartProduct = product
             binding.ivShoopingCartClose.setOnClickListener {
                 onClickItem(absoluteAdapterPosition)
             }

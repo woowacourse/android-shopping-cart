@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.presentation.shopping.detail.ProductUi" />
+            name="cartProduct"
+            type="woowacourse.shopping.presentation.cart.CartProductUi" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,7 +31,7 @@
                 android:layout_marginEnd="30dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{product.name}"
+                android:text="@{cartProduct.product.name}"
                 android:textAppearance="@style/H2"
                 app:layout_constraintEnd_toStartOf="@id/iv_shooping_cart_close"
                 app:layout_constraintStart_toStartOf="parent"
@@ -48,7 +48,7 @@
 
             <ImageView
                 android:id="@+id/iv_shooping_cart_product_image"
-                imageUrl="@{product.imageUrl}"
+                imageUrl="@{cartProduct.product.imageUrl}"
                 android:layout_width="136dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="20dp"
@@ -63,7 +63,7 @@
                 android:textAppearance="@style/B2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="@{@string/price_format(product.price)}"
+                android:text="@{@string/price_format(cartProduct.product.price)}"
                 tools:text="30_000원" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

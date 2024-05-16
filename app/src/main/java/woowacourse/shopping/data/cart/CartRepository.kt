@@ -1,10 +1,12 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.CartProduct
 
 interface CartRepository {
-    fun cartProducts(): List<Product>
+    fun cartProducts(currentPage: Int): List<CartProduct>
 
-    fun deleteCartProduct(id: Long)
+    fun addCartProduct(productId: Long): Long?
+
+    fun deleteCartProduct(productId: Long): Long?
 }
 

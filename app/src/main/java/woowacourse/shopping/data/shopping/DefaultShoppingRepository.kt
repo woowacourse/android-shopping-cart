@@ -3,18 +3,18 @@ package woowacourse.shopping.data.shopping
 import woowacourse.shopping.domain.Product
 
 class DefaultShoppingRepository(
-    private val productDataSource: ProductDataSource = DummyProductDataSource,
+    private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
 ) : ShoppingRepository {
     override fun products(exceptProducts: List<Long>): List<Product> {
-        return productDataSource.products(exceptProducts, PRODUCT_AMOUNT)
+        return shoppingDataSource.products(exceptProducts, PRODUCT_AMOUNT)
     }
 
     override fun productById(id: Long): Product? {
-        return productDataSource.productById(id)
+        return shoppingDataSource.productById(id)
     }
 
     override fun canLoadMoreProducts(exceptProducts: List<Long>): Boolean {
-        return productDataSource.canLoadMoreProducts(exceptProducts)
+        return shoppingDataSource.canLoadMoreProducts(exceptProducts)
     }
 
     companion object {

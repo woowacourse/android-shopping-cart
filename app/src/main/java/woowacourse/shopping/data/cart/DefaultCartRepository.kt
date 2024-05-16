@@ -1,24 +1,24 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.data.shopping.DummyShoppingDataSource
+import woowacourse.shopping.data.shopping.ShoppingDataSource
+import woowacourse.shopping.domain.CartProduct
 
-class DefaultCartRepository : CartRepository {
-    override fun cartProducts(): List<Product> {
-        return listOf(
-            Product(
-                3,
-                1000,
-                "오둥2",
-                "https://item.kakaocdn.net/do/8fb89536158119f901780df1ba184931a88f7b2cbb72be0bdfff91ad65b168ab",
-            ),
-            Product(
-                4,
-                1000,
-                "꼬상",
-                "https://w7.pngwing.com/pngs/921/264/png-transparent-chipmunk-chip-n-dale-sticker-the-walt-disney-company-goofy-others.png",
-            ),
-        )
+class DefaultCartRepository(
+    private val cartDataSource: CartDataSource = DummyCartDataSource,
+    private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
+) : CartRepository {
+    override fun cartProducts(currentPage: Int): List<CartProduct> {
+        return cartDataSource.loadCartProducts(currentPage)
     }
 
-    override fun deleteCartProduct(id: Long) {}
+    override fun addCartProduct(productId: Long): Long? {
+        val product = shoppingDataSource.productById(productId) ?: return null
+        return cartDataSource.addCartProduct(product)
+    }
+
+    override fun deleteCartProduct(productId: Long): Long? {
+        val product = shoppingDataSource.productById(productId) ?: return null
+        return cartDataSource.deleteCartProduct(product)
+    }
 }

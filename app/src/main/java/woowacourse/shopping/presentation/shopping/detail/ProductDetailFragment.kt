@@ -12,6 +12,7 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.DefaultCartRepository
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
@@ -23,7 +24,7 @@ class ProductDetailFragment :
         val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
         ViewModelProvider(
             this,
-            ProductDetailViewModel.factory(DefaultShoppingRepository())
+            ProductDetailViewModel.factory(DefaultShoppingRepository(), DefaultCartRepository())
         )[ProductDetailViewModel::class.java]
             .apply { loadProduct(id) }
     }
@@ -39,7 +40,14 @@ class ProductDetailFragment :
         }
         initAppBar()
         binding?.btnProductCart?.setOnClickListener {
-            navigateToShoppingCart()
+            viewModel.addCartProduct()
+        }
+        viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
+            if (isAdded) {
+                navigateToShoppingCart()
+                // TODO: SINGLE LIVEDATA 로 개선해보자
+                viewModel.addCartDone()
+            }
         }
     }
 

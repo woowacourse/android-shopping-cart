@@ -2,7 +2,7 @@ package woowacourse.shopping.data.shopping
 
 import woowacourse.shopping.domain.Product
 
-object DummyProductDataSource : ProductDataSource {
+object DummyShoppingDataSource : ShoppingDataSource {
     val products: List<Product> = List(100) {
         listOf(
             Product(
