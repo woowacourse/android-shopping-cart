@@ -2,8 +2,8 @@ package woowacourse.shopping.presentation.shopping
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -51,19 +51,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
                     dy: Int,
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = recyclerView.layoutManager as GridLayoutManager
-                    val totalItemCount = layoutManager.itemCount
-                    val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-
-                    if (lastVisibleItem == totalItemCount - 1) {
-                        // loadMoreData()
-                        if (dy > 0) {
-                            binding.btnLoadMore.visibility = View.VISIBLE
-                        } else {
-                            binding.btnLoadMore.visibility = View.GONE
-                        }
+                    if (!recyclerView.canScrollVertically(1)) {
+                        viewModel.updateVisibility(VISIBLE)
                     } else {
-                        binding.btnLoadMore.visibility = View.GONE
+                        if (dy < 0) viewModel.updateVisibility(GONE)
                     }
                 }
             },
@@ -96,6 +87,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
 
     override fun onLoadButtonClick() {
         viewModel.loadProducts()
-        binding.btnLoadMore.visibility = GONE
+        viewModel.updateVisibility(GONE)
     }
 }
