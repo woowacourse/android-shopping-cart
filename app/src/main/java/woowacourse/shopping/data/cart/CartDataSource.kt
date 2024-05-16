@@ -9,4 +9,6 @@ interface CartDataSource {
     fun addCartProduct(product: Product): Long?
 
     fun deleteCartProduct(product: Product): Long?
+
+    fun canLoadMoreCartProducts(currentPage: Int): Boolean
 }

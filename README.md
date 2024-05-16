@@ -48,6 +48,18 @@
 ## Domain
 삭제할 상품이 없을 때 상품을 삭제하면 에러?? Result? 아무 일도 없어, Boolean 반환?
 
+## Data
+
+현재 Cart 에서 상품들을 불러오는 과정이 매우 비효율적이다.
+
+- 1) Cart 에서 다음 데이터를 불러옴
+- 2-2) 불러온 데이터가 Empty 이면 false
+- 2-2) 불러온 데이터가 있으면 true
+
+추후 개선하자! 💪
+```kotlin
+fun canLoadMoreCartProducts(currentPage: Int): Boolean
+```
 ## UI
 
 ### Fragment vs Activity

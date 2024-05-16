@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.cart.ShoppingCartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,12 +19,70 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_shopping_cart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="60dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/layout_page"
+            app:layout_constraintTop_toTopOf="parent"
             tools:itemCount="10"
             tools:listitem="@layout/item_cart_product">
 
         </androidx.recyclerview.widget.RecyclerView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_page"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/tv_minus_page"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@{vm.canLoadPrevPage ? @color/mint : @color/gray500}"
+                android:enabled="@{vm.canLoadPrevPage}"
+                android:onClick="@{()->vm.minusPage()}"
+                android:text="&lt;"
+                android:textAlignment="center"
+                android:textAppearance="@style/H1"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:background="@color/mint" />
+
+            <TextView
+                android:id="@+id/tv_current_page"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:text="@{vm.currentPage.toString()}"
+                android:textAlignment="center"
+                tools:text="1"
+                android:textAppearance="@style/H1"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@id/tv_minus_page"
+                app:layout_constraintTop_toTopOf="@id/tv_minus_page" />
+
+            <TextView
+                android:id="@+id/tv_plus_page"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:onClick="@{()->vm.plusPage()}"
+                android:background="@{vm.canLoadNextPage ? @color/mint : @color/gray500}"
+                android:enabled="@{vm.canLoadNextPage}"
+                android:text="&gt;"
+                android:textAlignment="center"
+                android:textAppearance="@style/H1"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@id/tv_current_page"
+                app:layout_constraintTop_toTopOf="@id/tv_current_page"
+                tools:background="@color/mint" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

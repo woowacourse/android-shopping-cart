@@ -26,6 +26,10 @@ class ShoppingCartFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding?.apply {
+            vm = viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
         initAppBar()
         initViews()
         initObservers()

@@ -21,4 +21,8 @@ class DefaultCartRepository(
         val product = shoppingDataSource.productById(productId) ?: return null
         return cartDataSource.deleteCartProduct(product)
     }
+
+    override fun canLoadMoreCartProducts(currentPage: Int): Boolean {
+        return cartDataSource.canLoadMoreCartProducts(currentPage)
+    }
 }

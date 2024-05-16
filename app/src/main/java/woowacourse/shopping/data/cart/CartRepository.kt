@@ -8,5 +8,7 @@ interface CartRepository {
     fun addCartProduct(productId: Long): Long?
 
     fun deleteCartProduct(productId: Long): Long?
+
+    fun canLoadMoreCartProducts(currentPage: Int): Boolean
 }
 
