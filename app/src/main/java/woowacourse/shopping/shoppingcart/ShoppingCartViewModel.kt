@@ -2,6 +2,7 @@ package woowacourse.shopping.shoppingcart
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ShoppingRepository
@@ -15,22 +16,34 @@ class ShoppingCartViewModel(
     private val _cartItems: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
     val cartItems: LiveData<List<ProductUiModel>> get() = _cartItems
 
-    private val _totalSize = MutableLiveData<Int>(0)
-    val totalSize: LiveData<Int> get() = _totalSize
+    private val totalSize = MutableLiveData<Int>(0)
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(DEFAULT_CURRENT_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
 
+    val isLeftBtnEnable = MediatorLiveData<Boolean>(false).apply {
+        addSource(_currentPage) { value = checkIsLeftBtnEnable() }
+    }
+
+    val isRightBtnEnable = MediatorLiveData<Boolean>(false).apply {
+        addSource(_currentPage) { value = checkIsRightBtnEnable() }
+        addSource(totalSize) { value = checkIsRightBtnEnable() }
+    }
+
+    private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(1)?.not() ?: false
+
+    private fun checkIsRightBtnEnable() =
+        (totalSize.value != 0) && (_currentPage.value?.equals(totalSize.value))?.not() ?: false
+
     fun updatePageSize() {
         val totalItemSize = repository.shoppingCartSize()
-        _totalSize.value = ceil(totalItemSize / PAGE_SIZE.toDouble()).toInt()
+        totalSize.value = ceil(totalItemSize / PAGE_SIZE.toDouble()).toInt()
     }
 
     fun loadCartItems(currentPage: Int) {
         runCatching {
             repository.shoppingCartItems(currentPage - DEFAULT_CURRENT_PAGE, PAGE_SIZE)
         }.onSuccess { shoppingCartItems ->
-            Log.d("테스트", "$shoppingCartItems")
             _cartItems.value = shoppingCartItems.map { it.product.toProductUiModel() }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")

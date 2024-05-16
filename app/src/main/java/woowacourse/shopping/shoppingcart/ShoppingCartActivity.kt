@@ -43,8 +43,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         }
 
         viewModel.currentPage.observe(this) { currentPage ->
-            binding.btnShoppingCartLeft.isEnabled = !currentPage.equals(DEFAULT_CURRENT_PAGE)
-            binding.btnShoppingCartRight.isEnabled = !currentPage.equals(viewModel.totalSize.value)
             viewModel.loadCartItems(currentPage)
         }
     }
