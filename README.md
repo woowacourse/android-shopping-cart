@@ -50,13 +50,13 @@
 
 ## UI
 
-- Fragment vs Activity
+### Fragment vs Activity
 
 상품 목록이나 상품 상세를 띄울 때 Activity 를 사용할 것인가? Fragment 를 사용할 것인가? 를 고민을 하였는데
 Fragment로 대체할 수 있다면 Fragment를 사용하는 것이 좋다고 생각한다
 Fragment 가 Activity에 비해 가볍다고 생각했기 때문이다. (지세한건 모름...)
 
-- 추후 SingleLiveData 적용하기
+### 추후 SingleLiveData 적용하기
 
 1) 일단 장바구니에 있는 상품을 View에서 삭제하고 서버 통신
 2) 서버통신 결과값에 따라 장바구니에 있는 상품 삭제
@@ -64,3 +64,21 @@ Fragment 가 Activity에 비해 가볍다고 생각했기 때문이다. (지세�
 둘 중 뭐가 좋을까?
 2번의 경우 네트워크 시간 때문에 VIew에 바로 적용 안됨
 따라서, 우리는 사용자 에게 더 좋은 경험을 시켜주기 위해 1 번 방법 선택 
+
+### BindingAdapter 의 패키지 위치
+BindingAdapter 마다 다르겠지만
+
+아래의 BindingAdapter 는 이미지를 사용하는 곳에서 공통적으로 사용하는 녀석이다.
+물론, 화면마다 이미지를 처리하는 방식이 달라질 수 있다고는 생각하기에 각 화면마다 바인딩 어뎁터를 부여할 수도 있다.
+그러나, 지금은 공통적으로 사용함! 요녀석은 어디로 둬야하지..?
+
+```kotlin
+@BindingAdapter("imageUrl")
+fun ImageView.setImage(imgUrl: String?) {
+    Glide.with(context)
+        .load(imgUrl)
+        .placeholder(R.drawable.img_odooong)
+        .error(R.drawable.ic_error_24)
+        .into(this)
+}
+```

@@ -9,7 +9,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.shopping.cart.ShoppingCartFragment
+import woowacourse.shopping.presentation.cart.ShoppingCartFragment
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {

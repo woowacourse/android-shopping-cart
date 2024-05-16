@@ -21,8 +21,8 @@ data class ShoppingCart(
             product.price * count
         }.sum()
 
-    fun productsList(): List<Products> =
+    fun cartProducts(): List<CartProduct> =
         productMap.map { (product, count) ->
-            Products(product, count)
+            CartProduct(product, count)
         }
 }
