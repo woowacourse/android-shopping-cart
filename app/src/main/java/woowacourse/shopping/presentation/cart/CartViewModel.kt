@@ -45,7 +45,6 @@ class CartViewModel(
     }
 
     fun loadCurrentPageCartItems() {
-        // TODO return 대신 토스트 띄우기
         val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
         hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
 

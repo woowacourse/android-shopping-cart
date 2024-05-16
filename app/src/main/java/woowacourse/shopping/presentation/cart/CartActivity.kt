@@ -18,21 +18,22 @@ class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
     private val binding: ActivityCartBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_cart)
     }
-    private val viewModel: CartViewModel by lazy {
-        ViewModelProvider(
-            this,
-            CartViewModelFactory(
-                CartRepositoryImpl(DefaultCart),
-                ProductRepositoryImpl(DefaultProducts),
-            ),
-        )[CartViewModel::class.java]
-    }
+    private lateinit var viewModel: CartViewModel
     private val adapter: CartAdapter by lazy {
         CartAdapter(emptyList(), this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel =
+            ViewModelProvider(
+                this,
+                CartViewModelFactory(
+                    CartRepositoryImpl(DefaultCart),
+                    ProductRepositoryImpl(DefaultProducts),
+                ),
+            )[CartViewModel::class.java]
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel

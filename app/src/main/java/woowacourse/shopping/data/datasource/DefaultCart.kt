@@ -3,7 +3,6 @@ package woowacourse.shopping.data.datasource
 import woowacourse.shopping.data.model.CartItem
 import kotlin.math.min
 
-// TODO 삭제 시 발생할 수 있는 예외 처리 추가
 object DefaultCart : CartDataSource {
     private val cartItems: MutableList<CartItem> = mutableListOf()
     private var id: Long = 1
@@ -25,6 +24,10 @@ object DefaultCart : CartDataSource {
     override fun deleteCartItem(cartItemId: Long): Long {
         cartItems.removeIf { it.id == cartItemId }
         return cartItemId
+    }
+
+    override fun deleteAll() {
+        cartItems.clear()
     }
 
     override fun getCartItems(

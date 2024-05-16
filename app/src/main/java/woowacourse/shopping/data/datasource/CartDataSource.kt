@@ -14,4 +14,6 @@ interface CartDataSource {
     ): Long
 
     fun deleteCartItem(cartItemId: Long): Long
+
+    fun deleteAll()
 }
