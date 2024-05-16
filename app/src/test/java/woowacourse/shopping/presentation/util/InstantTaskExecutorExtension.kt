@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.shopping.product.util
+package woowacourse.shopping.presentation.util
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor

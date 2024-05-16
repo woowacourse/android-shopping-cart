@@ -11,13 +11,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.data.shopping.ShoppingRepository
 import woowacourse.shopping.domain.product
-import woowacourse.shopping.presentation.shopping.product.util.InstantTaskExecutorExtension
-import woowacourse.shopping.presentation.shopping.product.util.getOrAwaitValue
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
+import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension
+import woowacourse.shopping.presentation.util.getOrAwaitValue
 
 
-@ExtendWith(InstantTaskExecutorExtension::class)
-@ExtendWith(MockKExtension::class)
+@ExtendWith(InstantTaskExecutorExtension::class, MockKExtension::class)
 class ProductListViewModelTest {
 
     @MockK
