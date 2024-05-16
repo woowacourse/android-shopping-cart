@@ -82,6 +82,7 @@
             app:layout_constraintTop_toBottomOf="@id/rv_shopping_cart">
 
             <ImageButton
+                android:id="@+id/btn_prev"
                 android:onClick="@{()->onClickShoppingCart.clickPrevPage()}"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
@@ -92,6 +93,7 @@
                 android:src="@drawable/ic_arrow_back_24" />
 
             <TextView
+                android:id="@+id/tv_page_count"
                 android:text="@{String.valueOf(currentPage)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -102,6 +104,7 @@
                 tools:text="1" />
 
             <ImageButton
+                android:id="@+id/btn_next"
                 android:onClick="@{()->onClickShoppingCart.clickNextPage()}"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
