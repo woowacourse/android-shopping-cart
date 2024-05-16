@@ -1,7 +1,13 @@
 package woowacourse.shopping.presentation.shopping.product
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
@@ -9,6 +15,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
+import woowacourse.shopping.presentation.cart.ShoppingCartFragment
 import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
 import woowacourse.shopping.presentation.util.dp
 
@@ -32,8 +39,38 @@ class ProductListFragment :
             vm = viewModel
         }
 
+        initAppBar()
         initViews()
         initObservers()
+    }
+
+    private fun initAppBar() {
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.apply {
+            title = getString(R.string.app_name)
+            setDisplayHomeAsUpEnabled(false)
+        }
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.shopping_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    if (menuItem.itemId == R.id.menu_item_cart) {
+                        parentFragmentManager.commit {
+                            replace<ShoppingCartFragment>(
+                                R.id.fragment_container_shopping,
+                                ShoppingCartFragment.TAG
+                            )
+                            addToBackStack(TAG)
+                        }
+                        return true
+                    }
+                    return false
+                }
+            }, viewLifecycleOwner
+        )
     }
 
     private fun initViews() {

@@ -82,3 +82,8 @@ fun ImageView.setImage(imgUrl: String?) {
         .into(this)
 }
 ```
+
+### supportActionBar vs actionBar 뭐가 다름
+
+actionBar: Activity 또는 FragmentActivity 에 있음..
+supportActionBar: AppCompatActivity 에만 있네

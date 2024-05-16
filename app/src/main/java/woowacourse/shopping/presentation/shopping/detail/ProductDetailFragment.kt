@@ -1,7 +1,13 @@
 package woowacourse.shopping.presentation.shopping.detail
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
@@ -31,9 +37,33 @@ class ProductDetailFragment :
             it.lifecycleOwner = viewLifecycleOwner
             it.vm = viewModel
         }
+        initAppBar()
         binding?.btnProductCart?.setOnClickListener {
             navigateToShoppingCart()
         }
+    }
+
+    private fun initAppBar() {
+        (requireActivity() as? AppCompatActivity)?.supportActionBar?.apply {
+            title = ""
+            setDisplayHomeAsUpEnabled(false)
+        }
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.detail_product_menu, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    if (menuItem.itemId == R.id.menu_item_close) {
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                        return true
+                    }
+                    return false
+                }
+            }, viewLifecycleOwner
+        )
     }
 
     private fun navigateToShoppingCart() {

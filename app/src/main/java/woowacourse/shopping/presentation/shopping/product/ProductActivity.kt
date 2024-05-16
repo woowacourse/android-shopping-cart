@@ -8,7 +8,6 @@ import androidx.fragment.app.replace
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductBinding
 import woowacourse.shopping.presentation.base.BindingActivity
-import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
 
 class ProductActivity :
     BindingActivity<ActivityProductBinding>(R.layout.activity_product) {
@@ -22,27 +21,5 @@ class ProductActivity :
                 )
             }
         }
-        initActionBar()
-    }
-
-    private fun initActionBar() {
-        supportActionBar?.apply {
-            title = "꼬상"
-        }
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            supportFragmentManager.commit {
-                replace(R.id.fragment_container_shopping, ProductDetailFragment())
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.shopping_menu, menu)
-        return true
     }
 }
