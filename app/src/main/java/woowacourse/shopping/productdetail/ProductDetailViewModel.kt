@@ -29,7 +29,8 @@ class ProductDetailViewModel(
 
     fun addProductToCart() {
         runCatching {
-            val cartItem = ShoppingCartItem(_product.value!!)
+            val product = requireNotNull(_product.value)
+            val cartItem = ShoppingCartItem(product)
             val userId = repository.userId()
             val shoppingCart = repository.shoppingCart(userId)
             repository.updateShoppingCart(shoppingCart.addItem(cartItem))
