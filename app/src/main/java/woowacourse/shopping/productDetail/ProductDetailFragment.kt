@@ -2,10 +2,12 @@ package woowacourse.shopping.productDetail
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 
 class ProductDetailFragment : Fragment() {
@@ -32,9 +34,18 @@ class ProductDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.productDetailToolbar.setNavigationOnClickListener {
-            parentFragmentManager.popBackStack()
+        binding.productDetailToolbar.setOnMenuItemClickListener {
+            clickXButton(it)
         }
+    }
+
+    private fun clickXButton(it: MenuItem) = when (it.itemId) {
+        R.id.action_x -> {
+            parentFragmentManager.popBackStack()
+            true
+        }
+
+        else -> false
     }
 
     override fun onDestroyView() {

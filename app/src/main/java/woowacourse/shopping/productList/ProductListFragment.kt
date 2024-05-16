@@ -2,6 +2,7 @@ package woowacourse.shopping.productList
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -62,9 +63,21 @@ class ProductListFragment : Fragment() {
             navigateToCart()
         }
 
+        binding.productListToolbar.setOnMenuItemClickListener {
+            clickCartButton(it)
+        }
         viewModel.loadedProducts.observe(viewLifecycleOwner) {
             adapter.updateData(it)
         }
+    }
+
+    private fun clickCartButton(it: MenuItem) = when (it.itemId) {
+        R.id.action_cart -> {
+            navigateToCart()
+            true
+        }
+
+        else -> false
     }
 
     private fun navigateToCart() {
