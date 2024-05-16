@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.DefaultShoppingRepository
+import woowacourse.shopping.data.DefaultCartRepository
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 
@@ -13,7 +13,7 @@ class ShoppingCartFragment :
     private lateinit var adapter: CartAdapter
     private val viewModel: ShoppingCartViewModel by lazy {
         // TODO repository 싱글톤으로 바꾸기
-        ViewModelProvider(this, ShoppingCartViewModel.factory(DefaultShoppingRepository())).get(
+        ViewModelProvider(this, ShoppingCartViewModel.factory(DefaultCartRepository())).get(
             ShoppingCartViewModel::class.java
         )
     }
@@ -25,7 +25,7 @@ class ShoppingCartFragment :
     }
 
     private fun initViews() {
-        adapter = CartAdapter(onClickItem = { viewModel.deleteProduct(it)})
+        adapter = CartAdapter(onClickItem = { viewModel.deleteProduct(it) })
         binding?.apply {
             rvShoppingCart.adapter = adapter
         }
