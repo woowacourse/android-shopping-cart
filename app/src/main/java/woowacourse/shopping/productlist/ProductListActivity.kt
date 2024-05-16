@@ -1,10 +1,15 @@
 package woowacourse.shopping.productlist
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.ViewModelFactory
 
 class ProductListActivity : AppCompatActivity(), ProductListClickAction {
@@ -39,6 +44,19 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         viewModel.products.observe(this) { products ->
             adapter.submitList(products.map { it.toProductUiModel() })
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.product_list_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_shopping_cart_nav -> startActivity(ShoppingCartActivity.newInstance(this))
+            else -> {}
+        }
+        return true
     }
 
     override fun onProductClicked(id: Long) {
