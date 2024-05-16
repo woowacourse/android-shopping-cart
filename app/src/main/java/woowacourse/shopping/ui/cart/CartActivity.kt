@@ -25,33 +25,53 @@ class CartActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
 
-        viewModel.pageNumber.observe(this) {
-            binding.pageNumber = it.toString()
-        }
+        showPageNumber()
 
-        binding.btnLeft.setOnClickListener {
-            viewModel.minusPageNum()
-            viewModel.loadCartItems()
-        }
-
-        binding.btnRight.setOnClickListener {
-            viewModel.plusPageNum()
-            viewModel.loadCartItems()
-        }
+        setOnPreviousButtonClickListener()
+        setOnNextButtonClickListener()
 
         loadItems()
         setCartAdapter()
+
         observeCartItems()
+
+        changePreviousButtonEnabled()
+        changeNextButtonEnabled()
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
-        viewModel.canMovePreviousPage.observe(this) {
-            binding.btnLeft.isClickable = it
-            binding.btnLeft.isEnabled = it
-        }
-
+    private fun changeNextButtonEnabled() {
         viewModel.canMoveNextPage.observe(this) {
-            binding.btnRight.isClickable = it
-            binding.btnRight.isEnabled = it
+            binding.btnNext.isClickable = it
+            binding.btnNext.isEnabled = it
+        }
+    }
+
+    private fun changePreviousButtonEnabled() {
+        viewModel.canMovePreviousPage.observe(this) {
+            binding.btnPrevious.isClickable = it
+            binding.btnPrevious.isEnabled = it
+        }
+    }
+
+    private fun setOnNextButtonClickListener() {
+        binding.btnNext.setOnClickListener {
+            viewModel.plusPageNum()
+            viewModel.loadCartItems()
+        }
+    }
+
+    private fun setOnPreviousButtonClickListener() {
+        binding.btnPrevious.setOnClickListener {
+            viewModel.minusPageNum()
+            viewModel.loadCartItems()
+        }
+    }
+
+    private fun showPageNumber() {
+        viewModel.pageNumber.observe(this) {
+            binding.pageNumber = it.toString()
         }
     }
 

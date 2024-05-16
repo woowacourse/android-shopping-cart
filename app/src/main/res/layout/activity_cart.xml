@@ -25,12 +25,12 @@
             android:layout_height="0dp"
             android:paddingBottom="60dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/btn_left"
+            app:layout_constraintBottom_toTopOf="@id/btn_previous"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_cart" />
 
         <Button
-            android:id="@+id/btn_left"
+            android:id="@+id/btn_previous"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="115dp"
@@ -53,14 +53,14 @@
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_right"
-            app:layout_constraintStart_toEndOf="@id/btn_left"
+            app:layout_constraintEnd_toStartOf="@id/btn_next"
+            app:layout_constraintStart_toEndOf="@id/btn_previous"
             app:layout_constraintTop_toBottomOf="@id/rv_cart"
             tools:text="1" />
 
 
         <Button
-            android:id="@+id/btn_right"
+            android:id="@+id/btn_next"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:background="@drawable/selector_right_button"

@@ -40,14 +40,14 @@ class CartActivityTest {
 
     @Test
     fun `화면이_띄워지면_이전페이지_이동_버튼이_보인다`() {
-        onView(withId(R.id.btn_left))
+        onView(withId(R.id.btn_previous))
             .check(matches(isDisplayed()))
             .check(matches(withText("<")))
     }
 
     @Test
     fun `화면이_띄워지면_다음페이지_이동_버튼이_보인다`() {
-        onView(withId(R.id.btn_right))
+        onView(withId(R.id.btn_next))
             .check(matches(isDisplayed()))
             .check(matches(withText(">")))
     }
@@ -71,7 +71,7 @@ class CartActivityTest {
         // given
 
         // when
-        onView(withId(R.id.btn_right))
+        onView(withId(R.id.btn_next))
             .perform(click())
 
         // then
@@ -85,7 +85,7 @@ class CartActivityTest {
         // given
 
         // when
-        onView(withId(R.id.btn_right))
+        onView(withId(R.id.btn_next))
             .perform(click())
 
         // then
@@ -99,7 +99,7 @@ class CartActivityTest {
         // given
 
         // when
-        onView(withId(R.id.btn_right))
+        onView(withId(R.id.btn_next))
             .perform(click())
 
         // then
@@ -111,11 +111,11 @@ class CartActivityTest {
     @Test
     fun `이전페이지_버튼을_누르면_1페이지로_간다`() {
         // given
-        onView(withId(R.id.btn_right))
+        onView(withId(R.id.btn_next))
             .perform(click())
 
         // when
-        onView(withId(R.id.btn_left))
+        onView(withId(R.id.btn_previous))
             .perform(click())
 
         // then
