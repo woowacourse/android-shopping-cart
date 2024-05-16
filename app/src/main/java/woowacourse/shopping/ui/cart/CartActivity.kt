@@ -9,7 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.model.CartsImpl
+import woowacourse.shopping.model.data.CartsImpl
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding

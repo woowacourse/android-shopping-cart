@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductDao
+import woowacourse.shopping.model.data.ProductDao
 import kotlin.math.min
 
 class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel() {

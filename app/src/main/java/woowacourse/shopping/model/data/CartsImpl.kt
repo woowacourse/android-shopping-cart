@@ -1,4 +1,6 @@
-package woowacourse.shopping.model
+package woowacourse.shopping.model.data
+
+import woowacourse.shopping.model.Product
 
 object CartsImpl : CartDao {
     private const val EXCEPTION_INVALID_ID = "Movie not found with id: %d"

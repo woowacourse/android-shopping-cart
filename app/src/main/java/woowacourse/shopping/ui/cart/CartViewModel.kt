@@ -3,9 +3,9 @@ package woowacourse.shopping.ui.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.model.CartDao
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.data.CartDao
 import kotlin.math.min
 
 class CartViewModel(private val cartDao: CartDao) : ViewModel() {

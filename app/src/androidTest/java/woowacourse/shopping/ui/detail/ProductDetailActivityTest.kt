@@ -15,7 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductsImpl
+import woowacourse.shopping.model.data.ProductsImpl
 
 @RunWith(AndroidJUnit4::class)
 class ProductDetailActivityTest {

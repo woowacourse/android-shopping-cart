@@ -1,4 +1,6 @@
-package woowacourse.shopping.model
+package woowacourse.shopping.model.data
+
+import woowacourse.shopping.model.Product
 
 interface ProductDao {
     fun save(product: Product): Long

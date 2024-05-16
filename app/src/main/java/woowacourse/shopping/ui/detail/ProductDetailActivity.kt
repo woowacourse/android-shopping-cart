@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.CartsImpl
-import woowacourse.shopping.model.ProductsImpl
+import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.model.data.ProductsImpl
 
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding

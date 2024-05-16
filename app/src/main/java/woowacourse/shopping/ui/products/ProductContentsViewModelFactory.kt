@@ -2,7 +2,7 @@ package woowacourse.shopping.ui.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.model.ProductDao
+import woowacourse.shopping.model.data.ProductDao
 
 class ProductContentsViewModelFactory(
     private val productDao: ProductDao,

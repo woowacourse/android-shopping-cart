@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.model.CartsImpl
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductsImpl
+import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.model.data.ProductsImpl
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
