@@ -16,7 +16,6 @@ import woowacourse.shopping.presentation.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class, MockKExtension::class)
 class ShoppingCartViewModelTest {
-
     @MockK
     lateinit var cartRepository: CartRepository
 

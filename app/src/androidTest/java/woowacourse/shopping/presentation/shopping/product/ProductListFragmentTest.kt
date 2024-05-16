@@ -20,7 +20,6 @@ import woowacourse.shopping.presentation.shopping.product.adpater.ShoppingViewHo
 
 @RunWith(AndroidJUnit4::class)
 class ProductListFragmentTest {
-
     @Before
     fun setUp() {
         launchFragmentInContainer<ProductListFragment>()
@@ -58,11 +57,12 @@ class ProductListFragmentTest {
         // 더보기 버튼 클릭
         onView(withText(containsString(plusText))).perform(click())
         // 더보기 버튼까지 스크롤
-        val interaction= onView(withId(R.id.rv_product_list)).perform(
-            RecyclerViewActions.scrollToHolder(
-                CoreMatchers.instanceOf(ShoppingViewHolder.ProductViewHolder::class.java),
-            ).atPosition(20),
-        )
+        val interaction =
+            onView(withId(R.id.rv_product_list)).perform(
+                RecyclerViewActions.scrollToHolder(
+                    CoreMatchers.instanceOf(ShoppingViewHolder.ProductViewHolder::class.java),
+                ).atPosition(20),
+            )
         // then
         interaction.check(matches(hasDescendant(withText(containsString(expectProductTitle)))))
     }
