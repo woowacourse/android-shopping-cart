@@ -8,10 +8,10 @@ import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.MainActivity
-import woowacourse.shopping.view.viewmodel.MainViewModel
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
+import woowacourse.shopping.view.viewmodel.MainViewModel
 
 class ProductsListFragment : Fragment(), OnClickProducts {
     private var _binding: FragmentProductListBinding? = null
@@ -36,6 +36,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = (requireActivity() as MainActivity).viewModel
         initView()
+        observeData()
     }
 
     private fun initView() {
@@ -46,8 +47,10 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             ) { isLoadLastItem ->
                 binding.isVisible = isLoadLastItem
             }
-
         binding.rvProducts.adapter = adapter
+    }
+
+    private fun observeData() {
         mainViewModel.products.observe(viewLifecycleOwner) { products ->
             adapter.updateProducts(addedProducts = products)
         }

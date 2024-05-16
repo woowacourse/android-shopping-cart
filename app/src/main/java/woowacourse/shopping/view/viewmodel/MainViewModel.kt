@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.cart.ShoppingCartFragment.Companion.DEFAULT_ITEM_SIZE
 import kotlin.concurrent.thread
 
 class MainViewModel(
@@ -21,7 +22,7 @@ class MainViewModel(
     }
 
     fun loadPagingProduct() {
-        val pagingData = repository.loadPagingProducts(products.value?.size ?: 0)
+        val pagingData = repository.loadPagingProducts(products.value?.size ?: DEFAULT_ITEM_SIZE)
         if (pagingData.isNotEmpty()) {
             _products.value = _products.value?.plus(pagingData)
         }
@@ -46,7 +47,7 @@ class MainViewModel(
     fun loadPagingCartItem() {
         var pagingData = emptyList<CartItem>()
         thread {
-            pagingData = repository.loadPagingCartItems(shoppingCart.cartItems.value?.size ?: 0)
+            pagingData = repository.loadPagingCartItems(shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE)
         }.join()
         if (pagingData.isNotEmpty()) {
             shoppingCart.addProducts(pagingData)

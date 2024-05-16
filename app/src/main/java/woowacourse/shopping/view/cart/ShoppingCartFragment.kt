@@ -17,8 +17,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     val binding: FragmentShoppingCartBinding get() = _binding!!
     private lateinit var mainViewModel: MainViewModel
     private lateinit var adapter: ShoppingCartAdapter
-    private var currentPage = 1
-    private var totalItemSize = 0
+    private var currentPage = MIN_PAGE_COUNT
+    private var totalItemSize = DEFAULT_ITEM_SIZE
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +26,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentShoppingCartBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 
@@ -36,6 +37,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel = (requireActivity() as MainActivity).viewModel
         initView()
+        observeData()
     }
 
     private fun initView() {
@@ -50,9 +52,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
                 },
             )
         binding.rvShoppingCart.adapter = adapter
+    }
 
+    private fun observeData() {
         mainViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { cartItems ->
-            totalItemSize = cartItems?.size ?: 0
+            totalItemSize = cartItems?.size ?: DEFAULT_ITEM_SIZE
             view?.post {
                 updateRecyclerView()
             }
@@ -76,7 +80,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     override fun clickPrevPage() {
-        if (currentPage > 1) {
+        if (currentPage > MIN_PAGE_COUNT) {
             binding.currentPage = --currentPage
             updateRecyclerView()
         }
@@ -98,7 +102,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun updateRecyclerView() {
-        val startIndex = (currentPage - 1) * CART_ITEM_PAGE_SIZE
+        val startIndex = (currentPage - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
         val endIndex = minOf(currentPage * CART_ITEM_PAGE_SIZE, totalItemSize)
         val newData =
             mainViewModel.shoppingCart.cartItems.value?.subList(startIndex, endIndex) ?: emptyList()
@@ -106,10 +110,12 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun hasLastItem(endIndex: Int): Boolean {
-        return endIndex >= (mainViewModel.shoppingCart.cartItems.value?.size ?: 0)
+        return endIndex >= (mainViewModel.shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE)
     }
 
     companion object {
         const val CART_ITEM_PAGE_SIZE = 3
+        private const val MIN_PAGE_COUNT = 1
+        const val DEFAULT_ITEM_SIZE = 0
     }
 }
