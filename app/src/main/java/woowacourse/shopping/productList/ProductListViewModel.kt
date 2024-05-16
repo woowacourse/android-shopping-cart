@@ -1,8 +1,10 @@
 package woowacourse.shopping.productList
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import woowacourse.shopping.db.Product
 import woowacourse.shopping.repository.DummyProductStore
 
@@ -10,22 +12,20 @@ class ProductListViewModel : ViewModel() {
     private val dummyProductStore by lazy { DummyProductStore() }
     private var currentIndex = 1
 
-    private val _loadedProducts: MutableLiveData<List<Product>> =
-        MutableLiveData(
-            dummyProductStore.load20Data(currentIndex).toMutableList()
-                .also { currentIndex += COUNT_EACH_LOADING },
-        )
+    private val _loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(
+        dummyProductStore.load20Data(currentIndex).toMutableList()
+            .also { currentIndex += COUNT_EACH_LOADING })
 
     val loadedProducts: LiveData<List<Product>>
         get() = _loadedProducts
 
+
     fun loadProducts() {
         val result = dummyProductStore.load20Data(currentIndex)
         currentIndex += COUNT_EACH_LOADING
-        _loadedProducts.value =
-            _loadedProducts.value?.toMutableList()?.apply {
-                addAll(result)
-            }
+        _loadedProducts.value = _loadedProducts.value?.toMutableList()?.apply {
+            addAll(result)
+        }
     }
 
     companion object {
