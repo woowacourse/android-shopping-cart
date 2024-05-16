@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.shopping
+package woowacourse.shopping.presentation.ui.shopping
 
 import android.os.Bundle
 import android.view.Menu
@@ -13,8 +13,8 @@ import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
-import woowacourse.shopping.presentation.cart.CartActivity
-import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.presentation.ui.cart.CartActivity
+import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
 class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     private lateinit var binding: ActivityShoppingBinding

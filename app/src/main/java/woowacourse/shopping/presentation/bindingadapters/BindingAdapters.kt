@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.shopping.ShoppingAdapter
+import woowacourse.shopping.presentation.ui.shopping.ShoppingAdapter
 
 @BindingAdapter("app:imageUrl")
 fun loadImage(

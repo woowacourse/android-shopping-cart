@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.detail
+package woowacourse.shopping.presentation.ui.detail
 
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
-import woowacourse.shopping.presentation.cart.CartActivity
+import woowacourse.shopping.presentation.ui.cart.CartActivity
 
 class DetailActivity : AppCompatActivity(), DetailClickListener {
     private lateinit var binding: ActivityDetailBinding

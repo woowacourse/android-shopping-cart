@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.cart
+package woowacourse.shopping.presentation.ui.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

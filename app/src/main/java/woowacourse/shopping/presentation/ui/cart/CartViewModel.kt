@@ -1,18 +1,19 @@
-package woowacourse.shopping.presentation.cart
+package woowacourse.shopping.presentation.ui.cart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.presentation.state.UIState
 
 class CartViewModel(private val repository: CartRepository) : ViewModel() {
     private val pageSize = PAGE_SIZE
 
-    private val _shoppingCart = MutableLiveData<List<CartItem>>()
-    val shoppingCart: LiveData<List<CartItem>> = _shoppingCart
+    private val _uiState = MutableLiveData<UIState<List<CartItem>>>()
+    val uiState: LiveData<UIState<List<CartItem>>> = _uiState
 
-    private val _currentPage = MutableLiveData(0)
+    private val _currentPage = MutableLiveData(DEFAULT_PAGE)
     val currentPage: LiveData<Int> = _currentPage
 
     private val _isFirstPage = MutableLiveData(true)
@@ -39,13 +40,26 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
         val totalItems = repository.findAll().items.size
         lastPage = (totalItems - PAGE_STEP) / pageSize
 
-        _currentPage.value = page.coerceIn(0, lastPage)
+        _currentPage.value = page.coerceIn(DEFAULT_PAGE, lastPage)
         _isFirstPage.value = _currentPage.value == DEFAULT_PAGE
         _isLastPage.value = _currentPage.value == lastPage
 
-        val shoppingCart = repository.findAllPagedItems(_currentPage.value ?: DEFAULT_PAGE, pageSize)
-        _shoppingCart.postValue(shoppingCart.items)
+        loadCartItems()
         updatePageControlVisibility(totalItems)
+    }
+
+    fun loadCartItems() {
+        try {
+            val items =
+                repository.findAllPagedItems(_currentPage.value ?: DEFAULT_PAGE, pageSize).items
+            if (items.isEmpty()) {
+                _uiState.postValue(UIState.Empty)
+            } else {
+                _uiState.postValue(UIState.Success(items))
+            }
+        } catch (e: Exception) {
+            _uiState.postValue(UIState.Error(e))
+        }
     }
 
     fun loadNextPage() {

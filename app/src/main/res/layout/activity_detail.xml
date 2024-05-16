@@ -7,17 +7,17 @@
 
         <variable
             name="clickListener"
-            type="woowacourse.shopping.presentation.detail.DetailClickListener" />
+            type="woowacourse.shopping.presentation.ui.detail.DetailClickListener" />
 
         <variable
             name="vmProduct"
-            type="woowacourse.shopping.presentation.detail.DetailViewModel" />
+            type="woowacourse.shopping.presentation.ui.detail.DetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.shopping.ShoppingActivity">
+        tools:context=".presentation.ui.shopping.ShoppingActivity">
 
 
         <com.google.android.material.appbar.MaterialToolbar

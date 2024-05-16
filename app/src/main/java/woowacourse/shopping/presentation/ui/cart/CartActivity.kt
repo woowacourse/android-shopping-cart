@@ -1,15 +1,19 @@
-package woowacourse.shopping.presentation.cart
+package woowacourse.shopping.presentation.ui.cart
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
+import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
-import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.presentation.state.UIState
+import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
 class CartActivity : AppCompatActivity(), CartClickListener {
     private lateinit var binding: ActivityCartBinding
@@ -29,13 +33,33 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
         val factory = CartViewModelFactory(repository = CartRepositoryImpl())
         viewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
-        viewModel.shoppingCart.observe(
-            this,
-            Observer { cartItems ->
-                adapter.loadData(cartItems)
-            },
-        )
+
         binding.vmShoppingCart = viewModel
+
+        viewModel.uiState.observe(this) { state ->
+            when (state) {
+                is UIState.Success -> showData(state.data)
+                is UIState.Empty -> showEmptyView()
+                is UIState.Error ->
+                    showError(
+                        state.exception.message ?: getString(R.string.unknown_error),
+                    )
+            }
+        }
+    }
+
+    private fun showData(data: List<CartItem>) {
+        adapter.loadData(data)
+    }
+
+    private fun showEmptyView() {
+        binding.recyclerView.visibility = View.GONE
+        binding.tvEmptyCart.visibility = View.VISIBLE
+    }
+
+    private fun showError(errorMessage: String) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        viewModel.loadCartItems()
     }
 
     private fun setUpToolbar() {

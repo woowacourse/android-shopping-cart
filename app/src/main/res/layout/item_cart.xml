@@ -7,7 +7,7 @@
 
         <variable
             name="clickListener"
-            type="woowacourse.shopping.presentation.cart.CartClickListener" />
+            type="woowacourse.shopping.presentation.ui.cart.CartClickListener" />
 
         <variable
             name="cartItem"
