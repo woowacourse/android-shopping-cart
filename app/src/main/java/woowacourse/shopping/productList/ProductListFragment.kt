@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.cart.CartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
@@ -16,7 +18,8 @@ class ProductListFragment : Fragment() {
 
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
-            viewModel.loadProducts(),
+//            viewModel.loadProducts(),
+            viewModel.loadedProducts.value ?: emptyList(),
             onClick = { id -> navigateToProductDetail(id) }
         )
     }
@@ -29,7 +32,27 @@ class ProductListFragment : Fragment() {
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.productDetailList.adapter = adapter
+        binding.vm = viewModel
+        showLoadMoreButton()
         return binding.root
+    }
+
+    private fun showLoadMoreButton() {
+        binding.productDetailList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                if (totalItemCount == lastVisibleItem + 1) {
+                    binding.loadMoreButton.visibility = View.VISIBLE
+                } else {
+                    binding.loadMoreButton.visibility = View.GONE
+                }
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,6 +60,10 @@ class ProductListFragment : Fragment() {
 
         binding.productListToolbar.setNavigationOnClickListener {
             navigateToCart()
+        }
+
+        viewModel.loadedProducts.observe(viewLifecycleOwner) {
+            adapter.updateData(it)
         }
     }
 

@@ -7,7 +7,8 @@ import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.db.Product
 
 class ProductRecyclerViewAdapter(
-    private val values: List<Product>,
+//    private val values: List<Product>,
+    private var values: List<Product>,
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>() {
 
@@ -28,6 +29,12 @@ class ProductRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int = values.size
+
+
+    fun updateData(newData: List<Product>) {
+        this.values = newData
+        notifyDataSetChanged()
+    }
 
 
     inner class ViewHolder(
