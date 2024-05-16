@@ -38,6 +38,7 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
     fun removeCartItem(productId: Long) {
         cartDao.delete(productId)
         items.remove(items.find { it.id == productId })
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(items.size)
         _cart.value = getProducts()
     }
 
