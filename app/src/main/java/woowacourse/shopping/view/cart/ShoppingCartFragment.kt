@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.MainActivity
-import woowacourse.shopping.view.MainViewModel
+import woowacourse.shopping.view.viewmodel.MainViewModel
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 

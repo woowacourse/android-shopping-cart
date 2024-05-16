@@ -6,6 +6,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.products.ProductsListFragment
+import woowacourse.shopping.view.viewmodel.MainViewModel
+import woowacourse.shopping.view.viewmodel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {

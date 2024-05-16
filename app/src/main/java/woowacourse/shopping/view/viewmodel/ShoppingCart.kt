@@ -1,7 +1,8 @@
-package woowacourse.shopping.domain.model
+package woowacourse.shopping.view.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import woowacourse.shopping.domain.model.CartItem
 
 class ShoppingCart {
     private val _cartItems: MutableLiveData<List<CartItem>> = MutableLiveData(listOf())
@@ -13,13 +14,5 @@ class ShoppingCart {
 
     fun deleteProduct(itemId: Long) {
         _cartItems.value = _cartItems.value?.filter { it.id != itemId }
-    }
-
-    companion object {
-        fun makeShoppingCart(cartItems: List<CartItem>): ShoppingCart {
-            return ShoppingCart().apply {
-                _cartItems.postValue(cartItems)
-            }
-        }
     }
 }
