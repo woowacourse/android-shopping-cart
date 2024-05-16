@@ -7,11 +7,11 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
+import woowacourse.shopping.presentation.ui.getPriceText
 
 class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     override val layoutResourceId: Int
@@ -31,7 +31,8 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
                         .load(state.data.imgUrl)
                         .into(binding.ivProduct)
                     binding.tvName.text = state.data.name
-                    binding.tvPriceValue.text = state.data.price.toString()
+                    val priceText = getPriceText(binding.root.context, state.data.price)
+                    binding.tvPriceValue.text = priceText
                     binding.tvAddCart.setOnClickListener {
                         finish()
                         viewModel.saveCartItem(state.data)

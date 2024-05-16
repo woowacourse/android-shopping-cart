@@ -2,10 +2,10 @@ package woowacourse.shopping.presentation.ui.cart
 
 import android.content.Context
 import android.content.Intent
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
-import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.Product
@@ -18,10 +18,11 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
 
     private val cartAdapter: CartAdapter = CartAdapter(this)
 
-
     private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
+        setTitle("Cart")
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.rvCarts.adapter = cartAdapter
 
         binding.btnLeft.setOnClickListener {
@@ -67,6 +68,11 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
 
     override fun onDeleteClick(product: Product) {
         viewModel.deleteProduct(product)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return true
     }
 
     companion object {
