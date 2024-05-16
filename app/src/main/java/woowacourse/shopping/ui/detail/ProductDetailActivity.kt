@@ -6,23 +6,23 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.model.CartsImpl
+import woowacourse.shopping.model.ProductsImpl
 
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
-    private val viewModel: ProductDetailViewModel by viewModels()
-    private val productId by lazy {
-        intent.getLongExtra(
-            ProductDetailKey.EXTRA_PRODUCT_KEY,
-            EXTRA_DEFAULT_VALUE,
-        )
+    private val viewModel by lazy {
+        ViewModelProvider(this, ProductDetailViewModelFactory(ProductsImpl, CartsImpl))
+            .get(ProductDetailViewModel::class.java)
     }
+    private val productId by lazy { productId() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +66,12 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun productId() =
+        intent.getLongExtra(
+            ProductDetailKey.EXTRA_PRODUCT_KEY,
+            EXTRA_DEFAULT_VALUE,
+        )
 
     companion object {
         private const val EXTRA_DEFAULT_VALUE = -1L

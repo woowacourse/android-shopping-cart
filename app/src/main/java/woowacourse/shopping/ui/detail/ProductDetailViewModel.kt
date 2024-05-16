@@ -3,19 +3,22 @@ package woowacourse.shopping.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.model.CartsImpl
+import woowacourse.shopping.model.CartDao
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductsImpl
+import woowacourse.shopping.model.ProductDao
 
-class ProductDetailViewModel : ViewModel() {
+class ProductDetailViewModel(
+    private val productDao: ProductDao,
+    private val cartDao: CartDao,
+) : ViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
     fun loadProduct(productId: Long) {
-        _product.value = ProductsImpl.find(productId)
+        _product.value = productDao.find(productId)
     }
 
     fun addProductToCart() {
-        _product.value?.let { CartsImpl.save(it) }
+        _product.value?.let { cartDao.save(it) }
     }
 }

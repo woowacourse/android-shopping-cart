@@ -16,7 +16,7 @@ class ProductDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductDetailViewModel()
+        viewModel = ProductDetailViewModel(ProductsImpl, CartsImpl)
     }
 
     @Test
