@@ -60,7 +60,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     }
 
     companion object {
-        private const val EXTRA_PRODUCT_ID = "productId"
+        const val EXTRA_PRODUCT_ID = "productId"
 
         fun start(
             context: Context,
