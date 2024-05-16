@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
@@ -10,6 +11,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.viewmodel.CartViewModel
 import woowacourse.shopping.viewmodel.CartViewModelFactory
 import woowacourse.shopping.viewmodel.ProductViewModel
@@ -47,7 +49,27 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun initializeAddCartButton() {
         binding.btnProductDetailAddCart.setOnClickListener {
             cartViewModel.add(productId())
+            showAddCartDialog()
         }
+    }
+
+    private fun showAddCartDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.add_cart_done_title))
+            .setMessage(getString(R.string.add_cart_done_content))
+            .setPositiveButton(getString(R.string.common_move)) { _, _ ->
+                navigateToCartView()
+            }
+            .setNegativeButton(getString(R.string.common_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun navigateToCartView() {
+        val intent = Intent(this, CartActivity::class.java)
+        startActivity(intent)
     }
 
     private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
