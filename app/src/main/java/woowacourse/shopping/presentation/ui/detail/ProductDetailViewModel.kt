@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.presentation.ui.Product
 import woowacourse.shopping.presentation.ui.UiState
 
 class ProductDetailViewModel(private val productRepository: ProductRepository, private val cartRepository: CartRepository) : ViewModel() {

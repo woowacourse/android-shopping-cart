@@ -1,7 +1,5 @@
 package woowacourse.shopping.domain
 
-import woowacourse.shopping.presentation.ui.Product
-
 interface CartRepository {
     fun addData(product: Product): Result<Long>
 

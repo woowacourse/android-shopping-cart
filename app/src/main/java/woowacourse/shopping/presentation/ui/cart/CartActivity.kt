@@ -7,8 +7,8 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.base.BindingActivity
-import woowacourse.shopping.presentation.ui.Product
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
 
@@ -21,18 +21,15 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
-        setTitle("Cart")
+        title = "Cart"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.rvCarts.adapter = cartAdapter
-
         binding.btnLeft.setOnClickListener {
             viewModel.minus()
         }
-
         binding.btnRight.setOnClickListener {
             viewModel.plus()
         }
-
         viewModel.carts.observe(this) {
             when (it) {
                 is UiState.Finish -> {

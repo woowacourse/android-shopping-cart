@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.presentation.ui.Product
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.ui.getPriceText
 
 class CartAdapter(

@@ -12,7 +12,8 @@ import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
-import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder.ProductViewHolder.Companion.PRODUCT_VIEW_TYPE
+import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
+import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewType
 
 class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHandler {
     override val layoutResourceId: Int
@@ -23,24 +24,11 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     private val adapter: ShoppingAdapter = ShoppingAdapter(this)
 
     override fun initStartView() {
-        val layoutManager = GridLayoutManager(this, 2)
-        layoutManager.spanSizeLookup =
-            object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return if (adapter.getItemViewType(position) == PRODUCT_VIEW_TYPE) {
-                        1
-                    } else {
-                        2
-                    }
-                }
-            }
-        binding.rvShopping.layoutManager = layoutManager
-        binding.rvShopping.adapter = adapter
-
+        initAdapter()
         viewModel.loadProductByOffset()
-
         viewModel.products.observe(this) {
             when (it) {
+                is UiState.None -> {}
                 is UiState.Finish -> {
                     adapter.updateList(it.data)
                 }
@@ -48,13 +36,27 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                 is UiState.Error -> {
                     Toast.makeText(this, it.msg, Toast.LENGTH_SHORT).show()
                 }
-
-                is UiState.None -> {
-                    // TODO:초기 상태
-                }
             }
         }
     }
+
+    private fun initAdapter() {
+        val layoutManager = GridLayoutManager(this, GRIDLAYOUT_COL)
+        layoutManager.spanSizeLookup = getSpanManager()
+        binding.rvShopping.layoutManager = layoutManager
+        binding.rvShopping.adapter = adapter
+    }
+
+    private fun getSpanManager() =
+        object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (adapter.getItemViewType(position) == ShoppingViewType.Product.value) {
+                    ShoppingViewType.Product.span
+                } else {
+                    ShoppingViewType.LoadMore.span
+                }
+            }
+        }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.shopping_menu, menu)
@@ -72,5 +74,9 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     override fun loadMore() {
         viewModel.loadProductByOffset()
+    }
+
+    companion object {
+        const val GRIDLAYOUT_COL = 2
     }
 }

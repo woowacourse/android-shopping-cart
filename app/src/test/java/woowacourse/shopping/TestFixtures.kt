@@ -1,7 +1,7 @@
 package woowacourse.shopping
 
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.presentation.ui.Product
+import woowacourse.shopping.domain.Product
 
 val products =
     List(51) { id ->

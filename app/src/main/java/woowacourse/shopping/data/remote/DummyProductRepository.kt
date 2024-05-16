@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.remote
 
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.presentation.ui.Product
 import kotlin.math.min
 
 class DummyProductRepository : ProductRepository {

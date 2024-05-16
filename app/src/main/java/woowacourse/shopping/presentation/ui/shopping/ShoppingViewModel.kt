@@ -3,8 +3,8 @@ package woowacourse.shopping.presentation.ui.shopping
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.remote.DummyProductRepository
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductRepository
-import woowacourse.shopping.presentation.ui.Product
 import woowacourse.shopping.presentation.ui.UiState
 
 class ShoppingViewModel(private val repository: ProductRepository = DummyProductRepository()) :
