@@ -8,14 +8,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
-import woowacourse.shopping.data.DefaultCartRepository
+import woowacourse.shopping.data.cart.DefaultCartRepository
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.shopping.product.ProductListFragment
 
 class ShoppingCartFragment :
     BindingFragment<FragmentShoppingCartBinding>(R.layout.fragment_shopping_cart) {

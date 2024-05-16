@@ -13,7 +13,7 @@ import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.DefaultShoppingRepository
+import woowacourse.shopping.data.shopping.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.cart.ShoppingCartFragment
