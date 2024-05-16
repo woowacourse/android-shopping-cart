@@ -31,7 +31,7 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         adapter = CartAdapter(this)
         binding.recyclerView.adapter = adapter
 
-        val factory = CartViewModelFactory(repository = CartRepositoryImpl())
+        val factory = CartViewModelFactory(repository = CartRepositoryImpl)
         viewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
 
         binding.vmShoppingCart = viewModel

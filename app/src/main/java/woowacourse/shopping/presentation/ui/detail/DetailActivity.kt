@@ -32,7 +32,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
     private fun setUpViewModel() {
         val factory =
             DetailViewModelFactory(
-                CartRepositoryImpl(),
+                CartRepositoryImpl,
                 ShoppingItemsRepositoryImpl(),
                 productId = productId,
             )
