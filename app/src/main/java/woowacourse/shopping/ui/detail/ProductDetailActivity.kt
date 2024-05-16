@@ -39,12 +39,19 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     }
 
     private fun showProductDetail() {
-        viewModel.loadProduct(productId)
-        viewModel.product.observe(this) {
-            binding.product = it
-            Glide.with(this)
-                .load(it.imageUrl)
-                .into(binding.ivProductImage)
+        runCatching {
+            viewModel.loadProduct(productId)
+        }.onSuccess {
+            viewModel.product.observe(this) {
+                binding.product = it
+                Glide.with(this)
+                    .load(it.imageUrl)
+                    .into(binding.ivProductImage)
+            }
+        }.onFailure {
+            toast = Toast.makeText(this, it.message, Toast.LENGTH_SHORT)
+            toast?.show()
+            finish()
         }
     }
 
