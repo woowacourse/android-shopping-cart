@@ -45,7 +45,7 @@ class CartItemRecyclerViewAdapter(
 
         fun bind(product: Product) {
             binding.product = product
-            binding.root.setOnClickListener { onClick(product.id) }
+            binding.cartProductDelete.setOnClickListener { onClick(product.id) }
         }
     }
 

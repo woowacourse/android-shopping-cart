@@ -34,6 +34,7 @@
             tools:text="상품 이름" />
 
         <ImageView
+            android:id="@+id/cart_product_delete"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_margin="10dp"
