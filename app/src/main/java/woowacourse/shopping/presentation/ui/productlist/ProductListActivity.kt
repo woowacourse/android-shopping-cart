@@ -10,6 +10,8 @@ import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
+import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.Companion.PRODUCT_VIEW_TYPE
+import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapterManager
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
 
 class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
@@ -34,6 +36,8 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
 
     private fun initAdapter() {
         binding.rvProductList.adapter = adapter
+        binding.rvProductList.layoutManager =
+            ProductListAdapterManager(this, adapter, 2, PRODUCT_VIEW_TYPE)
     }
 
     private fun initObserve() {
@@ -49,7 +53,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
 
         viewModel.uiState.observe(this) { state ->
             state.pagingProduct?.let { pagingProduct ->
-                adapter.updateProductList(pagingProduct.productList)
+                adapter.updateProductList(pagingProduct)
             }
         }
 

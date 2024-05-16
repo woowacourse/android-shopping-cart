@@ -49,7 +49,7 @@ class ProductListViewModel(
         }
     }
 
-    fun onClickLoadMoreButton() {
+    override fun onClickLoadMoreButton() {
         _uiState.value?.let { state ->
             state.pagingProduct?.let { pagingProduct ->
                 getPagingProduct(pagingProduct.currentPage + 1)

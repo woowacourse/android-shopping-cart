@@ -14,3 +14,14 @@ fun TextView.binLoadMoreBtnVisible(last: Boolean?) {
         }
     }
 }
+
+@BindingAdapter("emptyLoadMoreTextVisible")
+fun TextView.bindEmptyLoadMoreTextVisible(last: Boolean?) {
+    last?.let { value ->
+        if (value) {
+            this.visibility = View.VISIBLE
+        } else {
+            this.visibility = View.GONE
+        }
+    }
+}

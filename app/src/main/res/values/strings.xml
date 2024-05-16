@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Shopping</string>
 
+    <!--    상품 목록-->
+    <string name="show_more_products_title">더보기</string>
+    <string name="empty_show_more_title">더이상 상품이 없습니다.</string>
+
     <!--    상품 상세-->
     <string name="product_detail_title"></string>
     <string name="detail_price_title">가격</string>
