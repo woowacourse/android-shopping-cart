@@ -38,7 +38,7 @@ class ProductsImplTest {
         ProductsImpl.save(product.copy(name = "그램"))
 
         // when
-        val actual = ProductsImpl.findInRange()
+        val actual = ProductsImpl.findAll()
 
         // then
         assertThat(actual[0].name).isEqualTo("갤럭시북")
@@ -55,13 +55,13 @@ class ProductsImplTest {
 
         // when
         ProductsImpl.deleteAll()
-        val actual = ProductsImpl.findInRange()
+        val actual = ProductsImpl.findAll()
 
         // then
         assertThat(actual).isEmpty()
     }
 
     companion object {
-        val product = Product(imageUrl = "", name = "맥북", price = 100)
+        private val product = Product(imageUrl = "", name = "맥북", price = 100)
     }
 }
