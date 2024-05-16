@@ -52,8 +52,7 @@ class CartViewModelTest {
     fun `한 페이지에는 5개의 장바구니 상품이 있다`() {
         // given
         repeat(pageSize) {
-            val product = productRepository.find(it.toLong())
-            cartRepository.increaseQuantity(product)
+            addCart(productId = it.toLong())
         }
 
         // when
@@ -69,8 +68,7 @@ class CartViewModelTest {
     fun `장바구니 상품이 10개인 경우 5개의 상품을 불러온다`() {
         // given
         repeat(10) {
-            val product = productRepository.find(it.toLong())
-            cartRepository.increaseQuantity(product)
+            addCart(productId = it.toLong())
         }
 
         // when
@@ -86,8 +84,7 @@ class CartViewModelTest {
     fun `장바구니에 6개의 상품을 담았다면 장바구니 상품 수는 6이다`() {
         // given
         repeat(6) {
-            val product = productRepository.find(it.toLong())
-            cartRepository.increaseQuantity(product)
+            addCart(productId = it.toLong())
         }
 
         // when
@@ -96,5 +93,10 @@ class CartViewModelTest {
         // then
         val actual = viewModel.cartSize.getOrAwaitValue()
         assertThat(actual).isEqualTo(6)
+    }
+
+    private fun addCart(productId: Long) {
+        val product = productRepository.find(productId)
+        cartRepository.increaseQuantity(product)
     }
 }
