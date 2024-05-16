@@ -42,27 +42,35 @@ class MainActivity : AppCompatActivity() {
     private fun initializeProductAdapter() {
         adapter =
             ProductAdapter(onClickProductItem = { productId ->
-                ProductDetailActivity.newIntent(this, productId)
-                    .also { startActivity(it) }
+                navigateToProductDetailView(productId)
             })
         binding.rvMainProduct.adapter = adapter
 
         productViewModel.products.observe(this) {
-            val itemCount = min(it.size, PAGE_SIZE)
-            adapter.updateProducts(it, page++ * PAGE_SIZE, itemCount)
+            val changedItemCount = min(it.size, PAGE_SIZE)
+            adapter.updateProducts(it, page++ * PAGE_SIZE, changedItemCount)
         }
+    }
+
+    private fun navigateToProductDetailView(productId: Long) {
+        ProductDetailActivity.newIntent(this, productId)
+            .also { startActivity(it) }
     }
 
     private fun initializeToolbar() {
         binding.toolbarMain.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.item_cart -> {
-                    val intent = Intent(this, CartActivity::class.java)
-                    startActivity(intent)
+                    navigateToCartView()
                 }
             }
             false
         }
+    }
+
+    private fun navigateToCartView() {
+        val intent = Intent(this, CartActivity::class.java)
+        startActivity(intent)
     }
 
     private fun updateProducts() {
@@ -78,11 +86,9 @@ class MainActivity : AppCompatActivity() {
                     dy: Int,
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
-                    val lastPosition =
-                        (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val lastPosition = (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
                     val totalCount = recyclerView.adapter?.itemCount
-                    binding.btnMainSeeMore.visibility =
-                        if (isSeeMore(lastPosition, totalCount)) View.VISIBLE else View.GONE
+                    binding.btnMainSeeMore.visibility = if (isSeeMore(lastPosition, totalCount)) View.VISIBLE else View.GONE
                 }
             }
         binding.rvMainProduct.addOnScrollListener(onScrollListener)

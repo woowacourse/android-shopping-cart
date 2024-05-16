@@ -8,6 +8,7 @@ import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.viewmodel.CartViewModel
 import woowacourse.shopping.viewmodel.CartViewModelFactory
 
@@ -39,23 +40,29 @@ class CartActivity : AppCompatActivity() {
 
     private fun initializeCartAdapter() {
         adapter =
-            CartAdapter(onClickExit = {
-                if (isEmptyLastPage()) page--
-                cartViewModel.delete(it)
-                updateCart()
-            })
+            CartAdapter(onClickExit = { deleteCartItem(it) })
         binding.rvCart.adapter = adapter
 
         cartViewModel.cartSize.observe(this) {
             cartSize = it
-            binding.layoutPage.visibility = if (it > PAGE_SIZE) View.VISIBLE else View.GONE
-            binding.btnCartPreviousPage.isEnabled = hasPreviousPage(page, MIN_PAGE)
-            binding.btnCartNextPage.isEnabled = hasNextPage(page, (it - 1) / PAGE_SIZE)
+            updatePageLayout(it)
         }
 
         cartViewModel.cart.observe(this) {
             adapter.updateCart(it)
         }
+    }
+
+    private fun deleteCartItem(it: Product) {
+        if (isEmptyLastPage()) page--
+        cartViewModel.delete(it)
+        updateCart()
+    }
+
+    private fun updatePageLayout(it: Int) {
+        binding.layoutPage.visibility = if (it > PAGE_SIZE) View.VISIBLE else View.GONE
+        binding.btnCartPreviousPage.isEnabled = hasPreviousPage(page, MIN_PAGE)
+        binding.btnCartNextPage.isEnabled = hasNextPage(page, (it - 1) / PAGE_SIZE)
     }
 
     private fun isEmptyLastPage() = page > 0 && cartSize % PAGE_SIZE == 1
@@ -83,15 +90,15 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateCart() {
+        cartViewModel.loadCart(page, PAGE_SIZE)
+        cartViewModel.loadCount()
+    }
+
     private fun initializeToolbar() {
         binding.toolbarCart.setNavigationOnClickListener {
             finish()
         }
-    }
-
-    private fun updateCart() {
-        cartViewModel.loadCart(page, PAGE_SIZE)
-        cartViewModel.loadCount()
     }
 
     companion object {
