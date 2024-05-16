@@ -14,7 +14,6 @@ import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 
-// TODO RecyclerView에 로딩 아이템 추가
 class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickListener {
     private val binding: ActivityHomeBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_home)
