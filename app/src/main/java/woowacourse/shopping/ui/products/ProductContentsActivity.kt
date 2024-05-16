@@ -4,20 +4,24 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
+import woowacourse.shopping.model.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
 
 class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
     private lateinit var adapter: ProductAdapter
-    private val viewModel: ProductContentsViewModel by viewModels()
+    private val viewModel by lazy {
+        ViewModelProvider(this, ProductContentsViewModelFactory(ProductsImpl))
+            .get(ProductContentsViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

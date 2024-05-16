@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductsImpl
+import woowacourse.shopping.model.ProductDao
 import kotlin.math.min
 
-class ProductContentsViewModel : ViewModel() {
+class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel() {
     private var currentOffset = 0
     private val items: MutableList<Product> = mutableListOf()
 
@@ -16,7 +16,7 @@ class ProductContentsViewModel : ViewModel() {
 
     fun loadProducts() {
         items.clear()
-        items.addAll(ProductsImpl.findAll())
+        items.addAll(productDao.findAll())
         _products.value = getProducts()
     }
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.model.ProductsImpl
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductContentsViewModelTest {
@@ -13,7 +14,7 @@ class ProductContentsViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductContentsViewModel()
+        viewModel = ProductContentsViewModel(ProductsImpl)
     }
 
     @Test
