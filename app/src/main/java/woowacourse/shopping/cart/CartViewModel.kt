@@ -31,7 +31,7 @@ class CartViewModel : ViewModel() {
     }
 
     fun nextPage() {
-        if (productIds.size / 3 < (currentPage.value ?: 0)) return
+        if (productIds.size / 5 < (currentPage.value ?: 0)) return
         _currentPage.value = _currentPage.value?.plus(1)
         updateItemsInShoppingCart()
     }
