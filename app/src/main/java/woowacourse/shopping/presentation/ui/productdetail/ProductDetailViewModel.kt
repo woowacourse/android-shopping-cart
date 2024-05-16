@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductListRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
+import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity.Companion.PUT_EXTRA_PRODUCT_ID
 
 class ProductDetailViewModel(
@@ -29,7 +30,7 @@ class ProductDetailViewModel(
         }.onFailure { e ->
             when (e) {
                 is NoSuchElementException -> showMessage(ProductDetailMessage.NoSuchElementErrorMessage)
-                else -> showMessage(ProductDetailMessage.DefaultErrorMessage)
+                else -> showMessage(MessageProvider.DefaultErrorMessage)
             }
         }
     }

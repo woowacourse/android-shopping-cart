@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
+import woowacourse.shopping.presentation.base.MessageProvider
 
 class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     BaseViewModel(),
@@ -26,7 +27,7 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
                     pagingOrder = pagingOrder,
                 )
         }.onFailure { _ ->
-            showMessage(ShoppingCartMessage.DefaultErrorMessage)
+            showMessage(MessageProvider.DefaultErrorMessage)
         }
     }
 

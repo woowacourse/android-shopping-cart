@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
+import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.ViewModelFactory
 import woowacourse.shopping.presentation.base.observeEvent
 
@@ -37,14 +38,14 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     private fun initObserve() {
         viewModel.message.observeEvent(this) { message ->
             when (message) {
-                is ProductDetailMessage.DefaultErrorMessage ->
-                    showToastMessage(message.toString(this))
+                is MessageProvider.DefaultErrorMessage ->
+                    showToastMessage(message.getMessage(this))
 
                 is ProductDetailMessage.NoSuchElementErrorMessage ->
-                    showToastMessage(message.toString(this))
+                    showToastMessage(message.getMessage(this))
 
                 is ProductDetailMessage.AddToCartSuccessMessage ->
-                    showSnackbar(message.toString(this)) {
+                    showSnackbar(message.getMessage(this)) {
                         anchorView = binding.tvAddToCart
                     }
             }

@@ -2,18 +2,14 @@ package woowacourse.shopping.presentation.ui.productdetail
 
 import android.content.Context
 import woowacourse.shopping.R
-import woowacourse.shopping.presentation.base.MessageType
+import woowacourse.shopping.presentation.base.MessageProvider
 
-sealed interface ProductDetailMessage : MessageType {
-    data object DefaultErrorMessage : ProductDetailMessage {
-        fun toString(context: Context): String = context.getString(R.string.unforeseen_error_message)
-    }
-
+sealed interface ProductDetailMessage : MessageProvider {
     data object NoSuchElementErrorMessage : ProductDetailMessage {
-        fun toString(context: Context): String = context.getString(R.string.no_such_element_exception_message)
+        fun getMessage(context: Context): String = context.getString(R.string.no_such_element_exception_message)
     }
 
     data object AddToCartSuccessMessage : ProductDetailMessage {
-        fun toString(context: Context): String = context.getString(R.string.add_to_cart_success_message)
+        fun getMessage(context: Context): String = context.getString(R.string.add_to_cart_success_message)
     }
 }

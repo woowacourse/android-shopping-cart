@@ -7,6 +7,7 @@ import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.repository.ProductListRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.Event
+import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
 
 class ProductListViewModel(
@@ -44,7 +45,7 @@ class ProductListViewModel(
 
             _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)
         }.onFailure { _ ->
-            showMessage(ProductListMessage.DefaultErrorMessage)
+            showMessage(MessageProvider.DefaultErrorMessage)
         }
     }
 

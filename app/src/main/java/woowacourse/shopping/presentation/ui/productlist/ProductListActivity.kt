@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.base.BaseActivity
+import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
@@ -54,7 +55,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
 
         viewModel.message.observeEvent(this) { message ->
             when (message) {
-                is ProductListMessage.DefaultErrorMessage -> showToastMessage(message.toString(this))
+                is MessageProvider.DefaultErrorMessage -> showToastMessage(message.getMessage(this))
             }
         }
     }

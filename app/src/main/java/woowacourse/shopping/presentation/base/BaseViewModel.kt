@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 abstract class BaseViewModel : ViewModel() {
-    private val _message: MutableLiveData<Event<MessageType>> = MutableLiveData()
-    val message: LiveData<Event<MessageType>> get() = _message
+    private val _message: MutableLiveData<Event<MessageProvider>> = MutableLiveData()
+    val message: LiveData<Event<MessageProvider>> get() = _message
 
-    fun showMessage(messageType: MessageType) {
-        _message.emit(messageType)
+    fun showMessage(messageProvider: MessageProvider) {
+        _message.emit(messageProvider)
     }
 }

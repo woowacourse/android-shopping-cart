@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
+import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.ViewModelFactory
 import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.OrderListAdapter
@@ -52,7 +53,7 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
 
         viewModel.message.observeEvent(this) { message ->
             when (message) {
-                is ShoppingCartMessage.DefaultErrorMessage -> showSnackbar(message.toString(this))
+                is MessageProvider.DefaultErrorMessage -> showSnackbar(message.getMessage(this))
             }
         }
     }
