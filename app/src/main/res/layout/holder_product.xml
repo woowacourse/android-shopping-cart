@@ -47,11 +47,12 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{String.valueOf(product.price)}"
+            android:text="@{@string/price_format(product.price)}"
             android:textAppearance="?attr/textAppearanceListItem"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/main_product_list_product_name"
             app:layout_constraintStart_toStartOf="@id/main_product_list_product_name"
             app:layout_constraintTop_toBottomOf="@id/main_product_list_product_name"
-            tools:text="10000000000000" />
+            tools:text="100000" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

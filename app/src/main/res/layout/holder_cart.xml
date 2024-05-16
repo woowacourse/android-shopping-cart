@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@{String.valueOf(product.price)}"
+            android:text="@{@string/price_format(product.price)}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="@id/cart_product_image"
             app:layout_constraintEnd_toEndOf="parent"
