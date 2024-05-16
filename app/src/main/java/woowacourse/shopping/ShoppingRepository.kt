@@ -7,7 +7,14 @@ import woowacourse.shopping.domain.ShoppingCartItem
 interface ShoppingRepository {
     fun products(): List<Product>
 
+    fun products(
+        startPosition: Int,
+        offset: Int,
+    ): List<Product>
+
     fun productById(id: Long): Product
+
+    fun productsTotalSize(): Int
 
     fun userId(): Long
 
