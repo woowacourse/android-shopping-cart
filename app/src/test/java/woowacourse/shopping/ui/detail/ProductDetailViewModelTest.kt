@@ -36,7 +36,6 @@ class ProductDetailViewModelTest {
         // given
         val productId = ProductsImpl.save(product)
         viewModel.loadProduct(productId)
-        println(productId)
 
         // when
         viewModel.addProductToCart()
