@@ -34,8 +34,41 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:layoutManager="LinearLayoutManager"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintTop_toBottomOf="@id/product_detail_toolbar"
         tools:context=".cart.CartFragment"
+        tools:itemCount="3"
         tools:listitem="@layout/holder_cart" />
+
+    <Button
+        android:id="@+id/cart_list_left_page_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이전"
+        app:layout_constraintBottom_toBottomOf="@+id/cart_list_page_number"
+        app:layout_constraintEnd_toStartOf="@id/cart_list_page_number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/cart_list_page_number" />
+
+    <TextView
+        android:id="@+id/cart_list_page_number"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        app:layout_constraintEnd_toStartOf="@id/cart_list_right_page_button"
+        app:layout_constraintStart_toEndOf="@id/cart_list_left_page_button"
+        app:layout_constraintTop_toBottomOf="@+id/cart_list" />
+
+
+    <Button
+        android:id="@+id/cart_list_right_page_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="다음"
+        app:layout_constraintBottom_toBottomOf="@+id/cart_list_page_number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cart_list_page_number"
+        app:layout_constraintTop_toTopOf="@+id/cart_list_page_number" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
