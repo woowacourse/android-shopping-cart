@@ -16,67 +16,85 @@ class CartRepositoryImpl : CartRepository {
         product: Product,
         quantity: Int,
     ) {
-        val thread =
-            Thread {
+        if (findOrNullWithProductId(product.id) != null) {
+            update(product.id, quantity)
+        } else {
+            threadAction {
                 dao.save(product.mapper(quantity))
             }
-        thread.start()
-        thread.join()
+        }
+    }
+
+    override fun update(
+        productId: Long,
+        quantity: Int,
+    ) {
+        val currentQuantity = findOrNullWithProductId(productId)?.quantity ?: 0
+        threadAction {
+            dao.update(productId, currentQuantity + quantity)
+        }
+    }
+
+    override fun findOrNullWithProductId(productId: Long): CartItem? {
+        var cartItemEntity: CartItemEntity? = null
+        threadAction {
+            cartItemEntity = dao.findWithProductId(productId)
+        }
+
+        return if (cartItemEntity == null) {
+            null
+        } else {
+            cartItemEntity?.toDomainModel()
+        }
     }
 
     override fun find(cartItemId: Long): CartItem {
-        var cardItemEntity: CartItemEntity? = null
-        val thread =
-            Thread {
-                cardItemEntity = dao.find(cartItemId)
-            }
-        thread.start()
-        thread.join()
+        var cartItemEntity: CartItemEntity? = null
+        threadAction {
+            cartItemEntity = dao.find(cartItemId)
+        }
 
-        return cardItemEntity?.toDomainModel() ?: throw IllegalArgumentException("데이터가 존재하지 않습니다.")
+        return cartItemEntity?.toDomainModel() ?: throw IllegalArgumentException("데이터가 존재하지 않습니다.")
     }
 
     override fun findAll(): ShoppingCart {
         var cartItems: List<CartItem> = emptyList()
-
-        val thread =
-            Thread {
-                cartItems = dao.findAll().map { it.toDomainModel() }
-            }
-        thread.start()
-        thread.join()
+        threadAction {
+            cartItems = dao.findAll().map { it.toDomainModel() }
+        }
         return ShoppingCart(cartItems)
     }
 
-    override fun findAllPagedItems(page: Int, pageSize: Int): ShoppingCart {
+    override fun findAllPagedItems(
+        page: Int,
+        pageSize: Int,
+    ): ShoppingCart {
         var cartItems: List<CartItem> = emptyList()
         val offset = page * pageSize
-        
-        val thread =
-            Thread {
-                cartItems = dao.findAllPaged(offset = offset, limit = pageSize)
+
+        threadAction {
+            cartItems =
+                dao.findAllPaged(offset = offset, limit = pageSize)
                     .map { it.toDomainModel() }
-            }
-        thread.start()
-        thread.join()
+        }
 
         return ShoppingCart(cartItems)
     }
 
     override fun delete(cartItemId: Long) {
-        val thread =
-            Thread {
-                dao.delete(cartItemId)
-            }
-        thread.start()
-        thread.join()
+        threadAction {
+            dao.delete(cartItemId)
+        }
     }
 
     override fun deleteAll() {
-        val thread =
-            Thread {
-                dao.deleteAll()
-            }
+        threadAction {
+            dao.deleteAll()
+        }
+    }
+
+    private fun threadAction(action: () -> Unit) {
+        val thread = Thread(action)
         thread.start()
         thread.join()
     }
