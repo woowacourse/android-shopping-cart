@@ -16,11 +16,7 @@ class ProductListViewModel(
     private val _currentSize: MutableLiveData<Int> = MutableLiveData()
     val currentSize: LiveData<Int> get() = _currentSize
 
-    val totalSize: Int
-
-    init {
-        totalSize = repository.productsTotalSize()
-    }
+    val totalSize: Int = repository.productsTotalSize()
 
     fun loadProducts(startPosition: Int) {
         runCatching {
@@ -28,6 +24,7 @@ class ProductListViewModel(
         }.onSuccess {
             val currentItems = _products.value ?: emptyList()
             _products.value = currentItems + it
+            _currentSize.value = products.value?.size
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }

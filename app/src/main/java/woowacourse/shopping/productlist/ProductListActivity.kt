@@ -17,6 +17,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
+        binding.vm = viewModel
 
         attachAdapter()
         showProducts()
