@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.ui.cart
 import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
@@ -21,46 +22,47 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
-        title = "Cart"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        initTitle()
+        initClickListener()
+
         binding.rvCarts.adapter = cartAdapter
+        viewModel.loadProductByOffset()
+
+        viewModel.carts.observe(this) {
+            when (it) {
+                is UiState.None -> {
+                }
+
+                is UiState.Finish -> {
+                    cartAdapter.updateList(it.data)
+                    with(binding) {
+                        layoutPage.isVisible = viewModel.maxOffset > 0
+                        btnRight.isEnabled = viewModel.offSet < viewModel.maxOffset
+                        btnLeft.isEnabled = viewModel.offSet > 0
+                        tvPageCount.text = (viewModel.offSet + OFFSET_BASE).toString()
+                    }
+                }
+
+                is UiState.Error -> {
+                    Toast.makeText(this, getString(R.string.error_load_cart), Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+    }
+
+    private fun initClickListener() {
         binding.btnLeft.setOnClickListener {
             viewModel.minus()
         }
         binding.btnRight.setOnClickListener {
             viewModel.plus()
         }
-        viewModel.carts.observe(this) {
-            when (it) {
-                is UiState.Finish -> {
-                    cartAdapter.updateList(it.data)
-                    binding.tvPageCount.text = (viewModel.offSet + 1).toString()
+    }
 
-                    if (viewModel.maxOffset <= 0) {
-                        binding.layoutPage.isVisible = false
-                    } else {
-                        binding.layoutPage.isVisible = true
-                        if (viewModel.offSet == viewModel.maxOffset) {
-                            binding.btnRight.isEnabled = false
-                        } else {
-                            binding.btnRight.isEnabled = true
-                        }
-
-                        if (viewModel.offSet == 0) {
-                            binding.btnLeft.isEnabled = false
-                        } else {
-                            binding.btnLeft.isEnabled = true
-                        }
-                    }
-                }
-
-                is UiState.None -> {
-                }
-
-                is UiState.Error -> {
-                }
-            }
-        }
+    private fun initTitle() {
+        title = getString(R.string.cart_title)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onDeleteClick(product: Product) {
@@ -73,6 +75,8 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     }
 
     companion object {
+        const val OFFSET_BASE = 1
+
         fun start(context: Context) {
             Intent(context, CartActivity::class.java).apply {
                 context.startActivity(this)

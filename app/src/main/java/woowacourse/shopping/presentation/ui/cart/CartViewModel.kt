@@ -9,17 +9,17 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.ui.UiState
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
-    var offSet: Int = 0
-        private set
-
-    private val _carts = MutableLiveData<UiState<List<Cart>>>(UiState.None)
-    val carts: LiveData<UiState<List<Cart>>> get() = _carts
-
     var maxOffset: Int = 0
         private set
 
+    var offSet: Int = 0
+        private set
+        get() = field.coerceAtMost(maxOffset)
+    private val _carts = MutableLiveData<UiState<List<Cart>>>(UiState.None)
+
+    val carts: LiveData<UiState<List<Cart>>> get() = _carts
+
     init {
-        loadProductByOffset()
         getItemCount()
     }
 
@@ -49,15 +49,14 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun deleteProduct(product: Product) {
         cartRepository.delete(product).onSuccess {
-            _carts.value = UiState.Finish(emptyList())
-            loadProductByOffset()
             getItemCount()
+            loadProductByOffset()
         }.onFailure {
             _carts.value = UiState.Error(CART_DELETE_ERROR)
         }
     }
 
-    fun getItemCount() {
+    private fun getItemCount() {
         cartRepository.getMaxOffset().onSuccess {
             maxOffset = it
         }
