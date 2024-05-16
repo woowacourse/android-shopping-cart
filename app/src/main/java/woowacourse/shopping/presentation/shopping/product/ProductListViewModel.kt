@@ -14,10 +14,6 @@ class ProductListViewModel(
     private val _products = MutableLiveData<List<ShoppingUiModel>>(emptyList())
     val products: LiveData<List<ShoppingUiModel>> = _products
 
-    init {
-        loadProducts()
-    }
-
     fun loadProducts() {
         val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
         val currentProductIds = currentProducts.map { it.id }

@@ -27,7 +27,7 @@ class ProductListFragment :
         ViewModelProvider(
             this,
             ProductListViewModel.factory(DefaultShoppingRepository()),
-        )[ProductListViewModel::class.java]
+        )[ProductListViewModel::class.java].apply { loadProducts() }
     }
     private lateinit var productAdapter: ProductAdapter
 
