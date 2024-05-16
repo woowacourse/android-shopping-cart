@@ -35,4 +35,13 @@ class ShoppingAdapter(
         this.products = products
         notifyDataSetChanged()
     }
+
+    /*fun updateProducts(
+        newProducts: List<Product>,
+        positiionStart: Int,
+        itemCount: Int,
+    ) {
+        products.addAll(newProducts)
+        notifyItemRangeChanged(positiionStart, itemCount)
+    }*/
 }

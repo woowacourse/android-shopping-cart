@@ -15,17 +15,18 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.ui.shopping.ShoppingActivity">
+        tools:context=".presentation.shopping.ShoppingActivity">
 
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_detail"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:textSize="20dp"
             android:background="@color/gray_500"
+            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -75,6 +76,7 @@
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
+            android:id="@+id/tv_detail_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -94,10 +96,10 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
+            android:onClick="@{() -> clickListener.onClick(vmProduct.product.id)}"
             android:text="장바구니 담기"
             android:textColor="@color/white"
             android:textSize="20dp"
-            android:onClick="@{() -> clickListener.onClick(vmProduct.product.id)}"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

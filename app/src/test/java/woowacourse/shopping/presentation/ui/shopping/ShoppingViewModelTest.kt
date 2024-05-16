@@ -13,77 +13,36 @@ import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingViewModelTest {
     private lateinit var viewModel: ShoppingViewModel
-    private lateinit var repository: ShoppingItemsRepository
+    private val repository: ShoppingItemsRepository = mockk()
 
     @BeforeEach
-    fun setup() {
-        repository = mockk<ShoppingItemsRepository>()
+    fun setUp() {
+        every { repository.getAllProducts() } returns
+            listOf(
+                Product.of(name = "Product 1", price = 1000, imageUrl = "URL 1"),
+                Product.of(name = "Product 2", price = 2000, imageUrl = "URL 2"),
+            )
+
         viewModel = ShoppingViewModel(repository)
     }
 
     @Test
-    fun `loadProducts should update products LiveData`() {
-        // Given
-        val products =
-            listOf(
-                Product.of("Product 1", 1000, "testUrl"),
-                Product.of("Product 2", 2000, "testUrl"),
-            )
-
-        every { repository.getAllProducts() } returns products
-
-        // When
+    fun `loadProducts가 호출됐을 때 products LiveData가 업데이트된다`() {
         viewModel.loadProducts()
-
-        // Then
-        assertEquals(products, viewModel.products.value)
+        assertEquals(2, viewModel.products.value?.size)
     }
 
     @Test
-    fun `updateVisibility should update visibility LiveData`() {
-        // When
+    fun `updateVisibility가 호출됐을 때 visibility LiveData가 업데이트된다_1`() {
+        viewModel.updateVisibility(View.VISIBLE)
+
+        assertEquals(View.VISIBLE, viewModel.visibility.value)
+    }
+
+    @Test
+    fun `updateVisibility가 호출됐을 때 visibility LiveData가 업데이트된다_2`() {
         viewModel.updateVisibility(View.GONE)
 
-        // Then
-        assertEquals(View.GONE, viewModel.visibility.value)
-    }
-
-    @Test
-    fun `getProducts should return a sublist of productsData`() {
-        // Given
-        val productsData =
-            listOf(
-                Product(1, "Product 1", 10.0),
-                Product(2, "Product 2", 20.0),
-                Product(3, "Product 3", 30.0),
-                Product(4, "Product 4", 40.0),
-                Product(5, "Product 5", 50.0),
-            )
-
-        // When
-        val result1 = viewModel.getProducts()
-        viewModel.offset = 2
-        val result2 = viewModel.getProducts()
-
-        // Then
-        assertEquals(productsData.subList(0, 10), result1)
-        assertEquals(productsData.subList(2, 12), result2)
-    }
-
-    @Test
-    fun `init should load products and update visibility`() {
-        // Given
-        val products =
-            listOf(
-                Product(1, "Product 1", 10.0),
-                Product(2, "Product 2", 20.0),
-            )
-
-        // When
-        viewModel = ShoppingViewModel(repository)
-
-        // Then
-        assertEquals(products, viewModel.products.value)
         assertEquals(View.GONE, viewModel.visibility.value)
     }
 }

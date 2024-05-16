@@ -35,9 +35,8 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
         _isPageControlVisible.postValue(totalItems > pageSize)
     }
 
-    private fun loadPage(page: Int) {
-        // TODO: item의 size를 가져오는 방법 변경
-        val totalItems = repository.findAll().items.size
+    fun loadPage(page: Int) {
+        val totalItems = repository.size()
         lastPage = (totalItems - PAGE_STEP) / pageSize
 
         _currentPage.value = page.coerceIn(DEFAULT_PAGE, lastPage)
