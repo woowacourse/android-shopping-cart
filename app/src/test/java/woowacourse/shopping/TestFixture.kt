@@ -10,11 +10,8 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 object TestFixture {
-
-    fun CartItemDatabase.deleteAll() {
-        this.openHelper.writableDatabase.execSQL("DELETE FROM ${CartItemDatabase.CART_ITEMS_DB_NAME}")
-    }
-
+    private const val TIME_OUT_MESSAGE = "LiveData value was never set."
+    private const val  UNCHECKED_CAST = "UNCHECKED_CAST"
     fun <T> LiveData<T>.getOrAwaitValue(
         time: Long = 2,
         timeUnit: TimeUnit = TimeUnit.SECONDS
@@ -31,12 +28,11 @@ object TestFixture {
 
         this.observeForever(observer)
 
-        // Don't wait indefinitely if the LiveData is not set.
         if (!latch.await(time, timeUnit)) {
-            throw TimeoutException("LiveData value was never set.")
+            throw TimeoutException(TIME_OUT_MESSAGE)
         }
 
-        @Suppress("UNCHECKED_CAST")
+        @Suppress(UNCHECKED_CAST)
         return data as T
     }
 }
