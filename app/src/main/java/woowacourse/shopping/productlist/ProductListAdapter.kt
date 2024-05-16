@@ -10,7 +10,7 @@ import woowacourse.shopping.databinding.ItemProductListBinding
 class ProductListAdapter(
     private val onClick: ProductListClickAction,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
-    private var items: MutableList<ProductUiModel> = mutableListOf()
+    private var items: List<ProductUiModel> = emptyList()
 
     class ProductListViewHolder(
         private val binding: ItemProductListBinding,
@@ -48,6 +48,8 @@ class ProductListAdapter(
     }
 
     fun submitList(products: List<ProductUiModel>) {
-        items.addAll(products)
+        val previousCount = itemCount
+        items = products
+        notifyItemRangeInserted(previousCount, products.size - previousCount)
     }
 }

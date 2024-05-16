@@ -21,6 +21,10 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         attachAdapter()
         showProducts()
 
+        binding.btnLoadMoreProducts.setOnClickListener {
+            viewModel.loadProducts(adapter.itemCount)
+        }
+
         supportActionBar?.title = "Shopping"
     }
 
@@ -30,7 +34,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     }
 
     private fun showProducts() {
-        viewModel.loadProducts()
+        viewModel.loadProducts(0)
         viewModel.products.observe(this) { products ->
             adapter.submitList(products.map { it.toProductUiModel() })
         }

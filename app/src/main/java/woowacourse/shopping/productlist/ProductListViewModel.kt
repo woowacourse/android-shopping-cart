@@ -13,13 +13,27 @@ class ProductListViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
     val products: LiveData<List<Product>> get() = _products
 
-    fun loadProducts() {
+    private val _currentSize: MutableLiveData<Int> = MutableLiveData()
+    val currentSize: LiveData<Int> get() = _currentSize
+
+    val totalSize: Int
+
+    init {
+        totalSize = repository.productsTotalSize()
+    }
+
+    fun loadProducts(startPosition: Int) {
         runCatching {
-            repository.products()
+            repository.products(startPosition, PRODUCTS_OFFSET_SIZE)
         }.onSuccess {
-            _products.value = it
+            val currentItems = _products.value ?: emptyList()
+            _products.value = currentItems + it
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
+    }
+
+    companion object {
+        private const val PRODUCTS_OFFSET_SIZE = 20
     }
 }
