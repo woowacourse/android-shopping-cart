@@ -7,7 +7,11 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
-class DetailViewModel(val cartRepository: CartRepository, val shoppingRepository: ShoppingItemsRepository, val productId: Long) : ViewModel() {
+class DetailViewModel(
+    val cartRepository: CartRepository,
+    val shoppingRepository: ShoppingItemsRepository,
+    val productId: Long,
+) : ViewModel() {
     private val _product = MutableLiveData<Product>()
     val product: LiveData<Product>
         get() = _product
