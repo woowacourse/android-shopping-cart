@@ -1,6 +1,7 @@
 package woowacourse.shopping.feature.cart
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.cart.CartDummyRepository
@@ -20,6 +21,7 @@ class CartActivity : AppCompatActivity() {
         )[CartViewModel::class.java]
     }
     private var page: Int = 0
+    private var cartSize: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,12 +40,15 @@ class CartActivity : AppCompatActivity() {
     private fun initializeCartAdapter() {
         adapter =
             CartAdapter(onClickExit = {
+                if (isEmptyLastPage()) page--
                 cartViewModel.delete(it)
                 updateCart()
             })
         binding.rvCart.adapter = adapter
 
         cartViewModel.cartSize.observe(this) {
+            cartSize = it
+            binding.layoutPage.visibility = if (it > PAGE_SIZE) View.VISIBLE else View.GONE
             binding.btnCartPreviousPage.isEnabled = hasPreviousPage(page, MIN_PAGE)
             binding.btnCartNextPage.isEnabled = hasNextPage(page, (it - 1) / PAGE_SIZE)
         }
@@ -52,6 +57,8 @@ class CartActivity : AppCompatActivity() {
             adapter.updateCart(it)
         }
     }
+
+    private fun isEmptyLastPage() = page > 0 && cartSize % PAGE_SIZE == 1
 
     private fun hasPreviousPage(
         page: Int,

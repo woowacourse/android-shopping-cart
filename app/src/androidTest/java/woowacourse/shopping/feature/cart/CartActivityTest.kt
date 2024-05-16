@@ -14,6 +14,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -69,7 +70,7 @@ class CartActivityTest {
     }
 
     @Test
-    fun `장바구니의_상품이_5개_이하인_경우_이전_페이지_버튼와_다음_페이지_버튼이_비활성화_된다`() {
+    fun `장바구니의_상품이_5개_이하인_경우_이전_페이지_버튼와_다음_페이지_버튼이_보이지_않는다`() {
         repeat(5) {
             addCart(imageUrl, title, price)
         }
@@ -77,8 +78,20 @@ class CartActivityTest {
         ActivityScenario.launch(CartActivity::class.java)
 
         onView(withId(R.id.btn_cart_previous_page))
-            .check(matches(isNotEnabled()))
+            .check(matches(not(isDisplayed())))
         onView(withId(R.id.btn_cart_next_page))
+            .check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun `장바구니의_상품이_6개_이상인_경우_이전_페이지_버튼이_비활성화_된다`() {
+        repeat(6) {
+            addCart(imageUrl, title, price)
+        }
+
+        ActivityScenario.launch(CartActivity::class.java)
+
+        onView(withId(R.id.btn_cart_previous_page))
             .check(matches(isNotEnabled()))
     }
 
