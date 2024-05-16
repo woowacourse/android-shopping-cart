@@ -40,6 +40,4 @@ class ProductListFragmentTest {
         onView(withId(R.id.btn_more_product))
             .check(matches(not(isDisplayed())))
     }
-
 }
-

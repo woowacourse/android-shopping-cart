@@ -9,14 +9,15 @@ object TestFixture {
         this.openHelper.writableDatabase.execSQL("DELETE FROM ${CartItemDatabase.CART_ITEMS_DB_NAME}")
     }
 
-    fun makeCartItemEntity(): CartItemEntity{
+    fun makeCartItemEntity(): CartItemEntity {
         return CartItemEntity(
-            product = Product(
-                imageUrl = "",
-                price = 10000,
-                name = "아메리카노",
-                id = 0L,
-            )
+            product =
+                Product(
+                    imageUrl = "",
+                    price = 10000,
+                    name = "아메리카노",
+                    id = 0L,
+                ),
         )
     }
 }

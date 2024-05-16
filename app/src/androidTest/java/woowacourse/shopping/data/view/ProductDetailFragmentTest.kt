@@ -21,9 +21,10 @@ class ProductDetailFragmentTest {
 
     @Before
     fun setUp() {
-        val productDetailFragment = ProductDetailFragment().apply {
-            arguments = ProductDetailFragment.createBundle(0L)
-        }
+        val productDetailFragment =
+            ProductDetailFragment().apply {
+                arguments = ProductDetailFragment.createBundle(0L)
+            }
         activityRule.scenario.onActivity { activity ->
             activity.supportFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, productDetailFragment)

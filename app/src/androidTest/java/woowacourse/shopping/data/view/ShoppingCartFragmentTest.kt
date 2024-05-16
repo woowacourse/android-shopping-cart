@@ -85,7 +85,6 @@ class ShoppingCartFragmentTest {
 
     @Test
     fun `다음_페이지의_데이터가_없을_때_다음_버튼을_클릭하면_페이지의_숫자가_증가한다`() {
-
         onView(withId(R.id.btn_next)).perform(ViewActions.click())
 
         onView(withId(R.id.tv_page_count)).check(matches(withText("1")))
