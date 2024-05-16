@@ -1,4 +1,4 @@
-package woowacourse.shopping.fixtures
+package woowacourse.shopping.viewmodel.fixtures
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

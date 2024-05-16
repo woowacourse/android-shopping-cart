@@ -1,13 +1,14 @@
-package woowacourse.shopping
+package woowacourse.shopping.viewmodel
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.fixtures.InstantTaskExecutorExtension
-import woowacourse.shopping.fixtures.getOrAwaitValue
+import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.productlist.ProductListViewModel
+import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
+import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
