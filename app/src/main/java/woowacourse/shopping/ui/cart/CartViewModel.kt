@@ -3,11 +3,11 @@ package woowacourse.shopping.ui.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.model.CartsImpl
+import woowacourse.shopping.model.CartDao
 import woowacourse.shopping.model.Product
 import kotlin.math.min
 
-class CartViewModel : ViewModel() {
+class CartViewModel(private val cartDao: CartDao) : ViewModel() {
     private var pageNum = 1
     private val _pageNumber: MutableLiveData<Int> = MutableLiveData()
 
@@ -27,7 +27,7 @@ class CartViewModel : ViewModel() {
         _pageNumber.value = pageNum
 
         items.clear()
-        items.addAll(CartsImpl.findAll())
+        items.addAll(cartDao.findAll())
         _cart.value = getProducts()
 
         _canMovePreviousPage.value = canMovePreviousPage()
@@ -35,7 +35,7 @@ class CartViewModel : ViewModel() {
     }
 
     fun removeCartItem(productId: Long) {
-        CartsImpl.delete(productId)
+        cartDao.delete(productId)
         items.remove(items.find { it.id == productId })
         _cart.value = items
     }
