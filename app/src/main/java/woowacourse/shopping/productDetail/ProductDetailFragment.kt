@@ -17,9 +17,8 @@ class ProductDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         _binding = FragmentProductDetailBinding.inflate(inflater)
 
@@ -32,10 +31,7 @@ class ProductDetailFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.productDetailToolbar.setOnMenuItemClickListener {
@@ -43,15 +39,14 @@ class ProductDetailFragment : Fragment() {
         }
     }
 
-    private fun clickXButton(it: MenuItem) =
-        when (it.itemId) {
-            R.id.action_x -> {
-                parentFragmentManager.popBackStack()
-                true
-            }
-
-            else -> false
+    private fun clickXButton(it: MenuItem) = when (it.itemId) {
+        R.id.action_x -> {
+            parentFragmentManager.popBackStack()
+            true
         }
+
+        else -> false
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

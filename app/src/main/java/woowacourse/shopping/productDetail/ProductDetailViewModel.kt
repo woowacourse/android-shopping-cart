@@ -16,4 +16,5 @@ class ProductDetailViewModel : ViewModel() {
     fun addProductToCart() {
         ShoppingCart.addProductToCart(productId)
     }
+
 }
