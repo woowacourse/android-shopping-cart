@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryImpl
 import woowacourse.shopping.data.product.ProductRepositoryImpl
@@ -30,15 +31,8 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun initializeView() {
         initializeToolbar()
-        initializeAddCardButton()
+        initializeAddCartButton()
         updateProduct()
-    }
-
-    private fun updateProduct() {
-        productViewModel.loadProduct(productId())
-        productViewModel.product.observe(this) {
-            binding.product = it
-        }
     }
 
     private fun initializeToolbar() {
@@ -50,13 +44,33 @@ class ProductDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initializeAddCardButton() {
+    private fun initializeAddCartButton() {
         binding.btnProductDetailAddCart.setOnClickListener {
             cartViewModel.add(productId())
         }
     }
 
     private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
+
+    private fun updateProduct() {
+        runCatching {
+            productViewModel.loadProduct(productId())
+        }.onFailure {
+            showErrorSnackBar()
+        }
+        productViewModel.product.observe(this) {
+            binding.product = it
+        }
+    }
+
+    private fun showErrorSnackBar() {
+        Snackbar
+            .make(binding.root, getString(R.string.common_error), Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.common_confirm)) {
+                finish()
+            }
+            .show()
+    }
 
     companion object {
         private const val PRODUCT_ID_KEY = "product_id_key"
