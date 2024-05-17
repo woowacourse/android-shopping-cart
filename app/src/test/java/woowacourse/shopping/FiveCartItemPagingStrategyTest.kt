@@ -60,15 +60,3 @@ class FiveCartItemPagingStrategyTest {
         assertThat(secondLoad).isEqualTo(expected)
     }
 }
-
-fun productsTestFixture(
-    count: Int,
-    productFixture: (Int) -> Product = { productTestFixture(it) },
-): List<Product> = List(count, productFixture)
-
-fun productTestFixture(
-    id: Int,
-    name: String = "$id name",
-    imageUrl: String = "1",
-    price: Int = 1,
-): Product = Product(id, imageUrl, name, price)
