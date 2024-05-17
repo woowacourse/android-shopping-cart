@@ -16,7 +16,7 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(
-    private val products: MutableList<Product>,
+    private var products: List<Product>,
     private var loadStatus: LoadStatus,
     private val productItemClickListener: ProductItemClickListener,
     private val loadClickListener: LoadClickListener,
