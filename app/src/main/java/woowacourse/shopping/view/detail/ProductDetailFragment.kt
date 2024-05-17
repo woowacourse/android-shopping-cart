@@ -68,6 +68,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
                     parentFragmentManager.popBackStack()
                 }
             }
+            productDetailViewModel.resetState()
         }
     }
 

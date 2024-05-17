@@ -64,6 +64,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
                 ProductListState.Init, ProductListState.LoadProductList.Success -> {}
                 ProductListState.LoadProductList.Fail -> showMessage(requireContext().getString(R.string.max_paging_data))
             }
+            productListViewModel.resetState()
         }
     }
 

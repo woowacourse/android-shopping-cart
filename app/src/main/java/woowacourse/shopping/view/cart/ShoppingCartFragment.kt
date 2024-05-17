@@ -81,6 +81,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
                     requireContext().getString(R.string.max_paging_data)
                 )
             }
+            shoppingCartViewModel.resetState()
         }
     }
 

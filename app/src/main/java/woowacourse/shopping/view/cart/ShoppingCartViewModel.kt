@@ -17,18 +17,16 @@ class ShoppingCartViewModel(
 
     private val _shoppingCartState: MutableLiveData<ShoppingCartState> =
         MutableLiveData(ShoppingCartState.Init)
-    val shoppingCartState: LiveData<ShoppingCartState> get() = _shoppingCartState!!
+    val shoppingCartState: LiveData<ShoppingCartState> get() = _shoppingCartState
 
     fun deleteShoppingCartItem(itemId: Long) {
         runCatching {
             shoppingCartRepository.deleteCartItem(itemId)
         }.onSuccess {
-            _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Success
             shoppingCart.deleteProduct(itemId)
-            _shoppingCartState.value = ShoppingCartState.Init
+            _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Success
         }.onFailure {
             _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Fail
-            _shoppingCartState.value = ShoppingCartState.Init
         }
     }
 
@@ -38,13 +36,15 @@ class ShoppingCartViewModel(
             shoppingCartRepository.loadPagingCartItems(itemSize, pagingSize)
         }
             .onSuccess {
-                _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
                 shoppingCart.addProducts(it)
-                _shoppingCartState.value = ShoppingCartState.Init
+                _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
             }
             .onFailure {
                 _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
-                _shoppingCartState.value = ShoppingCartState.Init
             }
+    }
+
+    fun resetState(){
+        _shoppingCartState.value = ShoppingCartState.Init
     }
 }
