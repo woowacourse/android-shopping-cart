@@ -9,7 +9,7 @@ import woowacourse.shopping.model.data.CartDao
 import kotlin.math.min
 
 class CartViewModel(private val cartDao: CartDao) : ViewModel() {
-    private val cartPageManager by lazy { CartPageManager() }
+    private val cartPageManager by lazy { CartPageManager(PAGE_SIZE) }
     private val _pageNumber: MutableLiveData<Int> = MutableLiveData()
 
     private val _canMoveNextPage: MutableLiveData<Boolean> = MutableLiveData()
