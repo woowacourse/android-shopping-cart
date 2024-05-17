@@ -40,8 +40,7 @@ class CartAdapter(
     class CartViewHolder(
         private val binding: ItemCartBinding,
         cartItemDeleteClickListener: CartItemDeleteClickListener,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.cartItemDeleteClickListener = cartItemDeleteClickListener
         }
