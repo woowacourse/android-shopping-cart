@@ -16,29 +16,37 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 
-class DetailActivity : AppCompatActivity(), AddCompleteListener {
+class DetailActivity : AppCompatActivity() {
     private val binding: ActivityDetailBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_detail)
     }
     private val viewModel: DetailViewModel by lazy {
         ViewModelProvider(
             this,
-            DetailViewModelFactory(ProductRepositoryImpl(DefaultProducts), CartRepositoryImpl(DefaultCart)),
+            DetailViewModelFactory(
+                ProductRepositoryImpl(DefaultProducts),
+                CartRepositoryImpl(DefaultCart)
+            ),
         )[DetailViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
 
         viewModel.loadProductInformation(productId)
-
         viewModel.productInformation.observe(this) {
             binding.product = it
         }
+        viewModel.message.observe(this) { event ->
+            if (event.hasBeenHandled) return@observe
+            showToastMessage(
+                getString(
+                    event.getContentIfNotHandled()?.stringResourceId ?: return@observe
+                )
+            )
+        }
         binding.detailViewModel = viewModel
-        binding.addCompleteListener = this
         binding.lifecycleOwner = this
 
         setSupportActionBar(binding.toolbarDetail)
@@ -52,11 +60,13 @@ class DetailActivity : AppCompatActivity(), AddCompleteListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_exit -> {
-                finish()
-            }
+            R.id.menu_exit -> finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showToastMessage(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
@@ -69,9 +79,5 @@ class DetailActivity : AppCompatActivity(), AddCompleteListener {
         ): Intent {
             return Intent(context, DetailActivity::class.java).putExtra(EXTRA_PRODUCT_ID, productId)
         }
-    }
-
-    override fun onAddComplete() {
-        Toast.makeText(this, getString(R.string.message_add_to_cart_complete), Toast.LENGTH_SHORT).show()
     }
 }
