@@ -20,6 +20,12 @@ object DummyCartRepository : CartRepository {
             product.id
         }
 
+    override fun deleteAll(): Result<Boolean> =
+        runCatching {
+            cartMap.clear()
+            true
+        }
+
     override fun load(
         pageOffset: Int,
         pageSize: Int,

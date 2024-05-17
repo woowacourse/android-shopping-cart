@@ -5,6 +5,8 @@ interface CartRepository {
 
     fun delete(product: Product): Result<Long>
 
+    fun deleteAll(): Result<Boolean>
+
     fun load(
         pageOffset: Int,
         pageSize: Int,
