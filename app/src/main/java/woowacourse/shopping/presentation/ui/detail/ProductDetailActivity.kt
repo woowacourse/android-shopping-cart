@@ -28,10 +28,8 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         viewModel.loadById(id)
         viewModel.products.observe(this) { state ->
             when (state) {
-                is UiState.None -> {
-                }
-
-                is UiState.Finish -> {
+                is UiState.None -> {}
+                is UiState.Success -> {
                     binding.tvName.text = state.data.name
                     binding.tvPriceValue.text = getString(R.string.won, state.data.price)
                     binding.tvAddCart.setOnClickListener {
@@ -42,9 +40,11 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
                         .load(state.data.imgUrl)
                         .into(binding.ivProduct)
                 }
-                is UiState.Error -> {
-                    Toast.makeText(this, getString(R.string.product_not_found), Toast.LENGTH_SHORT).show()
-                }
+            }
+        }
+        viewModel.errorHandler.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { message ->
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
     }

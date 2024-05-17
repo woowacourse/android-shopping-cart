@@ -30,10 +30,8 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
 
         viewModel.carts.observe(this) {
             when (it) {
-                is UiState.None -> {
-                }
-
-                is UiState.Finish -> {
+                is UiState.None -> {}
+                is UiState.Success -> {
                     cartAdapter.updateList(it.data)
                     with(binding) {
                         layoutPage.isVisible = viewModel.maxOffset > 0
@@ -42,11 +40,11 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
                         tvPageCount.text = (viewModel.offSet + OFFSET_BASE).toString()
                     }
                 }
-
-                is UiState.Error -> {
-                    Toast.makeText(this, getString(R.string.error_load_cart), Toast.LENGTH_SHORT)
-                        .show()
-                }
+            }
+        }
+        viewModel.errorHandler.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { message ->
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
     }

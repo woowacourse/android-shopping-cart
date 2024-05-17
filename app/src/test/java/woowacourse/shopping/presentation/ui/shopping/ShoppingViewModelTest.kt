@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.ui.ErrorEventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel.Companion.LOAD_ERROR
 import woowacourse.shopping.products
@@ -27,13 +28,13 @@ class ShoppingViewModelTest {
     fun `viewModel이 초기화되면 데이터가 20개 불러와진다`() {
         every { repository.findByPaging(any(), any()) } returns Result.success(products)
         viewModel.loadProductByOffset()
-        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(products))
+        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Success(products))
     }
 
     @Test
     fun `viewModel에서 데이터 로드가 실패하면 Error로 상태가 변화한다`() {
         every { repository.findByPaging(any(), any()) } returns Result.failure(Throwable())
         viewModel.loadProductByOffset()
-        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Error(LOAD_ERROR))
+        assertEquals(viewModel.errorHandler.getOrAwaitValue(1).peekContent(), LOAD_ERROR)
     }
 }

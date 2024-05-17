@@ -12,6 +12,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.ui.ErrorEventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel.Companion.PRODUCT_NOT_FOUND
 import woowacourse.shopping.product
@@ -32,14 +33,14 @@ class ProductDetailViewModelTest {
     fun `loadById로 특정 상품의 데이터를 가져온다`() {
         every { productRepository.findById(any()) } returns Result.success(product)
         viewModel.loadById(0)
-        Assertions.assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(product))
+        Assertions.assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Success(product))
     }
 
     @Test
     fun `loadById로 특정 상품의 데이터를 가져오기 실패하면 Error state로 전환한다`() {
         every { productRepository.findById(any()) } returns Result.failure(Throwable())
         viewModel.loadById(0)
-        Assertions.assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Error(PRODUCT_NOT_FOUND))
+        Assertions.assertEquals(viewModel.errorHandler.getOrAwaitValue(1).peekContent(), PRODUCT_NOT_FOUND)
     }
 
     @Test

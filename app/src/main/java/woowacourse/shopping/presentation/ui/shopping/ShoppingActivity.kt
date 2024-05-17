@@ -29,13 +29,14 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         viewModel.products.observe(this) {
             when (it) {
                 is UiState.None -> {}
-                is UiState.Finish -> {
+                is UiState.Success -> {
                     adapter.updateList(it.data)
                 }
-
-                is UiState.Error -> {
-                    Toast.makeText(this, it.msg, Toast.LENGTH_SHORT).show()
-                }
+            }
+        }
+        viewModel.errorHandler.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { message ->
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
     }

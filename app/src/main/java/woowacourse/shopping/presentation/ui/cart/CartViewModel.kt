@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.presentation.ui.ErrorEventState
 import woowacourse.shopping.presentation.ui.UiState
 
 class CartViewModel(private val productCartRepository: ProductCartRepository) : ViewModel() {
@@ -19,19 +20,22 @@ class CartViewModel(private val productCartRepository: ProductCartRepository) : 
 
     val carts: LiveData<UiState<List<Cart>>> get() = _carts
 
+    private val _errorHandler = MutableLiveData<ErrorEventState<String>>()
+    val errorHandler: LiveData<ErrorEventState<String>> get() = _errorHandler
+
     init {
         getItemCount()
     }
 
     fun loadProductByOffset() {
         productCartRepository.findByPaging(offSet, PAGE_SIZE).onSuccess {
-            if (_carts.value is UiState.None || _carts.value is UiState.Error) {
-                _carts.value = UiState.Finish(it)
+            if (_carts.value is UiState.None) {
+                _carts.value = UiState.Success(it)
             } else {
-                _carts.value = UiState.Finish(it)
+                _carts.value = UiState.Success(it)
             }
         }.onFailure {
-            _carts.value = UiState.Error(CART_LOAD_ERROR)
+            _errorHandler.value = ErrorEventState(CART_LOAD_ERROR)
         }
     }
 
@@ -52,7 +56,7 @@ class CartViewModel(private val productCartRepository: ProductCartRepository) : 
             getItemCount()
             loadProductByOffset()
         }.onFailure {
-            _carts.value = UiState.Error(CART_DELETE_ERROR)
+            _errorHandler.value = ErrorEventState(CART_DELETE_ERROR)
         }
     }
 
