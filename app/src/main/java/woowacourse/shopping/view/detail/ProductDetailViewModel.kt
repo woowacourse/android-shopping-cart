@@ -18,10 +18,15 @@ class ProductDetailViewModel(
     fun addShoppingCartItem(product: Product) =
         thread {
             val addedCartItemId = repository.addCartItem(product)
-            if (addedCartItemId == MainViewModel.ERROR_SAVE_DATA_ID) throw NoSuchDataException()
+            if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
         }
 
-    fun loadProductItem(productId: Long): Product {
-        return repository.getProduct(productId)
+    fun loadProductItem(productId: Long) = thread {
+        val loadData = repository.getProduct(productId)
+        _product.postValue(loadData)
+    }
+
+    companion object {
+        const val ERROR_SAVE_DATA_ID = -1L
     }
 }
