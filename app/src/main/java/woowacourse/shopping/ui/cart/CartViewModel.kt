@@ -57,7 +57,7 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
     }
 
     companion object {
+        const val PAGE_SIZE = 5
         private const val OFFSET = 1
-        private const val PAGE_SIZE = 5
     }
 }

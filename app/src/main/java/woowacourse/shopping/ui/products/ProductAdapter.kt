@@ -29,7 +29,8 @@ class ProductAdapter(
     }
 
     fun setData(newProducts: List<Product>) {
+        val positionStart = products.size
         products.addAll(newProducts)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(positionStart, newProducts.size)
     }
 }

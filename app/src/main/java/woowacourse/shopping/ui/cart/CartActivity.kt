@@ -83,6 +83,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun setCartAdapter() {
+        binding.rvCart.itemAnimator = null
         adapter =
             CartAdapter { productId ->
                 viewModel.removeCartItem(productId)

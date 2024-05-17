@@ -29,8 +29,22 @@ class CartAdapter(
     override fun getItemCount(): Int = cart.size
 
     fun setData(products: List<Product>) {
-        cart.clear()
-        cart.addAll(products)
-        notifyDataSetChanged()
+        addItems(products)
+        if (cart.size != CartViewModel.PAGE_SIZE) {
+            notifyItemRangeRemoved(cart.size + OFFSET, CartViewModel.PAGE_SIZE - cart.size)
+        }
+        notifyItemRangeChanged(DEFAULT_POSITION, cart.size)
+    }
+
+    private fun addItems(products: List<Product>) {
+        cart.apply {
+            clear()
+            addAll(products)
+        }
+    }
+
+    companion object {
+        private const val DEFAULT_POSITION = 0
+        private const val OFFSET = 1
     }
 }
