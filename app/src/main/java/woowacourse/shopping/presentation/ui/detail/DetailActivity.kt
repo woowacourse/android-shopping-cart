@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
@@ -16,7 +16,13 @@ import woowacourse.shopping.presentation.ui.cart.CartActivity
 class DetailActivity : AppCompatActivity(), DetailClickListener {
     private lateinit var binding: ActivityDetailBinding
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
-    private lateinit var viewModel: DetailViewModel
+    private val viewModel: DetailViewModel by viewModels {
+        DetailViewModelFactory(
+            CartRepositoryImpl,
+            ShoppingItemsRepositoryImpl(),
+            productId = productId,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,13 +36,6 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
     }
 
     private fun setUpViewModel() {
-        val factory =
-            DetailViewModelFactory(
-                CartRepositoryImpl,
-                ShoppingItemsRepositoryImpl(),
-                productId = productId,
-            )
-        viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
         binding.viewModel = viewModel
     }
 

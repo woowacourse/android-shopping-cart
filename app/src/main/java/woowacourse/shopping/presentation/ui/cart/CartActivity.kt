@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
@@ -18,7 +18,11 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 class CartActivity : AppCompatActivity(), CartClickListener {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
-    private lateinit var viewModel: CartViewModel
+    private val viewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            repository = CartRepositoryImpl,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +34,6 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
         adapter = CartAdapter(this)
         binding.recyclerView.adapter = adapter
-
-        val factory = CartViewModelFactory(repository = CartRepositoryImpl)
-        viewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
 
         binding.viewModel = viewModel
 
