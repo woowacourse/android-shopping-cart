@@ -49,7 +49,7 @@ class ProductDetailViewModelTest {
                 price = 5_000,
                 name = "아이스 아메리카노",
             )
-        viewModel.addShoppingCartItem(newProduct).join()
+        viewModel.addShoppingCartItem(newProduct)
 
         val actual = (shoppingCartRepository as MockShoppingCartRepository).cartItems.last()
         val expected = CartItem(3L, newProduct)

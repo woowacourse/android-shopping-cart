@@ -46,10 +46,9 @@ class MockShoppingCartRepository : ShoppingCartRepository {
             ),
         )
 
-    override fun addCartItem(product: Product): Long {
+    override fun addCartItem(product: Product) {
         val cartItem = CartItem(3L, product)
         cartItems.add(cartItem)
-        return cartItem.id
     }
 
     override fun loadPagingCartItems(
