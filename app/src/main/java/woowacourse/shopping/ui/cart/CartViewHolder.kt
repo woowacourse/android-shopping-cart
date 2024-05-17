@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.cart
 
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.model.Product
 
@@ -15,9 +14,5 @@ class CartViewHolder(
         binding.ivRemove.setOnClickListener {
             itemRemoveClickListener(product.id)
         }
-
-        Glide.with(binding.root)
-            .load(product.imageUrl)
-            .into(binding.ivProductImage)
     }
 }

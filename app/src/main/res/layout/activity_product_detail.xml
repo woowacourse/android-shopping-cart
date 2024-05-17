@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="fitXY"
+            app:imageUrlOnSuccess = "@{vm.uiState}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />

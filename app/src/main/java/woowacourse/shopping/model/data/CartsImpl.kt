@@ -3,7 +3,7 @@ package woowacourse.shopping.model.data
 import woowacourse.shopping.model.Product
 
 object CartsImpl : CartDao {
-    private const val EXCEPTION_INVALID_ID = "Movie not found with id: %d"
+    private const val EXCEPTION_INVALID_ID = "Product not found with id: %d"
     private var id: Long = 0
     private val cart = mutableMapOf<Long, Product>()
 

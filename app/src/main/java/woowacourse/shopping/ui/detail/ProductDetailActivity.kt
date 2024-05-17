@@ -5,19 +5,20 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.state.UiState
+import woowacourse.shopping.ui.utils.urlToImage
 
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
@@ -55,17 +56,13 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private fun observeProduct() {
         viewModel.uiState.observe(this) { uiState ->
             when (uiState) {
-                is UiState.SUCCESS -> {
-                    Glide.with(this)
-                        .load(uiState.data.imageUrl)
-                        .into(binding.ivProductImage)
-                }
-
                 is UiState.ERROR -> {
                     binding.btnAddProduct.isEnabled = false
                     toast = Toast.makeText(this, uiState.error.message, Toast.LENGTH_SHORT)
                     toast?.show()
                 }
+
+                is UiState.SUCCESS -> {}
 
                 is UiState.LOADING -> {}
             }
@@ -111,23 +108,22 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
 }
 
 @BindingAdapter("productName")
-fun setProductName(
-    textView: TextView,
-    uiState: UiState<Product>,
-) {
+fun TextView.setProductName(uiState: UiState<Product>) {
     if (uiState is UiState.SUCCESS) {
-        textView.text = uiState.data.name
+        text = uiState.data.name
     }
 }
 
 @BindingAdapter("productPrice")
-fun setProductPrice(
-    textView: TextView,
-    uiState: UiState<Product>,
-) {
+fun TextView.setProductPrice(uiState: UiState<Product>) {
     if (uiState is UiState.SUCCESS) {
-        textView.apply {
-            text = this.context.getString(R.string.product_price, uiState.data.price)
-        }
+        text = context.getString(R.string.product_price, uiState.data.price)
+    }
+}
+
+@BindingAdapter("imageUrlOnSuccess")
+fun ImageView.bindUrlToImageOnSuccess(uiState: UiState<Product>) {
+    if (uiState is UiState.SUCCESS) {
+        urlToImage(context, uiState.data.imageUrl)
     }
 }

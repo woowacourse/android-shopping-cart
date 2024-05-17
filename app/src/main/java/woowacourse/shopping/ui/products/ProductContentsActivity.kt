@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,6 +16,7 @@ import woowacourse.shopping.databinding.ActivityProductContentsBinding
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
+import woowacourse.shopping.ui.utils.urlToImage
 
 class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
@@ -97,4 +100,9 @@ class ProductContentsActivity : AppCompatActivity() {
     companion object {
         private const val OFFSET = 1
     }
+}
+
+@BindingAdapter("imageUrl")
+fun ImageView.bindUrlToImage(imageUrl: String?) {
+    urlToImage(context, imageUrl)
 }
