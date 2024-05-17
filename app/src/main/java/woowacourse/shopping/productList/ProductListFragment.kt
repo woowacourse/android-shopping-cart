@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.base.FragmentReplacer.replaceFragment
 import woowacourse.shopping.cart.CartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.productDetail.ProductDetailFragment
@@ -82,11 +83,7 @@ class ProductListFragment : Fragment() {
     private fun navigateToCart() {
         val cartFragment = CartFragment()
 
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.container, cartFragment)
-            addToBackStack(null)
-            commit()
-        }
+        replaceFragment(R.id.container, cartFragment, parentFragmentManager)
     }
 
     private fun navigateToProductDetail(id: Int) {
@@ -96,10 +93,6 @@ class ProductListFragment : Fragment() {
             }
         }
 
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.container, productDetailFragment)
-            addToBackStack(null)
-            commit()
-        }
+        replaceFragment(R.id.container, productDetailFragment, parentFragmentManager)
     }
 }
