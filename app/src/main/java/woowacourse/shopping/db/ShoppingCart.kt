@@ -1,7 +1,6 @@
 package woowacourse.shopping.db
 
 object ShoppingCart {
-
     private val _productIds = mutableListOf<Int>()
     val productIds get() = _productIds.toList()
 

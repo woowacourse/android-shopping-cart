@@ -19,11 +19,13 @@ class CartViewModel : ViewModel() {
     val currentPage: LiveData<Int> get() = _currentPage
 
     private var _itemsInShoppingCartPage: MutableLiveData<MutableList<Product>> =
-        MutableLiveData(currentPage.value?.let {
-            val endIndex = min(productIds.size, (it) * 5)
-            productIds.subList((it - 1) * 5, endIndex)
-                .map { productId -> productStore.findById(productId) }.toMutableList()
-        })
+        MutableLiveData(
+            currentPage.value?.let {
+                val endIndex = min(productIds.size, (it) * 5)
+                productIds.subList((it - 1) * 5, endIndex)
+                    .map { productId -> productStore.findById(productId) }.toMutableList()
+            },
+        )
     val itemsInShoppingCartPage: LiveData<MutableList<Product>> get() = _itemsInShoppingCartPage
 
     fun deleteItem(productId: Int) {
@@ -51,7 +53,6 @@ class CartViewModel : ViewModel() {
             _itemsInShoppingCartPage.value?.addAll(it)
                 ?: _itemsInShoppingCartPage.postValue(it.toMutableList())
         }
-
     }
 
     fun previousPage() {
