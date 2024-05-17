@@ -18,9 +18,9 @@ class CartViewModel : ViewModel() {
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
     private val loadItemsInCartPage = currentPage.value?.let {
-        val offset = min(productIds.size, (it) * 5)
+        val offset = min(productIds.size, (it) * COUNT_PER_LOAD)
 
-        productIds.subList((it - 1) * 5, offset)
+        productIds.subList((it - 1) * COUNT_PER_LOAD, offset)
             .map { productId -> productStore.findById(productId) }
             .toMutableList()
     }
@@ -36,7 +36,7 @@ class CartViewModel : ViewModel() {
     }
 
     fun nextPage() {
-        if (productIds.size / 5 < (currentPage.value ?: 0)) return
+        if (productIds.size / COUNT_PER_LOAD < (currentPage.value ?: 0)) return
         _currentPage.value = _currentPage.value?.plus(1)
         updateItemsInShoppingCart()
     }
@@ -50,8 +50,8 @@ class CartViewModel : ViewModel() {
     fun updateItemsInShoppingCart() {
         _itemsInShoppingCartPage.value?.clear()
         currentPage.value?.let {
-            val endIndex = min(productIds.size, (it) * 5)
-            productIds.subList((it - 1) * 5, endIndex).toMutableList()
+            val endIndex = min(productIds.size, (it) * COUNT_PER_LOAD)
+            productIds.subList((it - 1) * COUNT_PER_LOAD, endIndex).toMutableList()
                 .map { productId ->
                     productStore.findById(productId)
                 }
@@ -62,5 +62,7 @@ class CartViewModel : ViewModel() {
 
     }
 
-
+    companion object {
+        private const val COUNT_PER_LOAD = 5
+    }
 }
