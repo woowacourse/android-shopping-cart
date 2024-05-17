@@ -19,7 +19,7 @@ class FiveCartItemPagingStrategyTest {
         val items = productsTestFixture(10)
 
         // when
-        val loadPagedData = itemPagingStrategy.loadPagedData(0, items)
+        val loadPagedData = itemPagingStrategy.loadPagedData(1, items)
 
         // then
         val expected = productsTestFixture(5)
@@ -32,8 +32,8 @@ class FiveCartItemPagingStrategyTest {
         val items = productsTestFixture(10)
 
         // when
-        val firstLoad = itemPagingStrategy.loadPagedData(0, items)
-        val secondLoad = itemPagingStrategy.loadPagedData(1, items)
+        val firstLoad = itemPagingStrategy.loadPagedData(1, items)
+        val secondLoad = itemPagingStrategy.loadPagedData(2, items)
 
         // then
         val expected =
@@ -49,8 +49,8 @@ class FiveCartItemPagingStrategyTest {
         val items = productsTestFixture(8)
 
         // when
-        val firstLoad = itemPagingStrategy.loadPagedData(0, items)
-        val secondLoad = itemPagingStrategy.loadPagedData(1, items)
+        val firstLoad = itemPagingStrategy.loadPagedData(1, items)
+        val secondLoad = itemPagingStrategy.loadPagedData(2, items)
 
         val expected =
             productsTestFixture(3) {

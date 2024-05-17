@@ -34,7 +34,7 @@ class DummyShoppingCartItemRepositoryTest {
         }
 
         // when
-        val loadedCartItems = dummyShoppingCartItemRepository.loadPagedCartItems(0)
+        val loadedCartItems = dummyShoppingCartItemRepository.loadPagedCartItems(1)
 
         // then
         assertAll(
@@ -55,7 +55,7 @@ class DummyShoppingCartItemRepositoryTest {
         }
 
         // when
-        val loadedCartItems = dummyShoppingCartItemRepository.loadPagedCartItems(1)
+        val loadedCartItems = dummyShoppingCartItemRepository.loadPagedCartItems(2)
 
         // then
         assertAll(

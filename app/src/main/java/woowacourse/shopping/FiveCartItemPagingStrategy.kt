@@ -7,8 +7,8 @@ class FiveCartItemPagingStrategy<Product> : PagingStrategy<Product> {
         startPage: Int,
         items: List<Product>,
     ): List<Product> {
-        val endPosition = min((startPage + 1) * COUNT_PER_LOAD, items.size)
-        return items.subList(fromIndex = startPage * COUNT_PER_LOAD, toIndex = endPosition)
+        val endOffset = min((startPage) * COUNT_PER_LOAD, items.size)
+        return items.subList(fromIndex = (startPage - 1) * COUNT_PER_LOAD, toIndex = endOffset)
     }
 
     companion object {
