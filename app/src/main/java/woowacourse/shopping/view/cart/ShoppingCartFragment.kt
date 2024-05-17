@@ -10,6 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.ViewModelFactory
+import woowacourse.shopping.view.cart.ShoppingCartViewModel.Companion.MIN_PAGE_COUNT
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
@@ -23,8 +24,6 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         viewModelFactory.create(ShoppingCartViewModel::class.java)
     }
     private lateinit var adapter: ShoppingCartAdapter
-    private var currentPage = MIN_PAGE_COUNT
-    private var totalItemSize = DEFAULT_ITEM_SIZE
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +47,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private fun initView() {
         shoppingCartViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
         binding.onClickShoppingCart = this
-        binding.currentPage = currentPage
+        binding.currentPage = shoppingCartViewModel.currentPage
         adapter =
             ShoppingCartAdapter(
                 onClickShoppingCart = this,
@@ -61,7 +60,6 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     private fun observeData() {
         shoppingCartViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { cartItems ->
-            totalItemSize = cartItems?.size ?: DEFAULT_ITEM_SIZE
             updateRecyclerView()
         }
     }
@@ -84,14 +82,14 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     override fun clickPrevPage() {
         if (isExistPrevPage()) {
-            binding.currentPage = --currentPage
+            binding.currentPage = --shoppingCartViewModel.currentPage
             updateRecyclerView()
         }
     }
 
     override fun clickNextPage() {
         if (isExistNextPage()) {
-            binding.currentPage = ++currentPage
+            binding.currentPage = ++shoppingCartViewModel.currentPage
             updateRecyclerView()
         } else {
             showMaxItemMessage()
@@ -107,8 +105,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun updateRecyclerView() {
-        val startIndex = (currentPage - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
-        val endIndex = minOf(currentPage * CART_ITEM_PAGE_SIZE, totalItemSize)
+        val startIndex = (shoppingCartViewModel.currentPage - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
+        val endIndex = minOf(shoppingCartViewModel.currentPage * CART_ITEM_PAGE_SIZE, shoppingCartViewModel.totalItemSize)
         val newData =
             shoppingCartViewModel.shoppingCart.cartItems.value?.subList(startIndex, endIndex)
                 ?: emptyList()
@@ -117,18 +115,15 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun hasLastItem(endIndex: Int): Boolean {
-        return endIndex >= (
-                shoppingCartViewModel.shoppingCart.cartItems.value?.size
-                    ?: DEFAULT_ITEM_SIZE
-                )
+        return endIndex >= (shoppingCartViewModel.totalItemSize)
     }
 
     private fun isExistPrevPage(): Boolean {
-        return currentPage > MIN_PAGE_COUNT
+        return shoppingCartViewModel.currentPage > MIN_PAGE_COUNT
     }
 
     private fun isExistNextPage(): Boolean {
-        return currentPage * CART_ITEM_PAGE_SIZE < totalItemSize
+        return shoppingCartViewModel.currentPage * CART_ITEM_PAGE_SIZE < shoppingCartViewModel.totalItemSize
     }
 
     private fun updateImageButtonColor() {
@@ -142,8 +137,6 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     companion object {
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5
         const val CART_ITEM_PAGE_SIZE = 3
-        private const val MIN_PAGE_COUNT = 1
-        const val DEFAULT_ITEM_SIZE = 0
         private const val MAX_PAGING_DATA = "모든 데이터가 로드 되었습니다."
     }
 }

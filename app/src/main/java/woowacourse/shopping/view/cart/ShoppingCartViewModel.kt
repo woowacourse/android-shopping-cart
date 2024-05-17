@@ -10,6 +10,8 @@ class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     var shoppingCart = ShoppingCart()
+    var currentPage = MIN_PAGE_COUNT
+    val totalItemSize: Int get() = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
 
     fun deleteShoppingCartItem(itemId: Long) {
         thread {
@@ -21,11 +23,17 @@ class ShoppingCartViewModel(
     fun loadPagingCartItem(pagingSize: Int) {
         var pagingData = emptyList<CartItem>()
         thread {
-            val itemSize = shoppingCart.cartItems.value?.size ?: ShoppingCartFragment.DEFAULT_ITEM_SIZE
+            val itemSize = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
             pagingData = shoppingCartRepository.loadPagingCartItems(itemSize, pagingSize)
         }.join()
         if (pagingData.isNotEmpty()) {
             shoppingCart.addProducts(pagingData)
         }
     }
+
+    companion object {
+        private const val DEFAULT_ITEM_SIZE = 0
+        const val MIN_PAGE_COUNT = 1
+    }
+
 }
