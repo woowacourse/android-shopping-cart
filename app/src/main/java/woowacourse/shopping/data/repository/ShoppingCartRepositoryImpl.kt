@@ -34,10 +34,11 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
     }
 
     override fun deleteCartItem(itemId: Long) {
+        var deleteId = ERROR_DELETE_DATA_ID
         thread {
-            val deleteId = cartItemDao.deleteCartItemById(itemId)
-            if (deleteId == ERROR_DELETE_DATA_ID) throw NoSuchDataException()
-        }
+            deleteId = cartItemDao.deleteCartItemById(itemId)
+        }.join()
+        if (deleteId == ERROR_DELETE_DATA_ID) throw NoSuchDataException()
     }
 
     companion object {

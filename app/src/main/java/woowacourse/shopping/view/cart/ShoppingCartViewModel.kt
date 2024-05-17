@@ -23,10 +23,12 @@ class ShoppingCartViewModel(
         runCatching {
             shoppingCartRepository.deleteCartItem(itemId)
         }.onSuccess {
-            shoppingCart.deleteProduct(itemId)
             _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Success
+            shoppingCart.deleteProduct(itemId)
+            _shoppingCartState.value = ShoppingCartState.Init
         }.onFailure {
             _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Fail
+            _shoppingCartState.value = ShoppingCartState.Init
         }
     }
 
@@ -36,11 +38,13 @@ class ShoppingCartViewModel(
             shoppingCartRepository.loadPagingCartItems(itemSize, pagingSize)
         }
             .onSuccess {
-                shoppingCart.addProducts(it)
                 _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
+                shoppingCart.addProducts(it)
+                _shoppingCartState.value = ShoppingCartState.Init
             }
             .onFailure {
                 _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
+                _shoppingCartState.value = ShoppingCartState.Init
             }
     }
 }

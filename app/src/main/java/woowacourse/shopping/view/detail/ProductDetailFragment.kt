@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
@@ -54,15 +52,17 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         }
         productDetailViewModel.productDetailState.observe(viewLifecycleOwner) { productDetailState ->
             when (productDetailState) {
-                ProductDetailState.Init -> {}
+                ProductDetailState.Init, ProductDetailState.LoadProductItem.Success -> {}
                 ProductDetailState.AddShoppingCart.Success -> showMessage(
                     requireContext().getString(
                         R.string.success_save_data
                     )
                 )
 
-                ProductDetailState.AddShoppingCart.Fail -> showMessage(requireContext().getString(R.string.error_save_data))
-                ProductDetailState.LoadProductItem.Success -> {}
+                ProductDetailState.AddShoppingCart.Fail -> showMessage(
+                    requireContext().getString(R.string.error_save_data)
+                )
+
                 ProductDetailState.LoadProductItem.Fail -> {
                     showMessage(requireContext().getString(R.string.error_data_load))
                     parentFragmentManager.popBackStack()

@@ -60,9 +60,8 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             adapter.updateProducts(addedProducts = products)
         }
         productListViewModel.productListState.observe(viewLifecycleOwner) { productListState ->
-            when(productListState){
-                ProductListState.Init -> {}
-                ProductListState.LoadProductList.Success -> {}
+            when (productListState) {
+                ProductListState.Init, ProductListState.LoadProductList.Success -> {}
                 ProductListState.LoadProductList.Fail -> showMessage(requireContext().getString(R.string.max_paging_data))
             }
         }

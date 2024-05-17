@@ -24,8 +24,10 @@ class ProductDetailViewModel(
             shoppingCartRepository.addCartItem(product)
         }.onSuccess {
             _productDetailState.value = ProductDetailState.AddShoppingCart.Success
+            _productDetailState.value = ProductDetailState.Init
         }.onFailure {
             _productDetailState.value = ProductDetailState.AddShoppingCart.Fail
+            _productDetailState.value = ProductDetailState.Init
         }
     }
 
@@ -34,11 +36,13 @@ class ProductDetailViewModel(
             productRepository.getProduct(productId)
         }
             .onSuccess {
-                _product.postValue(it)
                 _productDetailState.value = ProductDetailState.LoadProductItem.Success
+                _product.postValue(it)
+                _productDetailState.value = ProductDetailState.Init
             }
             .onFailure {
                 _productDetailState.value = ProductDetailState.LoadProductItem.Fail
+                _productDetailState.value = ProductDetailState.Init
             }
     }
 }

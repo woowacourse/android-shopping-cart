@@ -66,11 +66,20 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         }
         shoppingCartViewModel.shoppingCartState.observe(viewLifecycleOwner) { shoppingCartState ->
             when (shoppingCartState) {
-                ShoppingCartState.Init -> {}
-                ShoppingCartState.DeleteShoppingCart.Success -> {}
-                ShoppingCartState.DeleteShoppingCart.Fail -> showMessage(requireContext().getString(R.string.error_delete_data))
-                ShoppingCartState.LoadCartItemList.Success -> {}
-                ShoppingCartState.LoadCartItemList.Fail -> showMessage(requireContext().getString(R.string.max_paging_data))
+                ShoppingCartState.DeleteShoppingCart.Success,
+                ShoppingCartState.LoadCartItemList.Success,
+                ShoppingCartState.Init -> {
+                }
+
+                ShoppingCartState.DeleteShoppingCart.Fail -> showMessage(
+                    requireContext().getString(
+                        R.string.error_delete_data
+                    )
+                )
+
+                ShoppingCartState.LoadCartItemList.Fail -> showMessage(
+                    requireContext().getString(R.string.max_paging_data)
+                )
             }
         }
     }

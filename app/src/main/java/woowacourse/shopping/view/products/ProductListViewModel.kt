@@ -24,11 +24,13 @@ class ProductListViewModel(
             repository.loadPagingProducts(itemSize, pagingSize)
         }
             .onSuccess {
-                _products.value = _products.value?.plus(it)
                 _productListState.value = ProductListState.LoadProductList.Success
+                _products.value = _products.value?.plus(it)
+                _productListState.value = ProductListState.Init
             }
             .onFailure {
                 _productListState.value = ProductListState.LoadProductList.Fail
+                _productListState.value = ProductListState.Init
             }
     }
 }
