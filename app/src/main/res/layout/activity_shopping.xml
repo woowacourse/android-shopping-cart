@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
 
         <variable
             name="clickListener"
@@ -58,7 +59,7 @@
             android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:visibility="@{viewModel.visibility}"
+            android:visibility="@{viewModel.isBtnVisibleCondition ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_product_list"

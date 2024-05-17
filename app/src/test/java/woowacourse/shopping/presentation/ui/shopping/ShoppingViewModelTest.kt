@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.view.View
 import io.mockk.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -34,15 +33,15 @@ class ShoppingViewModelTest {
 
     @Test
     fun `updateVisibility가 호출됐을 때 visibility LiveData가 업데이트된다_1`() {
-        viewModel.updateVisibility(View.VISIBLE)
+        viewModel.showLoadMoreBtn()
 
-        assertEquals(View.VISIBLE, viewModel.visibility.value)
+        assertEquals(true, viewModel.isBtnVisibleCondition.value)
     }
 
     @Test
     fun `updateVisibility가 호출됐을 때 visibility LiveData가 업데이트된다_2`() {
-        viewModel.updateVisibility(View.GONE)
+        viewModel.hideLoadMoreBtn()
 
-        assertEquals(View.GONE, viewModel.visibility.value)
+        assertEquals(false, viewModel.isBtnVisibleCondition.value)
     }
 }

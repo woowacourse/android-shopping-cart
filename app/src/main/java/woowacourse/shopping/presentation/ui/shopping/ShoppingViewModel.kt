@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.view.View.GONE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,15 +13,14 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
 
     private val productsData: List<Product> by lazy { repository.getAllProducts() }
 
-    private val _visibility = MutableLiveData<Int>()
-    val visibility: LiveData<Int>
-        get() = _visibility
+    private val _isBtnVisibleCondition = MutableLiveData<Boolean>()
+    val isBtnVisibleCondition: LiveData<Boolean> = _isBtnVisibleCondition
 
     private var offset = 0
 
     init {
         loadProducts()
-        updateVisibility(GONE)
+        hideLoadMoreBtn()
     }
 
     private fun getProducts(): List<Product> {
@@ -34,8 +32,12 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
         _products.postValue(getProducts())
     }
 
-    fun updateVisibility(visibility: Int) {
-        _visibility.postValue(visibility)
+    fun showLoadMoreBtn() {
+        _isBtnVisibleCondition.postValue(true)
+    }
+
+    fun hideLoadMoreBtn() {
+        _isBtnVisibleCondition.postValue(false)
     }
 
     companion object {
