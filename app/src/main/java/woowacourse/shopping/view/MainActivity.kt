@@ -7,14 +7,13 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.view.products.ProductsListFragment
 import woowacourse.shopping.view.viewmodel.MainViewModel
-import woowacourse.shopping.view.viewmodel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
     val viewModel: MainViewModel by lazy {
-        val viewModelFactory = MainViewModelFactory(ProductRepositoryImpl(context = this@MainActivity))
+        val viewModelFactory = ViewModelFactory{MainViewModel(ProductRepositoryImpl(context = this@MainActivity))}
         viewModelFactory.create(MainViewModel::class.java)
     }
 
