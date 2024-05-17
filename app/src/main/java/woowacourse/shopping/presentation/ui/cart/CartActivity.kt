@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
@@ -12,17 +13,16 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
 class CartActivity : AppCompatActivity(), CartClickListener {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
-    private lateinit var cartRepository: CartRepository
-    private val viewModel: CartViewModel by lazy {
-        val factory = CartViewModelFactory(repository = cartRepository)
-        factory.create(CartViewModel::class.java)
+    private val viewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            repository = CartRepositoryImpl((application as ShoppingApplication).database),
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,8 +32,6 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         setUpToolbar()
 
         adapter = CartAdapter(this)
-        val database = (application as ShoppingApplication).database
-        cartRepository = CartRepositoryImpl(database)
 
         binding.lifecycleOwner = this
         binding.recyclerView.adapter = adapter

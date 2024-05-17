@@ -2,10 +2,9 @@ package woowacourse.shopping.presentation.ui.shopping
 
 import android.os.Bundle
 import android.view.Menu
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
@@ -17,9 +16,8 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
-    private val viewModel: ShoppingViewModel by lazy {
-        val factory = ShoppingViewModelFactory(ShoppingItemsRepositoryImpl())
-        factory.create(ShoppingViewModel::class.java)
+    private val viewModel: ShoppingViewModel by viewModels {
+        ShoppingViewModelFactory(ShoppingItemsRepositoryImpl())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
