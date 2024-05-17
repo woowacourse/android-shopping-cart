@@ -39,6 +39,12 @@ class CartViewModel : ViewModel() {
         updateItemsInShoppingCart()
     }
 
+    fun previousPage() {
+        if (currentPage.value == 1) return
+        _currentPage.value = _currentPage.value?.minus(1)
+        updateItemsInShoppingCart()
+    }
+
     fun updateItemsInShoppingCart() {
         _itemsInShoppingCartPage.value?.clear()
         currentPage.value?.let {
@@ -54,8 +60,5 @@ class CartViewModel : ViewModel() {
 
     }
 
-    fun previousPage() {
-        if (currentPage.value == 1) return
-        _currentPage.value = _currentPage.value?.minus(1)
-    }
+
 }

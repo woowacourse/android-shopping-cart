@@ -40,11 +40,6 @@ class CartFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        viewModel.currentPage.observe(viewLifecycleOwner) {
-            viewModel.updateItemsInShoppingCart()
-            adapter.updateData(viewModel.itemsInShoppingCartPage.value ?: emptyList())
-        }
-
         viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) {
             adapter.updateData(it)
         }
