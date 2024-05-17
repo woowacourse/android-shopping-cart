@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -16,8 +15,9 @@ import woowacourse.shopping.presentation.detail.DetailActivity
 
 class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickListener {
     private val binding: ActivityHomeBinding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.activity_home)
+        ActivityHomeBinding.inflate(layoutInflater)
     }
+
     private val viewModel: HomeViewModel by lazy {
         ViewModelProvider(
             this,
@@ -30,6 +30,7 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup =

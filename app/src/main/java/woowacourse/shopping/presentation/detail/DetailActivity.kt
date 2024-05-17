@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.DefaultCart
@@ -18,7 +17,7 @@ import woowacourse.shopping.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity(), AddCompleteListener {
     private val binding: ActivityDetailBinding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.activity_detail)
+        ActivityDetailBinding.inflate(layoutInflater)
     }
     private val viewModel: DetailViewModel by lazy {
         ViewModelProvider(
@@ -29,6 +28,7 @@ class DetailActivity : AppCompatActivity(), AddCompleteListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
 

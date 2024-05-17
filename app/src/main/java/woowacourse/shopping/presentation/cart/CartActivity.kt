@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.DefaultCart
@@ -16,7 +15,7 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
     private val binding: ActivityCartBinding by lazy {
-        DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        ActivityCartBinding.inflate(layoutInflater)
     }
     private lateinit var viewModel: CartViewModel
     private val adapter: CartAdapter by lazy {
@@ -25,6 +24,7 @@ class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
         viewModel =
             ViewModelProvider(
