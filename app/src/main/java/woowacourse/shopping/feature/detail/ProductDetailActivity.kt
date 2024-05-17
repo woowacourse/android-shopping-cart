@@ -3,9 +3,9 @@ package woowacourse.shopping.feature.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartDummyRepository
@@ -18,12 +18,8 @@ import woowacourse.shopping.viewmodel.ProductViewModel
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
-    private val productViewModel by lazy {
-        ViewModelProvider(this, ProductViewModelFactory(ProductDummyRepository))[ProductViewModel::class.java]
-    }
-    private val cartViewModel by lazy {
-        ViewModelProvider(this, CartViewModelFactory(CartDummyRepository, ProductDummyRepository))[CartViewModel::class.java]
-    }
+    private val productViewModel by viewModels<ProductViewModel> { ProductViewModelFactory(ProductDummyRepository) }
+    private val cartViewModel by viewModels<CartViewModel> { CartViewModelFactory(CartDummyRepository, ProductDummyRepository) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
