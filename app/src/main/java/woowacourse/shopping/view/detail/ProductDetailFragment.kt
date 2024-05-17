@@ -54,11 +54,11 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         productDetailViewModel.productDetailState.observe(viewLifecycleOwner) { productDetailState ->
             when (productDetailState) {
                 ProductDetailState.Init -> {}
-                ProductDetailState.AddShoppingCart.Success -> showAddCartSuccessMessage()
-                ProductDetailState.AddShoppingCart.Fail -> showAddCartErrorMessage()
+                ProductDetailState.AddShoppingCart.Success -> showMessage(SUCCESS_SAVE_DATA)
+                ProductDetailState.AddShoppingCart.Fail -> showMessage(ERROR_SAVE_DATA)
                 ProductDetailState.LoadProductItem.Success -> {}
                 ProductDetailState.LoadProductItem.Fail -> {
-                    showLoadErrorMessage()
+                    showMessage(ERROR_DATA_LOAD_MESSAGE)
                     parentFragmentManager.popBackStack()
                 }
             }
@@ -92,23 +92,12 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     }
 
     override fun clickAddCart(product: Product) {
-        runCatching {
-            productDetailViewModel.addShoppingCartItem(product)
-        }.onSuccess {
-            showAddCartSuccessMessage()
-        }.onFailure {
-            showAddCartErrorMessage()
-        }
+        productDetailViewModel.addShoppingCartItem(product)
     }
 
-    private fun showLoadErrorMessage() =
-        Toast.makeText(this.context, ERROR_DATA_LOAD_MESSAGE, Toast.LENGTH_SHORT).show()
 
-    private fun showAddCartSuccessMessage() =
-        Toast.makeText(this.context, SUCCESS_SAVE_DATA, Toast.LENGTH_SHORT).show()
-
-    private fun showAddCartErrorMessage() =
-        Toast.makeText(this.context, ERROR_SAVE_DATA, Toast.LENGTH_SHORT).show()
+    private fun showMessage(message: String) =
+        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
         fun createBundle(id: Long): Bundle {

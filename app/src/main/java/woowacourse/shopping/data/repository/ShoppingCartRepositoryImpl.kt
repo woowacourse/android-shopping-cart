@@ -28,8 +28,8 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
         var pagingData = emptyList<CartItem>()
         thread {
             pagingData = cartItemDao.findPagingCartItem(offset, pagingSize).map { it.toCartItem() }
-            if (pagingData.isEmpty()) throw NoSuchDataException()
         }.join()
+        if (pagingData.isEmpty()) throw NoSuchDataException()
         return pagingData
     }
 
