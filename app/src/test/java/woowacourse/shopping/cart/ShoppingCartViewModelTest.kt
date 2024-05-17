@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import androidx.lifecycle.MutableLiveData
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -144,5 +145,27 @@ class ShoppingCartViewModelTest {
 
         // then
         assertThat(viewModel.isLastPage.getOrAwaitValue()).isFalse
+    }
+
+    @Test
+    fun `장바구니에 담긴 상품이 6개일 때 이전 페이지로 간다`() {
+        // given
+        val fakeProducts =
+            mutableListOf(
+                productTestFixture(id = 1),
+                productTestFixture(id = 2),
+                productTestFixture(id = 3),
+                productTestFixture(id = 4),
+                productTestFixture(id = 5),
+                productTestFixture(id = 6),
+            )
+        viewModel =
+            ShoppingCartViewModel(FakeShoppingCartItemRepository(fakeProducts), _currentPage = MutableLiveData(2))
+
+        // when
+        viewModel.previousPage()
+
+        // then
+        assertThat(viewModel.currentPage.getOrAwaitValue()).isEqualTo(1)
     }
 }

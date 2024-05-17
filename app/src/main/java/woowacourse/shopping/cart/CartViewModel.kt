@@ -64,8 +64,8 @@ class CartViewModel : ViewModel() {
 
 class ShoppingCartViewModel(
     private val shoppingCartItemRepository: ShoppingCartItemRepository,
-) : ViewModel() {
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE)
+) : ViewModel() {
     val currentPage: LiveData<Int> get() = _currentPage
 
     private var _itemsInCurrentPage =
@@ -85,6 +85,18 @@ class ShoppingCartViewModel(
 
         _currentPage.value = _currentPage.value?.plus(1)
         _isLastPage.value = shoppingCartItemRepository.isFinalPage(currentPage.value ?: 1)
+
+        _itemsInCurrentPage.postValue(
+            shoppingCartItemRepository.loadPagedCartItems(
+                currentPage.value ?: throw IllegalStateException("currentPage is null"),
+            ),
+        )
+    }
+
+    fun previousPage() {
+        if (currentPage.value == FIRST_PAGE) return
+
+        _currentPage.value = _currentPage.value?.minus(1)
 
         _itemsInCurrentPage.postValue(
             shoppingCartItemRepository.loadPagedCartItems(
