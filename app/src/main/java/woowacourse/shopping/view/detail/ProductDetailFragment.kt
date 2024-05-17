@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
@@ -59,10 +57,6 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     private fun initView(product: Product) {
         binding.product = product
         binding.onClickDetail = this
-        Glide.with(requireActivity())
-            .load(product.imageUrl)
-            .override(Target.SIZE_ORIGINAL)
-            .into(binding.ivDetail)
     }
 
     override fun onDestroyView() {

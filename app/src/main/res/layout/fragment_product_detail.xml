@@ -42,6 +42,7 @@
 
         <ImageView
             android:id="@+id/iv_detail"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="360dp"
             app:layout_constraintEnd_toEndOf="parent"

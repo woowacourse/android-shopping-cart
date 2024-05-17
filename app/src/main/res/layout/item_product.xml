@@ -21,6 +21,7 @@
 
         <ImageView
             android:id="@+id/iv_product_image"
+            imageUrl="@{product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="154dp"
             android:layout_gravity="center" />
