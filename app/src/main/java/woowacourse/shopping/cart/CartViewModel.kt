@@ -48,16 +48,11 @@ class CartViewModel : ViewModel() {
     }
 
     private fun updateItemsInShoppingCart() {
-        _itemsInShoppingCartPage.value?.clear()
-        currentPage.value?.let {
-            val endIndex = min(productIds.size, (it) * COUNT_PER_LOAD)
-            productIds.subList((it - 1) * COUNT_PER_LOAD, endIndex).toMutableList()
-                .map { productId ->
-                    productStore.findById(productId)
-                }
-        }?.let {
-            _itemsInShoppingCartPage.value?.addAll(it)
-                ?: _itemsInShoppingCartPage.postValue(it.toMutableList())
+        currentPage.value?.let { page ->
+            val endIndex = min(productIds.size, page * COUNT_PER_LOAD)
+            val newItems = productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
+                .map { productId -> productStore.findById(productId) }
+            _itemsInShoppingCartPage.value = newItems.toMutableList()
         }
     }
 
