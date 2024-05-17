@@ -15,10 +15,10 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/white"
-        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
         tools:context=".view.detail.ProductDetailFragment">
 
         <View
@@ -29,11 +29,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:onClick="@{()->onClickDetail.clickClose()}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
+            android:onClick="@{() -> onClickDetail.clickClose()}"
             android:src="@drawable/ic_close_24"
             app:layout_constraintBottom_toBottomOf="@id/vw_detail_top_bar"
             app:layout_constraintEnd_toEndOf="@id/vw_detail_top_bar"
@@ -50,15 +50,15 @@
             app:layout_constraintTop_toBottomOf="@id/vw_detail_top_bar" />
 
         <TextView
-            android:text="@{product.name}"
             android:id="@+id/tv_detail_product_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="16dp"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_detail"
@@ -86,11 +86,11 @@
             app:layout_constraintTop_toBottomOf="@id/vw_divider" />
 
         <TextView
-            android:text="@{@string/formatted_price(product.price)}"
             android:id="@+id/tv_detail_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
+            android:text="@{@string/formatted_price(product.price)}"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_detail_product_price_head"
             app:layout_constraintEnd_toEndOf="parent"
@@ -98,13 +98,13 @@
             tools:text="10,000원" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:onClick="@{()->onClickDetail.clickAddCart(product)}"
             android:id="@+id/btn_add_cart"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:background="@color/primary"
             android:minWidth="0dp"
             android:minHeight="0dp"
+            android:onClick="@{()->onClickDetail.clickAddCart(product)}"
             android:padding="0dp"
             android:text="@string/add_cart_text"
             android:textColor="@color/white"

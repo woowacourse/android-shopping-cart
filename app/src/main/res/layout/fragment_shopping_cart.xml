@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="onPrevButton"
             type="java.lang.Boolean" />
+
         <variable
             name="onNextButton"
             type="java.lang.Boolean" />
+
         <variable
             name="currentPage"
             type="java.lang.Integer" />
@@ -83,21 +86,21 @@
 
             <ImageButton
                 android:id="@+id/btn_prev"
-                android:onClick="@{()->onClickShoppingCart.clickPrevPage()}"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
+                android:background="@{onPrevButton ? @color/primary : @color/gray}"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
+                android:onClick="@{()->onClickShoppingCart.clickPrevPage()}"
                 android:padding="0dp"
-                android:background="@{onPrevButton ? @color/primary : @color/gray}"
                 android:src="@drawable/ic_arrow_back_24" />
 
             <TextView
                 android:id="@+id/tv_page_count"
-                android:text="@{String.valueOf(currentPage)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
+                android:text="@{String.valueOf(currentPage)}"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -105,13 +108,13 @@
 
             <ImageButton
                 android:id="@+id/btn_next"
-                android:onClick="@{()->onClickShoppingCart.clickNextPage()}"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
+                android:background="@{onNextButton ? @color/primary : @color/gray}"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
+                android:onClick="@{()->onClickShoppingCart.clickNextPage()}"
                 android:padding="0dp"
-                android:background="@{onNextButton ? @color/primary : @color/gray}"
                 android:src="@drawable/ic_arrow_forward_24" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
