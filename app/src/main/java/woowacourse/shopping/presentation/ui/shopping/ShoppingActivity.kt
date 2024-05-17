@@ -2,11 +2,10 @@ package woowacourse.shopping.presentation.ui.shopping
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
@@ -24,19 +23,31 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setUpToolbar()
+        setSupportActionBar(binding.toolbarMain)
+        setUpLoadMoreButton()
+        setUpAdapter()
+        setUpDataBinding()
+        observeViewModel()
+    }
 
-        adapter = ShoppingAdapter(this)
+    private fun setUpDataBinding() {
         binding.lifecycleOwner = this
-        binding.rvProductList.adapter = adapter
-
-        viewModel.products.observe(
-            this,
-            Observer { products ->
-                adapter.loadData(products)
-            },
-        )
+        binding.clickListener = this
         binding.vmProduct = viewModel
+    }
+
+    private fun setUpAdapter() {
+        adapter = ShoppingAdapter(this)
+        binding.rvProductList.adapter = adapter
+    }
+
+    private fun observeViewModel() {
+        viewModel.products.observe(this) { products ->
+            adapter.loadData(products)
+        }
+    }
+
+    private fun setUpLoadMoreButton() {
         binding.rvProductList.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(
@@ -53,17 +64,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
                 }
             },
         )
-        binding.clickListener = this
-    }
-
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarMain
-        setSupportActionBar(toolbar)
-
-        toolbar.setOnMenuItemClickListener {
-            navigateToShoppingCart()
-            true
-        }
     }
 
     private fun navigateToShoppingCart() {
@@ -73,6 +73,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        navigateToShoppingCart()
+        return true
     }
 
     override fun onProductClick(productId: Long) {

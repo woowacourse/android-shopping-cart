@@ -3,11 +3,10 @@ package woowacourse.shopping.presentation.ui.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
@@ -29,14 +28,23 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setUpToolbar()
+        setSupportActionBar(binding.toolbarCart)
+        setUpAdapter()
+        setUpdataBinding()
+        observeViewModel()
+    }
 
-        adapter = CartAdapter(this)
-
+    private fun setUpdataBinding() {
         binding.lifecycleOwner = this
-        binding.recyclerView.adapter = adapter
         binding.vmShoppingCart = viewModel
+    }
 
+    private fun setUpAdapter() {
+        adapter = CartAdapter(this)
+        binding.recyclerView.adapter = adapter
+    }
+
+    private fun observeViewModel() {
         viewModel.uiState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
@@ -58,13 +66,9 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         viewModel.loadCartItems()
     }
 
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarCart
-        setSupportActionBar(toolbar)
-
-        toolbar.setNavigationOnClickListener {
-            finish()
-        }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return true
     }
 
     override fun onItemClick(productId: Long) {

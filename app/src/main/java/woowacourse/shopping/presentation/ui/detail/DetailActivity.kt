@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
@@ -30,27 +30,24 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setUpToolbar()
+        setSupportActionBar(binding.toolbarDetail)
+        setUpDataBinding()
+    }
 
+    private fun setUpDataBinding() {
         binding.lifecycleOwner = this
         binding.clickListener = this
         binding.vmProduct = viewModel
     }
 
-
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarDetail
-        setSupportActionBar(toolbar)
-
-        toolbar.setOnMenuItemClickListener {
-            finish()
-            true
-        }
-    }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.detail_menu, menu)
         return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        finish()
+        return true
     }
 
     override fun onClick(productId: Long) {
