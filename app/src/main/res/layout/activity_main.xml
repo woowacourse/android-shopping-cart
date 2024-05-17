@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.feature.main.viewmodel.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,17 +47,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/teal_500"
+            android:onClick="@{() -> viewModel.loadPage()}"
             android:paddingVertical="12dp"
             android:text="@string/see_more"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_goneMarginTop="100dp"
-            tools:visibility="visible" />
+            app:visibility="@{viewModel.showSeeMore}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

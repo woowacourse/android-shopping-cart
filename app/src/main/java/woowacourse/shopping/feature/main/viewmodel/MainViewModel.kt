@@ -13,10 +13,24 @@ class MainViewModel(private val productRepository: ProductRepository) : ViewMode
     private val _page = MutableLiveData<Int>(INITIALIZE_PAGE)
     val page: LiveData<Int> get() = _page
 
+    private val _showSeeMore = MutableLiveData<Boolean>()
+    val showSeeMore: LiveData<Boolean> get() = _showSeeMore
+
+    private var totalProductCount: Int = 0
+
     fun loadPage() {
-        val pageValue = _page.value ?: return
-        _products.value = productRepository.findRange(pageValue, PAGE_SIZE)
-        _page.value = pageValue + 1
+        val currentPage = _page.value ?: return
+        val loadedPageProducts = productRepository.findRange(currentPage, PAGE_SIZE)
+
+        _products.value = loadedPageProducts
+        _page.value = currentPage + 1
+
+        totalProductCount += loadedPageProducts.size
+        _showSeeMore.value = false
+    }
+
+    fun changeSeeMoreVisibility(lastPosition: Int) {
+        _showSeeMore.value = (lastPosition + 1) % PAGE_SIZE == 0 && lastPosition + 1 == totalProductCount
     }
 
     companion object {
