@@ -3,12 +3,14 @@ package woowacourse.shopping.presentation.ui.shopping
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import io.kotest.matchers.shouldBe
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
@@ -52,6 +54,27 @@ class ShoppingActivityTest {
         )
     }
 
+    @Test
+    fun `처음엔_아이템이_20개이고_더보기를_클릭하면_40개가_된다`() {
+        val recyclerViewInteraction = onView(withId(R.id.rv_shopping))
+        val loadMoreViewInteraction = onView(withId(R.id.btn_show_more))
+        // 20개
+        recyclerViewInteraction.check { view, assertion ->
+            val recyclerView = view as RecyclerView
+            recyclerView.adapter?.itemCount shouldBe 20 + LOAD_MORE_OFFSET
+        }
+        recyclerViewInteraction.perform(
+            RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
+                20,
+            ),
+        )
+        loadMoreViewInteraction.perform(click())
+        recyclerViewInteraction.check { view, assertion ->
+            val recyclerView = view as RecyclerView
+            recyclerView.adapter?.itemCount shouldBe 40 + LOAD_MORE_OFFSET
+        }
+    }
+
     private fun matchViewHolderAtPosition(
         position: Int,
         viewHolderClass: Class<out RecyclerView.ViewHolder>,
@@ -70,5 +93,9 @@ class ShoppingActivityTest {
                     )
             }
         }
+    }
+
+    companion object {
+        const val LOAD_MORE_OFFSET = 1
     }
 }
