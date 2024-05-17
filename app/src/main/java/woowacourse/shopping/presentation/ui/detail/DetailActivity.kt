@@ -8,20 +8,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 
 class DetailActivity : AppCompatActivity(), DetailClickListener {
     private lateinit var binding: ActivityDetailBinding
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private lateinit var viewModel: DetailViewModel
+    private lateinit var cartRepository: CartRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val database = (application as ShoppingApplication).database
+        cartRepository = CartRepositoryImpl(database)
+
         setUpToolbar()
         setUpViewModel()
 
@@ -32,7 +39,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
     private fun setUpViewModel() {
         val factory =
             DetailViewModelFactory(
-                CartRepositoryImpl,
+                cartRepository,
                 ShoppingItemsRepositoryImpl(),
                 productId = productId,
             )
