@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             })
         binding.rvMainProduct.adapter = adapter
         viewModel.products.observe(this) {
-            adapter.updateProducts(it)
+            adapter.insertProducts(it)
         }
     }
 

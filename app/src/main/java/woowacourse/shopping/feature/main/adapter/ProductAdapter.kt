@@ -30,7 +30,7 @@ class ProductAdapter(private val onClickProductItem: OnClickProductItem) :
         return products.size
     }
 
-    fun updateProducts(insertedProducts: List<Product>) {
+    fun insertProducts(insertedProducts: List<Product>) {
         val positionStart = insertedProducts.size
         val itemCount = insertedProducts.size - products.size
 
