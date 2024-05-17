@@ -62,9 +62,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private fun observeData() {
         shoppingCartViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { cartItems ->
             totalItemSize = cartItems?.size ?: DEFAULT_ITEM_SIZE
-            view?.post {
-                updateRecyclerView()
-            }
+            updateRecyclerView()
         }
     }
 
@@ -120,9 +118,9 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     private fun hasLastItem(endIndex: Int): Boolean {
         return endIndex >= (
-            shoppingCartViewModel.shoppingCart.cartItems.value?.size
-                ?: DEFAULT_ITEM_SIZE
-        )
+                shoppingCartViewModel.shoppingCart.cartItems.value?.size
+                    ?: DEFAULT_ITEM_SIZE
+                )
     }
 
     private fun isExistPrevPage(): Boolean {
@@ -138,7 +136,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         binding.onNextButton = isExistNextPage()
     }
 
-    private fun showMaxItemMessage() = Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
+    private fun showMaxItemMessage() =
+        Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
 
     companion object {
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5
