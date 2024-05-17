@@ -34,11 +34,13 @@ class ProductDetailFragmentTest {
 
     @Test
     fun `선택한_상품의_이름이_보여져야_한다`() {
+        Thread.sleep(1000)
         onView(withId(R.id.tv_detail_product_name)).check(matches(withText("PET보틀-단지(400ml) 레몬청")))
     }
 
     @Test
     fun `선택한_상품의_가격이_보여져야_한다`() {
+        Thread.sleep(1000)
         onView(withId(R.id.tv_detail_product_price)).check(matches(withText("10,000원")))
     }
 }

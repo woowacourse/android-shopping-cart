@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.MockProductRepository
 import woowacourse.shopping.MockShoppingCartRepository
+import woowacourse.shopping.TestFixture.getOrAwaitValue
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -33,10 +34,11 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `상품아이디로_상품을_요청하면_아이디와_일치하는_상품_목록을_반환해야_한다`() {
-        val actual = viewModel.loadProductItem(0)
+        viewModel.loadProductItem(0)
+        val actual = viewModel.product.getOrAwaitValue()
         val expected = (productRepository as MockProductRepository).products[0]
 
-        Assertions.assertThat(actual).isEqualTo(expected)
+        assertThat(actual).isEqualTo(expected)
     }
 
     @Test
