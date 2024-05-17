@@ -46,4 +46,8 @@ class ShoppingCartActivityTest {
         onView(withId(R.id.btn_shopping_cart_left)).check(matches(isClickable()))
         onView(withId(R.id.btn_shopping_cart_right)).check(matches(isClickable()))
     }
+
+    @Test
+    fun `장바구니_아이템의_개수가_1개일때_아이템을_삭제하면_recyclerview에는_아이템이_없다`()  {
+    }
 }

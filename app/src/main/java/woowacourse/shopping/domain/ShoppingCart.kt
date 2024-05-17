@@ -1,7 +1,7 @@
 package woowacourse.shopping.domain
 
 data class ShoppingCart(val items: List<ShoppingCartItem>) {
-    fun updateItems(updatedItem: ShoppingCartItem): ShoppingCart {
+    fun updateItem(updatedItem: ShoppingCartItem): ShoppingCart {
         return items.map {
             if (it.product.id == updatedItem.product.id) updatedItem else it
         }.let(::ShoppingCart)
