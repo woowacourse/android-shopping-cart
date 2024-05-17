@@ -14,9 +14,5 @@ class ShoppingCartViewHolder(
     fun bind(cartItem: CartItem) {
         binding.cartItem = cartItem
         binding.onClickShoppingCart = onClickShoppingCart
-        Glide.with(itemView.context)
-            .load(cartItem.product.imageUrl)
-            .override(Target.SIZE_ORIGINAL)
-            .into(binding.ivCartItemImage)
     }
 }

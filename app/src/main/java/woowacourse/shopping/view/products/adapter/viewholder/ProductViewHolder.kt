@@ -14,9 +14,5 @@ class ProductViewHolder(
     fun bind(product: Product) {
         binding.product = product
         binding.onClickProduct = onClickProducts
-        Glide.with(itemView.context)
-            .load(product.imageUrl)
-            .override(Target.SIZE_ORIGINAL)
-            .into(binding.ivProductImage)
     }
 }

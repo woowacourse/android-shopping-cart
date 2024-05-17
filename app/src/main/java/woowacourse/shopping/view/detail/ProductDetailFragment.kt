@@ -82,10 +82,6 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     private fun initView(product: Product) {
         binding.product = product
         binding.onClickDetail = this
-        Glide.with(requireActivity())
-            .load(product.imageUrl)
-            .override(Target.SIZE_ORIGINAL)
-            .into(binding.ivDetail)
     }
 
     override fun onDestroyView() {

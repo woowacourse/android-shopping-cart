@@ -54,6 +54,7 @@
 
         <ImageView
             android:id="@+id/iv_cart_item_image"
+            app:imageUrl="@{cartItem.product.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginVertical="20dp"
