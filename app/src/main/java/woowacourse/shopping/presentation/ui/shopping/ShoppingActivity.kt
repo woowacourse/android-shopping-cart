@@ -17,7 +17,10 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
-    private lateinit var viewModel: ShoppingViewModel
+    private val viewModel: ShoppingViewModel by lazy {
+        val factory = ShoppingViewModelFactory(ShoppingItemsRepositoryImpl())
+        factory.create(ShoppingViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,15 +28,10 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         setContentView(binding.root)
         setUpToolbar()
 
-        binding.lifecycleOwner = this
-
-        binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
-
         adapter = ShoppingAdapter(this)
+        binding.lifecycleOwner = this
         binding.rvProductList.adapter = adapter
 
-        val factory = ShoppingViewModelFactory(ShoppingItemsRepositoryImpl())
-        viewModel = ViewModelProvider(this, factory)[ShoppingViewModel::class.java]
         viewModel.products.observe(
             this,
             Observer { products ->

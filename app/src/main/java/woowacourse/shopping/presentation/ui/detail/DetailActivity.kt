@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.CartRepositoryImpl
@@ -15,30 +14,28 @@ import woowacourse.shopping.presentation.ui.cart.CartActivity
 
 class DetailActivity : AppCompatActivity(), DetailClickListener {
     private lateinit var binding: ActivityDetailBinding
-    private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
-    private lateinit var viewModel: DetailViewModel
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setUpToolbar()
-        setUpViewModel()
-
-        binding.lifecycleOwner = this
-        binding.clickListener = this
-    }
-
-    private fun setUpViewModel() {
+    private val viewModel: DetailViewModel by lazy {
         val factory =
             DetailViewModelFactory(
                 CartRepositoryImpl,
                 ShoppingItemsRepositoryImpl(),
                 productId = productId,
             )
-        viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
+        factory.create(DetailViewModel::class.java)
+    }
+    private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setUpToolbar()
+
+        binding.lifecycleOwner = this
+        binding.clickListener = this
         binding.vmProduct = viewModel
     }
+
 
     private fun setUpToolbar() {
         val toolbar: MaterialToolbar = binding.toolbarDetail
