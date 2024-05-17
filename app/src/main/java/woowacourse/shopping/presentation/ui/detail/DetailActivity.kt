@@ -7,17 +7,20 @@ import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 
 class DetailActivity : AppCompatActivity(), DetailClickListener {
     private lateinit var binding: ActivityDetailBinding
+    private lateinit var cartRepository: CartRepository
     private val viewModel: DetailViewModel by lazy {
         val factory =
             DetailViewModelFactory(
-                CartRepositoryImpl(),
+                cartRepository,
                 ShoppingItemsRepositoryImpl(),
                 productId = productId,
             )
@@ -30,6 +33,9 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpToolbar()
+
+        val database = (application as ShoppingApplication).database
+        cartRepository = CartRepositoryImpl(database)
 
         binding.lifecycleOwner = this
         binding.clickListener = this
