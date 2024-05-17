@@ -25,13 +25,25 @@ class ProductContentsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_contents)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_contents)
+
+        initBinding()
         setProductAdapter()
         observeProductItems()
         loadItems()
-
-        setOnLoadMoreButtonListener()
         setOnRecyclerViewScrollListener()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_cart -> CartActivity.startActivity(this)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_contents)
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun setProductAdapter() {
@@ -49,12 +61,6 @@ class ProductContentsActivity : AppCompatActivity() {
     private fun observeProductItems() {
         viewModel.products.observe(this) {
             adapter.setData(it)
-        }
-    }
-
-    private fun setOnLoadMoreButtonListener() {
-        binding.btnLoadMore.setOnClickListener {
-            viewModel.loadProducts()
         }
     }
 
@@ -86,13 +92,6 @@ class ProductContentsActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_product_contents, menu)
         return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_cart -> CartActivity.startActivity(this)
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     companion object {

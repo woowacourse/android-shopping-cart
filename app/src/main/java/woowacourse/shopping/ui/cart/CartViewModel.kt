@@ -44,10 +44,12 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
 
     fun plusPageNum() {
         cartPageManager.plusPageNum()
+        loadCartItems()
     }
 
     fun minusPageNum() {
         cartPageManager.minusPageNum()
+        loadCartItems()
     }
 
     private fun getProducts(): List<Product> {

@@ -5,13 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.state.UiState
@@ -28,11 +31,17 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_product_detail)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+        initBinding()
 
         showProductDetail()
         observeProduct()
         setOnCartButtonClickListener()
+    }
+
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun setOnCartButtonClickListener() {
@@ -47,7 +56,6 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         viewModel.uiState.observe(this) { uiState ->
             when (uiState) {
                 is UiState.SUCCESS -> {
-                    binding.product = uiState.data
                     Glide.with(this)
                         .load(uiState.data.imageUrl)
                         .into(binding.ivProductImage)
@@ -90,7 +98,6 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         )
 
     companion object {
-        private val TAG = ProductDetailActivity::class.java.simpleName
         private const val EXTRA_DEFAULT_VALUE = -1L
 
         fun startActivity(
@@ -99,6 +106,28 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         ) = Intent(context, ProductDetailActivity::class.java).run {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
             context.startActivity(this)
+        }
+    }
+}
+
+@BindingAdapter("productName")
+fun setProductName(
+    textView: TextView,
+    uiState: UiState<Product>,
+) {
+    if (uiState is UiState.SUCCESS) {
+        textView.text = uiState.data.name
+    }
+}
+
+@BindingAdapter("productPrice")
+fun setProductPrice(
+    textView: TextView,
+    uiState: UiState<Product>,
+) {
+    if (uiState is UiState.SUCCESS) {
+        textView.apply {
+            text = this.context.getString(R.string.product_price, uiState.data.price)
         }
     }
 }

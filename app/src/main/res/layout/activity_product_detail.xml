@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.model.Product" />
+            name="vm"
+            type="woowacourse.shopping.ui.detail.ProductDetailViewModel" />
 
         <variable
             name="cartButtonClickListener"
@@ -38,8 +38,8 @@
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:text="@{product.name}"
             app:layout_constraintTop_toBottomOf="@id/iv_product_image"
+            app:productName="@{vm.uiState}"
             tools:text="[든든] 동원 스위트콘" />
 
         <View
@@ -69,11 +69,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="18dp"
+            app:productPrice = "@{vm.uiState}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/split_line"
-            android:text="@{@string/product_price(product.price)}"
             tools:text="99,800원" />
 
         <Button
@@ -81,11 +81,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/add_product_button_style"
+            android:onClick="@{()->cartButtonClickListener.onClick()}"
             android:text="@string/add_product_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:onClick="@{()->cartButtonClickListener.onClick()}"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

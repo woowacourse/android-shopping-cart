@@ -5,6 +5,10 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="woowacourse.shopping.ui.products.ProductContentsViewModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/load_more"
+            android:onClick="@{() -> vm.loadProducts()}"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

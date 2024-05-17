@@ -20,56 +20,25 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cart)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
-
-        showPageNumber()
-
-        setOnPreviousButtonClickListener()
-        setOnNextButtonClickListener()
-
+        initBinding()
         loadItems()
         setCartAdapter()
-
         observeCartItems()
-
-        changePreviousButtonEnabled()
-        changeNextButtonEnabled()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    private fun changeNextButtonEnabled() {
-        viewModel.canMoveNextPage.observe(this) {
-            binding.btnNext.isClickable = it
-            binding.btnNext.isEnabled = it
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> finish()
         }
+        return super.onOptionsItemSelected(item)
     }
 
-    private fun changePreviousButtonEnabled() {
-        viewModel.canMovePreviousPage.observe(this) {
-            binding.btnPrevious.isClickable = it
-            binding.btnPrevious.isEnabled = it
-        }
-    }
-
-    private fun setOnNextButtonClickListener() {
-        binding.btnNext.setOnClickListener {
-            viewModel.plusPageNum()
-            viewModel.loadCartItems()
-        }
-    }
-
-    private fun setOnPreviousButtonClickListener() {
-        binding.btnPrevious.setOnClickListener {
-            viewModel.minusPageNum()
-            viewModel.loadCartItems()
-        }
-    }
-
-    private fun showPageNumber() {
-        viewModel.pageNumber.observe(this) {
-            binding.pageNumber = it.toString()
-        }
+    private fun initBinding() {
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
     }
 
     private fun loadItems() {
@@ -89,13 +58,6 @@ class CartActivity : AppCompatActivity() {
                 viewModel.removeCartItem(productId)
             }
         binding.rvCart.adapter = adapter
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     companion object {

@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="pageNumber"
-            type="String" />
+            name="vm"
+            type="woowacourse.shopping.ui.cart.CartViewModel" />
 
     </data>
 
@@ -35,7 +35,10 @@
             android:layout_height="42dp"
             android:layout_marginStart="115dp"
             android:background="@drawable/selector_left_button"
+            android:clickable="@{vm.canMovePreviousPage}"
+            android:enabled="@{vm.canMovePreviousPage}"
             android:text="@string/previous_page"
+            android:onClick="@{() -> vm.minusPageNum()}"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -48,7 +51,7 @@
             android:layout_width="45dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:text="@{pageNumber}"
+            android:text="@{vm.pageNumber.toString()}"
             android:textColor="@color/gray5"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -66,6 +69,9 @@
             android:background="@drawable/selector_right_button"
             android:text="@string/next_page"
             android:textColor="@color/white"
+            android:clickable="@{vm.canMoveNextPage}"
+            android:enabled="@{vm.canMoveNextPage}"
+            android:onClick="@{() -> vm.plusPageNum()}"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
