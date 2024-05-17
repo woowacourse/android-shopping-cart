@@ -37,19 +37,15 @@ fun setItems(
 @BindingAdapter("app:price")
 fun setPrice(
     view: TextView,
-    price: Long?,
+    price: Long,
 ) {
-    price?.let {
-        view.text = view.context.getString(R.string.price_format, it)
-    } ?: run {
-        view.text = ""
-    }
+    view.text = view.context.getString(R.string.price_format, price)
 }
 
 @BindingAdapter("app:selectedBasedOn")
 fun setSelectedBasedOn(
     button: AppCompatButton,
-    isSelected: Boolean?,
+    isSelected: Boolean,
 ) {
-    button.isSelected = isSelected == true
+    button.isSelected = isSelected
 }
