@@ -8,6 +8,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.cart.ShoppingCartFragment.Companion.DEFAULT_ITEM_SIZE
+import woowacourse.shopping.view.cart.model.ShoppingCart
 import kotlin.concurrent.thread
 
 class MainViewModel(
