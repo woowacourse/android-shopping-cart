@@ -69,8 +69,3 @@ class CartViewModel(
         _orders.value = orders
     }
 }
-
-data class PageInformation(
-    val previousPageEnabled: Boolean = false,
-    val nextPageEnabled: Boolean = false,
-)
