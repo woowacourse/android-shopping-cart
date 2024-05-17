@@ -10,4 +10,5 @@ sealed interface ProductDetailState {
         data object Success: LoadProductItem
         data object Fail: LoadProductItem
     }
+
 }

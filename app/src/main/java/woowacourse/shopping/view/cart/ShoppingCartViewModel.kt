@@ -1,10 +1,10 @@
 package woowacourse.shopping.view.cart
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.view.cart.model.ShoppingCart
-import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
@@ -13,22 +13,33 @@ class ShoppingCartViewModel(
     var currentPage = MIN_PAGE_COUNT
     val totalItemSize: Int get() = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
 
+    private val _shoppingCartState: MutableLiveData<ShoppingCartState> =
+        MutableLiveData(ShoppingCartState.Init)
+    val shoppingCartState: LiveData<ShoppingCartState> get() = _shoppingCartState!!
+
     fun deleteShoppingCartItem(itemId: Long) {
-        thread {
+        runCatching {
             shoppingCartRepository.deleteCartItem(itemId)
-        }.join()
-        shoppingCart.deleteProduct(itemId)
+        }.onSuccess {
+            shoppingCart.deleteProduct(itemId)
+            _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Success
+        }.onFailure {
+            _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Fail
+        }
     }
 
-    fun loadPagingCartItem(pagingSize: Int) {
-        var pagingData = emptyList<CartItem>()
-        thread {
+    fun loadPagingCartItemList(pagingSize: Int) {
+        runCatching {
             val itemSize = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
-            pagingData = shoppingCartRepository.loadPagingCartItems(itemSize, pagingSize)
-        }.join()
-        if (pagingData.isNotEmpty()) {
-            shoppingCart.addProducts(pagingData)
+            shoppingCartRepository.loadPagingCartItems(itemSize, pagingSize)
         }
+            .onSuccess {
+                shoppingCart.addProducts(it)
+                _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
+            }
+            .onFailure {
+                _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
+            }
     }
 
     companion object {

@@ -41,9 +41,4 @@ class ProductDetailViewModel(
                 _productDetailState.value = ProductDetailState.LoadProductItem.Fail
             }
     }
-
-
-    companion object {
-        const val ERROR_SAVE_DATA_ID = -1L
-    }
 }

@@ -13,10 +13,11 @@ import kotlin.concurrent.thread
 class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
     private val cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
 
-    override fun addCartItem(product: Product)  {
+    override fun addCartItem(product: Product) {
         thread {
-            val addedCartItemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
-            if (addedCartItemId == ProductDetailViewModel.ERROR_SAVE_DATA_ID) throw NoSuchDataException()
+            val addedCartItemId =
+                cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
+            if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
         }
     }
 
@@ -24,10 +25,23 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
         offset: Int,
         pagingSize: Int,
     ): List<CartItem> {
-        return cartItemDao.findPagingCartItem(offset, pagingSize).map { it.toCartItem() }
+        var pagingData = emptyList<CartItem>()
+        thread {
+            pagingData = cartItemDao.findPagingCartItem(offset, pagingSize).map { it.toCartItem() }
+            if (pagingData.isEmpty()) throw NoSuchDataException()
+        }.join()
+        return pagingData
     }
 
     override fun deleteCartItem(itemId: Long) {
-        cartItemDao.deleteCartItemById(itemId)
+        thread {
+            val deleteId = cartItemDao.deleteCartItemById(itemId)
+            if (deleteId == ERROR_DELETE_DATA_ID) throw NoSuchDataException()
+        }
+    }
+
+    companion object {
+        const val ERROR_SAVE_DATA_ID = -1L
+        const val ERROR_DELETE_DATA_ID = 0
     }
 }

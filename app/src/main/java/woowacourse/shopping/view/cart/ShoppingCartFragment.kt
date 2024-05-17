@@ -45,14 +45,14 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun initView() {
-        shoppingCartViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
+        shoppingCartViewModel.loadPagingCartItemList(CART_ITEM_LOAD_PAGING_SIZE)
         binding.onClickShoppingCart = this
         binding.currentPage = shoppingCartViewModel.currentPage
         adapter =
             ShoppingCartAdapter(
                 onClickShoppingCart = this,
                 loadLastItem = {
-                    shoppingCartViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
+                    shoppingCartViewModel.loadPagingCartItemList(CART_ITEM_LOAD_PAGING_SIZE)
                 },
             )
         binding.rvShoppingCart.adapter = adapter
@@ -61,6 +61,15 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private fun observeData() {
         shoppingCartViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { cartItems ->
             updateRecyclerView()
+        }
+        shoppingCartViewModel.shoppingCartState.observe(viewLifecycleOwner) { shoppingCartState ->
+            when (shoppingCartState) {
+                ShoppingCartState.Init -> {}
+                ShoppingCartState.DeleteShoppingCart.Success -> {}
+                ShoppingCartState.DeleteShoppingCart.Fail -> showMessage(ERROR_DELETE_FAIL_MESSAGE)
+                ShoppingCartState.LoadCartItemList.Success -> {}
+                ShoppingCartState.LoadCartItemList.Fail -> showMessage(MAX_PAGING_DATA_MESSAGE)
+            }
         }
     }
 
@@ -92,7 +101,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
             binding.currentPage = ++shoppingCartViewModel.currentPage
             updateRecyclerView()
         } else {
-            showMaxItemMessage()
+            showMessage(MAX_PAGING_DATA_MESSAGE)
         }
     }
 
@@ -106,7 +115,10 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     private fun updateRecyclerView() {
         val startIndex = (shoppingCartViewModel.currentPage - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
-        val endIndex = minOf(shoppingCartViewModel.currentPage * CART_ITEM_PAGE_SIZE, shoppingCartViewModel.totalItemSize)
+        val endIndex = minOf(
+            shoppingCartViewModel.currentPage * CART_ITEM_PAGE_SIZE,
+            shoppingCartViewModel.totalItemSize
+        )
         val newData =
             shoppingCartViewModel.shoppingCart.cartItems.value?.subList(startIndex, endIndex)
                 ?: emptyList()
@@ -131,12 +143,13 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         binding.onNextButton = isExistNextPage()
     }
 
-    private fun showMaxItemMessage() =
-        Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
+    private fun showMessage(message: String) =
+        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5
         const val CART_ITEM_PAGE_SIZE = 3
-        private const val MAX_PAGING_DATA = "모든 데이터가 로드 되었습니다."
+        private const val MAX_PAGING_DATA_MESSAGE = "모든 데이터가 로드 되었습니다."
+        private const val ERROR_DELETE_FAIL_MESSAGE = "삭제에 실패하였습니다."
     }
 }

@@ -26,7 +26,7 @@ class ShoppingCartViewModelTest {
         val before = viewModel.shoppingCart.cartItems.getOrAwaitValue()
         Assertions.assertThat(before.size).isEqualTo(0)
 
-        viewModel.loadPagingCartItem(3)
+        viewModel.loadPagingCartItemList(3)
 
         val result = viewModel.shoppingCart.cartItems.getOrAwaitValue()
         Assertions.assertThat(result.size).isEqualTo(3)
@@ -34,7 +34,7 @@ class ShoppingCartViewModelTest {
 
     @Test
     fun `장바구니_id로_장바구니_목록을_삭제하면_전체_상품에서_해당_id와_일치하는_아이템이_삭제되어야_한다`() {
-        viewModel.loadPagingCartItem(3)
+        viewModel.loadPagingCartItemList(3)
         val before = viewModel.shoppingCart.cartItems.getOrAwaitValue()
         Assertions.assertThat(before.size).isEqualTo(3)
 
