@@ -10,5 +10,5 @@ interface CartRepository {
         pageSize: Int,
     ): Result<List<Cart>>
 
-    fun getMaxOffset(): Result<Int>
+    fun getMaxOffset(pageSize: Int): Result<Int>
 }

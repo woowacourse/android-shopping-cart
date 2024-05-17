@@ -24,7 +24,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     fun loadProductByOffset() {
-        cartRepository.load(offSet, 5).onSuccess {
+        cartRepository.load(offSet, PAGE_SIZE).onSuccess {
             if (_carts.value is UiState.None || _carts.value is UiState.Error) {
                 _carts.value = UiState.Finish(it)
             } else {
@@ -57,12 +57,13 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     private fun getItemCount() {
-        cartRepository.getMaxOffset().onSuccess {
+        cartRepository.getMaxOffset(PAGE_SIZE).onSuccess {
             maxOffset = it
         }
     }
 
     companion object {
+        private const val PAGE_SIZE = 5
         const val CART_LOAD_ERROR = "LOAD ERROR"
         const val CART_DELETE_ERROR = "DELETE ERROR"
     }

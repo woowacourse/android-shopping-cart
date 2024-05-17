@@ -31,8 +31,8 @@ object DummyCartRepository : CartRepository {
             carts.subList(startIndex, endIndex)
         }
 
-    override fun getMaxOffset(): Result<Int> =
+    override fun getMaxOffset(pageSize: Int): Result<Int> =
         runCatching {
-            ((cartMap.size + 4) / 5 - 1).coerceAtLeast(0)
+            ((cartMap.size + (pageSize - 1)) / pageSize - 1).coerceAtLeast(0)
         }
 }

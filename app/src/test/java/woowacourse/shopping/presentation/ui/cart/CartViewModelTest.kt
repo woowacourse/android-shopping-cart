@@ -26,7 +26,7 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { cartRepository.getMaxOffset() } returns Result.success(0) // 초기 오프셋 처리
+        every { cartRepository.getMaxOffset(any()) } returns Result.success(0) // 초기 오프셋 처리
         viewModel = CartViewModel(cartRepository)
     }
 
@@ -47,7 +47,7 @@ class CartViewModelTest {
     @Test
     fun `데이터를 삭제한 뒤에 새로운 데이터를 불러온다`() {
         every { cartRepository.delete(any()) } returns Result.success(0)
-        every { cartRepository.getMaxOffset() } returns Result.success(0)
+        every { cartRepository.getMaxOffset(any()) } returns Result.success(0)
         every { cartRepository.load(any(), any()) } returns Result.success(dummyCarts)
         viewModel.deleteProduct(product)
         assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Finish(dummyCarts))
