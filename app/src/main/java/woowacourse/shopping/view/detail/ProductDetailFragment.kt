@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
@@ -18,7 +19,12 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
     private val productDetailViewModel: ProductDetailViewModel by lazy {
-        val viewModelFactory = ViewModelFactory { ProductDetailViewModel(ProductRepositoryImpl(context = requireContext())) }
+        val viewModelFactory = ViewModelFactory {
+            ProductDetailViewModel(
+                productRepository = ProductRepositoryImpl(),
+                shoppingCartRepository = ShoppingCartRepositoryImpl(requireContext())
+            )
+        }
         viewModelFactory.create(ProductDetailViewModel::class.java)
     }
 
@@ -40,7 +46,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         observeData()
     }
 
-    private fun observeData()  {
+    private fun observeData() {
         productDetailViewModel.product.observe(viewLifecycleOwner) { product ->
             initView(product)
         }
@@ -88,11 +94,14 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         }
     }
 
-    private fun showLoadErrorMessage() = Toast.makeText(this.context, ERROR_DATA_LOAD_MESSAGE, Toast.LENGTH_SHORT).show()
+    private fun showLoadErrorMessage() =
+        Toast.makeText(this.context, ERROR_DATA_LOAD_MESSAGE, Toast.LENGTH_SHORT).show()
 
-    private fun showAddCartSuccessMessage() = Toast.makeText(this.context, SUCCESS_SAVE_DATA, Toast.LENGTH_SHORT).show()
+    private fun showAddCartSuccessMessage() =
+        Toast.makeText(this.context, SUCCESS_SAVE_DATA, Toast.LENGTH_SHORT).show()
 
-    private fun showAddCartErrorMessage() = Toast.makeText(this.context, ERROR_SAVE_DATA, Toast.LENGTH_SHORT).show()
+    private fun showAddCartErrorMessage() =
+        Toast.makeText(this.context, ERROR_SAVE_DATA, Toast.LENGTH_SHORT).show()
 
     companion object {
         fun createBundle(id: Long): Bundle {

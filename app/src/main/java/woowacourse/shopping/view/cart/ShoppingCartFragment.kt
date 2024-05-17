@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
@@ -18,7 +18,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     val binding: FragmentShoppingCartBinding get() = _binding!!
 
     private val shoppingCartViewModel: ShoppingCartViewModel by lazy {
-        val viewModelFactory = ViewModelFactory { ShoppingCartViewModel(ProductRepositoryImpl(context = requireContext())) }
+        val viewModelFactory =
+            ViewModelFactory { ShoppingCartViewModel(ShoppingCartRepositoryImpl(context = requireContext())) }
         viewModelFactory.create(ShoppingCartViewModel::class.java)
     }
     private lateinit var adapter: ShoppingCartAdapter
@@ -111,13 +112,15 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         val startIndex = (currentPage - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
         val endIndex = minOf(currentPage * CART_ITEM_PAGE_SIZE, totalItemSize)
         val newData =
-            shoppingCartViewModel.shoppingCart.cartItems.value?.subList(startIndex, endIndex) ?: emptyList()
+            shoppingCartViewModel.shoppingCart.cartItems.value?.subList(startIndex, endIndex)
+                ?: emptyList()
         adapter.updateCartItems(hasLastItem(endIndex), newData)
         updateImageButtonColor()
     }
 
     private fun hasLastItem(endIndex: Int): Boolean {
-        return endIndex >= (shoppingCartViewModel.shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE)
+        return endIndex >= (shoppingCartViewModel.shoppingCart.cartItems.value?.size
+            ?: DEFAULT_ITEM_SIZE)
     }
 
     private fun isExistPrevPage(): Boolean {
@@ -133,7 +136,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         binding.onNextButton = isExistNextPage()
     }
 
-    private fun showMaxItemMessage() = Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
+    private fun showMaxItemMessage() =
+        Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
 
     companion object {
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5

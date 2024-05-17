@@ -10,13 +10,5 @@ interface ProductRepository {
     ): List<Product>
 
     fun getProduct(productId: Long): Product
-
-    fun addCartItem(product: Product): Long
-
-    fun loadPagingCartItems(
-        offset: Int,
-        pagingSize: Int,
-    ): List<CartItem>
-
-    fun deleteCartItem(itemId: Long)
 }
+

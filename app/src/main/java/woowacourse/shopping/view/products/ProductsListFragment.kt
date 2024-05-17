@@ -18,7 +18,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private val productListViewModel: ProductListViewModel by lazy {
-        val viewModelFactory = ViewModelFactory { ProductListViewModel(ProductRepositoryImpl(context = requireContext())) }
+        val viewModelFactory = ViewModelFactory { ProductListViewModel(ProductRepositoryImpl()) }
         viewModelFactory.create(ProductListViewModel::class.java)
     }
     private lateinit var adapter: ProductAdapter

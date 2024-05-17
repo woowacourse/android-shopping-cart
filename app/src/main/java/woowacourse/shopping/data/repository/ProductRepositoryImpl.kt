@@ -9,9 +9,8 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 
-class ProductRepositoryImpl(context: Context) : ProductRepository {
+class ProductRepositoryImpl : ProductRepository {
     private val productDao = ProductDao()
-    private val cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
 
     override fun loadPagingProducts(
         offset: Int,
@@ -25,18 +24,4 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         return product ?: throw NoSuchDataException()
     }
 
-    override fun addCartItem(product: Product): Long {
-        return cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
-    }
-
-    override fun loadPagingCartItems(
-        offset: Int,
-        pagingSize: Int,
-    ): List<CartItem> {
-        return cartItemDao.findPagingCartItem(offset, pagingSize).map { it.toCartItem() }
-    }
-
-    override fun deleteCartItem(itemId: Long) {
-        cartItemDao.deleteCartItemById(itemId)
-    }
 }
