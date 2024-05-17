@@ -3,26 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".presentation.ui.cart.CartActivity">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_carts"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="100dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_cart" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_page"
@@ -33,18 +18,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_left"
-                android:layout_width="42dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="115dp"
-                android:background="@drawable/background_button"
-                android:text="@string/left_arrow"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/tv_page_count"
@@ -61,6 +34,18 @@
                 />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_left"
+                android:layout_width="42dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="115dp"
+                android:background="@drawable/background_button"
+                android:text="@string/left_arrow"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_right"
                 android:layout_width="42dp"
                 android:layout_height="wrap_content"
@@ -75,5 +60,20 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_carts"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="100dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_cart" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <data />
 </layout>
