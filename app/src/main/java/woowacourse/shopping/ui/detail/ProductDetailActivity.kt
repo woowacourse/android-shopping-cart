@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -18,9 +18,8 @@ import woowacourse.shopping.model.data.ProductsImpl
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
-    private val viewModel by lazy {
-        ViewModelProvider(this, ProductDetailViewModelFactory(ProductsImpl, CartsImpl))
-            .get(ProductDetailViewModel::class.java)
+    private val viewModel: ProductDetailViewModel by viewModels {
+        ProductDetailViewModelFactory(ProductsImpl, CartsImpl)
     }
     private val productId by lazy { productId() }
 
