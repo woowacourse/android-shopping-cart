@@ -23,8 +23,10 @@ class ProductDetailViewModel(
             shoppingCartRepository.addCartItem(product)
         }.onSuccess {
             _productDetailState.value = ProductDetailState.AddShoppingCart.Success
+            resetState()
         }.onFailure {
             _productDetailState.value = ProductDetailState.AddShoppingCart.Fail
+            resetState()
         }
     }
 
@@ -35,9 +37,11 @@ class ProductDetailViewModel(
             .onSuccess {
                 _product.postValue(it)
                 _productDetailState.value = ProductDetailState.LoadProductItem.Success
+                resetState()
             }
             .onFailure {
                 _productDetailState.value = ProductDetailState.LoadProductItem.Fail
+                resetState()
             }
     }
 

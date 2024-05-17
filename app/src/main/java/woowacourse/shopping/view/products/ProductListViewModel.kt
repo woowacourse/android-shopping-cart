@@ -23,15 +23,17 @@ class ProductListViewModel(
             repository.loadPagingProducts(itemSize, pagingSize)
         }
             .onSuccess {
-                _productListState.value = ProductListState.LoadProductList.Success
                 _products.value = _products.value?.plus(it)
+                _productListState.value = ProductListState.LoadProductList.Success
+                resetState()
             }
             .onFailure {
                 _productListState.value = ProductListState.LoadProductList.Fail
+                resetState()
             }
     }
 
-    fun resetState() {
+    private fun resetState() {
         _productListState.value = ProductListState.Init
     }
 }

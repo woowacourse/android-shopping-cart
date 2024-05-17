@@ -25,8 +25,10 @@ class ShoppingCartViewModel(
         }.onSuccess {
             shoppingCart.deleteProduct(itemId)
             _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Success
+            resetState()
         }.onFailure {
             _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Fail
+            resetState()
         }
     }
 
@@ -38,13 +40,15 @@ class ShoppingCartViewModel(
             .onSuccess {
                 shoppingCart.addProducts(it)
                 _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
+                resetState()
             }
             .onFailure {
                 _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
+                resetState()
             }
     }
 
-    fun resetState() {
+    private fun resetState() {
         _shoppingCartState.value = ShoppingCartState.Init
     }
 }

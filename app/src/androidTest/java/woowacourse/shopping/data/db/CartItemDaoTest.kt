@@ -13,6 +13,7 @@ import woowacourse.shopping.data.db.cartItem.CartItemDao
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.domain.model.Product
+import kotlin.concurrent.thread
 
 @RunWith(AndroidJUnit4::class)
 class CartItemDaoTest {
@@ -28,13 +29,18 @@ class CartItemDaoTest {
 
     @After
     fun tearDown() {
-        database.deleteAll()
+        thread {
+            database.deleteAll()
+        }.join()
     }
 
     @Test
     fun `전체_장바구니_아이템을_불러올_수_있다`() {
         val item = CartItemEntity(0, Product(0, "상품", 1000, ""))
-        val itemId = dao.saveCartItem(item)
+        var itemId = -1L
+        thread {
+            itemId = dao.saveCartItem(item)
+        }.join()
 
         val insertedItem = item.copy(id = itemId)
         assertThat(dao.findAll()).isEqualTo(listOf(insertedItem))
@@ -43,7 +49,9 @@ class CartItemDaoTest {
     @Test
     fun `선택한_아이템을_장바구니에_저장할_수_있다`() {
         val item = CartItemEntity(0, Product(0, "상품", 1000, ""))
-        dao.saveCartItem(item)
+        thread {
+            dao.saveCartItem(item)
+        }.join()
 
         val actual = dao.findAll().firstOrNull()?.product
         val expected = item.product
@@ -53,7 +61,10 @@ class CartItemDaoTest {
     @Test
     fun `특정_ID로_장바구니_아이템을_불러올_수_있다`() {
         val item = CartItemEntity(0, Product(0, "상품", 1000, ""))
-        val itemId = dao.saveCartItem(item)
+        var itemId = -1L
+        thread {
+            itemId = dao.saveCartItem(item)
+        }.join()
 
         val actual = dao.findCartItemById(itemId)
         val expected = item.copy(id = itemId)
@@ -63,9 +74,14 @@ class CartItemDaoTest {
     @Test
     fun `특정_ID로_장바구니_아이템을_삭제할_수_있다`() {
         val item = CartItemEntity(0, Product(0, "상품", 1000, ""))
-        val itemId = dao.saveCartItem(item)
+        var itemId = -1L
+        thread {
+            itemId = dao.saveCartItem(item)
+        }.join()
 
-        dao.deleteCartItemById(itemId)
+        thread {
+            dao.deleteCartItemById(itemId)
+        }.join()
 
         val deletedItem = item.copy(id = itemId)
         assertThat(dao.findAll().contains(deletedItem)).isEqualTo(false)
