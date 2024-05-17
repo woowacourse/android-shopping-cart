@@ -22,6 +22,9 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     private val _isLastPage = MutableLiveData(false)
     val isLastPage: LiveData<Boolean> = _isLastPage
 
+    private val _isEmpty = MutableLiveData(true)
+    val isEmpty: LiveData<Boolean> = _isEmpty
+
     private val _isPageControlVisible = MutableLiveData<Boolean>()
     val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
 
@@ -53,8 +56,10 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
                 repository.findAllPagedItems(_currentPage.value ?: DEFAULT_PAGE, pageSize).items
             if (items.isEmpty()) {
                 _uiState.postValue(UIState.Empty)
+                _isEmpty.postValue(true)
             } else {
                 _uiState.postValue(UIState.Success(items))
+                _isEmpty.postValue(false)
             }
         } catch (e: Exception) {
             _uiState.postValue(UIState.Error(e))

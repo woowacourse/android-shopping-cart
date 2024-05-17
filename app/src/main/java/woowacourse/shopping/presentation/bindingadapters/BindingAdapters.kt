@@ -58,3 +58,11 @@ fun setLoadMoreButtonVisibility(
 ) {
     view.visibility = if (isVisible) View.VISIBLE else View.GONE
 }
+
+@BindingAdapter("app:cartVisibility")
+fun setCartVisibility(
+    view: View,
+    isVisible: Boolean,
+) {
+    view.visibility = if (isVisible) View.VISIBLE else View.GONE
+}

@@ -40,7 +40,7 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         viewModel.uiState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
-                is UIState.Empty -> showEmptyView()
+                is UIState.Empty -> showData(emptyList())
                 is UIState.Error ->
                     showError(
                         state.exception.message ?: getString(R.string.unknown_error),
@@ -51,11 +51,6 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
     private fun showData(data: List<CartItem>) {
         adapter.loadData(data)
-    }
-
-    private fun showEmptyView() {
-        binding.recyclerView.visibility = View.GONE
-        binding.tvEmptyCart.visibility = View.VISIBLE
     }
 
     private fun showError(errorMessage: String) {
