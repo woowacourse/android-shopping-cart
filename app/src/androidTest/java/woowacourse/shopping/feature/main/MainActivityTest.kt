@@ -19,9 +19,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.RecyclerViewItemCountAssertion
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.hasSizeRecyclerView
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
@@ -93,6 +93,6 @@ class MainActivityTest {
             .perform(click())
 
         onView(withId(R.id.rv_main_product))
-            .check(RecyclerViewItemCountAssertion(30))
+            .hasSizeRecyclerView(30)
     }
 }

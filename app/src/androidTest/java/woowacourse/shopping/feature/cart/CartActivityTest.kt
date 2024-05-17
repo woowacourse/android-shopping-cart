@@ -19,11 +19,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.RecyclerViewItemCountAssertion
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.hasSizeRecyclerView
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
@@ -118,7 +118,7 @@ class CartActivityTest {
             .perform(click())
 
         onView(withId(R.id.rv_cart))
-            .check(RecyclerViewItemCountAssertion(1))
+            .hasSizeRecyclerView(1)
     }
 
     @Test
@@ -158,7 +158,7 @@ class CartActivityTest {
             .perform(click())
 
         onView(withId(R.id.rv_cart))
-            .check(RecyclerViewItemCountAssertion(0))
+            .hasSizeRecyclerView(0)
     }
 
     private fun addCart(
