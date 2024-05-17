@@ -1,8 +1,6 @@
 package woowacourse.shopping.view.products.adapter.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.products.OnClickProducts

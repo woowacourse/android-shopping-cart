@@ -102,7 +102,5 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         productListViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
     }
 
-    private fun showMessage(message: String) =
-        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
-
+    private fun showMessage(message: String) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 }

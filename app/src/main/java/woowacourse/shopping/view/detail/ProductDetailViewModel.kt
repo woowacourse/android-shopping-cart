@@ -18,7 +18,6 @@ class ProductDetailViewModel(
         MutableLiveData(ProductDetailState.Init)
     val productDetailState: LiveData<ProductDetailState> get() = _productDetailState
 
-
     fun addShoppingCartItem(product: Product) {
         runCatching {
             shoppingCartRepository.addCartItem(product)
@@ -42,7 +41,7 @@ class ProductDetailViewModel(
             }
     }
 
-    fun resetState(){
+    fun resetState() {
         _productDetailState.value = ProductDetailState.Init
     }
 }

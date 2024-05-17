@@ -24,5 +24,5 @@ interface CartItemDao {
     fun findCartItemById(itemId: Long): CartItemEntity?
 
     @Query("DELETE FROM $CART_ITEMS_DB_NAME WHERE id = :itemId")
-    fun deleteCartItemById(itemId: Long) : Int
+    fun deleteCartItemById(itemId: Long): Int
 }

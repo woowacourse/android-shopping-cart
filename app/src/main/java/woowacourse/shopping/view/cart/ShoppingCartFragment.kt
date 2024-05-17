@@ -68,18 +68,21 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
             when (shoppingCartState) {
                 ShoppingCartState.DeleteShoppingCart.Success,
                 ShoppingCartState.LoadCartItemList.Success,
-                ShoppingCartState.Init -> {
+                ShoppingCartState.Init,
+                -> {
                 }
 
-                ShoppingCartState.DeleteShoppingCart.Fail -> showMessage(
-                    requireContext().getString(
-                        R.string.error_delete_data
+                ShoppingCartState.DeleteShoppingCart.Fail ->
+                    showMessage(
+                        requireContext().getString(
+                            R.string.error_delete_data,
+                        ),
                     )
-                )
 
-                ShoppingCartState.LoadCartItemList.Fail -> showMessage(
-                    requireContext().getString(R.string.max_paging_data)
-                )
+                ShoppingCartState.LoadCartItemList.Fail ->
+                    showMessage(
+                        requireContext().getString(R.string.max_paging_data),
+                    )
             }
             shoppingCartViewModel.resetState()
         }
@@ -127,10 +130,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     private fun updateRecyclerView() {
         val startIndex = (shoppingCartViewModel.currentPage - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
-        val endIndex = minOf(
-            shoppingCartViewModel.currentPage * CART_ITEM_PAGE_SIZE,
-            shoppingCartViewModel.totalItemSize
-        )
+        val endIndex =
+            minOf(
+                shoppingCartViewModel.currentPage * CART_ITEM_PAGE_SIZE,
+                shoppingCartViewModel.totalItemSize,
+            )
         val newData =
             shoppingCartViewModel.shoppingCart.cartItems.value?.subList(startIndex, endIndex)
                 ?: emptyList()
@@ -155,6 +159,5 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         binding.onNextButton = isExistNextPage()
     }
 
-    private fun showMessage(message: String) =
-        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+    private fun showMessage(message: String) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 }

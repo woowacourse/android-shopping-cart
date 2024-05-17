@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.view.detail.ProductDetailState
 
 class ProductListViewModel(
     private val repository: ProductRepository,
@@ -32,7 +31,7 @@ class ProductListViewModel(
             }
     }
 
-    fun resetState(){
+    fun resetState() {
         _productListState.value = ProductListState.Init
     }
 }

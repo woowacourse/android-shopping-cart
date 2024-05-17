@@ -44,7 +44,7 @@ class ShoppingCartViewModel(
             }
     }
 
-    fun resetState(){
+    fun resetState() {
         _shoppingCartState.value = ShoppingCartState.Init
     }
 }

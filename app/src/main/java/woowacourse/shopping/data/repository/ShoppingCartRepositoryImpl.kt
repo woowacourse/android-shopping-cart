@@ -7,7 +7,6 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.NoSuchDataException
-import woowacourse.shopping.view.detail.ProductDetailViewModel
 import kotlin.concurrent.thread
 
 class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
