@@ -19,7 +19,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         init {
             binding.root.setOnClickListener {
-                shoppingHandler.onClick(id)
+                shoppingHandler.onProductClick(id)
             }
         }
 
@@ -39,7 +39,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     ) : ShoppingViewHolder(binding.root) {
         fun bind() {
             binding.btnShowMore.setOnClickListener {
-                shoppingHandler.loadMore()
+                shoppingHandler.onLoadMoreClick()
             }
         }
     }

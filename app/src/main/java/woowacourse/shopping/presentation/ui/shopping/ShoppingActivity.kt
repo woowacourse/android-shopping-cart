@@ -69,11 +69,11 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         return true
     }
 
-    override fun onClick(productId: Long) {
+    override fun onProductClick(productId: Long) {
         ProductDetailActivity.start(this, productId)
     }
 
-    override fun loadMore() {
+    override fun onLoadMoreClick() {
         viewModel.addProductByOffset()
     }
 

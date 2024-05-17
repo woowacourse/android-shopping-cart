@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.ui.shopping
 
 interface ShoppingHandler {
-    fun onClick(productId: Long)
+    fun onProductClick(productId: Long)
 
-    fun loadMore()
+    fun onLoadMoreClick()
 }

@@ -20,7 +20,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     val carts: LiveData<UiState<List<Cart>>> get() = _carts
 
     init {
-        getItemCount()
+        updateMaxOffset()
     }
 
     fun loadProductByOffset() {
@@ -45,14 +45,14 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun deleteProduct(product: Product) {
         cartRepository.delete(product).onSuccess {
-            getItemCount()
+            updateMaxOffset()
             loadProductByOffset()
         }.onFailure {
             _carts.value = UiState.Error(CART_DELETE_ERROR)
         }
     }
 
-    private fun getItemCount() {
+    private fun updateMaxOffset() {
         cartRepository.getMaxOffset(PAGE_SIZE).onSuccess {
             maxOffset = it
         }
