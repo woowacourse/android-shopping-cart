@@ -18,7 +18,7 @@ class CartActivity : AppCompatActivity(), CartClickListener {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
     private val viewModel: CartViewModel by lazy {
-        val factory = CartViewModelFactory(repository = CartRepositoryImpl)
+        val factory = CartViewModelFactory(repository = CartRepositoryImpl())
         factory.create(CartViewModel::class.java)
     }
 

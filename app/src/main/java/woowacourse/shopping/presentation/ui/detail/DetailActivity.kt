@@ -17,7 +17,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
     private val viewModel: DetailViewModel by lazy {
         val factory =
             DetailViewModelFactory(
-                CartRepositoryImpl,
+                CartRepositoryImpl(),
                 ShoppingItemsRepositoryImpl(),
                 productId = productId,
             )

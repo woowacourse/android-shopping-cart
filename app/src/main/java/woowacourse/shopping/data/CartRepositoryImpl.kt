@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-object CartRepositoryImpl : CartRepository {
+class CartRepositoryImpl : CartRepository {
     private val dao = database.cartDao()
 
     override fun insert(

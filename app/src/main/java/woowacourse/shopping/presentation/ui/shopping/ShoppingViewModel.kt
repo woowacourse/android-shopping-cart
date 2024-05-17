@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
-class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
+class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewModel() {
     private val productsData: List<Product> by lazy { repository.getAllProducts() }
 
     private val _products = MutableLiveData(getProducts())
