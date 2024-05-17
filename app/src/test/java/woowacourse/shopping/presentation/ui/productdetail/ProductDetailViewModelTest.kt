@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.repsoitory.DummyProductList
+import woowacourse.shopping.data.repsoitory.DummyProductRepositoryImpl
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.getOrAwaitValue
 
@@ -30,7 +30,7 @@ class ProductDetailViewModelTest {
         val initialState = mutableMapOf(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to 1)
         savedStateHandle = SavedStateHandle(initialState)
         viewModel =
-            ProductDetailViewModel(savedStateHandle, DummyProductList, shoppingCartRepository)
+            ProductDetailViewModel(savedStateHandle, DummyProductRepositoryImpl, shoppingCartRepository)
     }
 
     @Test
@@ -39,7 +39,7 @@ class ProductDetailViewModelTest {
         val actual = viewModel.product.getOrAwaitValue()
 
         // then
-        val expected = DummyProductList.findProductById(1).getOrThrow()
+        val expected = DummyProductRepositoryImpl.findProductById(1).getOrThrow()
         assertThat(actual).isEqualTo(expected)
     }
 
@@ -52,7 +52,7 @@ class ProductDetailViewModelTest {
         viewModel.onAddToCartButtonClick()
 
         // then
-        val product = DummyProductList.findProductById(1).getOrThrow()
+        val product = DummyProductRepositoryImpl.findProductById(1).getOrThrow()
         verify { shoppingCartRepository.addOrder(product) }
     }
 }

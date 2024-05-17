@@ -14,8 +14,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.domain.repository.ProductListRepository
+import woowacourse.shopping.data.repsoitory.DummyProductRepositoryImpl
+import woowacourse.shopping.domain.repository.ProductRepository
 
 @RunWith(AndroidJUnit4::class)
 class ProductDetailActivityTest {
@@ -26,7 +26,7 @@ class ProductDetailActivityTest {
                 ApplicationProvider.getApplicationContext(),
                 ProductDetailActivity::class.java,
             ).apply {
-                val repository: ProductListRepository = DummyProductList
+                val repository: ProductRepository = DummyProductRepositoryImpl
                 val pagingProduct = repository.getPagingProduct(0, 20).getOrThrow()
                 val id = pagingProduct.productList.first().id
                 putExtra(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID, id)

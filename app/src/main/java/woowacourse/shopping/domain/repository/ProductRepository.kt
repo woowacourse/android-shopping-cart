@@ -3,7 +3,7 @@ package woowacourse.shopping.domain.repository
 import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.model.Product
 
-interface ProductListRepository {
+interface ProductRepository {
     fun findProductById(id: Int): Result<Product>
 
     fun getPagingProduct(

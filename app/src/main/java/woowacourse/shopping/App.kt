@@ -1,14 +1,14 @@
 package woowacourse.shopping
 
 import android.app.Application
-import woowacourse.shopping.data.repsoitory.DummyProductList
-import woowacourse.shopping.data.repsoitory.DummyShoppingCart
-import woowacourse.shopping.domain.repository.ProductListRepository
+import woowacourse.shopping.data.repsoitory.DummyProductRepositoryImpl
+import woowacourse.shopping.data.repsoitory.DummyShoppingCartRepositoryImpl
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
 class App : Application() {
-    val shoppingCartRepository: ShoppingCartRepository by lazy { DummyShoppingCart }
-    val productListRepository: ProductListRepository by lazy { DummyProductList }
+    val shoppingCartRepository: ShoppingCartRepository by lazy { DummyShoppingCartRepositoryImpl }
+    val productRepository: ProductRepository by lazy { DummyProductRepositoryImpl }
 
     override fun onCreate() {
         super.onCreate()

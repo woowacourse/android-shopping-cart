@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.ProductListRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -12,7 +12,7 @@ import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity.
 
 class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val productListRepository: ProductListRepository,
+    private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : BaseViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData()
@@ -25,7 +25,7 @@ class ProductDetailViewModel(
     }
 
     private fun findByProductId(id: Int) {
-        productListRepository.findProductById(id).onSuccess { productValue ->
+        productRepository.findProductById(id).onSuccess { productValue ->
             _product.value = productValue
         }.onFailure { e ->
             when (e) {

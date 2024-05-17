@@ -3,14 +3,14 @@ package woowacourse.shopping.presentation.ui.productlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import woowacourse.shopping.domain.model.PagingProduct
-import woowacourse.shopping.domain.repository.ProductListRepository
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.Event
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
 
 class ProductListViewModel(
-    private val productListRepository: ProductListRepository,
+    private val productRepository: ProductRepository,
 ) : BaseViewModel(), ProductListActionHandler {
     private val _uiState: MutableLiveData<ProductListUiState> =
         MutableLiveData(ProductListUiState())
@@ -32,7 +32,7 @@ class ProductListViewModel(
         page: Int,
         pageSize: Int = PAGING_SIZE,
     ) {
-        productListRepository.getPagingProduct(page, pageSize).onSuccess { item ->
+        productRepository.getPagingProduct(page, pageSize).onSuccess { item ->
             val pagingProduct =
                 PagingProduct(
                     currentPage = item.currentPage,

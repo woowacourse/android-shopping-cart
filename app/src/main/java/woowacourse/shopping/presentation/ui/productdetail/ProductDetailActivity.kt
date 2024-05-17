@@ -15,7 +15,7 @@ import woowacourse.shopping.presentation.base.observeEvent
 class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels {
         ProductDetailViewModelFactory(
-            (application as App).productListRepository,
+            (application as App).productRepository,
             (application as App).shoppingCartRepository,
         )
     }
