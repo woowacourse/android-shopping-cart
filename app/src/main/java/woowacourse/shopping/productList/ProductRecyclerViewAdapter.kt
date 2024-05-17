@@ -32,9 +32,8 @@ class ProductRecyclerViewAdapter(
 
     fun updateData(newData: List<Product>) {
         this.values = newData
-        notifyDataSetChanged()
+        notifyItemChanged(0, newData.size)
     }
-
 
     inner class ViewHolder(
         private val binding: HolderProductBinding,
