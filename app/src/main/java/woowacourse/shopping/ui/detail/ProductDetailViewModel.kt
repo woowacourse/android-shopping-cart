@@ -16,7 +16,7 @@ class ProductDetailViewModel(
     val uiState: LiveData<UiState<Product>> get() = _uiState
 
     fun loadProduct(productId: Long) {
-        runCatching { productDao.find(-1L) }
+        runCatching { productDao.find(productId) }
             .onSuccess {
                 _uiState.value = UiState.SUCCESS(it)
             }.onFailure {
