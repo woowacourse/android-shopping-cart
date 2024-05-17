@@ -3,6 +3,8 @@ package woowacourse.shopping.view.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.MIN_PAGE_COUNT
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.view.cart.model.ShoppingCart
 
@@ -41,10 +43,4 @@ class ShoppingCartViewModel(
                 _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
             }
     }
-
-    companion object {
-        private const val DEFAULT_ITEM_SIZE = 0
-        const val MIN_PAGE_COUNT = 1
-    }
-
 }

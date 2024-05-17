@@ -3,6 +3,7 @@ package woowacourse.shopping.view.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.view.detail.ProductDetailState
@@ -29,9 +30,5 @@ class ProductListViewModel(
             .onFailure {
                 _productListState.value = ProductListState.LoadProductList.Fail
             }
-    }
-
-    companion object {
-        private const val DEFAULT_ITEM_SIZE = 0
     }
 }

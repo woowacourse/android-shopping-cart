@@ -21,4 +21,9 @@ class ProductRepositoryImpl : ProductRepository {
         val product = productDao.findProductById(productId)
         return product ?: throw NoSuchDataException()
     }
+
+    companion object {
+        const val PRODUCT_LOAD_PAGING_SIZE = 20
+        const val DEFAULT_ITEM_SIZE = 0
+    }
 }

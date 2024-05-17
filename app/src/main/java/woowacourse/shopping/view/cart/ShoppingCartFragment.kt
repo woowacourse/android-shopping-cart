@@ -8,9 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_PAGE_SIZE
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.MIN_PAGE_COUNT
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.ViewModelFactory
-import woowacourse.shopping.view.cart.ShoppingCartViewModel.Companion.MIN_PAGE_COUNT
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
@@ -59,7 +61,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun observeData() {
-        shoppingCartViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { cartItems ->
+        shoppingCartViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) {
             updateRecyclerView()
         }
         shoppingCartViewModel.shoppingCartState.observe(viewLifecycleOwner) { shoppingCartState ->
@@ -147,8 +149,6 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
-        private const val CART_ITEM_LOAD_PAGING_SIZE = 5
-        const val CART_ITEM_PAGE_SIZE = 3
         private const val MAX_PAGING_DATA_MESSAGE = "모든 데이터가 로드 되었습니다."
         private const val ERROR_DELETE_FAIL_MESSAGE = "삭제에 실패하였습니다."
     }

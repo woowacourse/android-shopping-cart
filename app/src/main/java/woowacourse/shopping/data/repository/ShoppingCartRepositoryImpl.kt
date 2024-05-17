@@ -41,7 +41,11 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
     }
 
     companion object {
+        const val CART_ITEM_LOAD_PAGING_SIZE = 5
+        const val CART_ITEM_PAGE_SIZE = 3
         const val ERROR_SAVE_DATA_ID = -1L
         const val ERROR_DELETE_DATA_ID = 0
+        const val DEFAULT_ITEM_SIZE = 0
+        const val MIN_PAGE_COUNT = 1
     }
 }

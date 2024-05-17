@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.PRODUCT_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
@@ -105,7 +106,6 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
 
     companion object {
-        private const val PRODUCT_LOAD_PAGING_SIZE = 20
         private const val MAX_PAGING_DATA = "모든 데이터가 로드 되었습니다."
     }
 }
