@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
@@ -78,20 +79,19 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         }
     }
 
-    private fun showLoadErrorMessage() = Toast.makeText(this.context, ERROR_DATA_LOAD_MESSAGE, Toast.LENGTH_SHORT).show()
+    private fun showLoadErrorMessage() = showToastMessage(R.string.error_load_data_message)
 
-    private fun showAddCartSuccessMessage() = Toast.makeText(this.context, SUCCESS_SAVE_DATA, Toast.LENGTH_SHORT).show()
+    private fun showAddCartSuccessMessage() = showToastMessage(R.string.success_save_cart_item_message)
 
-    private fun showAddCartErrorMessage() = Toast.makeText(this.context, ERROR_SAVE_DATA, Toast.LENGTH_SHORT).show()
+    private fun showAddCartErrorMessage() = showToastMessage(R.string.error_save_cart_item_message)
+
+    private fun showToastMessage(message: Int) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
         fun createBundle(id: Long): Bundle {
             return Bundle().apply { putLong(PRODUCT_ID, id) }
         }
 
-        private const val ERROR_SAVE_DATA = "장바구니에 담기지 않았습니다.."
-        private const val SUCCESS_SAVE_DATA = "장바구니에 담겼습니다!"
         private const val PRODUCT_ID = "productId"
-        private const val ERROR_DATA_LOAD_MESSAGE = "데이터가 없습니다!"
     }
 }

@@ -130,13 +130,12 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         binding.onNextButton = isExistNextPage()
     }
 
-    private fun showMaxItemMessage() = Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
+    private fun showMaxItemMessage() = Toast.makeText(this.context, R.string.max_paging_data_message, Toast.LENGTH_SHORT).show()
 
     companion object {
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5
         const val CART_ITEM_PAGE_SIZE = 3
         private const val MIN_PAGE_COUNT = 1
         const val DEFAULT_ITEM_SIZE = 0
-        private const val MAX_PAGING_DATA = "모든 데이터가 로드 되었습니다."
     }
 }
