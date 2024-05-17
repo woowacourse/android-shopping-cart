@@ -7,7 +7,6 @@ import android.view.View.VISIBLE
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
@@ -31,8 +30,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
-        binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
 
         adapter = ShoppingAdapter(this)
         binding.rvProductList.adapter = adapter
