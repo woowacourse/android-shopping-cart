@@ -44,7 +44,7 @@ class FiveCartItemPagingStrategyTest {
     }
 
     @Test
-    fun `총 8 개의  아이템 중 두번째 페이지의 모든 데이터를 불러온다`() {
+    fun `총 8 개의  아이템 중 두 번째 페이지의 모든 데이터를 불러온다`() {
         // given
         val items = productsTestFixture(8)
 
@@ -58,5 +58,41 @@ class FiveCartItemPagingStrategyTest {
             }
 
         assertThat(secondLoad).isEqualTo(expected)
+    }
+
+    @Test
+    fun `총 6개의 아이템에서 첫 번째 페이지에 있다면 마지막 페이지가 아니다`() {
+        // given
+        val items = productsTestFixture(6)
+
+        // when
+        val isFinalPage = itemPagingStrategy.isFinalPage(1, items)
+
+        // then
+        assertThat(isFinalPage).isFalse
+    }
+
+    @Test
+    fun `총 10개의 아이템에서 두번째 페이지에 있다면 마지막 페이지이다`() {
+        // given
+        val items = productsTestFixture(10)
+
+        // when
+        val isFinalPage = itemPagingStrategy.isFinalPage(2, items)
+
+        // then
+        assertThat(isFinalPage).isTrue
+    }
+
+    @Test
+    fun `총 3개의 아이템에서 첫번째 페이지에 있다면 마지막 페이지이다`() {
+        // given
+        val items = productsTestFixture(3)
+
+        // when
+        val isFinalPage = itemPagingStrategy.isFinalPage(1, items)
+
+        // then
+        assertThat(isFinalPage).isTrue
     }
 }
