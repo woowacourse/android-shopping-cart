@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         initializeProductAdapter()
         initializeToolbar()
         initializePage()
-        viewModel.loadPage()
     }
 
     private fun initializeProductAdapter() {
@@ -77,8 +76,7 @@ class MainActivity : AppCompatActivity() {
                     dy: Int,
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
-                    val lastPosition =
-                        (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val lastPosition = (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
                     viewModel.changeSeeMoreVisibility(lastPosition)
                 }
             }

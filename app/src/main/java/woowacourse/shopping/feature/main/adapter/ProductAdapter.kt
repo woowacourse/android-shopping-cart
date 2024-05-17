@@ -6,8 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.Product
 
-class ProductAdapter(private val onClickProductItem: OnClickProductItem) : RecyclerView.Adapter<ProductViewHolder>() {
-    private val products: MutableList<Product> = mutableListOf()
+class ProductAdapter(private val onClickProductItem: OnClickProductItem) :
+    RecyclerView.Adapter<ProductViewHolder>() {
+    private var products: List<Product> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,7 +31,10 @@ class ProductAdapter(private val onClickProductItem: OnClickProductItem) : Recyc
     }
 
     fun updateProducts(insertedProducts: List<Product>) {
-        products.addAll(insertedProducts)
-        notifyItemRangeChanged(products.size, insertedProducts.size)
+        val positionStart = insertedProducts.size
+        val itemCount = insertedProducts.size - products.size
+
+        products = insertedProducts
+        notifyItemRangeChanged(positionStart, itemCount)
     }
 }
