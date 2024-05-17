@@ -12,7 +12,9 @@ class ProductRepositoryImpl : ProductRepository {
         offset: Int,
         pagingSize: Int,
     ): List<Product> {
-        return productDao.findPagingProducts(offset, pagingSize)
+        val pagingData = productDao.findPagingProducts(offset, pagingSize)
+        if (pagingData.isEmpty()) throw NoSuchDataException()
+        return pagingData
     }
 
     override fun getProduct(productId: Long): Product {

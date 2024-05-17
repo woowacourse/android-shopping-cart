@@ -58,6 +58,13 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
             adapter.updateProducts(addedProducts = products)
         }
+        productListViewModel.productListState.observe(viewLifecycleOwner) { productListState ->
+            when(productListState){
+                ProductListState.Init -> {}
+                ProductListState.LoadProductList.Success -> {}
+                ProductListState.LoadProductList.Fail -> showMaxItemMessage()
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -91,14 +98,11 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
 
     private fun loadPagingData() {
-        runCatching {
-            productListViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
-        }.onFailure {
-            showMaxItemMessage()
-        }
+        productListViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
     }
 
-    private fun showMaxItemMessage() = Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
+    private fun showMaxItemMessage() =
+        Toast.makeText(this.context, MAX_PAGING_DATA, Toast.LENGTH_SHORT).show()
 
     companion object {
         private const val PRODUCT_LOAD_PAGING_SIZE = 20
