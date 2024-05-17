@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="product"
-            type="woowacourse.shopping.model.Product" />
+            name="viewModel"
+            type="woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +28,7 @@
             android:id="@+id/iv_product_detail"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{viewModel.product.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +42,7 @@
             android:layout_marginTop="16dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.title}"
+            android:text="@{viewModel.product.title}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
-            android:text="@{@string/product_price(product.price)}"
+            android:text="@{@string/product_price(viewModel.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"

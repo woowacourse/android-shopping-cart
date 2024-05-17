@@ -12,25 +12,31 @@ import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
-import woowacourse.shopping.viewmodel.CartViewModel
-import woowacourse.shopping.viewmodel.CartViewModelFactory
-import woowacourse.shopping.viewmodel.ProductViewModel
+import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel
+import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModelFactory
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
-    private val productViewModel by viewModels<ProductViewModel> { ProductViewModelFactory(ProductDummyRepository) }
-    private val cartViewModel by viewModels<CartViewModel> { CartViewModelFactory(CartDummyRepository, ProductDummyRepository) }
+    private val viewModel by viewModels<ProductDetailViewModel> {
+        ProductDetailViewModelFactory(
+            ProductDummyRepository,
+            CartDummyRepository,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         initializeView()
     }
 
     private fun initializeView() {
         initializeToolbar()
         initializeAddCartButton()
-        updateProduct()
+        loadProduct()
     }
 
     private fun initializeToolbar() {
@@ -44,7 +50,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun initializeAddCartButton() {
         binding.btnProductDetailAddCart.setOnClickListener {
-            cartViewModel.add(productId())
+            viewModel.addCartProduct()
             showAddCartDialog()
         }
     }
@@ -70,23 +76,18 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
 
-    private fun updateProduct() {
+    private fun loadProduct() {
         runCatching {
-            productViewModel.loadProduct(productId())
+            viewModel.loadProduct(productId())
         }.onFailure {
             showErrorSnackBar()
-        }
-        productViewModel.product.observe(this) {
-            binding.product = it
         }
     }
 
     private fun showErrorSnackBar() {
         Snackbar
             .make(binding.root, getString(R.string.common_error), Snackbar.LENGTH_INDEFINITE)
-            .setAction(getString(R.string.common_confirm)) {
-                finish()
-            }
+            .setAction(getString(R.string.common_confirm)) { finish() }
             .show()
     }
 
