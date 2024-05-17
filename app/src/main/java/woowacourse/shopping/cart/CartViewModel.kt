@@ -17,13 +17,15 @@ class CartViewModel : ViewModel() {
 
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
+    private val loadItemsInCartPage = currentPage.value?.let {
+        val offset = min(productIds.size, (it) * 5)
 
+        productIds.subList((it - 1) * 5, offset)
+            .map { productId -> productStore.findById(productId) }
+            .toMutableList()
+    }
     private var _itemsInShoppingCartPage: MutableLiveData<MutableList<Product>> =
-        MutableLiveData(currentPage.value?.let {
-            val endIndex = min(productIds.size, (it) * 5)
-            productIds.subList((it - 1) * 5, endIndex)
-                .map { productId -> productStore.findById(productId) }.toMutableList()
-        })
+        MutableLiveData(loadItemsInCartPage)
     val itemsInShoppingCartPage: LiveData<MutableList<Product>> get() = _itemsInShoppingCartPage
 
     fun deleteItem(productId: Int) {
