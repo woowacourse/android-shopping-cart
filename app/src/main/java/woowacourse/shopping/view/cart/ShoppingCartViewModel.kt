@@ -2,7 +2,6 @@ package woowacourse.shopping.view.cart
 
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.view.cart.model.ShoppingCart
 import kotlin.concurrent.thread

@@ -2,7 +2,6 @@ package woowacourse.shopping
 
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
 class MockShoppingCartRepository : ShoppingCartRepository {

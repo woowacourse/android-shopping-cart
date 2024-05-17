@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.viewmodel
 
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,7 +13,6 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.view.detail.ProductDetailViewModel
-import woowacourse.shopping.view.products.ProductListViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
@@ -26,10 +24,11 @@ class ProductDetailViewModelTest {
     fun setUp() {
         productRepository = MockProductRepository()
         shoppingCartRepository = MockShoppingCartRepository()
-        viewModel = ProductDetailViewModel(
-            productRepository = productRepository,
-            shoppingCartRepository = shoppingCartRepository,
-        )
+        viewModel =
+            ProductDetailViewModel(
+                productRepository = productRepository,
+                shoppingCartRepository = shoppingCartRepository,
+            )
     }
 
     @Test
