@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.db.Product
 import woowacourse.shopping.db.ShoppingCart
 import woowacourse.shopping.repository.DummyProductStore
+import woowacourse.shopping.repository.ShoppingCartItemRepository
 import kotlin.math.min
 
 class CartViewModel : ViewModel() {
@@ -58,5 +59,22 @@ class CartViewModel : ViewModel() {
     fun previousPage() {
         if (currentPage.value == 1) return
         _currentPage.value = _currentPage.value?.minus(1)
+    }
+}
+
+class ShoppingCartViewModel(
+    private val shoppingCartItemRepository: ShoppingCartItemRepository,
+) : ViewModel() {
+    private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE)
+    val currentPage: LiveData<Int> get() = _currentPage
+
+    private var _itemsInCurrentPage =
+        MutableLiveData<List<Product>>(
+            shoppingCartItemRepository.loadPagedCartItems(currentPage.value ?: 1),
+        )
+    val itemsInCurrentPage: LiveData<List<Product>> get() = _itemsInCurrentPage
+
+    companion object {
+        private const val FIRST_PAGE = 1
     }
 }
