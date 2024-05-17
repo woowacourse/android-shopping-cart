@@ -25,11 +25,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun loadProductByOffset() {
         cartRepository.load(offSet, PAGE_SIZE).onSuccess {
-            if (_carts.value is UiState.None || _carts.value is UiState.Error) {
-                _carts.value = UiState.Finish(it)
-            } else {
-                _carts.value = UiState.Finish(it)
-            }
+            _carts.value = UiState.Finish(it)
         }.onFailure {
             _carts.value = UiState.Error(CART_LOAD_ERROR)
         }
