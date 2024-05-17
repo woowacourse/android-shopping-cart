@@ -8,7 +8,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 
-class ProductLIstViewModel(
+class ProductListViewModel(
     private val repository: ProductRepository,
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
