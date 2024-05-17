@@ -3,11 +3,11 @@ package woowacourse.shopping.data.remote
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.presentation.ui.cart.CartViewModel
 import kotlin.math.min
 
 object DummyProductCartRepository : ProductCartRepository {
     private val cartMap: MutableMap<Product, Int> = mutableMapOf()
-
     override fun save(product: Product): Result<Long> =
         runCatching {
             cartMap[product] = (cartMap[product] ?: 0) + 1
@@ -39,6 +39,6 @@ object DummyProductCartRepository : ProductCartRepository {
 
     override fun getMaxOffset(): Result<Int> =
         runCatching {
-            ((cartMap.size + 4) / 5 - 1).coerceAtLeast(0)
+            ((cartMap.size + CartViewModel.PAGE_UPPER_BOUND) / CartViewModel.PAGE_SIZE - 1).coerceAtLeast(0)
         }
 }

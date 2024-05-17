@@ -24,7 +24,7 @@ class CartViewModel(private val productCartRepository: ProductCartRepository) : 
     }
 
     fun loadProductByOffset() {
-        productCartRepository.findByPaging(offSet, 5).onSuccess {
+        productCartRepository.findByPaging(offSet, PAGE_SIZE).onSuccess {
             if (_carts.value is UiState.None || _carts.value is UiState.Error) {
                 _carts.value = UiState.Finish(it)
             } else {
@@ -65,5 +65,7 @@ class CartViewModel(private val productCartRepository: ProductCartRepository) : 
     companion object {
         const val CART_LOAD_ERROR = "LOAD ERROR"
         const val CART_DELETE_ERROR = "DELETE ERROR"
+        const val PAGE_SIZE = 5
+        const val PAGE_UPPER_BOUND = 4
     }
 }

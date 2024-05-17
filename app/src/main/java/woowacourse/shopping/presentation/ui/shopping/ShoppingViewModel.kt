@@ -15,7 +15,7 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
     val products get() = _products
 
     fun loadProductByOffset() {
-        repository.findByPaging(offSet, 20).onSuccess {
+        repository.findByPaging(offSet, PAGE_SIZE).onSuccess {
             if (_products.value is UiState.None || _products.value is UiState.Error) {
                 _products.value = UiState.Finish(it)
             } else {
@@ -29,5 +29,6 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
 
     companion object {
         const val LOAD_ERROR = "아이템을 끝까지 불러왔습니다"
+        const val PAGE_SIZE = 20
     }
 }
