@@ -47,7 +47,7 @@ class CartViewModel : ViewModel() {
         updateItemsInShoppingCart()
     }
 
-    fun updateItemsInShoppingCart() {
+    private fun updateItemsInShoppingCart() {
         _itemsInShoppingCartPage.value?.clear()
         currentPage.value?.let {
             val endIndex = min(productIds.size, (it) * COUNT_PER_LOAD)
@@ -59,7 +59,6 @@ class CartViewModel : ViewModel() {
             _itemsInShoppingCartPage.value?.addAll(it)
                 ?: _itemsInShoppingCartPage.postValue(it.toMutableList())
         }
-
     }
 
     companion object {

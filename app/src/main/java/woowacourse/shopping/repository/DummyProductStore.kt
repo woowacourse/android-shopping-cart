@@ -12,7 +12,7 @@ class DummyProductStore : ProductStore {
         )
     }
 
-    override fun load20Data(currentIndex: Int): List<Product> {
+    override fun loadDataAsNeeded(currentIndex: Int): List<Product> {
         return products.subList(currentIndex, currentIndex + COUNT_PER_LOAD)
     }
 
