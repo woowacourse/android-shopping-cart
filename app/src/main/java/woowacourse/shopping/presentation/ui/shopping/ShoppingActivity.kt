@@ -50,9 +50,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (!recyclerView.canScrollVertically(1)) {
-                        viewModel.updateVisibility(true)
+                        viewModel.updateLoadMoreButtonVisibility(true)
                     } else {
-                        if (dy < 0) viewModel.updateVisibility(false)
+                        if (dy < 0) viewModel.updateLoadMoreButtonVisibility(false)
                     }
                 }
             },
@@ -85,6 +85,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
 
     override fun onLoadButtonClick() {
         viewModel.loadProducts()
-        viewModel.updateVisibility(false)
+        viewModel.updateLoadMoreButtonVisibility(false)
     }
 }

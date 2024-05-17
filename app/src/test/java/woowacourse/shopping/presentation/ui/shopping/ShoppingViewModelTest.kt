@@ -35,15 +35,15 @@ class ShoppingViewModelTest {
 
     @Test
     fun `updateVisibility가 호출됐을 때 visibility LiveData가 업데이트된다_1`() {
-        viewModel.updateVisibility(true)
+        viewModel.updateLoadMoreButtonVisibility(true)
 
-        assertEquals(View.VISIBLE, viewModel.visibility.value)
+        assertEquals(View.VISIBLE, viewModel.isLoadMoreButtonVisible.value)
     }
 
     @Test
     fun `updateVisibility가 호출됐을 때 visibility LiveData가 업데이트된다_2`() {
-        viewModel.updateVisibility(false)
+        viewModel.updateLoadMoreButtonVisibility(false)
 
-        assertEquals(View.GONE, viewModel.visibility.value)
+        assertEquals(View.GONE, viewModel.isLoadMoreButtonVisible.value)
     }
 }

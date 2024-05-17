@@ -13,9 +13,9 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
     val products: LiveData<List<Product>>
         get() = _products
 
-    private val _visibility = MutableLiveData(false)
-    val visibility: LiveData<Boolean>
-        get() = _visibility
+    private val _isLoadMoreButtonVisible = MutableLiveData(false)
+    val isLoadMoreButtonVisible: LiveData<Boolean>
+        get() = _isLoadMoreButtonVisible
 
     private var offset = 0
 
@@ -28,8 +28,8 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
         _products.postValue(getProducts())
     }
 
-    fun updateVisibility(isVisible: Boolean) {
-        _visibility.postValue(isVisible)
+    fun updateLoadMoreButtonVisibility(isVisible: Boolean) {
+        _isLoadMoreButtonVisible.postValue(isVisible)
     }
 
     companion object {
