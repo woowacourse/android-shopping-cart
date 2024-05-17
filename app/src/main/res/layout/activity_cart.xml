@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
-            name="pageNumber"
-            type="String" />
+            name="viewModel"
+            type="woowacourse.shopping.ui.cart.CartViewModel" />
 
     </data>
 
@@ -39,6 +38,8 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:enabled="@{viewModel.canMovePreviousPage}"
+            android:clickable="@{viewModel.canMovePreviousPage}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_cart" />
@@ -48,7 +49,7 @@
             android:layout_width="45dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:text="@{pageNumber}"
+            android:text="@{Integer.toString(viewModel.pageNumber)}"
             android:textColor="@color/gray5"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -68,6 +69,8 @@
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
+            android:enabled="@{viewModel.canMoveNextPage}"
+            android:clickable="@{viewModel.canMoveNextPage}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_page_number"
             app:layout_constraintTop_toBottomOf="@id/rv_cart" />
