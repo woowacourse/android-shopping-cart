@@ -7,13 +7,12 @@ import woowacourse.shopping.model.Product
 
 class CartViewHolder(
     private val binding: ItemCartBinding,
-    private val itemRemoveClickListener: (Long) -> Unit,
-) :
-    RecyclerView.ViewHolder(binding.root) {
+    private val onRemoveButtonClick: (Long) -> Unit,
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(product: Product) {
         binding.product = product
         binding.ivRemove.setOnClickListener {
-            itemRemoveClickListener(product.id)
+            onRemoveButtonClick(product.id)
         }
 
         Glide.with(binding.root)

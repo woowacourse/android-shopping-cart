@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.model.Product
 
 class CartAdapter(
-    private val itemRemoveClickListener: (Long) -> Unit,
+    private val onRemoveButtonClick: (Long) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val cart: MutableList<Product> = mutableListOf()
 
@@ -16,7 +16,7 @@ class CartAdapter(
         viewType: Int,
     ): CartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(binding, itemRemoveClickListener)
+        return CartViewHolder(binding, onRemoveButtonClick)
     }
 
     override fun onBindViewHolder(
