@@ -24,18 +24,42 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setUpToolbar()
+        setUpRecyclerView()
 
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.clickListener = this
+    }
+
+    private fun setUpToolbar() {
+        val toolbar: MaterialToolbar = binding.toolbarMain
+        setSupportActionBar(toolbar)
+
+        toolbar.setOnMenuItemClickListener {
+            navigateToShoppingCart()
+            true
+        }
+    }
+
+    private fun setUpRecyclerView() {
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
+        setUpRecyclerViewAdapter()
+        checkLoadMoreBtnVisibility()
+    }
+
+    private fun setUpRecyclerViewAdapter() {
         adapter = ShoppingAdapter(this)
         binding.rvProductList.adapter = adapter
+
         viewModel.products.observe(
             this,
             Observer { products ->
                 adapter.loadData(products)
             },
         )
-        binding.viewModel = viewModel
+    }
+
+    private fun checkLoadMoreBtnVisibility() {
         binding.rvProductList.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(
@@ -52,17 +76,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
                 }
             },
         )
-        binding.clickListener = this
-    }
-
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarMain
-        setSupportActionBar(toolbar)
-
-        toolbar.setOnMenuItemClickListener {
-            navigateToShoppingCart()
-            true
-        }
     }
 
     private fun navigateToShoppingCart() {
