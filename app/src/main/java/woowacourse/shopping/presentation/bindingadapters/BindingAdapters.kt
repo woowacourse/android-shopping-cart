@@ -66,3 +66,11 @@ fun setCartVisibility(
 ) {
     view.visibility = if (isVisible) View.VISIBLE else View.GONE
 }
+
+@BindingAdapter("app:pageControlVisibility")
+fun setPageControlVisibility(
+    view: View,
+    isVisible: Boolean,
+) {
+    view.visibility = if (isVisible) View.VISIBLE else View.GONE
+}

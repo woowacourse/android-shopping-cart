@@ -25,7 +25,7 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     private val _isEmpty = MutableLiveData(true)
     val isEmpty: LiveData<Boolean> = _isEmpty
 
-    private val _isPageControlVisible = MutableLiveData<Boolean>()
+    private val _isPageControlVisible = MutableLiveData(false)
     val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
 
     private var lastPage: Int = DEFAULT_PAGE

@@ -55,7 +55,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_detail_product_image"
-            tools:text="[든든] 동원 스위트콘" />
+            tools:text="대전 장인약과 | 장인더 파지약과" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider"

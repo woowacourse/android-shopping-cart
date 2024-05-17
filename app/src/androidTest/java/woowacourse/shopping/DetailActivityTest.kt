@@ -37,7 +37,7 @@ class DetailActivityTest {
     @Test
     fun `선택한_상품의_제목이_표시된다`() {
         onView(withId(R.id.tv_detail_product_name))
-            .check(matches(withText("[든든] 동원 스위트콘1")))
+            .check(matches(withText("대전 장인약과 | 장인더 파지약과")))
     }
 
     @Test

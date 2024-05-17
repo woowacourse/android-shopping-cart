@@ -42,9 +42,8 @@
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/iv_product"
-            app:layout_constraintStart_toStartOf="@+id/iv_product"
-            app:layout_constraintTop_toBottomOf="@+id/iv_product"
+            app:layout_constraintStart_toStartOf="@id/iv_product"
+            app:layout_constraintTop_toBottomOf="@id/iv_product"
             tools:text="PET보틀-정사각형어쩌구저ㄱㅉ" />
 
         <TextView
@@ -54,10 +53,10 @@
             android:layout_margin="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            app:price="@{product.price}"
             android:textSize="16dp"
-            app:layout_constraintStart_toStartOf="@+id/tv_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            app:layout_constraintStart_toStartOf="@id/iv_product"
+            app:layout_constraintTop_toBottomOf="@id/tv_name"
+            app:price="@{product.price}"
             tools:text="10,000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="vmShoppingCart"
             type="woowacourse.shopping.presentation.ui.cart.CartViewModel" />
@@ -52,10 +50,9 @@
             android:layout_height="0dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
-            android:layout_marginBottom="100dp"
             app:cartVisibility="@{!vmShoppingCart.isEmpty}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/page_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar_cart"
@@ -66,11 +63,13 @@
             android:id="@+id/page_layout"
             android:layout_width="129dp"
             android:layout_height="42dp"
+            android:layout_marginTop="9dp"
             android:layout_marginBottom="50dp"
-            android:visibility="@{vmShoppingCart.isPageControlVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+            app:pageControlVisibility="@{vmShoppingCart.isPageControlVisible}">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_before"
