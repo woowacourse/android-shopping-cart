@@ -4,47 +4,37 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 
 class DetailActivity : AppCompatActivity(), DetailClickListener {
     private lateinit var binding: ActivityDetailBinding
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
-    private lateinit var viewModel: DetailViewModel
-    private lateinit var cartRepository: CartRepository
+    private val viewModel: DetailViewModel by viewModels {
+        DetailViewModelFactory(
+            cartRepository = CartRepositoryImpl((application as ShoppingApplication).database),
+            shoppingRepository = ShoppingItemsRepositoryImpl(),
+            productId = productId,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val database = (application as ShoppingApplication).database
-        cartRepository = CartRepositoryImpl(database)
-
         setUpToolbar()
-        setUpViewModel()
 
         binding.lifecycleOwner = this
-        binding.clickListener = this
-    }
-
-    private fun setUpViewModel() {
-        val factory =
-            DetailViewModelFactory(
-                cartRepository,
-                ShoppingItemsRepositoryImpl(),
-                productId = productId,
-            )
-        viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
         binding.viewModel = viewModel
+        binding.clickListener = this
     }
 
     private fun setUpToolbar() {

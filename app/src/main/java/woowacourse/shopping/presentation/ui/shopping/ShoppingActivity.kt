@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -19,7 +19,9 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
-    private lateinit var viewModel: ShoppingViewModel
+    private val viewModel: ShoppingViewModel by viewModels {
+        ShoppingViewModelFactory(ShoppingItemsRepositoryImpl())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,21 +30,20 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         setUpToolbar()
 
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         binding.rvProductList.layoutManager = GridLayoutManager(this, 2)
 
         adapter = ShoppingAdapter(this)
         binding.rvProductList.adapter = adapter
 
-        val factory = ShoppingViewModelFactory(ShoppingItemsRepositoryImpl())
-        viewModel = ViewModelProvider(this, factory)[ShoppingViewModel::class.java]
         viewModel.products.observe(
             this,
             Observer { products ->
                 adapter.loadData(products)
             },
         )
-        binding.viewModel = viewModel
+
         binding.rvProductList.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(

@@ -1,7 +1,8 @@
 package woowacourse.shopping.presentation.ui.shopping
 
 import android.view.View
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
