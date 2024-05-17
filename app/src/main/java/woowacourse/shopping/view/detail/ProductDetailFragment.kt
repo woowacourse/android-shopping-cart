@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
+import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
@@ -54,11 +55,16 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         productDetailViewModel.productDetailState.observe(viewLifecycleOwner) { productDetailState ->
             when (productDetailState) {
                 ProductDetailState.Init -> {}
-                ProductDetailState.AddShoppingCart.Success -> showMessage(SUCCESS_SAVE_DATA)
-                ProductDetailState.AddShoppingCart.Fail -> showMessage(ERROR_SAVE_DATA)
+                ProductDetailState.AddShoppingCart.Success -> showMessage(
+                    requireContext().getString(
+                        R.string.success_save_data
+                    )
+                )
+
+                ProductDetailState.AddShoppingCart.Fail -> showMessage(requireContext().getString(R.string.error_save_data))
                 ProductDetailState.LoadProductItem.Success -> {}
                 ProductDetailState.LoadProductItem.Fail -> {
-                    showMessage(ERROR_DATA_LOAD_MESSAGE)
+                    showMessage(requireContext().getString(R.string.error_data_load))
                     parentFragmentManager.popBackStack()
                 }
             }
@@ -104,9 +110,6 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
             return Bundle().apply { putLong(PRODUCT_ID, id) }
         }
 
-        private const val ERROR_SAVE_DATA = "장바구니에 담기지 않았습니다.."
-        private const val SUCCESS_SAVE_DATA = "장바구니에 담겼습니다!"
         private const val PRODUCT_ID = "productId"
-        private const val ERROR_DATA_LOAD_MESSAGE = "데이터가 없습니다!"
     }
 }

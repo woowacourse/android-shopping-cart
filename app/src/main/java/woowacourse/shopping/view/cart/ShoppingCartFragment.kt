@@ -68,9 +68,9 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
             when (shoppingCartState) {
                 ShoppingCartState.Init -> {}
                 ShoppingCartState.DeleteShoppingCart.Success -> {}
-                ShoppingCartState.DeleteShoppingCart.Fail -> showMessage(ERROR_DELETE_FAIL_MESSAGE)
+                ShoppingCartState.DeleteShoppingCart.Fail -> showMessage(requireContext().getString(R.string.error_delete_data))
                 ShoppingCartState.LoadCartItemList.Success -> {}
-                ShoppingCartState.LoadCartItemList.Fail -> showMessage(MAX_PAGING_DATA_MESSAGE)
+                ShoppingCartState.LoadCartItemList.Fail -> showMessage(requireContext().getString(R.string.max_paging_data))
             }
         }
     }
@@ -103,7 +103,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
             binding.currentPage = ++shoppingCartViewModel.currentPage
             updateRecyclerView()
         } else {
-            showMessage(MAX_PAGING_DATA_MESSAGE)
+            showMessage(requireContext().getString(R.string.max_paging_data))
         }
     }
 
@@ -147,9 +147,4 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     private fun showMessage(message: String) =
         Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
-
-    companion object {
-        private const val MAX_PAGING_DATA_MESSAGE = "모든 데이터가 로드 되었습니다."
-        private const val ERROR_DELETE_FAIL_MESSAGE = "삭제에 실패하였습니다."
-    }
 }

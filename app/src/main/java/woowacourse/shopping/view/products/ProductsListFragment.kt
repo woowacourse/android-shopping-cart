@@ -63,7 +63,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             when(productListState){
                 ProductListState.Init -> {}
                 ProductListState.LoadProductList.Success -> {}
-                ProductListState.LoadProductList.Fail -> showMessage(MAX_PAGING_DATA)
+                ProductListState.LoadProductList.Fail -> showMessage(requireContext().getString(R.string.max_paging_data))
             }
         }
     }
@@ -105,7 +105,4 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     private fun showMessage(message: String) =
         Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
-    companion object {
-        private const val MAX_PAGING_DATA = "모든 데이터가 로드 되었습니다."
-    }
 }
