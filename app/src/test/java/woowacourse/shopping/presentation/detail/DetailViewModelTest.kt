@@ -15,12 +15,10 @@ import woowacourse.shopping.domain.repository.FakeProductRepository
 class DetailViewModelTest {
     private lateinit var detailViewModel: DetailViewModel
     private lateinit var cartRepository: CartRepository
-    private lateinit var addCompleteListener: AddCompleteListener
 
     @BeforeEach
     fun setUp() {
         cartRepository = mockk<CartRepository>(relaxed = true)
-        addCompleteListener = mockk<AddCompleteListener>(relaxed = true)
         detailViewModel = DetailViewModel(FakeProductRepository(), cartRepository)
     }
 
@@ -37,7 +35,7 @@ class DetailViewModelTest {
 
     @Test
     fun `장바구니에 상품을 담을 수 있다`() {
-        detailViewModel.addToCart(1, addCompleteListener)
+        detailViewModel.addToCart(1)
 
         verify { cartRepository.addCartItem(1, any()) }
     }
