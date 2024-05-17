@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.bindingadapters
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -30,7 +31,7 @@ fun setItems(
     products: List<Product>?,
 ) {
     products?.let {
-        (recyclerView.adapter as? ShoppingAdapter)?.products = it
+        (recyclerView.adapter as? ShoppingAdapter)?.loadData(it)
     }
 }
 
@@ -52,4 +53,16 @@ fun setSelectedBasedOn(
     isSelected: Boolean?,
 ) {
     button.isSelected = isSelected == true
+}
+
+@BindingAdapter("app:setLoadMoreBtnVisibility")
+fun setLoadMoreBtnVisibility(
+    view: TextView,
+    isVisible: Boolean?,
+) {
+    if (isVisible == true) {
+        view.visibility = View.VISIBLE
+    } else {
+        view.visibility = View.GONE
+    }
 }
