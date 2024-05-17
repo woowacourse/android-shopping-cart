@@ -2,8 +2,6 @@ package woowacourse.shopping.presentation.ui.shopping
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -52,9 +50,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (!recyclerView.canScrollVertically(1)) {
-                        viewModel.updateVisibility(VISIBLE)
+                        viewModel.updateVisibility(true)
                     } else {
-                        if (dy < 0) viewModel.updateVisibility(GONE)
+                        if (dy < 0) viewModel.updateVisibility(false)
                     }
                 }
             },
@@ -87,6 +85,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
 
     override fun onLoadButtonClick() {
         viewModel.loadProducts()
-        viewModel.updateVisibility(GONE)
+        viewModel.updateVisibility(false)
     }
 }

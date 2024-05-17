@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.view.View.GONE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,22 +7,17 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
 class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
-    private val _products = MutableLiveData<List<Product>>()
+    private val productsData: List<Product> by lazy { repository.getAllProducts() }
+
+    private val _products = MutableLiveData(getProducts())
     val products: LiveData<List<Product>>
         get() = _products
 
-    private val productsData: List<Product> by lazy { repository.getAllProducts() }
-
-    private val _visibility = MutableLiveData<Int>()
-    val visibility: LiveData<Int>
+    private val _visibility = MutableLiveData(false)
+    val visibility: LiveData<Boolean>
         get() = _visibility
 
     private var offset = 0
-
-    init {
-        loadProducts()
-        updateVisibility(GONE)
-    }
 
     private fun getProducts(): List<Product> {
         offset = Integer.min(offset + PAGE_SIZE, productsData.size)
@@ -34,8 +28,8 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
         _products.postValue(getProducts())
     }
 
-    fun updateVisibility(visibility: Int) {
-        _visibility.postValue(visibility)
+    fun updateVisibility(isVisible: Boolean) {
+        _visibility.postValue(isVisible)
     }
 
     companion object {

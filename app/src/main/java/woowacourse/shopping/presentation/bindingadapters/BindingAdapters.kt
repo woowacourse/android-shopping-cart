@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.bindingadapters
 
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -48,4 +49,12 @@ fun setSelectedBasedOn(
     isSelected: Boolean,
 ) {
     button.isSelected = isSelected
+}
+
+@BindingAdapter("app:loadMoreVisibility")
+fun setLoadMoreButtonVisibility(
+    view: TextView,
+    isVisible: Boolean,
+) {
+    view.visibility = if (isVisible) View.VISIBLE else View.GONE
 }
