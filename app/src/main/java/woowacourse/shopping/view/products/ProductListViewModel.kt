@@ -20,5 +20,4 @@ class ProductListViewModel(
         if (pagingData.isEmpty()) throw NoSuchDataException()
         _products.value = _products.value?.plus(pagingData)
     }
-
 }

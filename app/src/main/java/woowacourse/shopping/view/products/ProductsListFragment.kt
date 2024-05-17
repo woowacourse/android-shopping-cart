@@ -13,17 +13,15 @@ import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
-import woowacourse.shopping.view.viewmodel.MainViewModel
 
 class ProductsListFragment : Fragment(), OnClickProducts {
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private val productListViewModel: ProductListViewModel by lazy {
-        val viewModelFactory = ViewModelFactory{ ProductListViewModel(ProductRepositoryImpl(context = requireContext())) }
+        val viewModelFactory = ViewModelFactory { ProductListViewModel(ProductRepositoryImpl(context = requireContext())) }
         viewModelFactory.create(ProductListViewModel::class.java)
     }
     private lateinit var adapter: ProductAdapter
-
 
     override fun onCreateView(
         inflater: LayoutInflater,

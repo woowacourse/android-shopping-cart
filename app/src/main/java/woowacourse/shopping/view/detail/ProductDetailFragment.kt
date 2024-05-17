@@ -12,16 +12,13 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
-import woowacourse.shopping.view.MainActivity
 import woowacourse.shopping.view.ViewModelFactory
-import woowacourse.shopping.view.products.ProductListViewModel
-import woowacourse.shopping.view.viewmodel.MainViewModel
 
 class ProductDetailFragment : Fragment(), OnClickDetail {
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
     private val productDetailViewModel: ProductDetailViewModel by lazy {
-        val viewModelFactory = ViewModelFactory{ ProductDetailViewModel(ProductRepositoryImpl(context = requireContext())) }
+        val viewModelFactory = ViewModelFactory { ProductDetailViewModel(ProductRepositoryImpl(context = requireContext())) }
         viewModelFactory.create(ProductDetailViewModel::class.java)
     }
 
@@ -43,8 +40,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         observeData()
     }
 
-    private fun observeData(){
-        productDetailViewModel.product.observe(viewLifecycleOwner){ product ->
+    private fun observeData()  {
+        productDetailViewModel.product.observe(viewLifecycleOwner) { product ->
             initView(product)
         }
     }

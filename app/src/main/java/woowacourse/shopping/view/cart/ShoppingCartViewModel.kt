@@ -8,7 +8,7 @@ import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
     private val repository: ProductRepository,
-): ViewModel() {
+) : ViewModel() {
     var shoppingCart = ShoppingCart()
 
     fun deleteShoppingCartItem(itemId: Long) {
