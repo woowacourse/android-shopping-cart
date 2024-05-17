@@ -34,9 +34,6 @@ class DetailActivity : AppCompatActivity(), AddCompleteListener {
 
         viewModel.loadProductInformation(productId)
 
-        viewModel.productInformation.observe(this) {
-            binding.product = it
-        }
         binding.detailViewModel = viewModel
         binding.addCompleteListener = this
         binding.lifecycleOwner = this
