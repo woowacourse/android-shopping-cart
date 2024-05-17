@@ -52,6 +52,9 @@ class ProductContentsActivityTest {
     fun `스크롤이_가장_아래로_내려가면_더보기_버튼이_보인다`() {
         onView(withId(R.id.rv_products))
             .perform(RecyclerViewActions.scrollToPosition<ProductViewHolder>(19))
+
+        Thread.sleep(1000)
+
         onView(withId(R.id.btn_load_more))
             .check(matches(isDisplayed()))
             .check(matches(allOf(withText("상품 더보기"), isDisplayed())))
