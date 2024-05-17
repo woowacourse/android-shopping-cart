@@ -14,6 +14,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.ui.state.UiState
 
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
@@ -30,6 +31,7 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
 
         showProductDetail()
+        observeProduct()
         setOnCartButtonClickListener()
     }
 
@@ -38,19 +40,27 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     }
 
     private fun showProductDetail() {
-        runCatching {
-            viewModel.loadProduct(productId)
-        }.onSuccess {
-            viewModel.product.observe(this) {
-                binding.product = it
-                Glide.with(this)
-                    .load(it.imageUrl)
-                    .into(binding.ivProductImage)
+        viewModel.loadProduct(productId)
+    }
+
+    private fun observeProduct() {
+        viewModel.uiState.observe(this) { uiState ->
+            when (uiState) {
+                is UiState.SUCCESS -> {
+                    binding.product = uiState.data
+                    Glide.with(this)
+                        .load(uiState.data.imageUrl)
+                        .into(binding.ivProductImage)
+                }
+
+                is UiState.ERROR -> {
+                    binding.btnAddProduct.isEnabled = false
+                    toast = Toast.makeText(this, uiState.error.message, Toast.LENGTH_SHORT)
+                    toast?.show()
+                }
+
+                is UiState.LOADING -> {}
             }
-        }.onFailure {
-            toast = Toast.makeText(this, it.message, Toast.LENGTH_SHORT)
-            toast?.show()
-            finish()
         }
     }
 
@@ -80,6 +90,7 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         )
 
     companion object {
+        private val TAG = ProductDetailActivity::class.java.simpleName
         private const val EXTRA_DEFAULT_VALUE = -1L
 
         fun startActivity(

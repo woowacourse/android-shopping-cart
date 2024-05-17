@@ -10,6 +10,7 @@ import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.ui.state.UiState
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
@@ -31,7 +32,10 @@ class ProductDetailViewModelTest {
         viewModel.loadProduct(productId)
 
         // then
-        assertEquals(viewModel.product.getOrAwaitValue(), product.copy(id = productId))
+        assertEquals(
+            viewModel.uiState.getOrAwaitValue(),
+            UiState.SUCCESS(product.copy(id = productId)),
+        )
     }
 
     @Test

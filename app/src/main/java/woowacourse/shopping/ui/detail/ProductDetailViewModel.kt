@@ -6,19 +6,25 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartDao
 import woowacourse.shopping.model.data.ProductDao
+import woowacourse.shopping.ui.state.UiState
 
 class ProductDetailViewModel(
     private val productDao: ProductDao,
     private val cartDao: CartDao,
 ) : ViewModel() {
-    private val _product: MutableLiveData<Product> = MutableLiveData()
-    val product: LiveData<Product> get() = _product
+    private val _uiState: MutableLiveData<UiState<Product>> = MutableLiveData(UiState.LOADING)
+    val uiState: LiveData<UiState<Product>> get() = _uiState
 
     fun loadProduct(productId: Long) {
-        _product.value = productDao.find(productId)
+        runCatching { productDao.find(-1L) }
+            .onSuccess {
+                _uiState.value = UiState.SUCCESS(it)
+            }.onFailure {
+                _uiState.value = UiState.ERROR(it)
+            }
     }
 
     fun addProductToCart() {
-        _product.value?.let { cartDao.save(it) }
+        _uiState.value?.let { cartDao.save((it as UiState.SUCCESS).data) }
     }
 }
