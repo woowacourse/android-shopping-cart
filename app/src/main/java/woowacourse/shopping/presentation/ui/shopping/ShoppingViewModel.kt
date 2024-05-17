@@ -14,8 +14,19 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
     private val _products = MutableLiveData<UiState<List<Product>>>(UiState.None)
     val products get() = _products
 
-    fun loadProductByOffset() {
-        repository.load(offSet, 20).onSuccess {
+    fun loadInitialProductByOffset() {
+        if (products.value !is UiState.Finish<List<Product>>) {
+            repository.load(offSet, PAGE_SIZE).onSuccess {
+                _products.value = UiState.Finish(it)
+                offSet++
+            }.onFailure {
+                _products.value = UiState.Error(LOAD_ERROR)
+            }
+        }
+    }
+
+    fun addProductByOffset() {
+        repository.load(offSet, PAGE_SIZE).onSuccess {
             if (_products.value is UiState.None || _products.value is UiState.Error) {
                 _products.value = UiState.Finish(it)
             } else {
@@ -29,5 +40,6 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
 
     companion object {
         const val LOAD_ERROR = "아이템을 끝까지 불러왔습니다"
+        const val PAGE_SIZE = 20
     }
 }

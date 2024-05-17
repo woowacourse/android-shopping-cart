@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.ui.cart
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -21,7 +22,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
 
     private val viewModel: CartViewModel by viewModels { ViewModelFactory() }
 
-    override fun initStartView() {
+    override fun initStartView(savedInstanceState: Bundle?) {
         initTitle()
         initClickListener()
 

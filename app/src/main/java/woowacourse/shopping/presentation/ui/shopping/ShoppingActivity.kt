@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.shopping
 
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -23,9 +24,9 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     private val adapter: ShoppingAdapter = ShoppingAdapter(this)
 
-    override fun initStartView() {
+    override fun initStartView(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) viewModel.loadInitialProductByOffset()
         initAdapter()
-        viewModel.loadProductByOffset()
         viewModel.products.observe(this) {
             when (it) {
                 is UiState.None -> {}
@@ -73,7 +74,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     }
 
     override fun loadMore() {
-        viewModel.loadProductByOffset()
+        viewModel.addProductByOffset()
     }
 
     companion object {

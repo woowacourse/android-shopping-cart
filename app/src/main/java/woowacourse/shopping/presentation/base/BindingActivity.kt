@@ -14,10 +14,10 @@ abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = DataBindingUtil.setContentView(this, layoutResourceId)
-        initStartView()
+        initStartView(savedInstanceState)
     }
 
-    abstract fun initStartView()
+    abstract fun initStartView(savedInstanceState: Bundle?)
 
     override fun onDestroy() {
         super.onDestroy()

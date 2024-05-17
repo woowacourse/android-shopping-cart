@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.ui.detail
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -19,7 +20,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
 
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
-    override fun initStartView() {
+    override fun initStartView(savedInstanceState: Bundle?) {
         title = getString(R.string.detail_title)
 
         val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
