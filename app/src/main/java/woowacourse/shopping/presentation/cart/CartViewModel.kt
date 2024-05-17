@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 class CartViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-) : ViewModel() {
+) : ViewModel(), CartItemDeleteClickListener {
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int>
         get() = _currentPage
@@ -89,6 +89,10 @@ class CartViewModel(
             }
         }
         _orders.value = orders
+    }
+
+    override fun onCartItemDelete(cartItemId: Long) {
+        removeCartItem(cartItemId)
     }
 }
 

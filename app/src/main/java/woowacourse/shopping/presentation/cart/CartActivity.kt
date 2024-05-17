@@ -14,13 +14,13 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 
-class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
+class CartActivity : AppCompatActivity() {
     private val binding: ActivityCartBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_cart)
     }
     private lateinit var viewModel: CartViewModel
     private val adapter: CartAdapter by lazy {
-        CartAdapter(emptyList(), this)
+        CartAdapter(emptyList(), viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,10 +53,6 @@ class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
             android.R.id.home -> finish()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCartItemDelete(cartItemId: Long) {
-        viewModel.removeCartItem(cartItemId)
     }
 
     companion object {
