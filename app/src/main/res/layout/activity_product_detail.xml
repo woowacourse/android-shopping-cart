@@ -85,11 +85,11 @@
             app:layout_constraintTop_toTopOf="@id/divider_product_detail"
             tools:text="99,800원" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/btn_product_detail_add_cart"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/teal_500"
+            android:backgroundTint="@color/teal_500"
             android:paddingVertical="12dp"
             android:text="@string/product_detail_add_cart"
             android:textColor="@color/white"

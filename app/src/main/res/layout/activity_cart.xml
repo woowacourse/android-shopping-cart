@@ -49,11 +49,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_cart">
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_cart_previous_page"
                 style="@style/PageButtonStyle"
                 android:layout_marginVertical="50dp"
                 android:background="@drawable/selector_previous_page_button"
+                app:backgroundTint="@null"
                 android:enabled="false"
                 android:text="@string/previous_page"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -77,10 +78,11 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="1" />
 
-            <androidx.appcompat.widget.AppCompatButton
+            <Button
                 android:id="@+id/btn_cart_next_page"
                 style="@style/PageButtonStyle"
                 android:background="@drawable/selector_next_page_button"
+                app:backgroundTint="@null"
                 android:enabled="true"
                 android:text="@string/next_page"
                 app:layout_constraintBottom_toBottomOf="parent"
