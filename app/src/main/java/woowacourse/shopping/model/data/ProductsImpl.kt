@@ -9,7 +9,6 @@ object ProductsImpl : ProductDao {
 
     init {
         repeat(100) {
-
             save(MAC_BOOK)
             save(IPHONE)
             save(GALAXY_BOOK)
@@ -24,6 +23,7 @@ object ProductsImpl : ProductDao {
 
     override fun deleteAll() {
         products.clear()
+        id = 0
     }
 
     override fun find(id: Long): Product {

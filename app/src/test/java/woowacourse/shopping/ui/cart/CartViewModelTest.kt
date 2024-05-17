@@ -15,6 +15,7 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
+        CartsImpl.deleteAll()
         viewModel = CartViewModel(CartsImpl)
     }
 

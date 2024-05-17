@@ -14,6 +14,7 @@ object CartsImpl : CartDao {
 
     override fun deleteAll() {
         cart.clear()
+        id = 0
     }
 
     override fun delete(id: Long) {
