@@ -1,7 +1,12 @@
 package woowacourse.shopping.presentation.ui.productlist
 
-import woowacourse.shopping.domain.model.PagingProduct
+import woowacourse.shopping.domain.model.Product
 
 data class ProductListUiState(
-    val pagingProduct: PagingProduct? = null,
+    val pagingProduct: PagingProduct = PagingProduct(),
+)
+
+data class PagingProduct(
+    val productList: List<Product> = emptyList(),
+    val last: Boolean = false,
 )

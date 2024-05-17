@@ -28,7 +28,7 @@ class ProductDetailActivityTest {
             ).apply {
                 val repository: ProductRepository = DummyProductRepositoryImpl
                 val pagingProduct = repository.getPagingProduct(0, 20).getOrThrow()
-                val id = pagingProduct.productList.first().id
+                val id = pagingProduct.first().id
                 putExtra(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID, id)
             },
         )

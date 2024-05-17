@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.repsoitory
 
 import woowacourse.shopping.data.repsoitory.DummyData.PRODUCT_LIST
-import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.math.min
@@ -17,15 +16,10 @@ object DummyProductRepositoryImpl : ProductRepository {
     override fun getPagingProduct(
         page: Int,
         pageSize: Int,
-    ): Result<PagingProduct> =
+    ): Result<List<Product>> =
         runCatching {
             val fromIndex = page * pageSize
             val toIndex = min(fromIndex + pageSize, productList.size)
-            val last = toIndex == productList.size
-            PagingProduct(
-                currentPage = page,
-                productList = productList.subList(fromIndex, toIndex),
-                last = last,
-            )
+            productList.subList(fromIndex, toIndex)
         }
 }

@@ -6,15 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderLoadMoreBinding
 import woowacourse.shopping.databinding.HolderProductBinding
-import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.ui.productlist.PagingProduct
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.LoadMoreViewHolder
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.ProductViewHolder
 
 class ProductListAdapter(
     private val actionHandler: ProductListActionHandler,
-    private var pagingProduct: PagingProduct = PagingProduct(0, emptyList(), true),
+    private var pagingProduct: PagingProduct = PagingProduct(emptyList(), true),
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         return if (position == itemCount - 1) LOAD_VIEW_TYPE else PRODUCT_VIEW_TYPE
@@ -50,22 +50,21 @@ class ProductListAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> {
-                holder.bind(pagingProduct.productList[position])
-            }
-
-            is LoadMoreViewHolder -> {
-                holder.bind(pagingProduct.last)
-            }
+            is ProductViewHolder -> holder.bind(pagingProduct.productList[position])
+            is LoadMoreViewHolder -> holder.bind(pagingProduct.last)
         }
     }
 
     fun updateProductList(newPagingProduct: PagingProduct) {
         val positionStart = pagingProduct.productList.size
-        val itemCount = newPagingProduct.productList.size - pagingProduct.productList.size
-
         pagingProduct = newPagingProduct
-        notifyItemRangeChanged(positionStart, itemCount)
+
+        if (newPagingProduct.last) {
+            notifyItemChanged(positionStart)
+        } else {
+            val itemCount = newPagingProduct.productList.size - pagingProduct.productList.size
+            notifyItemRangeInserted(positionStart, itemCount)
+        }
     }
 
     sealed class ProductListViewHolder(view: View) : RecyclerView.ViewHolder(view) {

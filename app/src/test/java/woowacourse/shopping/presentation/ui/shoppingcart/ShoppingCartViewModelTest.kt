@@ -48,11 +48,11 @@ class ShoppingCartViewModelTest {
                 currentPage = 0,
                 orderList =
                     listOf(
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 4, product = DummyData.STUB_PRODUCT_A),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
+                        DummyData.order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
+                        DummyData.order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
+                        DummyData.order.copy(id = 4, product = DummyData.STUB_PRODUCT_A),
+                        DummyData.order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
+                        DummyData.order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
                     ),
                 last = false,
             )
@@ -71,11 +71,11 @@ class ShoppingCartViewModelTest {
                 currentPage = 1,
                 orderList =
                     listOf(
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 7, product = DummyData.STUB_PRODUCT_A),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 8, product = DummyData.STUB_PRODUCT_B),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 9, product = DummyData.STUB_PRODUCT_C),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 10, product = DummyData.STUB_PRODUCT_A),
+                        DummyData.order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
+                        DummyData.order.copy(id = 7, product = DummyData.STUB_PRODUCT_A),
+                        DummyData.order.copy(id = 8, product = DummyData.STUB_PRODUCT_B),
+                        DummyData.order.copy(id = 9, product = DummyData.STUB_PRODUCT_C),
+                        DummyData.order.copy(id = 10, product = DummyData.STUB_PRODUCT_A),
                     ),
                 last = false,
             )
@@ -95,11 +95,11 @@ class ShoppingCartViewModelTest {
                 currentPage = 0,
                 orderList =
                     listOf(
-                        DummyShoppingCartRepositoryImpl.order,
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 4, product = DummyData.STUB_PRODUCT_A),
-                        DummyShoppingCartRepositoryImpl.order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
+                        DummyData.order,
+                        DummyData.order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
+                        DummyData.order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
+                        DummyData.order.copy(id = 4, product = DummyData.STUB_PRODUCT_A),
+                        DummyData.order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
                     ),
                 last = false,
             )
