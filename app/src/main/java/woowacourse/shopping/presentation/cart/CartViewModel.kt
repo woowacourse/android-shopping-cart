@@ -18,7 +18,8 @@ class CartViewModel(
     val orders: LiveData<List<Order>>
         get() = _orders
 
-    private val _pageInformation: MutableLiveData<PageInformation> = MutableLiveData(PageInformation())
+    private val _pageInformation: MutableLiveData<PageInformation> =
+        MutableLiveData(PageInformation())
     val pageInformation: LiveData<PageInformation>
         get() = _pageInformation
 
@@ -59,35 +60,12 @@ class CartViewModel(
                     price = it.quantity * productInformation.price,
                 )
             }
-        if (currentPage.value == 0) {
-            if (orders.size < 5) {
-                _pageInformation.value =
-                    pageInformation.value?.copy(
-                        previousPageEnabled = false,
-                        nextPageEnabled = hasNext,
-                    )
-            } else {
-                _pageInformation.value =
-                    pageInformation.value?.copy(
-                        previousPageEnabled = false,
-                        nextPageEnabled = hasNext,
-                    )
-            }
-        } else {
-            if (orders.size < 5) {
-                _pageInformation.value =
-                    pageInformation.value?.copy(
-                        previousPageEnabled = true,
-                        nextPageEnabled = hasNext,
-                    )
-            } else {
-                _pageInformation.value =
-                    pageInformation.value?.copy(
-                        previousPageEnabled = true,
-                        nextPageEnabled = hasNext,
-                    )
-            }
-        }
+
+        _pageInformation.value =
+            pageInformation.value?.copy(
+                previousPageEnabled = currentPage.value != 0,
+                nextPageEnabled = hasNext,
+            )
         _orders.value = orders
     }
 }
