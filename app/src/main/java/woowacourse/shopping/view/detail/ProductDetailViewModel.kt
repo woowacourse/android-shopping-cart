@@ -13,7 +13,7 @@ class ProductDetailViewModel(
     private val repository: ProductRepository,
 ): ViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData(Product.defaultProduct)
-    private val product: LiveData<Product> get() = _product
+    val product: LiveData<Product> get() = _product
 
     fun addShoppingCartItem(product: Product) =
         thread {

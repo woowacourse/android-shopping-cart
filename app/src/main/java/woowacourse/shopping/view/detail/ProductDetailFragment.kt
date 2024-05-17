@@ -8,16 +8,22 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.Target
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.MainActivity
+import woowacourse.shopping.view.ViewModelFactory
+import woowacourse.shopping.view.products.ProductListViewModel
 import woowacourse.shopping.view.viewmodel.MainViewModel
 
 class ProductDetailFragment : Fragment(), OnClickDetail {
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
-    private lateinit var mainViewModel: MainViewModel
+    private val productDetailViewModel: ProductDetailViewModel by lazy {
+        val viewModelFactory = ViewModelFactory{ ProductDetailViewModel(ProductRepositoryImpl(context = requireContext())) }
+        viewModelFactory.create(ProductDetailViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,9 +39,12 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel = (requireActivity() as MainActivity).viewModel
-        val product = loadProduct()
-        if (product != null) {
+        loadProduct()
+        observeData()
+    }
+
+    private fun observeData(){
+        productDetailViewModel.product.observe(viewLifecycleOwner){ product ->
             initView(product)
         }
     }
@@ -46,9 +55,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
 
     private fun loadProduct(): Product? {
         runCatching {
-            mainViewModel.loadProductItem(receiveId())
-        }.onSuccess {
-            return it
+            productDetailViewModel.loadProductItem(receiveId())
         }.onFailure {
             showLoadErrorMessage()
             parentFragmentManager.popBackStack()
@@ -76,7 +83,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
 
     override fun clickAddCart(product: Product) {
         runCatching {
-            mainViewModel.addShoppingCartItem(product)
+            productDetailViewModel.addShoppingCartItem(product)
         }.onSuccess {
             showAddCartSuccessMessage()
         }.onFailure {
