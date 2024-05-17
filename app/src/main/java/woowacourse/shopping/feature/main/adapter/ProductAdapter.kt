@@ -29,12 +29,8 @@ class ProductAdapter(private val onClickProductItem: OnClickProductItem) : Recyc
         return products.size
     }
 
-    fun updateProducts(
-        newProducts: List<Product>,
-        positionStart: Int,
-        itemCount: Int,
-    ) {
-        products.addAll(newProducts)
-        notifyItemRangeChanged(positionStart, itemCount)
+    fun updateProducts(insertedProducts: List<Product>) {
+        products.addAll(insertedProducts)
+        notifyItemRangeChanged(products.size, insertedProducts.size)
     }
 }

@@ -12,16 +12,14 @@ import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
-import woowacourse.shopping.feature.detail.ProductViewModelFactory
+import woowacourse.shopping.feature.main.adapter.MainViewModelFactory
 import woowacourse.shopping.feature.main.adapter.ProductAdapter
-import woowacourse.shopping.viewmodel.ProductViewModel
-import kotlin.math.min
+import woowacourse.shopping.feature.main.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val viewModel by viewModels<MainViewModel> { MainViewModelFactory(ProductDummyRepository) }
     private lateinit var adapter: ProductAdapter
-    private val productViewModel by viewModels<ProductViewModel> { ProductViewModelFactory(ProductDummyRepository) }
-    private var page: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         initializeToolbar()
         initializeSeeMoreButton()
         initializePage()
-        updateProducts()
+        viewModel.loadPage()
     }
 
     private fun initializeProductAdapter() {
@@ -44,9 +42,8 @@ class MainActivity : AppCompatActivity() {
             })
         binding.rvMainProduct.adapter = adapter
 
-        productViewModel.products.observe(this) {
-            val changedItemCount = min(it.size, PAGE_SIZE)
-            adapter.updateProducts(it, page++ * PAGE_SIZE, changedItemCount)
+        viewModel.products.observe(this) {
+            adapter.updateProducts(it)
         }
     }
 
@@ -69,10 +66,6 @@ class MainActivity : AppCompatActivity() {
     private fun navigateToCartView() {
         val intent = Intent(this, CartActivity::class.java)
         startActivity(intent)
-    }
-
-    private fun updateProducts() {
-        productViewModel.loadPage(page, PAGE_SIZE)
     }
 
     private fun initializePage() {
@@ -101,7 +94,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeSeeMoreButton() {
         binding.btnMainSeeMore.setOnClickListener {
-            updateProducts()
+            viewModel.loadPage()
             it.visibility = View.GONE
         }
     }
