@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.data.CartsImpl
@@ -44,9 +43,6 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         }.onSuccess {
             viewModel.product.observe(this) {
                 binding.product = it
-                Glide.with(this)
-                    .load(it.imageUrl)
-                    .into(binding.ivProductImage)
             }
         }.onFailure {
             toast = Toast.makeText(this, it.message, Toast.LENGTH_SHORT)

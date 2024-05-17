@@ -27,7 +27,8 @@
             android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background" />
+            tools:src="@drawable/ic_launcher_background"
+            app:imageUrl="@{product.imageUrl}"/>
 
         <TextView
             android:id="@+id/tv_product_name"

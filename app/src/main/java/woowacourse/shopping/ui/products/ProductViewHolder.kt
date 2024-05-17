@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.products
 
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.Product
 
@@ -15,9 +14,5 @@ class ProductViewHolder(
         binding.itemLayout.setOnClickListener {
             itemClickListener(product.id)
         }
-
-        Glide.with(binding.root)
-            .load(product.imageUrl)
-            .into(binding.ivProductImage)
     }
 }
