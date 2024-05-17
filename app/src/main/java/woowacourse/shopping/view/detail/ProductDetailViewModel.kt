@@ -6,8 +6,6 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.utils.NoSuchDataException
-import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -16,17 +14,34 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData(Product.defaultProduct)
     val product: LiveData<Product> get() = _product
 
-    fun addShoppingCartItem(product: Product) =
-        thread {
-            val addedCartItemId = shoppingCartRepository.addCartItem(product)
-            if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
-        }
+    private val _productDetailState: MutableLiveData<ProductDetailState> =
+        MutableLiveData(ProductDetailState.Init)
+    val productDetailState: LiveData<ProductDetailState> get() = _productDetailState
 
-    fun loadProductItem(productId: Long) =
-        thread {
-            val loadData = productRepository.getProduct(productId)
-            _product.postValue(loadData)
+
+    fun addShoppingCartItem(product: Product) {
+        runCatching {
+            shoppingCartRepository.addCartItem(product)
+        }.onSuccess {
+            _productDetailState.value = ProductDetailState.AddShoppingCart.Success
+        }.onFailure {
+            _productDetailState.value = ProductDetailState.AddShoppingCart.Fail
         }
+    }
+
+    fun loadProductItem(productId: Long) {
+        runCatching {
+            productRepository.getProduct(productId)
+        }
+            .onSuccess {
+                _product.postValue(it)
+                _productDetailState.value = ProductDetailState.LoadProductItem.Success
+            }
+            .onFailure {
+                _productDetailState.value = ProductDetailState.LoadProductItem.Fail
+            }
+    }
+
 
     companion object {
         const val ERROR_SAVE_DATA_ID = -1L
