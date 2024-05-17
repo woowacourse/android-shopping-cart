@@ -98,6 +98,34 @@ class DummyShoppingCartItemRepositoryTest {
         }
     }
 
+    @Test
+    fun `상품이 6개일 떄 1 페이지는 마지막 페이지가 아니다`() {
+        // given
+        for (i in 1..6) {
+            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i))
+        }
+
+        // when
+        val isFinalPage = dummyShoppingCartItemRepository.isFinalPage(1)
+
+        // then
+        assertThat(isFinalPage).isFalse
+    }
+
+    @Test
+    fun `상품이 5개 일 때 1페이지는 마지막 페이지이다`() {
+        // given
+        for (i in 1..5) {
+            dummyShoppingCartItemRepository.addCartItem(productTestFixture(id = i))
+        }
+
+        // when
+        val isFinalPage = dummyShoppingCartItemRepository.isFinalPage(1)
+
+        // then
+        assertThat(isFinalPage).isTrue
+    }
+
     @AfterEach
     fun tearDown() {
         dummyShoppingCartItemRepository.clearAllCartItems()

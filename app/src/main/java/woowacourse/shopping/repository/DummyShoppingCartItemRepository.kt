@@ -26,6 +26,8 @@ class DummyShoppingCartItemRepository(private val pagingStrategy: PagingStrategy
         cartItems.clear()
     }
 
+    override fun isFinalPage(page: Int): Boolean = pagingStrategy.isFinalPage(page, cartItems)
+
     companion object {
         private val cartItems = mutableListOf<Product>()
     }

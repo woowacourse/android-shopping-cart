@@ -12,4 +12,6 @@ interface ShoppingCartItemRepository {
     fun removeCartItem(productId: Int): Product
 
     fun clearAllCartItems()
+
+    fun isFinalPage(page: Int): Boolean
 }

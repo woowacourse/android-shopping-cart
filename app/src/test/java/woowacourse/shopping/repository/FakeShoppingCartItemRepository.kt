@@ -28,4 +28,6 @@ class FakeShoppingCartItemRepository(
     override fun clearAllCartItems() {
         cartItems.clear()
     }
+
+    override fun isFinalPage(page: Int): Boolean = pagingStrategy.isFinalPage(page, cartItems)
 }
