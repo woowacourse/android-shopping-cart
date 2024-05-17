@@ -24,7 +24,7 @@ class MainViewModelTest {
 
     @Test
     fun `offset을_기준으로_상품_리스트를_요청하면_상품_목록을_정해진_개수만큼_반환해야_한다`() {
-        val before = viewModel.shoppingCart.cartItems.getOrAwaitValue()
+        val before = viewModel.products.getOrAwaitValue()
         assertThat(before.size).isEqualTo(0)
 
         viewModel.loadPagingProduct(3)
