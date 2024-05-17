@@ -36,7 +36,6 @@ class DetailViewModelTest {
     @Test
     fun `장바구니에 상품을 담을 수 있다`() {
         detailViewModel.addToCart(1)
-
         verify { cartRepository.addCartItem(1, any()) }
     }
 }

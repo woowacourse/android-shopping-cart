@@ -1,9 +1,7 @@
 package woowacourse.shopping.presentation.home
 
-interface ProductItemClickListener {
+interface HomeItemClickListener {
     fun onProductItemClick(id: Long)
-}
 
-interface LoadClickListener {
     fun onLoadClick()
 }

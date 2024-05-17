@@ -11,14 +11,14 @@
             type="woowacourse.shopping.data.model.Product" />
 
         <variable
-            name="productItemClickListener"
-            type="woowacourse.shopping.presentation.home.ProductItemClickListener" />
+            name="homeItemClickListener"
+            type="woowacourse.shopping.presentation.home.HomeItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> productItemClickListener.onProductItemClick(product.id)}"
+        android:onClick="@{() -> homeItemClickListener.onProductItemClick(product.id)}"
         android:padding="8dp">
 
         <ImageView

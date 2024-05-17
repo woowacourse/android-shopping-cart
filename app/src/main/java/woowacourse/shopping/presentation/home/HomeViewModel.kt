@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.util.Event
 
 class HomeViewModel(
     private val productRepository: ProductRepository,
-) : ViewModel() {
+) : ViewModel(), HomeItemClickListener {
     private var page: Int = 0
 
     private val _products: MutableLiveData<List<Product>> =
@@ -19,6 +20,10 @@ class HomeViewModel(
     private val _loadStatus: MutableLiveData<LoadStatus> = MutableLiveData(LoadStatus())
     val loadStatus: LiveData<LoadStatus>
         get() = _loadStatus
+
+    private val _navigateToDetailEvent: MutableLiveData<Event<Long>> = MutableLiveData()
+    val navigateToDetailEvent: LiveData<Event<Long>>
+        get() = _navigateToDetailEvent
 
     fun loadProducts() {
         _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
@@ -31,5 +36,13 @@ class HomeViewModel(
                     isLoadingPage = false,
                 )
         }
+    }
+
+    override fun onProductItemClick(id: Long) {
+        _navigateToDetailEvent.value = Event(id)
+    }
+
+    override fun onLoadClick() {
+        loadProducts()
     }
 }

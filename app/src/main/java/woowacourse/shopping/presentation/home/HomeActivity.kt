@@ -14,7 +14,7 @@ import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 
-class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickListener {
+class HomeActivity : AppCompatActivity() {
     private val binding: ActivityHomeBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_home)
     }
@@ -25,7 +25,7 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         )[HomeViewModel::class.java]
     }
     private val adapter: ProductAdapter by lazy {
-        ProductAdapter(mutableListOf(), viewModel.loadStatus.value ?: LoadStatus(), this, this)
+        ProductAdapter(mutableListOf(), viewModel.loadStatus.value ?: LoadStatus(), viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +42,14 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         }
         viewModel.loadStatus.observe(this) {
             adapter.updateLoadStatus(it)
+        }
+        viewModel.navigateToDetailEvent.observe(this) { event ->
+            startActivity(
+                DetailActivity.newIntent(
+                    this,
+                    event.getContentIfNotHandled() ?: return@observe
+                )
+            )
         }
 
         setSupportActionBar(binding.toolbarHome)
@@ -60,14 +68,6 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onProductItemClick(id: Long) {
-        startActivity(DetailActivity.newIntent(this, id))
-    }
-
-    override fun onLoadClick() {
-        viewModel.loadProducts()
     }
 
     private fun initializeProductListLayout() {

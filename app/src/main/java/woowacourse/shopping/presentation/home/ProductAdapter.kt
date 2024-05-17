@@ -18,8 +18,7 @@ import java.lang.IllegalArgumentException
 class ProductAdapter(
     private val products: MutableList<Product>,
     private var loadStatus: LoadStatus,
-    private val productItemClickListener: ProductItemClickListener,
-    private val loadClickListener: LoadClickListener,
+    private val homeItemClickListener: HomeItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,13 +29,13 @@ class ProductAdapter(
             TYPE_PRODUCT -> {
                 val binding: ItemProductBinding =
                     DataBindingUtil.inflate(layoutInflater, R.layout.item_product, parent, false)
-                ProductViewHolder(binding, productItemClickListener)
+                ProductViewHolder(binding, homeItemClickListener)
             }
 
             TYPE_LOAD -> {
                 val binding: ItemLoadMoreBinding =
                     DataBindingUtil.inflate(layoutInflater, R.layout.item_load_more, parent, false)
-                LoadingViewHolder(binding, loadClickListener)
+                LoadingViewHolder(binding, homeItemClickListener)
             }
 
             else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)
@@ -76,11 +75,11 @@ class ProductAdapter(
 
     class ProductViewHolder(
         private val binding: ItemProductBinding,
-        productItemClickListener: ProductItemClickListener,
+        homeItemClickListener: HomeItemClickListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.productItemClickListener = productItemClickListener
+            binding.homeItemClickListener = homeItemClickListener
         }
 
         fun bind(product: Product) {
@@ -90,10 +89,10 @@ class ProductAdapter(
 
     class LoadingViewHolder(
         private val binding: ItemLoadMoreBinding,
-        loadClickListener: LoadClickListener,
-    ) : RecyclerView.ViewHolder(binding.root) {
+        homeItemClickListener: HomeItemClickListener,
+        ) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.loadClickListener = loadClickListener
+            binding.homeItemClickListener = homeItemClickListener
         }
 
         fun bind(loadStatus: LoadStatus) {

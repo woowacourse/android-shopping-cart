@@ -49,4 +49,35 @@ class HomeViewModelTest {
             ),
         )
     }
+
+    @Test
+    fun `더보기 작업을 수행하면 다음 페이지를 불러온다`() {
+        homeViewModel.loadProducts()
+        homeViewModel.onLoadClick()
+        val actualResult = homeViewModel.products.getOrAwaitValue()
+        assertThat(actualResult).isEqualTo(
+            listOf(
+                Product(21, "Product 21", "", 21000),
+                Product(22, "Product 22", "", 22000),
+                Product(23, "Product 23", "", 23000),
+                Product(24, "Product 24", "", 24000),
+                Product(25, "Product 25", "", 25000),
+                Product(26, "Product 26", "", 26000),
+                Product(27, "Product 27", "", 27000),
+                Product(28, "Product 28", "", 28000),
+                Product(29, "Product 29", "", 29000),
+                Product(30, "Product 30", "", 30000),
+                Product(31, "Product 31", "", 31000),
+                Product(32, "Product 32", "", 32000),
+                Product(33, "Product 33", "", 33000),
+                Product(34, "Product 34", "", 34000),
+                Product(35, "Product 35", "", 35000),
+                Product(36, "Product 36", "", 36000),
+                Product(37, "Product 37", "", 37000),
+                Product(38, "Product 38", "", 38000),
+                Product(39, "Product 39", "", 39000),
+                Product(40, "Product 40", "", 40000),
+            ),
+        )
+    }
 }
