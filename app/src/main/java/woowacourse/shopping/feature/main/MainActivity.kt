@@ -3,8 +3,8 @@ package woowacourse.shopping.feature.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
@@ -19,10 +19,8 @@ import kotlin.math.min
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private val productViewModel: ProductViewModel by viewModels { ProductViewModelFactory(ProductDummyRepository) }
     private lateinit var adapter: ProductAdapter
-    private val productViewModel by lazy {
-        ViewModelProvider(this, ProductViewModelFactory(ProductDummyRepository))[ProductViewModel::class.java]
-    }
     private var page: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
