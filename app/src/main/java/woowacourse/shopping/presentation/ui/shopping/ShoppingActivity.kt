@@ -90,9 +90,4 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     override fun onProductClick(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
     }
-
-    override fun onLoadButtonClick() {
-        viewModel.loadProducts()
-        viewModel.hideLoadMoreBtn()
-    }
 }

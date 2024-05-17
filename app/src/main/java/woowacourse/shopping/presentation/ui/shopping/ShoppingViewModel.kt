@@ -23,12 +23,17 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
         hideLoadMoreBtn()
     }
 
+    fun loadNextProducts() {
+        loadProducts()
+        hideLoadMoreBtn()
+    }
+
     private fun getProducts(): List<Product> {
         offset = Integer.min(offset + PAGE_SIZE, productsData.size)
         return productsData.subList(0, offset)
     }
 
-    fun loadProducts() {
+    private fun loadProducts() {
         _products.postValue(getProducts())
     }
 

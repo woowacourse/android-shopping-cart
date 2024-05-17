@@ -54,7 +54,7 @@
             android:layout_height="50dp"
             android:background="@color/purple_200"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onLoadButtonClick()}"
+            android:onClick="@{() -> viewModel.loadNextProducts()}"
             android:text="Load More"
             android:textColor="@color/white"
             android:textSize="20dp"
