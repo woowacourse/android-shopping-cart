@@ -25,7 +25,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     private val adapter: ShoppingAdapter = ShoppingAdapter(this)
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) viewModel.loadInitialProductByOffset()
+        if (savedInstanceState == null) viewModel.loadInitialProductByPage()
         initAdapter()
         viewModel.products.observe(this) {
             when (it) {
@@ -74,7 +74,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     }
 
     override fun onLoadMoreClick() {
-        viewModel.addProductByOffset()
+        viewModel.addProductByPage()
     }
 
     companion object {

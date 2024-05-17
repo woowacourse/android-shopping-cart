@@ -422,11 +422,11 @@ class DummyProductRepository : ProductRepository {
         )
 
     override fun load(
-        pageOffset: Int,
+        startPage: Int,
         pageSize: Int,
     ): Result<List<Product>> =
         runCatching {
-            val startIndex = pageOffset * pageSize
+            val startIndex = startPage * pageSize
             val endIndex = min(startIndex + pageSize, products.size)
             products.subList(startIndex, endIndex)
         }

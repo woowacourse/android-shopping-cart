@@ -2,7 +2,7 @@ package woowacourse.shopping.domain
 
 interface ProductRepository {
     fun load(
-        pageOffset: Int,
+        startPage: Int,
         pageSize: Int,
     ): Result<List<Product>>
 

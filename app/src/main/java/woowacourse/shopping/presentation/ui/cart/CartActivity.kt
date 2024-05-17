@@ -27,7 +27,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
         initClickListener()
 
         binding.rvCarts.adapter = cartAdapter
-        viewModel.loadProductByOffset()
+        viewModel.loadProductByPage()
 
         viewModel.carts.observe(this) {
             when (it) {
@@ -37,10 +37,10 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
                 is UiState.Finish -> {
                     cartAdapter.updateList(it.data)
                     with(binding) {
-                        layoutPage.isVisible = viewModel.maxOffset > 0
-                        btnRight.isEnabled = viewModel.offSet < viewModel.maxOffset
-                        btnLeft.isEnabled = viewModel.offSet > 0
-                        tvPageCount.text = (viewModel.offSet + OFFSET_BASE).toString()
+                        layoutPage.isVisible = viewModel.maxPage > 0
+                        btnRight.isEnabled = viewModel.currentPage < viewModel.maxPage
+                        btnLeft.isEnabled = viewModel.currentPage > 0
+                        tvPageCount.text = (viewModel.currentPage + PAGE_OFFSET).toString()
                     }
                 }
 
@@ -76,7 +76,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     }
 
     companion object {
-        const val OFFSET_BASE = 1
+        const val PAGE_OFFSET = 1
 
         fun start(context: Context) {
             Intent(context, CartActivity::class.java).apply {

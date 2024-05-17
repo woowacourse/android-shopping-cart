@@ -26,28 +26,28 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { cartRepository.getMaxOffset(any()) } returns Result.success(0) // 초기 오프셋 처리
+        every { cartRepository.getMaxPage(any()) } returns Result.success(0) // 초기 오프셋 처리
         viewModel = CartViewModel(cartRepository)
     }
 
     @Test
     fun `카트 아이템을 pageCount개씩 불러온다`() {
         every { cartRepository.load(any(), any()) } returns Result.success(dummyCarts)
-        viewModel.loadProductByOffset()
+        viewModel.loadProductByPage()
         assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Finish(dummyCarts))
     }
 
     @Test
     fun `카트 아이템을 불러오기 실패하면 Error 상태로 변화한다`() {
         every { cartRepository.load(any(), any()) } returns Result.failure(Throwable())
-        viewModel.loadProductByOffset()
+        viewModel.loadProductByPage()
         assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Error(CART_LOAD_ERROR))
     }
 
     @Test
     fun `데이터를 삭제한 뒤에 새로운 데이터를 불러온다`() {
         every { cartRepository.delete(any()) } returns Result.success(0)
-        every { cartRepository.getMaxOffset(any()) } returns Result.success(0)
+        every { cartRepository.getMaxPage(any()) } returns Result.success(0)
         every { cartRepository.load(any(), any()) } returns Result.success(dummyCarts)
         viewModel.deleteProduct(product)
         assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Finish(dummyCarts))

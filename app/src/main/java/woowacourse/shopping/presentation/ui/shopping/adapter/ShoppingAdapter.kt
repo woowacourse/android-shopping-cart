@@ -14,7 +14,7 @@ class ShoppingAdapter(
     private var items: List<Product> = emptyList(),
 ) : RecyclerView.Adapter<ShoppingViewHolder>() {
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - LOADING_OFFSET) ShoppingViewType.LoadMore.value else ShoppingViewType.Product.value
+        return if (position == itemCount - LOAD_MORE_COUNT) ShoppingViewType.LoadMore.value else ShoppingViewType.Product.value
     }
 
     override fun onCreateViewHolder(
@@ -57,10 +57,10 @@ class ShoppingAdapter(
     }
 
     override fun getItemCount(): Int {
-        return items.size + LOADING_OFFSET
+        return items.size + LOAD_MORE_COUNT
     }
 
     companion object {
-        private const val LOADING_OFFSET = 1
+        private const val LOAD_MORE_COUNT = 1
     }
 }

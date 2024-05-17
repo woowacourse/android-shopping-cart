@@ -26,28 +26,28 @@ class ShoppingViewModelTest {
     @Test
     fun `viewModel이 초기화되면 데이터가 20개 불러와진다`() {
         every { repository.load(any(), any()) } returns Result.success(products)
-        viewModel.loadInitialProductByOffset()
+        viewModel.loadInitialProductByPage()
         assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(products))
     }
 
     @Test
     fun `viewModel에서 데이터 로드가 실패하면 Error로 상태가 변화한다`() {
         every { repository.load(any(), any()) } returns Result.failure(Throwable())
-        viewModel.loadInitialProductByOffset()
+        viewModel.loadInitialProductByPage()
         assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Error(LOAD_ERROR))
     }
 
     @Test
     fun `더보기 버튼이 눌리면 데이터가 20개 불러와진다`() {
         every { repository.load(any(), any()) } returns Result.success(products)
-        viewModel.addProductByOffset()
+        viewModel.addProductByPage()
         assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(products))
     }
 
     @Test
     fun `더보기 버튼이 눌렸을 때 데이터 로드가 실패하면 Error로 상태가 변화한다`() {
         every { repository.load(any(), any()) } returns Result.failure(Throwable())
-        viewModel.addProductByOffset()
+        viewModel.addProductByPage()
         assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Error(LOAD_ERROR))
     }
 }

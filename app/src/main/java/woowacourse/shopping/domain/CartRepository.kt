@@ -6,9 +6,9 @@ interface CartRepository {
     fun delete(product: Product): Result<Long>
 
     fun load(
-        pageOffset: Int,
+        startPage: Int,
         pageSize: Int,
     ): Result<List<Cart>>
 
-    fun getMaxOffset(pageSize: Int): Result<Int>
+    fun getMaxPage(pageSize: Int): Result<Int>
 }

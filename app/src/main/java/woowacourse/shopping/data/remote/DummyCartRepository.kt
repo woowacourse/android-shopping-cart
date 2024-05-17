@@ -21,17 +21,17 @@ object DummyCartRepository : CartRepository {
         }
 
     override fun load(
-        pageOffset: Int,
+        startPage: Int,
         pageSize: Int,
     ): Result<List<Cart>> =
         runCatching {
             val carts = cartMap.map { Cart(it.key, it.value) }.toList()
-            val startIndex = pageOffset * pageSize
+            val startIndex = startPage * pageSize
             val endIndex = min(startIndex + pageSize, carts.size)
             carts.subList(startIndex, endIndex)
         }
 
-    override fun getMaxOffset(pageSize: Int): Result<Int> =
+    override fun getMaxPage(pageSize: Int): Result<Int> =
         runCatching {
             ((cartMap.size + (pageSize - 1)) / pageSize - 1).coerceAtLeast(0)
         }

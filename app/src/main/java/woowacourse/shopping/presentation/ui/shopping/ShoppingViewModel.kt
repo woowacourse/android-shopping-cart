@@ -9,30 +9,30 @@ import woowacourse.shopping.presentation.ui.UiState
 
 class ShoppingViewModel(private val repository: ProductRepository = DummyProductRepository()) :
     ViewModel() {
-    private var offSet: Int = 0
+    private var currentPage: Int = 0
 
     private val _products = MutableLiveData<UiState<List<Product>>>(UiState.None)
     val products get() = _products
 
-    fun loadInitialProductByOffset() {
+    fun loadInitialProductByPage() {
         if (products.value !is UiState.Finish<List<Product>>) {
-            repository.load(offSet, PAGE_SIZE).onSuccess {
+            repository.load(currentPage, PAGE_SIZE).onSuccess {
                 _products.value = UiState.Finish(it)
-                offSet++
+                currentPage++
             }.onFailure {
                 _products.value = UiState.Error(LOAD_ERROR)
             }
         }
     }
 
-    fun addProductByOffset() {
-        repository.load(offSet, PAGE_SIZE).onSuccess {
+    fun addProductByPage() {
+        repository.load(currentPage, PAGE_SIZE).onSuccess {
             if (_products.value is UiState.None || _products.value is UiState.Error) {
                 _products.value = UiState.Finish(it)
             } else {
                 _products.value = UiState.Finish((_products.value as UiState.Finish).data + it)
             }
-            offSet++
+            currentPage++
         }.onFailure {
             _products.value = UiState.Error(LOAD_ERROR)
         }

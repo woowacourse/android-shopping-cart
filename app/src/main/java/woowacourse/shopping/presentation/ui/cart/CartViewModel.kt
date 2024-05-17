@@ -9,52 +9,51 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.ui.UiState
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
-    var maxOffset: Int = 0
+    var maxPage: Int = 0
         private set
-
-    var offSet: Int = 0
+    var currentPage: Int = 0
         private set
-        get() = field.coerceAtMost(maxOffset)
+        get() = field.coerceAtMost(maxPage)
     private val _carts = MutableLiveData<UiState<List<Cart>>>(UiState.None)
 
     val carts: LiveData<UiState<List<Cart>>> get() = _carts
 
     init {
-        updateMaxOffset()
+        updateMaxPage()
     }
 
-    fun loadProductByOffset() {
-        cartRepository.load(offSet, PAGE_SIZE).onSuccess {
+    fun loadProductByPage() {
+        cartRepository.load(currentPage, PAGE_SIZE).onSuccess {
             _carts.value = UiState.Finish(it)
         }.onFailure {
             _carts.value = UiState.Error(CART_LOAD_ERROR)
         }
     }
 
+    private fun updateMaxPage() {
+        cartRepository.getMaxPage(PAGE_SIZE).onSuccess {
+            maxPage = it
+        }
+    }
+
     fun plus() {
-        if (offSet == maxOffset) return
-        offSet++
-        loadProductByOffset()
+        if (currentPage == maxPage) return
+        currentPage++
+        loadProductByPage()
     }
 
     fun minus() {
-        if (offSet == 0) return
-        offSet--
-        loadProductByOffset()
+        if (currentPage == 0) return
+        currentPage--
+        loadProductByPage()
     }
 
     fun deleteProduct(product: Product) {
         cartRepository.delete(product).onSuccess {
-            updateMaxOffset()
-            loadProductByOffset()
+            updateMaxPage()
+            loadProductByPage()
         }.onFailure {
             _carts.value = UiState.Error(CART_DELETE_ERROR)
-        }
-    }
-
-    private fun updateMaxOffset() {
-        cartRepository.getMaxOffset(PAGE_SIZE).onSuccess {
-            maxOffset = it
         }
     }
 
