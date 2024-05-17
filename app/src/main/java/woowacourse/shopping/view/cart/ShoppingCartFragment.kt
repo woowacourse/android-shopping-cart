@@ -48,6 +48,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private fun initView() {
         shoppingCartViewModel.loadPagingCartItemList(CART_ITEM_LOAD_PAGING_SIZE)
         binding.onClickShoppingCart = this
+        binding.lifecycleOwner = this
         binding.currentPage = shoppingCartViewModel.currentPage
         adapter =
             ShoppingCartAdapter(

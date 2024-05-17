@@ -2,7 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
         <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
@@ -25,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="154dp"
             android:layout_gravity="center"
-            app:imageUrl="@{product.imageUrl}" />
+            app:bindingImageUrl="@{product.imageUrl}" />
 
         <Space
             android:layout_width="0dp"

@@ -84,6 +84,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     private fun initView(product: Product) {
         binding.product = product
         binding.onClickDetail = this
+        binding.lifecycleOwner = this
     }
 
     override fun onDestroyView() {

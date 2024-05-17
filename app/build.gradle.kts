@@ -42,8 +42,8 @@ android {
             excludes += "win32-x86*/**"
         }
     }
-    dataBinding {
-        enable = true
+    buildFeatures {
+        dataBinding = true
     }
 }
 

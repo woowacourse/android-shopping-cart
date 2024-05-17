@@ -45,6 +45,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     private fun initView() {
         loadPagingData()
         binding.onClickProduct = this
+        binding.lifecycleOwner = this
         adapter =
             ProductAdapter(
                 onClickProducts = this,
