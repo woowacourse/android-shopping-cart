@@ -7,7 +7,7 @@ object FragmentReplacer {
     fun replaceFragment(
         containerId: Int,
         fragment: Fragment,
-        parentFragmentManager: FragmentManager
+        parentFragmentManager: FragmentManager,
     ) {
         parentFragmentManager.beginTransaction().apply {
             replace(containerId, fragment)

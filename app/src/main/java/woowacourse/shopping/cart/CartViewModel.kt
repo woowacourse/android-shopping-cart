@@ -17,13 +17,14 @@ class CartViewModel : ViewModel() {
 
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
-    private val loadItemsInCartPage = currentPage.value?.let {
-        val offset = min(productIds.size, (it) * COUNT_PER_LOAD)
+    private val loadItemsInCartPage =
+        currentPage.value?.let {
+            val offset = min(productIds.size, (it) * COUNT_PER_LOAD)
 
-        productIds.subList((it - 1) * COUNT_PER_LOAD, offset)
-            .map { productId -> productStore.findById(productId) }
-            .toMutableList()
-    }
+            productIds.subList((it - 1) * COUNT_PER_LOAD, offset)
+                .map { productId -> productStore.findById(productId) }
+                .toMutableList()
+        }
     private var _itemsInShoppingCartPage: MutableLiveData<MutableList<Product>> =
         MutableLiveData(loadItemsInCartPage)
     val itemsInShoppingCartPage: LiveData<MutableList<Product>> get() = _itemsInShoppingCartPage
@@ -50,8 +51,9 @@ class CartViewModel : ViewModel() {
     private fun updateItemsInShoppingCart() {
         currentPage.value?.let { page ->
             val endIndex = min(productIds.size, page * COUNT_PER_LOAD)
-            val newItems = productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
-                .map { productId -> productStore.findById(productId) }
+            val newItems =
+                productIds.subList((page - 1) * COUNT_PER_LOAD, endIndex)
+                    .map { productId -> productStore.findById(productId) }
             _itemsInShoppingCartPage.value = newItems.toMutableList()
         }
     }

@@ -10,20 +10,22 @@ class ProductListViewModel : ViewModel() {
     private val dummyProductStore by lazy { DummyProductStore() }
     private var currentIndex = 1
 
-    private val _loadedProducts: MutableLiveData<List<Product>> = MutableLiveData(
-        dummyProductStore.loadDataAsNeeded(currentIndex).toMutableList()
-            .also { currentIndex += COUNT_EACH_LOADING })
+    private val _loadedProducts: MutableLiveData<List<Product>> =
+        MutableLiveData(
+            dummyProductStore.loadDataAsNeeded(currentIndex).toMutableList()
+                .also { currentIndex += COUNT_EACH_LOADING },
+        )
 
     val loadedProducts: LiveData<List<Product>>
         get() = _loadedProducts
 
-
     fun loadProducts() {
         val result = dummyProductStore.loadDataAsNeeded(currentIndex)
         currentIndex += COUNT_EACH_LOADING
-        _loadedProducts.value = _loadedProducts.value?.toMutableList()?.apply {
-            addAll(result)
-        }
+        _loadedProducts.value =
+            _loadedProducts.value?.toMutableList()?.apply {
+                addAll(result)
+            }
     }
 
     companion object {
