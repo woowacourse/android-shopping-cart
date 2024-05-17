@@ -15,7 +15,7 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
     val products get() = _products
 
     fun loadProductByOffset() {
-        repository.load(offSet, 20).onSuccess {
+        repository.findByPaging(offSet, 20).onSuccess {
             if (_products.value is UiState.None || _products.value is UiState.Error) {
                 _products.value = UiState.Finish(it)
             } else {

@@ -421,7 +421,7 @@ class DummyProductRepository : ProductRepository {
             ),
         )
 
-    override fun load(
+    override fun findByPaging(
         pageOffset: Int,
         pageSize: Int,
     ): Result<List<Product>> =
@@ -431,7 +431,7 @@ class DummyProductRepository : ProductRepository {
             products.subList(startIndex, endIndex)
         }
 
-    override fun loadById(id: Long): Result<Product> =
+    override fun findById(id: Long): Result<Product> =
         runCatching {
             products.first { it.id == id }
         }

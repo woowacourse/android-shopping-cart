@@ -1,10 +1,10 @@
 package woowacourse.shopping.domain
 
 interface ProductRepository {
-    fun load(
+    fun findByPaging(
         pageOffset: Int,
         pageSize: Int,
     ): Result<List<Product>>
 
-    fun loadById(id: Long): Result<Product>
+    fun findById(id: Long): Result<Product>
 }

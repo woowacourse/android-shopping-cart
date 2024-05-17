@@ -1,13 +1,13 @@
 package woowacourse.shopping.domain
 
-interface CartRepository {
-    fun addData(product: Product): Result<Long>
+interface ProductCartRepository {
+    fun save(product: Product): Result<Long>
 
     fun delete(product: Product): Result<Long>
 
     fun deleteAll(): Result<Boolean>
 
-    fun load(
+    fun findByPaging(
         pageOffset: Int,
         pageSize: Int,
     ): Result<List<Cart>>

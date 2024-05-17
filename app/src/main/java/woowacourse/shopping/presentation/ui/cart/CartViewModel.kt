@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartRepository
+import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.ui.UiState
 
-class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
+class CartViewModel(private val productCartRepository: ProductCartRepository) : ViewModel() {
     var maxOffset: Int = 0
         private set
 
@@ -24,7 +24,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     fun loadProductByOffset() {
-        cartRepository.load(offSet, 5).onSuccess {
+        productCartRepository.findByPaging(offSet, 5).onSuccess {
             if (_carts.value is UiState.None || _carts.value is UiState.Error) {
                 _carts.value = UiState.Finish(it)
             } else {
@@ -48,7 +48,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     fun deleteProduct(product: Product) {
-        cartRepository.delete(product).onSuccess {
+        productCartRepository.delete(product).onSuccess {
             getItemCount()
             loadProductByOffset()
         }.onFailure {
@@ -57,7 +57,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     private fun getItemCount() {
-        cartRepository.getMaxOffset().onSuccess {
+        productCartRepository.getMaxOffset().onSuccess {
             maxOffset = it
         }
     }

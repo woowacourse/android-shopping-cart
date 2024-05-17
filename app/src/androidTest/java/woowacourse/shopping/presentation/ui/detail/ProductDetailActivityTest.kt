@@ -14,9 +14,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.remote.DummyCartRepository
+import woowacourse.shopping.data.remote.DummyProductCartRepository
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity.Companion.EXTRA_PRODUCT_ID
-import woowacourse.shopping.presentation.ui.dummyProduct
 import java.lang.IllegalStateException
 
 @RunWith(AndroidJUnit4::class)
@@ -54,7 +53,7 @@ class ProductDetailActivityTest {
     @Test
     fun `장바구니에_담으면_상품이_데이터에_추가된다`() {
         onView(withId(R.id.tv_add_cart)).perform(click())
-        DummyCartRepository.load(0, 1).onSuccess {
+        DummyProductCartRepository.findByPaging(0, 1).onSuccess {
             it.size shouldBe 1
         }.onFailure {
             throw IllegalStateException()
