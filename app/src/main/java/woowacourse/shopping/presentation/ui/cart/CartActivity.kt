@@ -34,7 +34,7 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         val factory = CartViewModelFactory(repository = CartRepositoryImpl)
         viewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
 
-        binding.vmShoppingCart = viewModel
+        binding.viewModel = viewModel
 
         viewModel.uiState.observe(this) { state ->
             when (state) {

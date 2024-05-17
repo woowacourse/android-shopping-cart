@@ -10,7 +10,7 @@
             type="woowacourse.shopping.presentation.ui.shopping.ShoppingClickListener" />
 
         <variable
-            name="vmProduct"
+            name="viewModel"
             type="woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel" />
     </data>
 
@@ -44,7 +44,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_main"
-            app:product="@{vmProduct.products}"
+            app:product="@{viewModel.products}"
             tools:itemCount="10"
             tools:listitem="@layout/item_product" />
 
@@ -59,7 +59,7 @@
             android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:visibility="@{vmProduct.visibility}"
+            android:visibility="@{viewModel.visibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_product_list"

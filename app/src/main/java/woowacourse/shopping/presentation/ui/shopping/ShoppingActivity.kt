@@ -42,7 +42,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
                 adapter.loadData(products)
             },
         )
-        binding.vmProduct = viewModel
+        binding.viewModel = viewModel
         binding.rvProductList.addOnScrollListener(
             object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(

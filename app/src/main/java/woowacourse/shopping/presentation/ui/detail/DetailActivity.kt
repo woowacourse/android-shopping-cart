@@ -37,7 +37,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
                 productId = productId,
             )
         viewModel = ViewModelProvider(this, factory)[DetailViewModel::class.java]
-        binding.vmProduct = viewModel
+        binding.viewModel = viewModel
     }
 
     private fun setUpToolbar() {
