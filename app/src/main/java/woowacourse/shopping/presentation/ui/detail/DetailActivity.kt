@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
@@ -18,8 +19,8 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
-            CartRepositoryImpl,
-            ShoppingItemsRepositoryImpl(),
+            cartRepository = CartRepositoryImpl((application as ShoppingApplication).database),
+            shoppingRepository = ShoppingItemsRepositoryImpl(),
             productId = productId,
         )
     }

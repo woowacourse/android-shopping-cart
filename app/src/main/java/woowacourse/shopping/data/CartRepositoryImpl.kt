@@ -1,6 +1,5 @@
 package woowacourse.shopping.data
 
-import woowacourse.shopping.ShoppingApplication.Companion.database
 import woowacourse.shopping.data.mapper.toDomainModel
 import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.data.model.mapper
@@ -9,7 +8,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
-object CartRepositoryImpl : CartRepository {
+class CartRepositoryImpl(database: CartDatabase) : CartRepository {
     private val dao = database.cartDao()
 
     override fun insert(
@@ -49,11 +48,7 @@ object CartRepositoryImpl : CartRepository {
             cartItemEntity = dao.findWithProductId(productId)
         }
 
-        return if (cartItemEntity == null) {
-            null
-        } else {
-            cartItemEntity?.toDomainModel()
-        }
+        return cartItemEntity?.toDomainModel()
     }
 
     override fun find(cartItemId: Long): CartItem {
