@@ -13,7 +13,7 @@ import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.viewmodel.MainViewModel
 
-class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
+class ShoppingCartFragment : Fragment(), ShoppingCartActionHandler, NavigationActionHandler {
     private var _binding: FragmentShoppingCartBinding? = null
     val binding: FragmentShoppingCartBinding get() = _binding!!
     private lateinit var mainViewModel: MainViewModel
@@ -43,11 +43,13 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     private fun initView() {
         mainViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
-        binding.onClickShoppingCart = this
+        binding.shoppingCartActionHandler = this
+        binding.navigationActionHandler = this
         binding.currentPage = currentPage
         adapter =
             ShoppingCartAdapter(
-                onClickShoppingCart = this,
+                shoppingCartActionHandler = this,
+                navigationActionHandler = this,
                 loadLastItem = {
                     mainViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
                 },
@@ -64,11 +66,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         }
     }
 
-    override fun clickBack() {
+    override fun onBackButtonClicked() {
         parentFragmentManager.popBackStack()
     }
 
-    override fun clickCartItem(productId: Long) {
+    override fun onCartItemClicked(productId: Long) {
         val productFragment =
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
@@ -76,18 +78,18 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         changeFragment(productFragment)
     }
 
-    override fun clickRemoveCartItem(cartItemId: Long) {
+    override fun onRemoveCartItemButtonClicked(cartItemId: Long) {
         mainViewModel.deleteShoppingCartItem(cartItemId)
     }
 
-    override fun clickPrevPage() {
+    override fun onPreviousPageButtonClicked() {
         if (isExistPrevPage()) {
             binding.currentPage = --currentPage
             updateRecyclerView()
         }
     }
 
-    override fun clickNextPage() {
+    override fun onNextPageButtonClicked() {
         if (isExistNextPage()) {
             binding.currentPage = ++currentPage
             updateRecyclerView()

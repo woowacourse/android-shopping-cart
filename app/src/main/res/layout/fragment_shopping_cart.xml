@@ -18,8 +18,12 @@
             type="java.lang.Integer" />
 
         <variable
-            name="onClickShoppingCart"
-            type="woowacourse.shopping.view.cart.OnClickShoppingCart" />
+            name="shoppingCartActionHandler"
+            type="woowacourse.shopping.view.cart.ShoppingCartActionHandler" />
+
+        <variable
+            name="navigationActionHandler"
+            type="woowacourse.shopping.view.cart.NavigationActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="27dp"
             android:background="@android:color/transparent"
-            android:onClick="@{() -> onClickShoppingCart.clickBack()}"
+            android:onClick="@{() -> navigationActionHandler.onBackButtonClicked()}"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="@id/vw_cart_top_bar"
             app:layout_constraintStart_toStartOf="@id/vw_cart_top_bar"
@@ -91,7 +95,7 @@
                 android:background="@{onPrevButton ? @color/primary : @color/gray}"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
-                android:onClick="@{()->onClickShoppingCart.clickPrevPage()}"
+                android:onClick="@{() -> shoppingCartActionHandler.onPreviousPageButtonClicked()}"
                 android:padding="0dp"
                 android:src="@drawable/ic_arrow_back_24" />
 
@@ -113,7 +117,7 @@
                 android:background="@{onNextButton ? @color/primary : @color/gray}"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
-                android:onClick="@{()->onClickShoppingCart.clickNextPage()}"
+                android:onClick="@{() -> shoppingCartActionHandler.onNextPageButtonClicked()}"
                 android:padding="0dp"
                 android:src="@drawable/ic_arrow_forward_24" />
         </LinearLayout>

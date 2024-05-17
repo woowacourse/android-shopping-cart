@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="onClickShoppingCart"
-            type="woowacourse.shopping.view.cart.OnClickShoppingCart" />
+            name="shoppingCartActionHandler"
+            type="woowacourse.shopping.view.cart.ShoppingCartActionHandler" />
+
+        <variable
+            name="navigationActionHandler"
+            type="woowacourse.shopping.view.cart.NavigationActionHandler" />
 
         <variable
             name="cartItem"
@@ -19,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:background="@drawable/shape_border"
-        android:onClick="@{()->onClickShoppingCart.clickCartItem(cartItem.product.id)}">
+        android:onClick="@{() -> navigationActionHandler.onCartItemClicked(cartItem.product.id)}">
 
         <TextView
             android:id="@+id/tv_cart_item_name"
@@ -46,7 +50,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
-            android:onClick="@{()->onClickShoppingCart.clickRemoveCartItem(cartItem.id)}"
+            android:onClick="@{() -> shoppingCartActionHandler.onRemoveCartItemButtonClicked(cartItem.id)}"
             android:src="@drawable/ic_close_24"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_item_name"
             app:layout_constraintEnd_toEndOf="parent"

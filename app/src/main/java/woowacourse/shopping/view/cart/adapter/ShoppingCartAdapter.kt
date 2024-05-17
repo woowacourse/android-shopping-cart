@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.view.cart.OnClickShoppingCart
+import woowacourse.shopping.view.cart.NavigationActionHandler
+import woowacourse.shopping.view.cart.ShoppingCartActionHandler
 import woowacourse.shopping.view.cart.adapter.viewholder.ShoppingCartViewHolder
 
 class ShoppingCartAdapter(
-    private val onClickShoppingCart: OnClickShoppingCart,
+    private val shoppingCartActionHandler: ShoppingCartActionHandler,
+    private val navigationActionHandler: NavigationActionHandler,
     private val loadLastItem: () -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
@@ -21,7 +23,7 @@ class ShoppingCartAdapter(
     ): ShoppingCartViewHolder {
         val view =
             ItemShoppingCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingCartViewHolder(view, onClickShoppingCart)
+        return ShoppingCartViewHolder(view, shoppingCartActionHandler, navigationActionHandler)
     }
 
     override fun getItemCount(): Int {
