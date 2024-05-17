@@ -33,7 +33,6 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentShoppingCartBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 
@@ -85,6 +84,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
                     )
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun clickBack() {

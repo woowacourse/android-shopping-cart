@@ -64,8 +64,6 @@
             tools:listitem="@layout/item_product" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:onClick="@{()->onClickProduct.clickLoadPagingData()}"
-            android:visibility="@{isVisible ? View.VISIBLE : View.GONE}"
             android:id="@+id/btn_more_product"
             android:layout_width="0dp"
             android:layout_height="48dp"
@@ -73,10 +71,12 @@
             android:background="@color/primary"
             android:minWidth="0dp"
             android:minHeight="0dp"
+            android:onClick="@{()->onClickProduct.clickLoadPagingData()}"
             android:text="더보기"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:visibility="@{isVisible ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

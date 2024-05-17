@@ -30,7 +30,6 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 

@@ -45,7 +45,7 @@ class ProductDetailViewModel(
             }
     }
 
-    fun resetState() {
+    private fun resetState() {
         _productDetailState.value = ProductDetailState.Init
     }
 }
