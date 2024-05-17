@@ -22,7 +22,7 @@ class CartPageManager {
     fun canMoveNextPage(itemSize: Int): Boolean {
         val fromIndex = (pageNum - OFFSET) * PAGE_SIZE
         val toIndex = min(fromIndex + PAGE_SIZE, itemSize)
-        return toIndex != (itemSize)
+        return toIndex != itemSize
     }
 
     companion object {
