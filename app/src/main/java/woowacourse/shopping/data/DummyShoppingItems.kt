@@ -473,5 +473,32 @@ object DummyShoppingItems {
                 name = "[그릭데이] 그릭 요거트 시그니처",
                 price = 10000,
             ),
+            Product.of(
+                imageUrl =
+                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
+                        "net%2FMjAyNDAyMjNfMjkg%2FMDAxNzA4NjE1NTg1ODg5.ZFPHZ3Q2HzH7GcYA1_Jl0ls" +
+                        "IdvAnzUF2h6Qd6bgDLHkg._7ffkgE45HXRVgX2Bywc3B320_tuatBww5y1hS4xjWQg.JPE" +
+                        "G%2FIMG_5278.jpg&type=sc960_832",
+                name = "대전 장인약과 | 장인더 파지약과",
+                price = 10000,
+            ),
+
+            Product.of(
+                imageUrl =
+                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.ne" +
+                        "t%2FMjAyNDAxMDVfNjYg%2FMDAxNzA0NDU0MTYwMTAx.4pxrLnIdvFp8KDGAnGkbl8zHo5" +
+                        "Mcn0d-yD7pzToeiSsg.lF4rd6908c0j_7kfxBr_u4MSdjq73RkhzKfRk7Z6VUMg.JPEG.rbx" +
+                        "od123%2F1704454160034.jpg&type=sc960_832",
+                name = "[다이어트 아이스크림] 라라스윗 바닐라 - 저지방, 저칼로리",
+                price = 10000,
+            ),
+            Product.of(
+                imageUrl =
+                "https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver." +
+                        "net%2F20220419_195%2F1650332783362X5wqH_JPEG%2F51468679090044420_141718" +
+                        "1296.jpg&type=sc960_832",
+                name = "청포도",
+                price = 10000,
+            )
         )
 }

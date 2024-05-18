@@ -25,13 +25,13 @@ fun loadImage(
     }
 }
 
-@BindingAdapter("app:product")
+@BindingAdapter("app:products")
 fun setItems(
     recyclerView: RecyclerView,
     products: List<Product>?,
 ) {
     products?.let {
-        (recyclerView.adapter as? ShoppingAdapter)?.products = it
+        (recyclerView.adapter as ShoppingAdapter).updateData(it)
     }
 }
 
@@ -51,24 +51,8 @@ fun setSelectedBasedOn(
     button.isSelected = isSelected
 }
 
-@BindingAdapter("app:loadMoreVisibility")
-fun setLoadMoreButtonVisibility(
-    view: TextView,
-    isVisible: Boolean,
-) {
-    view.visibility = if (isVisible) View.VISIBLE else View.GONE
-}
-
-@BindingAdapter("app:cartVisibility")
-fun setCartVisibility(
-    view: View,
-    isVisible: Boolean,
-) {
-    view.visibility = if (isVisible) View.VISIBLE else View.GONE
-}
-
-@BindingAdapter("app:pageControlVisibility")
-fun setPageControlVisibility(
+@BindingAdapter("app:viewVisibility")
+fun setViewVisibility(
     view: View,
     isVisible: Boolean,
 ) {

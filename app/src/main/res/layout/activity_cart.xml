@@ -38,7 +38,7 @@
             android:textSize="100dp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:cartVisibility="@{vmShoppingCart.isEmpty}"
+            app:viewVisibility="@{vmShoppingCart.isEmpty}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
-            app:cartVisibility="@{!vmShoppingCart.isEmpty}"
+            app:viewVisibility="@{!vmShoppingCart.isEmpty}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/page_layout"
             app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +69,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recyclerView"
-            app:pageControlVisibility="@{vmShoppingCart.isPageControlVisible}">
+            app:viewVisibility="@{vmShoppingCart.isPageControlVisible}">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_before"

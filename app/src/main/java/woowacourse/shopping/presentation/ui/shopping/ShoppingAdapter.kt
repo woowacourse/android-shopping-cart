@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.Product
 class ShoppingAdapter(
     private val clickListener: ShoppingClickListener,
 ) : RecyclerView.Adapter<ShoppingViewHolder>() {
-    var products: List<Product> = emptyList()
+    private var products: List<Product> = emptyList()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,8 +31,13 @@ class ShoppingAdapter(
         return products.size
     }
 
-    fun loadData(products: List<Product>) {
+    fun loadData(addedProducts: List<Product>) {
+        val positionStart = products.size
+        products += addedProducts
+        notifyItemRangeInserted(positionStart, addedProducts.size)
+    }
+
+    fun updateData(products: List<Product>) {
         this.products = products
-        notifyDataSetChanged()
     }
 }
