@@ -7,8 +7,7 @@ import woowacourse.shopping.model.Product
 class ProductViewHolder(
     private val binding: ItemProductBinding,
     private val itemClickListener: (Long) -> Unit,
-) :
-    RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
     fun bind(product: Product) {
         binding.product = product
         binding.itemLayout.setOnClickListener {

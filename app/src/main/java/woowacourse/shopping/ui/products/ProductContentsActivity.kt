@@ -60,9 +60,7 @@ class ProductContentsActivity : AppCompatActivity() {
     }
 
     private fun setOnRecyclerViewScrollListener() {
-        binding.rvProducts.addOnScrollListener(
-            onScrollListener(),
-        )
+        binding.rvProducts.addOnScrollListener(onScrollListener())
     }
 
     private fun onScrollListener() =
