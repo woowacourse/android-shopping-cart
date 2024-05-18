@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.viewmodel
+package woowacourse.shopping.view.cart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,5 +14,9 @@ class ShoppingCart {
 
     fun deleteProduct(itemId: Long) {
         _cartItems.value = _cartItems.value?.filter { it.id != itemId }
+    }
+
+    fun getItemCount(): Int {
+        return _cartItems.value?.size ?: 0
     }
 }

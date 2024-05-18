@@ -9,10 +9,10 @@ import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.MainActivity
+import woowacourse.shopping.view.MainViewModel
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
-import woowacourse.shopping.view.viewmodel.MainViewModel
 
 class ProductsListFragment : Fragment(), OnClickProducts {
     private var _binding: FragmentProductListBinding? = null

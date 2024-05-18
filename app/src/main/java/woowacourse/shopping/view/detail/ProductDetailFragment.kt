@@ -11,7 +11,7 @@ import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.MainActivity
-import woowacourse.shopping.view.viewmodel.MainViewModel
+import woowacourse.shopping.view.MainViewModel
 
 class ProductDetailFragment : Fragment(), OnClickDetail {
     private var _binding: FragmentProductDetailBinding? = null

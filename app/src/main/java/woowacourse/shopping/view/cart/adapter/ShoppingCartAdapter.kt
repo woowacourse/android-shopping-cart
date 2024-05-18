@@ -13,7 +13,6 @@ import woowacourse.shopping.view.cart.adapter.viewholder.ShoppingCartViewHolder
 class ShoppingCartAdapter(
     private val shoppingCartActionHandler: ShoppingCartActionHandler,
     private val navigationActionHandler: NavigationActionHandler,
-    private val loadLastItem: () -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
 
@@ -44,7 +43,7 @@ class ShoppingCartAdapter(
         cartItems: List<CartItem>,
     ) {
         if (hasLastItem) {
-            loadLastItem()
+            shoppingCartActionHandler.loadCartItems()
         }
         this.cartItems = cartItems
         notifyDataSetChanged()

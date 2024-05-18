@@ -7,19 +7,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
-import woowacourse.shopping.view.MainActivity
+import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
-import woowacourse.shopping.view.viewmodel.MainViewModel
 
-class ShoppingCartFragment : Fragment(), ShoppingCartActionHandler, NavigationActionHandler {
+class ShoppingCartFragment : Fragment(), NavigationActionHandler {
     private var _binding: FragmentShoppingCartBinding? = null
     val binding: FragmentShoppingCartBinding get() = _binding!!
-    private lateinit var mainViewModel: MainViewModel
     private lateinit var adapter: ShoppingCartAdapter
-    private var currentPage = MIN_PAGE_COUNT
-    private var totalItemSize = DEFAULT_ITEM_SIZE
+
+    private val shoppingCartViewModel: ShoppingCartViewModel by lazy {
+        val viewModelFactory = ViewModelFactory(ProductRepositoryImpl(context = requireContext()))
+        viewModelFactory.create(ShoppingCartViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,33 +38,25 @@ class ShoppingCartFragment : Fragment(), ShoppingCartActionHandler, NavigationAc
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel = (requireActivity() as MainActivity).viewModel
-        initView()
+        setupDataBinding()
         observeData()
     }
 
-    private fun initView() {
-        mainViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
-        binding.shoppingCartActionHandler = this
+    private fun setupDataBinding() {
+        binding.viewModel = shoppingCartViewModel
+        binding.shoppingCartActionHandler = shoppingCartViewModel
         binding.navigationActionHandler = this
-        binding.currentPage = currentPage
         adapter =
             ShoppingCartAdapter(
-                shoppingCartActionHandler = this,
+                shoppingCartActionHandler = shoppingCartViewModel,
                 navigationActionHandler = this,
-                loadLastItem = {
-                    mainViewModel.loadPagingCartItem(CART_ITEM_LOAD_PAGING_SIZE)
-                },
             )
         binding.rvShoppingCart.adapter = adapter
     }
 
     private fun observeData() {
-        mainViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) { cartItems ->
-            totalItemSize = cartItems?.size ?: DEFAULT_ITEM_SIZE
-            view?.post {
-                updateRecyclerView()
-            }
+        shoppingCartViewModel.pagedData.observe(viewLifecycleOwner) {
+            adapter.updateCartItems(true, it)
         }
     }
 
@@ -78,26 +72,6 @@ class ShoppingCartFragment : Fragment(), ShoppingCartActionHandler, NavigationAc
         changeFragment(productFragment)
     }
 
-    override fun onRemoveCartItemButtonClicked(cartItemId: Long) {
-        mainViewModel.deleteShoppingCartItem(cartItemId)
-    }
-
-    override fun onPreviousPageButtonClicked() {
-        if (isExistPrevPage()) {
-            binding.currentPage = --currentPage
-            updateRecyclerView()
-        }
-    }
-
-    override fun onNextPageButtonClicked() {
-        if (isExistNextPage()) {
-            binding.currentPage = ++currentPage
-            updateRecyclerView()
-        } else {
-            showMaxItemMessage()
-        }
-    }
-
     private fun changeFragment(nextFragment: Fragment) {
         parentFragmentManager
             .beginTransaction()
@@ -106,38 +80,9 @@ class ShoppingCartFragment : Fragment(), ShoppingCartActionHandler, NavigationAc
             .commit()
     }
 
-    private fun updateRecyclerView() {
-        val startIndex = (currentPage - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
-        val endIndex = minOf(currentPage * CART_ITEM_PAGE_SIZE, totalItemSize)
-        val newData =
-            mainViewModel.shoppingCart.cartItems.value?.subList(startIndex, endIndex) ?: emptyList()
-        adapter.updateCartItems(hasLastItem(endIndex), newData)
-        updateImageButtonColor()
-    }
-
-    private fun hasLastItem(endIndex: Int): Boolean {
-        return endIndex >= (mainViewModel.shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE)
-    }
-
-    private fun isExistPrevPage(): Boolean {
-        return currentPage > MIN_PAGE_COUNT
-    }
-
-    private fun isExistNextPage(): Boolean {
-        return currentPage * CART_ITEM_PAGE_SIZE < totalItemSize
-    }
-
-    private fun updateImageButtonColor() {
-        binding.onPrevButton = isExistPrevPage()
-        binding.onNextButton = isExistNextPage()
-    }
-
     private fun showMaxItemMessage() = Toast.makeText(this.context, R.string.max_paging_data_message, Toast.LENGTH_SHORT).show()
 
     companion object {
-        private const val CART_ITEM_LOAD_PAGING_SIZE = 5
-        const val CART_ITEM_PAGE_SIZE = 3
-        private const val MIN_PAGE_COUNT = 1
         const val DEFAULT_ITEM_SIZE = 0
     }
 }
