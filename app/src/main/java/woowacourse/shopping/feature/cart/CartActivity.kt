@@ -24,9 +24,15 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initializeView() {
-        initializeCartAdapter()
         initializeToolbar()
+        initializeCartAdapter()
         viewModel.loadCart()
+    }
+
+    private fun initializeToolbar() {
+        binding.toolbarCart.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     private fun initializeCartAdapter() {
@@ -35,12 +41,6 @@ class CartActivity : AppCompatActivity() {
 
         viewModel.cart.observe(this) {
             adapter.updateCart(it)
-        }
-    }
-
-    private fun initializeToolbar() {
-        binding.toolbarCart.setNavigationOnClickListener {
-            finish()
         }
     }
 }

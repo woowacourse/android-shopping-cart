@@ -74,8 +74,6 @@ class ProductDetailActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
-
     private fun loadProduct() {
         runCatching {
             viewModel.loadProduct(productId())
@@ -83,6 +81,8 @@ class ProductDetailActivity : AppCompatActivity() {
             showErrorSnackBar()
         }
     }
+
+    private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
 
     private fun showErrorSnackBar() {
         Snackbar

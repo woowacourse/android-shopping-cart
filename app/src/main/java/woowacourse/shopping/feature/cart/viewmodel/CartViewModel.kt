@@ -30,6 +30,11 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         loadTotalCartCount()
     }
 
+    private fun loadTotalCartCount() {
+        cartSize = cartRepository.count()
+        maxPage = (cartSize - 1) / PAGE_SIZE
+    }
+
     fun deleteCartItem(product: Product) {
         if (isEmptyLastPage()) _page.value = _page.value?.minus(1)
         cartRepository.deleteCartItem(product)
@@ -46,16 +51,17 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         updatePageVisibility()
     }
 
-    private fun loadTotalCartCount() {
-        cartSize = cartRepository.count()
-        maxPage = (cartSize - 1) / PAGE_SIZE
-    }
-
     private fun updatePageVisibility() {
         _hasPage.value = changePageVisibility()
         _hasPreviousPage.value = changePreviousPageVisibility()
         _hasNextPage.value = changeNextPageVisibility()
     }
+
+    private fun changePageVisibility(): Boolean = cartSize > PAGE_SIZE
+
+    private fun changePreviousPageVisibility(): Boolean = page() > INITIALIZE_PAGE
+
+    private fun changeNextPageVisibility(): Boolean = page() < maxPage
 
     fun moveNextPage() {
         _page.value = _page.value?.plus(1)
@@ -66,12 +72,6 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         _page.value = _page.value?.minus(1)
         loadCart()
     }
-
-    private fun changePageVisibility(): Boolean = cartSize > PAGE_SIZE
-
-    private fun changePreviousPageVisibility(): Boolean = page() > INITIALIZE_PAGE
-
-    private fun changeNextPageVisibility(): Boolean = page() < maxPage
 
     private fun page() = _page.value ?: INITIALIZE_PAGE
 
