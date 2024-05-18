@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.viewmodel
+package woowacourse.shopping.view
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -10,7 +10,6 @@ import woowacourse.shopping.TestFixture.getOrAwaitValue
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.view.MainViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class MainViewModelTest {
