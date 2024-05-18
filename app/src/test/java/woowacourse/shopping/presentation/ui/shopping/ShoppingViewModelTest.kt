@@ -27,7 +27,7 @@ class ShoppingViewModelTest {
     fun `viewModel이 초기화되면 데이터가 20개 불러와진다`() {
         every { repository.load(any(), any()) } returns Result.success(products)
         viewModel.loadInitialProductByPage()
-        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(products))
+        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Success(products))
     }
 
     @Test
@@ -42,7 +42,7 @@ class ShoppingViewModelTest {
         every { repository.load(any(), any()) } returns Result.success(products)
         viewModel.loadInitialProductByPage()
         viewModel.addProductByPage()
-        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(products + products))
+        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Success(products + products))
     }
 
     @Test

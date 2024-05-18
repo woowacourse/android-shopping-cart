@@ -32,7 +32,7 @@ class ProductDetailViewModelTest {
     fun `loadById로 특정 상품의 데이터를 가져온다`() {
         every { productRepository.loadById(any()) } returns Result.success(product)
         viewModel.loadById(0)
-        Assertions.assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(product))
+        Assertions.assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Success(product))
     }
 
     @Test

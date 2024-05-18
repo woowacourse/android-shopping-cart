@@ -34,7 +34,7 @@ class CartViewModelTest {
     fun `카트 아이템을 pageCount개씩 불러온다`() {
         every { cartRepository.load(any(), any()) } returns Result.success(dummyCarts)
         viewModel.loadProductByPage()
-        assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Finish(dummyCarts))
+        assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Success(dummyCarts))
     }
 
     @Test
@@ -50,7 +50,7 @@ class CartViewModelTest {
         every { cartRepository.getMaxPage(any()) } returns Result.success(0)
         every { cartRepository.load(any(), any()) } returns Result.success(dummyCarts)
         viewModel.deleteProduct(product)
-        assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Finish(dummyCarts))
+        assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Success(dummyCarts))
     }
 
     @Test

@@ -34,7 +34,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
                 is UiState.None -> {
                 }
 
-                is UiState.Finish -> {
+                is UiState.Success -> {
                     cartAdapter.updateList(it.data)
                     with(binding) {
                         layoutPage.isVisible = viewModel.maxPage > 0

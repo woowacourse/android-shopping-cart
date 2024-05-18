@@ -55,7 +55,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         viewModel.products.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
-                is UiState.Finish -> handleFinishState(state)
+                is UiState.Success -> handleFinishState(state)
                 is UiState.Error -> handleErrorState(state)
             }
         }
@@ -65,7 +65,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         Toast.makeText(this, error.msg, Toast.LENGTH_SHORT).show()
     }
 
-    private fun handleFinishState(newProducts: UiState.Finish<List<Product>>) {
+    private fun handleFinishState(newProducts: UiState.Success<List<Product>>) {
         adapter.insertItemsAtPosition(viewModel.maxPosition, newProducts.data)
     }
 

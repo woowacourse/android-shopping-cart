@@ -20,9 +20,9 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
     val products get() = _products
 
     fun loadInitialProductByPage() {
-        if (products.value !is UiState.Finish<List<Product>>) {
+        if (products.value !is UiState.Success<List<Product>>) {
             repository.load(currentPage, PAGE_SIZE).onSuccess {
-                _products.value = UiState.Finish(it)
+                _products.value = UiState.Success(it)
                 newItemCount = it.size
                 currentPage++
             }.onFailure {
@@ -35,7 +35,7 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
         repository.load(currentPage, PAGE_SIZE).onSuccess {
             newItemCount = it.size
             currentPage++
-            _products.value = UiState.Finish((_products.value as UiState.Finish).data + it)
+            _products.value = UiState.Success((_products.value as UiState.Success).data + it)
         }.onFailure {
             _products.value = UiState.Error(LOAD_ERROR)
         }

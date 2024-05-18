@@ -32,7 +32,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
                 is UiState.None -> {
                 }
 
-                is UiState.Finish -> {
+                is UiState.Success -> {
                     binding.tvName.text = state.data.name
                     binding.tvPriceValue.text = getString(R.string.won, state.data.price)
                     binding.tvAddCart.setOnClickListener {

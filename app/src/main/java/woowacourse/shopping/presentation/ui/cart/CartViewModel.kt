@@ -24,7 +24,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun loadProductByPage() {
         cartRepository.load(currentPage, PAGE_SIZE).onSuccess {
-            _carts.value = UiState.Finish(it)
+            _carts.value = UiState.Success(it)
         }.onFailure {
             _carts.value = UiState.Error(CART_LOAD_ERROR)
         }
