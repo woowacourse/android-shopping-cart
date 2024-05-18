@@ -34,7 +34,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentChangeListener){
+        if (context is FragmentChangeListener) {
             fragmentChangeListener = context
         }
     }
@@ -79,10 +79,11 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
                     parentFragmentManager.popBackStack()
                 }
 
-                ProductDetailState.Error -> ShoppingUtils.makeToast(
-                    requireContext(),
-                    getString(R.string.error_default)
-                )
+                ProductDetailState.Error ->
+                    ShoppingUtils.makeToast(
+                        requireContext(),
+                        getString(R.string.error_default),
+                    )
             }
         }
     }

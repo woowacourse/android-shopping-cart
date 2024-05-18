@@ -29,8 +29,8 @@ class ShoppingCartViewModel(
             shoppingCartRepository.deleteCartItem(itemId)
             shoppingCart.deleteProduct(itemId)
             _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Success
-        } catch (e: Exception){
-            when(e){
+        } catch (e: Exception) {
+            when (e) {
                 is NoSuchDataException -> _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Fail
                 else -> _shoppingCartState.value = ShoppingCartState.Error
             }
@@ -45,8 +45,8 @@ class ShoppingCartViewModel(
             val pagingData = shoppingCartRepository.loadPagingCartItems(itemSize, pagingSize)
             shoppingCart.addProducts(pagingData)
             _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
-        } catch (e: Exception){
-            when(e){
+        } catch (e: Exception) {
+            when (e) {
                 is NoSuchDataException -> _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
                 else -> _shoppingCartState.value = ShoppingCartState.Error
             }
@@ -57,7 +57,7 @@ class ShoppingCartViewModel(
 
     fun getUpdatePageData(): List<CartItem> {
         val startIndex =
-            ((currentPage.value?: MIN_PAGE_COUNT) - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
+            ((currentPage.value ?: MIN_PAGE_COUNT) - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
         val endIndex = getLastItemIndex()
         return shoppingCart.cartItems.value?.subList(startIndex, endIndex)
             ?: emptyList()
@@ -69,11 +69,11 @@ class ShoppingCartViewModel(
     }
 
     fun isExistPrevPage(): Boolean {
-        return (currentPage.value?:MIN_PAGE_COUNT) > MIN_PAGE_COUNT
+        return (currentPage.value ?: MIN_PAGE_COUNT) > MIN_PAGE_COUNT
     }
 
     fun isExistNextPage(): Boolean {
-        return (currentPage.value?:MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE < totalItemSize
+        return (currentPage.value ?: MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE < totalItemSize
     }
 
     fun increaseCurrentPage() {
@@ -86,7 +86,7 @@ class ShoppingCartViewModel(
 
     private fun getLastItemIndex(): Int {
         return minOf(
-            (currentPage.value?:MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE,
+            (currentPage.value ?: MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE,
             totalItemSize,
         )
     }

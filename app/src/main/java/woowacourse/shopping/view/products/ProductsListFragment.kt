@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
@@ -33,6 +32,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             fragmentChangeListener = context
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,14 +71,16 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         productListViewModel.productListState.observe(viewLifecycleOwner) { productListState ->
             when (productListState) {
                 ProductListState.Init, ProductListState.LoadProductList.Success -> {}
-                ProductListState.LoadProductList.Fail -> ShoppingUtils.makeToast(
-                    requireContext(),
-                    getString(R.string.max_paging_data)
-                )
-                ProductListState.Error -> ShoppingUtils.makeToast(
-                    requireContext(),
-                    getString(R.string.error_default)
-                )
+                ProductListState.LoadProductList.Fail ->
+                    ShoppingUtils.makeToast(
+                        requireContext(),
+                        getString(R.string.max_paging_data),
+                    )
+                ProductListState.Error ->
+                    ShoppingUtils.makeToast(
+                        requireContext(),
+                        getString(R.string.error_default),
+                    )
             }
         }
     }

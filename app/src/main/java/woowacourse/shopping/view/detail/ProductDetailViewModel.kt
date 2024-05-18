@@ -23,8 +23,8 @@ class ProductDetailViewModel(
         try {
             shoppingCartRepository.addCartItem(product)
             _productDetailState.value = ProductDetailState.AddShoppingCart.Success
-        } catch (e :Exception){
-            when(e){
+        } catch (e: Exception) {
+            when (e) {
                 is NoSuchDataException -> _productDetailState.value = ProductDetailState.AddShoppingCart.Fail
                 else -> _productDetailState.value = ProductDetailState.Error
             }
@@ -38,8 +38,8 @@ class ProductDetailViewModel(
             val product = productRepository.getProduct(productId)
             _product.postValue(product)
             _productDetailState.value = ProductDetailState.LoadProductItem.Success
-        } catch (e: Exception){
-            when(e){
+        } catch (e: Exception) {
+            when (e) {
                 is NoSuchDataException -> _productDetailState.value = ProductDetailState.LoadProductItem.Fail
                 else -> _productDetailState.value = ProductDetailState.Error
             }

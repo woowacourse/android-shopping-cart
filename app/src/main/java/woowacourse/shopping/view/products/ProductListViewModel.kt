@@ -26,8 +26,9 @@ class ProductListViewModel(
             _productListState.value = ProductListState.LoadProductList.Success
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _productListState.value =
-                    ProductListState.LoadProductList.Fail
+                is NoSuchDataException ->
+                    _productListState.value =
+                        ProductListState.LoadProductList.Fail
 
                 else -> ProductListState.Error
             }

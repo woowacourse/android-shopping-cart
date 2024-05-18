@@ -30,7 +30,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentChangeListener){
+        if (context is FragmentChangeListener) {
             fragmentChangeListener = context
         }
     }
@@ -94,10 +94,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
                         getString(R.string.max_paging_data),
                     )
 
-                ShoppingCartState.Error -> ShoppingUtils.makeToast(
-                    requireContext(),
-                    getString(R.string.error_default)
-                )
+                ShoppingCartState.Error ->
+                    ShoppingUtils.makeToast(
+                        requireContext(),
+                        getString(R.string.error_default),
+                    )
             }
         }
     }
@@ -151,5 +152,4 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         binding.onPrevButton = shoppingCartViewModel.isExistPrevPage()
         binding.onNextButton = shoppingCartViewModel.isExistNextPage()
     }
-
 }
