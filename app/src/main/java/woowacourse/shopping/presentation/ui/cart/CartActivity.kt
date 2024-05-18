@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.ui.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -38,10 +37,10 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
         binding.viewModel = viewModel
 
-        viewModel.uiState.observe(this) { state ->
+        viewModel.cartUIState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
-                is UIState.Empty -> showEmptyView()
+                is UIState.Empty -> viewModel.showEmptyView()
                 is UIState.Error ->
                     showError(
                         state.exception.message ?: getString(R.string.unknown_error),
@@ -52,11 +51,6 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
     private fun showData(data: List<CartItem>) {
         adapter.loadData(data)
-    }
-
-    private fun showEmptyView() {
-        binding.recyclerView.visibility = View.GONE
-        binding.tvEmptyCart.visibility = View.VISIBLE
     }
 
     private fun showError(errorMessage: String) {

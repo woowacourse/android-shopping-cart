@@ -8,7 +8,9 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.shopping.ShoppingAdapter
 
 @BindingAdapter("app:imageUrl")
@@ -64,5 +66,28 @@ fun setLoadMoreBtnVisibility(
         view.visibility = View.VISIBLE
     } else {
         view.visibility = View.GONE
+    }
+}
+
+@BindingAdapter("app:cartViewVisibility")
+fun setViewVisibility(
+    view: View,
+    uiState: UIState<List<CartItem>>?,
+) {
+    when (uiState) {
+        is UIState.Empty -> {
+            if (view is TextView) {
+                view.visibility = View.VISIBLE
+            } else {
+                view.visibility = View.GONE
+            }
+        }
+        else -> {
+            if (view is TextView) {
+                view.visibility = View.GONE
+            } else {
+                view.visibility = View.VISIBLE
+            }
+        }
     }
 }

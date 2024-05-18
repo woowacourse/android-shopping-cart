@@ -10,8 +10,8 @@ import woowacourse.shopping.presentation.state.UIState
 class CartViewModel(private val repository: CartRepository) : ViewModel() {
     private val pageSize = PAGE_SIZE
 
-    private val _uiState = MutableLiveData<UIState<List<CartItem>>>()
-    val uiState: LiveData<UIState<List<CartItem>>> = _uiState
+    private val _cartUIState = MutableLiveData<UIState<List<CartItem>>>()
+    val cartUIState: LiveData<UIState<List<CartItem>>> = _cartUIState
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
     val currentPage: LiveData<Int> = _currentPage
@@ -49,16 +49,21 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
 
     fun loadCartItems() {
         try {
+            // throw IllegalArgumentException("error")
             val items =
                 repository.findAllPagedItems(_currentPage.value ?: DEFAULT_PAGE, pageSize).items
             if (items.isEmpty()) {
-                _uiState.postValue(UIState.Empty)
+                _cartUIState.postValue(UIState.Empty)
             } else {
-                _uiState.postValue(UIState.Success(items))
+                _cartUIState.postValue(UIState.Success(items))
             }
         } catch (e: Exception) {
-            _uiState.postValue(UIState.Error(e))
+            _cartUIState.postValue(UIState.Error(e))
         }
+    }
+
+    fun showEmptyView() {
+        _cartUIState.postValue(UIState.Empty)
     }
 
     fun loadNextPage() {
