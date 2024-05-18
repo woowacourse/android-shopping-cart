@@ -37,10 +37,10 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
         binding.viewModel = viewModel
 
-        viewModel.cartUIState.observe(this) { state ->
+        viewModel.cartItemsState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
-                is UIState.Empty -> viewModel.showEmptyView()
+                is UIState.Empty -> {}
                 is UIState.Error ->
                     showError(
                         state.exception.message ?: getString(R.string.unknown_error),
@@ -55,7 +55,6 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
     private fun showError(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-        viewModel.loadCartItems()
     }
 
     private fun setUpToolbar() {
