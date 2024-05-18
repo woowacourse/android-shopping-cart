@@ -33,7 +33,7 @@ class ProductAdapter(
         products.addAll(newProducts)
         notifyItemRangeInserted(
             newProducts.size * currentOffset,
-            newProducts.size * (currentOffset + 1) - 1,
+            newProducts.size,
         )
         currentOffset++
     }
