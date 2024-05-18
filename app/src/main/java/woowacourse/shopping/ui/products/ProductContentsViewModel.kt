@@ -30,6 +30,6 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
 
     companion object {
         private const val DEFAULT_OFFSET = 0
-        private const val LOAD_LIMIT = 20
+        const val LOAD_LIMIT = 20
     }
 }
