@@ -1,16 +1,15 @@
 package woowacourse.shopping.presentation.cart
 
-import io.mockk.mockk
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.dummy.DummyCartItems
+import woowacourse.shopping.presentation.dummy.DummyProducts
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
@@ -18,31 +17,49 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        cartViewModel = CartViewModel(FakeCartRepository(), FakeProductRepository())
+        cartViewModel = CartViewModel(FakeCartRepository(DummyCartItems().cartItems), FakeProductRepository(DummyProducts().products))
     }
 
     @Test
-    fun `장바구니에 담아놓은 상품들을 불러올 수 있다`() {
+    fun `장바구니에 상품이 5개보다 많아도 5개씩 불러온다`() {
+        val orders = cartViewModel.orders
+
         cartViewModel.loadCurrentPageCartItems()
-        val orders = cartViewModel.orders.value
-        assertThat(orders).isEqualTo(
-            listOf(
-                Order(cartItemId = 1, image = "", productName = "Product 1", price = 1000, quantity = 1),
-                Order(cartItemId = 2, image = "", productName = "Product 2", price = 2000, quantity = 1),
-                Order(cartItemId = 3, image = "", productName = "Product 3", price = 3000, quantity = 1),
-                Order(cartItemId = 4, image = "", productName = "Product 4", price = 4000, quantity = 1),
-                Order(cartItemId = 5, image = "", productName = "Product 5", price = 5000, quantity = 1),
-            ),
-        )
+
+        assertThat(orders.getOrAwaitValue()).hasSize(5)
+    }
+
+    @Test
+    fun `다음 상품들을 불러오면 장바구니 2개를 가지고 있다`() {
+        val orders = cartViewModel.orders
+
+        cartViewModel.loadNextPageCartItems()
+
+        assertThat(orders.getOrAwaitValue()).hasSize(2)
+    }
+
+    @Test
+    fun `이전 페이지로 이동하면 장바구니 5개를 가지고 있다`() {
+        val orders = cartViewModel.orders
+
+        cartViewModel.loadNextPageCartItems()
+        cartViewModel.loadPreviousPageCartItems()
+
+        assertThat(orders.getOrAwaitValue()).hasSize(5)
     }
 
     @Test
     fun `장바구니에 담긴 상품을 삭제할 수 있다`() {
-        val cartRepository = mockk<CartRepository>(relaxed = true)
-        val productRepository = mockk<ProductRepository>(relaxed = true)
-        val viewmodel = CartViewModel(cartRepository, productRepository)
-        viewmodel.removeCartItem(1)
-        verify { cartRepository.removeCartItem(1) }
-        verify { cartRepository.fetchCartItems(0) }
+        val orders = cartViewModel.orders
+
+        cartViewModel.loadCurrentPageCartItems()
+        cartViewModel.removeCartItem(1)
+        cartViewModel.removeCartItem(2)
+        cartViewModel.removeCartItem(3)
+        cartViewModel.removeCartItem(4)
+        cartViewModel.removeCartItem(5)
+        cartViewModel.removeCartItem(6)
+
+        assertThat(orders.getOrAwaitValue()).hasSize(1)
     }
 }
