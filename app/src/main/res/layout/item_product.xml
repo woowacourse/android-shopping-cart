@@ -15,7 +15,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="166dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{() -> clickListener.onProductClick(product.id)}"
         android:padding="6dp">
@@ -24,9 +24,9 @@
             android:id="@+id/iv_product"
             android:layout_width="154dp"
             android:layout_height="154dp"
+            android:layout_marginVertical="12dp"
             app:imageUrl="@{product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.25"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@android:color/holo_green_dark" />
@@ -44,13 +44,12 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/iv_product"
             app:layout_constraintTop_toBottomOf="@id/iv_product"
-            tools:text="PET보틀-정사각형어쩌구저ㄱㅉ" />
+            tools:text="PET보틀-정사각형어쩌구저쩌구" />
 
         <TextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="6dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="16dp"

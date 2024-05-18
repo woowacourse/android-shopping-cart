@@ -56,9 +56,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
     }
 
     private fun navigate() {
-        startActivity(
-            CartActivity.createIntent(context = this),
-        )
+        startActivity(CartActivity.createIntent(context = this))
     }
 
     companion object {

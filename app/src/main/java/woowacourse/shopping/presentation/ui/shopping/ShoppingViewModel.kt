@@ -22,7 +22,6 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewM
     val isLoadMoreButtonVisible: LiveData<Boolean>
         get() = _isLoadMoreButtonVisible
 
-
     init {
         loadProducts()
     }
@@ -48,7 +47,8 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewM
     }
 
     fun updateLoadMoreButtonVisibility(isVisible: Boolean) {
-        _isLoadMoreButtonVisible.postValue(isVisible)
+        if (offset == productsData.size) _isLoadMoreButtonVisible.postValue(false)
+        else _isLoadMoreButtonVisible.postValue(isVisible)
     }
 
     companion object {
