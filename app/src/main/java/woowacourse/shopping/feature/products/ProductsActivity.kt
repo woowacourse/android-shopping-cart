@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main
+package woowacourse.shopping.feature.products
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,17 +8,17 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.ProductDummyRepository
-import woowacourse.shopping.databinding.ActivityMainBinding
+import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
-import woowacourse.shopping.feature.main.adapter.ProductAdapter
-import woowacourse.shopping.feature.main.viewmodel.MainViewModel
-import woowacourse.shopping.feature.main.viewmodel.MainViewModelFactory
+import woowacourse.shopping.feature.products.adapter.ProductsAdapter
+import woowacourse.shopping.feature.products.viewmodel.ProductsViewModel
+import woowacourse.shopping.feature.products.viewmodel.ProductsViewModelFactory
 
-class MainActivity : AppCompatActivity() {
-    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val viewModel by viewModels<MainViewModel> { MainViewModelFactory(ProductDummyRepository) }
-    private lateinit var adapter: ProductAdapter
+class ProductsActivity : AppCompatActivity() {
+    private val binding: ActivityProductsBinding by lazy { ActivityProductsBinding.inflate(layoutInflater) }
+    private val viewModel by viewModels<ProductsViewModel> { ProductsViewModelFactory(ProductDummyRepository) }
+    private lateinit var adapter: ProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +38,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeProductAdapter() {
         adapter =
-            ProductAdapter(onClickProductItem = { productId ->
+            ProductsAdapter(onClickProductItem = { productId ->
                 navigateToProductDetailView(productId)
             })
-        binding.rvMainProduct.adapter = adapter
+        binding.rvProducts.adapter = adapter
         viewModel.products.observe(this) {
             adapter.insertProducts(it)
         }
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeToolbar() {
-        binding.toolbarMain.setOnMenuItemClickListener {
+        binding.toolbarProducts.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.item_cart -> {
                     navigateToCartView()
@@ -81,6 +81,6 @@ class MainActivity : AppCompatActivity() {
                     viewModel.changeSeeMoreVisibility(lastPosition)
                 }
             }
-        binding.rvMainProduct.addOnScrollListener(onScrollListener)
+        binding.rvProducts.addOnScrollListener(onScrollListener)
     }
 }

@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main
+package woowacourse.shopping.feature.products
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -7,21 +7,21 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.feature.main.viewmodel.MainViewModel
+import woowacourse.shopping.feature.products.viewmodel.ProductsViewModel
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
 
 @ExtendWith(InstantTaskExecutorExtension::class)
-class MainViewModelTest {
-    private lateinit var viewModel: MainViewModel
+class ProductsViewModelTest {
+    private lateinit var viewModel: ProductsViewModel
     private val productRepository: ProductRepository = ProductDummyRepository
     private val pageSize = 20
 
     @BeforeEach
     fun setUp() {
-        viewModel = MainViewModel(productRepository)
+        viewModel = ProductsViewModel(productRepository)
         productRepository.deleteAll()
     }
 

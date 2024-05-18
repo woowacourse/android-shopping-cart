@@ -22,12 +22,12 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     private val _hasNextPage = MutableLiveData<Boolean>()
     val hasNextPage: LiveData<Boolean> get() = _hasNextPage
 
-    private var cartSize: Int = INITIALIZE_CART_SIZE
+    private var totalCartCount: Int = INITIALIZE_CART_SIZE
     private var maxPage: Int = INITIALIZE_PAGE
 
     private fun loadTotalCartCount() {
-        cartSize = cartRepository.count()
-        maxPage = (cartSize - 1) / PAGE_SIZE
+        totalCartCount = cartRepository.count()
+        maxPage = (totalCartCount - 1) / PAGE_SIZE
     }
 
     fun deleteCartItem(cartItem: CartItem) {
@@ -37,7 +37,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     private fun isEmptyLastPage(): Boolean {
-        return page() > 0 && cartSize % PAGE_SIZE == 1
+        return page() > 0 && totalCartCount % PAGE_SIZE == 1
     }
 
     fun loadCart() {
@@ -52,7 +52,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         _hasNextPage.value = changeNextPageVisibility()
     }
 
-    private fun changePageVisibility(): Boolean = cartSize > PAGE_SIZE
+    private fun changePageVisibility(): Boolean = totalCartCount > PAGE_SIZE
 
     private fun changePreviousPageVisibility(): Boolean = page() > INITIALIZE_PAGE
 

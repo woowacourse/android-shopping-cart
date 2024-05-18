@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main
+package woowacourse.shopping.feature.products
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
@@ -27,9 +27,9 @@ import woowacourse.shopping.price
 import woowacourse.shopping.title
 
 @RunWith(AndroidJUnit4::class)
-class MainActivityTest {
+class ProductsActivityTest {
     @get:Rule
-    val activityRule: ActivityScenarioRule<MainActivity>
+    val activityRule: ActivityScenarioRule<ProductsActivity>
 
     init {
         val productRepository: ProductRepository = ProductDummyRepository
@@ -37,17 +37,17 @@ class MainActivityTest {
         repeat(30) {
             productRepository.save(imageUrl, "$title $it", price + it)
         }
-        activityRule = ActivityScenarioRule(MainActivity::class.java)
+        activityRule = ActivityScenarioRule(ProductsActivity::class.java)
     }
 
     @Test
-    fun `상품_목록을_보여준다`() {
-        onView(withId(R.id.rv_main_product)).check(matches(isDisplayed()))
+    fun `상품_목록이_보인다`() {
+        onView(withId(R.id.rv_products)).check(matches(isDisplayed()))
     }
 
     @Test
     fun `상품의_제목이_보인다`() {
-        onView(withId(R.id.rv_main_product))
+        onView(withId(R.id.rv_products))
             .perform(scrollToPosition<RecyclerView.ViewHolder>(0))
             .check(matches(hasDescendant(allOf(withText("$title 0"), isDisplayed()))))
     }
@@ -55,44 +55,44 @@ class MainActivityTest {
     @Test
     fun `상품의_가격이_보인다`() {
         val expected = "%,d원".format(price)
-        onView(withId(R.id.rv_main_product))
+        onView(withId(R.id.rv_products))
             .perform(scrollToPosition<RecyclerView.ViewHolder>(0))
             .check(matches(hasDescendant(allOf(withText(expected), isDisplayed()))))
     }
 
     @Test
     fun `상품_목록이_최상단일_때_더보기_버튼이_보이지_않는다`() {
-        onView(withId(R.id.rv_main_product))
+        onView(withId(R.id.rv_products))
             .perform(scrollToPosition<RecyclerView.ViewHolder>(0))
-        onView(withId(R.id.btn_main_load_more))
+        onView(withId(R.id.btn_products_load_more))
             .check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
     @Test
     fun `20번째_상품이_화면_최하단에_닿기_전까지_더보기_버튼이_보이지_않는다`() {
-        onView(withId(R.id.rv_main_product))
+        onView(withId(R.id.rv_products))
             .perform(scrollToPosition<RecyclerView.ViewHolder>(10))
-        onView(withId(R.id.btn_main_load_more))
+        onView(withId(R.id.btn_products_load_more))
             .check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
     @Test
-    fun `20번째_상품이_최하단에_닿으면_더보기_버튼이_보여진다`() {
-        onView(withId(R.id.rv_main_product))
+    fun `20번째_상품이_최하단에_닿으면_더보기_버튼이_보인다`() {
+        onView(withId(R.id.rv_products))
             .perform(scrollToLastPosition<RecyclerView.ViewHolder>())
-        onView(withId(R.id.btn_main_load_more))
+        onView(withId(R.id.btn_products_load_more))
             .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
     @Test
     fun `상품_목록_최하단에서_더보기_버튼을_누르면_상품_10개가_더_보인다`() {
-        onView(withId(R.id.rv_main_product))
+        onView(withId(R.id.rv_products))
             .perform(scrollToLastPosition<RecyclerView.ViewHolder>())
 
-        onView(withId(R.id.btn_main_load_more))
+        onView(withId(R.id.btn_products_load_more))
             .perform(click())
 
-        onView(withId(R.id.rv_main_product))
+        onView(withId(R.id.rv_products))
             .hasSizeRecyclerView(30)
     }
 }

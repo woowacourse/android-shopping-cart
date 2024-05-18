@@ -1,4 +1,4 @@
-package woowacourse.shopping.feature.main.viewmodel
+package woowacourse.shopping.feature.products.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.Product
 
-class MainViewModel(private val productRepository: ProductRepository) : ViewModel() {
+class ProductsViewModel(private val productRepository: ProductRepository) : ViewModel() {
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> get() = _products
 

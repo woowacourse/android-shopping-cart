@@ -32,20 +32,20 @@ class ProductDetailActivityTest {
     }
 
     @Test
-    fun `상품_제목이_보여진다`() {
+    fun `상품_제목이_보인다`() {
         onView(withId(R.id.tv_product_detail_title))
             .check(matches(withText(title)))
     }
 
     @Test
-    fun `상품_가격이_보여진다`() {
+    fun `상품_가격이_보인다`() {
         val expected = "%,d원".format(price)
         onView(withId(R.id.tv_product_detail_price))
             .check(matches(withText(expected)))
     }
 
     @Test
-    fun `장바구니_담기_버튼이_보여진다`() {
+    fun `장바구니_담기_버튼이_보인다`() {
         onView(withId(R.id.btn_product_detail_add_cart))
             .check(matches(isDisplayed()))
     }
