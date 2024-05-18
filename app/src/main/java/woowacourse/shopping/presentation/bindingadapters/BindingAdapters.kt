@@ -30,9 +30,8 @@ fun setItems(
     recyclerView: RecyclerView,
     products: List<Product>?,
 ) {
-    products?.let {
-        (recyclerView.adapter as ShoppingAdapter).updateData(it)
-    }
+    val items = products ?: return
+    (recyclerView.adapter as ShoppingAdapter).updateData(items)
 }
 
 @BindingAdapter("app:price")

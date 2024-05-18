@@ -25,11 +25,10 @@ class DetailViewModel(
     }
 
     fun createShoppingCartItem() {
-        product.value?.let {
-            cartRepository.insert(
-                product = it,
-                quantity = 1,
-            )
-        }
+        val item = product.value ?: return
+        cartRepository.insert(
+            product = item,
+            quantity = 1,
+        )
     }
 }
