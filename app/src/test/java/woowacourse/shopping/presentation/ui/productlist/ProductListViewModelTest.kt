@@ -1,62 +1,69 @@
 package woowacourse.shopping.presentation.ui.productlist
 
-import org.assertj.core.api.Assertions.assertThat
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.repsoitory.DummyProductRepositoryImpl
+import woowacourse.shopping.data.repsoitory.DummyData.PRODUCT_LIST
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListPagingSource
 
 @ExtendWith(InstantTaskExecutorExtension::class)
+@ExtendWith(MockKExtension::class)
 class ProductListViewModelTest {
-    val repository: ProductRepository = DummyProductRepositoryImpl
+    private lateinit var viewModel: ProductListViewModel
+
+    @MockK
+    private lateinit var repository: ProductRepository
+
+    private fun initViewModel() {
+        viewModel = ProductListViewModel(repository)
+    }
 
     @Test
     fun `상품을 불러온다`() {
         // given
-        val productListViewModel: ProductListViewModel = ProductListViewModel(repository)
-
-        // when
-        val actual = productListViewModel.uiState.getOrAwaitValue()
+        every { repository.getPagingProduct(0, 20) } returns Result.success(PRODUCT_LIST)
+        initViewModel()
 
         // then
-        val expected = DummyProductRepositoryImpl.getPagingProduct(0, 20).getOrThrow()
-        assertThat(actual.pagingProduct.productList).isEqualTo(expected)
+        val actual = viewModel.uiState.getOrAwaitValue()
+        assert(actual.pagingProduct.productList == PRODUCT_LIST)
     }
 
     @Test
     fun `더보기 버튼을 눌렀을 때 상품을 더 불러온다`() {
         // given
-        val productListPagingSource = ProductListPagingSource(repository)
-        val dummyPagingProduct = productListPagingSource.load().getOrThrow()
-        val nextDummyPagingProduct = productListPagingSource.load().getOrThrow()
+        every { repository.getPagingProduct(0, 20) } returns
+            Result.success(PRODUCT_LIST.subList(0, 20))
+        every { repository.getPagingProduct(1, 20) } returns
+            Result.success(PRODUCT_LIST.subList(20, 40))
+        initViewModel()
 
         // when
-        val productListViewModel: ProductListViewModel = ProductListViewModel(DummyProductRepositoryImpl)
-        productListViewModel.onClickLoadMoreButton()
-        val actual = productListViewModel.uiState.getOrAwaitValue()
+        viewModel.onClickLoadMoreButton()
 
         // then
-        val expected =
-            PagingProduct(
-                productList = dummyPagingProduct.productList + nextDummyPagingProduct.productList,
-                last = nextDummyPagingProduct.last,
-            )
-        assertThat(actual.pagingProduct).isEqualTo(expected)
+        val actual = viewModel.uiState.getOrAwaitValue()
+        assert(actual.pagingProduct.productList == PRODUCT_LIST.subList(0, 40))
     }
 
     @Test
-    fun `상품을 누르면 상품의 상세 소개 화면으로 넘어간다`() {
-        // given & when
-        val productListViewModel: ProductListViewModel =
-            ProductListViewModel(DummyProductRepositoryImpl)
-        productListViewModel.onClickProduct(1)
-        val actual = productListViewModel.navigateAction.getOrAwaitValue()
+    fun `상품을 누르면 상품의 상세 소개 화면으로 넘어가는 이벤트를 발생시킨다`() {
+        // given
+        val productList = PRODUCT_LIST.subList(0, 20)
+        every { repository.getPagingProduct(0, 20) } returns
+            Result.success(productList)
+        initViewModel()
+
+        // when
+        viewModel.onClickProduct(productList.first().id)
 
         // then
-        val expected = ProductListNavigateAction.NavigateToProductDetail(1)
-        assertThat(actual.value).isEqualTo(expected)
+        val actual = viewModel.navigateAction.getOrAwaitValue()
+        val expected = ProductListNavigateAction.NavigateToProductDetail(productList.first().id)
+        assert(actual.value == expected)
     }
 }
