@@ -88,7 +88,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
+        menuInflater.inflate(R.menu.shopping_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
