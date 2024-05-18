@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.utils.ShoppingUtils
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
@@ -61,7 +62,10 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         productListViewModel.productListState.observe(viewLifecycleOwner) { productListState ->
             when (productListState) {
                 ProductListState.Init, ProductListState.LoadProductList.Success -> {}
-                ProductListState.LoadProductList.Fail -> showMessage(requireContext().getString(R.string.max_paging_data))
+                ProductListState.LoadProductList.Fail -> ShoppingUtils.makeToast(
+                    requireContext(),
+                    getString(R.string.max_paging_data)
+                )
             }
         }
     }
@@ -99,7 +103,4 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     private fun loadPagingData() {
         productListViewModel.loadPagingProduct()
     }
-
-    private fun showMessage(message: String) =
-        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 }

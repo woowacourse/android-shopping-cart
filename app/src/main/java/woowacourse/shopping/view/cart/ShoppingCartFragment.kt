@@ -12,6 +12,7 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_PAGE_SIZE
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.MIN_PAGE_COUNT
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
+import woowacourse.shopping.utils.ShoppingUtils
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
@@ -73,15 +74,17 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
                 }
 
                 ShoppingCartState.DeleteShoppingCart.Fail ->
-                    showMessage(
-                        requireContext().getString(
+                    ShoppingUtils.makeToast(
+                        requireContext(),
+                        getString(
                             R.string.error_delete_data,
                         ),
                     )
 
                 ShoppingCartState.LoadCartItemList.Fail ->
-                    showMessage(
-                        requireContext().getString(R.string.max_paging_data),
+                    ShoppingUtils.makeToast(
+                        requireContext(),
+                        getString(R.string.max_paging_data),
                     )
             }
         }
@@ -120,7 +123,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
             binding.currentPage = ++shoppingCartViewModel.currentPage
             updateRecyclerView()
         } else {
-            showMessage(requireContext().getString(R.string.max_paging_data))
+            ShoppingUtils.makeToast(requireContext(),getString(R.string.max_paging_data))
         }
     }
 
@@ -163,5 +166,4 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         binding.onNextButton = isExistNextPage()
     }
 
-    private fun showMessage(message: String) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 }
