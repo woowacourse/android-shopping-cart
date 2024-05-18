@@ -8,8 +8,8 @@ class DefaultCartRepository(
     private val cartDataSource: CartDataSource = DummyCartDataSource,
     private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
 ) : CartRepository {
-    override fun cartProducts(currentPage: Int): List<CartProduct> {
-        return cartDataSource.loadCartProducts(currentPage)
+    override fun cartProducts(currentPage: Int, pageSize: Int): List<CartProduct> {
+        return cartDataSource.loadCartProducts(currentPage, pageSize)
     }
 
     override fun addCartProduct(productId: Long): Long? {
@@ -22,12 +22,7 @@ class DefaultCartRepository(
         return cartDataSource.deleteCartProduct(product)
     }
 
-    override fun canLoadMoreCartProducts(currentPage: Int): Boolean {
-        if (currentPage <= START_PAGE) return false
-        return cartDataSource.canLoadMoreCartProducts(currentPage)
-    }
-
-    companion object {
-        private const val START_PAGE = 1
+    override fun canLoadMoreCartProducts(currentPage: Int, pageSize: Int): Boolean {
+        return cartDataSource.canLoadMoreCartProducts(currentPage, pageSize)
     }
 }

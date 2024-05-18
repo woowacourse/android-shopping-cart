@@ -7,7 +7,7 @@
 - [x]: Plus -> LoadMore 로 네이밍 변경 
 - [x]: ProductDetailViewModel early return 으로 개선
 - [x]: MediatorLiveData, map, switchMap을 활용하여 LiveData 개선 
-- [ ]: 장바구니 Cart paging 리팩토링 --- Product, page 바뀌면 prev, next page 로드
+- [x]: 장바구니 Cart paging 리팩토링 --- Product, page 바뀌면 prev, next page 로드
 - [ ]: Shopping List Cart 리팩토링
 - [ ]: CartAdapter onClickItem도 DataBinding을 사용
 - [ ]: CartAdapter notifyDataSetChanged 개선
