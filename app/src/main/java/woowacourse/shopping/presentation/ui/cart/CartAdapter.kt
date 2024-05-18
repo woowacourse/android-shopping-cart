@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
@@ -53,11 +51,6 @@ class CartViewHolder(private val binding: ItemCartBinding, val cartHandler: Cart
 
     fun bind(item: Cart) {
         product = item.product
-        binding.tvName.text = item.product.name
-        Glide.with(binding.root.context)
-            .load(item.product.imgUrl)
-            .into(binding.ivCart)
-        binding.tvName.text = item.product.name
-        binding.tvPrice.text = binding.root.context.getString(R.string.price_format_kor, item.product.price)
+        binding.cart = item
     }
 }

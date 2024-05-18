@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data/>
+    <data>
+        <variable
+            name="cart"
+            type="woowacourse.shopping.domain.Cart" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,12 +25,14 @@
             android:maxLines="1"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:text="@{cart.product.name}"
             app:layout_constraintEnd_toStartOf="@id/iv_close"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="상품 제목" />
 
         <ImageView
+            bindLoadImage="@{cart.product.imgUrl}"
             android:id="@+id/iv_cart"
             android:layout_width="136dp"
             android:layout_height="72dp"
@@ -38,6 +44,7 @@
             tools:src="@drawable/ic_close_white" />
 
         <TextView
+            bindTextFormattedCurrency="@{cart.product.price}"
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
