@@ -1,4 +1,4 @@
-package woowacourse.shopping
+package woowacourse.shopping.presentaion.ui.detail
 
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
@@ -13,6 +13,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import woowacourse.shopping.R
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
 @RunWith(AndroidJUnit4::class)

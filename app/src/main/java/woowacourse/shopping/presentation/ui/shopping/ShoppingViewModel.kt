@@ -47,7 +47,7 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewM
     }
 
     fun updateLoadMoreButtonVisibility(isVisible: Boolean) {
-        if (offset == productsData.size) {
+        if (productsData.size < PAGE_SIZE || offset == productsData.size) {
             _isLoadMoreButtonVisible.postValue(false)
         } else {
             _isLoadMoreButtonVisible.postValue(isVisible)

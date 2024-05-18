@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.view.View
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -18,32 +17,64 @@ class ShoppingViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { repository.getAllProducts() } returns
-            listOf(
-                Product.of(name = "Product 1", price = 1000, imageUrl = "URL 1"),
-                Product.of(name = "Product 2", price = 2000, imageUrl = "URL 2"),
-            )
-
         viewModel = ShoppingViewModel(repository)
     }
 
     @Test
-    fun `loadProducts가 호출됐을 때 products LiveData가 업데이트된다`() {
+    fun `10개 초과의 데이터가 존재하더라도 초기에 저장되는 products의 크기는 10개 이다`() {
+        every { repository.getAllProducts() } returns List(11) {
+            Product.of(
+                name = "Product $it",
+                price = 1000,
+                imageUrl = "URL $it"
+            )
+        }
         viewModel.loadProducts()
-        assertEquals(2, viewModel.products.value?.size)
+        assertEquals(10, viewModel.products.value?.size)
     }
 
     @Test
-    fun `updateVisibility가 호출됐을 때 visibility LiveData가 업데이트된다_1`() {
+    fun `10개 이하의 데이터가 존재할때는 isLoadMoreButtonVisible의 값에는 항상 false가 저장된다`() {
+        every { repository.getAllProducts() } returns List(8) {
+            Product.of(
+                name = "Product $it",
+                price = 1000,
+                imageUrl = "URL $it"
+            )
+        }
+        viewModel.loadProducts()
         viewModel.updateLoadMoreButtonVisibility(true)
 
-        assertEquals(View.VISIBLE, viewModel.isLoadMoreButtonVisible.value)
+        assertEquals(false, viewModel.isLoadMoreButtonVisible.value)
     }
 
     @Test
-    fun `updateVisibility가 호출됐을 때 visibility LiveData가 업데이트된다_2`() {
+    fun `10개 초과의 데이터가 존재하고 isVisible이 true라면 isLoadMoreButtonVisible의 값은 true가 저장된다`() {
+        every { repository.getAllProducts() } returns List(11) {
+            Product.of(
+                name = "Product $it",
+                price = 1000,
+                imageUrl = "URL $it"
+            )
+        }
+        viewModel.loadProducts()
+        viewModel.updateLoadMoreButtonVisibility(true)
+
+        assertEquals(true, viewModel.isLoadMoreButtonVisible.value)
+    }
+
+    @Test
+    fun `10개 초과의 데이터가 존재하고 isVisible이 false라면 isLoadMoreButtonVisible의 값은 false 저장된다`() {
+        every { repository.getAllProducts() } returns List(11) {
+            Product.of(
+                name = "Product $it",
+                price = 1000,
+                imageUrl = "URL $it"
+            )
+        }
+        viewModel.loadProducts()
         viewModel.updateLoadMoreButtonVisibility(false)
 
-        assertEquals(View.GONE, viewModel.isLoadMoreButtonVisible.value)
+        assertEquals(false, viewModel.isLoadMoreButtonVisible.value)
     }
 }

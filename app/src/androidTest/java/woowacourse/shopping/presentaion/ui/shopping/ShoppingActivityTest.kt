@@ -1,3 +1,5 @@
+package woowacourse.shopping.presentaion.ui.shopping
+
 import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.rules.ActivityScenarioRule
