@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.utils.NoSuchDataException
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -19,30 +20,32 @@ class ProductDetailViewModel(
     val productDetailState: LiveData<ProductDetailState> get() = _productDetailState
 
     fun addShoppingCartItem(product: Product) {
-        runCatching {
+        try {
             shoppingCartRepository.addCartItem(product)
-        }.onSuccess {
             _productDetailState.value = ProductDetailState.AddShoppingCart.Success
-            resetState()
-        }.onFailure {
-            _productDetailState.value = ProductDetailState.AddShoppingCart.Fail
+        } catch (e :Exception){
+            when(e){
+                is NoSuchDataException -> _productDetailState.value = ProductDetailState.AddShoppingCart.Fail
+                else -> _productDetailState.value = ProductDetailState.Error
+            }
+        } finally {
             resetState()
         }
     }
 
     fun loadProductItem(productId: Long) {
-        runCatching {
-            productRepository.getProduct(productId)
+        try {
+            val product = productRepository.getProduct(productId)
+            _product.postValue(product)
+            _productDetailState.value = ProductDetailState.LoadProductItem.Success
+        } catch (e: Exception){
+            when(e){
+                is NoSuchDataException -> _productDetailState.value = ProductDetailState.LoadProductItem.Fail
+                else -> _productDetailState.value = ProductDetailState.Error
+            }
+        } finally {
+            resetState()
         }
-            .onSuccess {
-                _product.postValue(it)
-                _productDetailState.value = ProductDetailState.LoadProductItem.Success
-                resetState()
-            }
-            .onFailure {
-                _productDetailState.value = ProductDetailState.LoadProductItem.Fail
-                resetState()
-            }
     }
 
     private fun resetState() {

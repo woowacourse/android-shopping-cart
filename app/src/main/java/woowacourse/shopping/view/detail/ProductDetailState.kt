@@ -2,6 +2,7 @@ package woowacourse.shopping.view.detail
 
 sealed interface ProductDetailState {
     data object Init : ProductDetailState
+    data object Error: ProductDetailState
 
     sealed interface AddShoppingCart : ProductDetailState {
         data object Success : AddShoppingCart
