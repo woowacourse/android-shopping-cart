@@ -40,8 +40,19 @@ class CartActivityTest {
     }
 
     @Test
-    fun `장바구니_상품_목록이_보인다`() {
+    fun `장바구니에_상품이_없는_경우_장바구니가_비어있다는_화면이_보인다`() {
         ActivityScenario.launch(CartActivity::class.java)
+
+        onView(withId(R.id.tv_empty_cart))
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun `장바구니에_상품이_있는_경우_상품_목록이_보인다`() {
+        addCart(imageUrl, title, price)
+
+        ActivityScenario.launch(CartActivity::class.java)
+
         onView(withId(R.id.rv_cart))
             .check(matches(isDisplayed()))
     }

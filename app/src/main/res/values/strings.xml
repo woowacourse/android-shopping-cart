@@ -16,6 +16,7 @@
     <string name="common_move">이동</string>
     <string name="common_cancel">취소</string>
 
+    <string name="empty_cart">장바구니가 비어있습니다.</string>
     <string name="previous_page">&lt;</string>
     <string name="next_page">&gt;</string>
 </resources>

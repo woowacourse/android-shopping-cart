@@ -19,6 +19,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     val hasPage: LiveData<Boolean> = totalCartCount.map { changePageVisibility(it) }
     val hasPreviousPage: LiveData<Boolean> = _page.map { changePreviousPageVisibility(it) }
     val hasNextPage: LiveData<Boolean> = _page.map { changeNextPageVisibility(it) }
+    val isEmptyCart: LiveData<Boolean> = _cart.map { it.isEmpty() }
 
     private var maxPage: Int = INITIALIZE_PAGE
 

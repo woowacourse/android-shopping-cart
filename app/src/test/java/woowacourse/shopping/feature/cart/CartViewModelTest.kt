@@ -215,6 +215,21 @@ class CartViewModelTest {
         assertThat(actual).isEqualTo(0)
     }
 
+    @Test
+    fun `장바구니에 1개의 상품이 있고 1개의 상품을 삭제하면 장바구니가 비어있다`() {
+        // given
+        addCartItem()
+        viewModel.loadCart()
+
+        // when
+        val cartItem = viewModel.cart.getOrAwaitValue().first()
+        viewModel.deleteCartItem(cartItem)
+
+        // then
+        val actual = viewModel.isEmptyCart.getOrAwaitValue()
+        assertThat(actual).isTrue
+    }
+
     private fun addCartItem() {
         val productId = productRepository.save(imageUrl, title, price)
         val product = productRepository.find(productId)
