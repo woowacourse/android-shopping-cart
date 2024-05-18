@@ -10,7 +10,7 @@
 - [ ]: ProductListViewModel 의 반복되는 코드 함수화하기
 - [ ]: Android Resource의 dimen 도입
 - [ ]: Android Resource의 style 도입
-- [ ]: common 으로 Image 처리 BindingAdapter 빼기
+- [x]: common 으로 Image 처리 BindingAdapter 빼기
 - [ ]: by viewModels() 로 리팩
 - [ ]: ShoppingNavigator
 - [ ]: 어떤 페이지부터, 어떤 항목부터 데이터를 받아올 것을 기대할거에요.
