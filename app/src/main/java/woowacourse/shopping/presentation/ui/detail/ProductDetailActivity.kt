@@ -59,7 +59,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
 
     private fun handleSuccessState(state: UiState.Success<Product>) {
         binding.tvName.text = state.data.name
-        binding.tvPriceValue.text = getString(R.string.won, state.data.price)
+        binding.tvPriceValue.text = getString(R.string.price_format_kor, state.data.price)
         binding.tvAddCart.setOnClickListener {
             finish()
             viewModel.saveCartItem(state.data)

@@ -2,8 +2,6 @@ package woowacourse.shopping.presentation.ui.shopping.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.Product
@@ -25,11 +23,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         fun bind(item: Product) {
             id = item.id
-            binding.tvName.text = item.name
-            binding.tvPrice.text = binding.root.context.getString(R.string.won, item.price)
-            Glide.with(binding.root.context)
-                .load(item.imgUrl)
-                .into(binding.imgItem)
+            binding.product = item
         }
     }
 

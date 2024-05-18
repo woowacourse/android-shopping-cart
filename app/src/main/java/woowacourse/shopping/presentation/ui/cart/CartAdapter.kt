@@ -58,6 +58,6 @@ class CartViewHolder(private val binding: ItemCartBinding, val cartHandler: Cart
             .load(item.product.imgUrl)
             .into(binding.ivCart)
         binding.tvName.text = item.product.name
-        binding.tvPrice.text = binding.root.context.getString(R.string.won, item.product.price)
+        binding.tvPrice.text = binding.root.context.getString(R.string.price_format_kor, item.product.price)
     }
 }
