@@ -1,9 +1,11 @@
 package woowacourse.shopping.viewmodel
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.function.Executable
 import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
@@ -60,8 +62,10 @@ class CartViewModelTest {
 
         // then
         val actual = viewModel.cart.getOrAwaitValue()
-        assertThat(actual).hasSize(pageSize)
-        assertThat(actual).isEqualTo(cartRepository.findRange(0, pageSize))
+        assertAll(
+            Executable { assertThat(actual).hasSize(pageSize) },
+            Executable { assertThat(actual).isEqualTo(cartRepository.findRange(0, pageSize)) },
+        )
     }
 
     @Test
@@ -76,8 +80,10 @@ class CartViewModelTest {
 
         // then
         val actual = viewModel.cart.getOrAwaitValue()
-        assertThat(actual).hasSize(pageSize)
-        assertThat(actual).isEqualTo(cartRepository.findRange(0, pageSize))
+        assertAll(
+            Executable { assertThat(actual).hasSize(pageSize) },
+            Executable { assertThat(actual).isEqualTo(cartRepository.findRange(0, pageSize)) },
+        )
     }
 
     @Test

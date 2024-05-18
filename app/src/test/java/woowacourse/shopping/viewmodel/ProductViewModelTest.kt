@@ -1,10 +1,12 @@
 package woowacourse.shopping.viewmodel
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.function.Executable
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.imageUrl
@@ -35,9 +37,11 @@ class ProductViewModelTest {
 
         // then
         val actual = viewModel.product.getOrAwaitValue()
-        assertThat(actual.imageUrl).isEqualTo(imageUrl)
-        assertThat(actual.title).isEqualTo(title)
-        assertThat(actual.price).isEqualTo(price)
+        assertAll(
+            Executable { assertThat(actual.imageUrl).isEqualTo(imageUrl) },
+            Executable { assertThat(actual.title).isEqualTo(title) },
+            Executable { assertThat(actual.price).isEqualTo(price) },
+        )
     }
 
     @Test
@@ -59,8 +63,10 @@ class ProductViewModelTest {
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
-        assertThat(actual).hasSize(pageSize)
-        assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
+        assertAll(
+            Executable { assertThat(actual).hasSize(pageSize) },
+            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+        )
     }
 
     @Test
@@ -75,8 +81,10 @@ class ProductViewModelTest {
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
-        assertThat(actual).hasSize(pageSize)
-        assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
+        assertAll(
+            Executable { assertThat(actual).hasSize(pageSize) },
+            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+        )
     }
 
     @Test
@@ -91,7 +99,9 @@ class ProductViewModelTest {
 
         // then
         val actual = viewModel.products.getOrAwaitValue()
-        assertThat(actual).hasSize(5)
-        assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
+        assertAll(
+            Executable { assertThat(actual).hasSize(5) },
+            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
+        )
     }
 }
