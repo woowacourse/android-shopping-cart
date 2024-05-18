@@ -53,14 +53,12 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         loadProduct()
         observeData()
     }
 
     private fun observeData() {
-        productDetailViewModel.product.observe(viewLifecycleOwner) { product ->
-            initView(product)
-        }
         productDetailViewModel.productDetailState.observe(viewLifecycleOwner) { productDetailState ->
             when (productDetailState) {
                 ProductDetailState.Init, ProductDetailState.LoadProductItem.Success -> {}
@@ -97,8 +95,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         productDetailViewModel.loadProductItem(receiveId())
     }
 
-    private fun initView(product: Product) {
-        binding.product = product
+    private fun initView() {
+        binding.vm = productDetailViewModel
         binding.onClickDetail = this
         binding.lifecycleOwner = this
     }
