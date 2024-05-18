@@ -21,21 +21,16 @@ class ProductsViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductsViewModel(productRepository)
         productRepository.deleteAll()
     }
 
     @Test
     fun `한 페이지에는 20개의 상품이 있다`() {
-        // given
         repeat(20) {
             productRepository.save(imageUrl, title, price)
         }
+        viewModel = ProductsViewModel(productRepository)
 
-        // when
-        viewModel.loadPage()
-
-        // then
         val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(20)
         assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
@@ -43,15 +38,11 @@ class ProductsViewModelTest {
 
     @Test
     fun `상품이 40개인 경우 1페이지에서 20개의 상품을 불러온다`() {
-        // given
         repeat(40) {
             productRepository.save(imageUrl, title, price)
         }
+        viewModel = ProductsViewModel(productRepository)
 
-        // when
-        viewModel.loadPage()
-
-        // then
         val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(20)
         assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
@@ -59,15 +50,11 @@ class ProductsViewModelTest {
 
     @Test
     fun `상품이 5개인 경우 1페이지에서 5개의 상품을 불러온다`() {
-        // given
         repeat(5) {
             productRepository.save(imageUrl, title, price)
         }
+        viewModel = ProductsViewModel(productRepository)
 
-        // when
-        viewModel.loadPage()
-
-        // then
         val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(5)
         assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
@@ -79,9 +66,9 @@ class ProductsViewModelTest {
         repeat(10) {
             productRepository.save(imageUrl, title, price)
         }
+        viewModel = ProductsViewModel(productRepository)
 
         // when
-        viewModel.loadPage()
         viewModel.changeSeeMoreVisibility(lastPosition())
 
         // then
@@ -95,9 +82,9 @@ class ProductsViewModelTest {
         repeat(25) {
             productRepository.save(imageUrl, title, price)
         }
+        viewModel = ProductsViewModel(productRepository)
 
         // when
-        viewModel.loadPage()
         viewModel.changeSeeMoreVisibility(lastPosition())
 
         // then
@@ -111,9 +98,9 @@ class ProductsViewModelTest {
         repeat(25) {
             productRepository.save(imageUrl, title, price)
         }
+        viewModel = ProductsViewModel(productRepository)
 
         // when
-        viewModel.loadPage()
         viewModel.loadPage()
 
         // then
@@ -127,9 +114,9 @@ class ProductsViewModelTest {
         repeat(25) {
             productRepository.save(imageUrl, title, price)
         }
+        viewModel = ProductsViewModel(productRepository)
 
         // when
-        viewModel.loadPage()
         viewModel.loadPage()
         viewModel.changeSeeMoreVisibility(lastPosition())
 

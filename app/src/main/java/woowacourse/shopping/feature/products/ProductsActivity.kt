@@ -33,7 +33,6 @@ class ProductsActivity : AppCompatActivity() {
         initializeProductAdapter()
         initializeToolbar()
         initializePage()
-        viewModel.loadPage()
     }
 
     private fun initializeProductAdapter() {

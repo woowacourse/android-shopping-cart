@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.cart
 
+import android.content.pm.ActivityInfo
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -170,6 +171,24 @@ class CartActivityTest {
 
         onView(withId(R.id.rv_cart))
             .hasSizeRecyclerView(0)
+    }
+
+    @Test
+    fun `장바구니에_6개의_상품이_있고_2페이지일_때_화면을_회전해도_2페이지가_보인다`() {
+        repeat(6) {
+            addCart(imageUrl, title, price)
+        }
+
+        val activityScenario = ActivityScenario.launch(CartActivity::class.java)
+        onView(withId(R.id.btn_cart_next_page))
+            .perform(click())
+
+        activityScenario.onActivity { activity ->
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+
+        onView(withId(R.id.rv_cart))
+            .hasSizeRecyclerView(1)
     }
 
     private fun addCart(

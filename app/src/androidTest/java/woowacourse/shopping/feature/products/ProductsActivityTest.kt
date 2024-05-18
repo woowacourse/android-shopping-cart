@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.products
 
+import android.content.pm.ActivityInfo
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -91,6 +92,21 @@ class ProductsActivityTest {
 
         onView(withId(R.id.btn_products_load_more))
             .perform(click())
+
+        onView(withId(R.id.rv_products))
+            .hasSizeRecyclerView(30)
+    }
+
+    @Test
+    fun `상품_목록_최하단에서_더보기_버튼을_누르면_화면을_회전해도_상품_10개가_더_보인다`() {
+        onView(withId(R.id.rv_products))
+            .perform(scrollToLastPosition<RecyclerView.ViewHolder>())
+        onView(withId(R.id.btn_products_load_more))
+            .perform(click())
+
+        activityRule.scenario.onActivity { activity ->
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
 
         onView(withId(R.id.rv_products))
             .hasSizeRecyclerView(30)
