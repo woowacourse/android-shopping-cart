@@ -10,17 +10,7 @@ class ProductViewModel(private val productRepository: ProductRepository) : ViewM
     private val _product = MutableLiveData<Product>()
     val product: LiveData<Product> get() = _product
 
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>> get() = _products
-
     fun loadProduct(productId: Long) {
         _product.value = productRepository.find(productId)
-    }
-
-    fun loadPage(
-        page: Int,
-        pageSize: Int,
-    ) {
-        _products.value = productRepository.findRange(page, pageSize)
     }
 }

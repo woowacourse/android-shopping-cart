@@ -12,14 +12,14 @@ import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
-import woowacourse.shopping.feature.detail.ProductViewModelFactory
 import woowacourse.shopping.feature.main.adapter.ProductAdapter
-import woowacourse.shopping.viewmodel.ProductViewModel
+import woowacourse.shopping.feature.main.viewmodel.MainViewModel
+import woowacourse.shopping.feature.main.viewmodel.MainViewModelFactory
 import kotlin.math.min
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private val productViewModel: ProductViewModel by viewModels { ProductViewModelFactory(ProductDummyRepository) }
+    private val mainViewModel: MainViewModel by viewModels { MainViewModelFactory(ProductDummyRepository) }
     private lateinit var adapter: ProductAdapter
     private var page: Int = 0
 
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             })
         binding.rvMainProduct.adapter = adapter
 
-        productViewModel.products.observe(this) {
+        mainViewModel.products.observe(this) {
             val changedItemCount = min(it.size, PAGE_SIZE)
             adapter.updateProducts(it, page++ * PAGE_SIZE, changedItemCount)
         }
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateProducts() {
-        productViewModel.loadPage(page, PAGE_SIZE)
+        mainViewModel.loadPage(page, PAGE_SIZE)
     }
 
     private fun initializePage() {

@@ -18,7 +18,6 @@ import java.lang.IllegalArgumentException
 class ProductViewModelTest {
     private lateinit var viewModel: ProductViewModel
     private lateinit var productRepository: ProductRepository
-    private val pageSize = 20
 
     @BeforeEach
     fun setUp() {
@@ -49,59 +48,5 @@ class ProductViewModelTest {
         assertThrows<IllegalArgumentException> {
             viewModel.loadProduct(-1L)
         }
-    }
-
-    @Test
-    fun `한 페이지에는 20개의 상품이 있다`() {
-        // given
-        repeat(pageSize) {
-            productRepository.save(imageUrl, title, price)
-        }
-
-        // when
-        viewModel.loadPage(0, pageSize)
-
-        // then
-        val actual = viewModel.products.getOrAwaitValue()
-        assertAll(
-            Executable { assertThat(actual).hasSize(pageSize) },
-            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
-        )
-    }
-
-    @Test
-    fun `상품이 40개인 경우 20개의 상품을 불러온다`() {
-        // given
-        repeat(40) {
-            productRepository.save(imageUrl, title, price)
-        }
-
-        // when
-        viewModel.loadPage(0, pageSize)
-
-        // then
-        val actual = viewModel.products.getOrAwaitValue()
-        assertAll(
-            Executable { assertThat(actual).hasSize(pageSize) },
-            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
-        )
-    }
-
-    @Test
-    fun `상품이 5개인 경우 5개의 상품을 불러온다`() {
-        // given
-        repeat(5) {
-            productRepository.save(imageUrl, title, price)
-        }
-
-        // when
-        viewModel.loadPage(0, pageSize)
-
-        // then
-        val actual = viewModel.products.getOrAwaitValue()
-        assertAll(
-            Executable { assertThat(actual).hasSize(5) },
-            Executable { assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize)) },
-        )
     }
 }
