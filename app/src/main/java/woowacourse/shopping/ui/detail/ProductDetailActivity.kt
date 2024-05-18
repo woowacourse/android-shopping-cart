@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -25,10 +24,8 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_product_detail)
-
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
-
+        binding = ActivityProductDetailBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         showProductDetail()
         setOnCartButtonClickListener()
     }

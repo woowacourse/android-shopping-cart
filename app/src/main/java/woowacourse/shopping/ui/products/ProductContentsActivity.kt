@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,8 +24,8 @@ class ProductContentsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_product_contents)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_product_contents)
+        binding = ActivityProductContentsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setProductAdapter()
         observeProductItems()
         loadItems()
