@@ -4,6 +4,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repsoitory.DummyProductList
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -17,7 +18,11 @@ import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActivity
 class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_product_list
 
-    private val viewModel: ProductListViewModel by viewModels()
+    private val viewModel: ProductListViewModel by viewModels {
+        ProductListViewModelFactory(
+            DummyProductList,
+        )
+    }
 
     private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
 
