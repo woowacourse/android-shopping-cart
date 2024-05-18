@@ -19,6 +19,6 @@ class ProductDetailViewModel(
     }
 
     fun addCartProduct() {
-        cartRepository.increaseQuantity(product.value ?: return)
+        cartRepository.increaseQuantity(_product.value ?: return)
     }
 }
