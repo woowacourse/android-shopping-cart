@@ -7,52 +7,58 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.just
 import io.mockk.runs
 import io.mockk.verify
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.repsoitory.DummyProductRepositoryImpl
+import woowacourse.shopping.data.repsoitory.DummyData.STUB_PRODUCT_A
+import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 @ExtendWith(MockKExtension::class)
 class ProductDetailViewModelTest {
-    private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var viewModel: ProductDetailViewModel
+
+    private lateinit var savedStateHandle: SavedStateHandle
 
     @MockK
     private lateinit var shoppingCartRepository: ShoppingCartRepository
 
-    @BeforeEach
-    fun setUp() {
-        val initialState = mutableMapOf(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to 1)
+    @MockK
+    private lateinit var productRepository: ProductRepository
+
+    private val productId = 1
+
+    private fun initViewModel() {
+        val initialState = mutableMapOf(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to productId)
         savedStateHandle = SavedStateHandle(initialState)
         viewModel =
-            ProductDetailViewModel(savedStateHandle, DummyProductRepositoryImpl, shoppingCartRepository)
+            ProductDetailViewModel(savedStateHandle, productRepository, shoppingCartRepository)
     }
 
     @Test
     fun `선택한 상품의 상세 정보를 불러온다`() {
         // given & when
-        val actual = viewModel.product.getOrAwaitValue()
+        every { productRepository.findProductById(productId) } returns Result.success(STUB_PRODUCT_A)
+        initViewModel()
 
         // then
-        val expected = DummyProductRepositoryImpl.findProductById(1).getOrThrow()
-        assertThat(actual).isEqualTo(expected)
+        val actual = viewModel.product.getOrAwaitValue()
+        assert(actual == STUB_PRODUCT_A)
     }
 
     @Test
     fun `선택한 상품을 장바구니에 추가한다`() {
         // given
-        every { shoppingCartRepository.addOrder(any()) } just runs
+        every { productRepository.findProductById(productId) } returns Result.success(STUB_PRODUCT_A)
+        every { shoppingCartRepository.addOrder(STUB_PRODUCT_A) } just runs
+        initViewModel()
 
         // when
         viewModel.onAddToCartButtonClick()
 
         // then
-        val product = DummyProductRepositoryImpl.findProductById(1).getOrThrow()
-        verify { shoppingCartRepository.addOrder(product) }
+        verify { shoppingCartRepository.addOrder(STUB_PRODUCT_A) }
     }
 }
