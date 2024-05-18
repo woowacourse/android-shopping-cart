@@ -9,17 +9,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.DefaultCartRepository
-import woowacourse.shopping.databinding.FragmentShoppingCartBinding
+import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 
-class ShoppingCartFragment :
-    BindingFragment<FragmentShoppingCartBinding>(R.layout.fragment_shopping_cart) {
+class CartFragment :
+    BindingFragment<FragmentCartBinding>(R.layout.fragment_cart) {
     private lateinit var adapter: CartAdapter
-    private val viewModel by viewModels<ShoppingCartViewModel> {
-        ShoppingCartViewModel.factory(DefaultCartRepository())
+    private val viewModel by viewModels<CartViewModel> {
+        CartViewModel.factory(DefaultCartRepository())
     }
 
     override fun onViewCreated(
@@ -76,6 +75,6 @@ class ShoppingCartFragment :
     }
 
     companion object {
-        val TAG: String? = ShoppingCartFragment::class.java.canonicalName
+        val TAG: String? = CartFragment::class.java.canonicalName
     }
 }

@@ -1,19 +1,19 @@
 package woowacourse.shopping.domain
 
-data class ShoppingCart(
+data class Cart(
     private val productMap: Map<Product, Int> = emptyMap(),
 ) {
     constructor(products: List<Product>) : this(products.groupingBy { it }.eachCount())
 
     constructor(vararg products: Product) : this(products.toList())
 
-    fun add(product: Product): ShoppingCart {
+    fun add(product: Product): Cart {
         val count = productMap.getOrDefault(product, 0) + 1
-        return ShoppingCart(productMap.plus(product to count))
+        return Cart(productMap.plus(product to count))
     }
 
-    fun remove(product: Product): ShoppingCart {
-        return ShoppingCart(productMap.minus(product))
+    fun remove(product: Product): Cart {
+        return Cart(productMap.minus(product))
     }
 
     fun totalPrice(): Int =

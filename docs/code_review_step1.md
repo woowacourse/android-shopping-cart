@@ -1,25 +1,25 @@
 ## Step1 feature list
 
+- [x]: SINGLE LIVEDATA로 개선
+- [x]: common 으로 Image 처리 BindingAdapter 빼기
+- [x]: by viewModels() 로 리팩
+- [x]: Cart 로 네이밍 통일
+- [x]: Plus -> LoadMore 로 네이밍 변경 
 - [ ]: CartAdapter onClickItem도 DataBinding을 사용
 - [ ]: CartAdapter notifyDataSetChanged 개선
 - [ ]: repository 싱글톤으로 바꾸기
 - [ ]: MediatorLiveData 혹은 map, switchMap을 활용하여 LiveData 정리
 - [ ]: onViewCreated() 내부에 있는 함수들을 분리
-- [x]: SINGLE LIVEDATA로 개선
 - [ ]: UiState 도입
 - [ ]: ProductListViewModel 의 반복되는 코드 함수화하기
 - [ ]: Android Resource의 dimen 도입
 - [ ]: Android Resource의 style 도입
-- [x]: common 으로 Image 처리 BindingAdapter 빼기
-- [x]: by viewModels() 로 리팩
 - [ ]: SavedStateHandle 을 사용하여 ViewModel 에서 상태 저장하기
 - [ ]: ShoppingNavigator
 - [ ]: 어떤 페이지부터, 어떤 항목부터 데이터를 받아올 것을 기대할거에요.
 그런데 현재 설계는 모든 데이터를 가져오면서 특정 아이템을 제외하도록 만들었어요.
-- [ ]: ShoppingCart, Cart 두개가 혼용되어서 하나로 맞추
 - [ ]: 한번 불러온 데이터의 경우 레포지토리에 캐싱해두기
 - [ ]: ProductDetailViewModel early return 으로 개선
-- [x]: Plus -> LoadMore 로 네이밍 변경 
 - [ ]: 테스트 아래와 같이 개선
 ```kotlin
 @Test
