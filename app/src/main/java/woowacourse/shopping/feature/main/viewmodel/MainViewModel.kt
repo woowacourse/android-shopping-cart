@@ -15,10 +15,6 @@ class MainViewModel(private val productRepository: ProductRepository) : ViewMode
 
     private var page: Int = INITIALIZE_PAGE
 
-    init {
-        loadPage()
-    }
-
     fun loadPage() {
         val currentProducts = _products.value ?: emptyList()
         _products.value = currentProducts + productRepository.findRange(page++, PAGE_SIZE)

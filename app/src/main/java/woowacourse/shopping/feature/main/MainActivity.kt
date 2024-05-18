@@ -11,9 +11,9 @@ import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityMainBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
-import woowacourse.shopping.feature.main.viewmodel.MainViewModelFactory
 import woowacourse.shopping.feature.main.adapter.ProductAdapter
 import woowacourse.shopping.feature.main.viewmodel.MainViewModel
+import woowacourse.shopping.feature.main.viewmodel.MainViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
         initializeProductAdapter()
         initializeToolbar()
         initializePage()
+        viewModel.loadPage()
     }
 
     private fun initializeProductAdapter() {
