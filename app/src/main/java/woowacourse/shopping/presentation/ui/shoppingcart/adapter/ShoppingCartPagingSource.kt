@@ -1,42 +1,24 @@
-// package woowacourse.shopping.presentation.ui.shoppingcart.adapter
-//
-// import woowacourse.shopping.domain.model.Product
-// import woowacourse.shopping.domain.repository.ProductRepository
-//
-// class ShoppingCartPagingSource(
-//    private val repository: ProductRepository,
-// ) {
-//    private val data: MutableMap<Int, List<Product>> = mutableMapOf()
-//
-//    fun load(
-//        page: Int,
-//        pageSize: Int,
-//    ): List<Product> {
-//        if (data.containsKey(page)) {
-//          return  data[page]!!
-//        } else {
-//            emptyList<Product>()
-//        }
-//
-//        val result = repository.getPagingProduct(page = page, pageSize = pageSize)
-//
-//        return result.fold(
-//            onSuccess = {
-//                        it
-//
-//            },
-//            onFailure = {
-//
-//            }
-//        )
-// //
-// //                val fromIndex = page * pageSize
-// //                val toIndex = min(fromIndex + pageSize, productList.size)
-// //                val last = toIndex == productList.size
-// //                PagingProduct(
-// //                    currentPage = page,
-// //                    productList = productList.subList(fromIndex, toIndex),
-// //                    last = last,
-// //                )
-//    }
-// }
+package woowacourse.shopping.presentation.ui.shoppingcart.adapter
+
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.presentation.ui.shoppingcart.PagingOrder
+
+class ShoppingCartPagingSource(private val repository: ShoppingCartRepository) {
+    fun load(page: Int): Result<PagingOrder> {
+        val result = repository.getPagingOrder(page = page, pageSize = PAGING_SIZE)
+
+        return result.fold(
+            onSuccess = { pagingOrder ->
+                val last = pagingOrder.maxOffSet <= (PAGING_SIZE * (page + 1))
+                Result.success(PagingOrder(pagingOrder.orders, page, last))
+            },
+            onFailure = { e ->
+                Result.failure(e)
+            },
+        )
+    }
+
+    companion object {
+        private const val PAGING_SIZE = 5
+    }
+}

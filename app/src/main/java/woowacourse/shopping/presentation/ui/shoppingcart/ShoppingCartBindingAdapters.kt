@@ -28,27 +28,13 @@ fun TextView.binEmptyTextVisible(orderList: List<Order>?) {
     }
 }
 
-@BindingAdapter("prePageBtnSelect")
-fun TextView.bindPrePageBtnSelect(currentPage: Int?) {
-    currentPage?.let { page ->
-        this.isEnabled = page != 0
-    }
-}
-
-@BindingAdapter("nextPageBtnSelect")
-fun TextView.bindNextPageBtnSelect(last: Boolean?) {
-    last?.let { value ->
-        this.isEnabled = value != true
-    }
-}
-
-@BindingAdapter("currentPage", "orderList")
+@BindingAdapter("currentPage", "last")
 fun TextView.bindPageNavigationTextVisible(
     currentPage: Int?,
-    orderList: List<Order>?,
+    last: Boolean?,
 ) {
-    if (currentPage == null || orderList == null) return
-    if (currentPage == 0 && orderList.size < ShoppingCartViewModel.PAGE_SIZE) {
+    if (currentPage == null || last == null) return
+    if (currentPage == 0 && last == true) {
         this.visibility = View.GONE
     } else {
         this.visibility = View.VISIBLE

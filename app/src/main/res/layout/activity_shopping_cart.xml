@@ -20,7 +20,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_order_list"
-            recyclerViewVisible="@{vm.uiState.pagingOrder.orderList}"
+            recyclerViewVisible="@{vm.uiState.pagingOrder.orders}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="71dp"
@@ -34,7 +34,7 @@
             tools:listitem="@layout/holder_order" />
 
         <TextView
-            emptyTextVisible="@{vm.uiState.pagingOrder.orderList}"
+            emptyTextVisible="@{vm.uiState.pagingOrder.orders}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_shopping_cart_title"
@@ -48,12 +48,12 @@
         <TextView
             android:id="@+id/tv_pre_page"
             currentPage="@{vm.uiState.pagingOrder.currentPage}"
-            orderList="@{vm.uiState.pagingOrder.orderList}"
-            prePageBtnSelect="@{vm.uiState.pagingOrder.currentPage}"
+            last="@{vm.uiState.pagingOrder.last}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/selector_pre_page_btn"
+            android:enabled="@{vm.uiState.pagingOrder.currentPage != 0}"
             android:gravity="center"
             android:onClick="@{() -> vm.onClickPrePage()}"
             android:text="@string/tv_pre_page_title"
@@ -66,7 +66,7 @@
         <TextView
             android:id="@+id/tv_page"
             currentPage="@{vm.uiState.pagingOrder.currentPage}"
-            orderList="@{vm.uiState.pagingOrder.orderList}"
+            last="@{vm.uiState.pagingOrder.last}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="62dp"
@@ -82,12 +82,12 @@
         <TextView
             android:id="@+id/tv_next_page"
             currentPage="@{vm.uiState.pagingOrder.currentPage}"
-            nextPageBtnSelect="@{vm.uiState.pagingOrder.last}"
-            orderList="@{vm.uiState.pagingOrder.orderList}"
+            last="@{vm.uiState.pagingOrder.last}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/selector_next_page_btn"
+            android:enabled="@{vm.uiState.pagingOrder.last != true}"
             android:gravity="center"
             android:onClick="@{() -> vm.onClickNextPage()}"
             android:text="@string/tv_next_page_title"

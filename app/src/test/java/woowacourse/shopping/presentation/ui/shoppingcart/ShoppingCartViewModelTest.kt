@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.repsoitory.DummyData
 import woowacourse.shopping.data.repsoitory.DummyShoppingCartRepositoryImpl
-import woowacourse.shopping.domain.model.PagingOrder
+import woowacourse.shopping.domain.model.OrderList
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -28,15 +28,15 @@ class ShoppingCartViewModelTest {
         val actual = viewModel.uiState.getOrAwaitValue()
 
         // then
-        val expected = dummyPagingOrder
-        assertThat(actual.pagingOrder).isEqualTo(expected)
+        val expected = dummyPagingOrder.orders
+        assertThat(actual.pagingOrder.orders).isEqualTo(expected)
     }
 
     @Test
     fun `주문을 삭제하면 장바구니에 주문이 사라진다`() {
         // given
         val dummyPagingProduct = DummyShoppingCartRepositoryImpl.getPagingOrder(0, 5).getOrThrow()
-        val closeOrder = dummyPagingProduct.orderList.first()
+        val closeOrder = dummyPagingProduct.orders.first()
 
         // when
         viewModel.onClickClose(closeOrder.id)
@@ -44,9 +44,8 @@ class ShoppingCartViewModelTest {
 
         // then
         val expected =
-            PagingOrder(
-                currentPage = 0,
-                orderList =
+            OrderList(
+                orders =
                     listOf(
                         DummyData.order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
                         DummyData.order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
@@ -54,9 +53,9 @@ class ShoppingCartViewModelTest {
                         DummyData.order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
                         DummyData.order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
                     ),
-                last = false,
+                maxOffSet = DummyData.ORDERS.size,
             )
-        assertThat(actual.pagingOrder).isEqualTo(expected)
+        assertThat(actual.pagingOrder.orders).isEqualTo(expected.orders)
     }
 
     @Test
@@ -67,9 +66,8 @@ class ShoppingCartViewModelTest {
 
         // then
         val expected =
-            PagingOrder(
-                currentPage = 1,
-                orderList =
+            OrderList(
+                orders =
                     listOf(
                         DummyData.order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
                         DummyData.order.copy(id = 7, product = DummyData.STUB_PRODUCT_A),
@@ -77,9 +75,9 @@ class ShoppingCartViewModelTest {
                         DummyData.order.copy(id = 9, product = DummyData.STUB_PRODUCT_C),
                         DummyData.order.copy(id = 10, product = DummyData.STUB_PRODUCT_A),
                     ),
-                last = false,
+                maxOffSet = DummyData.ORDERS.size,
             )
-        assertThat(actual.pagingOrder).isEqualTo(expected)
+        assertThat(actual.pagingOrder.orders).isEqualTo(expected.orders)
     }
 
     @Test
@@ -91,9 +89,8 @@ class ShoppingCartViewModelTest {
 
         // then
         val expected =
-            PagingOrder(
-                currentPage = 0,
-                orderList =
+            OrderList(
+                orders =
                     listOf(
                         DummyData.order,
                         DummyData.order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
@@ -101,8 +98,8 @@ class ShoppingCartViewModelTest {
                         DummyData.order.copy(id = 4, product = DummyData.STUB_PRODUCT_A),
                         DummyData.order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
                     ),
-                last = false,
+                maxOffSet = DummyData.ORDERS.size,
             )
-        assertThat(actual.pagingOrder).isEqualTo(expected)
+        assertThat(actual.pagingOrder.orders).isEqualTo(expected.orders)
     }
 }

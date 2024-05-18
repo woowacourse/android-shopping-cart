@@ -2,7 +2,7 @@ package woowacourse.shopping.data.repsoitory
 
 import woowacourse.shopping.data.repsoitory.DummyData.ORDERS
 import woowacourse.shopping.domain.model.Order
-import woowacourse.shopping.domain.model.PagingOrder
+import woowacourse.shopping.domain.model.OrderList
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import kotlin.math.min
@@ -27,15 +27,11 @@ object DummyShoppingCartRepositoryImpl : ShoppingCartRepository {
     override fun getPagingOrder(
         page: Int,
         pageSize: Int,
-    ): Result<PagingOrder> =
+    ): Result<OrderList> =
         runCatching {
             val fromIndex = page * pageSize
             val toIndex = min(fromIndex + pageSize, orders.size)
-            val last = toIndex == orders.size
-            PagingOrder(
-                currentPage = page,
-                orderList = orders.subList(fromIndex, toIndex),
-                last = last,
-            )
+
+            OrderList(orders.subList(fromIndex, toIndex), orders.size)
         }
 }

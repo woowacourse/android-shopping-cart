@@ -1,6 +1,6 @@
 package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.model.PagingOrder
+import woowacourse.shopping.domain.model.OrderList
 import woowacourse.shopping.domain.model.Product
 
 interface ShoppingCartRepository {
@@ -13,5 +13,5 @@ interface ShoppingCartRepository {
     fun getPagingOrder(
         page: Int,
         pageSize: Int,
-    ): Result<PagingOrder>
+    ): Result<OrderList>
 }

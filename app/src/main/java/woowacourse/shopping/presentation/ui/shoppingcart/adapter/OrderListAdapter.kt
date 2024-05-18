@@ -1,16 +1,16 @@
 package woowacourse.shopping.presentation.ui.shoppingcart.adapter
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderOrderBinding
 import woowacourse.shopping.domain.model.Order
 import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActionHandler
-import woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartViewModel
 
 class OrderListAdapter(
     private val actionHandler: ShoppingCartActionHandler,
-    private var orderList: List<Order> = emptyList(),
+    private val orderList: MutableList<Order> = mutableListOf(),
 ) : RecyclerView.Adapter<OrderListAdapter.OrderViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,16 +31,17 @@ class OrderListAdapter(
     }
 
     fun updateOrderList(newOrderList: List<Order>) {
-        orderList = newOrderList
+        orderList.clear()
+        orderList.addAll(newOrderList)
 
-        if (orderList.size != ShoppingCartViewModel.PAGE_SIZE) {
+        if (orderList.size != PAGE_SIZE) {
             notifyItemRangeRemoved(
-                orderList.size + 1,
-                orderList.size + 1 + ShoppingCartViewModel.PAGE_SIZE,
+                orderList.size,
+                PAGE_SIZE,
             )
         }
 
-        notifyItemRangeChanged(0, orderList.size)
+        notifyDataSetChanged()
     }
 
     class OrderViewHolder(
