@@ -44,9 +44,9 @@ class ShoppingCartActivityTest {
     }
 
     @Test
-    fun `5개의_상품이_장바구니에_있을_때_페이지_이동_버튼이_보인다`() {
+    fun `6개의_상품이_장바구니에_있을_때_페이지_이동_버튼이_보인다`() {
         // Given
-        repeat(5) {
+        repeat(6) {
             repository.addOrder(product = STUB_PRODUCT_A)
         }
 
