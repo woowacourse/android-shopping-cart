@@ -56,7 +56,7 @@ class ShoppingCartFragment : Fragment(), NavigationActionHandler {
 
     private fun observeData() {
         shoppingCartViewModel.pagedData.observe(viewLifecycleOwner) {
-            adapter.updateCartItems(true, it)
+            adapter.updateCartItems(it)
         }
     }
 

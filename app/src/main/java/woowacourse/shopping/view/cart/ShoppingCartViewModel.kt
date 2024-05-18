@@ -29,7 +29,7 @@ class ShoppingCartViewModel(
         updatePagedData()
     }
 
-    override fun loadCartItems() {
+    private fun loadCartItems() {
         var pagingData = emptyList<CartItem>()
         thread {
             val itemSize = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
@@ -65,11 +65,18 @@ class ShoppingCartViewModel(
     private fun updatePagedData() {
         val pageNumber = currentPage.value ?: 1
         val startIndex = (pageNumber - MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE
+        if (shouldLoadCartItems(pageNumber)) {
+            loadCartItems()
+        }
         val endIndex = minOf(pageNumber * CART_ITEM_PAGE_SIZE, shoppingCart.getItemCount())
         val newData = shoppingCart.cartItems.value?.subList(startIndex, endIndex) ?: emptyList()
         _pagedData.value = newData
 
         updateButtonState()
+    }
+
+    private fun shouldLoadCartItems(pageNumber: Int): Boolean {
+        return pageNumber * CART_ITEM_PAGE_SIZE > shoppingCart.getItemCount()
     }
 
     private fun updateButtonState() {

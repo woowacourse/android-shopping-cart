@@ -38,13 +38,7 @@ class ShoppingCartAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCartItems(
-        hasLastItem: Boolean,
-        cartItems: List<CartItem>,
-    ) {
-        if (hasLastItem) {
-            shoppingCartActionHandler.loadCartItems()
-        }
+    fun updateCartItems(cartItems: List<CartItem>) {
         this.cartItems = cartItems
         notifyDataSetChanged()
     }
