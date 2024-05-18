@@ -31,7 +31,7 @@ class ProductContentsActivity : AppCompatActivity() {
         observeProductItems()
         loadItems()
 
-        setOnLoadMoreButtonListener()
+        setOnLoadMoreButtonClickListener()
         setOnRecyclerViewScrollListener()
     }
 
@@ -53,7 +53,7 @@ class ProductContentsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setOnLoadMoreButtonListener() {
+    private fun setOnLoadMoreButtonClickListener() {
         binding.btnLoadMore.setOnClickListener {
             viewModel.loadProducts()
         }
