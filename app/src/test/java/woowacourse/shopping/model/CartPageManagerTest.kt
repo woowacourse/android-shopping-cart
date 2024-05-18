@@ -9,7 +9,7 @@ class CartPageManagerTest {
 
     @BeforeEach
     fun setUp() {
-        cartPageManager = CartPageManager()
+        cartPageManager = CartPageManager(5)
     }
 
     @Test
