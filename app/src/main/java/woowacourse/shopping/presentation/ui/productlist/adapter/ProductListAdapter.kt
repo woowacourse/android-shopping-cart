@@ -55,7 +55,7 @@ class ProductListAdapter(
             }
 
             is LoadMoreViewHolder -> {
-                holder.bind(pagingProduct.last)
+                holder.bind(pagingProduct.isLastPage)
             }
         }
     }
@@ -83,8 +83,8 @@ class ProductListAdapter(
             private val binding: HolderLoadMoreBinding,
             private val actionHandler: ProductListActionHandler,
         ) : ProductListViewHolder(binding.root) {
-            fun bind(last: Boolean) {
-                binding.last = last
+            fun bind(isLastPage: Boolean) {
+                binding.isLastPage = isLastPage
                 binding.actionHandler = actionHandler
             }
         }

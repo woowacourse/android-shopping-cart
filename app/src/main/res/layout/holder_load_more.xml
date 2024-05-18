@@ -7,7 +7,7 @@
     <data>
 
         <variable
-            name="last"
+            name="isLastPage"
             type="boolean" />
 
         <variable
@@ -23,7 +23,7 @@
 
         <TextView
             android:id="@+id/tv_show_more_products"
-            loadMoreBtnVisible="@{last}"
+            loadMoreBtnVisible="@{isLastPage}"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_margin="16dp"
@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/tv_empty_show_more"
-            emptyLoadMoreTextVisible="@{last}"
+            emptyLoadMoreTextVisible="@{isLastPage}"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_margin="16dp"

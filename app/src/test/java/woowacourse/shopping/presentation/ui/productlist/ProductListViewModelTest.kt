@@ -39,7 +39,7 @@ class ProductListViewModelTest {
             PagingProduct(
                 currentPage = nextDummyPagingProduct.currentPage,
                 productList = dummyPagingProduct.productList + nextDummyPagingProduct.productList,
-                last = nextDummyPagingProduct.last,
+                isLastPage = nextDummyPagingProduct.isLastPage,
             )
         assertThat(actual.pagingProduct).isEqualTo(expected)
     }

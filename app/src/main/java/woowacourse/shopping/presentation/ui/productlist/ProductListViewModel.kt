@@ -39,7 +39,7 @@ class ProductListViewModel(
                     productList =
                         _uiState.value?.pagingProduct?.productList?.plus(item.productList)
                             ?: item.productList,
-                    last = item.last,
+                    isLastPage = item.isLastPage,
                 )
 
             _uiState.value = _uiState.value?.copy(pagingProduct = pagingProduct)

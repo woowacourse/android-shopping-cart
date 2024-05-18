@@ -77,7 +77,7 @@ object DummyProductList : ProductListRepository {
             PagingProduct(
                 currentPage = page,
                 productList = DummyProductList.productList.subList(fromIndex, toIndex),
-                last = last,
+                isLastPage = last,
             )
         }
 }
