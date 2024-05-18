@@ -54,7 +54,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun observeCartItems() {
         viewModel.cart.observe(this) {
-            adapter.setData(viewModel.cart.value ?: emptyList())
+            adapter.setData(it)
         }
     }
 
