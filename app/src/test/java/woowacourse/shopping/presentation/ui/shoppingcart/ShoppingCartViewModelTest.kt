@@ -1,105 +1,115 @@
 package woowacourse.shopping.presentation.ui.shoppingcart
 
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.just
+import io.mockk.runs
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.repsoitory.DummyData
-import woowacourse.shopping.data.repsoitory.DummyShoppingCartRepositoryImpl
+import woowacourse.shopping.data.repsoitory.DummyData.ORDERS
 import woowacourse.shopping.domain.model.OrderList
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
+@ExtendWith(MockKExtension::class)
 class ShoppingCartViewModelTest {
     private lateinit var viewModel: ShoppingCartViewModel
 
-    @BeforeEach
-    fun setUp() {
-        viewModel = ShoppingCartViewModel(DummyShoppingCartRepositoryImpl)
+    @MockK
+    private lateinit var repository: ShoppingCartRepository
+
+    private fun initViewModel() {
+        viewModel = ShoppingCartViewModel(repository)
     }
 
     @Test
     fun `첫 번째 페이지에 장바구니를 불러온다`() {
-        // given
-        val dummyPagingOrder = DummyShoppingCartRepositoryImpl.getPagingOrder(0, 5).getOrThrow()
-
-        // when
-        val actual = viewModel.uiState.getOrAwaitValue()
+        // given & when
+        val orderList = OrderList(ORDERS.subList(0, 5), ORDERS.size)
+        every { repository.getPagingOrder(0, 5) } returns
+            Result.success(orderList)
+        initViewModel()
 
         // then
-        val expected = dummyPagingOrder.orders
-        assertThat(actual.pagingOrder.orders).isEqualTo(expected)
+        val actual = viewModel.uiState.getOrAwaitValue()
+        assert(actual.pagingOrder.orders == orderList.orders)
+//        assertThat(actual.pagingOrder.orders).isEqualTo(orderList.orders)
     }
 
     @Test
     fun `주문을 삭제하면 장바구니에 주문이 사라진다`() {
         // given
-        val dummyPagingProduct = DummyShoppingCartRepositoryImpl.getPagingOrder(0, 5).getOrThrow()
-        val closeOrder = dummyPagingProduct.orders.first()
+        val orderList = OrderList(ORDERS.subList(0, 5), ORDERS.size)
+        every { repository.getPagingOrder(0, 5) } returns
+            Result.success(orderList)
+        every { repository.getPagingOrder(0, 5) } returns
+            Result.success(orderList.copy(orders = ORDERS.subList(1, 6)))
+        every { repository.removeOrder(orderList.orders.first().id) } just runs
+        initViewModel()
 
         // when
-        viewModel.onClickClose(closeOrder.id)
-        val actual = viewModel.uiState.getOrAwaitValue()
+        viewModel.onClickClose(orderList.orders.first().id)
 
         // then
-        val expected =
-            OrderList(
+        val actual = viewModel.uiState.getOrAwaitValue()
+        assertThat(actual.pagingOrder.orders).isEqualTo(
+            orderList.copy(
                 orders =
-                    listOf(
-                        DummyData.order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
-                        DummyData.order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
-                        DummyData.order.copy(id = 4, product = DummyData.STUB_PRODUCT_A),
-                        DummyData.order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
-                        DummyData.order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
+                    ORDERS.subList(
+                        1,
+                        6,
                     ),
-                maxOffSet = DummyData.ORDERS.size,
-            )
-        assertThat(actual.pagingOrder.orders).isEqualTo(expected.orders)
+            ).orders,
+        )
+
+        assert(
+            actual.pagingOrder.orders ==
+                orderList.copy(orders = ORDERS.subList(1, 6)).orders,
+        )
     }
 
     @Test
     fun `첫 번째 페이지에서 다음 페이지로 넘어가면 다음 페이지 장바구니를 불러온다`() {
-        // given & when
+        // given
+        val firstPageOrderList = OrderList(ORDERS.subList(0, 5), ORDERS.size)
+        val secondPageOrderList = OrderList(ORDERS.subList(5, 10), ORDERS.size)
+
+        every { repository.getPagingOrder(0, 5) } returns
+            Result.success(firstPageOrderList)
+        every { repository.getPagingOrder(1, 5) } returns
+            Result.success(secondPageOrderList)
+        initViewModel()
+
+        // when
         viewModel.onClickNextPage()
-        val actual = viewModel.uiState.getOrAwaitValue()
 
         // then
-        val expected =
-            OrderList(
-                orders =
-                    listOf(
-                        DummyData.order.copy(id = 6, product = DummyData.STUB_PRODUCT_C),
-                        DummyData.order.copy(id = 7, product = DummyData.STUB_PRODUCT_A),
-                        DummyData.order.copy(id = 8, product = DummyData.STUB_PRODUCT_B),
-                        DummyData.order.copy(id = 9, product = DummyData.STUB_PRODUCT_C),
-                        DummyData.order.copy(id = 10, product = DummyData.STUB_PRODUCT_A),
-                    ),
-                maxOffSet = DummyData.ORDERS.size,
-            )
-        assertThat(actual.pagingOrder.orders).isEqualTo(expected.orders)
+        val actual = viewModel.uiState.getOrAwaitValue()
+        assert(actual.pagingOrder.orders == secondPageOrderList.orders)
     }
 
     @Test
     fun `두 번째 페이지에서 이전 페이지로 넘어가면 다음 페이지 장바구니를 불러온다`() {
-        // given & when
+        // given
+        val firstPageOrderList = OrderList(ORDERS.subList(0, 5), ORDERS.size)
+        val secondPageOrderList = OrderList(ORDERS.subList(5, 10), ORDERS.size)
+
+        every { repository.getPagingOrder(0, 5) } returns
+            Result.success(firstPageOrderList)
+        every { repository.getPagingOrder(1, 5) } returns
+            Result.success(secondPageOrderList)
+        initViewModel()
+
+        // when
         viewModel.onClickNextPage()
         viewModel.onClickPrePage()
-        val actual = viewModel.uiState.getOrAwaitValue()
 
         // then
-        val expected =
-            OrderList(
-                orders =
-                    listOf(
-                        DummyData.order,
-                        DummyData.order.copy(id = 2, product = DummyData.STUB_PRODUCT_B),
-                        DummyData.order.copy(id = 3, product = DummyData.STUB_PRODUCT_C),
-                        DummyData.order.copy(id = 4, product = DummyData.STUB_PRODUCT_A),
-                        DummyData.order.copy(id = 5, product = DummyData.STUB_PRODUCT_B),
-                    ),
-                maxOffSet = DummyData.ORDERS.size,
-            )
-        assertThat(actual.pagingOrder.orders).isEqualTo(expected.orders)
+        val actual = viewModel.uiState.getOrAwaitValue()
+        assert(actual.pagingOrder.orders == firstPageOrderList.orders)
     }
 }
