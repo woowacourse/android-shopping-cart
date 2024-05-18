@@ -15,7 +15,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class CartActivity : AppCompatActivity(), CartClickListener {
+class CartActivity : AppCompatActivity(), CartItemClickListener {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
     private val viewModel: CartViewModel by viewModels {
@@ -70,11 +70,11 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         return true
     }
 
-    override fun onItemClick(productId: Long) {
+    override fun onCartItemClick(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
     }
 
-    override fun onDeleteItemClick(itemId: Long) {
+    override fun onDeleteButtonClick(itemId: Long) {
         viewModel.deleteItem(itemId)
     }
 

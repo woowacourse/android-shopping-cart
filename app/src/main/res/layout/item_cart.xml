@@ -7,7 +7,7 @@
 
         <variable
             name="clickListener"
-            type="woowacourse.shopping.presentation.ui.cart.CartClickListener" />
+            type="woowacourse.shopping.presentation.ui.cart.CartItemClickListener" />
 
         <variable
             name="cartItem"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:background="@drawable/shopping_cart_item_gridview"
-        android:onClick="@{() -> clickListener.onItemClick(cartItem.productId)}">
+        android:onClick="@{() -> clickListener.onCartItemClick(cartItem.productId)}">
 
         <TextView
             android:id="@+id/tv_product_name"
@@ -69,7 +69,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="12dp"
-            android:onClick="@{() -> clickListener.onDeleteItemClick(cartItem.id)}"
+            android:onClick="@{() -> clickListener.onDeleteButtonClick(cartItem.id)}"
             android:src="@drawable/ic_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

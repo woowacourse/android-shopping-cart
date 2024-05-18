@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.CartItem
 
 class CartAdapter(
-    private val clickListener: CartClickListener,
+    private val clickListener: CartItemClickListener,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
 
