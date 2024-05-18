@@ -93,6 +93,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
                         requireContext(),
                         getString(R.string.max_paging_data),
                     )
+
+                ShoppingCartState.Error -> ShoppingUtils.makeToast(
+                    requireContext(),
+                    getString(R.string.error_default)
+                )
             }
         }
     }

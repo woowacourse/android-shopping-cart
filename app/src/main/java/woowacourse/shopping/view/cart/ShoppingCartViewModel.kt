@@ -7,6 +7,7 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.cart.model.ShoppingCart
 
 class ShoppingCartViewModel(
@@ -24,32 +25,34 @@ class ShoppingCartViewModel(
     val shoppingCartState: LiveData<ShoppingCartState> get() = _shoppingCartState
 
     fun deleteShoppingCartItem(itemId: Long) {
-        runCatching {
+        try {
             shoppingCartRepository.deleteCartItem(itemId)
-        }.onSuccess {
             shoppingCart.deleteProduct(itemId)
             _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Success
-            resetState()
-        }.onFailure {
-            _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Fail
+        } catch (e: Exception){
+            when(e){
+                is NoSuchDataException -> _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Fail
+                else -> _shoppingCartState.value = ShoppingCartState.Error
+            }
+        } finally {
             resetState()
         }
     }
 
     fun loadPagingCartItemList(pagingSize: Int) {
-        runCatching {
+        try {
             val itemSize = shoppingCart.cartItems.value?.size ?: DEFAULT_ITEM_SIZE
-            shoppingCartRepository.loadPagingCartItems(itemSize, pagingSize)
+            val pagingData = shoppingCartRepository.loadPagingCartItems(itemSize, pagingSize)
+            shoppingCart.addProducts(pagingData)
+            _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
+        } catch (e: Exception){
+            when(e){
+                is NoSuchDataException -> _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
+                else -> _shoppingCartState.value = ShoppingCartState.Error
+            }
+        } finally {
+            resetState()
         }
-            .onSuccess {
-                shoppingCart.addProducts(it)
-                _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
-                resetState()
-            }
-            .onFailure {
-                _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
-                resetState()
-            }
     }
 
     fun getUpdatePageData(): List<CartItem> {
