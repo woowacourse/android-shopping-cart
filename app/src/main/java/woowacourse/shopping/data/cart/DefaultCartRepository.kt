@@ -23,6 +23,11 @@ class DefaultCartRepository(
     }
 
     override fun canLoadMoreCartProducts(currentPage: Int): Boolean {
+        if (currentPage <= START_PAGE) return false
         return cartDataSource.canLoadMoreCartProducts(currentPage)
+    }
+
+    companion object {
+        private const val START_PAGE = 1
     }
 }

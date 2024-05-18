@@ -6,10 +6,12 @@
 - [x]: Cart 로 네이밍 통일
 - [x]: Plus -> LoadMore 로 네이밍 변경 
 - [x]: ProductDetailViewModel early return 으로 개선
+- [x]: MediatorLiveData, map, switchMap을 활용하여 LiveData 개선 
+- [ ]: 장바구니 Cart paging 리팩토링 --- Product, page 바뀌면 prev, next page 로드
+- [ ]: Shopping List Cart 리팩토링
 - [ ]: CartAdapter onClickItem도 DataBinding을 사용
 - [ ]: CartAdapter notifyDataSetChanged 개선
 - [ ]: repository 싱글톤으로 바꾸기
-- [ ]: MediatorLiveData 혹은 map, switchMap을 활용하여 LiveData 정리
 - [ ]: onViewCreated() 내부에 있는 함수들을 분리
 - [ ]: UiState 도입
 - [ ]: ProductListViewModel 의 반복되는 코드 함수화하기
@@ -42,6 +44,14 @@
 1페이지라면, 이전 페이지로 이동할 수 없다.
 마지막 페이지라면, 다음 페이지로 이동할 수 없다
 - [ ]: ViewModel 테스트 모두 작성하기  
+
+# 공부 정리
+## map vs switchMap vs MediatorLiveData
+- MediatorLiveData 여러 LiveData 소스를 하나로 만듦(combine 이랑 비슷한데 element가 하나 라도 바뀌면 emit함)
+- map (Collection map이랑 비슷, {element -> element})
+- switchMap (collection flatMap 이랑 비슷, {element -> LiveData})
+
+switchMap은 다른 LiveData를 기반으로 LiveData 소스를 전환하는 데 사용됩니다.
 
 # 답변 정리
 ## leak Canary 를 추가한 이유가 궁금합니다.
