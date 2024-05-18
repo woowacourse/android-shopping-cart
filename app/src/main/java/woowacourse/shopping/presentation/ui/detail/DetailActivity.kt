@@ -25,7 +25,6 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         )
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -37,7 +36,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
     private fun setUpDataBinding() {
         binding.lifecycleOwner = this
         binding.clickListener = this
-        binding.vmProduct = viewModel
+        binding.viewModel = viewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

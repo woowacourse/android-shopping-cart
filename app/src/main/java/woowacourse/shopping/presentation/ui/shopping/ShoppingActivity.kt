@@ -36,7 +36,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     private fun setUpDataBinding() {
         binding.lifecycleOwner = this
         binding.clickListener = this
-        binding.vmProduct = viewModel
+        binding.viewModel = viewModel
     }
 
     private fun setUpAdapter() {

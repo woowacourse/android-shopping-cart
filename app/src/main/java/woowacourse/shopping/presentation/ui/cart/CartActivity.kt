@@ -36,7 +36,7 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
     private fun setUpdataBinding() {
         binding.lifecycleOwner = this
-        binding.vmShoppingCart = viewModel
+        binding.viewModel = viewModel
     }
 
     private fun setUpAdapter() {

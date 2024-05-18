@@ -10,7 +10,7 @@
             type="woowacourse.shopping.presentation.ui.detail.DetailClickListener" />
 
         <variable
-            name="vmProduct"
+            name="viewModel"
             type="woowacourse.shopping.presentation.ui.detail.DetailViewModel" />
     </data>
 
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="fitXY"
-            app:imageUrl="@{vmProduct.product.imageUrl}"
+            app:imageUrl="@{viewModel.product.imageUrl}"
             app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
             tools:layout_editor_absoluteX="-157dp"
             tools:src="@drawable/ic_launcher_background" />
@@ -51,7 +51,7 @@
             android:layout_margin="18dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{vmProduct.product.name}"
+            android:text="@{viewModel.product.name}"
             android:textColor="@color/black"
             android:textSize="24dp"
             android:textStyle="bold"
@@ -88,7 +88,7 @@
             android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider"
-            app:price="@{vmProduct.product.price}"
+            app:price="@{viewModel.product.price}"
             tools:text="99,800원" />
 
         <TextView
@@ -99,7 +99,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onClick(vmProduct.product.id)}"
+            android:onClick="@{() -> clickListener.onClick(viewModel.product.id)}"
             android:text="장바구니 담기"
             android:textColor="@color/white"
             android:textSize="20dp"
