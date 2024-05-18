@@ -2,8 +2,10 @@ package woowacourse.shopping.presentation.ui.productlist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
+import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.base.Event
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
@@ -51,5 +53,13 @@ class ProductListViewModel(
 
     override fun onClickLoadMoreButton() {
         getPagingProduct()
+    }
+
+    companion object {
+        fun factory(productRepository: ProductRepository): ViewModelProvider.Factory {
+            return BaseViewModelFactory {
+                ProductListViewModel(productRepository)
+            }
+        }
     }
 }

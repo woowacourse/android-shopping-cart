@@ -19,7 +19,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_product_list
 
     private val viewModel: ProductListViewModel by viewModels {
-        ProductListViewModelFactory((application as App).productRepository)
+        ProductListViewModel.factory((application as App).productRepository)
     }
 
     private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }

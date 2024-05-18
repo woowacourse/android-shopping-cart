@@ -2,8 +2,10 @@ package woowacourse.shopping.presentation.ui.shoppingcart
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
+import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.ShoppingCartPagingSource
 
@@ -50,6 +52,11 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
 
     companion object {
         const val INIT_PAGE = 0
-        const val PAGE_SIZE = 5
+
+        fun factory(repository: ShoppingCartRepository): ViewModelProvider.Factory {
+            return BaseViewModelFactory {
+                ShoppingCartViewModel(repository)
+            }
+        }
     }
 }

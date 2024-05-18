@@ -16,7 +16,7 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_shopping_cart
 
     private val viewModel: ShoppingCartViewModel by viewModels {
-        ShoppingCartViewModelFactory((application as App).shoppingCartRepository)
+        ShoppingCartViewModel.factory((application as App).shoppingCartRepository)
     }
 
     private val adapter: OrderListAdapter by lazy { OrderListAdapter(viewModel) }
