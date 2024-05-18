@@ -27,7 +27,7 @@
             android:noHistory="true"
             android:theme="@style/Theme.Shopping" />
         <activity
-            android:name=".presentation.ui.shopping.ShoppingItemActivity"
+            android:name=".presentation.ui.shopping.ShoppingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

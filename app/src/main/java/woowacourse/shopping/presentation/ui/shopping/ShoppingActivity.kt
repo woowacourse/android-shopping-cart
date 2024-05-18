@@ -15,7 +15,7 @@ import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class ShoppingItemActivity : AppCompatActivity(), ShoppingItemClickListener {
+class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
     private val viewModel: ShoppingViewModel by viewModels {

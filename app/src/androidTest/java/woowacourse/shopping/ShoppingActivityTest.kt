@@ -4,16 +4,16 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.runner.RunWith
-import woowacourse.shopping.presentation.ui.shopping.ShoppingItemActivity
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
 
 @RunWith(AndroidJUnit4::class)
 class ShoppingActivityTest {
     @get:Rule
-    val activityRule: ActivityScenarioRule<ShoppingItemActivity> =
-        ActivityScenarioRule<ShoppingItemActivity>(
+    val activityRule: ActivityScenarioRule<ShoppingActivity> =
+        ActivityScenarioRule<ShoppingActivity>(
             Intent(
                 ApplicationProvider.getApplicationContext(),
-                ShoppingItemActivity::class.java,
+                ShoppingActivity::class.java,
             ),
         )
 
