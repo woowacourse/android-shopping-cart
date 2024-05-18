@@ -3,11 +3,10 @@ package woowacourse.shopping.view.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
-import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.PRODUCT_LOAD_PAGING_SIZE
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.utils.NoSuchDataException
 
 class ProductListViewModel(
     private val repository: ProductRepository,
@@ -20,19 +19,21 @@ class ProductListViewModel(
     val productListState: LiveData<ProductListState> get() = _productListState
 
     fun loadPagingProduct() {
-        runCatching {
+        try {
             val itemSize = products.value?.size ?: DEFAULT_ITEM_SIZE
-            repository.loadPagingProducts(itemSize)
+            val pagingData = repository.loadPagingProducts(itemSize)
+            _products.value = _products.value?.plus(pagingData)
+            _productListState.value = ProductListState.LoadProductList.Success
+        } catch (e: Exception) {
+            when (e) {
+                is NoSuchDataException -> _productListState.value =
+                    ProductListState.LoadProductList.Fail
+
+                else -> ProductListState.Error
+            }
+        } finally {
+            resetState()
         }
-            .onSuccess {
-                _products.value = _products.value?.plus(it)
-                _productListState.value = ProductListState.LoadProductList.Success
-                resetState()
-            }
-            .onFailure {
-                _productListState.value = ProductListState.LoadProductList.Fail
-                resetState()
-            }
     }
 
     private fun resetState() {

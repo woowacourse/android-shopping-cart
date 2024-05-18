@@ -75,6 +75,10 @@ class ProductsListFragment : Fragment(), OnClickProducts {
                     requireContext(),
                     getString(R.string.max_paging_data)
                 )
+                ProductListState.Error -> ShoppingUtils.makeToast(
+                    requireContext(),
+                    getString(R.string.error_default)
+                )
             }
         }
     }
