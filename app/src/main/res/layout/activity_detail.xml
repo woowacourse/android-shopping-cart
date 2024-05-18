@@ -96,7 +96,7 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onClick(viewModel.product.id)}"
+            android:onClick="@{() -> clickListener.onAddToCartClick(viewModel.product.id)}"
             android:text="장바구니 담기"
             android:textColor="@color/white"
             android:textSize="20dp"

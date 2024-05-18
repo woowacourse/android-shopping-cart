@@ -55,7 +55,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onClick(productId: Long) {
+    override fun onAddToCartClick(productId: Long) {
         viewModel.createShoppingCartItem()
         navigate()
     }
