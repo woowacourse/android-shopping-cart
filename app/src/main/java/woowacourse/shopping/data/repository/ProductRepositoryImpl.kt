@@ -8,11 +8,8 @@ import woowacourse.shopping.utils.NoSuchDataException
 class ProductRepositoryImpl : ProductRepository {
     private val productDao = ProductDao()
 
-    override fun loadPagingProducts(
-        offset: Int,
-        pagingSize: Int,
-    ): List<Product> {
-        val pagingData = productDao.findPagingProducts(offset, pagingSize)
+    override fun loadPagingProducts(offset: Int): List<Product> {
+        val pagingData = productDao.findPagingProducts(offset, PRODUCT_LOAD_PAGING_SIZE)
         if (pagingData.isEmpty()) throw NoSuchDataException()
         return pagingData
     }

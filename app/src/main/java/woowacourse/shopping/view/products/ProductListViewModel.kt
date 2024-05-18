@@ -3,7 +3,9 @@ package woowacourse.shopping.view.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
+import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.PRODUCT_LOAD_PAGING_SIZE
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
@@ -17,10 +19,10 @@ class ProductListViewModel(
         MutableLiveData(ProductListState.Init)
     val productListState: LiveData<ProductListState> get() = _productListState
 
-    fun loadPagingProduct(pagingSize: Int) {
+    fun loadPagingProduct() {
         runCatching {
             val itemSize = products.value?.size ?: DEFAULT_ITEM_SIZE
-            repository.loadPagingProducts(itemSize, pagingSize)
+            repository.loadPagingProducts(itemSize)
         }
             .onSuccess {
                 _products.value = _products.value?.plus(it)

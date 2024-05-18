@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.PRODUCT_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
@@ -98,8 +97,9 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
 
     private fun loadPagingData() {
-        productListViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
+        productListViewModel.loadPagingProduct()
     }
 
-    private fun showMessage(message: String) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+    private fun showMessage(message: String) =
+        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 }
