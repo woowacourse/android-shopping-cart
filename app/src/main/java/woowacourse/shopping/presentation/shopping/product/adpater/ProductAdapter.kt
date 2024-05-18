@@ -34,12 +34,12 @@ class ProductAdapter(
                         parent,
                         false,
                     )
-                ShoppingViewHolder.ProductViewHolder(view, onClickItem)
+                ShoppingViewHolder.Product(view, onClickItem)
             }
 
             ShoppingUiModel.ITEM_VIEW_TYPE_PLUS -> {
                 val view = ItemPlusProductBinding.inflate(layoutInflater, parent, false)
-                ShoppingViewHolder.PlusViewHolder(view, onPlusItem)
+                ShoppingViewHolder.LoadMore(view, onPlusItem)
             }
 
             else -> error("Invalid view type")
@@ -51,8 +51,8 @@ class ProductAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ShoppingViewHolder.ProductViewHolder -> holder.bind(products[position] as ShoppingUiModel.Product)
-            is ShoppingViewHolder.PlusViewHolder -> holder.bind()
+            is ShoppingViewHolder.Product -> holder.bind(products[position] as ShoppingUiModel.Product)
+            is ShoppingViewHolder.LoadMore -> holder.bind()
         }
     }
 

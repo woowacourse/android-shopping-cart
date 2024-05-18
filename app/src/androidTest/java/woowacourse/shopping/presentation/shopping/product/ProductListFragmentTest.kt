@@ -34,7 +34,7 @@ class ProductListFragmentTest {
         val viewInteraction =
             onView(withId(R.id.rv_product_list)).perform(
                 RecyclerViewActions.scrollToHolder(
-                    CoreMatchers.instanceOf(ShoppingViewHolder.PlusViewHolder::class.java),
+                    CoreMatchers.instanceOf(ShoppingViewHolder.LoadMore::class.java),
                 ).atPosition(0),
             )
         // then
@@ -51,7 +51,7 @@ class ProductListFragmentTest {
         // 더보기 버튼까지 스크롤
         onView(withId(R.id.rv_product_list)).perform(
             RecyclerViewActions.scrollToHolder(
-                CoreMatchers.instanceOf(ShoppingViewHolder.PlusViewHolder::class.java),
+                CoreMatchers.instanceOf(ShoppingViewHolder.LoadMore::class.java),
             ).atPosition(0),
         )
         // 더보기 버튼 클릭
@@ -60,7 +60,7 @@ class ProductListFragmentTest {
         val interaction =
             onView(withId(R.id.rv_product_list)).perform(
                 RecyclerViewActions.scrollToHolder(
-                    CoreMatchers.instanceOf(ShoppingViewHolder.ProductViewHolder::class.java),
+                    CoreMatchers.instanceOf(ShoppingViewHolder.Product::class.java),
                 ).atPosition(20),
             )
         // then

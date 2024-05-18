@@ -23,7 +23,7 @@ class ProductListViewModel(
                 .map { it.toShoppingUiModel() }
 
         if (shoppingRepository.canLoadMoreProducts(currentProductIds)) {
-            _products.value = currentProducts + newProducts + ShoppingUiModel.Plus
+            _products.value = currentProducts + newProducts + ShoppingUiModel.LoadMore
         } else {
             _products.value = currentProducts + newProducts
         }

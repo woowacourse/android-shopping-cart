@@ -19,7 +19,7 @@
 - [ ]: ShoppingCart, Cart 두개가 혼용되어서 하나로 맞추
 - [ ]: 한번 불러온 데이터의 경우 레포지토리에 캐싱해두기
 - [ ]: ProductDetailViewModel early return 으로 개선
-- [ ]: Plus -> LoadMore 로 개선 
+- [x]: Plus -> LoadMore 로 네이밍 변경 
 - [ ]: 테스트 아래와 같이 개선
 ```kotlin
 @Test

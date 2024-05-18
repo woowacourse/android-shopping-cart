@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 
 sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    class ProductViewHolder(
+    class Product(
         private val binding: ItemProductBinding,
         private val onClickItem: (id: Long) -> Unit,
     ) : ShoppingViewHolder(binding.root) {
@@ -17,7 +17,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    class PlusViewHolder(
+    class LoadMore(
         private val binding: ItemPlusProductBinding,
         private val onPlusItem: () -> Unit,
     ) : ShoppingViewHolder(binding.root) {
