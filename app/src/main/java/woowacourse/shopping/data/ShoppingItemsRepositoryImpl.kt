@@ -6,6 +6,17 @@ import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 class ShoppingItemsRepositoryImpl : ShoppingItemsRepository {
     private val items: List<Product> = DummyShoppingItems.items
 
+    override fun fetchProductsSize(): Int {
+        return items.size
+    }
+
+    override fun fetchProductsWithIndex(
+        start: Int,
+        end: Int,
+    ): List<Product> {
+        return items.subList(start, end)
+    }
+
     override fun getAllProducts(): List<Product> {
         return items
     }
