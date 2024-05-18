@@ -63,7 +63,6 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
     private fun showError(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-        viewModel.loadCartItems()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
