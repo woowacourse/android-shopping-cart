@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
@@ -48,11 +47,10 @@ class ProductDetailViewModel(
 
     companion object {
         fun factory(
-            extras: CreationExtras,
             productRepository: ProductRepository,
             shoppingCartRepository: ShoppingCartRepository,
         ): ViewModelProvider.Factory {
-            return BaseViewModelFactory {
+            return BaseViewModelFactory { extras ->
                 ProductDetailViewModel(
                     extras.createSavedStateHandle(),
                     productRepository,
