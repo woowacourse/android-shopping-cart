@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.detail
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +13,11 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 
 class ProductDetailFragment : Fragment(), OnClickDetail {
+    private var fragmentChangeListener: FragmentChangeListener? = null
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
     private val productDetailViewModel: ProductDetailViewModel by lazy {
@@ -26,6 +29,13 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
                 )
             }
         viewModelFactory.create(ProductDetailViewModel::class.java)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangeListener){
+            fragmentChangeListener = context
+        }
     }
 
     override fun onCreateView(
@@ -90,10 +100,11 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        fragmentChangeListener = null
     }
 
     override fun clickClose() {
-        parentFragmentManager.popBackStack()
+        fragmentChangeListener?.popFragment()
     }
 
     override fun clickAddCart(product: Product) {

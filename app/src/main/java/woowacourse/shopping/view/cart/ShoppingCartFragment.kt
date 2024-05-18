@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.cart
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +11,13 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.utils.ShoppingUtils
+import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
 class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
+    private var fragmentChangeListener: FragmentChangeListener? = null
     private var _binding: FragmentShoppingCartBinding? = null
     val binding: FragmentShoppingCartBinding get() = _binding!!
 
@@ -24,6 +27,13 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         viewModelFactory.create(ShoppingCartViewModel::class.java)
     }
     private lateinit var adapter: ShoppingCartAdapter
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangeListener){
+            fragmentChangeListener = context
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -90,10 +100,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        fragmentChangeListener = null
     }
 
     override fun clickBack() {
-        parentFragmentManager.popBackStack()
+        fragmentChangeListener?.popFragment()
     }
 
     override fun clickCartItem(productId: Long) {
@@ -101,7 +112,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
             }
-        changeFragment(productFragment)
+        fragmentChangeListener?.changeFragment(productFragment)
     }
 
     override fun clickRemoveCartItem(cartItemId: Long) {
@@ -122,14 +133,6 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         } else {
             ShoppingUtils.makeToast(requireContext(), getString(R.string.max_paging_data))
         }
-    }
-
-    private fun changeFragment(nextFragment: Fragment) {
-        parentFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_container, nextFragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     private fun updateRecyclerView() {

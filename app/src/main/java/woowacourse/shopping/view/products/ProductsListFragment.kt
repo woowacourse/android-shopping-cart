@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.products
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.utils.ShoppingUtils
+import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
 
 class ProductsListFragment : Fragment(), OnClickProducts {
+    private var fragmentChangeListener: FragmentChangeListener? = null
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private val productListViewModel: ProductListViewModel by lazy {
@@ -24,6 +27,12 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
     private lateinit var adapter: ProductAdapter
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentChangeListener) {
+            fragmentChangeListener = context
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,6 +82,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        fragmentChangeListener = null
     }
 
     override fun clickProductItem(productId: Long) {
@@ -80,24 +90,16 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
             }
-        changeFragment(productFragment)
+        fragmentChangeListener?.changeFragment(productFragment)
     }
 
     override fun clickShoppingCart() {
         val shoppingCartFragment = ShoppingCartFragment()
-        changeFragment(shoppingCartFragment)
+        fragmentChangeListener?.changeFragment(shoppingCartFragment)
     }
 
     override fun clickLoadPagingData() {
         loadPagingData()
-    }
-
-    private fun changeFragment(nextFragment: Fragment) {
-        parentFragmentManager
-            .beginTransaction()
-            .add(R.id.fragment_container, nextFragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     private fun loadPagingData() {
