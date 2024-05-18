@@ -20,25 +20,21 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
 
     val pageNumber: LiveData<Int> get() = _pageNumber
 
-    private val items: MutableList<Product> = mutableListOf()
     private val _cart: MutableLiveData<List<Product>> = MutableLiveData()
     val cart: LiveData<List<Product>> get() = _cart
 
+    private val cartItems get() = cartDao.findAll()
+
     fun loadCartItems() {
         _pageNumber.value = cartPageManager.pageNum
-
-        items.clear()
-        items.addAll(cartDao.findAll())
         _cart.value = getProducts()
-
         _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(items.size)
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartItems.size)
     }
 
     fun removeCartItem(productId: Long) {
         cartDao.delete(productId)
-        items.remove(items.find { it.id == productId })
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(items.size)
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartItems.size)
         _cart.value = getProducts()
     }
 
@@ -52,8 +48,8 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
 
     private fun getProducts(): List<Product> {
         val fromIndex = (cartPageManager.pageNum - OFFSET) * PAGE_SIZE
-        val toIndex = min(fromIndex + PAGE_SIZE, items.size)
-        return items.toList().subList(fromIndex, toIndex)
+        val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
+        return cartItems.toList().subList(fromIndex, toIndex)
     }
 
     companion object {
