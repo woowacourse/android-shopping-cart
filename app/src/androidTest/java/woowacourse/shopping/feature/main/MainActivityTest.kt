@@ -64,7 +64,7 @@ class MainActivityTest {
     fun `상품_목록이_최상단일_때_더보기_버튼이_보이지_않는다`() {
         onView(withId(R.id.rv_main_product))
             .perform(scrollToPosition<RecyclerView.ViewHolder>(0))
-        onView(withId(R.id.btn_main_see_more))
+        onView(withId(R.id.btn_main_load_more))
             .check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
@@ -72,7 +72,7 @@ class MainActivityTest {
     fun `20번째_상품이_화면_최하단에_닿기_전까지_더보기_버튼이_보이지_않는다`() {
         onView(withId(R.id.rv_main_product))
             .perform(scrollToPosition<RecyclerView.ViewHolder>(10))
-        onView(withId(R.id.btn_main_see_more))
+        onView(withId(R.id.btn_main_load_more))
             .check(matches(withEffectiveVisibility(Visibility.GONE)))
     }
 
@@ -80,7 +80,7 @@ class MainActivityTest {
     fun `20번째_상품이_최하단에_닿으면_더보기_버튼이_보여진다`() {
         onView(withId(R.id.rv_main_product))
             .perform(scrollToLastPosition<RecyclerView.ViewHolder>())
-        onView(withId(R.id.btn_main_see_more))
+        onView(withId(R.id.btn_main_load_more))
             .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
     }
 
@@ -89,7 +89,7 @@ class MainActivityTest {
         onView(withId(R.id.rv_main_product))
             .perform(scrollToLastPosition<RecyclerView.ViewHolder>())
 
-        onView(withId(R.id.btn_main_see_more))
+        onView(withId(R.id.btn_main_load_more))
             .perform(click())
 
         onView(withId(R.id.rv_main_product))
