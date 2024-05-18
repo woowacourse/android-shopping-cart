@@ -7,7 +7,6 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.cart.ShoppingCartFragment.Companion.DEFAULT_ITEM_SIZE
-import kotlin.concurrent.thread
 
 class MainViewModel(
     private val repository: ProductRepository,
@@ -22,17 +21,7 @@ class MainViewModel(
         _products.value = _products.value?.plus(pagingData)
     }
 
-    fun addShoppingCartItem(product: Product) =
-        thread {
-            val addedCartItemId = repository.addCartItem(product)
-            if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
-        }
-
     fun loadProductItem(productId: Long): Product {
         return repository.getProduct(productId)
-    }
-
-    companion object {
-        const val ERROR_SAVE_DATA_ID = -1L
     }
 }

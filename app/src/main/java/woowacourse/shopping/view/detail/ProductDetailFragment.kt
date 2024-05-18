@@ -7,16 +7,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
-import woowacourse.shopping.view.MainActivity
-import woowacourse.shopping.view.MainViewModel
 
 class ProductDetailFragment : Fragment(), OnClickDetail {
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
-    private lateinit var mainViewModel: MainViewModel
+
+    private val productDetailViewModel: ProductDetailViewModel by lazy {
+        val viewModelFactory = DetailViewModelFactory(ProductRepositoryImpl(context = requireContext()), receiveProductId())
+        viewModelFactory.create(ProductDetailViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,32 +35,27 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel = (requireActivity() as MainActivity).viewModel
-        val product = loadProduct()
-        if (product != null) {
-            initView(product)
-        }
+        setupDataBinding()
+        observeData()
     }
 
-    private fun receiveId(): Long {
-        return arguments?.getLong(PRODUCT_ID) ?: throw NoSuchDataException()
-    }
-
-    private fun loadProduct(): Product? {
-        runCatching {
-            mainViewModel.loadProductItem(receiveId())
-        }.onSuccess {
-            return it
-        }.onFailure {
-            showLoadErrorMessage()
-            parentFragmentManager.popBackStack()
-        }
-        return null
-    }
-
-    private fun initView(product: Product) {
-        binding.product = product
+    private fun setupDataBinding() {
+        binding.viewModel = productDetailViewModel
         binding.onClickDetail = this
+    }
+
+    private fun observeData() {
+        productDetailViewModel.cartItemSavedState.observe(viewLifecycleOwner) {
+            when (it) {
+                is ProductDetailState.Success -> showAddCartSuccessMessage()
+                is ProductDetailState.Fail -> showAddCartErrorMessage()
+                is ProductDetailState.Idle -> {}
+            }
+        }
+    }
+
+    private fun receiveProductId(): Long {
+        return arguments?.getLong(PRODUCT_ID) ?: throw NoSuchDataException()
     }
 
     override fun onDestroyView() {
@@ -70,13 +68,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     }
 
     override fun clickAddCart(product: Product) {
-        runCatching {
-            mainViewModel.addShoppingCartItem(product)
-        }.onSuccess {
-            showAddCartSuccessMessage()
-        }.onFailure {
-            showAddCartErrorMessage()
-        }
+        productDetailViewModel.addShoppingCartItem(product)
     }
 
     private fun showLoadErrorMessage() = showToastMessage(R.string.error_load_data_message)

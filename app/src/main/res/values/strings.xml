@@ -8,4 +8,5 @@
     <string name="success_save_cart_item_message">장바구니에 담겼습니다!</string>
     <string name="error_load_data_message">데이터가 없습니다!</string>
     <string name="shopping_cart_page_title_text">Cart</string>
+    <string name="product_detail_price_header">가격</string>
 </resources>

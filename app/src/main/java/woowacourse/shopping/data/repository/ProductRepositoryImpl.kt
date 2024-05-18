@@ -8,6 +8,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
+import kotlin.concurrent.thread
 
 class ProductRepositoryImpl(context: Context) : ProductRepository {
     private val productDao = ProductDao()
@@ -26,7 +27,12 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
     }
 
     override fun addCartItem(product: Product): Long {
-        return cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
+        var addedCartItemId = ERROR_SAVE_DATA_ID
+        thread {
+            addedCartItemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
+        }.join()
+        if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
+        return addedCartItemId
     }
 
     override fun loadPagingCartItems(
@@ -38,5 +44,9 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
 
     override fun deleteCartItem(itemId: Long) {
         cartItemDao.deleteCartItemById(itemId)
+    }
+
+    companion object {
+        const val ERROR_SAVE_DATA_ID = -1L
     }
 }
