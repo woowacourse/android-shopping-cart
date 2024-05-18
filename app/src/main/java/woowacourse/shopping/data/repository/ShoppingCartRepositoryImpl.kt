@@ -46,6 +46,5 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
         const val ERROR_SAVE_DATA_ID = -1L
         const val ERROR_DELETE_DATA_ID = 0
         const val DEFAULT_ITEM_SIZE = 0
-        const val MIN_PAGE_COUNT = 1
     }
 }

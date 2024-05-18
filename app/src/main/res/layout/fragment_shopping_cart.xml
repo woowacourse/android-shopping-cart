@@ -14,8 +14,8 @@
             type="java.lang.Boolean" />
 
         <variable
-            name="currentPage"
-            type="java.lang.Integer" />
+            name="vm"
+            type="woowacourse.shopping.view.cart.ShoppingCartViewModel" />
 
         <variable
             name="onClickShoppingCart"
@@ -100,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:text="@{String.valueOf(currentPage)}"
+                android:text="@{String.valueOf(vm.currentPage)}"
                 android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold"
