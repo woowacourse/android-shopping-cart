@@ -5,7 +5,7 @@
 - [ ]: repository 싱글톤으로 바꾸기
 - [ ]: MediatorLiveData 혹은 map, switchMap을 활용하여 LiveData 정리
 - [ ]: onViewCreated() 내부에 있는 함수들을 분리
-- [ ]: SINGLE LIVEDATA로 개선
+- [x]: SINGLE LIVEDATA로 개선
 - [ ]: UiState 도입
 - [ ]: ProductListViewModel 의 반복되는 코드 함수화하기
 - [ ]: Android Resource의 dimen 도입

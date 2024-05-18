@@ -37,7 +37,7 @@ class ProductListFragment :
             lifecycleOwner = viewLifecycleOwner
             vm = viewModel
         }
-
+        viewModel.loadProducts()
         initAppBar()
         initViews()
         initObservers()
