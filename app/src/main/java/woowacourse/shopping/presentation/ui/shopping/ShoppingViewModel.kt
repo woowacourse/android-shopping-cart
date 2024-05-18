@@ -9,7 +9,12 @@ import woowacourse.shopping.presentation.ui.UiState
 
 class ShoppingViewModel(private val repository: ProductRepository = DummyProductRepository()) :
     ViewModel() {
+    private var newItemCount: Int = 0
+
     private var currentPage: Int = 0
+
+    val maxPosition: Int
+        get() = currentPage * PAGE_SIZE
 
     private val _products = MutableLiveData<UiState<List<Product>>>(UiState.None)
     val products get() = _products
@@ -18,6 +23,7 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
         if (products.value !is UiState.Finish<List<Product>>) {
             repository.load(currentPage, PAGE_SIZE).onSuccess {
                 _products.value = UiState.Finish(it)
+                newItemCount = it.size
                 currentPage++
             }.onFailure {
                 _products.value = UiState.Error(LOAD_ERROR)
@@ -27,12 +33,9 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
 
     fun addProductByPage() {
         repository.load(currentPage, PAGE_SIZE).onSuccess {
-            if (_products.value is UiState.None || _products.value is UiState.Error) {
-                _products.value = UiState.Finish(it)
-            } else {
-                _products.value = UiState.Finish((_products.value as UiState.Finish).data + it)
-            }
+            newItemCount = it.size
             currentPage++
+            _products.value = UiState.Finish((_products.value as UiState.Finish).data + it)
         }.onFailure {
             _products.value = UiState.Error(LOAD_ERROR)
         }

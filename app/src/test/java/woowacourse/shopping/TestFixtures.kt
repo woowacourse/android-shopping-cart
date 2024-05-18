@@ -22,5 +22,3 @@ val dummyCarts: List<Cart> =
             count = 1,
         )
     }
-
-val emptyCarts: List<Cart> = listOf()

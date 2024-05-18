@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
@@ -25,20 +26,11 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     private val adapter: ShoppingAdapter = ShoppingAdapter(this)
 
     override fun initStartView(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) viewModel.loadInitialProductByPage()
-        initAdapter()
-        viewModel.products.observe(this) {
-            when (it) {
-                is UiState.None -> {}
-                is UiState.Finish -> {
-                    adapter.updateList(it.data)
-                }
-
-                is UiState.Error -> {
-                    Toast.makeText(this, it.msg, Toast.LENGTH_SHORT).show()
-                }
-            }
+        if (savedInstanceState == null) {
+            viewModel.loadInitialProductByPage()
         }
+        initAdapter()
+        observeProductUpdates()
     }
 
     private fun initAdapter() {
@@ -58,6 +50,24 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                 }
             }
         }
+
+    private fun observeProductUpdates() {
+        viewModel.products.observe(this) { state ->
+            when (state) {
+                is UiState.None -> {}
+                is UiState.Finish -> handleFinishState(state)
+                is UiState.Error -> handleErrorState(state)
+            }
+        }
+    }
+
+    private fun handleErrorState(error: UiState.Error) {
+        Toast.makeText(this, error.msg, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun handleFinishState(newProducts: UiState.Finish<List<Product>>) {
+        adapter.insertItemsAtPosition(viewModel.maxPosition, newProducts.data)
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.shopping_menu, menu)

@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.shopping.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -50,10 +49,12 @@ class ShoppingAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateList(newItems: List<Product>) {
-        items = newItems
-        notifyDataSetChanged()
+    fun insertItemsAtPosition(
+        startPosition: Int,
+        newProducts: List<Product>,
+    ) {
+        items = newProducts
+        notifyItemRangeInserted(startPosition, newProducts.size)
     }
 
     override fun getItemCount(): Int {

@@ -38,10 +38,11 @@ class ShoppingViewModelTest {
     }
 
     @Test
-    fun `더보기 버튼이 눌리면 데이터가 20개 불러와진다`() {
+    fun `초기화 후, 더보기 버튼이 눌리면 데이터가 20개 더 불러와진다`() {
         every { repository.load(any(), any()) } returns Result.success(products)
+        viewModel.loadInitialProductByPage()
         viewModel.addProductByPage()
-        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(products))
+        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Finish(products + products))
     }
 
     @Test
