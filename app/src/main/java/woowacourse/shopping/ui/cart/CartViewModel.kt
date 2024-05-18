@@ -40,10 +40,18 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
 
     fun plusPageNum() {
         cartPageManager.plusPageNum()
+        _pageNumber.value = cartPageManager.pageNum
+        _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartItems.size)
+        _cart.value = getProducts()
     }
 
     fun minusPageNum() {
         cartPageManager.minusPageNum()
+        _pageNumber.value = cartPageManager.pageNum
+        _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartItems.size)
+        _cart.value = getProducts()
     }
 
     private fun getProducts(): List<Product> {

@@ -24,7 +24,6 @@ class CartActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-        showPageNumber()
 
         setOnPreviousButtonClickListener()
         setOnNextButtonClickListener()
@@ -34,41 +33,18 @@ class CartActivity : AppCompatActivity() {
 
         observeCartItems()
 
-        changePreviousButtonEnabled()
-        changeNextButtonEnabled()
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun changeNextButtonEnabled() {
-        viewModel.canMoveNextPage.observe(this) {
-            binding.viewModel = viewModel
-        }
-    }
-
-    private fun changePreviousButtonEnabled() {
-        viewModel.canMovePreviousPage.observe(this) {
-            binding.viewModel = viewModel
-        }
     }
 
     private fun setOnNextButtonClickListener() {
         binding.btnNext.setOnClickListener {
             viewModel.plusPageNum()
-            viewModel.loadCartItems()
         }
     }
 
     private fun setOnPreviousButtonClickListener() {
         binding.btnPrevious.setOnClickListener {
             viewModel.minusPageNum()
-            viewModel.loadCartItems()
-        }
-    }
-
-    private fun showPageNumber() {
-        viewModel.pageNumber.observe(this) {
-            binding.viewModel = viewModel
         }
     }
 
@@ -78,7 +54,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun observeCartItems() {
         viewModel.cart.observe(this) {
-            adapter.setData(it)
+            adapter.setData(viewModel.cart.value ?: emptyList())
         }
     }
 
