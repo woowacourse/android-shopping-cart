@@ -30,7 +30,7 @@ class CartViewModelTest {
         viewModel.loadPage(0)
 
         // when
-        val state = viewModel.uiState.getOrAwaitValue()
+        val state = viewModel.cartItemsState.getOrAwaitValue()
 
         // then
         assertThat(state).isEqualTo(UIState.Empty)
@@ -44,11 +44,8 @@ class CartViewModelTest {
             quantity = 1,
         )
 
-        // when
-        viewModel.loadCartItems()
-
         // then
-        val state = viewModel.uiState.getOrAwaitValue()
+        val state = viewModel.cartItemsState.getOrAwaitValue()
         assertThat(state).isEqualTo(UIState.Success(listOf(testCartItem0)))
     }
 
@@ -63,7 +60,7 @@ class CartViewModelTest {
         }
 
         // when
-        viewModel.loadCartItems()
+        // viewModel.loadCartItems()
 
         // then
         val isVisible = viewModel.isPageControlVisible.getOrAwaitValue()
@@ -97,7 +94,7 @@ class CartViewModelTest {
                 quantity = 1,
             )
         }
-        viewModel.loadCartItems()
+        // viewModel.loadCartItems()
 
         // when
         viewModel.loadNextPage()
@@ -116,7 +113,7 @@ class CartViewModelTest {
                 quantity = 1,
             )
         }
-        viewModel.loadCartItems()
+        // viewModel.loadCartItems()
 
         // when
         viewModel.loadPreviousPage()
@@ -134,13 +131,13 @@ class CartViewModelTest {
             product = testProduct0,
             quantity = 1,
         )
-        viewModel.loadCartItems()
+        // viewModel.loadCartItems()
 
         // when
         viewModel.deleteItem(0)
 
         // then
-        val state = viewModel.uiState.getOrAwaitValue()
+        val state = viewModel.cartItemsState.getOrAwaitValue()
         assertThat(state).isEqualTo(UIState.Empty)
     }
 
@@ -173,7 +170,7 @@ class CartViewModelTest {
                 quantity = 1,
             )
         }
-        viewModel.loadCartItems()
+        // viewModel.loadCartItems()
 
         // when
         viewModel.deleteItem(0)
