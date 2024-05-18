@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="java.util.List" />
+
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartViewModel" />
@@ -20,12 +24,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_order_list"
-            recyclerViewVisible="@{vm.uiState.pagingOrder.orders}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="71dp"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="@{vm.uiState.pagingOrder.orders.isEmpty() ? View.GONE : View.VISIBLE }"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/tv_page"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,11 +37,10 @@
             tools:listitem="@layout/holder_order" />
 
         <TextView
-            emptyTextVisible="@{vm.uiState.pagingOrder.orders}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_shopping_cart_title"
-            android:visibility="gone"
+            android:visibility="@{vm.uiState.pagingOrder.orders.isEmpty() ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toTopOf="@+id/tv_page"
             app:layout_constraintEnd_toEndOf="@+id/rv_order_list"
             app:layout_constraintStart_toStartOf="@+id/rv_order_list"
