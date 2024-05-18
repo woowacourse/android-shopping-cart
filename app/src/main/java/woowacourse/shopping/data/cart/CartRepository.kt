@@ -8,7 +8,7 @@ interface CartRepository {
 
     fun decreaseQuantity(product: Product)
 
-    fun deleteCartItem(product: Product)
+    fun deleteCartItem(cartItem: CartItem)
 
     fun deleteAll()
 

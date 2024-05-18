@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.model.CartItem
-import woowacourse.shopping.model.Product
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     private val _cart = MutableLiveData<List<CartItem>>()
@@ -35,9 +34,9 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         maxPage = (cartSize - 1) / PAGE_SIZE
     }
 
-    fun deleteCartItem(product: Product) {
+    fun deleteCartItem(cartItem: CartItem) {
         if (isEmptyLastPage()) _page.value = _page.value?.minus(1)
-        cartRepository.deleteCartItem(product)
+        cartRepository.deleteCartItem(cartItem)
         loadTotalCartCount()
         loadCart()
     }

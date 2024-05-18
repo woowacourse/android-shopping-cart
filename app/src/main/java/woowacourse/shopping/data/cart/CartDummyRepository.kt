@@ -34,8 +34,8 @@ object CartDummyRepository : CartRepository {
         cart.add(oldCartItem.copy(quantity = --quantity))
     }
 
-    override fun deleteCartItem(product: Product) {
-        cart.removeIf { it.product.id == product.id }
+    override fun deleteCartItem(cartItem: CartItem) {
+        cart.remove(cartItem)
     }
 
     override fun deleteAll() {

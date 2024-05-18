@@ -33,8 +33,8 @@ class CartAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateCart(cart: List<CartItem>) {
-        this.cart = cart
+    fun changeCartItems(cartItems: List<CartItem>) {
+        this.cart = cartItems
         notifyDataSetChanged()
     }
 }
