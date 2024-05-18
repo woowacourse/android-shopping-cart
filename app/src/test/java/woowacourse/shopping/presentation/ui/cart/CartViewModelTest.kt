@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -12,8 +13,6 @@ import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.dummyCarts
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.UiState
-import woowacourse.shopping.presentation.ui.cart.CartViewModel.Companion.CART_DELETE_ERROR
-import woowacourse.shopping.presentation.ui.cart.CartViewModel.Companion.CART_LOAD_ERROR
 import woowacourse.shopping.product
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -41,7 +40,7 @@ class CartViewModelTest {
     fun `카트 아이템을 불러오기 실패하면 Error 상태로 변화한다`() {
         every { cartRepository.load(any(), any()) } returns Result.failure(Throwable())
         viewModel.loadProductByPage()
-        assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Error(CART_LOAD_ERROR))
+        Assertions.assertEquals(viewModel.error.getOrAwaitValue(1), true)
     }
 
     @Test
@@ -57,6 +56,6 @@ class CartViewModelTest {
     fun `데이터 삭제에 실패하면 Error 상태로 변화한다`() {
         every { cartRepository.delete(any()) } returns Result.failure(Throwable())
         viewModel.deleteProduct(product)
-        assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Error(CART_DELETE_ERROR))
+        Assertions.assertEquals(viewModel.error.getOrAwaitValue(1), true)
     }
 }

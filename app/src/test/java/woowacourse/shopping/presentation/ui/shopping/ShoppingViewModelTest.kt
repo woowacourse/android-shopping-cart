@@ -11,7 +11,6 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.UiState
-import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel.Companion.LOAD_ERROR
 import woowacourse.shopping.products
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -34,7 +33,7 @@ class ShoppingViewModelTest {
     fun `viewModel에서 데이터 로드가 실패하면 Error로 상태가 변화한다`() {
         every { repository.load(any(), any()) } returns Result.failure(Throwable())
         viewModel.loadInitialProductByPage()
-        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Error(LOAD_ERROR))
+        assertEquals(viewModel.error.getOrAwaitValue(1), true)
     }
 
     @Test
@@ -49,6 +48,6 @@ class ShoppingViewModelTest {
     fun `더보기 버튼이 눌렸을 때 데이터 로드가 실패하면 Error로 상태가 변화한다`() {
         every { repository.load(any(), any()) } returns Result.failure(Throwable())
         viewModel.addProductByPage()
-        assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Error(LOAD_ERROR))
+        assertEquals(viewModel.error.getOrAwaitValue(1), true)
     }
 }

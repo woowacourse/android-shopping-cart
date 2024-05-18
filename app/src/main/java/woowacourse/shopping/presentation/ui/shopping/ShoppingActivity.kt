@@ -30,6 +30,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
             viewModel.loadInitialProductByPage()
         }
         initAdapter()
+        observeErrorEventUpdates()
         observeProductUpdates()
     }
 
@@ -51,18 +52,26 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
             }
         }
 
+    private fun observeErrorEventUpdates() {
+        viewModel.error.observe(this) {
+            when (it) {
+                true -> handleErrorState()
+                false -> {}
+            }
+        }
+    }
+
+    private fun handleErrorState() {
+        Toast.makeText(this, "아이템을 모두 불러왔습니다.", Toast.LENGTH_SHORT).show()
+    }
+
     private fun observeProductUpdates() {
         viewModel.products.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
                 is UiState.Success -> handleFinishState(state)
-                is UiState.Error -> handleErrorState(state)
             }
         }
-    }
-
-    private fun handleErrorState(error: UiState.Error) {
-        Toast.makeText(this, error.msg, Toast.LENGTH_SHORT).show()
     }
 
     private fun handleFinishState(newProducts: UiState.Success<List<Product>>) {

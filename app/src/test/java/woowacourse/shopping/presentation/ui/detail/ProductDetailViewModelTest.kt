@@ -13,7 +13,6 @@ import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.UiState
-import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel.Companion.PRODUCT_NOT_FOUND
 import woowacourse.shopping.product
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -39,7 +38,7 @@ class ProductDetailViewModelTest {
     fun `loadById로 특정 상품의 데이터를 가져오기 실패하면 Error state로 전환한다`() {
         every { productRepository.loadById(any()) } returns Result.failure(Throwable())
         viewModel.loadById(0)
-        Assertions.assertEquals(viewModel.products.getOrAwaitValue(1), UiState.Error(PRODUCT_NOT_FOUND))
+        Assertions.assertEquals(viewModel.error.getOrAwaitValue(1), true)
     }
 
     @Test

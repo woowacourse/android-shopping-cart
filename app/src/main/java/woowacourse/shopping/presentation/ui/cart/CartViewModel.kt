@@ -14,7 +14,11 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     var currentPage: Int = 0
         private set
         get() = field.coerceAtMost(maxPage)
+
     private val _carts = MutableLiveData<UiState<List<Cart>>>(UiState.None)
+
+    private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
+    val error: LiveData<Boolean> = _error
 
     val carts: LiveData<UiState<List<Cart>>> get() = _carts
 
@@ -24,9 +28,10 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun loadProductByPage() {
         cartRepository.load(currentPage, PAGE_SIZE).onSuccess {
+            _error.value = false
             _carts.value = UiState.Success(it)
         }.onFailure {
-            _carts.value = UiState.Error(CART_LOAD_ERROR)
+            _error.value = true
         }
     }
 
@@ -50,10 +55,11 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun deleteProduct(product: Product) {
         cartRepository.delete(product).onSuccess {
+            _error.value = false
             updateMaxPage()
             loadProductByPage()
         }.onFailure {
-            _carts.value = UiState.Error(CART_DELETE_ERROR)
+            _error.value = true
         }
     }
 

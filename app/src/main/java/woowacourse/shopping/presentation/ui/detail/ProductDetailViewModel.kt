@@ -12,11 +12,15 @@ class ProductDetailViewModel(private val productRepository: ProductRepository, p
     private val _products = MutableLiveData<UiState<Product>>(UiState.None)
     val products: LiveData<UiState<Product>> get() = _products
 
+    private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
+    val error: LiveData<Boolean> = _error
+
     fun loadById(productId: Long) {
         productRepository.loadById(productId).onSuccess {
+            _error.value = false
             _products.value = UiState.Success(it)
         }.onFailure {
-            _products.value = UiState.Error(PRODUCT_NOT_FOUND)
+            _error.value = true
         }
     }
 

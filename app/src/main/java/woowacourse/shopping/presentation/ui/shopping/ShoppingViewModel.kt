@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.shopping
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.remote.DummyProductRepository
@@ -9,6 +10,9 @@ import woowacourse.shopping.presentation.ui.UiState
 
 class ShoppingViewModel(private val repository: ProductRepository = DummyProductRepository()) :
     ViewModel() {
+    private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
+    val error: LiveData<Boolean> = _error
+
     private var newItemCount: Int = 0
 
     private var currentPage: Int = 0
@@ -22,22 +26,24 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
     fun loadInitialProductByPage() {
         if (products.value !is UiState.Success<List<Product>>) {
             repository.load(currentPage, PAGE_SIZE).onSuccess {
+                _error.value = false
                 _products.value = UiState.Success(it)
                 newItemCount = it.size
                 currentPage++
             }.onFailure {
-                _products.value = UiState.Error(LOAD_ERROR)
+                _error.value = true
             }
         }
     }
 
     fun addProductByPage() {
         repository.load(currentPage, PAGE_SIZE).onSuccess {
+            _error.value = false
             newItemCount = it.size
             currentPage++
             _products.value = UiState.Success((_products.value as UiState.Success).data + it)
         }.onFailure {
-            _products.value = UiState.Error(LOAD_ERROR)
+            _error.value = true
         }
     }
 
