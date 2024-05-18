@@ -28,11 +28,9 @@ class CartViewModel(
     }
 
     fun deleteProduct(position: Int) {
-        val deletedItem = _products.value?.get(position)
-        if (deletedItem != null) {
-            _products.value = _products.value?.minus(deletedItem)
-            cartRepository.deleteCartProduct(deletedItem.product.id)
-        }
+        val deletedItem = _products.value?.get(position) ?: return
+        _products.value = _products.value?.minus(deletedItem)
+        cartRepository.deleteCartProduct(deletedItem.product.id)
     }
 
     fun plusPage() {
