@@ -23,6 +23,7 @@ class ProductListFragment : Fragment() {
             onClick = { id -> navigateToProductDetail(id) },
         )
     }
+
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding!!
 
@@ -86,23 +87,17 @@ class ProductListFragment : Fragment() {
                 navigateToCart()
                 true
             }
-
             else -> false
         }
 
     private fun navigateToCart() {
-        val cartFragment = CartFragment()
-
-        replaceFragment(R.id.container, cartFragment, parentFragmentManager)
+        replaceFragment(R.id.container, CartFragment(), parentFragmentManager)
     }
 
     private fun navigateToProductDetail(id: Int) {
         val productDetailFragment =
             ProductDetailFragment().apply {
-                arguments =
-                    Bundle().apply {
-                        putInt("productId", id)
-                    }
+                arguments = Bundle().apply { putInt("productId", id) }
             }
 
         replaceFragment(R.id.container, productDetailFragment, parentFragmentManager)
