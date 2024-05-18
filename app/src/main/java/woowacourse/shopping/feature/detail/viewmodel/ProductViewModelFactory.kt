@@ -1,9 +1,8 @@
-package woowacourse.shopping.feature.detail
+package woowacourse.shopping.feature.detail.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.viewmodel.ProductViewModel
 import java.lang.IllegalArgumentException
 
 class ProductViewModelFactory(private val productRepository: ProductRepository) : ViewModelProvider.Factory {

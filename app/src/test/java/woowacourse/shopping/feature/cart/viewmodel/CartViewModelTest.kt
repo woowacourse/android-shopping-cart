@@ -1,4 +1,4 @@
-package woowacourse.shopping.viewmodel
+package woowacourse.shopping.feature.cart.viewmodel
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -10,6 +10,8 @@ import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.feature.InstantTaskExecutorExtension
+import woowacourse.shopping.feature.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {

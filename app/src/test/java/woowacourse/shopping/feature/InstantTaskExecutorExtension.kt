@@ -1,4 +1,4 @@
-package woowacourse.shopping.viewmodel
+package woowacourse.shopping.feature
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor

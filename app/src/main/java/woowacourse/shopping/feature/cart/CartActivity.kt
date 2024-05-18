@@ -8,9 +8,9 @@ import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
+import woowacourse.shopping.feature.cart.viewmodel.CartViewModel
+import woowacourse.shopping.feature.cart.viewmodel.CartViewModelFactory
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.viewmodel.CartViewModel
-import woowacourse.shopping.viewmodel.CartViewModelFactory
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }

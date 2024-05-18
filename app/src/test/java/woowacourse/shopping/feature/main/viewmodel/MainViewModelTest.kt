@@ -1,4 +1,4 @@
-package woowacourse.shopping.viewmodel
+package woowacourse.shopping.feature.main.viewmodel
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertAll
@@ -8,7 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.function.Executable
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.feature.main.viewmodel.MainViewModel
+import woowacourse.shopping.feature.InstantTaskExecutorExtension
+import woowacourse.shopping.feature.getOrAwaitValue
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
 import woowacourse.shopping.title
@@ -24,7 +25,6 @@ class MainViewModelTest {
         viewModel = MainViewModel(productRepository)
         productRepository.deleteAll()
     }
-
 
     @Test
     fun `한 페이지에는 20개의 상품이 있다`() {
