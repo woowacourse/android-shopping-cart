@@ -59,8 +59,8 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("com.squareup.leakcanary:leakcanary-android:2.7")
     // third-party
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
     implementation("com.github.bumptech.glide:glide:4.14.2")
     kapt("com.github.bumptech.glide:compiler:4.14.2")
     // unit test
