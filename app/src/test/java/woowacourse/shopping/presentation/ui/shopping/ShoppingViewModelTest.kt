@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.remote.DummyProductRepository
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.ui.ErrorEventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel.Companion.LOAD_ERROR
 import woowacourse.shopping.products

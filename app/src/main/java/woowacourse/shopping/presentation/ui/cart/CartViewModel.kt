@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.presentation.ui.ErrorEventState
 import woowacourse.shopping.presentation.ui.UiState
 
-class CartViewModel(private val productCartRepository: ProductCartRepository) : ViewModel() {
+class CartViewModel(private val productCartRepository: ProductCartRepository) : ViewModel(), CartActionHandler {
     var maxOffset: Int = 0
         private set
 
@@ -29,29 +29,19 @@ class CartViewModel(private val productCartRepository: ProductCartRepository) : 
 
     fun loadProductByOffset() {
         productCartRepository.findByPaging(offSet, PAGE_SIZE).onSuccess {
-            if (_carts.value is UiState.None) {
-                _carts.value = UiState.Success(it)
-            } else {
-                _carts.value = UiState.Success(it)
-            }
+            _carts.value = UiState.Success(it)
         }.onFailure {
             _errorHandler.value = ErrorEventState(CART_LOAD_ERROR)
         }
     }
 
-    fun plus() {
-        if (offSet == maxOffset) return
-        offSet++
-        loadProductByOffset()
+    private fun getItemCount() {
+        productCartRepository.getMaxOffset().onSuccess {
+            maxOffset = it
+        }
     }
 
-    fun minus() {
-        if (offSet == 0) return
-        offSet--
-        loadProductByOffset()
-    }
-
-    fun deleteProduct(product: Product) {
+    override fun onDelete(product: Product) {
         productCartRepository.delete(product).onSuccess {
             getItemCount()
             loadProductByOffset()
@@ -60,10 +50,16 @@ class CartViewModel(private val productCartRepository: ProductCartRepository) : 
         }
     }
 
-    private fun getItemCount() {
-        productCartRepository.getMaxOffset().onSuccess {
-            maxOffset = it
-        }
+    override fun onNext() {
+        if (offSet == maxOffset) return
+        offSet++
+        loadProductByOffset()
+    }
+
+    override fun onPrevious() {
+        if (offSet == 0) return
+        offSet--
+        loadProductByOffset()
     }
 
     companion object {

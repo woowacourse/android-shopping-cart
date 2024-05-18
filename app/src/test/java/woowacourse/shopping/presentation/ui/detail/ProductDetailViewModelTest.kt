@@ -12,7 +12,6 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.ui.ErrorEventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.detail.ProductDetailViewModel.Companion.PRODUCT_NOT_FOUND
 import woowacourse.shopping.product

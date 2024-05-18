@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.ui
-open class ErrorEventState<out T>(private val content: T) {
 
+open class ErrorEventState<out T>(private val content: T) {
     private var hasBeenHandled = false
 
     fun getContentIfNotHandled(): T? {
@@ -11,5 +11,6 @@ open class ErrorEventState<out T>(private val content: T) {
             content
         }
     }
+
     fun peekContent(): T = content
 }

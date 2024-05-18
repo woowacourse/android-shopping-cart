@@ -1,13 +1,14 @@
 package woowacourse.shopping.data.remote
 
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.presentation.ui.cart.CartViewModel
 import kotlin.math.min
 
 object DummyProductCartRepository : ProductCartRepository {
     private val cartMap: MutableMap<Product, Int> = mutableMapOf()
+
     override fun save(product: Product): Result<Long> =
         runCatching {
             cartMap[product] = (cartMap[product] ?: 0) + 1

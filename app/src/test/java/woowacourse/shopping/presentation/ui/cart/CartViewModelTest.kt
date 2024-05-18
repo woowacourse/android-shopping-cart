@@ -11,7 +11,6 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.ProductCartRepository
 import woowacourse.shopping.dummyCarts
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.ui.ErrorEventState
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.cart.CartViewModel.Companion.CART_DELETE_ERROR
 import woowacourse.shopping.presentation.ui.cart.CartViewModel.Companion.CART_LOAD_ERROR
@@ -50,14 +49,14 @@ class CartViewModelTest {
         every { productCartRepository.delete(any()) } returns Result.success(0)
         every { productCartRepository.getMaxOffset() } returns Result.success(0)
         every { productCartRepository.findByPaging(any(), any()) } returns Result.success(dummyCarts)
-        viewModel.deleteProduct(product)
+        viewModel.onDelete(product)
         assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Success(dummyCarts))
     }
 
     @Test
     fun `데이터 삭제에 실패하면 Error 상태로 변화한다`() {
         every { productCartRepository.delete(any()) } returns Result.failure(Throwable())
-        viewModel.deleteProduct(product)
+        viewModel.onDelete(product)
         assertThat(viewModel.errorHandler.getOrAwaitValue(3).peekContent()).isEqualTo(CART_DELETE_ERROR)
     }
 }

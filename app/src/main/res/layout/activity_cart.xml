@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.presentation.ui.cart.CartViewModel" />
+        <variable
+            name="cartActionHandler"
+            type="woowacourse.shopping.presentation.ui.cart.CartActionHandler" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -17,7 +26,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            cartPagingIsVisible="@{viewModel}">
 
             <TextView
                 android:id="@+id/tv_page_count"
@@ -29,9 +39,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btn_right"
                 app:layout_constraintStart_toEndOf="@id/btn_left"
-                tools:text="1"
-
-                />
+                cartPageCount="@{viewModel}"
+                tools:text="1"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_left"
@@ -43,7 +52,9 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:onClick="@{() -> viewModel.onPrevious()}"
+                cartLeftBtnIsEnable="@{viewModel}"/>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_right"
@@ -55,7 +66,9 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                android:onClick="@{() -> viewModel.onNext()}"
+                cartRightBtnIsEnable="@{viewModel}"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -74,6 +87,4 @@
             tools:listitem="@layout/item_cart" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <data />
 </layout>

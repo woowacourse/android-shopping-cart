@@ -48,15 +48,16 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         binding.rvShopping.adapter = adapter
     }
 
-    private val spanManager = object : GridLayoutManager.SpanSizeLookup() {
-        override fun getSpanSize(position: Int): Int {
-            return if (adapter.getItemViewType(position) == ShoppingViewType.Product.value) {
-                ShoppingViewType.Product.span
-            } else {
-                ShoppingViewType.LoadMore.span
+    private val spanManager =
+        object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (adapter.getItemViewType(position) == ShoppingViewType.Product.value) {
+                    ShoppingViewType.Product.span
+                } else {
+                    ShoppingViewType.LoadMore.span
+                }
             }
         }
-    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.shopping_menu, menu)

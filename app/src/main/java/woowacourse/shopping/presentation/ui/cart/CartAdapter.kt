@@ -11,7 +11,7 @@ import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 
 class CartAdapter(
-    private val cartHandler: CartHandler,
+    private val cartActionHandler: CartActionHandler,
     private var carts: List<Cart> = emptyList(),
 ) : RecyclerView.Adapter<CartViewHolder>() {
     override fun onCreateViewHolder(
@@ -20,7 +20,7 @@ class CartAdapter(
     ): CartViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemCartBinding.inflate(inflater, parent, false)
-        return CartViewHolder(binding, cartHandler)
+        return CartViewHolder(binding, cartActionHandler)
     }
 
     override fun onBindViewHolder(
@@ -41,13 +41,13 @@ class CartAdapter(
     }
 }
 
-class CartViewHolder(private val binding: ItemCartBinding, val cartHandler: CartHandler) :
+class CartViewHolder(private val binding: ItemCartBinding, val cartActionHandler: CartActionHandler) :
     RecyclerView.ViewHolder(binding.root) {
     lateinit var product: Product
 
     init {
         binding.ivClose.setOnClickListener {
-            cartHandler.onDeleteClick(product)
+            cartActionHandler.onDelete(product)
         }
     }
 
