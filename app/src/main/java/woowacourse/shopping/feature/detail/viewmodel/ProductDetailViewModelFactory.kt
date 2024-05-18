@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.data.product.ProductRepository
 import java.lang.IllegalArgumentException
 
-class ProductViewModelFactory(private val productRepository: ProductRepository) : ViewModelProvider.Factory {
+class ProductDetailViewModelFactory(private val productRepository: ProductRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ProductViewModel::class.java)) {
-            return ProductViewModel(productRepository) as T
+        if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
+            return ProductDetailViewModel(productRepository) as T
         }
         throw IllegalArgumentException()
     }

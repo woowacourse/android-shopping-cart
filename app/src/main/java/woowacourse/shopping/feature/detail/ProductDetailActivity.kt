@@ -14,12 +14,12 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModel
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModelFactory
-import woowacourse.shopping.feature.detail.viewmodel.ProductViewModel
-import woowacourse.shopping.feature.detail.viewmodel.ProductViewModelFactory
+import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModel
+import woowacourse.shopping.feature.detail.viewmodel.ProductDetailViewModelFactory
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
-    private val productViewModel: ProductViewModel by viewModels { ProductViewModelFactory(ProductDummyRepository) }
+    private val productDetailViewModel: ProductDetailViewModel by viewModels { ProductDetailViewModelFactory(ProductDummyRepository) }
     private val cartViewModel: CartViewModel by viewModels { CartViewModelFactory(CartDummyRepository, ProductDummyRepository) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,11 +73,11 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun updateProduct() {
         runCatching {
-            productViewModel.loadProduct(productId())
+            productDetailViewModel.loadProduct(productId())
         }.onFailure {
             showErrorSnackBar()
         }
-        productViewModel.product.observe(this) {
+        productDetailViewModel.product.observe(this) {
             binding.product = it
         }
     }
