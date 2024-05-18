@@ -3,12 +3,15 @@ package woowacourse.shopping.presentation.ui.shopping
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
@@ -42,8 +45,15 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     }
 
     private fun observeViewModel() {
-        viewModel.products.observe(this) { products ->
-            adapter.loadData(products)
+        viewModel.uiState.observe(this) { state ->
+            when (state) {
+                is UIState.Success -> showData(state.data)
+                is UIState.Empty -> showData(emptyList())
+                is UIState.Error ->
+                    showError(
+                        state.exception.message ?: getString(R.string.unknown_error),
+                    )
+            }
         }
     }
 
@@ -66,8 +76,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         )
     }
 
+    private fun showData(data: List<Product>) {
+        adapter.loadData(data)
+    }
+
     private fun navigateToShoppingCart() {
         startActivity(CartActivity.createIntent(context = this))
+    }
+
+    private fun showError(errorMessage: String) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
