@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.presentation.ui.shopping.ShoppingClickListener" />
-
-        <variable
             name="viewModel"
             type="woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel" />
     </data>
@@ -54,7 +50,7 @@
             android:layout_height="50dp"
             android:background="@color/purple_200"
             android:gravity="center"
-            android:onClick="@{() -> clickListener.onLoadButtonClick()}"
+            android:onClick="@{() -> viewModel.onLoadMoreButtonClick()}"
             android:text="Load More"
             android:textColor="@color/white"
             android:textSize="20dp"

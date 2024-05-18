@@ -15,7 +15,7 @@ import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
+class ShoppingItemActivity : AppCompatActivity(), ShoppingItemClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
     private val viewModel: ShoppingViewModel by viewModels {
@@ -35,7 +35,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
 
     private fun setUpDataBinding() {
         binding.lifecycleOwner = this
-        binding.clickListener = this
         binding.viewModel = viewModel
     }
 
@@ -100,10 +99,5 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
 
     override fun onProductClick(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
-    }
-
-    override fun onLoadButtonClick() {
-        viewModel.loadProducts()
-        viewModel.updateLoadMoreButtonVisibility(false)
     }
 }

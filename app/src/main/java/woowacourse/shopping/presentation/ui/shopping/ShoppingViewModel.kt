@@ -7,7 +7,7 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.state.UIState
 
-class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewModel() {
+class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewModel(), ShoppingButtonClickListener {
     private var offset = 0
     private lateinit var productsData: List<Product>
 
@@ -56,5 +56,10 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewM
 
     companion object {
         private const val PAGE_SIZE = 10
+    }
+
+    override fun onLoadMoreButtonClick() {
+        loadProducts()
+        updateLoadMoreButtonVisibility(false)
     }
 }
