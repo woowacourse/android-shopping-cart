@@ -11,7 +11,8 @@
 - [ ]: Android Resource의 dimen 도입
 - [ ]: Android Resource의 style 도입
 - [x]: common 으로 Image 처리 BindingAdapter 빼기
-- [ ]: by viewModels() 로 리팩
+- [x]: by viewModels() 로 리팩
+- [ ]: SavedStateHandle 을 사용하여 ViewModel 에서 상태 저장하기
 - [ ]: ShoppingNavigator
 - [ ]: 어떤 페이지부터, 어떤 항목부터 데이터를 받아올 것을 기대할거에요.
 그런데 현재 설계는 모든 데이터를 가져오면서 특정 아이템을 제외하도록 만들었어요.

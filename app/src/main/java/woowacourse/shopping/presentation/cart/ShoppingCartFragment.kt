@@ -8,6 +8,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.DefaultCartRepository
@@ -17,11 +18,8 @@ import woowacourse.shopping.presentation.base.BindingFragment
 class ShoppingCartFragment :
     BindingFragment<FragmentShoppingCartBinding>(R.layout.fragment_shopping_cart) {
     private lateinit var adapter: CartAdapter
-    private val viewModel: ShoppingCartViewModel by lazy {
-        // TODO repository 싱글톤으로 바꾸기
-        ViewModelProvider(this, ShoppingCartViewModel.factory(DefaultCartRepository())).get(
-            ShoppingCartViewModel::class.java,
-        )
+    private val viewModel by viewModels<ShoppingCartViewModel> {
+        ShoppingCartViewModel.factory(DefaultCartRepository())
     }
 
     override fun onViewCreated(
@@ -49,7 +47,8 @@ class ShoppingCartFragment :
                 override fun onCreateMenu(
                     menu: Menu,
                     menuInflater: MenuInflater,
-                ) {}
+                ) {
+                }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == android.R.id.home) {
