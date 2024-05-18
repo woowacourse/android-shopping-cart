@@ -76,9 +76,10 @@ class ProductContentsActivity : AppCompatActivity() {
             }
         }
 
-    private fun isLastItemVisible(recyclerView: RecyclerView) =
-        (recyclerView.layoutManager as GridLayoutManager)
-            .findLastCompletelyVisibleItemPosition() == adapterItemSize()
+    private fun isLastItemVisible(recyclerView: RecyclerView): Boolean {
+        val layoutManager = recyclerView.layoutManager as GridLayoutManager
+        return layoutManager.findLastCompletelyVisibleItemPosition() == adapterItemSize()
+    }
 
     private fun adapterItemSize() = adapter.itemCount - OFFSET
 
