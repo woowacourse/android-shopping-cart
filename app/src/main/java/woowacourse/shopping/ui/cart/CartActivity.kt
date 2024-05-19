@@ -20,7 +20,6 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         initBinding()
-        loadItems()
         setCartAdapter()
         observeCartItems()
 
@@ -38,10 +37,6 @@ class CartActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.vm = viewModel
         binding.lifecycleOwner = this
-    }
-
-    private fun loadItems() {
-        viewModel.loadCartItems()
     }
 
     private fun observeCartItems() {

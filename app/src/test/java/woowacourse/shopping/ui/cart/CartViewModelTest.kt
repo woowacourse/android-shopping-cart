@@ -2,7 +2,6 @@ package woowacourse.shopping.ui.cart
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
@@ -14,11 +13,6 @@ import woowacourse.shopping.model.data.CartsImpl
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
 
-    @BeforeEach
-    fun setUp() {
-        viewModel = CartViewModel(CartsImpl)
-    }
-
     @AfterEach
     fun tearDown() {
         CartsImpl.deleteAll()
@@ -27,7 +21,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 상품을 넣지 않았다면 장바구니가 비어있어야 한다`() {
         // when
-        viewModel.loadCartItems()
+        viewModel = CartViewModel(CartsImpl)
 
         // then
         assertThat(viewModel.cart.getOrAwaitValue().size).isEqualTo(0)
@@ -41,7 +35,7 @@ class CartViewModelTest {
         CartsImpl.save(UMBRELLA)
 
         // when
-        viewModel.loadCartItems()
+        viewModel = CartViewModel(CartsImpl)
 
         // then
         assertThat(viewModel.cart.getOrAwaitValue()[0].name).isEqualTo("의자")
@@ -57,9 +51,8 @@ class CartViewModelTest {
         CartsImpl.save(UMBRELLA)
 
         // when
-        viewModel.loadCartItems()
+        viewModel = CartViewModel(CartsImpl)
         viewModel.removeCartItem(productId)
-        val actual = CartsImpl.findAll().size
 
         // then
         assertThat(viewModel.cart.getOrAwaitValue()[0].name).isEqualTo("의자")
