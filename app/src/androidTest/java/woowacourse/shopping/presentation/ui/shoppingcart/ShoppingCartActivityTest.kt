@@ -14,14 +14,15 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
+import woowacourse.shopping.data.repsoitory.DummyData
 import woowacourse.shopping.data.repsoitory.DummyData.STUB_PRODUCT_A
-import woowacourse.shopping.data.repsoitory.DummyShoppingCartRepositoryImpl
+import woowacourse.shopping.data.repsoitory.ShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.ui.utils.RecyclerViewItemCountAssertion
 
 @RunWith(AndroidJUnit4::class)
 class ShoppingCartActivityTest {
-    private val repository: ShoppingCartRepository = DummyShoppingCartRepositoryImpl
+    private val repository: ShoppingCartRepository = ShoppingCartRepositoryImpl(DummyData.ORDERS)
 
     @Before
     fun setUp() {
