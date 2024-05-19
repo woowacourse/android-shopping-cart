@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.data.Product
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException

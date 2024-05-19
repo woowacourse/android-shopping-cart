@@ -1,7 +1,7 @@
 package woowacourse.shopping.repository
 
 import woowacourse.shopping.PagingStrategy
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.data.Product
 
 class DummyShoppingProductsRepository(
     private val pagingStrategy: PagingStrategy<Product>,

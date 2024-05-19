@@ -3,8 +3,8 @@ package woowacourse.shopping.productList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.data.Product
 import woowacourse.shopping.databinding.HolderProductBinding
-import woowacourse.shopping.db.Product
 
 class ProductRecyclerViewAdapter(
     private var values: List<Product>,

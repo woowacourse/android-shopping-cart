@@ -1,7 +1,7 @@
 package woowacourse.shopping.productDetail
 
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.data.Product
 import woowacourse.shopping.repository.ShoppingCartItemRepository
 import woowacourse.shopping.repository.ShoppingProductsRepository
 

@@ -2,7 +2,7 @@ package woowacourse.shopping.repository
 
 import woowacourse.shopping.PagingStrategy
 import woowacourse.shopping.TwentyItemsPagingStrategy
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.data.Product
 
 class FakeShoppingProductsRepository(
     private val cartItems: List<Product> = listOf(),

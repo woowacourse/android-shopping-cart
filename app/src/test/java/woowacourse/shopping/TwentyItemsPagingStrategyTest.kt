@@ -3,7 +3,7 @@ package woowacourse.shopping
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.data.Product
 
 class TwentyItemsPagingStrategyTest {
     private lateinit var pagingStrategy: PagingStrategy<Product>

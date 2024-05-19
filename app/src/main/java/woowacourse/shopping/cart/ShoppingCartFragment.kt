@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.FiveCartItemPagingStrategy
-import woowacourse.shopping.ShoppingCartViewModelFactory
 import woowacourse.shopping.databinding.FragmentCartListBinding
 import woowacourse.shopping.repository.DummyShoppingCartItemRepository
 

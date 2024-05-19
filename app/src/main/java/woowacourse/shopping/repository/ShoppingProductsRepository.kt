@@ -1,6 +1,6 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.data.Product
 
 interface ShoppingProductsRepository {
     fun loadPagedItems(page: Int): List<Product>

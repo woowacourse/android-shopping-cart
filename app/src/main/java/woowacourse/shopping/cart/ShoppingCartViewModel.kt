@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.currentPageIsNullException
-import woowacourse.shopping.db.Product
+import woowacourse.shopping.data.Product
 import woowacourse.shopping.repository.ShoppingCartItemRepository
 
 class ShoppingCartViewModel(

@@ -1,8 +1,7 @@
-package woowacourse.shopping
+package woowacourse.shopping.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.cart.ShoppingCartViewModel
 import woowacourse.shopping.repository.ShoppingCartItemRepository
 
 class ShoppingCartViewModelFactory(private val repository: ShoppingCartItemRepository) : ViewModelProvider.Factory {
