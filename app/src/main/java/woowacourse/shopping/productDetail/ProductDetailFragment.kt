@@ -29,20 +29,24 @@ class ProductDetailFragment : Fragment() {
     ): View {
         _binding = FragmentProductDetailBinding.inflate(inflater)
 
-        arguments?.let {
-            factory =
-                ProductDetailViewModelFactory(
-                    it.getInt("productId"),
-                    DummyShoppingProductsRepository(TwentyItemsPagingStrategy()),
-                    DummyShoppingCartItemRepository(FiveCartItemPagingStrategy()),
-                )
-            viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
-        }
+        initViewModel()
 
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
         return binding.root
+    }
+
+    private fun initViewModel() {
+        arguments?.let {
+            factory =
+                ProductDetailViewModelFactory(
+                    it.getInt(PRODUCT_ID),
+                    DummyShoppingProductsRepository(TwentyItemsPagingStrategy()),
+                    DummyShoppingCartItemRepository(FiveCartItemPagingStrategy()),
+                )
+            viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
+        }
     }
 
     override fun onViewCreated(
@@ -52,22 +56,36 @@ class ProductDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.productDetailToolbar.setOnMenuItemClickListener {
-            clickXButton(it)
+            navigateToMenuItem(it)
         }
     }
 
-    private fun clickXButton(it: MenuItem) =
+    private fun navigateToMenuItem(it: MenuItem) =
         when (it.itemId) {
-            R.id.action_x -> {
-                parentFragmentManager.popBackStack()
-                true
-            }
+            R.id.action_x -> navigateToPreviousFragment()
 
             else -> false
         }
 
+    private fun navigateToPreviousFragment(): Boolean {
+        parentFragmentManager.popBackStack()
+        return true
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        private const val PRODUCT_ID = "productId"
+
+        fun newInstance(productId: Int): ProductDetailFragment {
+            val fragment = ProductDetailFragment()
+            val bundle = Bundle()
+            bundle.putInt(PRODUCT_ID, productId)
+            fragment.arguments = bundle
+            return fragment
+        }
     }
 }
