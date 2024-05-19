@@ -4,13 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 
 class CartViewModel(
     private val cartRepository: CartRepository,
-    private val productRepository: ProductRepository,
 ) : ViewModel() {
     private val _cart = MutableLiveData<List<CartItem>>()
     val cart: LiveData<List<CartItem>> get() = _cart
@@ -35,11 +33,6 @@ class CartViewModel(
 
     init {
         updatePage()
-    }
-
-    fun add(productId: Long) {
-        val product = productRepository.find(productId)
-        cartRepository.increaseQuantity(product)
     }
 
     fun delete(product: Product) {

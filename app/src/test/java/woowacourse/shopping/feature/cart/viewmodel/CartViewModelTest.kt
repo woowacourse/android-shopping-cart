@@ -26,23 +26,14 @@ class CartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = CartViewModel(cartRepository, productRepository)
+        viewModel = CartViewModel(cartRepository)
         cartRepository.deleteAll()
-    }
-
-    @Test
-    fun `장바구니에 상품을 추가한다`() {
-        viewModel.add(0)
-        viewModel.loadCount()
-
-        val actual = viewModel.cartSize.getOrAwaitValue()
-        assertThat(actual).isEqualTo(1)
     }
 
     @Test
     fun `장바구니에 담긴 상품을 삭제한다`() {
         val product = productRepository.find(0L)
-        viewModel.add(product.id)
+        cartRepository.increaseQuantity(productFixture(productId = 0L))
 
         viewModel.delete(product)
         viewModel.loadCount()
@@ -196,7 +187,7 @@ class CartViewModelTest {
             addCart(productId = it.toLong())
         }
         viewModel.increasePage()
-        viewModel.delete(Product(6, imageUrl, title, price))
+        viewModel.delete(productFixture(productId = 6))
 
         viewModel.checkEmptyLastPage()
 
@@ -231,7 +222,8 @@ class CartViewModelTest {
     }
 
     private fun addCart(productId: Long) {
-        val product = productRepository.find(productId)
-        cartRepository.increaseQuantity(product)
+        cartRepository.increaseQuantity(productFixture(productId))
     }
+
+    private fun productFixture(productId: Long) = Product(productId, imageUrl, title, price)
 }

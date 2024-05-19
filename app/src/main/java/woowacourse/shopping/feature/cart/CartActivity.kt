@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.cart.CartDummyRepository
-import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModel
@@ -13,7 +12,7 @@ import woowacourse.shopping.model.Product
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
-    private val cartViewModel: CartViewModel by viewModels { CartViewModelFactory(CartDummyRepository, ProductDummyRepository) }
+    private val cartViewModel: CartViewModel by viewModels { CartViewModelFactory(CartDummyRepository) }
     private lateinit var adapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
