@@ -29,7 +29,7 @@ class HomeViewModel(
         loadProducts()
     }
 
-    fun loadProducts() {
+    private fun loadProducts() {
         _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
         _products.value = products.value?.plus(productRepository.fetchSinglePage(page++))
 
