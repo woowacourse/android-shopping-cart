@@ -27,9 +27,12 @@ class FakeCartRepository(
         return cartItemId
     }
 
-    override fun fetchCartItems(page: Int): List<CartItem> {
-        val fromIndex = page * 5
-        val toIndex = min(fromIndex + 5, cartItems.size)
+    override fun fetchCartItems(
+        page: Int,
+        pageSize: Int,
+    ): List<CartItem> {
+        val fromIndex = page * pageSize
+        val toIndex = min(fromIndex + pageSize, cartItems.size)
 
         if (fromIndex > toIndex) return emptyList()
 

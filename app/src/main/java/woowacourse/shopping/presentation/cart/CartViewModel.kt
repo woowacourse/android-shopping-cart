@@ -46,8 +46,8 @@ class CartViewModel(
     }
 
     fun loadCurrentPageCartItems() {
-        val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
-        hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
+        val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return, PAGE_SIZE)
+        hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return, PAGE_SIZE).isNotEmpty()
 
         val orders =
             cartItems.map {
@@ -67,5 +67,9 @@ class CartViewModel(
                 nextPageEnabled = hasNext,
             )
         _orders.value = orders
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 5
     }
 }

@@ -7,8 +7,11 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
-    override fun fetchCartItems(page: Int): List<CartItem> {
-        return cartDataSource.getCartItems(page, PAGE_SIZE)
+    override fun fetchCartItems(
+        page: Int,
+        pageSize: Int,
+    ): List<CartItem> {
+        return cartDataSource.getCartItems(page, pageSize)
     }
 
     override fun addCartItem(
@@ -20,9 +23,5 @@ class CartRepositoryImpl(
 
     override fun removeCartItem(cartItemId: Long): Long {
         return cartDataSource.deleteCartItem(cartItemId)
-    }
-
-    companion object {
-        private const val PAGE_SIZE = 5
     }
 }
