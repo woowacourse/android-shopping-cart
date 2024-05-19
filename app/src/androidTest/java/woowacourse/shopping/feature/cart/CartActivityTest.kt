@@ -53,9 +53,8 @@ class CartActivityTest {
 
         ActivityScenario.launch(CartActivity::class.java)
 
-        onView(withId(R.id.rv_cart))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(0))
-            .check(matches(hasDescendant(allOf(withText(title), isDisplayed()))))
+        onView(withId(R.id.tv_cart_product_title))
+            .check(matches(withText(title)))
     }
 
     @Test
@@ -65,9 +64,8 @@ class CartActivityTest {
         ActivityScenario.launch(CartActivity::class.java)
 
         val expected = "%,d원".format(price)
-        onView(withId(R.id.rv_cart))
-            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(0))
-            .check(matches(hasDescendant(allOf(withText(expected), isDisplayed()))))
+        onView(withId(R.id.tv_cart_product_price))
+            .check(matches(withText(expected)))
     }
 
     @Test
@@ -163,7 +161,7 @@ class CartActivityTest {
     }
 
     @Test
-    fun `2페이지로_이동한_후_화면_회전_시_2페이자가_그대로_유지_된다`() {
+    fun `2페이지로_이동한_후_화면_회전_시_2페이지가_그대로_유지_된다`() {
         repeat(8) {
             addCart(imageUrl, title, price)
         }
