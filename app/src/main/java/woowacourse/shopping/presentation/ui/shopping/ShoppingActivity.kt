@@ -1,33 +1,26 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.os.Bundle
 import android.view.Menu
 import android.view.View.GONE
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class ShoppingActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityShoppingBinding
-    private lateinit var adapter: ShoppingAdapter
+class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity_shopping) {
     private val viewModel: ShoppingViewModel by viewModels {
         ShoppingViewModelFactory(ShoppingItemsRepositoryImpl())
     }
+    private lateinit var adapter: ShoppingAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityShoppingBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+    override fun onCreateSetup() {
         initializeViews()
         observeViewModel()
     }
@@ -35,7 +28,6 @@ class ShoppingActivity : AppCompatActivity() {
     private fun initializeViews() {
         setUpToolbar()
         setUpRecyclerView()
-        binding.lifecycleOwner = this
         binding.viewModel = viewModel
     }
 
@@ -71,7 +63,10 @@ class ShoppingActivity : AppCompatActivity() {
             when (state) {
                 is UIState.Success -> showData(state.data)
                 is UIState.Empty -> showEmptyView()
-                is UIState.Error -> showError(state.exception.message ?: getString(R.string.unknown_error))
+                is UIState.Error ->
+                    showError(
+                        state.exception.message ?: getString(R.string.unknown_error),
+                    )
             }
         }
 
@@ -86,11 +81,11 @@ class ShoppingActivity : AppCompatActivity() {
 
     private fun showEmptyView() {
         binding.rvProductList.visibility = GONE
-        Toast.makeText(this, getString(R.string.empty_product_list), Toast.LENGTH_LONG).show()
+        showErrorMessage(getString(R.string.empty_product_list))
     }
 
     private fun showError(errorMessage: String) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        showErrorMessage(errorMessage)
     }
 
     private fun navigateToShoppingCart() {
