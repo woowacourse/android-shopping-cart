@@ -15,9 +15,12 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData(Product.defaultProduct)
     val product: LiveData<Product> get() = _product
 
-    private val _productDetailState: MutableLiveData<ProductDetailState> =
-        MutableLiveData(ProductDetailState.Init)
-    val productDetailState: LiveData<ProductDetailState> get() = _productDetailState
+    private val _errorState: MutableLiveData<ProductDetailState.ErrorState> =
+        MutableLiveData()
+    val errorState: LiveData<ProductDetailState.ErrorState> get() = _errorState
+
+    private val _productDetailState = MutableLiveData<ProductDetailState>()
+    val productDetailState: LiveData<ProductDetailState> = _productDetailState
 
     fun addShoppingCartItem(product: Product) {
         try {
@@ -25,8 +28,8 @@ class ProductDetailViewModel(
             _productDetailState.value = ProductDetailState.AddShoppingCart.Success
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _productDetailState.value = ProductDetailState.AddShoppingCart.Fail
-                else -> _productDetailState.value = ProductDetailState.Error
+                is NoSuchDataException -> _errorState.value = ProductDetailState.AddShoppingCart.Fail
+                else -> _errorState.value = ProductDetailState.ErrorState.NotKnownError
             }
         } finally {
             resetState()
@@ -40,8 +43,8 @@ class ProductDetailViewModel(
             _productDetailState.value = ProductDetailState.LoadProductItem.Success
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _productDetailState.value = ProductDetailState.LoadProductItem.Fail
-                else -> _productDetailState.value = ProductDetailState.Error
+                is NoSuchDataException -> _errorState.value = ProductDetailState.LoadProductItem.Fail
+                else -> _errorState.value = ProductDetailState.ErrorState.NotKnownError
             }
         } finally {
             resetState()

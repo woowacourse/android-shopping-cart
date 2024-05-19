@@ -13,7 +13,6 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
-import woowacourse.shopping.utils.ShoppingUtils
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
@@ -61,15 +60,16 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
 
     private fun observeData() {
         productDetailViewModel.productDetailState.observe(viewLifecycleOwner) { productDetailState ->
-            when (productDetailState) {
-                ProductDetailState.Init, ProductDetailState.LoadProductItem.Success -> {}
-                ProductDetailState.AddShoppingCart.Success ->
-                    showMessage(
-                        requireContext().getString(
-                            R.string.success_save_data,
-                        ),
-                    )
-
+            if (productDetailState == ProductDetailState.AddShoppingCart.Success) {
+                showMessage(
+                    requireContext().getString(
+                        R.string.success_save_data,
+                    ),
+                )
+            }
+        }
+        productDetailViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+            when (errorState) {
                 ProductDetailState.AddShoppingCart.Fail ->
                     showMessage(
                         requireContext().getString(R.string.error_save_data),
@@ -80,7 +80,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
                     parentFragmentManager.popBackStack()
                 }
 
-                ProductDetailState.Error ->
+                ProductDetailState.ErrorState.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
                     )
@@ -116,7 +116,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         productDetailViewModel.addShoppingCartItem(product)
     }
 
-    private fun showMessage(message: String) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+    private fun showMessage(message: String) =
+        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
         fun createBundle(id: Long): Bundle {
