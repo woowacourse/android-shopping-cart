@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shopping"
+                android:text="@string/shopping_description"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="@{() -> vm.loadNextPageProducts()}"
-            android:text="더볼래?"
+            android:text="@string/load_more_products"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

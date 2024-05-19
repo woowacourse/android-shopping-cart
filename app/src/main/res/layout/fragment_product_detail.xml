@@ -55,7 +55,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="18dp"
-            android:text="가격"
+            android:text="@string/product_price_description"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
             android:onClick="@{() -> vm.addProductToCart()}"
-            android:text="장바구니 담기"
+            android:text="@string/add_to_cart"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

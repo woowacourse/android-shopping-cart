@@ -4,4 +4,11 @@
     <string name="price_format">%1$,d원</string>
     <string name="next_arrow"><![CDATA[>]]></string>
     <string name="previous_arrow"><![CDATA[<]]></string>
+    <string name="shopping_cart_description">장바구니</string>
+    <string name="product_price_description">가격</string>
+    <string name="add_to_cart">장바구니 담기</string>
+    <string name="load_more_products">더볼래?</string>
+    <string name="shopping_description">Shopping</string>
+    <string name="exit">X</string>
+    <string name="shopping_cart">shopping cart</string>
 </resources>

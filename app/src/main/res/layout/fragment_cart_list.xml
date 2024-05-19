@@ -31,7 +31,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="장바구니"
+                android:text="@string/shopping_cart_description"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
         </androidx.appcompat.widget.Toolbar>
@@ -57,10 +57,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
+            android:enabled="@{vm.currentPage > 1}"
             android:onClick="@{() -> vm.previousPage()}"
             android:text="@string/previous_arrow"
             android:textSize="12sp"
-            android:enabled="@{vm.currentPage > 1}"
             app:layout_constraintBottom_toBottomOf="@+id/cart_list_page_number"
             app:layout_constraintEnd_toStartOf="@id/cart_list_page_number"
             app:layout_constraintStart_toStartOf="parent"
