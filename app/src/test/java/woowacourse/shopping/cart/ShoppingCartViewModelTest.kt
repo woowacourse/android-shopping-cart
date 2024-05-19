@@ -1,12 +1,7 @@
 package woowacourse.shopping.cart
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
@@ -17,12 +12,6 @@ import woowacourse.shopping.repository.FakeShoppingCartItemRepository
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
     private lateinit var viewModel: ShoppingCartViewModel
-
-    @BeforeEach
-    fun setUp() {
-        mockkStatic(Log::class)
-        every { Log.d(any(), any()) } returns mockk(relaxed = true)
-    }
 
     @Test
     fun `장바구니에 담긴 상품이 없을 때`() {
