@@ -25,27 +25,12 @@ class CartActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        setOnPreviousButtonClickListener()
-        setOnNextButtonClickListener()
-
         loadItems()
         setCartAdapter()
 
         observeCartItems()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    private fun setOnNextButtonClickListener() {
-        binding.btnNext.setOnClickListener {
-            viewModel.plusPageNum()
-        }
-    }
-
-    private fun setOnPreviousButtonClickListener() {
-        binding.btnPrevious.setOnClickListener {
-            viewModel.minusPageNum()
-        }
     }
 
     private fun loadItems() {

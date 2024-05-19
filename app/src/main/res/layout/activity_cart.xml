@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.ui.cart.CartViewModel" />
@@ -34,12 +35,13 @@
             android:layout_height="42dp"
             android:layout_marginStart="115dp"
             android:background="@drawable/selector_left_button"
+            android:clickable="@{viewModel.canMovePreviousPage}"
+            android:enabled="@{viewModel.canMovePreviousPage}"
+            android:onClick="@{() -> viewModel.minusPageNum()}"
             android:text="@string/previous_page"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:enabled="@{viewModel.canMovePreviousPage}"
-            android:clickable="@{viewModel.canMovePreviousPage}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/rv_cart" />
@@ -65,12 +67,13 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:background="@drawable/selector_right_button"
+            android:clickable="@{viewModel.canMoveNextPage}"
+            android:enabled="@{viewModel.canMoveNextPage}"
+            android:onClick="@{() -> viewModel.plusPageNum()}"
             android:text="@string/next_page"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:enabled="@{viewModel.canMoveNextPage}"
-            android:clickable="@{viewModel.canMoveNextPage}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_page_number"
             app:layout_constraintTop_toBottomOf="@id/rv_cart" />
