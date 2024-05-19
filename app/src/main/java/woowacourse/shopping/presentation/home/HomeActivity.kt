@@ -36,23 +36,10 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding.productAdapter = adapter
-        binding.viewModel = viewModel
-        binding.lifecycleOwner = this
         initializeProductListLayout()
-
-        viewModel.navigateToDetailEvent.observe(this) { event ->
-            startActivity(
-                DetailActivity.newIntent(
-                    this,
-                    event.getContentIfNotHandled() ?: return@observe
-                )
-            )
-        }
-
-        setSupportActionBar(binding.toolbarHome)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
+        initializeBindingVariables()
+        initializeToolbar()
+        observeEvents()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -73,6 +60,28 @@ class HomeActivity : AppCompatActivity() {
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup = ProductItemSpanSizeLookup(adapter)
         binding.rvHome.layoutManager = layoutManager
+    }
+
+    private fun initializeBindingVariables() {
+        binding.productAdapter = adapter
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+    }
+
+    private fun initializeToolbar() {
+        setSupportActionBar(binding.toolbarHome)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun observeEvents() {
+        viewModel.navigateToDetailEvent.observe(this) { event ->
+            startActivity(
+                DetailActivity.newIntent(
+                    this,
+                    event.getContentIfNotHandled() ?: return@observe
+                )
+            )
+        }
     }
 }
 
