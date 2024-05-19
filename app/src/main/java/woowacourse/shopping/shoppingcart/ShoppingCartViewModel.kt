@@ -16,7 +16,7 @@ class ShoppingCartViewModel(
     private val _cartItems: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
     val cartItems: LiveData<List<ProductUiModel>> get() = _cartItems
 
-    private val totalSize = MutableLiveData<Int>(0)
+    private val totalSize = MutableLiveData(NO_CART_ITEM)
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(DEFAULT_CURRENT_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
@@ -32,17 +32,18 @@ class ShoppingCartViewModel(
             addSource(totalSize) { value = checkIsRightBtnEnable() }
         }
 
-    private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(1)?.not() ?: false
+    private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(DEFAULT_CURRENT_PAGE)?.not() ?: false
 
-    private fun checkIsRightBtnEnable() = (totalSize.value != 0) && (_currentPage.value?.equals(totalSize.value))?.not() ?: false
+    private fun checkIsRightBtnEnable() = (totalSize.value != NO_CART_ITEM) && (_currentPage.value?.equals(totalSize.value))?.not() ?: false
 
     fun updatePageSize() {
         val totalItemSize = repository.shoppingCartSize()
         totalSize.value = ceil(totalItemSize / PAGE_SIZE.toDouble()).toInt()
     }
 
-    fun loadCartItems(currentPage: Int) {
+    fun loadCartItems() {
         runCatching {
+            val currentPage = _currentPage?.value ?: DEFAULT_CURRENT_PAGE
             repository.shoppingCartItems(currentPage - DEFAULT_CURRENT_PAGE, PAGE_SIZE)
         }.onSuccess { shoppingCartItems ->
             _cartItems.value = shoppingCartItems.map { it.product.toProductUiModel() }
@@ -55,21 +56,24 @@ class ShoppingCartViewModel(
         runCatching {
             repository.deleteShoppingCartItem(productId)
         }.onSuccess {
-            val currentPage = requireNotNull(_currentPage.value)
-            loadCartItems(currentPage)
+            updatePageSize()
+            loadCartItems()
         }
     }
 
     fun nextPage() {
         _currentPage.value = _currentPage.value?.inc()
+        loadCartItems()
     }
 
     fun previousPage() {
         _currentPage.value = _currentPage.value?.dec()
+        loadCartItems()
     }
 
     companion object {
         private const val PAGE_SIZE = 5
         private const val DEFAULT_CURRENT_PAGE = 1
+        private const val NO_CART_ITEM = 0
     }
 }

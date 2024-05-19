@@ -31,7 +31,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
     }
 
     private fun initShoppingCart() {
-        viewModel.loadCartItems(DEFAULT_CURRENT_PAGE)
+        viewModel.loadCartItems()
         viewModel.updatePageSize()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Cart"
@@ -40,10 +40,6 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
     private fun updateView() {
         viewModel.cartItems.observe(this) { cartItems ->
             adapter.submitList(cartItems)
-        }
-
-        viewModel.currentPage.observe(this) { currentPage ->
-            viewModel.loadCartItems(currentPage)
         }
     }
 
@@ -56,12 +52,9 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
 
     override fun onItemRemoveBtnClicked(id: Long) {
         viewModel.deleteCartItem(id)
-        viewModel.updatePageSize()
     }
 
     companion object {
-        private const val DEFAULT_CURRENT_PAGE = 1
-
         fun newInstance(context: Context) = Intent(context, ShoppingCartActivity::class.java)
     }
 }
