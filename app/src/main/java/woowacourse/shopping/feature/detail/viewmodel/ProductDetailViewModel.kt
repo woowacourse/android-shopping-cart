@@ -14,6 +14,9 @@ class ProductDetailViewModel(
     private val _product = MutableLiveData<Product>()
     val product: LiveData<Product> get() = _product
 
+    private val _isSuccessAddToCart = MutableLiveData(false)
+    val isSuccessAddToCart: LiveData<Boolean> get() = _isSuccessAddToCart
+
     fun loadProduct(productId: Long) {
         _product.value = productRepository.find(productId)
     }
@@ -21,5 +24,6 @@ class ProductDetailViewModel(
     fun addProductToCart() {
         val product = product.value ?: return
         cartRepository.increaseQuantity(product)
+        _isSuccessAddToCart.value = true
     }
 }

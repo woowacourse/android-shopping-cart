@@ -12,7 +12,6 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.feature.InstantTaskExecutorExtension
-import woowacourse.shopping.feature.cart.viewmodel.CartViewModel
 import woowacourse.shopping.feature.getOrAwaitValue
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price
@@ -21,15 +20,13 @@ import java.lang.IllegalArgumentException
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
-    private lateinit var productDetailViewModel: ProductDetailViewModel
-    private lateinit var cartViewModel: CartViewModel
+    private lateinit var viewModel: ProductDetailViewModel
     private val productRepository: ProductRepository = ProductDummyRepository
     private val cartRepository: CartRepository = CartDummyRepository
 
     @BeforeEach
     fun setUp() {
-        productDetailViewModel = ProductDetailViewModel(productRepository, cartRepository)
-        cartViewModel = CartViewModel(cartRepository)
+        viewModel = ProductDetailViewModel(productRepository, cartRepository)
         productRepository.deleteAll()
         cartRepository.deleteAll()
     }
@@ -40,10 +37,10 @@ class ProductDetailViewModelTest {
         val id = productRepository.save(imageUrl, title, price)
 
         // when
-        productDetailViewModel.loadProduct(id)
+        viewModel.loadProduct(id)
 
         // then
-        val actual = productDetailViewModel.product.getOrAwaitValue()
+        val actual = viewModel.product.getOrAwaitValue()
         assertAll(
             Executable { assertThat(actual.imageUrl).isEqualTo(imageUrl) },
             Executable { assertThat(actual.title).isEqualTo(title) },
@@ -54,19 +51,27 @@ class ProductDetailViewModelTest {
     @Test
     fun `상품 id에 해당하는 상품이 없는 경우 예외가 발생한다`() {
         assertThrows<IllegalArgumentException> {
-            productDetailViewModel.loadProduct(-1L)
+            viewModel.loadProduct(-1L)
         }
     }
 
     @Test
-    fun `장바구니에 상품을 추가한다`() {
+    fun `장바구니에 상품을 추가하지 않았을 때 장바구니 상품 추가 성공 여부는 false 이다`() {
         val id = productRepository.save(imageUrl, title, price)
-        productDetailViewModel.loadProduct(id)
+        viewModel.loadProduct(id)
 
-        productDetailViewModel.addProductToCart()
-        cartViewModel.loadCount()
+        val actual = viewModel.isSuccessAddToCart.getOrAwaitValue()
+        assertThat(actual).isFalse()
+    }
 
-        val actual = cartViewModel.cartSize.getOrAwaitValue()
-        assertThat(actual).isEqualTo(1)
+    @Test
+    fun `장바구니에 상품을 추가했을 때 장바구니 상품 추가 성공 여부는 true 이다`() {
+        val id = productRepository.save(imageUrl, title, price)
+        viewModel.loadProduct(id)
+
+        viewModel.addProductToCart()
+
+        val actual = viewModel.isSuccessAddToCart.getOrAwaitValue()
+        assertThat(actual).isTrue()
     }
 }

@@ -24,13 +24,19 @@ class ProductDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        initializeBinding()
         initializeView()
+    }
+
+    private fun initializeBinding() {
+        binding.lifecycleOwner = this
+        binding.viewModel = productDetailViewModel
     }
 
     private fun initializeView() {
         initializeToolbar()
-        initializeAddCartButton()
-        updateProduct()
+        observeAddProductToCart()
+        showProduct()
     }
 
     private fun initializeToolbar() {
@@ -42,10 +48,9 @@ class ProductDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initializeAddCartButton() {
-        binding.btnProductDetailAddCart.setOnClickListener {
-            productDetailViewModel.addProductToCart()
-            showAddCartDialog()
+    private fun observeAddProductToCart() {
+        productDetailViewModel.isSuccessAddToCart.observe(this) { isSuccessAddToCart ->
+            if (isSuccessAddToCart) showAddCartDialog()
         }
     }
 
@@ -70,14 +75,11 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
 
-    private fun updateProduct() {
+    private fun showProduct() {
         runCatching {
             productDetailViewModel.loadProduct(productId())
         }.onFailure {
             showErrorSnackBar()
-        }
-        productDetailViewModel.product.observe(this) {
-            binding.product = it
         }
     }
 
