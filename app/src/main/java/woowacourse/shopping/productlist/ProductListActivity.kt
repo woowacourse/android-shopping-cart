@@ -40,8 +40,8 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     private fun showProducts() {
         viewModel.loadProducts(INITIAL_POSITION)
-        viewModel.products.observe(this) { products ->
-            adapter.submitList(products)
+        viewModel.moreProducts.observe(this) { moreProducts ->
+            adapter.submitList(moreProducts)
         }
     }
 

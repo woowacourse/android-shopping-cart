@@ -15,6 +15,9 @@ class ProductListViewModel(
     private val _currentSize: MutableLiveData<Int> = MutableLiveData()
     val currentSize: LiveData<Int> get() = _currentSize
 
+    private val _moreProducts: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
+    val moreProducts: LiveData<List<ProductUiModel>> get() = _moreProducts
+
     val totalSize: Int = repository.productsTotalSize()
 
     fun loadProducts(startPosition: Int) {
@@ -22,8 +25,10 @@ class ProductListViewModel(
             repository.products(startPosition, PRODUCTS_OFFSET_SIZE)
         }.onSuccess { newProducts ->
             val currentItems = _products.value ?: emptyList()
-            _products.value = currentItems + newProducts.map { it.toProductUiModel() }
-            _currentSize.value = products.value?.size
+            val newProducts = newProducts.map { it.toProductUiModel() }
+            _products.value = currentItems + newProducts
+            _moreProducts.value = newProducts
+            _currentSize.value = _products.value?.size
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }

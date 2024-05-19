@@ -10,7 +10,7 @@ import woowacourse.shopping.util.imageUrlToSrc
 class ProductListAdapter(
     private val onClick: ProductListClickAction,
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
-    private var items: List<ProductUiModel> = emptyList()
+    private val items: MutableList<ProductUiModel> = mutableListOf()
 
     class ProductListViewHolder(
         private val binding: ItemProductListBinding,
@@ -49,7 +49,7 @@ class ProductListAdapter(
 
     fun submitList(products: List<ProductUiModel>) {
         val previousCount = itemCount
-        items = products
-        notifyItemRangeInserted(previousCount, products.size - previousCount)
+        items.addAll(products)
+        notifyItemRangeInserted(previousCount, products.size)
     }
 }
