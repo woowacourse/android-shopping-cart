@@ -31,6 +31,8 @@ class CartViewModelTest {
     @Test
     @DisplayName("ViewModel 이 초기화될 때, 첫 번째 페이지에 해당하는 상품들이 로드된다")
     fun test0() {
+        every { cartRepository.cartProducts(1) } returns listOf(cartProduct())
+
         verify(exactly = 1) { cartRepository.cartProducts(1) }
         verify(exactly = 1) { cartRepository.canLoadMoreCartProducts(1) }
         cartViewModel.currentPage.getOrAwaitValue() shouldBe 1
@@ -38,18 +40,42 @@ class CartViewModelTest {
         cartViewModel.canLoadPrevPage.getOrAwaitValue() shouldBe false
     }
 
+
     @Test
-    @DisplayName("현재 페이지가 1일 때, 다음 페이지로 이돌하면, 페이지가 2가 된다")
+    @DisplayName("현재 페이지가 1일 때, 다음 페이지로 이동하면, 페이지가 2가 된다")
     fun test1() {
-        val nextPage = 2
         // given
-        every { cartRepository.cartProducts(nextPage) } returns listOf(cartProduct())
-        every { cartRepository.canLoadMoreCartProducts(nextPage) } returns true
+        val nextPage = 2
         // when
         cartViewModel.plusPage()
         // then
-        verify(exactly = 1) { cartRepository.cartProducts(nextPage) }
-        verify(exactly = 1) { cartRepository.canLoadMoreCartProducts(nextPage) }
+        verify { cartRepository.canLoadMoreCartProducts(1) }
         cartViewModel.currentPage.getOrAwaitValue() shouldBe nextPage
+    }
+
+    @Test
+    @DisplayName("현재 페이지가 1 페이지라면, 이전 페이지로 이동할 수 없다")
+    fun test2() {
+        // when
+        cartViewModel.minusPage()
+        // then
+        cartViewModel.currentPage.getOrAwaitValue() shouldBe 1
+    }
+
+    @Test
+    @DisplayName("현재 페이지가 마지막 페이지라면, 다음 페이지로 이동할 수 없다")
+    fun test3() {
+        // given
+        every { cartRepository.canLoadMoreCartProducts(2) } returns true
+        every { cartRepository.canLoadMoreCartProducts(3) } returns true
+        every { cartRepository.canLoadMoreCartProducts(4) } returns true
+        every { cartRepository.canLoadMoreCartProducts(5) } returns false
+        // when
+        cartViewModel.plusPage()
+        cartViewModel.plusPage()
+        cartViewModel.plusPage()
+        cartViewModel.plusPage()
+        // then
+        cartViewModel.canLoadNextPage.getOrAwaitValue() shouldBe false
     }
 }

@@ -43,7 +43,9 @@ class CartViewModel(
 
     fun minusPage() {
         val currentPage = _currentPage.value ?: return
-        _currentPage.value = currentPage - INCREMENT_AMOUNT
+        if (currentPage > 1) {
+            _currentPage.value = currentPage - INCREMENT_AMOUNT
+        }
     }
 
     companion object {
