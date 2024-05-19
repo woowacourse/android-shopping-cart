@@ -10,7 +10,6 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
-import woowacourse.shopping.utils.ShoppingUtils
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
@@ -73,14 +72,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
         shoppingCartViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) {
             updateRecyclerView()
         }
-        shoppingCartViewModel.shoppingCartState.observe(viewLifecycleOwner) { shoppingCartState ->
-            when (shoppingCartState) {
-                ShoppingCartState.DeleteShoppingCart.Success,
-                ShoppingCartState.LoadCartItemList.Success,
-                ShoppingCartState.Init,
-                -> {
-                }
-
+        shoppingCartViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+            when (errorState) {
                 ShoppingCartState.DeleteShoppingCart.Fail ->
                     requireContext().makeToast(
                         getString(
@@ -93,7 +86,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
                         getString(R.string.max_paging_data),
                     )
 
-                ShoppingCartState.Error ->
+                ShoppingCartState.ErrorState.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
                     )

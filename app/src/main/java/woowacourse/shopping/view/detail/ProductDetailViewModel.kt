@@ -19,7 +19,7 @@ class ProductDetailViewModel(
         MutableLiveData()
     val errorState: LiveData<ProductDetailState.ErrorState> get() = _errorState
 
-    private val _productDetailState = MutableLiveData<ProductDetailState>()
+    private val _productDetailState = MutableLiveData<ProductDetailState>(ProductDetailState.Init)
     val productDetailState: LiveData<ProductDetailState> = _productDetailState
 
     fun addShoppingCartItem(product: Product) {

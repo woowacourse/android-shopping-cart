@@ -24,6 +24,10 @@ class ShoppingCartViewModel(
         MutableLiveData(ShoppingCartState.Init)
     val shoppingCartState: LiveData<ShoppingCartState> get() = _shoppingCartState
 
+    private val _errorState: MutableLiveData<ShoppingCartState.ErrorState> =
+        MutableLiveData()
+    val errorState: LiveData<ShoppingCartState.ErrorState> get() = _errorState
+
     fun deleteShoppingCartItem(itemId: Long) {
         try {
             shoppingCartRepository.deleteCartItem(itemId)
@@ -31,8 +35,8 @@ class ShoppingCartViewModel(
             _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Success
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _shoppingCartState.value = ShoppingCartState.DeleteShoppingCart.Fail
-                else -> _shoppingCartState.value = ShoppingCartState.Error
+                is NoSuchDataException -> _errorState.value = ShoppingCartState.DeleteShoppingCart.Fail
+                else -> _errorState.value = ShoppingCartState.ErrorState.NotKnownError
             }
         } finally {
             resetState()
@@ -47,8 +51,8 @@ class ShoppingCartViewModel(
             _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Success
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _shoppingCartState.value = ShoppingCartState.LoadCartItemList.Fail
-                else -> _shoppingCartState.value = ShoppingCartState.Error
+                is NoSuchDataException -> _errorState.value = ShoppingCartState.LoadCartItemList.Fail
+                else -> _errorState.value = ShoppingCartState.ErrorState.NotKnownError
             }
         } finally {
             resetState()
