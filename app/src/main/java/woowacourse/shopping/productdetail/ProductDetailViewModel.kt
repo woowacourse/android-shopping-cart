@@ -4,12 +4,14 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.ShoppingCartRepository
 import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingCartItem
 
 class ProductDetailViewModel(
-    private val repository: ShoppingRepository,
+    private val shoppingRepository: ShoppingRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
@@ -19,7 +21,7 @@ class ProductDetailViewModel(
 
     fun loadProductDetail(productId: Long) {
         runCatching {
-            repository.productById(productId)
+            shoppingRepository.productById(productId)
         }.onSuccess {
             _product.value = it
         }.onFailure {
@@ -31,9 +33,9 @@ class ProductDetailViewModel(
         runCatching {
             val product = requireNotNull(_product.value)
             val cartItem = ShoppingCartItem(product)
-            val userId = repository.userId()
-            val shoppingCart = repository.shoppingCart(userId)
-            repository.updateShoppingCart(shoppingCart.addItem(cartItem))
+            val userId = shoppingCartRepository.userId()
+            val shoppingCart = shoppingCartRepository.shoppingCart(userId)
+            shoppingCartRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
         }.onSuccess {
             _isAddSuccess.value = true
         }.onFailure {

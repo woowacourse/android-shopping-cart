@@ -15,19 +15,4 @@ interface ShoppingRepository {
     fun productById(id: Long): Product
 
     fun productsTotalSize(): Int
-
-    fun userId(): Long
-
-    fun shoppingCart(userId: Long): ShoppingCart
-
-    fun shoppingCartItems(
-        page: Int,
-        pageSize: Int,
-    ): List<ShoppingCartItem>
-
-    fun deleteShoppingCartItem(productId: Long)
-
-    fun shoppingCartSize(): Int
-
-    fun updateShoppingCart(shoppingCart: ShoppingCart)
 }

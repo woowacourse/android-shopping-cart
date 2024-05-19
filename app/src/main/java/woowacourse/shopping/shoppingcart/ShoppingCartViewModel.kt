@@ -5,13 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ShoppingRepository
+import woowacourse.shopping.ShoppingCartRepository
 import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.productlist.toProductUiModel
 import kotlin.math.ceil
 
 class ShoppingCartViewModel(
-    private val repository: ShoppingRepository,
+    private val repository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _cartItems: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
     val cartItems: LiveData<List<ProductUiModel>> get() = _cartItems
