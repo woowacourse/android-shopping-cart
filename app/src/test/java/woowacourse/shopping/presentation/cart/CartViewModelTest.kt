@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.cart
 
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -40,9 +41,12 @@ class CartViewModelTest {
     fun `장바구니에 담긴 상품을 삭제할 수 있다`() {
         val cartRepository = mockk<CartRepository>(relaxed = true)
         val productRepository = mockk<ProductRepository>(relaxed = true)
+        val deletedItemId = slot<Long>()
         val viewmodel = CartViewModel(cartRepository, productRepository)
-        viewmodel.removeCartItem(1)
-        verify { cartRepository.removeCartItem(1) }
+
+        viewmodel.removeCartItem(1L)
+        verify { cartRepository.removeCartItem(capture(deletedItemId)) }
+        assert(deletedItemId.captured == 1L)
         verify { cartRepository.fetchCartItems(0) }
     }
 }
