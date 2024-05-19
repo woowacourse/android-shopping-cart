@@ -30,7 +30,6 @@ class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private fun initializeViews() {
         setUpToolbar()
         setUpRecyclerView()
-        binding.lifecycleOwner = this
         binding.viewModel = viewModel
     }
 

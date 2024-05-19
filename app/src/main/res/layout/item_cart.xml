@@ -23,14 +23,19 @@
 
         <TextView
             android:id="@+id/textView3"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="40dp"
             android:text="@{cartItem.productName}"
             android:textColor="@color/gray_500"
             android:textSize="18dp"
             android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="상품명" />
@@ -49,6 +54,7 @@
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
@@ -60,11 +66,12 @@
             tools:text="10,000원" />
 
         <ImageView
-            android:src="@drawable/ic_back"
+            android:id="@+id/imageView2"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="12dp"
             android:onClick="@{() -> viewModel.deleteItem(cartItem.id)}"
+            android:src="@drawable/ic_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray_100" />
