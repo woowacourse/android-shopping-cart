@@ -29,23 +29,37 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        initializeViews()
+        observeViewModel()
+    }
+
+    private fun initializeViews() {
         setUpToolbar()
-
+        setUpRecyclerView()
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+    }
 
+    private fun setUpToolbar() {
+        val toolbar: MaterialToolbar = binding.toolbarCart
+        setSupportActionBar(toolbar)
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
+    }
+
+    private fun setUpRecyclerView() {
         adapter = CartAdapter(this)
         binding.recyclerView.adapter = adapter
+    }
 
-        binding.viewModel = viewModel
-
+    private fun observeViewModel() {
         viewModel.cartItemsState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
                 is UIState.Empty -> showEmptyView()
-                is UIState.Error ->
-                    showError(
-                        state.exception.message ?: getString(R.string.unknown_error),
-                    )
+                is UIState.Error -> showError(state.exception.message ?: getString(R.string.unknown_error))
             }
         }
     }
@@ -61,16 +75,6 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
     private fun showError(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-        // Todo: Show error
-    }
-
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarCart
-        setSupportActionBar(toolbar)
-
-        toolbar.setNavigationOnClickListener {
-            finish()
-        }
     }
 
     override fun onItemClick(productId: Long) {
