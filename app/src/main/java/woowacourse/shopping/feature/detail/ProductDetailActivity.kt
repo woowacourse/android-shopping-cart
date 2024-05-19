@@ -8,8 +8,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDummyRepository
-import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.feature.cart.CartActivity
 
@@ -18,8 +18,8 @@ class ProductDetailActivity : AppCompatActivity() {
     private val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModelFactory(
             intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE),
-            ProductDummyRepository.getInstance(),
-            CartDummyRepository.getInstance(),
+            ProductRepository.getInstance(),
+            CartRepository.getInstance(),
         )
     }
 

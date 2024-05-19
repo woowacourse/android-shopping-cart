@@ -16,32 +16,25 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
-import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.cart.FakeCartRepository
+import woowacourse.shopping.data.product.FakeProductRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.hasSizeRecyclerView
 import woowacourse.shopping.imageUrl
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.price
 import woowacourse.shopping.title
 
 @RunWith(AndroidJUnit4::class)
 class CartActivityTest {
-    private val productRepository: ProductRepository = ProductDummyRepository
-    private val cartRepository: CartRepository = CartDummyRepository
-
-    @Before
-    fun setUp() {
-        productRepository.deleteAll()
-        cartRepository.deleteAll()
-    }
-
     @Test
     fun `장바구니에_상품이_없는_경우_장바구니가_비어있다는_화면이_보인다`() {
+        CartRepository.setInstance(FakeCartRepository())
+
         ActivityScenario.launch(CartActivity::class.java)
 
         onView(withId(R.id.tv_empty_cart))
@@ -50,7 +43,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니에_상품이_있는_경우_상품_목록이_보인다`() {
-        addCart(imageUrl, title, price)
+        setUpCart(1)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -60,7 +53,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니의_상품_제목이_보인다`() {
-        addCart(imageUrl, title, price)
+        setUpCart(1, imageUrl, title, price)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -71,7 +64,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니의_상품_가격이_보인다`() {
-        addCart(imageUrl, title, price)
+        setUpCart(1, imageUrl, title, price)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -83,9 +76,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니의_상품이_5개_이하인_경우_이전_페이지_버튼와_다음_페이지_버튼이_보이지_않는다`() {
-        repeat(5) {
-            addCart(imageUrl, title, price)
-        }
+        setUpCart(5)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -97,9 +88,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니의_상품이_6개_이상인_경우_이전_페이지_버튼이_비활성화_된다`() {
-        repeat(6) {
-            addCart(imageUrl, title, price)
-        }
+        setUpCart(6)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -109,9 +98,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니의_상품이_6개_이상인_경우_다음_페이지_버튼이_활성화_된다`() {
-        repeat(6) {
-            addCart(imageUrl, title, price)
-        }
+        setUpCart(6)
 
         ActivityScenario.launch(CartActivity::class.java)
 
@@ -121,9 +108,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니의_상품이_6개인_경우_다음_페이지로_이동하면_하나의_상품이_보인다`() {
-        repeat(6) {
-            addCart(imageUrl, title, price)
-        }
+        setUpCart(6)
 
         ActivityScenario.launch(CartActivity::class.java)
         onView(withId(R.id.btn_cart_next_page))
@@ -135,9 +120,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니에_10개의_상품이_있고_다음_페이지로_이동하면_다음_페이지_버튼이_비활성화_된다`() {
-        repeat(10) {
-            addCart(imageUrl, title, price)
-        }
+        setUpCart(10)
 
         ActivityScenario.launch(CartActivity::class.java)
         onView(withId(R.id.btn_cart_next_page))
@@ -149,9 +132,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니에_10개의_상품이_있고_다음_페이지로_이동하면_이전_페이지_버튼이_활성화_된다`() {
-        repeat(10) {
-            addCart(imageUrl, title, price)
-        }
+        setUpCart(10)
 
         ActivityScenario.launch(CartActivity::class.java)
         onView(withId(R.id.btn_cart_next_page))
@@ -163,7 +144,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니의_상품의_엑스_버튼을_누르면_장바구니_리스트에서_없어진다`() {
-        addCart(imageUrl, title, price)
+        setUpCart(1)
 
         ActivityScenario.launch(CartActivity::class.java)
         onView(withId(R.id.iv_cart_exit))
@@ -175,9 +156,7 @@ class CartActivityTest {
 
     @Test
     fun `장바구니에_6개의_상품이_있고_2페이지일_때_화면을_회전해도_2페이지가_보인다`() {
-        repeat(6) {
-            addCart(imageUrl, title, price)
-        }
+        setUpCart(6)
 
         val activityScenario = ActivityScenario.launch(CartActivity::class.java)
         onView(withId(R.id.btn_cart_next_page))
@@ -191,13 +170,17 @@ class CartActivityTest {
             .hasSizeRecyclerView(1)
     }
 
-    private fun addCart(
-        productImageUrl: String,
-        productTitle: String,
-        productPrice: Int,
+    private fun setUpCart(
+        cartSize: Int,
+        productImageUrl: String = imageUrl,
+        productTitle: String = title,
+        productPrice: Int = price,
     ) {
-        val id = productRepository.save(productImageUrl, productTitle, productPrice)
-        val product = productRepository.find(id)
-        cartRepository.increaseQuantity(product)
+        val products = List(cartSize) { Product(it.toLong(), productImageUrl, productTitle, productPrice) }
+
+        ProductRepository.setInstance(FakeProductRepository(products))
+        CartRepository.setInstance(FakeCartRepository())
+
+        products.forEach { CartRepository.getInstance().increaseQuantity(it) }
     }
 }

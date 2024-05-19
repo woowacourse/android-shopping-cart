@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
@@ -15,7 +15,7 @@ import woowacourse.shopping.feature.products.adapter.ProductsAdapter
 
 class ProductsActivity : AppCompatActivity() {
     private val binding: ActivityProductsBinding by lazy { ActivityProductsBinding.inflate(layoutInflater) }
-    private val viewModel by viewModels<ProductsViewModel> { ProductsViewModelFactory(ProductDummyRepository.getInstance()) }
+    private val viewModel by viewModels<ProductsViewModel> { ProductsViewModelFactory(ProductRepository.getInstance()) }
     private lateinit var adapter: ProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

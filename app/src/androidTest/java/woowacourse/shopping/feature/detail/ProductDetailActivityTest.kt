@@ -13,8 +13,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.product.FakeProductRepository
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.imageUrl
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.price
 import woowacourse.shopping.title
 
@@ -24,10 +26,12 @@ class ProductDetailActivityTest {
     val activityRule: ActivityScenarioRule<ProductDetailActivity>
 
     init {
-        val productId = ProductDummyRepository.save(imageUrl, title, price)
+        val fakeProductRepository =
+            FakeProductRepository(listOf(Product(0L, imageUrl, title, price)))
+        ProductRepository.setInstance(fakeProductRepository)
         val intent =
             Intent(ApplicationProvider.getApplicationContext(), ProductDetailActivity::class.java)
-                .putExtra("product_id_key", productId)
+                .putExtra("product_id_key", 0L)
         activityRule = ActivityScenarioRule(intent)
     }
 

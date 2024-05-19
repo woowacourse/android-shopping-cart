@@ -3,9 +3,9 @@ package woowacourse.shopping.feature.cart
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.FakeCartRepository
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.FakeCartRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.model.CartItem

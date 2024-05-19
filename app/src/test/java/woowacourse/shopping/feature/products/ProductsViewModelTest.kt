@@ -3,8 +3,8 @@ package woowacourse.shopping.feature.products
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.InstantTaskExecutorExtension
+import woowacourse.shopping.data.product.FakeProductRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.imageUrl

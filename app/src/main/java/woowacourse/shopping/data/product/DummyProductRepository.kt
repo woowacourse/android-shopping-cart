@@ -4,7 +4,7 @@ import woowacourse.shopping.model.Product
 import kotlin.concurrent.Volatile
 import kotlin.math.min
 
-class ProductDummyRepository private constructor(savedProducts: List<Product>) : ProductRepository {
+class DummyProductRepository private constructor(savedProducts: List<Product>) : ProductRepository {
     private val products: MutableMap<Long, Product> = savedProducts.associateBy { it.id }.toMutableMap()
 
     override fun find(id: Long): Product {
@@ -24,11 +24,11 @@ class ProductDummyRepository private constructor(savedProducts: List<Product>) :
         private const val INVALID_ID_MESSAGE = "해당하는 id의 상품이 존재하지 않습니다."
 
         @Volatile
-        private var instance: ProductDummyRepository? = null
+        private var instance: DummyProductRepository? = null
 
-        fun getInstance(savedProducts: List<Product> = dummyProducts): ProductDummyRepository {
+        fun getInstance(savedProducts: List<Product>): DummyProductRepository {
             return instance ?: synchronized(this) {
-                ProductDummyRepository(savedProducts)
+                DummyProductRepository(savedProducts)
             }
         }
     }

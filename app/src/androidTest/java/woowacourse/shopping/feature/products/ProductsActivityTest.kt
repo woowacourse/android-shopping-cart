@@ -19,11 +19,13 @@ import org.hamcrest.CoreMatchers.allOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.R
-import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.product.FakeProductRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.hasSizeRecyclerView
 import woowacourse.shopping.imageUrl
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.price
 import woowacourse.shopping.title
 
@@ -33,11 +35,8 @@ class ProductsActivityTest {
     val activityRule: ActivityScenarioRule<ProductsActivity>
 
     init {
-        val productRepository: ProductRepository = ProductDummyRepository
-        productRepository.deleteAll()
-        repeat(30) {
-            productRepository.save(imageUrl, "$title $it", price + it)
-        }
+        val products = List(30) { Product(it.toLong(), imageUrl, "$title $it", price + it) }
+        ProductRepository.setInstance(FakeProductRepository(products))
         activityRule = ActivityScenarioRule(ProductsActivity::class.java)
     }
 

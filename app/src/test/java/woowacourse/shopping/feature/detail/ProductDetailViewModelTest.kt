@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.FakeCartRepository
-import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.cart.FakeCartRepository
+import woowacourse.shopping.data.product.FakeProductRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.imageUrl

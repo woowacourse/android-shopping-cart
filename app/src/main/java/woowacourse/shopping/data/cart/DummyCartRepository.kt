@@ -6,7 +6,7 @@ import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.math.min
 
-class CartDummyRepository private constructor() : CartRepository {
+class DummyCartRepository private constructor() : CartRepository {
     private val cart: MutableList<CartItem> = mutableListOf()
     private var id: Long = 0L
 
@@ -51,11 +51,11 @@ class CartDummyRepository private constructor() : CartRepository {
         private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
 
         @Volatile
-        private var instance: CartDummyRepository? = null
+        private var instance: DummyCartRepository? = null
 
-        fun getInstance(): CartDummyRepository {
+        fun getInstance(): DummyCartRepository {
             return instance ?: synchronized(this) {
-                CartDummyRepository()
+                DummyCartRepository()
             }
         }
     }

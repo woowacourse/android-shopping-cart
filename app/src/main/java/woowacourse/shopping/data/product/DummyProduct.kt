@@ -2,7 +2,7 @@ package woowacourse.shopping.data.product
 
 import woowacourse.shopping.model.Product
 
-val dummyProducts: List<Product> =
+val products =
     listOf(
         Product(
             0L,
@@ -10,7 +10,12 @@ val dummyProducts: List<Product> =
             "마리오 그린올리브 300g",
             4500,
         ),
-        Product(1L, "https://images.emarteveryday.co.kr/images/product/8801392067167/vSYMPCA3qqbLJjhv.png", "비비고 통새우 만두 200g", 5980),
+        Product(
+            1L,
+            "https://images.emarteveryday.co.kr/images/product/8801392067167/vSYMPCA3qqbLJjhv.png",
+            "비비고 통새우 만두 200g",
+            5980,
+        ),
         Product(
             2L,
             "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/97/12/2500000351297_1.png",
@@ -48,3 +53,11 @@ val dummyProducts: List<Product> =
             9980,
         ),
     )
+
+val dummyProducts =
+    List(55) {
+        products[it % products.size].copy(
+            id = it.toLong(),
+            title = "$it ${products[it % products.size].title}",
+        )
+    }
