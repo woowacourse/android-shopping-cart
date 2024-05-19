@@ -30,7 +30,7 @@
             android:layout_margin="16dp"
             android:background="@color/green"
             android:gravity="center"
-            android:onClick="@{() -> actionHandler.onClickLoadMoreButton()}"
+            android:onClick="@{() -> actionHandler.loadMoreProducts()}"
             android:text="@string/show_more_products_title"
             android:textColor="@color/white"
             android:textSize="20dp"

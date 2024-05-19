@@ -43,7 +43,7 @@ class ProductListViewModelTest {
         initViewModel()
 
         // when
-        viewModel.onClickLoadMoreButton()
+        viewModel.loadMoreProducts()
 
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
@@ -59,7 +59,7 @@ class ProductListViewModelTest {
         initViewModel()
 
         // when
-        viewModel.onClickProduct(productList.first().id)
+        viewModel.navigateToProductDetail(productList.first().id)
 
         // then
         val actual = viewModel.navigateAction.getOrAwaitValue()

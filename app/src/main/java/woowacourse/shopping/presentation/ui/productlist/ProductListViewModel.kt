@@ -25,14 +25,14 @@ class ProductListViewModel(
     private val productListPagingSource = ProductListPagingSource(repository = productRepository)
 
     init {
-        getPagingProduct()
+        loadProductList()
     }
 
-    override fun onClickProduct(productId: Int) {
+    override fun navigateToProductDetail(productId: Int) {
         _navigateAction.emit(ProductListNavigateAction.NavigateToProductDetail(productId = productId))
     }
 
-    private fun getPagingProduct() {
+    private fun loadProductList() {
         productListPagingSource.load().onSuccess { pagingProduct ->
             _uiState.value?.let { state ->
                 val nowPagingProduct =
@@ -51,8 +51,8 @@ class ProductListViewModel(
         }
     }
 
-    override fun onClickLoadMoreButton() {
-        getPagingProduct()
+    override fun loadMoreProducts() {
+        loadProductList()
     }
 
     companion object {
