@@ -52,7 +52,7 @@ class ShoppingCartViewModelTest {
         initViewModel()
 
         // when
-        viewModel.onClickClose(orderList.orders.first().id)
+        viewModel.removeOrder(orderList.orders.first().id)
 
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
@@ -85,7 +85,7 @@ class ShoppingCartViewModelTest {
         initViewModel()
 
         // when
-        viewModel.onClickNextPage()
+        viewModel.loadNextPage()
 
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
@@ -105,8 +105,8 @@ class ShoppingCartViewModelTest {
         initViewModel()
 
         // when
-        viewModel.onClickNextPage()
-        viewModel.onClickPrePage()
+        viewModel.loadNextPage()
+        viewModel.loadPreviousPage()
 
         // then
         val actual = viewModel.uiState.getOrAwaitValue()

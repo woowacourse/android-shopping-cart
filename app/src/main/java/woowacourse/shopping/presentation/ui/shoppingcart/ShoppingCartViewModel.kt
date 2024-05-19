@@ -19,10 +19,10 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
     private val shoppingCartPagingSource = ShoppingCartPagingSource(repository)
 
     init {
-        getPagingOrder(INIT_PAGE)
+        loadOrders(INIT_PAGE)
     }
 
-    private fun getPagingOrder(page: Int) {
+    private fun loadOrders(page: Int) {
         shoppingCartPagingSource.load(page).onSuccess { pagingOrder ->
             _uiState.value =
                 _uiState.value?.copy(pagingOrder = pagingOrder)
@@ -31,22 +31,22 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
         }
     }
 
-    override fun onClickClose(orderId: Int) {
+    override fun removeOrder(orderId: Int) {
         repository.removeOrder(orderId)
         uiState.value?.let { state ->
-            getPagingOrder(state.pagingOrder.currentPage)
+            loadOrders(state.pagingOrder.currentPage)
         }
     }
 
-    fun onClickNextPage() {
+    fun loadNextPage() {
         uiState.value?.let { state ->
-            getPagingOrder(state.pagingOrder.currentPage + 1)
+            loadOrders(state.pagingOrder.currentPage + 1)
         }
     }
 
-    fun onClickPrePage() {
+    fun loadPreviousPage() {
         uiState.value?.let { state ->
-            getPagingOrder(state.pagingOrder.currentPage - 1)
+            loadOrders(state.pagingOrder.currentPage - 1)
         }
     }
 

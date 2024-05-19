@@ -80,7 +80,7 @@
             android:id="@+id/iv_closed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> actionHandler.onClickClose(order.id)}"
+            android:onClick="@{() -> actionHandler.removeOrder(order.id)}"
             android:padding="20dp"
             android:src="@drawable/ic_close_gray6"
             app:layout_constraintEnd_toEndOf="parent"
