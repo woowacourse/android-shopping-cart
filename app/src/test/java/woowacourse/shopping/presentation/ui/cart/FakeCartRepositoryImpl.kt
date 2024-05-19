@@ -36,7 +36,7 @@ class FakeCartRepositoryImpl : CartRepository {
     }
 
     override fun findOrNullWithProductId(productId: Long): CartItem? {
-        return null
+        return cartItems.find { it.productId == productId }
     }
 
     override fun find(cartItemId: Long): CartItem {
