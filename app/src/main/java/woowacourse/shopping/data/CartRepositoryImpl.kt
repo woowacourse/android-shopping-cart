@@ -1,8 +1,8 @@
 package woowacourse.shopping.data
 
+import woowacourse.shopping.data.mapper.toCartItemEntity
 import woowacourse.shopping.data.mapper.toDomainModel
 import woowacourse.shopping.data.model.CartItemEntity
-import woowacourse.shopping.data.model.mapper
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.ShoppingCart
@@ -19,7 +19,7 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
             update(product.id, quantity)
         } else {
             threadAction {
-                dao.save(product.mapper(quantity))
+                dao.save(product.toCartItemEntity(quantity))
             }
         }
     }
