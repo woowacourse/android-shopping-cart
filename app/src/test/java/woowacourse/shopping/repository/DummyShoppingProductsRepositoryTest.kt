@@ -31,7 +31,6 @@ class DummyShoppingProductsRepositoryTest {
         assertThat(loadedCartItems.size).isEqualTo(20)
     }
 
-    // findById test
     @Test
     fun `id로 상품을 찾는다`() {
         // given
@@ -42,5 +41,29 @@ class DummyShoppingProductsRepositoryTest {
 
         // then
         assertThat(product.id).isEqualTo(findId)
+    }
+
+    @Test
+    fun `상품 60개 일 때 2 페이지이면 마지막 페이지가 아니다`() {
+        // given
+        val page = 2
+
+        // when
+        val isFinalPage = dummyShoppingProductsRepository.isFinalPage(page)
+
+        // then
+        assertThat(isFinalPage).isFalse
+    }
+
+    @Test
+    fun `상품 60 개일 때 3 페이지면 마지막 페이지이다`() {
+        // given
+        val page = 3
+
+        // when
+        val isFinalPage = dummyShoppingProductsRepository.isFinalPage(page)
+
+        // then
+        assertThat(isFinalPage).isTrue
     }
 }
