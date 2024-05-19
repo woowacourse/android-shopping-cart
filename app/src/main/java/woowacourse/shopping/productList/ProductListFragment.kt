@@ -22,8 +22,8 @@ class ProductListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val factory = ProductListViewModelFactory(DummyShoppingProductsRepository(TwentyItemsPagingStrategy()))
-    private val viewModel: ProductListViewModel2 by lazy {
-        ViewModelProvider(this, factory)[ProductListViewModel2::class.java]
+    private val viewModel: ProductListViewModel by lazy {
+        ViewModelProvider(this, factory)[ProductListViewModel::class.java]
     }
 
     private val adapter: ProductRecyclerViewAdapter by lazy {
@@ -40,7 +40,7 @@ class ProductListFragment : Fragment() {
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.productDetailList.adapter = adapter
-        binding.shoppingProductsViewModel = viewModel
+        binding.vm = viewModel
         showLoadMoreButton()
         return binding.root
     }

@@ -8,10 +8,6 @@
         <variable
             name="vm"
             type="woowacourse.shopping.productList.ProductListViewModel" />
-
-        <variable
-            name="shoppingProductsViewModel"
-            type="woowacourse.shopping.productList.ProductListViewModel2" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,7 +60,7 @@
             android:id="@+id/load_more_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> shoppingProductsViewModel.loadNextPageProducts()}"
+            android:onClick="@{() -> vm.loadNextPageProducts()}"
             android:text="더볼래?"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent" />

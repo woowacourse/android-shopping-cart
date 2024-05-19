@@ -16,7 +16,7 @@ import woowacourse.shopping.repository.FakeShoppingProductsRepository
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
-    private lateinit var viewModel: ProductListViewModel2
+    private lateinit var viewModel: ProductListViewModel
 
     @BeforeEach
     fun setUp() {
@@ -32,7 +32,7 @@ class ProductListViewModelTest {
                 productsTestFixture(20),
             )
         viewModel =
-            ProductListViewModel2(
+            ProductListViewModel(
                 productsRepository = repo,
                 _currentPage = MutableLiveData(1),
             )
@@ -45,7 +45,7 @@ class ProductListViewModelTest {
     fun `데이터 40개 로드`() {
         // given
         viewModel =
-            ProductListViewModel2(
+            ProductListViewModel(
                 productsRepository =
                     FakeShoppingProductsRepository(
                         productsTestFixture(40),
@@ -64,7 +64,7 @@ class ProductListViewModelTest {
     fun `총 데이터가 15 개일 때 현재 페이지는 1페이지이다`() {
         // givne
         viewModel =
-            ProductListViewModel2(
+            ProductListViewModel(
                 productsRepository =
                     FakeShoppingProductsRepository(
                         productsTestFixture(15),
@@ -80,7 +80,7 @@ class ProductListViewModelTest {
     fun `총 데이터가 21 개일 때 데이터를 두번 로드하면 2페이지이다`() {
         // given
         viewModel =
-            ProductListViewModel2(
+            ProductListViewModel(
                 productsRepository =
                     FakeShoppingProductsRepository(
                         productsTestFixture(21),
@@ -99,7 +99,7 @@ class ProductListViewModelTest {
     fun `총 데이터가 20 개 일때 첫 페이지가 마지막 페이지이다`() {
         // given
         viewModel =
-            ProductListViewModel2(
+            ProductListViewModel(
                 productsRepository =
                     FakeShoppingProductsRepository(
                         productsTestFixture(20),
@@ -115,7 +115,7 @@ class ProductListViewModelTest {
     fun `총 데이터가 21 개 일때 첫 페이지가 마지막 페이지가 아니다`() {
         // given
         viewModel =
-            ProductListViewModel2(
+            ProductListViewModel(
                 productsRepository =
                     FakeShoppingProductsRepository(
                         productsTestFixture(21),
@@ -131,7 +131,7 @@ class ProductListViewModelTest {
     fun `총 데이터가 21 개 일때 두번째 페이지가 마지막 페이지이다`() {
         // given
         viewModel =
-            ProductListViewModel2(
+            ProductListViewModel(
                 productsRepository =
                     FakeShoppingProductsRepository(
                         productsTestFixture(21),
