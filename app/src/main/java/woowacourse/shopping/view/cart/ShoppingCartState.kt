@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.cart
 
 sealed interface ShoppingCartState {
-    data object Init : ShoppingCartState
 
     sealed interface ErrorState {
         data object NotKnownError : ErrorState

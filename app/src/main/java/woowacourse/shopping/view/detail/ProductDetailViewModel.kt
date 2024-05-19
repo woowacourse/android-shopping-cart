@@ -19,7 +19,7 @@ class ProductDetailViewModel(
         MutableLiveData()
     val errorState: LiveData<ProductDetailState.ErrorState> get() = _errorState
 
-    private val _productDetailState = MutableLiveData<ProductDetailState>(ProductDetailState.Init)
+    private val _productDetailState = MutableLiveData<ProductDetailState>()
     val productDetailState: LiveData<ProductDetailState> = _productDetailState
 
     fun addShoppingCartItem(product: Product) {
@@ -31,8 +31,6 @@ class ProductDetailViewModel(
                 is NoSuchDataException -> _errorState.value = ProductDetailState.AddShoppingCart.Fail
                 else -> _errorState.value = ProductDetailState.ErrorState.NotKnownError
             }
-        } finally {
-            resetState()
         }
     }
 
@@ -46,12 +44,6 @@ class ProductDetailViewModel(
                 is NoSuchDataException -> _errorState.value = ProductDetailState.LoadProductItem.Fail
                 else -> _errorState.value = ProductDetailState.ErrorState.NotKnownError
             }
-        } finally {
-            resetState()
         }
-    }
-
-    private fun resetState() {
-        _productDetailState.value = ProductDetailState.Init
     }
 }

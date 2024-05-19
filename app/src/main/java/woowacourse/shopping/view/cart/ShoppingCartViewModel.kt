@@ -21,7 +21,7 @@ class ShoppingCartViewModel(
     val currentPage: LiveData<Int> get() = _currentPage
 
     private val _shoppingCartState: MutableLiveData<ShoppingCartState> =
-        MutableLiveData(ShoppingCartState.Init)
+        MutableLiveData()
     val shoppingCartState: LiveData<ShoppingCartState> get() = _shoppingCartState
 
     private val _errorState: MutableLiveData<ShoppingCartState.ErrorState> =
@@ -38,8 +38,6 @@ class ShoppingCartViewModel(
                 is NoSuchDataException -> _errorState.value = ShoppingCartState.DeleteShoppingCart.Fail
                 else -> _errorState.value = ShoppingCartState.ErrorState.NotKnownError
             }
-        } finally {
-            resetState()
         }
     }
 
@@ -54,8 +52,6 @@ class ShoppingCartViewModel(
                 is NoSuchDataException -> _errorState.value = ShoppingCartState.LoadCartItemList.Fail
                 else -> _errorState.value = ShoppingCartState.ErrorState.NotKnownError
             }
-        } finally {
-            resetState()
         }
     }
 
@@ -93,10 +89,6 @@ class ShoppingCartViewModel(
             (currentPage.value ?: MIN_PAGE_COUNT) * CART_ITEM_PAGE_SIZE,
             totalItemSize,
         )
-    }
-
-    private fun resetState() {
-        _shoppingCartState.value = ShoppingCartState.Init
     }
 
     companion object {
