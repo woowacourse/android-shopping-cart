@@ -37,9 +37,6 @@ class DetailActivity : AppCompatActivity() {
             val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
             viewModel.loadProductInformation(productId)
         }
-        viewModel.productInformation.observe(this) {
-            binding.product = it
-        }
         viewModel.message.observe(this) { event ->
             if (event.hasBeenHandled) return@observe
             showToastMessage(

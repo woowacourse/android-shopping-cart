@@ -8,10 +8,6 @@
         <variable
             name="detailViewModel"
             type="woowacourse.shopping.presentation.detail.DetailViewModel" />
-
-        <variable
-            name="product"
-            type="woowacourse.shopping.data.model.Product" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,7 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appbar_detail"
             app:layout_constraintBottom_toTopOf="@id/btn_add_to_cart_detail"
-            shopping:productThumbnail="@{product.imageSource}"
+            shopping:productThumbnail="@{detailViewModel.productInformation.imageSource}"
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
@@ -55,7 +51,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/black"
-            android:text="@{product.name}"
+            android:text="@{detailViewModel.productInformation.name}"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +83,7 @@
             android:id="@+id/tv_price_value_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{@string/format_price(product.price)}"
+            android:text="@{@string/format_price(detailViewModel.productInformation.price)}"
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -97,7 +93,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_to_cart_detail"
-            android:onClick="@{() -> detailViewModel.addToCart(product.id)}"
+            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.id)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint_900"
