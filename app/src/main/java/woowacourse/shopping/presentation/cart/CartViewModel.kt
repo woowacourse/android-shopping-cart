@@ -14,6 +14,9 @@ class CartViewModel(
 
     private val _currentPage = MutableLiveData(START_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
+
+    // todo 캐싱 update
+    private val cachedProducts = mutableMapOf<Int, List<CartProductUi>>()
     val products: LiveData<List<CartProductUi>> = _currentPage.map { page ->
         cartRepository.cartProducts(page).map { it.toUiModel() }
     }
@@ -23,11 +26,12 @@ class CartViewModel(
     val canLoadNextPage: LiveData<Boolean> =
         _currentPage.map { page -> cartRepository.canLoadMoreCartProducts(page) }
 
-    fun deleteProduct(position: Int) {
-        val currentProducts = products.value.orEmpty()
-        val deletedItem = currentProducts.getOrNull(position) ?: return
-        _currentPage.value = _currentPage.value
-        cartRepository.deleteCartProduct(deletedItem.product.id)
+    fun deleteProduct(item: CartProductUi) {
+        val currentProducts = products.value ?: return
+        if (currentProducts.contains(item)) {
+            _currentPage.value = _currentPage.value
+            cartRepository.deleteCartProduct(item.product.id)
+        }
     }
 
     fun plusPage() {

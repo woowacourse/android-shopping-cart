@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
 
-class CartAdapter(private val onClickDeleteBtn: (position: Int) -> Unit) :
+class CartAdapter(private val onClickDeleteBtn: (product: CartProductUi) -> Unit) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
     private var products: List<CartProductUi> = emptyList()
 
@@ -38,13 +38,13 @@ class CartAdapter(private val onClickDeleteBtn: (position: Int) -> Unit) :
 
     class CartViewHolder(
         private val binding: ItemCartProductBinding,
-        private val onClickDeleteBtn: (position: Int) -> Unit,
+        private val onClickDeleteBtn: (product: CartProductUi) -> Unit,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
             binding.ivCartItemDelete.setOnClickListener {
-                onClickDeleteBtn(absoluteAdapterPosition)
+                onClickDeleteBtn(product)
             }
         }
     }
