@@ -8,9 +8,9 @@ class CartViewHolder(private val binding: ItemCartBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
         cartItem: CartItem,
-        clickListener: CartClickListener,
+        viewModel: CartViewModel,
     ) {
         binding.cartItem = cartItem
-        binding.clickListener = clickListener
+        binding.viewModel = viewModel
     }
 }

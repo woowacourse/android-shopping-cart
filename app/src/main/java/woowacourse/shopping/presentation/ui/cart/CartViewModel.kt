@@ -28,6 +28,9 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     private val _isPageControlVisible = MutableLiveData<Boolean>()
     val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
 
+    private val _navigateToProductDetail = MutableLiveData<Long>()
+    val navigateToProductDetail: LiveData<Long> = _navigateToProductDetail
+
     private var lastPage: Int = DEFAULT_PAGE
 
     val cartItemsState: LiveData<UIState<List<CartItem>>> =
@@ -74,8 +77,12 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
         loadPage(prevPage)
     }
 
-    fun deleteItem(itemId: Long) {
-        repository.delete(itemId)
+    fun onProductClick(productId: Long) {
+        _navigateToProductDetail.postValue(productId)
+    }
+
+    fun deleteItem(cartItemId: Long) {
+        repository.delete(cartItemId)
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
 
