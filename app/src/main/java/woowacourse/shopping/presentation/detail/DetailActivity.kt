@@ -34,9 +34,29 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
-            viewModel.loadProductInformation(productId)
+            initializeProductInformation()
         }
+        initializeBindingVariables()
+        initializeToolbar()
+        observeEvents()
+    }
+
+    private fun initializeProductInformation() {
+        val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
+        viewModel.loadProductInformation(productId)
+    }
+
+    private fun initializeToolbar() {
+        setSupportActionBar(binding.toolbarDetail)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    private fun initializeBindingVariables() {
+        binding.detailViewModel = viewModel
+        binding.lifecycleOwner = this
+    }
+
+    private fun observeEvents() {
         viewModel.message.observe(this) { event ->
             if (event.hasBeenHandled) return@observe
             showToastMessage(
@@ -45,11 +65,6 @@ class DetailActivity : AppCompatActivity() {
                 )
             )
         }
-        binding.detailViewModel = viewModel
-        binding.lifecycleOwner = this
-
-        setSupportActionBar(binding.toolbarDetail)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
