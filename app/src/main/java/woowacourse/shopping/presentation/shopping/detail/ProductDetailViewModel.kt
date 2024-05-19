@@ -12,6 +12,7 @@ import woowacourse.shopping.presentation.shopping.toUiModel
 class ProductDetailViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
+    productId: Long,
 ) : ViewModel() {
     private val _product = MutableLiveData<ProductUi>()
     val product: LiveData<ProductUi> get() = _product
@@ -19,19 +20,19 @@ class ProductDetailViewModel(
     private val _isAddedCart = MutableLiveData<Boolean>()
     val isAddedCart: LiveData<Boolean> get() = _isAddedCart
 
-    fun loadProduct(id: Long) {
-        val product = shoppingRepository.productById(id)
-        if (product != null) {
-            _product.value = product.toUiModel()
-        }
+    init {
+        loadProduct(productId)
+    }
+
+    private fun loadProduct(id: Long) {
+        val product = shoppingRepository.productById(id) ?: return
+        _product.value = product.toUiModel()
     }
 
     fun addCartProduct() {
-        val product = _product.value
-        if (product != null) {
-            cartRepository.addCartProduct(product.id)
-            _isAddedCart.value = true
-        }
+        val product = _product.value ?: return
+        cartRepository.addCartProduct(product.id)
+        _isAddedCart.value = true
     }
 
     fun addCartDone() {
@@ -42,11 +43,13 @@ class ProductDetailViewModel(
         fun factory(
             shoppingRepository: ShoppingRepository,
             cartRepository: CartRepository,
+            productId: Long,
         ): ViewModelProvider.Factory {
             return BaseViewModelFactory {
                 ProductDetailViewModel(
                     shoppingRepository,
                     cartRepository,
+                    productId,
                 )
             }
         }
