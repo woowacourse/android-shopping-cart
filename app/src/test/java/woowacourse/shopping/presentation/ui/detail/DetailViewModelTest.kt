@@ -41,6 +41,7 @@ class DetailViewModelTest {
     @Test
     fun `장바구니에 상품을 추가한다`() {
         // when
+        detailViewModel.product.getOrAwaitValue()
         detailViewModel.createShoppingCartItem()
 
         // then

@@ -31,7 +31,7 @@ class DetailViewModel(
         _navigateToShoppingCart.postValue(productId)
     }
 
-    private fun createShoppingCartItem() {
+    fun createShoppingCartItem() {
         product.value?.let {
             cartRepository.insert(
                 product = it,
