@@ -5,11 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -33,15 +31,24 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         showProductDetail()
         setOnCartButtonClickListener()
 
-        viewModel.error.observe(this) { event ->
-            event.getContentIfNotHandled()?.let {
-                binding.errorState = it
-            }
-        }
+        observeError()
 
+        observeErrorMessage()
+    }
+
+    private fun observeErrorMessage() {
         viewModel.errorMsg.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
-                binding.errorMessage = it
+                toast = Toast.makeText(this, it, Toast.LENGTH_SHORT)
+                toast?.show()
+            }
+        }
+    }
+
+    private fun observeError() {
+        viewModel.error.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                binding.btnAddProduct.isEnabled = !it
             }
         }
     }
@@ -95,16 +102,5 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
             context.startActivity(this)
         }
-    }
-}
-
-@BindingAdapter("errorState", "errorMessage")
-fun showError(
-    view: View,
-    errorState: Boolean,
-    errorMessage: String?,
-) {
-    if (errorState) {
-        Toast.makeText(view.context, errorMessage ?: "", Toast.LENGTH_SHORT).show()
     }
 }
