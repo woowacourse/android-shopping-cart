@@ -1,20 +1,23 @@
 package woowacourse.shopping.data.cart
 
+import woowacourse.shopping.data.product.ProductDummyRepository
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
-import java.lang.IllegalArgumentException
 import kotlin.math.min
 
 object CartDummyRepository : CartRepository {
     private val cart: MutableList<CartItem> = mutableListOf()
+    private val productRepository: ProductRepository = ProductDummyRepository
     private var id: Long = 0L
 
     private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
 
-    override fun increaseQuantity(product: Product) {
-        val oldCartItem = cart.find { it.product.id == product.id }
+    override fun increaseCartItemQuantity(productId: Long) {
+        val oldCartItem = cart.find { it.product.id == productId }
         if (oldCartItem == null) {
+            val product: Product = productRepository.find(productId)
             cart.add(CartItem(id++, product, Quantity()))
             return
         }
@@ -23,8 +26,8 @@ object CartDummyRepository : CartRepository {
         cart.add(oldCartItem.copy(quantity = ++quantity))
     }
 
-    override fun decreaseQuantity(product: Product) {
-        val oldCartItem = cart.find { it.product.id == product.id }
+    override fun decreaseCartItemQuantity(productId: Long) {
+        val oldCartItem = cart.find { it.product.id == productId }
         oldCartItem ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
         cart.remove(oldCartItem)
         if (oldCartItem.quantity.isMin()) {
@@ -34,8 +37,8 @@ object CartDummyRepository : CartRepository {
         cart.add(oldCartItem.copy(quantity = --quantity))
     }
 
-    override fun deleteCartItem(product: Product) {
-        cart.removeIf { it.product.id == product.id }
+    override fun deleteCartItemAtOnce(cartItemId: Long) {
+        cart.removeIf { it.id == cartItemId }
     }
 
     override fun deleteAll() {

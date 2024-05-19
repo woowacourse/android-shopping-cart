@@ -57,8 +57,8 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `장바구니에 상품을 추가하지 않았을 때 장바구니 상품 추가 성공 여부는 false 이다`() {
-        val id = productRepository.save(imageUrl, title, price)
-        viewModel.loadProduct(id)
+        val productId = productRepository.save(imageUrl, title, price)
+        viewModel.loadProduct(productId)
 
         val actual = viewModel.isSuccessAddToCart.getOrAwaitValue()
         assertThat(actual).isFalse()
@@ -66,10 +66,10 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `장바구니에 상품을 추가했을 때 장바구니 상품 추가 성공 여부는 true 이다`() {
-        val id = productRepository.save(imageUrl, title, price)
-        viewModel.loadProduct(id)
+        val productId = productRepository.save(imageUrl, title, price)
+        viewModel.loadProduct(productId)
 
-        viewModel.addProductToCart()
+        viewModel.addProductToCart(productId)
 
         val actual = viewModel.isSuccessAddToCart.getOrAwaitValue()
         assertThat(actual).isTrue()

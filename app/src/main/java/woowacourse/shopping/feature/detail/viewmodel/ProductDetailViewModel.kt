@@ -21,9 +21,8 @@ class ProductDetailViewModel(
         _product.value = productRepository.find(productId)
     }
 
-    fun addProductToCart() {
-        val product = product.value ?: return
-        cartRepository.increaseQuantity(product)
+    fun addProductToCart(productId: Long) {
+        cartRepository.increaseCartItemQuantity(productId)
         _isSuccessAddToCart.value = true
     }
 }

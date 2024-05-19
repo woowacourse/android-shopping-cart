@@ -8,7 +8,6 @@ import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.feature.cart.adapter.CartAdapter
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModel
 import woowacourse.shopping.feature.cart.viewmodel.CartViewModelFactory
-import woowacourse.shopping.model.Product
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
@@ -41,7 +40,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun initializeCartAdapter() {
         adapter =
-            CartAdapter(onClickExit = { deleteCartItem(it) })
+            CartAdapter(onClickExit = { deleteCartItem(cartItemId = it) })
         binding.rvCart.adapter = adapter
 
         cartViewModel.cart.observe(this) {
@@ -49,12 +48,12 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteCartItem(product: Product) {
+    private fun deleteCartItem(cartItemId: Long) {
         cartViewModel.checkEmptyLastPage()
         cartViewModel.isEmptyLastPage.observe(this) { isEmptyLastPage ->
             if (isEmptyLastPage) cartViewModel.decreasePage()
         }
-        cartViewModel.delete(product)
+        cartViewModel.delete(cartItemId)
     }
 
     private fun updatePageLayout() {

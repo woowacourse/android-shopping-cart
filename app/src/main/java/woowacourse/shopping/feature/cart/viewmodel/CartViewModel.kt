@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.model.CartItem
-import woowacourse.shopping.model.Product
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -35,8 +34,8 @@ class CartViewModel(
         updatePage()
     }
 
-    fun delete(product: Product) {
-        cartRepository.deleteCartItem(product)
+    fun delete(cartItemId: Long) {
+        cartRepository.deleteCartItemAtOnce(cartItemId)
         updatePage()
     }
 
