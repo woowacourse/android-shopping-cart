@@ -49,7 +49,7 @@ class CartFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.shoppingCartViewModel = viewModel
+        binding.vm = viewModel
         binding.lifecycleOwner = this
 
         binding.productDetailToolbar.setNavigationOnClickListener {

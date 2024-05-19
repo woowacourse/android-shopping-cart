@@ -7,10 +7,6 @@
 
         <variable
             name="vm"
-            type="woowacourse.shopping.cart.CartViewModel" />
-
-        <variable
-            name="shoppingCartViewModel"
             type="woowacourse.shopping.cart.ShoppingCartViewModel" />
     </data>
 
@@ -61,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
-            android:onClick="@{() -> shoppingCartViewModel.previousPage()}"
+            android:onClick="@{() -> vm.previousPage()}"
             android:text="@string/previous_arrow"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/cart_list_page_number"
@@ -75,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="50dp"
-            android:text="@{String.valueOf(shoppingCartViewModel.currentPage)}"
+            android:text="@{String.valueOf(vm.currentPage)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cart_list_right_page_button"
             app:layout_constraintStart_toEndOf="@id/cart_list_left_page_button"
@@ -87,8 +83,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/black"
-            android:onClick="@{() -> shoppingCartViewModel.nextPage()}"
-            android:enabled="@{!shoppingCartViewModel.isLastPage()}"
+            android:enabled="@{!vm.isLastPage()}"
+            android:onClick="@{() -> vm.nextPage()}"
             android:text="@string/next_arrow"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@+id/cart_list_page_number"
