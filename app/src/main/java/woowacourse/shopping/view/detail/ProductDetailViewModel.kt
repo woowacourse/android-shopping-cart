@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.utils.NoSuchDataException
 
 class ProductDetailViewModel(
     private val repository: ProductRepository,
@@ -24,9 +25,10 @@ class ProductDetailViewModel(
         _product.value = repository.getProduct(productId)
     }
 
-    fun addShoppingCartItem(product: Product) {
+    fun addShoppingCartItem() {
         runCatching {
-            repository.addCartItem(product)
+            val selected = product.value ?: throw NoSuchDataException()
+            repository.addCartItem(selected)
         }.onSuccess {
             _cartItemSavedState.value = ProductDetailState.Success
         }.onFailure {

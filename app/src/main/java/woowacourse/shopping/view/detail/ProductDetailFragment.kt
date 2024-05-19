@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
 
 class ProductDetailFragment : Fragment(), OnClickDetail {
@@ -67,8 +66,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         parentFragmentManager.popBackStack()
     }
 
-    override fun clickAddCart(product: Product) {
-        productDetailViewModel.addShoppingCartItem(product)
+    override fun clickAddCart() {
+        productDetailViewModel.addShoppingCartItem()
     }
 
     private fun showLoadErrorMessage() = showToastMessage(R.string.error_load_data_message)
