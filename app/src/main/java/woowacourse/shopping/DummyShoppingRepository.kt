@@ -137,6 +137,15 @@ object DummyShoppingRepository : ShoppingRepository {
         return cartItems.subList(fromIndex, toIndex)
     }
 
+    override fun shoppingCartItemByPosition(
+        currentPage: Int,
+        pageSize: Int,
+        position: Int,
+    ): ShoppingCartItem {
+        val items = shoppingCartItems(currentPage, pageSize)
+        return items.elementAtOrNull(position) ?: error("$position : 해당 위치에 해당하는 item이 없습니다.")
+    }
+
     override fun deleteShoppingCartItem(productId: Long) {
         val shoppingCart = users.first().shoppingCart
         val updatedShoppingCart = shoppingCart.deleteItemById(productId)

@@ -33,5 +33,10 @@ data class ShoppingCart(val items: List<ShoppingCartItem>) {
             it.product.id == selectedItem.product.id
         }.let(::ShoppingCart)
 
-    fun deleteItemById(productId: Long): ShoppingCart = items.filterNot { it.product.id == productId }.let(::ShoppingCart)
+    fun deleteItemById(productId: Long): ShoppingCart {
+        require(items.map { it.product.id }.contains(productId)) {
+            "$productId 에 해당하는 product가 없습니다"
+        }
+        return items.filterNot { it.product.id == productId }.let(::ShoppingCart)
+    }
 }
