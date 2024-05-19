@@ -10,6 +10,9 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.ui.cart.adapter.CartAdapter
+import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
+import woowacourse.shopping.ui.cart.viewmodel.CartViewModelFactory
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding

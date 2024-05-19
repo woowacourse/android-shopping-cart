@@ -8,6 +8,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductContentsViewModelTest {

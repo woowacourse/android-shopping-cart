@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="woowacourse.shopping.ui.detail.ProductDetailViewModel" />
+            type="woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel" />
 
         <variable
             name="cartButtonClickListener"

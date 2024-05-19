@@ -18,6 +18,8 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
+import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModelFactory
 import woowacourse.shopping.ui.state.UiState
 import woowacourse.shopping.ui.utils.urlToImage
 

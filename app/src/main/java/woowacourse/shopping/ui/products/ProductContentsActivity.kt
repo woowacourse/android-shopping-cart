@@ -16,6 +16,9 @@ import woowacourse.shopping.databinding.ActivityProductContentsBinding
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
+import woowacourse.shopping.ui.products.adapter.ProductAdapter
+import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
+import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModelFactory
 import woowacourse.shopping.ui.utils.urlToImage
 
 class ProductContentsActivity : AppCompatActivity() {
