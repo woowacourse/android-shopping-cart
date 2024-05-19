@@ -1,7 +1,6 @@
 package woowacourse.shopping.cart
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,17 +50,19 @@ class CartFragment : Fragment() {
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
+        initNavigation()
+        observeItemsInCurrentPage()
+    }
+
+    private fun initNavigation() {
         binding.productDetailToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
-        viewModel.itemsInCurrentPage.observe(viewLifecycleOwner) {
-            Log.d(TAG, "onViewCreated: itemsInCurrentPage: ${viewModel.itemsInCurrentPage.value}")
-            adapter.updateData(it)
-        }
     }
 
-    companion object {
-        private const val TAG = "CartFragment"
+    private fun observeItemsInCurrentPage() {
+        viewModel.itemsInCurrentPage.observe(viewLifecycleOwner) { products ->
+            adapter.updateData(products)
+        }
     }
 }
