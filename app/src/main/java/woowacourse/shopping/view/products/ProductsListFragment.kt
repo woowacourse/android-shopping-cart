@@ -13,7 +13,7 @@ import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
 
-class ProductsListFragment : Fragment(), OnClickProducts {
+class ProductsListFragment : Fragment(), ProductActionListener {
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private lateinit var adapter: ProductAdapter
@@ -38,25 +38,27 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
+        setUpDataBinding()
         observeData()
     }
 
-    private fun initView() {
-        loadPagingData()
-        binding.onClickProduct = this
-        adapter =
-            ProductAdapter(
-                onClickProducts = this,
-            ) { isLoadLastItem ->
-                binding.isVisible = isLoadLastItem
-            }
+    private fun setUpDataBinding() {
+        binding.productActionListener = this
+        binding.loadPagingDataListener = productListViewModel
+        adapter = ProductAdapter(productActionListener = this)
         binding.rvProducts.adapter = adapter
     }
 
     private fun observeData() {
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
             adapter.updateProducts(addedProducts = products)
+        }
+
+        productListViewModel.allDataLoaded.observe(viewLifecycleOwner) {
+            if (it) {
+                showMaxItemMessage()
+                showMoreButton(false)
+            }
         }
     }
 
@@ -78,8 +80,8 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         changeFragment(shoppingCartFragment)
     }
 
-    override fun clickLoadPagingData() {
-        loadPagingData()
+    override fun showMoreButton(isLoadLastItem: Boolean) {
+        binding.isVisible = isLoadLastItem
     }
 
     private fun changeFragment(nextFragment: Fragment) {
@@ -90,17 +92,5 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             .commit()
     }
 
-    private fun loadPagingData() {
-        runCatching {
-            productListViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
-        }.onFailure {
-            showMaxItemMessage()
-        }
-    }
-
     private fun showMaxItemMessage() = Toast.makeText(this.context, R.string.max_paging_data_message, Toast.LENGTH_SHORT).show()
-
-    companion object {
-        private const val PRODUCT_LOAD_PAGING_SIZE = 20
-    }
 }

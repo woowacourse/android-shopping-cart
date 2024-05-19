@@ -13,8 +13,12 @@
             type="Boolean" />
 
         <variable
-            name="onClickProduct"
-            type="woowacourse.shopping.view.products.OnClickProducts" />
+            name="productActionListener"
+            type="woowacourse.shopping.view.products.ProductActionListener" />
+
+        <variable
+            name="loadPagingDataListener"
+            type="woowacourse.shopping.view.products.LoadPagingDataListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
-            android:text="Shopping"
+            android:text="@string/product_list_page_title_text"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -46,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:background="@android:color/transparent"
-            android:onClick="@{()->onClickProduct.clickShoppingCart()}"
+            android:onClick="@{()->productActionListener.clickShoppingCart()}"
             android:src="@drawable/ic_cart"
             app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
             app:layout_constraintEnd_toEndOf="@id/vw_product_list_top_bar"
@@ -71,8 +75,8 @@
             android:background="@color/primary"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:onClick="@{()->onClickProduct.clickLoadPagingData()}"
-            android:text="더보기"
+            android:onClick="@{()->loadPagingDataListener.clickLoadPagingData()}"
+            android:text="@string/product_list_more_data_button"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"

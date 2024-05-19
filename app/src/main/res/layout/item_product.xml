@@ -9,7 +9,7 @@
 
         <variable
             name="onClickProduct"
-            type="woowacourse.shopping.view.products.OnClickProducts" />
+            type="woowacourse.shopping.view.products.ProductActionListener" />
     </data>
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"

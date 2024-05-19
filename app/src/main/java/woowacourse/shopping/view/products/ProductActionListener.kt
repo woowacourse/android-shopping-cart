@@ -1,9 +1,9 @@
 package woowacourse.shopping.view.products
 
-interface OnClickProducts {
+interface ProductActionListener {
     fun clickProductItem(productId: Long)
 
     fun clickShoppingCart()
 
-    fun clickLoadPagingData()
+    fun showMoreButton(isLoadLastItem: Boolean)
 }

@@ -6,12 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.view.products.OnClickProducts
+import woowacourse.shopping.view.products.ProductActionListener
 import woowacourse.shopping.view.products.adapter.viewholder.ProductViewHolder
 
 class ProductAdapter(
-    private val onClickProducts: OnClickProducts,
-    private val isLoadLastItem: (Boolean) -> Unit,
+    private val productActionListener: ProductActionListener,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()
 
@@ -20,7 +19,7 @@ class ProductAdapter(
         viewType: Int,
     ): ProductViewHolder {
         val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(view, onClickProducts)
+        return ProductViewHolder(view, productActionListener)
     }
 
     override fun getItemCount(): Int {
@@ -35,9 +34,9 @@ class ProductAdapter(
         holder.bind(item)
 
         if (position == itemCount - 1) {
-            isLoadLastItem(true)
+            productActionListener.showMoreButton(true)
         } else {
-            isLoadLastItem(false)
+            productActionListener.showMoreButton(false)
         }
     }
 
