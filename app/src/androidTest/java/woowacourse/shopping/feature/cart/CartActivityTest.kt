@@ -1,5 +1,6 @@
 package woowacourse.shopping.feature.cart
 
+import android.content.pm.ActivityInfo
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
@@ -159,6 +160,25 @@ class CartActivityTest {
 
         onView(withId(R.id.rv_cart))
             .check(RecyclerViewItemCountAssertion(0))
+    }
+
+    @Test
+    fun `2페이지로_이동한_후_화면_회전_시_2페이자가_그대로_유지_된다`() {
+        repeat(8) {
+            addCart(imageUrl, title, price)
+        }
+
+        val activityScenario = ActivityScenario.launch(CartActivity::class.java)
+        onView(withId(R.id.btn_cart_next_page))
+            .perform(click())
+
+        activityScenario.onActivity { activity ->
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+
+        onView(withId(R.id.rv_cart))
+            .check(RecyclerViewItemCountAssertion(3))
+        onView(withId(R.id.tv_cart_page)).check(matches(withText("2")))
     }
 
     private fun addCart(
