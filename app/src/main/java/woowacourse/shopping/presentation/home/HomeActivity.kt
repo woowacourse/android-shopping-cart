@@ -23,7 +23,6 @@ class HomeActivity : AppCompatActivity() {
     private val binding: ActivityHomeBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_home)
     }
-
     private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory(
             ProductRepositoryImpl(
@@ -32,7 +31,7 @@ class HomeActivity : AppCompatActivity() {
         )
     }
     private val adapter: ProductAdapter by lazy {
-        ProductAdapter(viewModel.loadStatus.value ?: LoadStatus(), viewModel)
+        ProductAdapter(viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +42,6 @@ class HomeActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         initializeProductListLayout()
 
-        viewModel.loadStatus.observe(this) {
-            adapter.updateLoadStatus(it)
-        }
         viewModel.navigateToDetailEvent.observe(this) { event ->
             startActivity(
                 DetailActivity.newIntent(
@@ -87,5 +83,15 @@ fun <T> RecyclerView.setData(
     if (data == null) return
     if (adapter is BindableAdapter<*>) {
         (adapter as BindableAdapter<T>).setData(data)
+    }
+}
+
+@BindingAdapter("shopping:loadStatus")
+fun RecyclerView.setLoadStatus(
+    loadStatus: LoadStatus?,
+) {
+    if (loadStatus == null) return
+    if (adapter is ProductAdapter) {
+        (adapter as ProductAdapter).updateLoadStatus(loadStatus)
     }
 }

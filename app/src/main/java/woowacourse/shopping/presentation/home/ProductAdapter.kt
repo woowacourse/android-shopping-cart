@@ -17,10 +17,10 @@ import woowacourse.shopping.presentation.BindableAdapter
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(
-    private var loadStatus: LoadStatus,
     private val homeItemClickListener: HomeItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), BindableAdapter<Product> {
     private var products: List<Product> = emptyList()
+    private var loadStatus: LoadStatus = LoadStatus()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
