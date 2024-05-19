@@ -11,21 +11,21 @@ class ProductListViewModel : ViewModel() {
     private var currentIndex = 1
 
     private val _loadedProducts: MutableLiveData<List<Product>> =
-        MutableLiveData(
-            dummyProductStore.loadDataAsNeeded(currentIndex).toMutableList()
-                .also { currentIndex += COUNT_EACH_LOADING },
-        )
+        MutableLiveData(loadProducts())
 
     val loadedProducts: LiveData<List<Product>>
         get() = _loadedProducts
 
-    fun loadProducts() {
+    fun loadMoreProducts() {
+        val newProducts = loadProducts()
+        val currentProducts = _loadedProducts.value.orEmpty()
+        _loadedProducts.value = currentProducts + newProducts
+    }
+
+    private fun loadProducts(): List<Product> {
         val result = dummyProductStore.loadDataAsNeeded(currentIndex)
         currentIndex += COUNT_EACH_LOADING
-        _loadedProducts.value =
-            _loadedProducts.value?.toMutableList()?.apply {
-                addAll(result)
-            }
+        return result
     }
 
     companion object {
