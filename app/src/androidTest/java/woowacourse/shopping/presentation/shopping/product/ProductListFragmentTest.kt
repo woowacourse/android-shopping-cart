@@ -11,11 +11,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.containsString
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.presentation.shopping.product.adpater.ShoppingViewHolder
 
 @RunWith(AndroidJUnit4::class)

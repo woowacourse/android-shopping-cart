@@ -42,6 +42,25 @@
 마지막 페이지라면, 다음 페이지로 이동할 수 없다
 - [ ]: ViewModel 테스트 모두 작성하기  
 
+## ?? 궁금증
+```kotlin
+class ShoppingApplication : Application() {
+
+    val shoppingRepository: ShoppingRepository by lazy {
+        ShoppingRepositoryInjector.shoppingRepository()
+    }
+
+    val cartRepository: CartRepository by lazy {
+        CartRepositoryInjector.cartRepository()
+    }
+}
+```
+esspresso 테스트에서 개별 테스트는 모두 통과하는데
+테스트를 모두 실행하면, 실패하는 경험을 했습니다.
+
+이게 테스트 마다 Application이 다시 시작되지 않는 것 때문인데요..  
+매 테스트 마다 다시 Application을 시작하도록 하는 좋은 방법이 있을까요..?
+
 # 공부 정리
 ## map vs switchMap vs MediatorLiveData
 - MediatorLiveData 여러 LiveData 소스를 하나로 만듦(combine 이랑 비슷한데 element가 하나 라도 바뀌면 emit함)
