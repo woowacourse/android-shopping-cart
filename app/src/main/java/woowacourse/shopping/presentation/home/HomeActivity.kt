@@ -32,19 +32,12 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val layoutManager = GridLayoutManager(this, 2)
-        layoutManager.spanSizeLookup =
-            object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return when (adapter.getItemViewType(position)) {
-                        ProductAdapter.TYPE_PRODUCT -> 1
-                        ProductAdapter.TYPE_LOAD -> 2
-                        else -> throw IllegalArgumentException("유효하지 않은 뷰 타입입니다.")
-                    }
-                }
+        val layoutManager =
+            GridLayoutManager(this, 2).apply {
+                spanSizeLookup = ProductsGridLayoutManager(adapter)
             }
-        binding.rvHome.layoutManager = layoutManager
 
+        binding.rvHome.layoutManager = layoutManager
         binding.productAdapter = adapter
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
