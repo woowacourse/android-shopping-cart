@@ -8,13 +8,14 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.Product
 
 class ProductDetailViewModel(
+    private val productId: Long,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _product = MutableLiveData<Product>()
     val product: LiveData<Product> get() = _product
 
-    fun loadProduct(productId: Long) {
+    fun loadProduct() {
         _product.value = productRepository.find(productId)
     }
 

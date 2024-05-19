@@ -25,7 +25,6 @@ class ProductDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductDetailViewModel(productRepository, cartRepository)
         productRepository.deleteAll()
         cartRepository.deleteAll()
     }
@@ -34,9 +33,10 @@ class ProductDetailViewModelTest {
     fun `상품 id에 맞는 상품을 불러온다`() {
         // given
         val id = productRepository.save(imageUrl, title, price)
+        viewModel = ProductDetailViewModel(id, productRepository, cartRepository)
 
         // when
-        viewModel.loadProduct(id)
+        viewModel.loadProduct()
 
         // then
         val actual = viewModel.product.getOrAwaitValue()
@@ -45,8 +45,10 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `상품 id에 해당하는 상품이 없는 경우 예외가 발생한다`() {
+        viewModel = ProductDetailViewModel(-1L, productRepository, cartRepository)
+
         assertThrows<IllegalArgumentException> {
-            viewModel.loadProduct(-1L)
+            viewModel.loadProduct()
         }
     }
 
@@ -54,7 +56,8 @@ class ProductDetailViewModelTest {
     fun `상품을 장바구니에 담는다`() {
         // given
         val id = productRepository.save(imageUrl, title, price)
-        viewModel.loadProduct(id)
+        viewModel = ProductDetailViewModel(id, productRepository, cartRepository)
+        viewModel.loadProduct()
 
         // when
         viewModel.addCartProduct()

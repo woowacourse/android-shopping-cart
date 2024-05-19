@@ -7,12 +7,13 @@ import woowacourse.shopping.data.product.ProductRepository
 import java.lang.IllegalArgumentException
 
 class ProductDetailViewModelFactory(
+    private val productId: Long,
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProductDetailViewModel::class.java)) {
-            return ProductDetailViewModel(productRepository, cartRepository) as T
+            return ProductDetailViewModel(productId, productRepository, cartRepository) as T
         }
         throw IllegalArgumentException()
     }

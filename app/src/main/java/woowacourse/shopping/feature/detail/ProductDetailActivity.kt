@@ -17,6 +17,7 @@ class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModelFactory(
+            intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE),
             ProductDummyRepository,
             CartDummyRepository,
         )
@@ -74,13 +75,11 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun loadProduct() {
         runCatching {
-            viewModel.loadProduct(productId())
+            viewModel.loadProduct()
         }.onFailure {
             showErrorSnackBar()
         }
     }
-
-    private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
 
     private fun showErrorSnackBar() {
         Snackbar
