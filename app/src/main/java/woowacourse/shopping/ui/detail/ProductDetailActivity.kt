@@ -5,9 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -15,13 +13,10 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModelFactory
-import woowacourse.shopping.ui.state.UiState
-import woowacourse.shopping.ui.utils.urlToImage
 
 class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
@@ -35,7 +30,6 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         super.onCreate(savedInstanceState)
 
         initBinding()
-
         showProductDetail()
         setOnCartButtonClickListener()
     }
@@ -92,31 +86,13 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     }
 }
 
-@BindingAdapter("productName")
-fun TextView.setProductName(uiState: UiState<Product>) {
-    if (uiState is UiState.SUCCESS) {
-        text = uiState.data.name
-    }
-}
-
-@BindingAdapter("productPrice")
-fun TextView.setProductPrice(uiState: UiState<Product>) {
-    if (uiState is UiState.SUCCESS) {
-        text = context.getString(R.string.product_price, uiState.data.price)
-    }
-}
-
-@BindingAdapter("imageUrlOnSuccess")
-fun ImageView.bindUrlToImageOnSuccess(uiState: UiState<Product>) {
-    if (uiState is UiState.SUCCESS) {
-        urlToImage(context, uiState.data.imageUrl)
-    }
-}
-
-@BindingAdapter("loadProductError")
-fun Button.disableButton(uiState: UiState<Product>) {
-    if (uiState is UiState.ERROR) {
-        isEnabled = false
-        Toast.makeText(context, uiState.error.message, Toast.LENGTH_SHORT).show()
+@BindingAdapter("errorState", "errorMessage")
+fun showError(
+    view: View,
+    errorState: Boolean,
+    errorMessage: String,
+) {
+    if (errorState) {
+        Toast.makeText(view.context, errorMessage, Toast.LENGTH_SHORT).show()
     }
 }

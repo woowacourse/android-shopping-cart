@@ -18,6 +18,8 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:errorState="@{vm.error}"
+        app:errorMessage="@{vm.errorMsg}"
         tools:context=".ui.detail.ProductDetailActivity">
 
         <ImageView
@@ -25,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="fitXY"
-            app:imageUrlOnSuccess="@{vm.productDetailLoadState}"
+            app:imageUrl="@{vm.product.imageUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -36,11 +38,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:paddingStart="18dp"
+            android:text="@{vm.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/iv_product_image"
-            app:productName="@{vm.productDetailLoadState}"
             tools:text="[든든] 동원 스위트콘" />
 
         <View
@@ -70,11 +72,11 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="18dp"
+            android:text="@{@string/product_price(vm.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/split_line"
-            app:productPrice="@{vm.productDetailLoadState}"
             tools:text="99,800원" />
 
         <Button
@@ -82,14 +84,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_add_product_button"
-            android:enabled="true"
+            android:enabled="@{!vm.error}"
             android:onClick="@{()->cartButtonClickListener.onClick()}"
             android:text="@string/add_product_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:loadProductError="@{vm.productDetailLoadState}" />
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
