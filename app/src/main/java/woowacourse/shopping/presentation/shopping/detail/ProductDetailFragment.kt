@@ -39,8 +39,6 @@ class ProductDetailFragment :
         viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
             if (isAdded) {
                 navigateToShoppingCart()
-                // TODO: SINGLE LIVEDATA 로 개선해보자
-                viewModel.addCartDone()
             }
         }
     }

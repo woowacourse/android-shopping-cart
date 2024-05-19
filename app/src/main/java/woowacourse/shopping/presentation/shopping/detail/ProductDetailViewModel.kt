@@ -8,24 +8,25 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.shopping.ShoppingRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.shopping.toUiModel
+import woowacourse.shopping.presentation.util.SingleLiveEvent
 
 class ProductDetailViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val cartRepository: CartRepository,
-    productId: Long,
+    private val productId: Long,
 ) : ViewModel() {
     private val _product = MutableLiveData<ProductUi>()
     val product: LiveData<ProductUi> get() = _product
 
-    private val _isAddedCart = MutableLiveData<Boolean>()
+    private val _isAddedCart = SingleLiveEvent<Boolean>()
     val isAddedCart: LiveData<Boolean> get() = _isAddedCart
 
     init {
-        loadProduct(productId)
+        loadProduct()
     }
 
-    private fun loadProduct(id: Long) {
-        val product = shoppingRepository.productById(id) ?: return
+    private fun loadProduct() {
+        val product = shoppingRepository.productById(productId) ?: return
         _product.value = product.toUiModel()
     }
 
@@ -33,10 +34,6 @@ class ProductDetailViewModel(
         val product = _product.value ?: return
         cartRepository.addCartProduct(product.id)
         _isAddedCart.value = true
-    }
-
-    fun addCartDone() {
-        _isAddedCart.value = false
     }
 
     companion object {
