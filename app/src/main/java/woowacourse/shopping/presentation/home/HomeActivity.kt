@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.DefaultProducts
+import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
+import woowacourse.shopping.presentation.BindableAdapter
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
 
@@ -25,7 +29,7 @@ class HomeActivity : AppCompatActivity() {
         )[HomeViewModel::class.java]
     }
     private val adapter: ProductAdapter by lazy {
-        ProductAdapter(mutableListOf(), viewModel.loadStatus.value ?: LoadStatus(), viewModel)
+        ProductAdapter(viewModel.loadStatus.value ?: LoadStatus(), viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,10 +40,6 @@ class HomeActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         initializeProductListLayout()
 
-        viewModel.loadProducts()
-        viewModel.products.observe(this) {
-            adapter.addProducts(it)
-        }
         viewModel.loadStatus.observe(this) {
             adapter.updateLoadStatus(it)
         }
@@ -74,5 +74,15 @@ class HomeActivity : AppCompatActivity() {
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup = ProductItemSpanSizeLookup(adapter)
         binding.rvHome.layoutManager = layoutManager
+    }
+}
+
+@BindingAdapter("shopping:data")
+fun <T> RecyclerView.setData(
+    data: List<T>?,
+) {
+    if (data == null) return
+    if (adapter is BindableAdapter<*>) {
+        (adapter as BindableAdapter<T>).setData(data)
     }
 }

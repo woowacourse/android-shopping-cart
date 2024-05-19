@@ -13,13 +13,15 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.presentation.BindableAdapter
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(
-    private val products: MutableList<Product>,
     private var loadStatus: LoadStatus,
     private val homeItemClickListener: HomeItemClickListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), BindableAdapter<Product> {
+    private var products: List<Product> = emptyList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -63,10 +65,10 @@ class ProductAdapter(
         }
     }
 
-    fun addProducts(insertedProducts: List<Product>) {
+    override fun setData(data: List<Product>) {
         val previousSize = products.size
-        products += insertedProducts
-        notifyItemRangeInserted(previousSize, insertedProducts.size)
+        products = data
+        notifyItemRangeInserted(previousSize, data.size - previousSize)
     }
 
     fun updateLoadStatus(loadStatus: LoadStatus) {
@@ -78,10 +80,10 @@ class ProductAdapter(
         homeItemClickListener: HomeItemClickListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
+
         init {
             binding.homeItemClickListener = homeItemClickListener
         }
-
         fun bind(product: Product) {
             binding.product = product
         }
@@ -91,10 +93,10 @@ class ProductAdapter(
         private val binding: ItemLoadMoreBinding,
         homeItemClickListener: HomeItemClickListener,
         ) : RecyclerView.ViewHolder(binding.root) {
+
         init {
             binding.homeItemClickListener = homeItemClickListener
         }
-
         fun bind(loadStatus: LoadStatus) {
             binding.loadStatus = loadStatus
         }

@@ -25,9 +25,13 @@ class HomeViewModel(
     val navigateToDetailEvent: LiveData<Event<Long>>
         get() = _navigateToDetailEvent
 
+    init {
+        loadProducts()
+    }
+
     fun loadProducts() {
         _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
-        _products.value = productRepository.fetchSinglePage(page++)
+        _products.value = products.value?.plus(productRepository.fetchSinglePage(page++))
 
         products.value?.let {
             _loadStatus.value =
