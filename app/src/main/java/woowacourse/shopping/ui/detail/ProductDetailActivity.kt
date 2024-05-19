@@ -31,8 +31,6 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         showProductDetail()
         setOnCartButtonClickListener()
 
-        observeError()
-
         observeErrorMessage()
     }
 
@@ -41,14 +39,6 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
             event.getContentIfNotHandled()?.let {
                 toast = Toast.makeText(this, it, Toast.LENGTH_SHORT)
                 toast?.show()
-            }
-        }
-    }
-
-    private fun observeError() {
-        viewModel.error.observe(this) { event ->
-            event.getContentIfNotHandled()?.let {
-                binding.btnAddProduct.isEnabled = !it
             }
         }
     }

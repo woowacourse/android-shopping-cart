@@ -84,6 +84,7 @@
             android:background="@drawable/selector_add_product_button"
             android:onClick="@{()->cartButtonClickListener.onClick()}"
             android:text="@string/add_product_to_cart"
+            android:enabled="@{!vm.error}"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"

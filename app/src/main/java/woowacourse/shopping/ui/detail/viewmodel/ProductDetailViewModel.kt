@@ -12,8 +12,8 @@ class ProductDetailViewModel(
     private val productDao: ProductDao,
     private val cartDao: CartDao,
 ) : ViewModel() {
-    private val _error: MutableLiveData<Event<Boolean>> = MutableLiveData(Event(false))
-    val error: LiveData<Event<Boolean>> get() = _error
+    private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
+    val error: LiveData<Boolean> get() = _error
 
     private val _errorMsg: MutableLiveData<Event<String>> = MutableLiveData(Event(""))
     val errorMsg: LiveData<Event<String>> get() = _errorMsg
@@ -25,10 +25,10 @@ class ProductDetailViewModel(
         runCatching {
             productDao.find(productId)
         }.onSuccess {
-            _error.setErrorHandled(false)
+            _error.value = false
             _product.value = it
         }.onFailure {
-            _error.setErrorHandled(true)
+            _error.value = true
             _errorMsg.setErrorHandled(it.message.toString())
         }
     }
