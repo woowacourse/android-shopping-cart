@@ -66,4 +66,42 @@ class TwentyItemsPagingStrategyTest {
 
         assertThat(secondLoad).isEqualTo(listOf<Product>())
     }
+
+    // test for final page
+    @Test
+    fun `총 5개의 아이템에서 첫번째 페이지에 있다면 마지막 페이지이다`() {
+        // given
+        val items = productsTestFixture(5)
+
+        // when
+        val isFinalPage = pagingStrategy.isFinalPage(1, items)
+
+        // then
+        assertThat(isFinalPage).isTrue
+    }
+
+    // test for final page
+    @Test
+    fun `총 21개의 아이템에서 첫 번째 페이지에 있다면 마지막 페이지가 아니다`() {
+        // given
+        val items = productsTestFixture(21)
+
+        // when
+        val isFinalPage = pagingStrategy.isFinalPage(1, items)
+
+        // then
+        assertThat(isFinalPage).isFalse
+    }
+
+    @Test
+    fun `총 21개의 아이템에서 두 번째 페이지에 있다면 마지막 페이지이다`() {
+        // given
+        val items = productsTestFixture(21)
+
+        // when
+        val isFinalPage = pagingStrategy.isFinalPage(2, items)
+
+        // then
+        assertThat(isFinalPage).isTrue
+    }
 }
