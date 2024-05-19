@@ -1,5 +1,5 @@
 package woowacourse.shopping.cart
 
-fun interface OnCartItemListener {
+fun interface OnProductItemClickListener {
     fun onClick(id: Int)
 }

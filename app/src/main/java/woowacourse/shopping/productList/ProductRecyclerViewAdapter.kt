@@ -3,50 +3,31 @@ package woowacourse.shopping.productList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.cart.OnProductItemClickListener
 import woowacourse.shopping.data.Product
 import woowacourse.shopping.databinding.HolderProductBinding
 
 class ProductRecyclerViewAdapter(
     private var values: List<Product>,
-    private val onClick: (id: Int) -> Unit,
-) : RecyclerView.Adapter<ProductRecyclerViewAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int,
-    ): ViewHolder {
-        return ViewHolder(
-            HolderProductBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false,
-            ),
-            onClick = { id -> onClick(id) },
-        )
-    }
+    private val onProductItemClickListener: OnProductItemClickListener,
+) : RecyclerView.Adapter<ProductsItemViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsItemViewHolder = ProductsItemViewHolder(
+        HolderProductBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false,
+        ),
+    ) { onProductItemClickListener.onClick(it) }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
+        holder: ProductsItemViewHolder,
         position: Int,
-    ) {
-        val item = values[position]
-        holder.bind(item)
-    }
+    ) = holder.bind(values[position])
 
     override fun getItemCount(): Int = values.size
 
     fun updateData(newData: List<Product>) {
         this.values = newData
-        notifyDataSetChanged()
-    }
-
-    inner class ViewHolder(
-        private val binding: HolderProductBinding,
-        private val onClick: (id: Int) -> Unit,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product) {
-            binding.product = product
-            binding.root.setOnClickListener { onClick(product.id) }
-        }
+        notifyItemRangeInserted(values.size, newData.size)
     }
 }

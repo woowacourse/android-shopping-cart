@@ -8,7 +8,7 @@ import woowacourse.shopping.databinding.HolderCartBinding
 
 class CartItemRecyclerViewAdapter(
     private var values: List<Product>,
-    private val onCartItemListener: OnCartItemListener,
+    private val onProductItemClickListener: OnProductItemClickListener,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
     private lateinit var recyclerView: RecyclerView
 
@@ -24,15 +24,12 @@ class CartItemRecyclerViewAdapter(
     ): ShoppingCartItemViewHolder =
         ShoppingCartItemViewHolder(
             HolderCartBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-        ) { onCartItemListener.onClick(it) }
+        ) { onProductItemClickListener.onClick(it) }
 
     override fun onBindViewHolder(
         holder: ShoppingCartItemViewHolder,
         position: Int,
-    ) {
-        val item = values[position]
-        holder.bind(item)
-    }
+    ) = holder.bind(values[position])
 
     override fun getItemCount(): Int = values.size.coerceAtMost(COUNT_PER_PAGE)
 

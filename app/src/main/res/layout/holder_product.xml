@@ -9,11 +9,17 @@
             name="product"
             type="woowacourse.shopping.data.Product" />
 
+        <variable
+            name="onProductItemClickListener"
+            type="woowacourse.shopping.cart.OnProductItemClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
+        >
 
         <ImageView
             android:id="@+id/main_product_list_item_img"

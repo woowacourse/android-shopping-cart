@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.TwentyItemsPagingStrategy
+import woowacourse.shopping.cart.OnProductItemClickListener
 import woowacourse.shopping.cart.ShoppingCartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.productDetail.ProductDetailFragment
@@ -28,8 +29,7 @@ class ProductListFragment : Fragment() {
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
             viewModel.loadedProducts.value ?: emptyList(),
-            onClick = { productId -> navigateToProductDetail(productId) },
-        )
+        ) { productId -> navigateToProductDetail(productId) }
     }
 
     private fun navigateToProductDetail(id: Int) = navigateToFragment(ProductDetailFragment.newInstance(id))
