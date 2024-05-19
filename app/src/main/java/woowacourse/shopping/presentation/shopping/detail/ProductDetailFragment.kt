@@ -20,7 +20,7 @@ import woowacourse.shopping.presentation.cart.ShoppingCartFragment
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
-    private val viewModel by viewModels<ProductDetailViewModel> {
+    override val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModel.factory(
             DefaultShoppingRepository(),
             DefaultCartRepository(),
@@ -32,10 +32,6 @@ class ProductDetailFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.also {
-            it.lifecycleOwner = viewLifecycleOwner
-            it.vm = viewModel
-        }
         val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
         viewModel.loadProduct(id)
         initAppBar()

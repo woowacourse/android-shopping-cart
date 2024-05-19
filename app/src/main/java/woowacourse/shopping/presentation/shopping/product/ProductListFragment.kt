@@ -23,7 +23,7 @@ import woowacourse.shopping.presentation.util.dp
 
 class ProductListFragment :
     BindingFragment<FragmentProductListBinding>(R.layout.fragment_product_list) {
-    private val viewModel by viewModels<ProductListViewModel> {
+    override val viewModel by viewModels<ProductListViewModel> {
         ProductListViewModel.factory(
             DefaultShoppingRepository(),
         )
@@ -35,11 +35,6 @@ class ProductListFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.apply {
-            lifecycleOwner = viewLifecycleOwner
-            vm = viewModel
-        }
-
         viewModel.loadProducts()
         initAppBar()
         initViews()

@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.base.BindingFragment
 class ShoppingCartFragment :
     BindingFragment<FragmentShoppingCartBinding>(R.layout.fragment_shopping_cart) {
     private lateinit var adapter: CartAdapter
-    private val viewModel by viewModels<ShoppingCartViewModel> {
+    override val viewModel by viewModels<ShoppingCartViewModel> {
         ShoppingCartViewModel.factory(
             DefaultCartRepository(),
         )
@@ -28,10 +28,6 @@ class ShoppingCartFragment :
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.apply {
-            vm = viewModel
-            lifecycleOwner = viewLifecycleOwner
-        }
         initAppBar()
         initViews()
         initObservers()
