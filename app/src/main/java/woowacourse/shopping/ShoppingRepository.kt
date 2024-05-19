@@ -25,6 +25,12 @@ interface ShoppingRepository {
         pageSize: Int,
     ): List<ShoppingCartItem>
 
+    fun shoppingCartItemByPosition(
+        currentPage: Int,
+        pageSize: Int,
+        position: Int,
+    ): ShoppingCartItem
+
     fun deleteShoppingCartItem(productId: Long)
 
     fun shoppingCartSize(): Int

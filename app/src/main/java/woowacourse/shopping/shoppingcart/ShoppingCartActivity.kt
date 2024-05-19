@@ -22,24 +22,24 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         binding.lifecycleOwner = this
         binding.vm = viewModel
 
-        initShoppingCart()
-
         adapter = ShoppingCartAdapter(this)
         binding.rcvShoppingCart.adapter = adapter
+
+        initShoppingCart()
 
         updateView()
     }
 
     private fun initShoppingCart() {
         viewModel.loadCartItems()
-        viewModel.updatePageSize()
+        viewModel.updatePageCount()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Cart"
     }
 
     private fun updateView() {
         viewModel.cartItems.observe(this) { cartItems ->
-            adapter.submitList(cartItems)
+            adapter.replaceItems(cartItems)
         }
     }
 
@@ -52,6 +52,11 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
 
     override fun onItemRemoveBtnClicked(id: Long) {
         viewModel.deleteCartItem(id)
+//        viewModel.isDeleteSuccess.observe(this, EventObserver { isSuccess ->
+//            if (isSuccess) {
+//                adapter.deleteItemByProductId(id)
+//            }
+//        })
     }
 
     companion object {
