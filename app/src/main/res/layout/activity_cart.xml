@@ -79,7 +79,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:selectedBasedOn="@{!viewModel.isFirstPage}" />
+                app:selected="@{!viewModel.isFirstPage}" />
 
             <TextView
                 android:id="@+id/tv_page"
@@ -103,7 +103,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:selectedBasedOn="@{!viewModel.isLastPage}" />
+                app:selected="@{!viewModel.isLastPage}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

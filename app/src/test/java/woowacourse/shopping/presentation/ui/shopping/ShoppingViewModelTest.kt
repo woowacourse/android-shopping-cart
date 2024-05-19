@@ -20,9 +20,6 @@ class ShoppingViewModelTest {
         testShoppingRepository = ErrorShoppingRepositoryImpl()
         viewModel = ShoppingViewModel(testShoppingRepository)
 
-        // when
-        viewModel.loadProducts()
-
         // then
         val state = viewModel.productItemsState.getOrAwaitValue()
         assertThat(state).isInstanceOf(UIState.Error::class.java)
@@ -33,9 +30,6 @@ class ShoppingViewModelTest {
         // given
         testShoppingRepository = EmptyShoppingRepositoryImpl()
         viewModel = ShoppingViewModel(testShoppingRepository)
-
-        // when
-        viewModel.loadProducts()
 
         // then
         val state = viewModel.productItemsState.getOrAwaitValue()
@@ -48,9 +42,6 @@ class ShoppingViewModelTest {
         testShoppingRepository = FakeShoppingRepositoryImpl()
         viewModel = ShoppingViewModel(testShoppingRepository)
 
-        // when
-        viewModel.loadProducts()
-
         // then
         val state = viewModel.productItemsState.getOrAwaitValue()
         assertThat(state).isInstanceOf(UIState.Success::class.java)
@@ -62,8 +53,23 @@ class ShoppingViewModelTest {
         testShoppingRepository = FakeShoppingRepositoryImpl()
         viewModel = ShoppingViewModel(testShoppingRepository)
 
+        // then
+        val state = viewModel.productItemsState.getOrAwaitValue()
+        assertThat(state).isInstanceOf(UIState.Success::class.java)
+
+        if (state is UIState.Success) {
+            assertEquals(20, state.data.size)
+        }
+    }
+
+    @Test
+    fun `더보기 버튼을 클릭하면 20개의 상품이 더 보인다 `() {
+        // given
+        testShoppingRepository = FakeShoppingRepositoryImpl()
+        viewModel = ShoppingViewModel(testShoppingRepository)
+
         // when
-        viewModel.loadProducts()
+        viewModel.onLoadMoreButtonClick()
 
         // then
         val state = viewModel.productItemsState.getOrAwaitValue()
@@ -75,31 +81,21 @@ class ShoppingViewModelTest {
     }
 
     @Test
-    fun `데이터가 더 존재한다면 더보기 버튼이 보인다 `() {
+    fun `데이터가 20개보다 작다면 그 데이터의 수만큼 보인다`() {
         // given
         testShoppingRepository = FakeShoppingRepositoryImpl()
         viewModel = ShoppingViewModel(testShoppingRepository)
 
         // when
-        viewModel.loadProducts()
-
-        // then
-        val isVisible = viewModel.loadMoreVisibility.getOrAwaitValue()
-        assertThat(isVisible).isTrue()
-    }
-
-    @Test
-    fun `데이터가 더 존재하지 않는다면 더보기 버튼이 보이지 않는다`() {
-        // given
-        testShoppingRepository = FakeShoppingRepositoryImpl()
-        viewModel = ShoppingViewModel(testShoppingRepository)
-
-        // when
-        viewModel.loadProducts()
+        viewModel.onLoadMoreButtonClick()
         viewModel.onLoadMoreButtonClick()
 
         // then
-        val isVisible = viewModel.loadMoreVisibility.getOrAwaitValue()
-        assertThat(isVisible).isFalse()
+        val state = viewModel.productItemsState.getOrAwaitValue()
+        assertThat(state).isInstanceOf(UIState.Success::class.java)
+
+        if (state is UIState.Success) {
+            assertEquals(17, state.data.size)
+        }
     }
 }

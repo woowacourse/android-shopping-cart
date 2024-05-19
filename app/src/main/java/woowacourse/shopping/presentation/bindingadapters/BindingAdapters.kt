@@ -2,9 +2,7 @@ package woowacourse.shopping.presentation.bindingadapters
 
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 
@@ -31,23 +29,5 @@ fun setPrice(
         view.text = view.context.getString(R.string.price_format, it)
     } ?: run {
         view.text = ""
-    }
-}
-
-@BindingAdapter("app:selectedBasedOn")
-fun setSelectedBasedOn(
-    button: AppCompatButton,
-    isSelected: Boolean?,
-) {
-    button.isSelected = isSelected == true
-}
-
-@BindingAdapter("app:visibilityTv")
-fun setVisibility(
-    view: TextView,
-    visibility: Boolean?,
-) {
-    visibility?.let {
-        view.visibility = if (it) RecyclerView.VISIBLE else RecyclerView.GONE
     }
 }
