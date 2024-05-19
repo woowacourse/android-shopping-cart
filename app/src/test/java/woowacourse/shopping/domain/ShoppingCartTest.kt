@@ -48,7 +48,7 @@ class ShoppingCartTest {
             (EXIST_ITEM_ID_0.increaseQuantity() as QuantityUpdate.Success).value
 
         // when
-        val newShoppingCart = shoppingCart.updateItems(updatedItem)
+        val newShoppingCart = shoppingCart.updateItem(updatedItem)
 
         // then
         assertThat(newShoppingCart.items[0].totalQuantity).isGreaterThan(shoppingCart.items[0].totalQuantity)
