@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.bindingadapters
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -49,14 +48,6 @@ fun setPrice(
     }
 }
 
-@BindingAdapter("app:selectedBasedOn")
-fun setSelectedBasedOn(
-    button: AppCompatButton,
-    isSelected: Boolean?,
-) {
-    button.isSelected = isSelected == true
-}
-
 @BindingAdapter("app:setLoadMoreBtnVisibility")
 fun setLoadMoreBtnVisibility(
     view: TextView,
@@ -82,6 +73,7 @@ fun setViewVisibility(
                 view.visibility = View.GONE
             }
         }
+
         else -> {
             if (view is TextView) {
                 view.visibility = View.GONE
