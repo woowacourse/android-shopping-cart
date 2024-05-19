@@ -33,7 +33,7 @@ class ShoppingCartViewModelTest {
     }
 
     @Test
-    fun `nextPage와 previousPage 메서드를 호출하기 전에는, 현재 페이지는 1이다`()  {
+    fun `nextPage와 previousPage 메서드를 호출하기 전에는, 현재 페이지는 1이다`() {
         val currentPage = viewModel.currentPage.getOrAwaitValue()
 
         assertThat(currentPage).isEqualTo(CURRENT_PAGE)
