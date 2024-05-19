@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentaion.ui.detail
 
-import android.content.Intent
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -19,12 +18,7 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 @RunWith(AndroidJUnit4::class)
 class DetailActivityTest {
     private val intent =
-        Intent(
-            ApplicationProvider.getApplicationContext(),
-            DetailActivity::class.java,
-        ).apply {
-            putExtra(DetailActivity.PRODUCT_ID, 0L)
-        }
+        DetailActivity.createIntent(ApplicationProvider.getApplicationContext(), 0L)
 
     @get:Rule
     val activityRule = ActivityScenarioRule<DetailActivity>(intent)
@@ -44,7 +38,7 @@ class DetailActivityTest {
     @Test
     fun `선택한_상품의_가격이_표시된다`() {
         onView(withId(R.id.tv_detail_price))
-            .check(matches(withText("99,800원")))
+            .check(matches(withText("10,000원")))
     }
 
     @Test

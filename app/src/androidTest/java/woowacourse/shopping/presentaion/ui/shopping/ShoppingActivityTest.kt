@@ -19,14 +19,15 @@ import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder
 
 @RunWith(AndroidJUnit4::class)
 class ShoppingActivityTest {
+    private val intent =
+        Intent(
+            ApplicationProvider.getApplicationContext(),
+            ShoppingActivity::class.java,
+        )
+
     @get:Rule
     val activityRule: ActivityScenarioRule<ShoppingActivity> =
-        ActivityScenarioRule<ShoppingActivity>(
-            Intent(
-                ApplicationProvider.getApplicationContext(),
-                ShoppingActivity::class.java,
-            ),
-        )
+        ActivityScenarioRule<ShoppingActivity>(intent)
 
     @Test
     fun `화면에_상품_목록이_나타난다`() {

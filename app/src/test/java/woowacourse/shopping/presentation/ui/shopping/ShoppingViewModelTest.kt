@@ -24,7 +24,8 @@ class ShoppingViewModelTest {
     fun `10개 초과의 데이터가 존재하더라도 초기에 저장되는 products의 크기는 10개 이다`() {
         every { repository.getAllProducts() } returns
             List(11) {
-                Product.of(
+                Product(
+                    id = it.toLong(),
                     name = "Product $it",
                     price = 1000,
                     imageUrl = "URL $it",
@@ -38,7 +39,8 @@ class ShoppingViewModelTest {
     fun `10개 이하의 데이터가 존재할때는 isLoadMoreButtonVisible의 값에는 항상 false가 저장된다`() {
         every { repository.getAllProducts() } returns
             List(8) {
-                Product.of(
+                Product(
+                    id = it.toLong(),
                     name = "Product $it",
                     price = 1000,
                     imageUrl = "URL $it",
@@ -54,7 +56,8 @@ class ShoppingViewModelTest {
     fun `10개 초과의 데이터가 존재하고 isVisible이 true라면 isLoadMoreButtonVisible의 값은 true가 저장된다`() {
         every { repository.getAllProducts() } returns
             List(11) {
-                Product.of(
+                Product(
+                    id = it.toLong(),
                     name = "Product $it",
                     price = 1000,
                     imageUrl = "URL $it",
@@ -70,7 +73,8 @@ class ShoppingViewModelTest {
     fun `10개 초과의 데이터가 존재하고 isVisible이 false라면 isLoadMoreButtonVisible의 값은 false 저장된다`() {
         every { repository.getAllProducts() } returns
             List(11) {
-                Product.of(
+                Product(
+                    id = it.toLong(),
                     name = "Product $it",
                     price = 1000,
                     imageUrl = "URL $it",
