@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="fitXY"
-            app:imageUrlOnSuccess = "@{vm.uiState}"
+            app:imageUrlOnSuccess="@{vm.uiState}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -70,24 +70,26 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="18dp"
-            app:productPrice = "@{vm.uiState}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/split_line"
+            app:productPrice="@{vm.uiState}"
             tools:text="99,800원" />
 
         <Button
             android:id="@+id/btn_add_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/add_product_button_style"
+            android:background="@drawable/selector_add_product_button"
+            android:enabled="true"
             android:onClick="@{()->cartButtonClickListener.onClick()}"
             android:text="@string/add_product_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:loadProductError="@{vm.uiState}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -34,8 +35,19 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         initBinding()
 
         showProductDetail()
-        observeProduct()
         setOnCartButtonClickListener()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_product_detail, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_close -> finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initBinding() {
@@ -52,39 +64,11 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         viewModel.loadProduct(productId)
     }
 
-    private fun observeProduct() {
-        viewModel.uiState.observe(this) { uiState ->
-            when (uiState) {
-                is UiState.ERROR -> {
-                    binding.btnAddProduct.isEnabled = false
-                    toast = Toast.makeText(this, uiState.error.message, Toast.LENGTH_SHORT)
-                    toast?.show()
-                }
-
-                is UiState.SUCCESS -> {}
-
-                is UiState.LOADING -> {}
-            }
-        }
-    }
-
     override fun onClick() {
         viewModel.addProductToCart()
         toast?.cancel()
         toast = Toast.makeText(this, getString(R.string.add_cart_complete), Toast.LENGTH_SHORT)
         toast?.show()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_product_detail, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_close -> finish()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun productId() =
@@ -124,5 +108,13 @@ fun TextView.setProductPrice(uiState: UiState<Product>) {
 fun ImageView.bindUrlToImageOnSuccess(uiState: UiState<Product>) {
     if (uiState is UiState.SUCCESS) {
         urlToImage(context, uiState.data.imageUrl)
+    }
+}
+
+@BindingAdapter("loadProductError")
+fun Button.disableButton(uiState: UiState<Product>) {
+    if (uiState is UiState.ERROR) {
+        isEnabled = false
+        Toast.makeText(context, uiState.error.message, Toast.LENGTH_SHORT).show()
     }
 }
