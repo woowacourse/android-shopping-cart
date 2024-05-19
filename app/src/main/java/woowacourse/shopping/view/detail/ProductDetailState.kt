@@ -1,7 +1,7 @@
 package woowacourse.shopping.view.detail
 
 sealed interface ProductDetailState {
-    sealed interface ErrorState : ProductDetailState{
+    sealed interface ErrorState : ProductDetailState {
         data object NotKnownError : ErrorState
     }
 

@@ -129,7 +129,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
             updateRecyclerView()
         } else {
             requireContext().makeToast(
-                getString(R.string.max_paging_data)
+                getString(R.string.max_paging_data),
             )
         }
     }

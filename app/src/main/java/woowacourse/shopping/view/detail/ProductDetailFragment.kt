@@ -116,8 +116,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         productDetailViewModel.addShoppingCartItem(product)
     }
 
-    private fun showMessage(message: String) =
-        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+    private fun showMessage(message: String) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
         fun createBundle(id: Long): Bundle {
