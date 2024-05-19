@@ -6,15 +6,25 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.ProductListViewModelFactory
 import woowacourse.shopping.R
+import woowacourse.shopping.TwentyItemsPagingStrategy
 import woowacourse.shopping.cart.CartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.productDetail.ProductDetailFragment
+import woowacourse.shopping.repository.DummyShoppingProductsRepository
 
 class ProductListFragment : Fragment() {
-    private val viewModel: ProductListViewModel by lazy { ProductListViewModel() }
+    private var _binding: FragmentProductListBinding? = null
+    private val binding get() = _binding!!
+
+    private val factory = ProductListViewModelFactory(DummyShoppingProductsRepository(TwentyItemsPagingStrategy()))
+    private val viewModel: ProductListViewModel2 by lazy {
+        ViewModelProvider(this, factory)[ProductListViewModel2::class.java]
+    }
 
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
@@ -22,8 +32,6 @@ class ProductListFragment : Fragment() {
             onClick = { id -> navigateToProductDetail(id) },
         )
     }
-    private var _binding: FragmentProductListBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,7 +40,7 @@ class ProductListFragment : Fragment() {
     ): View {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.productDetailList.adapter = adapter
-        binding.vm = viewModel
+        binding.shoppingProductsViewModel = viewModel
         showLoadMoreButton()
         return binding.root
     }
@@ -51,7 +59,9 @@ class ProductListFragment : Fragment() {
                     val totalItemCount = layoutManager.itemCount
                     val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
-                    if (totalItemCount == lastVisibleItem + 1) {
+                    if (totalItemCount == lastVisibleItem + 1 &&
+                        viewModel.isLastPage.value == false
+                    ) {
                         binding.loadMoreButton.visibility = View.VISIBLE
                     } else {
                         binding.loadMoreButton.visibility = View.GONE
