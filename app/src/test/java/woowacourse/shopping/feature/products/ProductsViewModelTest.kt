@@ -51,14 +51,14 @@ class ProductsViewModelTest {
     }
 
     @Test
-    fun `상품이 10개이고 1페이지인 경우 상품을 더 불러올 수 없다`() {
+    fun `상품이 10개이고 1페이지의 10번째 상품에 위치해 있는 경우 상품을 더 불러올 수 없다`() {
         // given
         val products = products(10)
         productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         // when
-        viewModel.changeSeeMoreVisibility(lastPosition())
+        viewModel.changeSeeMoreVisibility(9)
 
         // then
         val actual = viewModel.showLoadMore.getOrAwaitValue()
@@ -66,14 +66,14 @@ class ProductsViewModelTest {
     }
 
     @Test
-    fun `상품이 25개이고 1페이지인 경우 상품을 더 불러올 수 있다`() {
+    fun `상품이 25개이고 1페이지의 20번째 상품에 위치해 있는 경우 상품을 더 불러올 수 있다`() {
         // given
         val products = products(25)
         productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         // when
-        viewModel.changeSeeMoreVisibility(lastPosition())
+        viewModel.changeSeeMoreVisibility(19)
 
         // then
         val actual = viewModel.showLoadMore.getOrAwaitValue()
@@ -97,7 +97,7 @@ class ProductsViewModelTest {
     }
 
     @Test
-    fun `상품이 25개이고 2페이지인 경우 상품을 더 불러올 수 없다`() {
+    fun `상품이 25개이고 2페이지의 25번째 상품에 위치해 있는 경우 상품을 더 불러올 수 없다`() {
         // given
         val products = products(25)
         productRepository = FakeProductRepository(products)
@@ -105,14 +105,12 @@ class ProductsViewModelTest {
 
         // when
         viewModel.loadPage()
-        viewModel.changeSeeMoreVisibility(lastPosition())
+        viewModel.changeSeeMoreVisibility(24)
 
         // then
         val actual = viewModel.showLoadMore.getOrAwaitValue()
         assertThat(actual).isFalse
     }
-
-    private fun lastPosition(): Int = viewModel.products.getOrAwaitValue().size - 1
 
     private fun products(size: Int): List<Product> {
         return List(size) { Product(it.toLong(), imageUrl, title, price) }
