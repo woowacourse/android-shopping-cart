@@ -11,13 +11,17 @@ class ProductRecyclerViewAdapter(
     private var values: List<Product>,
     private val onProductItemClickListener: OnProductItemClickListener,
 ) : RecyclerView.Adapter<ProductsItemViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductsItemViewHolder = ProductsItemViewHolder(
-        HolderProductBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false,
-        ),
-    ) { onProductItemClickListener.onClick(it) }
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): ProductsItemViewHolder =
+        ProductsItemViewHolder(
+            HolderProductBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            ),
+        ) { onProductItemClickListener.onClick(it) }
 
     override fun onBindViewHolder(
         holder: ProductsItemViewHolder,

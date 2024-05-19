@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.HolderProductBinding
 
 class ProductsItemViewHolder(
     private val binding: HolderProductBinding,
-    private val onProductItemClickListener: OnProductItemClickListener
+    private val onProductItemClickListener: OnProductItemClickListener,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(product: Product) {
         binding.product = product
