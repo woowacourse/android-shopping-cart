@@ -168,4 +168,110 @@ class ShoppingCartViewModelTest {
         // then
         assertThat(viewModel.currentPage.getOrAwaitValue()).isEqualTo(1)
     }
+
+    @Test
+    fun `2번째 페이지에서 로드되는 데이터 5개`() {
+        // given
+        val fakeProducts =
+            mutableListOf(
+                productTestFixture(id = 1),
+                productTestFixture(id = 2),
+                productTestFixture(id = 3),
+                productTestFixture(id = 4),
+                productTestFixture(id = 5),
+                productTestFixture(id = 6),
+                productTestFixture(id = 7),
+                productTestFixture(id = 8),
+                productTestFixture(id = 9),
+                productTestFixture(id = 10),
+                productTestFixture(id = 11),
+            )
+        viewModel =
+            ShoppingCartViewModel(FakeShoppingCartItemRepository(fakeProducts), _currentPage = MutableLiveData(2))
+
+        // when
+        val cartItems = viewModel.itemsInCurrentPage.getOrAwaitValue()
+
+        // then
+        val expected =
+            mutableListOf(
+                productTestFixture(id = 6),
+                productTestFixture(id = 7),
+                productTestFixture(id = 8),
+                productTestFixture(id = 9),
+                productTestFixture(id = 10),
+            )
+        assertThat(cartItems).containsExactlyElementsOf(expected)
+    }
+
+    @Test
+    fun `2번째 페이지에서 1번째 페이지로 왔을 때 로드되는 데이터`() {
+        // given
+        val fakeProducts =
+            mutableListOf(
+                productTestFixture(id = 1),
+                productTestFixture(id = 2),
+                productTestFixture(id = 3),
+                productTestFixture(id = 4),
+                productTestFixture(id = 5),
+                productTestFixture(id = 6),
+                productTestFixture(id = 7),
+                productTestFixture(id = 8),
+                productTestFixture(id = 9),
+                productTestFixture(id = 10),
+                productTestFixture(id = 11),
+            )
+        viewModel =
+            ShoppingCartViewModel(FakeShoppingCartItemRepository(fakeProducts), _currentPage = MutableLiveData(2))
+
+        // when
+        viewModel.previousPage()
+        val cartItems = viewModel.itemsInCurrentPage.getOrAwaitValue()
+
+        // then
+        val expected =
+            mutableListOf(
+                productTestFixture(id = 1),
+                productTestFixture(id = 2),
+                productTestFixture(id = 3),
+                productTestFixture(id = 4),
+                productTestFixture(id = 5),
+            )
+        assertThat(cartItems).isEqualTo(expected)
+    }
+
+    @Test
+    fun `세번째 페이지에서 로드되는 데이터 3개`() {
+        // given
+        val fakeProducts =
+            mutableListOf(
+                productTestFixture(id = 1),
+                productTestFixture(id = 2),
+                productTestFixture(id = 3),
+                productTestFixture(id = 4),
+                productTestFixture(id = 5),
+                productTestFixture(id = 6),
+                productTestFixture(id = 7),
+                productTestFixture(id = 8),
+                productTestFixture(id = 9),
+                productTestFixture(id = 10),
+                productTestFixture(id = 11),
+                productTestFixture(id = 12),
+                productTestFixture(id = 13),
+            )
+        viewModel =
+            ShoppingCartViewModel(FakeShoppingCartItemRepository(fakeProducts), _currentPage = MutableLiveData(3))
+
+        // when
+        val cartItems = viewModel.itemsInCurrentPage.getOrAwaitValue()
+
+        // then
+        val expected =
+            mutableListOf(
+                productTestFixture(id = 11),
+                productTestFixture(id = 12),
+                productTestFixture(id = 13),
+            )
+        assertThat(cartItems).isEqualTo(expected)
+    }
 }

@@ -64,7 +64,7 @@ class CartViewModel : ViewModel() {
 
 class ShoppingCartViewModel(
     private val shoppingCartItemRepository: ShoppingCartItemRepository,
-    private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE)
+    private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
 ) : ViewModel() {
     val currentPage: LiveData<Int> get() = _currentPage
 
