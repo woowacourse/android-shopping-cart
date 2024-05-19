@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -48,6 +49,19 @@ class ShoppingCartViewModel(
                 currentPage.value ?: throw IllegalStateException("currentPage is null"),
             ),
         )
+    }
+
+    fun deleteItem(cartItemId: Int) {
+        shoppingCartItemRepository.removeCartItem(cartItemId)
+        Log.d(TAG, "deleteItem: $cartItemId")
+
+        _itemsInCurrentPage.postValue(
+            shoppingCartItemRepository.loadPagedCartItems(
+                currentPage.value ?: throw IllegalStateException("currentPage is null"),
+            ),
+        )
+
+        _isLastPage.value = shoppingCartItemRepository.isFinalPage(currentPage.value ?: 1)
     }
 
     companion object {

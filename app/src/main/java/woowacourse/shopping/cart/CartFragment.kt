@@ -24,10 +24,9 @@ class CartFragment : Fragment() {
 
     private val adapter: CartItemRecyclerViewAdapter by lazy {
         CartItemRecyclerViewAdapter(
-            viewModel.itemsInCurrentPage.value ?: emptyList(),
-            onClick = { deleteItemId ->
-                // TODO: implement delete item
-                Log.d(TAG, "deleteItem: $deleteItemId")
+            emptyList(),
+            onClick = { cartItemId ->
+                viewModel.deleteItem(cartItemId)
             },
         )
     }

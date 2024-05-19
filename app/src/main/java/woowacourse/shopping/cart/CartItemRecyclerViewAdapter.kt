@@ -1,5 +1,6 @@
 package woowacourse.shopping.cart
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -40,20 +41,17 @@ class CartItemRecyclerViewAdapter(
         holder.bind(item)
     }
 
-    override fun getItemCount(): Int = values.size.coerceAtMost(5)
+    override fun getItemCount(): Int = values.size.coerceAtMost(COUNT_PER_PAGE)
 
     fun updateData(newData: List<Product>) {
-        val oldSize = this.values.size
-        val newSize = newData.size
+        Log.d(TAG, "updateData: ")
         this.values = newData
 
-        if (oldSize == newSize) {
-            notifyItemRangeChanged(0, newSize)
+        if (newData.isEmpty()) {
+            notifyItemRemoved(0)
             return
         }
-
-        notifyItemRangeRemoved(0, oldSize)
-        notifyItemRangeInserted(0, newSize)
+        notifyItemRangeChanged(0, itemCount)
     }
 
     inner class ViewHolder(
@@ -69,5 +67,6 @@ class CartItemRecyclerViewAdapter(
 
     companion object {
         private const val TAG = "CartItemRecyclerViewAdapter"
+        private const val COUNT_PER_PAGE = 5
     }
 }
