@@ -29,13 +29,13 @@ class ProductListViewModelTest {
         // given
         val product = product()
         val expectProducts = listOf(product.toShoppingUiModel(), ShoppingUiModel.LoadMore)
-        every { shoppingRepository.products(emptyList()) } returns listOf(product)
-        every { shoppingRepository.canLoadMoreProducts(emptyList()) } returns true
+        every { shoppingRepository.products(0, 20) } returns listOf(product)
+        every { shoppingRepository.canLoadMoreProducts(1, 20) } returns true
         // when
         productListViewModel.loadProducts()
         // then
-        verify(exactly = 1) { shoppingRepository.products(emptyList()) }
-        verify(exactly = 1) { shoppingRepository.canLoadMoreProducts(emptyList()) }
+        verify(exactly = 1) { shoppingRepository.products(0, 20) }
+        verify(exactly = 1) { shoppingRepository.canLoadMoreProducts(1, 20) }
         productListViewModel.products.getOrAwaitValue() shouldBe expectProducts
     }
 
@@ -45,13 +45,13 @@ class ProductListViewModelTest {
         // given
         val product = product()
         val expectProducts = listOf(product.toShoppingUiModel())
-        every { shoppingRepository.products(emptyList()) } returns listOf(product)
-        every { shoppingRepository.canLoadMoreProducts(emptyList()) } returns false
+        every { shoppingRepository.products(0, 20) } returns listOf(product)
+        every { shoppingRepository.canLoadMoreProducts(1, 20) } returns false
         // when
         productListViewModel.loadProducts()
         // then
-        verify(exactly = 1) { shoppingRepository.products(emptyList()) }
-        verify(exactly = 1) { shoppingRepository.canLoadMoreProducts(emptyList()) }
+        verify(exactly = 1) { shoppingRepository.products(0, 20) }
+        verify(exactly = 1) { shoppingRepository.canLoadMoreProducts(1, 20) }
         productListViewModel.products.getOrAwaitValue() shouldBe expectProducts
     }
 }
