@@ -18,7 +18,8 @@ class CartViewModel(
     val orders: LiveData<List<Order>>
         get() = _orders
 
-    private val _pageInformation: MutableLiveData<PageInformation> = MutableLiveData(PageInformation())
+    private val _pageInformation: MutableLiveData<PageInformation> =
+        MutableLiveData(PageInformation())
     val pageInformation: LiveData<PageInformation>
         get() = _pageInformation
 
@@ -63,36 +64,25 @@ class CartViewModel(
                     price = it.quantity * productInformation.price,
                 )
             }
-        if (currentPage.value == 0) {
-            if (orders.size < 5) {
-                _pageInformation.value =
-                    pageInformation.value?.copy(
-                        previousPageEnabled = false,
-                        nextPageEnabled = hasNext,
-                    )
-            } else {
-                _pageInformation.value =
-                    pageInformation.value?.copy(
-                        previousPageEnabled = false,
-                        nextPageEnabled = hasNext,
-                    )
-            }
-        } else {
-            if (orders.size < 5) {
-                _pageInformation.value =
-                    pageInformation.value?.copy(
-                        previousPageEnabled = true,
-                        nextPageEnabled = hasNext,
-                    )
-            } else {
-                _pageInformation.value =
-                    pageInformation.value?.copy(
-                        previousPageEnabled = true,
-                        nextPageEnabled = hasNext,
-                    )
-            }
-        }
+
+        setPageInformation()
         _orders.value = orders
+    }
+
+    private fun setPageInformation() {
+        if (currentPage.value == 0) {
+            _pageInformation.value =
+                pageInformation.value?.copy(
+                    previousPageEnabled = false,
+                    nextPageEnabled = hasNext,
+                )
+        } else {
+            _pageInformation.value =
+                pageInformation.value?.copy(
+                    previousPageEnabled = true,
+                    nextPageEnabled = hasNext,
+                )
+        }
     }
 
     override fun onCartItemDelete(cartItemId: Long) {
