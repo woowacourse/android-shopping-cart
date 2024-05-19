@@ -15,7 +15,7 @@
             android:layout_height="match_parent"
             android:text="더보기"
             android:textAlignment="center"
-            android:textAppearance="@style/H1"
+            android:theme="@style/H1"
             android:textColor="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,7 +48,7 @@
                 android:onClick="@{()->vm.minusPage()}"
                 android:text="&lt;"
                 android:textAlignment="center"
-                android:textAppearance="@style/H1"
+                android:theme="@style/H1"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -60,23 +60,22 @@
                 android:layout_height="42dp"
                 android:text="@{vm.currentPage.toString()}"
                 android:textAlignment="center"
-                tools:text="1"
-                android:textAppearance="@style/H1"
-                android:textColor="@color/black"
+                android:theme="@style/H1"
                 app:layout_constraintStart_toEndOf="@id/tv_minus_page"
-                app:layout_constraintTop_toTopOf="@id/tv_minus_page" />
+                app:layout_constraintTop_toTopOf="@id/tv_minus_page"
+                tools:text="1" />
 
             <TextView
                 android:id="@+id/tv_plus_page"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:onClick="@{()->vm.plusPage()}"
                 android:background="@{vm.canLoadNextPage ? @color/mint : @color/gray500}"
                 android:enabled="@{vm.canLoadNextPage}"
+                android:onClick="@{()->vm.plusPage()}"
                 android:text="&gt;"
                 android:textAlignment="center"
-                android:textAppearance="@style/H1"
                 android:textColor="@color/white"
+                android:theme="@style/H1"
                 app:layout_constraintStart_toEndOf="@id/tv_current_page"
                 app:layout_constraintTop_toTopOf="@id/tv_current_page"
                 tools:background="@color/mint" />
