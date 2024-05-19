@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.TwentyItemsPagingStrategy
-import woowacourse.shopping.cart.OnProductItemClickListener
 import woowacourse.shopping.cart.ShoppingCartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.productDetail.ProductDetailFragment

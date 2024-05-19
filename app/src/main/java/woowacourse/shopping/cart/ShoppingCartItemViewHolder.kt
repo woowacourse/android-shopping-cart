@@ -1,6 +1,7 @@
 package woowacourse.shopping.cart
 
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.OnProductItemClickListener
 import woowacourse.shopping.data.Product
 import woowacourse.shopping.databinding.HolderCartBinding
 
