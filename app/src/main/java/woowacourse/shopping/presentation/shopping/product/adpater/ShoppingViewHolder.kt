@@ -9,20 +9,28 @@ import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     class Product(
         private val binding: ItemProductBinding,
-        private val onClickItem: (id: Long) -> Unit,
+        private val productListener: ProductListener,
     ) : ShoppingViewHolder(binding.root) {
         fun bind(product: ShoppingUiModel.Product) {
             binding.product = product
-            binding.root.setOnClickListener { onClickItem(product.id) }
+            binding.listener = productListener
+        }
+
+        fun interface ProductListener {
+            fun onClickProduct(id: Long)
         }
     }
 
     class LoadMore(
         private val binding: ItemPlusProductBinding,
-        private val onPlusItem: () -> Unit,
+        private val loadMoreListener: LoadMoreListener,
     ) : ShoppingViewHolder(binding.root) {
         fun bind() {
-            binding.root.setOnClickListener { onPlusItem() }
+            binding.listener = loadMoreListener
+        }
+
+        fun interface LoadMoreListener {
+            fun onClickLoadMore()
         }
     }
 }

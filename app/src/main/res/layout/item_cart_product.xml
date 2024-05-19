@@ -8,9 +8,10 @@
         <variable
             name="cartProduct"
             type="woowacourse.shopping.presentation.cart.CartProductUi" />
+
         <variable
             name="listener"
-            type="woowacourse.shopping.presentation.cart.CartAdapter.DeleteProductListener" />
+            type="woowacourse.shopping.presentation.cart.CartAdapter.CartProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,8 +46,8 @@
                 android:id="@+id/iv_shooping_cart_close"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:onClick="@{() -> listener.delete(cartProduct)}"
                 android:padding="6dp"
-                android:onClick="@{() -> listener.deleteProduct()}"
                 android:src="@drawable/ic_close_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -65,10 +66,10 @@
                 android:id="@+id/tv_shooping_cart_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{@string/price_format(cartProduct.product.price)}"
                 android:theme="@style/B2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="@{@string/price_format(cartProduct.product.price)}"
                 tools:text="30_000원" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

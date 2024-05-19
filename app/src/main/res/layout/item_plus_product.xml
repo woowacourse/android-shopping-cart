@@ -3,20 +3,24 @@
 
     <data>
 
+        <variable
+            name="listener"
+            type="woowacourse.shopping.presentation.shopping.product.adpater.ShoppingViewHolder.LoadMore.LoadMoreListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/mint">
+        android:background="@color/mint"
+        android:onClick="@{() -> listener.onClickLoadMore()}">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="더보기"
             android:textAlignment="center"
-            android:theme="@style/H1"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:theme="@style/H1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

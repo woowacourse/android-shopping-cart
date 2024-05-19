@@ -78,16 +78,14 @@ class ProductListFragment :
 
     private fun initViews() {
         binding?.apply {
-            productAdapter =
-                ProductAdapter(
-                    onClickItem = { navigateToDetailView(it) },
-                    onPlusItem = { viewModel.loadProducts() },
-                )
+            productAdapter = ProductAdapter(
+                onClickProduct = ::navigateToDetailView,
+                onClickLoadMore = viewModel::loadProducts,
+            )
             rvProductList.adapter = productAdapter
-            rvProductList.layoutManager =
-                GridLayoutManager(requireContext(), SPAN_COUNT).apply {
-                    spanSizeLookup = spanSizeLookUp()
-                }
+            rvProductList.layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT).apply {
+                spanSizeLookup = spanSizeLookUp()
+            }
             rvProductList.addItemDecoration(ProductItemDecoration(12.dp))
         }
     }
@@ -109,16 +107,15 @@ class ProductListFragment :
         }
     }
 
-    private fun spanSizeLookUp() =
-        object : GridLayoutManager.SpanSizeLookup() {
-            override fun getSpanSize(position: Int): Int {
-                return if (productAdapter.getItemViewType(position) == ShoppingUiModel.ITEM_VIEW_TYPE_PLUS) {
-                    ShoppingUiModel.PLUS_SPAN_COUNT
-                } else {
-                    ShoppingUiModel.PRODUCT_SPAN_COUNT
-                }
+    private fun spanSizeLookUp() = object : GridLayoutManager.SpanSizeLookup() {
+        override fun getSpanSize(position: Int): Int {
+            return if (productAdapter.getItemViewType(position) == ShoppingUiModel.ITEM_VIEW_TYPE_PLUS) {
+                ShoppingUiModel.PLUS_SPAN_COUNT
+            } else {
+                ShoppingUiModel.PRODUCT_SPAN_COUNT
             }
         }
+    }
 
     companion object {
         val TAG: String? = ProductListFragment::class.java.canonicalName
