@@ -32,9 +32,10 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
-
-        viewModel.loadProductInformation(productId)
+        if (savedInstanceState == null) {
+            val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
+            viewModel.loadProductInformation(productId)
+        }
         viewModel.productInformation.observe(this) {
             binding.product = it
         }
