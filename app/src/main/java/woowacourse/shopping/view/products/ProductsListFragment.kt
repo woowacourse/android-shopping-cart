@@ -18,7 +18,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     val binding: FragmentProductListBinding get() = _binding!!
     private lateinit var adapter: ProductAdapter
 
-    private val productDetailViewModel: ProductListViewModel by lazy {
+    private val productListViewModel: ProductListViewModel by lazy {
         val viewModelFactory = ProductListViewModelFactory(ProductRepositoryImpl(context = requireContext()))
         viewModelFactory.create(ProductListViewModel::class.java)
     }
@@ -55,7 +55,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
     }
 
     private fun observeData() {
-        productDetailViewModel.products.observe(viewLifecycleOwner) { products ->
+        productListViewModel.products.observe(viewLifecycleOwner) { products ->
             adapter.updateProducts(addedProducts = products)
         }
     }
@@ -92,7 +92,7 @@ class ProductsListFragment : Fragment(), OnClickProducts {
 
     private fun loadPagingData() {
         runCatching {
-            productDetailViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
+            productListViewModel.loadPagingProduct(PRODUCT_LOAD_PAGING_SIZE)
         }.onFailure {
             showMaxItemMessage()
         }

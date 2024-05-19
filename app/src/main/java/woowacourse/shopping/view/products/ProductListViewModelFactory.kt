@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 
 class ProductListViewModelFactory(private val repository: ProductRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(ProductsListFragment::class.java)) {
+        return if (modelClass.isAssignableFrom(ProductListViewModel::class.java)) {
             ProductListViewModel(repository) as T
         } else {
             throw IllegalArgumentException(UNKNOWN_VIEWMODEL)

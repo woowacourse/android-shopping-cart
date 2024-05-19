@@ -1,4 +1,4 @@
-package woowacourse.shopping.view
+package woowacourse.shopping.view.products
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -7,19 +7,17 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.MockProductRepository
 import woowacourse.shopping.TestFixture.getOrAwaitValue
-import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 
 @ExtendWith(InstantTaskExecutorExtension::class)
-class MainViewModelTest {
+class ProductListViewModelTest {
     private lateinit var repository: ProductRepository
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: ProductListViewModel
 
     @BeforeEach
     fun setUp() {
         repository = MockProductRepository()
-        viewModel = MainViewModel(repository)
+        viewModel = ProductListViewModel(repository)
     }
 
     @Test
@@ -37,23 +35,6 @@ class MainViewModelTest {
     fun `상품아이디로_상품을_요청하면_아이디와_일치하는_상품_목록을_반환해야_한다`() {
         val actual = viewModel.loadProductItem(0)
         val expected = (repository as MockProductRepository).products[0]
-
-        assertThat(actual).isEqualTo(expected)
-    }
-
-    @Test
-    fun `상품을_장바구니에_추가하면_장바구니에_상품이_추가되어야_한다`() {
-        val newProduct =
-            Product(
-                id = 3L,
-                imageUrl = "",
-                price = 5_000,
-                name = "아이스 아메리카노",
-            )
-        viewModel.addShoppingCartItem(newProduct).join()
-
-        val actual = (repository as MockProductRepository).cartItems.last()
-        val expected = CartItem(3L, newProduct)
 
         assertThat(actual).isEqualTo(expected)
     }
