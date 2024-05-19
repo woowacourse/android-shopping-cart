@@ -11,7 +11,7 @@ import woowacourse.shopping.util.imageUrlToSrc
 class ShoppingCartAdapter(
     private val onClicked: ShoppingCartClickAction,
 ) : RecyclerView.Adapter<ShoppingCartAdapter.ShoppingCartViewHolder>() {
-    private var items = emptyList<ProductUiModel>()
+    private val items = mutableListOf<ProductUiModel>()
 
     class ShoppingCartViewHolder(
         private val binding: ItemCartBinding,
@@ -38,11 +38,6 @@ class ShoppingCartAdapter(
         return ShoppingCartViewHolder(binding, onClicked)
     }
 
-    fun submitList(updatedItems: List<ProductUiModel>) {
-        items = updatedItems
-        notifyDataSetChanged()
-    }
-
     override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(
@@ -50,5 +45,22 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         holder.onBind(items[position])
+    }
+
+    fun replaceItems(newItems: List<ProductUiModel>) {
+        items.clear()
+        items.addAll(newItems.toList())
+        notifyDataSetChanged()
+    }
+
+    fun deleteItemByProductId(productId: Long) {
+        val deleteIndex = items.indexOfFirst { it.id == productId }
+        items.removeAt(deleteIndex)
+        notifyDataSetChanged()
+    }
+
+    fun addItem(item: ProductUiModel) {
+        items.add(item.copy())
+        notifyItemInserted(items.lastIndex)
     }
 }

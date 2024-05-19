@@ -37,7 +37,7 @@ class ShoppingCartActivityTest {
                 )
 
             recyclerView = activity.findViewById(R.id.rcv_shopping_cart)
-            recyclerView.adapter = ShoppingCartAdapter(activity).apply { this.submitList(items) }
+            recyclerView.adapter = ShoppingCartAdapter(activity).apply { this.replaceItems(items) }
         }
     }
 
@@ -48,6 +48,6 @@ class ShoppingCartActivityTest {
     }
 
     @Test
-    fun `장바구니_아이템의_개수가_1개일때_아이템을_삭제하면_recyclerview에는_아이템이_없다`()  {
+    fun `장바구니_아이템의_개수가_1개일때_아이템을_삭제하면_recyclerview에는_아이템이_없다`() {
     }
 }
