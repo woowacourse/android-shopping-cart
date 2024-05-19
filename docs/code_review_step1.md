@@ -9,12 +9,12 @@
 - [x]: MediatorLiveData, map, switchMap을 활용하여 LiveData 개선 
 - [x]: 장바구니 Cart paging 리팩토링 --- Product, page 바뀌면 prev, next page 로드
 - [x]: CartAdapter notifyDataSetChanged 개선 - ItemUpdateHelper util 함수 구현
-- [ ]: Shopping List Cart 리팩토링
 - [x]: CartAdapter onClickItem도 DataBinding을 사용
-- [ ]: repository 싱글톤으로 바꾸기
 - [x]: onViewCreated() 내부에 있는 함수들을 분리
+- [x]: ProductListViewModel 의 반복되는 코드 함수화하기
+- [ ]: repository 싱글톤으로 바꾸기
+- [ ]: Shopping List Cart 리팩토링
 - [ ]: UiState 도입
-- [ ]: ProductListViewModel 의 반복되는 코드 함수화하기
 - [ ]: Android Resource의 dimen 도입
 - [ ]: Android Resource의 style 도입
 - [ ]: SavedStateHandle 을 사용하여 ViewModel 에서 상태 저장하기

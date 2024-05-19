@@ -17,15 +17,13 @@ class ProductListViewModel(
     fun loadProducts() {
         val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
         val currentProductIds = currentProducts.map { it.id }
-
         val newProducts =
             shoppingRepository.products(exceptProducts = currentProductIds)
                 .map { it.toShoppingUiModel() }
 
-        if (shoppingRepository.canLoadMoreProducts(currentProductIds)) {
-            _products.value = currentProducts + newProducts + ShoppingUiModel.LoadMore
-        } else {
-            _products.value = currentProducts + newProducts
+        _products.value = currentProducts + newProducts
+        if (shoppingRepository.canLoadMoreProducts(exceptProducts = currentProductIds)) {
+            _products.value = _products.value?.plus(ShoppingUiModel.LoadMore)
         }
     }
 
