@@ -1,7 +1,12 @@
 package woowacourse.shopping.cart
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
@@ -12,6 +17,12 @@ import woowacourse.shopping.repository.FakeShoppingCartItemRepository
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ShoppingCartViewModelTest {
     private lateinit var viewModel: ShoppingCartViewModel
+
+    @BeforeEach
+    fun setUp() {
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns mockk(relaxed = true)
+    }
 
     @Test
     fun `장바구니에 담긴 상품이 없을 때`() {
@@ -273,5 +284,64 @@ class ShoppingCartViewModelTest {
                 productTestFixture(id = 13),
             )
         assertThat(cartItems).isEqualTo(expected)
+    }
+
+    @Test
+    fun `상품 삭제 시 현 페이지가 변경된다`() {
+        // given
+        val fakeProducts =
+            mutableListOf(
+                productTestFixture(id = 1),
+                productTestFixture(id = 2),
+                productTestFixture(id = 3),
+                productTestFixture(id = 4),
+                productTestFixture(id = 5),
+                productTestFixture(id = 6),
+                productTestFixture(id = 7),
+                productTestFixture(id = 8),
+                productTestFixture(id = 9),
+                productTestFixture(id = 10),
+                productTestFixture(id = 11),
+                productTestFixture(id = 12),
+                productTestFixture(id = 13),
+            )
+        viewModel = ShoppingCartViewModel(FakeShoppingCartItemRepository(fakeProducts))
+
+        // when
+        viewModel.deleteItem(1)
+
+        // then
+        val cartItems = viewModel.itemsInCurrentPage.getOrAwaitValue()
+        val expected =
+            mutableListOf(
+                productTestFixture(id = 2),
+                productTestFixture(id = 3),
+                productTestFixture(id = 4),
+                productTestFixture(id = 5),
+                productTestFixture(id = 6),
+            )
+        assertThat(cartItems).isEqualTo(expected)
+    }
+
+    @Test
+    fun `상품 삭제 시 현재 페이지가 마지막 페이지가 된다`() {
+        // given
+        val fakeProducts =
+            mutableListOf(
+                productTestFixture(id = 1),
+                productTestFixture(id = 2),
+                productTestFixture(id = 3),
+                productTestFixture(id = 4),
+                productTestFixture(id = 5),
+                productTestFixture(id = 6),
+            )
+        viewModel =
+            ShoppingCartViewModel(FakeShoppingCartItemRepository(fakeProducts), _currentPage = MutableLiveData(1))
+
+        // when
+        viewModel.deleteItem(1)
+
+        // then
+        assertThat(viewModel.isLastPage.getOrAwaitValue()).isTrue
     }
 }
