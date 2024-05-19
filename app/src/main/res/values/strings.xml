@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <string name="price_format">%1$,d원</string>
+    <string name="next_arrow"><![CDATA[>]]></string>
+    <string name="previous_arrow"><![CDATA[<]]></string>
 </resources>
