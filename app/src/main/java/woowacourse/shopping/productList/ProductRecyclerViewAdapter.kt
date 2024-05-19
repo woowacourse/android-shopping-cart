@@ -35,8 +35,9 @@ class ProductRecyclerViewAdapter(
     override fun getItemCount(): Int = values.size
 
     fun updateData(newData: List<Product>) {
+        val start = this.values.size
         this.values = newData
-        notifyItemChanged(0, newData.size)
+        notifyItemRangeInserted(start, newData.size - start)
     }
 
     inner class ViewHolder(
