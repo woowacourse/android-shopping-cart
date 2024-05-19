@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -18,22 +19,18 @@ class CartActivity : AppCompatActivity() {
     private val binding: ActivityCartBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_cart)
     }
-    private lateinit var viewModel: CartViewModel
+    private val viewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            CartRepositoryImpl(DefaultCart),
+            ProductRepositoryImpl(DefaultProducts),
+        )
+    }
     private val adapter: CartAdapter by lazy {
         CartAdapter(viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel =
-            ViewModelProvider(
-                this,
-                CartViewModelFactory(
-                    CartRepositoryImpl(DefaultCart),
-                    ProductRepositoryImpl(DefaultProducts),
-                ),
-            )[CartViewModel::class.java]
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel

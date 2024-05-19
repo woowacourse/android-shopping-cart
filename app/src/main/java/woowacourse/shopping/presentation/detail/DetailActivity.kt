@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -15,19 +16,19 @@ import woowacourse.shopping.data.datasource.DefaultProducts
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.presentation.home.HomeViewModel
+import woowacourse.shopping.presentation.home.HomeViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
     private val binding: ActivityDetailBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_detail)
     }
-    private val viewModel: DetailViewModel by lazy {
-        ViewModelProvider(
-            this,
-            DetailViewModelFactory(
-                ProductRepositoryImpl(DefaultProducts),
-                CartRepositoryImpl(DefaultCart)
-            ),
-        )[DetailViewModel::class.java]
+
+    private val viewModel: DetailViewModel by viewModels {
+        DetailViewModelFactory(
+            ProductRepositoryImpl(DefaultProducts),
+            CartRepositoryImpl(DefaultCart)
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

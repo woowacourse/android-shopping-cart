@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.home
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
@@ -22,11 +23,13 @@ class HomeActivity : AppCompatActivity() {
     private val binding: ActivityHomeBinding by lazy {
         DataBindingUtil.setContentView(this, R.layout.activity_home)
     }
-    private val viewModel: HomeViewModel by lazy {
-        ViewModelProvider(
-            this,
-            HomeViewModelFactory(ProductRepositoryImpl(DefaultProducts)),
-        )[HomeViewModel::class.java]
+
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory(
+            ProductRepositoryImpl(
+                DefaultProducts
+            )
+        )
     }
     private val adapter: ProductAdapter by lazy {
         ProductAdapter(viewModel.loadStatus.value ?: LoadStatus(), viewModel)
