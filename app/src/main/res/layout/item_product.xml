@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.presentation.ui.shopping.ShoppingClickListener" />
+            name="viewModel"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel" />
 
         <variable
             name="product"
@@ -17,7 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="166dp"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> clickListener.onProductClick(product.id)}"
+        android:onClick="@{() -> viewModel.onProductClick(product.id)}"
         android:padding="6dp">
 
         <ImageView

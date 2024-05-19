@@ -7,8 +7,6 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.ui.shopping.ShoppingAdapter
 
 @BindingAdapter("app:imageUrl")
 fun loadImage(
@@ -21,16 +19,6 @@ fun loadImage(
             .placeholder(R.drawable.ic_launcher_background)
             .error(R.drawable.ic_launcher_background)
             .into(view)
-    }
-}
-
-@BindingAdapter("app:product")
-fun setItems(
-    recyclerView: RecyclerView,
-    products: List<Product>?,
-) {
-    products?.let {
-        (recyclerView.adapter as? ShoppingAdapter)?.products = it
     }
 }
 
@@ -52,4 +40,14 @@ fun setSelectedBasedOn(
     isSelected: Boolean?,
 ) {
     button.isSelected = isSelected == true
+}
+
+@BindingAdapter("app:visibilityTv")
+fun setVisibility(
+    view: TextView,
+    visibility: Boolean?,
+) {
+    visibility?.let {
+        view.visibility = if (it) RecyclerView.VISIBLE else RecyclerView.GONE
+    }
 }

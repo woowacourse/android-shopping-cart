@@ -3,4 +3,7 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="price_format">%1$,d원</string>
     <string name="unknown_error">알 수 없는 오류가 발생했습니다.</string>
+    <string name="empty_product_list">상품이 없습니다.</string>
+    <string name="load_more">Load More</string>
+    <string name="empty_cart">텅!</string>
 </resources>

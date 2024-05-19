@@ -1,44 +1,62 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import android.view.View.GONE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
+import woowacourse.shopping.presentation.state.UIState
 
-class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
-    private val _products = MutableLiveData<List<Product>>()
-    val products: LiveData<List<Product>>
-        get() = _products
+class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewModel() {
+    private val _productItemsState = MutableLiveData<UIState<List<Product>>>()
+    val productItemsState: LiveData<UIState<List<Product>>> = _productItemsState
 
-    private val productsData: List<Product> by lazy { repository.getAllProducts() }
+    private val _navigateToProductDetail = MutableLiveData<Long>()
+    val navigateToProductDetail: LiveData<Long> = _navigateToProductDetail
 
-    private val _visibility = MutableLiveData<Int>()
-    val visibility: LiveData<Int>
-        get() = _visibility
+    private val _productListVisibility = MutableLiveData<Boolean>()
+    val productListVisibility: LiveData<Boolean> = _productListVisibility
 
-    private var offset = 0
+    private val _loadMoreVisibility = MutableLiveData<Boolean>()
+    val loadMoreVisibility: LiveData<Boolean> = _loadMoreVisibility
+
+    private var currentPage = 0
+    private val pageSize = 20
 
     init {
         loadProducts()
-        updateVisibility(GONE)
-    }
-
-    private fun getProducts(): List<Product> {
-        offset = Integer.min(offset + PAGE_SIZE, productsData.size)
-        return productsData.subList(0, offset)
     }
 
     fun loadProducts() {
-        _products.postValue(getProducts())
+        try {
+            val productList = repository.findProductsByPage(currentPage, pageSize)
+            if (productList.isEmpty()) {
+                _productItemsState.postValue(UIState.Empty)
+                _productListVisibility.postValue(false)
+            } else {
+                _productItemsState.postValue(UIState.Success(productList))
+                if (productList.size < pageSize) {
+                    updateVisibility(false)
+                } else {
+                    updateVisibility(true)
+                }
+            }
+        } catch (e: Exception) {
+            _productItemsState.postValue(UIState.Error(e))
+        }
     }
 
-    fun updateVisibility(visibility: Int) {
-        _visibility.postValue(visibility)
+    fun onProductClick(productId: Long) {
+        _navigateToProductDetail.postValue(productId)
     }
 
-    companion object {
-        private const val PAGE_SIZE = 10
+    fun updateVisibility(visibility: Boolean) {
+        _loadMoreVisibility.postValue(visibility)
+    }
+
+    fun onLoadMoreButtonClick() {
+        currentPage++
+        loadProducts()
+        updateVisibility(false)
     }
 }
