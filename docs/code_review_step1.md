@@ -12,7 +12,7 @@
 - [ ]: Shopping List Cart 리팩토링
 - [x]: CartAdapter onClickItem도 DataBinding을 사용
 - [ ]: repository 싱글톤으로 바꾸기
-- [ ]: onViewCreated() 내부에 있는 함수들을 분리
+- [x]: onViewCreated() 내부에 있는 함수들을 분리
 - [ ]: UiState 도입
 - [ ]: ProductListViewModel 의 반복되는 코드 함수화하기
 - [ ]: Android Resource의 dimen 도입

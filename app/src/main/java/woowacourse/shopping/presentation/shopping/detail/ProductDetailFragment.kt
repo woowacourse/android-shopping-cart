@@ -22,9 +22,6 @@ class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
 
     private val viewModel by viewModels<ProductDetailViewModel>(
-        // TODO: SavedStateHandle 사용
-        // TODO: https://pluu.github.io/blog/android/2022/03/12/creationextras/
-//        extrasProducer = {},
         factoryProducer = {
             ProductDetailViewModel.factory(
                 DefaultShoppingRepository(),
@@ -45,9 +42,17 @@ class ProductDetailFragment :
             it.vm = viewModel
         }
         initAppBar()
+        initListeners()
+        initObservers()
+    }
+
+    private fun initListeners() {
         binding?.btnProductCart?.setOnClickListener {
             viewModel.addCartProduct()
         }
+    }
+
+    private fun initObservers() {
         viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
             if (isAdded) navigateToShoppingCart()
         }
