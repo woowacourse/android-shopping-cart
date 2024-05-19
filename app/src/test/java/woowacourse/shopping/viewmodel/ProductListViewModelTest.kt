@@ -7,6 +7,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.productlist.ProductListViewModel
+import woowacourse.shopping.productlist.toProductUiModel
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
 import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue
 
@@ -28,8 +29,8 @@ class ProductListViewModelTest {
         val actual = viewModel.products.getOrAwaitValue()
 
         // then
-        assertThat(actual).containsAll(DummyShoppingRepository.products(0, 20))
-        assertThat(actual.last()).isEqualTo(DummyShoppingRepository.productById(19))
+        assertThat(actual).containsAll(DummyShoppingRepository.products(0, 20).map { it.toProductUiModel() })
+        assertThat(actual.last()).isEqualTo(DummyShoppingRepository.productById(19).toProductUiModel())
     }
 
     @Test

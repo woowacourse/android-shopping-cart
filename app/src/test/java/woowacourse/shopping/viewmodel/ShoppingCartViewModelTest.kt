@@ -27,13 +27,22 @@ class ShoppingCartViewModelTest {
 
     @AfterEach
     fun tearDown() {
-        DummyShoppingRepository.deleteShoppingCartItem(STUB_PRODUCT_ID)
+        if (DummyShoppingRepository.shoppingCartSize() != 0) {
+            DummyShoppingRepository.deleteShoppingCartItem(STUB_PRODUCT_ID)
+        }
+    }
+
+    @Test
+    fun `nextPage와 previousPage 메서드를 호출하기 전에는, 현재 페이지는 1이다`()  {
+        val currentPage = viewModel.currentPage.getOrAwaitValue()
+
+        assertThat(currentPage).isEqualTo(CURRENT_PAGE)
     }
 
     @Test
     fun `1페이지에 해당하는 데이터들을 로드한다`() {
         // when
-        viewModel.loadCartItems(CURRENT_PAGE)
+        viewModel.loadCartItems()
 
         // given
         val actual = viewModel.cartItems.getOrAwaitValue()
@@ -45,7 +54,7 @@ class ShoppingCartViewModelTest {
     @Test
     fun `데이터를 삭제하면, 카트 아이템의 개수가 1개 줄어든다`() {
         // when
-        viewModel.loadCartItems(CURRENT_PAGE)
+        viewModel.loadCartItems()
         val previous = viewModel.cartItems.getOrAwaitValue()
         assertThat(previous.size).isEqualTo(1)
 
