@@ -6,6 +6,14 @@
     <data>
 
         <variable
+            name="errorState"
+            type="Boolean" />
+
+        <variable
+            name="errorMessage"
+            type="String" />
+
+        <variable
             name="vm"
             type="woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel" />
 
@@ -18,8 +26,8 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:errorState="@{vm.error}"
-        app:errorMessage="@{vm.errorMsg}"
+        app:errorState="@{errorState}"
+        app:errorMessage = "@{errorMessage}"
         tools:context=".ui.detail.ProductDetailActivity">
 
         <ImageView
@@ -84,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_add_product_button"
-            android:enabled="@{!vm.error}"
+            android:enabled="@{!errorState}"
             android:onClick="@{()->cartButtonClickListener.onClick()}"
             android:text="@string/add_product_to_cart"
             android:textColor="@color/white"

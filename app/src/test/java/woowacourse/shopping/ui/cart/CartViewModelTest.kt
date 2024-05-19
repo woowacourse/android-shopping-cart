@@ -1,7 +1,7 @@
 package woowacourse.shopping.ui.cart
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
@@ -14,8 +14,8 @@ import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 class CartViewModelTest {
     private lateinit var viewModel: CartViewModel
 
-    @AfterEach
-    fun tearDown() {
+    @BeforeEach
+    fun setUp() {
         CartsImpl.deleteAll()
     }
 

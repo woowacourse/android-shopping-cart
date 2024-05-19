@@ -32,6 +32,18 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         initBinding()
         showProductDetail()
         setOnCartButtonClickListener()
+
+        viewModel.error.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                binding.errorState = it
+            }
+        }
+
+        viewModel.errorMsg.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                binding.errorMessage = it
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -90,9 +102,9 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
 fun showError(
     view: View,
     errorState: Boolean,
-    errorMessage: String,
+    errorMessage: String?,
 ) {
     if (errorState) {
-        Toast.makeText(view.context, errorMessage, Toast.LENGTH_SHORT).show()
+        Toast.makeText(view.context, errorMessage ?: "", Toast.LENGTH_SHORT).show()
     }
 }
