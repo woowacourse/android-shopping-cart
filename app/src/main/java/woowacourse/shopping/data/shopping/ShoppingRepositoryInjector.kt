@@ -17,4 +17,9 @@ object ShoppingRepositoryInjector {
     fun setShoppingRepository(shoppingRepository: ShoppingRepository) {
         instance = shoppingRepository
     }
+
+    @VisibleForTesting
+    fun clear() {
+        instance = null
+    }
 }

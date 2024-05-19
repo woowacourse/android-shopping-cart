@@ -19,5 +19,10 @@ object CartRepositoryInjector {
     fun setCartRepository(cartRepository: CartRepository) {
         instance = cartRepository
     }
+
+    @VisibleForTesting
+    fun clear() {
+        instance = null
+    }
 }
 
