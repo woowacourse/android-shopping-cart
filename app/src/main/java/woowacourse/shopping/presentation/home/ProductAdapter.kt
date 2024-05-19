@@ -6,10 +6,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
@@ -29,13 +27,13 @@ class ProductAdapter(
         return when (viewType) {
             TYPE_PRODUCT -> {
                 val binding: ItemProductBinding =
-                    DataBindingUtil.inflate(layoutInflater, R.layout.item_product, parent, false)
+                    ItemProductBinding.inflate(layoutInflater, parent, false)
                 ProductViewHolder(binding, productItemClickListener)
             }
 
             TYPE_LOAD -> {
                 val binding: ItemLoadMoreBinding =
-                    DataBindingUtil.inflate(layoutInflater, R.layout.item_load_more, parent, false)
+                    ItemLoadMoreBinding.inflate(layoutInflater, parent, false)
                 LoadingViewHolder(binding, loadClickListener)
             }
 
