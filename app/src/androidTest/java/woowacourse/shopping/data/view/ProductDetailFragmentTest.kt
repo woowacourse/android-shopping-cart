@@ -2,6 +2,7 @@ package woowacourse.shopping.data.view
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -40,5 +41,15 @@ class ProductDetailFragmentTest {
     @Test
     fun `선택한_상품의_가격이_보여져야_한다`() {
         onView(withId(R.id.tv_detail_product_price)).check(matches(withText("10,000원")))
+    }
+
+    @Test
+    fun `장바구니_담기_버튼이_보여져야_한다`() {
+        onView(withId(R.id.btn_add_cart)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun `창_닫기_버튼이_보여져야_한다`() {
+        onView(withId(R.id.btn_close)).check(matches(isDisplayed()))
     }
 }
