@@ -2,9 +2,7 @@ package woowacourse.shopping.presentation.cart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 
 class CartAdapter(
@@ -17,7 +15,7 @@ class CartAdapter(
     ): CartViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ItemCartBinding =
-            DataBindingUtil.inflate(layoutInflater, R.layout.item_cart, parent, false)
+            ItemCartBinding.inflate(layoutInflater, parent, false)
         return CartViewHolder(binding, cartItemDeleteClickListener)
     }
 
