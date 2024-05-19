@@ -51,10 +51,9 @@ class CartViewModel(
         return cartRepository.canLoadMoreCartProducts(page, PAGE_SIZE)
     }
 
-    fun deleteProduct(position: Int) {
-        val deletedItem = _products.value?.get(position) ?: return
-        _products.value = _products.value?.minus(deletedItem)
-        cartRepository.deleteCartProduct(deletedItem.product.id) ?: return
+    fun deleteProduct(product: CartProductUi) {
+        _products.value = _products.value?.minus(product)
+        cartRepository.deleteCartProduct(product.product.id) ?: return
         val currentPage = currentPage.value ?: return
         loadCartProducts(currentPage)
     }

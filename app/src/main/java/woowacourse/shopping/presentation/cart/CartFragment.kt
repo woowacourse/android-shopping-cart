@@ -62,10 +62,9 @@ class CartFragment :
     }
 
     private fun initViews() {
-        adapter = CartAdapter(onClickItem = { viewModel.deleteProduct(it) })
+        adapter = CartAdapter(onDeletedProduct = viewModel::deleteProduct)
         binding?.apply {
             rvShoppingCart.adapter = adapter.apply { setHasStableIds(true) }
-//            rvShoppingCart.itemAnimator = null
         }
     }
 

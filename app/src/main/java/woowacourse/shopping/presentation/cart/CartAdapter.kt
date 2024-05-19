@@ -4,10 +4,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
+import woowacourse.shopping.presentation.cart.CartAdapter.DeleteProductListener
 import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class CartAdapter(
-    private val onClickItem: (position: Int) -> Unit,
+    private val onDeletedProduct: (product: CartProductUi) -> Unit,
 ) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
     private var products: List<CartProductUi> = emptyList()
@@ -29,7 +30,7 @@ class CartAdapter(
                 parent,
                 false,
             )
-        return CartViewHolder(binding, onClickItem)
+        return CartViewHolder(binding, onDeletedProduct)
     }
 
     override fun onBindViewHolder(
@@ -49,14 +50,16 @@ class CartAdapter(
 
     class CartViewHolder(
         private val binding: ItemCartProductBinding,
-        private val onClickItem: (position: Int) -> Unit,
+        private val onDeletedProduct: (product: CartProductUi) -> Unit,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
-            binding.ivShoopingCartClose.setOnClickListener {
-                onClickItem(absoluteAdapterPosition)
-            }
+            binding.listener = DeleteProductListener { onDeletedProduct(product) }
         }
+    }
+
+    fun interface DeleteProductListener {
+        fun deleteProduct()
     }
 }

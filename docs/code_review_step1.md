@@ -8,9 +8,9 @@
 - [x]: ProductDetailViewModel early return 으로 개선
 - [x]: MediatorLiveData, map, switchMap을 활용하여 LiveData 개선 
 - [x]: 장바구니 Cart paging 리팩토링 --- Product, page 바뀌면 prev, next page 로드
-- [ ]: Shopping List Cart 리팩토링
-- [ ]: CartAdapter onClickItem도 DataBinding을 사용
 - [x]: CartAdapter notifyDataSetChanged 개선 - ItemUpdateHelper util 함수 구현
+- [ ]: Shopping List Cart 리팩토링
+- [x]: CartAdapter onClickItem도 DataBinding을 사용
 - [ ]: repository 싱글톤으로 바꾸기
 - [ ]: onViewCreated() 내부에 있는 함수들을 분리
 - [ ]: UiState 도입
@@ -19,9 +19,6 @@
 - [ ]: Android Resource의 style 도입
 - [ ]: SavedStateHandle 을 사용하여 ViewModel 에서 상태 저장하기
 - [ ]: ShoppingNavigator
-- [ ]: 어떤 페이지부터, 어떤 항목부터 데이터를 받아올 것을 기대할거에요.
-그런데 현재 설계는 모든 데이터를 가져오면서 특정 아이템을 제외하도록 만들었어요.
-- [ ]: 한번 불러온 데이터의 경우 레포지토리에 캐싱해두기
 - [ ]: 테스트 아래와 같이 개선
 ```kotlin
 @Test
