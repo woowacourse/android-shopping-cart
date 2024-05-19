@@ -3,10 +3,10 @@ package woowacourse.shopping.shoppingcart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.productlist.ProductUiModel
+import woowacourse.shopping.util.imageUrlToSrc
 
 class ShoppingCartAdapter(
     private val onClicked: ShoppingCartClickAction,
@@ -20,7 +20,7 @@ class ShoppingCartAdapter(
         fun onBind(item: ProductUiModel) {
             with(binding) {
                 tvItemCartName.text = item.name
-                Glide.with(itemView.context).load(item.imageUrl).into(ivCartProduct)
+                itemView.context.imageUrlToSrc(item.imageUrl, ivCartProduct)
                 tvCartPrice.text =
                     itemView.context.getString(R.string.product_price_format, item.price)
                 ibCartClose.setOnClickListener {

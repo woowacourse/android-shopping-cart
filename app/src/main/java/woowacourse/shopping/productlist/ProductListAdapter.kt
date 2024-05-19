@@ -3,9 +3,9 @@ package woowacourse.shopping.productlist
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductListBinding
+import woowacourse.shopping.util.imageUrlToSrc
 
 class ProductListAdapter(
     private val onClick: ProductListClickAction,
@@ -21,7 +21,7 @@ class ProductListAdapter(
                 tvProductListName.text = item.name
                 tvProductListPrice.text =
                     itemView.context.getString(R.string.product_price_format, item.price)
-                Glide.with(itemView.context).load(item.imageUrl).into(ivProductItem)
+                itemView.context.imageUrlToSrc(item.imageUrl, ivProductItem)
                 root.setOnClickListener {
                     onClick.onProductClicked(item.id)
                 }
