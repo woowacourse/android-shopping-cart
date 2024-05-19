@@ -41,7 +41,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private fun showProducts() {
         viewModel.loadProducts(INITIAL_POSITION)
         viewModel.products.observe(this) { products ->
-            adapter.submitList(products.map { it.toProductUiModel() })
+            adapter.submitList(products)
         }
     }
 
