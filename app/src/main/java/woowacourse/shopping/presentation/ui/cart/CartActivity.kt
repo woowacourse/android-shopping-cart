@@ -30,18 +30,18 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbarCart)
         setUpAdapter()
-        setUpdataBinding()
+        setUpDataBinding()
         observeViewModel()
     }
 
-    private fun setUpdataBinding() {
+    private fun setUpDataBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
     }
 
     private fun setUpAdapter() {
         adapter = CartAdapter(this)
-        binding.recyclerView.adapter = adapter
+        binding.rvCart.adapter = adapter
     }
 
     private fun observeViewModel() {
