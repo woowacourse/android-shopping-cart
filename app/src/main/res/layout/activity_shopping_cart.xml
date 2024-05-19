@@ -47,7 +47,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-        <TextView
+        <Button
             android:id="@+id/tv_pre_page"
             currentPage="@{vm.uiState.pagingOrder.currentPage}"
             last="@{vm.uiState.pagingOrder.last}"
@@ -61,6 +61,7 @@
             android:text="@string/tv_pre_page_title"
             android:textColor="@color/white"
             android:textSize="19dp"
+            app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="@+id/tv_page"
             app:layout_constraintEnd_toStartOf="@+id/tv_page"
             app:layout_constraintTop_toTopOf="@+id/tv_page" />
@@ -81,7 +82,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="1" />
 
-        <TextView
+        <Button
             android:id="@+id/tv_next_page"
             currentPage="@{vm.uiState.pagingOrder.currentPage}"
             last="@{vm.uiState.pagingOrder.last}"
@@ -95,6 +96,7 @@
             android:text="@string/tv_next_page_title"
             android:textColor="@color/white"
             android:textSize="19dp"
+            app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="@+id/tv_page"
             app:layout_constraintStart_toEndOf="@+id/tv_page"
             app:layout_constraintTop_toTopOf="@+id/tv_page" />

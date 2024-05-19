@@ -23,7 +23,7 @@
         android:layout_height="wrap_content">
 
 
-        <TextView
+        <Button
             android:id="@+id/tv_show_more_products"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -36,6 +36,7 @@
             android:textSize="20dp"
             android:textStyle="bold"
             android:visibility="@{last ? View.GONE : View.VISIBLE}"
+            app:backgroundTint="@null"
             app:layout_constraintBottom_toBottomOf="parent" />
 
         <TextView
