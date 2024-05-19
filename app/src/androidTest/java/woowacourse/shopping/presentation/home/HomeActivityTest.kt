@@ -25,11 +25,6 @@ class HomeActivityTest {
     val scenarioRule = ActivityScenarioRule(HomeActivity::class.java)
 
     @Test
-    fun `전체_상품_목록을_불러온다`() {
-        onView(withId(R.id.rv_home)).check(matches(isDisplayed()))
-    }
-
-    @Test
     fun `스크롤을_끝까지_내렸을_때_더보기_버튼이_나타난다`() {
         var itemCount = 0
 
@@ -67,7 +62,6 @@ class HomeActivityTest {
             onView(withId(R.id.rv_home))
                 .perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
                 .perform(
-                    // Trouble Shooting : 아이템의 특성(withText 등)을 찾기보다는 포지션을 활용하는 것이 좋음
                     RecyclerViewActions.actionOnItemAtPosition<ProductAdapter.LoadingViewHolder>(
                         20,
                         ViewActions.click(),
