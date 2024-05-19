@@ -9,7 +9,6 @@ import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.feature.cart.viewmodel.CartViewModel
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price

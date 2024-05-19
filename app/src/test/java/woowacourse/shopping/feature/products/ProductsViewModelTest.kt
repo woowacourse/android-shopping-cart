@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
-import woowacourse.shopping.feature.products.viewmodel.ProductsViewModel
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.imageUrl
 import woowacourse.shopping.price

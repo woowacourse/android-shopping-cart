@@ -12,8 +12,6 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.feature.cart.CartActivity
 import woowacourse.shopping.feature.detail.ProductDetailActivity
 import woowacourse.shopping.feature.products.adapter.ProductsAdapter
-import woowacourse.shopping.feature.products.viewmodel.ProductsViewModel
-import woowacourse.shopping.feature.products.viewmodel.ProductsViewModelFactory
 
 class ProductsActivity : AppCompatActivity() {
     private val binding: ActivityProductsBinding by lazy { ActivityProductsBinding.inflate(layoutInflater) }
