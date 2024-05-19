@@ -69,14 +69,13 @@ class ProductsListFragment : Fragment(), OnClickProducts {
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
             adapter.updateProducts(addedProducts = products)
         }
-        productListViewModel.productListState.observe(viewLifecycleOwner) { productListState ->
-            when (productListState) {
-                ProductListState.Init, ProductListState.LoadProductList.Success -> {}
+        productListViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+            when (errorState) {
                 ProductListState.LoadProductList.Fail ->
                     requireContext().makeToast(
                         getString(R.string.max_paging_data),
                     )
-                ProductListState.Error ->
+                ProductListState.ErrorState.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
                     )

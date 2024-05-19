@@ -15,8 +15,12 @@ class ProductListViewModel(
     val products: LiveData<List<Product>> get() = _products
 
     private val _productListState: MutableLiveData<ProductListState> =
-        MutableLiveData(ProductListState.Init)
+        MutableLiveData()
     val productListState: LiveData<ProductListState> get() = _productListState
+
+    private val _errorState: MutableLiveData<ProductListState.ErrorState> =
+        MutableLiveData()
+    val errorState: LiveData<ProductListState.ErrorState> get() = _errorState
 
     fun loadPagingProduct() {
         try {
@@ -27,17 +31,11 @@ class ProductListViewModel(
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _productListState.value =
+                    _errorState.value =
                         ProductListState.LoadProductList.Fail
 
-                else -> ProductListState.Error
+                else -> _errorState.value = ProductListState.ErrorState.NotKnownError
             }
-        } finally {
-            resetState()
         }
-    }
-
-    private fun resetState() {
-        _productListState.value = ProductListState.Init
     }
 }
