@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemPlusProductBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
+import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class ProductAdapter(
     private val onClickItem: (id: Long) -> Unit,
@@ -14,6 +15,16 @@ class ProductAdapter(
 ) :
     RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<ShoppingUiModel> = emptyList()
+    private val updateHelper: ItemUpdateHelper<ShoppingUiModel> = ItemUpdateHelper<ShoppingUiModel>(
+        adapter = this,
+        areItemsTheSame = { oldItem, newItem ->
+            if (oldItem is ShoppingUiModel.Product && newItem is ShoppingUiModel.Product) {
+                return@ItemUpdateHelper (oldItem.id == newItem.id)
+            }
+            return@ItemUpdateHelper false
+        },
+        areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
+    )
 
     override fun getItemCount(): Int = products.size
 
@@ -56,9 +67,9 @@ class ProductAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateProducts(newProducts: List<ShoppingUiModel>) {
-        this.products = newProducts
-        notifyDataSetChanged()
+        val oldProducts = products.toList()
+        products = newProducts
+        updateHelper.update(oldProducts, newProducts)
     }
 }

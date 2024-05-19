@@ -22,19 +22,19 @@ class CartViewModel(
                 value = canLoadMoreCartProducts(prevPage)
             }
             addSource(products) {
-                val currentPage = currentPage.value ?: return@addSource
-                value = canLoadMoreCartProducts(currentPage)
+                val prevPage = currentPage.value?.minus(INCREMENT_AMOUNT) ?: return@addSource
+                value = canLoadMoreCartProducts(prevPage)
             }
         }
     val canLoadNextPage: LiveData<Boolean>
         get() = MediatorLiveData<Boolean>().apply {
             addSource(currentPage) {
-                val nextPage = it - INCREMENT_AMOUNT
+                val nextPage = it + INCREMENT_AMOUNT
                 value = canLoadMoreCartProducts(nextPage)
             }
             addSource(products) {
-                val currentPage = currentPage.value ?: return@addSource
-                value = canLoadMoreCartProducts(currentPage)
+                val nextPage = currentPage.value?.plus(INCREMENT_AMOUNT) ?: return@addSource
+                value = canLoadMoreCartProducts(nextPage)
             }
         }
 
@@ -47,8 +47,8 @@ class CartViewModel(
             cartRepository.cartProducts(page, PAGE_SIZE).map { it.toUiModel() }
     }
 
-    private fun canLoadMoreCartProducts(currentPage: Int): Boolean {
-        return cartRepository.canLoadMoreCartProducts(currentPage, PAGE_SIZE)
+    private fun canLoadMoreCartProducts(page: Int): Boolean {
+        return cartRepository.canLoadMoreCartProducts(page, PAGE_SIZE)
     }
 
     fun deleteProduct(position: Int) {

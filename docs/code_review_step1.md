@@ -10,7 +10,7 @@
 - [x]: 장바구니 Cart paging 리팩토링 --- Product, page 바뀌면 prev, next page 로드
 - [ ]: Shopping List Cart 리팩토링
 - [ ]: CartAdapter onClickItem도 DataBinding을 사용
-- [ ]: CartAdapter notifyDataSetChanged 개선
+- [x]: CartAdapter notifyDataSetChanged 개선 - ItemUpdateHelper util 함수 구현
 - [ ]: repository 싱글톤으로 바꾸기
 - [ ]: onViewCreated() 내부에 있는 함수들을 분리
 - [ ]: UiState 도입

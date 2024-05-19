@@ -4,10 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartProductBinding
+import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
-class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
+class CartAdapter(
+    private val onClickItem: (position: Int) -> Unit,
+) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
     private var products: List<CartProductUi> = emptyList()
+    private val updateHelper: ItemUpdateHelper<CartProductUi> = ItemUpdateHelper<CartProductUi>(
+        adapter = this,
+        areItemsTheSame = { oldItem, newItem -> oldItem.product.id == newItem.product.id },
+        areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
+    )
 
     override fun getItemCount(): Int = products.size
 
@@ -31,9 +39,12 @@ class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
         holder.bind(products[position])
     }
 
+    override fun getItemId(position: Int): Long = products[position].product.id
+
     fun updateProduct(newProducts: List<CartProductUi>) {
+        val oldProducts = products.toList()
         products = newProducts
-        notifyDataSetChanged()
+        updateHelper.update(oldProducts, newProducts)
     }
 
     class CartViewHolder(
