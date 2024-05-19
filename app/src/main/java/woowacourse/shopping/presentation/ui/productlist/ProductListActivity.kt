@@ -3,8 +3,8 @@ package woowacourse.shopping.presentation.ui.productlist
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import woowacourse.shopping.App
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -19,7 +19,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_product_list
 
     private val viewModel: ProductListViewModel by viewModels {
-        ProductListViewModel.factory((application as App).productRepository)
+        ProductListViewModel.factory((application as ShoppingApplication).productRepository)
     }
 
     private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }

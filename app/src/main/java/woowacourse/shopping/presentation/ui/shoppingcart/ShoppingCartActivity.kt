@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
 import androidx.activity.viewModels
-import woowacourse.shopping.App
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -16,7 +16,7 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_shopping_cart
 
     private val viewModel: ShoppingCartViewModel by viewModels {
-        ShoppingCartViewModel.factory((application as App).shoppingCartRepository)
+        ShoppingCartViewModel.factory((application as ShoppingApplication).shoppingCartRepository)
     }
 
     private val adapter: OrderListAdapter by lazy { OrderListAdapter(viewModel) }

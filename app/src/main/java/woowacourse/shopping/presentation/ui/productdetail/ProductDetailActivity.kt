@@ -5,8 +5,8 @@ import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
-import woowacourse.shopping.App
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -15,8 +15,8 @@ import woowacourse.shopping.presentation.base.observeEvent
 class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels {
         ProductDetailViewModel.factory(
-            (application as App).productRepository,
-            (application as App).shoppingCartRepository,
+            (application as ShoppingApplication).productRepository,
+            (application as ShoppingApplication).shoppingCartRepository,
         )
     }
 

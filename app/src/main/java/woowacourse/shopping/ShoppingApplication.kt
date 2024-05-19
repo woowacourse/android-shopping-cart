@@ -6,7 +6,7 @@ import woowacourse.shopping.data.repsoitory.DummyShoppingCartRepositoryImpl
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 
-class App : Application() {
+class ShoppingApplication : Application() {
     val shoppingCartRepository: ShoppingCartRepository by lazy { DummyShoppingCartRepositoryImpl }
     val productRepository: ProductRepository by lazy { DummyProductRepositoryImpl }
 
