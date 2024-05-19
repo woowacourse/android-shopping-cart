@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.state.UIState
+import woowacourse.shopping.presentation.ui.FakeCartRepositoryImpl
 import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.ui.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.testCartItem0
