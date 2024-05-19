@@ -14,6 +14,7 @@ import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.utils.ShoppingUtils
+import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 
@@ -80,8 +81,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
                 }
 
                 ProductDetailState.Error ->
-                    ShoppingUtils.makeToast(
-                        requireContext(),
+                    requireContext().makeToast(
                         getString(R.string.error_default),
                     )
             }

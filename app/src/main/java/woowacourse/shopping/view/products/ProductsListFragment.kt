@@ -10,6 +10,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.utils.ShoppingUtils
+import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
@@ -72,13 +73,11 @@ class ProductsListFragment : Fragment(), OnClickProducts {
             when (productListState) {
                 ProductListState.Init, ProductListState.LoadProductList.Success -> {}
                 ProductListState.LoadProductList.Fail ->
-                    ShoppingUtils.makeToast(
-                        requireContext(),
+                    requireContext().makeToast(
                         getString(R.string.max_paging_data),
                     )
                 ProductListState.Error ->
-                    ShoppingUtils.makeToast(
-                        requireContext(),
+                    requireContext().makeToast(
                         getString(R.string.error_default),
                     )
             }
