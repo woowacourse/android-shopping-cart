@@ -8,16 +8,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.cart.CartFragment
-import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
+import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 import woowacourse.shopping.presentation.shopping.product.adpater.ProductAdapter
 import woowacourse.shopping.presentation.util.dp
 
@@ -61,13 +58,7 @@ class ProductListFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_cart) {
-                        parentFragmentManager.commit {
-                            replace<CartFragment>(
-                                R.id.fragment_container_shopping,
-                                CartFragment.TAG,
-                            )
-                            addToBackStack(TAG)
-                        }
+                        (requireActivity() as ShoppingNavigator).navigateToCart()
                         return true
                     }
                     return false
@@ -100,14 +91,7 @@ class ProductListFragment :
     }
 
     private fun navigateToDetailView(id: Long) {
-        parentFragmentManager.commit {
-            replace<ProductDetailFragment>(
-                R.id.fragment_container_shopping,
-                ProductDetailFragment.TAG,
-                ProductDetailFragment.args(id),
-            )
-            addToBackStack(TAG)
-        }
+        (requireActivity() as ShoppingNavigator).navigateToProductDetail(id)
     }
 
     private fun spanSizeLookUp() =

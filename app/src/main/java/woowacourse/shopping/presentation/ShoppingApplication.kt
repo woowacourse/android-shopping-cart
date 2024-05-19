@@ -7,7 +7,6 @@ import woowacourse.shopping.data.shopping.ShoppingRepository
 import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 
 class ShoppingApplication : Application() {
-    // Appl
     val shoppingRepository: ShoppingRepository by lazy {
         ShoppingRepositoryInjector.shoppingRepository()
     }

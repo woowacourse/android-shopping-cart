@@ -8,15 +8,13 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.commit
-import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.cart.CartFragment
+import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
@@ -85,13 +83,7 @@ class ProductDetailFragment :
     }
 
     private fun navigateToShoppingCart() {
-        parentFragmentManager.commit {
-            replace<CartFragment>(
-                R.id.fragment_container_shopping,
-                CartFragment.TAG,
-            )
-            addToBackStack(TAG)
-        }
+        (requireActivity() as? ShoppingNavigator)?.navigateToCart()
     }
 
     companion object {
