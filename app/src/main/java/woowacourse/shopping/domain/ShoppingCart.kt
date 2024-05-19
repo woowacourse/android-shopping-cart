@@ -1,6 +1,12 @@
 package woowacourse.shopping.domain
 
 data class ShoppingCart(val items: List<ShoppingCartItem>) {
+    init {
+        require(items.size == items.distinctBy { it.product.id }.size) {
+            "shoppingCartItem 리스트는 중복된 상품을 가질 수 없습니다."
+        }
+    }
+
     fun updateItem(updatedItem: ShoppingCartItem): ShoppingCart {
         return items.map {
             if (it.product.id == updatedItem.product.id) updatedItem else it
