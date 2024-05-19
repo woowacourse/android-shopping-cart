@@ -12,19 +12,19 @@ class ProductDetailViewModel(
     private val productDao: ProductDao,
     private val cartDao: CartDao,
 ) : ViewModel() {
-    private val _uiState: MutableLiveData<UiState<Product>> = MutableLiveData(UiState.LOADING)
-    val uiState: LiveData<UiState<Product>> get() = _uiState
+    private val _productDetailLoadState: MutableLiveData<UiState<Product>> = MutableLiveData(UiState.LOADING)
+    val productDetailLoadState: LiveData<UiState<Product>> get() = _productDetailLoadState
 
     fun loadProduct(productId: Long) {
         runCatching { productDao.find(productId) }
             .onSuccess {
-                _uiState.value = UiState.SUCCESS(it)
+                _productDetailLoadState.value = UiState.SUCCESS(it)
             }.onFailure {
-                _uiState.value = UiState.ERROR(it)
+                _productDetailLoadState.value = UiState.ERROR(it)
             }
     }
 
     fun addProductToCart() {
-        _uiState.value?.let { cartDao.save((it as UiState.SUCCESS).data) }
+        _productDetailLoadState.value?.let { cartDao.save((it as UiState.SUCCESS).data) }
     }
 }

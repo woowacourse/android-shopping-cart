@@ -33,7 +33,7 @@ class ProductDetailViewModelTest {
 
         // then
         assertEquals(
-            viewModel.uiState.getOrAwaitValue(),
+            viewModel.productDetailLoadState.getOrAwaitValue(),
             UiState.SUCCESS(product.copy(id = productId)),
         )
     }

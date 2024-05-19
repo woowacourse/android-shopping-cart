@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="fitXY"
-            app:imageUrlOnSuccess="@{vm.uiState}"
+            app:imageUrlOnSuccess="@{vm.productDetailLoadState}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
@@ -40,7 +40,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintTop_toBottomOf="@id/iv_product_image"
-            app:productName="@{vm.uiState}"
+            app:productName="@{vm.productDetailLoadState}"
             tools:text="[든든] 동원 스위트콘" />
 
         <View
@@ -74,7 +74,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/split_line"
-            app:productPrice="@{vm.uiState}"
+            app:productPrice="@{vm.productDetailLoadState}"
             tools:text="99,800원" />
 
         <Button
@@ -89,7 +89,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:loadProductError="@{vm.uiState}" />
+            app:loadProductError="@{vm.productDetailLoadState}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
