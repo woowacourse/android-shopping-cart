@@ -56,6 +56,10 @@ class DetailActivity : AppCompatActivity(), AddCompleteListener {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onAddComplete() {
+        Toast.makeText(this, getString(R.string.message_add_to_cart_complete), Toast.LENGTH_SHORT).show()
+    }
+
     companion object {
         private const val EXTRA_PRODUCT_ID = "extra_product_id"
         private const val DEFAULT_PRODUCT_ID = -1L
@@ -66,9 +70,5 @@ class DetailActivity : AppCompatActivity(), AddCompleteListener {
         ): Intent {
             return Intent(context, DetailActivity::class.java).putExtra(EXTRA_PRODUCT_ID, productId)
         }
-    }
-
-    override fun onAddComplete() {
-        Toast.makeText(this, getString(R.string.message_add_to_cart_complete), Toast.LENGTH_SHORT).show()
     }
 }
