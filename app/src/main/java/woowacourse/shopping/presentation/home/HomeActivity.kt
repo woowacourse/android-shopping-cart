@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.datasource.DefaultProducts
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
@@ -24,10 +25,9 @@ class HomeActivity : AppCompatActivity() {
         DataBindingUtil.setContentView(this, R.layout.activity_home)
     }
     private val viewModel: HomeViewModel by viewModels {
+        val application = application as ShoppingApplication
         HomeViewModelFactory(
-            ProductRepositoryImpl(
-                DefaultProducts
-            )
+            application.productRepository
         )
     }
     private val adapter: ProductAdapter by lazy {

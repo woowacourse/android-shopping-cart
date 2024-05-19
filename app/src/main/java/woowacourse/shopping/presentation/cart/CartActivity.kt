@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.datasource.DefaultCart
 import woowacourse.shopping.data.datasource.DefaultProducts
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -20,9 +21,10 @@ class CartActivity : AppCompatActivity() {
         DataBindingUtil.setContentView(this, R.layout.activity_cart)
     }
     private val viewModel: CartViewModel by viewModels {
+        val application = application as ShoppingApplication
         CartViewModelFactory(
-            CartRepositoryImpl(DefaultCart),
-            ProductRepositoryImpl(DefaultProducts),
+            application.cartRepository,
+            application.productRepository,
         )
     }
     private val adapter: CartAdapter by lazy {
