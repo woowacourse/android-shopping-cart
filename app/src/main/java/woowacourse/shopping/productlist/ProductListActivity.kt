@@ -39,7 +39,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     }
 
     private fun showProducts() {
-        viewModel.loadProducts(0)
+        viewModel.loadProducts(INITIAL_POSITION)
         viewModel.products.observe(this) { products ->
             adapter.submitList(products.map { it.toProductUiModel() })
         }
@@ -60,5 +60,9 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     override fun onProductClicked(id: Long) {
         startActivity(ProductDetailActivity.newInstance(this, id))
+    }
+
+    companion object {
+        private const val INITIAL_POSITION = 0
     }
 }
