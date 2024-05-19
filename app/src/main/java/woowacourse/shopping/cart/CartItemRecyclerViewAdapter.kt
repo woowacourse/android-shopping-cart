@@ -10,6 +10,14 @@ class CartItemRecyclerViewAdapter(
     private var values: List<Product>,
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<CartItemRecyclerViewAdapter.ViewHolder>() {
+    private lateinit var recyclerView: RecyclerView
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+        recyclerView.itemAnimator = null
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -35,8 +43,17 @@ class CartItemRecyclerViewAdapter(
     override fun getItemCount(): Int = values.size.coerceAtMost(5)
 
     fun updateData(newData: List<Product>) {
+        val oldSize = this.values.size
+        val newSize = newData.size
         this.values = newData
-        notifyDataSetChanged()
+
+        if (oldSize == newSize) {
+            notifyItemRangeChanged(0, newSize)
+            return
+        }
+
+        notifyItemRangeRemoved(0, oldSize)
+        notifyItemRangeInserted(0, newSize)
     }
 
     inner class ViewHolder(
@@ -48,5 +65,9 @@ class CartItemRecyclerViewAdapter(
             binding.product = product
             binding.cartProductDelete.setOnClickListener { onClick(product.id) }
         }
+    }
+
+    companion object {
+        private const val TAG = "CartItemRecyclerViewAdapter"
     }
 }
