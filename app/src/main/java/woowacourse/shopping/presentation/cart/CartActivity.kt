@@ -31,15 +31,8 @@ class CartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
-        binding.adapter = adapter
-
-        setSupportActionBar(binding.toolbarCart)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+        initializeBindingVariables()
+        initializeToolbar()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -47,6 +40,19 @@ class CartActivity : AppCompatActivity() {
             android.R.id.home -> finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun initializeToolbar() {
+        setSupportActionBar(binding.toolbarCart)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_back)
+    }
+
+    private fun initializeBindingVariables() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.adapter = adapter
     }
 
     companion object {
