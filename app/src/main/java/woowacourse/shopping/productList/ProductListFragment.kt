@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.ProductListViewModelFactory
 import woowacourse.shopping.R
 import woowacourse.shopping.TwentyItemsPagingStrategy
-import woowacourse.shopping.cart.CartFragment
+import woowacourse.shopping.cart.ShoppingCartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.productDetail.ProductDetailFragment
 import woowacourse.shopping.repository.DummyShoppingProductsRepository
@@ -99,7 +99,7 @@ class ProductListFragment : Fragment() {
         }
 
     private fun navigateToShoppingCart(): Boolean {
-        navigateToFragment(CartFragment())
+        navigateToFragment(ShoppingCartFragment())
         return true
     }
 
