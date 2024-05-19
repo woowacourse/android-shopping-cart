@@ -14,7 +14,10 @@ object DummyCartDataSource : CartDataSource {
         )
     private val products: List<CartProduct> get() = cart.cartProducts()
 
-    override fun loadCartProducts(currentPage: Int, productSize: Int): List<CartProduct> {
+    override fun loadCartProducts(
+        currentPage: Int,
+        productSize: Int,
+    ): List<CartProduct> {
         if (canLoadMoreCartProducts(currentPage, productSize).not()) return emptyList()
         val startIndex = (currentPage - 1) * productSize
         val endIndex = (startIndex + productSize).coerceAtMost(products.size)
@@ -33,7 +36,10 @@ object DummyCartDataSource : CartDataSource {
         return product.id
     }
 
-    override fun canLoadMoreCartProducts(currentPage: Int, pageSize: Int): Boolean {
+    override fun canLoadMoreCartProducts(
+        currentPage: Int,
+        pageSize: Int,
+    ): Boolean {
         if (currentPage < START_PAGE) return false
         val startIndex = (currentPage - 1) * pageSize
         return startIndex < products.size

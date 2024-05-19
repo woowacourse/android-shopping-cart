@@ -14,16 +14,17 @@ class ProductAdapter(
 ) :
     RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<ShoppingUiModel> = emptyList()
-    private val updateHelper: ItemUpdateHelper<ShoppingUiModel> = ItemUpdateHelper<ShoppingUiModel>(
-        adapter = this,
-        areItemsTheSame = { oldItem, newItem ->
-            if (oldItem is ShoppingUiModel.Product && newItem is ShoppingUiModel.Product) {
-                return@ItemUpdateHelper (oldItem.id == newItem.id)
-            }
-            return@ItemUpdateHelper false
-        },
-        areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
-    )
+    private val updateHelper: ItemUpdateHelper<ShoppingUiModel> =
+        ItemUpdateHelper<ShoppingUiModel>(
+            adapter = this,
+            areItemsTheSame = { oldItem, newItem ->
+                if (oldItem is ShoppingUiModel.Product && newItem is ShoppingUiModel.Product) {
+                    return@ItemUpdateHelper (oldItem.id == newItem.id)
+                }
+                return@ItemUpdateHelper false
+            },
+            areContentsTheSame = { oldItem, newItem -> oldItem == newItem },
+        )
 
     override fun getItemCount(): Int = products.size
 

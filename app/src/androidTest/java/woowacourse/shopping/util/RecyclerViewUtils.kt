@@ -10,12 +10,14 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.hamcrest.Matcher
 
-
 /**
  * 리사이클러뷰의 expectedCount만큼 아이템이 있는지 확인하는 ViewAssertion
  */
 class RecyclerViewItemCountAssertion(private val expectedCount: Int) : ViewAssertion {
-    override fun check(view: View?, noViewFoundException: NoMatchingViewException?) {
+    override fun check(
+        view: View?,
+        noViewFoundException: NoMatchingViewException?,
+    ) {
         if (noViewFoundException != null) {
             throw noViewFoundException
         }
@@ -43,10 +45,13 @@ fun clickChildViewWithId(id: Int): ViewAction {
         }
 
         override fun getDescription(): String {
-            return "Click on specific button";
+            return "Click on specific button"
         }
 
-        override fun perform(uiController: UiController, view: View) {
+        override fun perform(
+            uiController: UiController,
+            view: View,
+        ) {
             val v = view.findViewById<View>(id)
             v.performClick()
         }

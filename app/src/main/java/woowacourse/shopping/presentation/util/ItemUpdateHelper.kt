@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 class ItemUpdateHelper<T>(
     private val adapter: RecyclerView.Adapter<*>,
     private val areItemsTheSame: (T, T) -> Boolean,
-    private val areContentsTheSame: (T, T) -> Boolean
+    private val areContentsTheSame: (T, T) -> Boolean,
 ) {
     /**
      * RecyclerView 의 데이터를 업데이트한다.
@@ -32,7 +32,10 @@ class ItemUpdateHelper<T>(
      * }
      * ```
      */
-    fun update(oldList: List<T>, newList: List<T>) {
+    fun update(
+        oldList: List<T>,
+        newList: List<T>,
+    ) {
         if (oldList === newList) return
         if (oldList.isEmpty()) return adapter.notifyItemRangeInserted(0, newList.size)
         if (newList.isEmpty()) return adapter.notifyItemRangeRemoved(0, oldList.size)
@@ -67,7 +70,10 @@ class ItemUpdateHelper<T>(
         }
     }
 
-    private fun shouldUpdate(oldItem: T, newItem: T): Boolean {
+    private fun shouldUpdate(
+        oldItem: T,
+        newItem: T,
+    ): Boolean {
         return !areItemsTheSame(oldItem, newItem) || !areContentsTheSame(oldItem, newItem)
     }
 }

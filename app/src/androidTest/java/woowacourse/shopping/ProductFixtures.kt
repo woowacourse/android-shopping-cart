@@ -18,6 +18,6 @@ fun product(
 
 fun products(size: Int): List<Product> {
     return List(size) {
-        product(id = (it + 1).toLong(), name = "오둥이 ${it+1}")
+        product(id = (it + 1).toLong(), name = "오둥이 ${it + 1}")
     }
 }

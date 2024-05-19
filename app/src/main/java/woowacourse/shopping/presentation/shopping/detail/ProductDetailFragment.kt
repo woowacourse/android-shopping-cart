@@ -17,11 +17,9 @@ import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.cart.CartFragment
-import woowacourse.shopping.presentation.shopping.product.ProductListViewModel
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
-
     private val viewModel by viewModels<ProductDetailViewModel> {
         val shoppingRepository = ShoppingRepositoryInjector.shoppingRepository()
         val cartRepository = CartRepositoryInjector.cartRepository()

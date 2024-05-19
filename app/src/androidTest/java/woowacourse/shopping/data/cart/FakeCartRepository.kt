@@ -7,10 +7,12 @@ import woowacourse.shopping.product
 class FakeCartRepository(
     private var cart: Cart = Cart(),
 ) : CartRepository {
-
     private val products get() = cart.cartProducts()
 
-    override fun cartProducts(currentPage: Int, productSize: Int): List<CartProduct> {
+    override fun cartProducts(
+        currentPage: Int,
+        productSize: Int,
+    ): List<CartProduct> {
         if (canLoadMoreCartProducts(currentPage, productSize).not()) return emptyList()
         val startIndex = (currentPage - 1) * productSize
         val endIndex = (startIndex + productSize).coerceAtMost(products.size)
@@ -29,7 +31,10 @@ class FakeCartRepository(
         return productId
     }
 
-    override fun canLoadMoreCartProducts(currentPage: Int, pageSize: Int): Boolean {
+    override fun canLoadMoreCartProducts(
+        currentPage: Int,
+        pageSize: Int,
+    ): Boolean {
         if (currentPage < 1) return false
         val startIndex = (currentPage - 1) * pageSize
         return startIndex < products.size

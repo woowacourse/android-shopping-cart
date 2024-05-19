@@ -7,7 +7,10 @@ class DefaultCartRepository(
     private val cartDataSource: CartDataSource,
     private val shoppingDataSource: ShoppingDataSource,
 ) : CartRepository {
-    override fun cartProducts(currentPage: Int, pageSize: Int): List<CartProduct> {
+    override fun cartProducts(
+        currentPage: Int,
+        pageSize: Int,
+    ): List<CartProduct> {
         return cartDataSource.loadCartProducts(currentPage, pageSize)
     }
 
@@ -21,7 +24,10 @@ class DefaultCartRepository(
         return cartDataSource.deleteCartProduct(product)
     }
 
-    override fun canLoadMoreCartProducts(currentPage: Int, pageSize: Int): Boolean {
+    override fun canLoadMoreCartProducts(
+        currentPage: Int,
+        pageSize: Int,
+    ): Boolean {
         return cartDataSource.canLoadMoreCartProducts(currentPage, pageSize)
     }
 }

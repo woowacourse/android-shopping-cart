@@ -13,10 +13,8 @@ import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductListBinding
-import woowacourse.shopping.presentation.ShoppingApplication
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.cart.CartFragment
 import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
@@ -81,14 +79,16 @@ class ProductListFragment :
 
     private fun initViews() {
         binding?.apply {
-            productAdapter = ProductAdapter(
-                onClickProduct = ::navigateToDetailView,
-                onClickLoadMore = viewModel::loadProducts,
-            )
+            productAdapter =
+                ProductAdapter(
+                    onClickProduct = ::navigateToDetailView,
+                    onClickLoadMore = viewModel::loadProducts,
+                )
             rvProductList.adapter = productAdapter
-            rvProductList.layoutManager = GridLayoutManager(requireContext(), SPAN_COUNT).apply {
-                spanSizeLookup = spanSizeLookUp()
-            }
+            rvProductList.layoutManager =
+                GridLayoutManager(requireContext(), SPAN_COUNT).apply {
+                    spanSizeLookup = spanSizeLookUp()
+                }
             rvProductList.addItemDecoration(ProductItemDecoration(12.dp))
         }
     }
@@ -110,15 +110,16 @@ class ProductListFragment :
         }
     }
 
-    private fun spanSizeLookUp() = object : GridLayoutManager.SpanSizeLookup() {
-        override fun getSpanSize(position: Int): Int {
-            return if (productAdapter.getItemViewType(position) == ShoppingUiModel.ITEM_VIEW_TYPE_PLUS) {
-                ShoppingUiModel.PLUS_SPAN_COUNT
-            } else {
-                ShoppingUiModel.PRODUCT_SPAN_COUNT
+    private fun spanSizeLookUp() =
+        object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return if (productAdapter.getItemViewType(position) == ShoppingUiModel.ITEM_VIEW_TYPE_PLUS) {
+                    ShoppingUiModel.PLUS_SPAN_COUNT
+                } else {
+                    ShoppingUiModel.PRODUCT_SPAN_COUNT
+                }
             }
         }
-    }
 
     companion object {
         val TAG: String? = ProductListFragment::class.java.canonicalName

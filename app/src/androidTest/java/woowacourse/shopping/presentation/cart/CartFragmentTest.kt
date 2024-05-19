@@ -30,10 +30,8 @@ import woowacourse.shopping.util.clickChildViewWithId
 import woowacourse.shopping.util.testApplicationContext
 import woowacourse.shopping.util.withItemCount
 
-
 @RunWith(AndroidJUnit4::class)
 class CartFragmentTest {
-
     @After
     fun tearDown() {
         CartRepositoryInjector.clear()
@@ -97,17 +95,17 @@ class CartFragmentTest {
                 matches(
                     hasDescendant(
                         withText(
-                            containsString(expectProductTitle)
-                        )
-                    )
-                )
+                            containsString(expectProductTitle),
+                        ),
+                    ),
+                ),
             ).check(withItemCount(expectCount))
     }
 
     @Test
     @DisplayName(
         "현재 페이지가 1이고 장바구니에 상품이 6개 있을 때, 3번째 상품을 삭제 하면 " +
-                "6 번째 상품이 현재 페이지에 보인다"
+            "6 번째 상품이 현재 페이지에 보인다",
     )
     fun test6() {
         // given
@@ -119,13 +117,13 @@ class CartFragmentTest {
         onView(withId(R.id.rv_shopping_cart)).perform(
             RecyclerViewActions.scrollToHolder(
                 CoreMatchers.instanceOf(CartAdapter.CartViewHolder::class.java),
-            ).atPosition(deletePosition)
+            ).atPosition(deletePosition),
         )
         onView(withId(R.id.rv_shopping_cart)).perform(
             RecyclerViewActions.actionOnItemAtPosition<CartAdapter.CartViewHolder>(
                 deletePosition,
-                clickChildViewWithId(R.id.iv_shooping_cart_delete)
-            )
+                clickChildViewWithId(R.id.iv_shooping_cart_delete),
+            ),
         )
         // then
         onView(withId(R.id.rv_shopping_cart)).check(withItemCount(5))
@@ -133,22 +131,22 @@ class CartFragmentTest {
         onView(withId(R.id.rv_shopping_cart)).perform(
             RecyclerViewActions.scrollToHolder(
                 CoreMatchers.instanceOf(CartAdapter.CartViewHolder::class.java),
-            ).atPosition(addedPosition)
+            ).atPosition(addedPosition),
         ).check(
             matches(
                 hasDescendant(
                     withText(
-                        containsString(expectProductTitle)
-                    )
-                )
-            )
+                        containsString(expectProductTitle),
+                    ),
+                ),
+            ),
         )
     }
 
     @Test
     @DisplayName(
         "현재 페이지가 1이고 장바구니에 상품이 5개 있을 때, 3번째 상품을 삭제 하면 " +
-                "4개가 보인다"
+            "4개가 보인다",
     )
     fun test7() {
         // given
@@ -159,13 +157,13 @@ class CartFragmentTest {
         onView(withId(R.id.rv_shopping_cart)).perform(
             RecyclerViewActions.scrollToHolder(
                 CoreMatchers.instanceOf(CartAdapter.CartViewHolder::class.java),
-            ).atPosition(deletePosition)
+            ).atPosition(deletePosition),
         )
         onView(withId(R.id.rv_shopping_cart)).perform(
             RecyclerViewActions.actionOnItemAtPosition<CartAdapter.CartViewHolder>(
                 deletePosition,
-                clickChildViewWithId(R.id.iv_shooping_cart_delete)
-            )
+                clickChildViewWithId(R.id.iv_shooping_cart_delete),
+            ),
         )
         // then
         onView(withId(R.id.rv_shopping_cart)).check(withItemCount(expectCount))

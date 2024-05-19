@@ -16,27 +16,29 @@ class CartViewModel(
     private val _currentPage = MutableLiveData(START_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
     val canLoadPrevPage: LiveData<Boolean>
-        get() = MediatorLiveData<Boolean>().apply {
-            addSource(currentPage) {
-                val prevPage = it - INCREMENT_AMOUNT
-                value = canLoadMoreCartProducts(prevPage)
+        get() =
+            MediatorLiveData<Boolean>().apply {
+                addSource(currentPage) {
+                    val prevPage = it - INCREMENT_AMOUNT
+                    value = canLoadMoreCartProducts(prevPage)
+                }
+                addSource(products) {
+                    val prevPage = currentPage.value?.minus(INCREMENT_AMOUNT) ?: return@addSource
+                    value = canLoadMoreCartProducts(prevPage)
+                }
             }
-            addSource(products) {
-                val prevPage = currentPage.value?.minus(INCREMENT_AMOUNT) ?: return@addSource
-                value = canLoadMoreCartProducts(prevPage)
-            }
-        }
     val canLoadNextPage: LiveData<Boolean>
-        get() = MediatorLiveData<Boolean>().apply {
-            addSource(currentPage) {
-                val nextPage = it + INCREMENT_AMOUNT
-                value = canLoadMoreCartProducts(nextPage)
+        get() =
+            MediatorLiveData<Boolean>().apply {
+                addSource(currentPage) {
+                    val nextPage = it + INCREMENT_AMOUNT
+                    value = canLoadMoreCartProducts(nextPage)
+                }
+                addSource(products) {
+                    val nextPage = currentPage.value?.plus(INCREMENT_AMOUNT) ?: return@addSource
+                    value = canLoadMoreCartProducts(nextPage)
+                }
             }
-            addSource(products) {
-                val nextPage = currentPage.value?.plus(INCREMENT_AMOUNT) ?: return@addSource
-                value = canLoadMoreCartProducts(nextPage)
-            }
-        }
 
     init {
         loadCartProducts(START_PAGE)

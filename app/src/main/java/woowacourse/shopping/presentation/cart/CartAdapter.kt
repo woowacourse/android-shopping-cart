@@ -11,11 +11,12 @@ class CartAdapter(
 ) :
     RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
     private var products: List<CartProductUi> = emptyList()
-    private val updateHelper: ItemUpdateHelper<CartProductUi> = ItemUpdateHelper<CartProductUi>(
-        adapter = this,
-        areItemsTheSame = { oldItem, newItem -> oldItem.product.id == newItem.product.id },
-        areContentsTheSame = { oldItem, newItem -> oldItem == newItem }
-    )
+    private val updateHelper: ItemUpdateHelper<CartProductUi> =
+        ItemUpdateHelper<CartProductUi>(
+            adapter = this,
+            areItemsTheSame = { oldItem, newItem -> oldItem.product.id == newItem.product.id },
+            areContentsTheSame = { oldItem, newItem -> oldItem == newItem },
+        )
 
     override fun getItemCount(): Int = products.size
 

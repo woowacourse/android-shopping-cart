@@ -4,16 +4,16 @@ import androidx.annotation.VisibleForTesting
 import woowacourse.shopping.data.shopping.DummyShoppingDataSource
 
 object CartRepositoryInjector {
-
     @Volatile
     private var instance: CartRepository? = null
 
-    fun cartRepository(): CartRepository = instance ?: synchronized(this) {
-        instance ?: DefaultCartRepository(
-            DummyCartDataSource,
-            DummyShoppingDataSource
-        ).also { instance = it }
-    }
+    fun cartRepository(): CartRepository =
+        instance ?: synchronized(this) {
+            instance ?: DefaultCartRepository(
+                DummyCartDataSource,
+                DummyShoppingDataSource,
+            ).also { instance = it }
+        }
 
     @VisibleForTesting
     fun setCartRepository(cartRepository: CartRepository) {
@@ -25,4 +25,3 @@ object CartRepositoryInjector {
         instance = null
     }
 }
-

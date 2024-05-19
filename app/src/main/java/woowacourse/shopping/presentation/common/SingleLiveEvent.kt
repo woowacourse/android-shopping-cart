@@ -4,7 +4,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 
 class MutableSingleLiveData<T> : SingleLiveData<T> {
-
     constructor() : super()
 
     constructor(value: T) : super(value)
@@ -19,7 +18,6 @@ class MutableSingleLiveData<T> : SingleLiveData<T> {
 }
 
 abstract class SingleLiveData<T> {
-
     private val liveData = MutableLiveData<Event<T>>()
 
     protected constructor()
@@ -38,11 +36,17 @@ abstract class SingleLiveData<T> {
 
     fun getValue() = liveData.value?.peekContent()
 
-    fun observe(owner: LifecycleOwner, onResult: (T) -> Unit) {
+    fun observe(
+        owner: LifecycleOwner,
+        onResult: (T) -> Unit,
+    ) {
         liveData.observe(owner) { it.getContentIfNotHandled()?.let(onResult) }
     }
 
-    fun observePeek(owner: LifecycleOwner, onResult: (T) -> Unit) {
+    fun observePeek(
+        owner: LifecycleOwner,
+        onResult: (T) -> Unit,
+    ) {
         liveData.observe(owner) { onResult(it.peekContent()) }
     }
 }

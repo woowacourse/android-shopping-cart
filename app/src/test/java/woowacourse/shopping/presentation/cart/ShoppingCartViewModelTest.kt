@@ -23,33 +23,35 @@ class ShoppingCartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { cartRepository.cartProducts(1) } returns listOf(cartProduct())
-        every { cartRepository.canLoadMoreCartProducts(1) } returns true
+        every { cartRepository.cartProducts(1, PAGE_SIZE) } returns listOf(cartProduct())
+        every { cartRepository.canLoadMoreCartProducts(2, PAGE_SIZE) } returns true
+        every { cartRepository.canLoadMoreCartProducts(0, PAGE_SIZE) } returns false
         cartViewModel = CartViewModel(cartRepository)
     }
 
     @Test
     @DisplayName("ViewModel 이 초기화될 때, 첫 번째 페이지에 해당하는 상품들이 로드된다")
     fun test0() {
-        verify(exactly = 1) { cartRepository.cartProducts(1) }
-        verify(exactly = 1) { cartRepository.canLoadMoreCartProducts(1) }
+        verify(exactly = 1) { cartRepository.cartProducts(1, PAGE_SIZE) }
         cartViewModel.currentPage.getOrAwaitValue() shouldBe 1
         cartViewModel.canLoadNextPage.getOrAwaitValue() shouldBe true
         cartViewModel.canLoadPrevPage.getOrAwaitValue() shouldBe false
     }
 
     @Test
-    @DisplayName("현재 페이지가 1일 때, 다음 페이지로 이돌하면, 페이지가 2가 된다")
+    @DisplayName("현재 페이지가 1일 때, 다음 페이지로 이동하면, 페이지가 2가 된다")
     fun test1() {
         val nextPage = 2
         // given
-        every { cartRepository.cartProducts(nextPage) } returns listOf(cartProduct())
-        every { cartRepository.canLoadMoreCartProducts(nextPage) } returns true
+        every { cartRepository.cartProducts(nextPage, PAGE_SIZE) } returns listOf(cartProduct())
         // when
         cartViewModel.plusPage()
         // then
-        verify(exactly = 1) { cartRepository.cartProducts(nextPage) }
-        verify(exactly = 1) { cartRepository.canLoadMoreCartProducts(nextPage) }
+        verify(exactly = 1) { cartRepository.cartProducts(nextPage, PAGE_SIZE) }
         cartViewModel.currentPage.getOrAwaitValue() shouldBe nextPage
+    }
+
+    companion object {
+        const val PAGE_SIZE = 5
     }
 }
