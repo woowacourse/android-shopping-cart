@@ -1,12 +1,11 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.data.shopping.DummyShoppingDataSource
 import woowacourse.shopping.data.shopping.ShoppingDataSource
 import woowacourse.shopping.domain.CartProduct
 
 class DefaultCartRepository(
-    private val cartDataSource: CartDataSource = DummyCartDataSource,
-    private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
+    private val cartDataSource: CartDataSource,
+    private val shoppingDataSource: ShoppingDataSource,
 ) : CartRepository {
     override fun cartProducts(currentPage: Int, pageSize: Int): List<CartProduct> {
         return cartDataSource.loadCartProducts(currentPage, pageSize)

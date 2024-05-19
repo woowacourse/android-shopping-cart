@@ -3,7 +3,7 @@ package woowacourse.shopping.data.shopping
 import woowacourse.shopping.domain.Product
 
 class DefaultShoppingRepository(
-    private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
+    private val shoppingDataSource: ShoppingDataSource,
 ) : ShoppingRepository {
     override fun products(exceptProducts: List<Long>): List<Product> {
         return shoppingDataSource.products(exceptProducts, PRODUCT_AMOUNT)

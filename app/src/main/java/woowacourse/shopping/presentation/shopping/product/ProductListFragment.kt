@@ -13,8 +13,10 @@ import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
-import woowacourse.shopping.data.shopping.DefaultShoppingRepository
+import woowacourse.shopping.data.cart.CartRepositoryInjector
+import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.presentation.ShoppingApplication
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.cart.CartFragment
 import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
@@ -24,7 +26,8 @@ import woowacourse.shopping.presentation.util.dp
 class ProductListFragment :
     BindingFragment<FragmentProductListBinding>(R.layout.fragment_product_list) {
     private val viewModel by viewModels<ProductListViewModel> {
-        ProductListViewModel.factory(DefaultShoppingRepository())
+        val shoppingRepository = ShoppingRepositoryInjector.shoppingRepository()
+        ProductListViewModel.factory(shoppingRepository)
     }
     private lateinit var productAdapter: ProductAdapter
 

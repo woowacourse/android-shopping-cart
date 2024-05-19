@@ -10,7 +10,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.DefaultCartRepository
+import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 
@@ -18,7 +18,8 @@ class CartFragment :
     BindingFragment<FragmentCartBinding>(R.layout.fragment_cart) {
     private lateinit var adapter: CartAdapter
     private val viewModel by viewModels<CartViewModel> {
-        CartViewModel.factory(DefaultCartRepository())
+        val cartRepository = CartRepositoryInjector.cartRepository()
+        CartViewModel.factory(cartRepository)
     }
 
     override fun onViewCreated(

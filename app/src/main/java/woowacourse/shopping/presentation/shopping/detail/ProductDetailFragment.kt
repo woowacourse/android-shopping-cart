@@ -12,23 +12,24 @@ import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
-import woowacourse.shopping.data.cart.DefaultCartRepository
-import woowacourse.shopping.data.shopping.DefaultShoppingRepository
+import woowacourse.shopping.data.cart.CartRepositoryInjector
+import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.cart.CartFragment
+import woowacourse.shopping.presentation.shopping.product.ProductListViewModel
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
 
-    private val viewModel by viewModels<ProductDetailViewModel>(
-        factoryProducer = {
-            ProductDetailViewModel.factory(
-                DefaultShoppingRepository(),
-                DefaultCartRepository()
-            )
-        }
-    )
+    private val viewModel by viewModels<ProductDetailViewModel> {
+        val shoppingRepository = ShoppingRepositoryInjector.shoppingRepository()
+        val cartRepository = CartRepositoryInjector.cartRepository()
+        ProductDetailViewModel.factory(
+            shoppingRepository,
+            cartRepository,
+        )
+    }
 
     override fun onViewCreated(
         view: View,
