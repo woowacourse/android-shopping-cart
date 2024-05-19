@@ -10,7 +10,11 @@ import woowacourse.shopping.model.CartItem
 class CartAdapter(
     private val onClickExit: OnClickExit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private var cart: List<CartItem> = emptyList()
+    private val cart: MutableList<CartItem> = mutableListOf()
+
+    init {
+        setHasStableIds(true)
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -32,9 +36,10 @@ class CartAdapter(
         return cart.size
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateCart(cart: List<CartItem>) {
-        this.cart = cart
-        notifyDataSetChanged()
+    fun updateCart(newCart: List<CartItem>) {
+        notifyItemRangeRemoved(0, cart.size)
+        cart.removeAll(cart)
+        cart.addAll(newCart)
+        notifyItemRangeChanged(0, newCart.size)
     }
 }
