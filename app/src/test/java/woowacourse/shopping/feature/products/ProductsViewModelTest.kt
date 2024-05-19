@@ -1,70 +1,60 @@
 package woowacourse.shopping.feature.products
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.imageUrl
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.price
 import woowacourse.shopping.title
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductsViewModelTest {
     private lateinit var viewModel: ProductsViewModel
-    private val productRepository: ProductRepository = ProductDummyRepository
-    private val pageSize = 20
-
-    @BeforeEach
-    fun setUp() {
-        productRepository.deleteAll()
-    }
+    private lateinit var productRepository: ProductRepository
 
     @Test
     fun `한 페이지에는 20개의 상품이 있다`() {
-        repeat(20) {
-            productRepository.save(imageUrl, title, price)
-        }
+        val products = products(20)
+        productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(20)
-        assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
+        assertThat(actual).isEqualTo(products.take(20))
     }
 
     @Test
     fun `상품이 40개인 경우 1페이지에서 20개의 상품을 불러온다`() {
-        repeat(40) {
-            productRepository.save(imageUrl, title, price)
-        }
+        val products = products(40)
+        productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(20)
-        assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
+        assertThat(actual).isEqualTo(products.take(20))
     }
 
     @Test
     fun `상품이 5개인 경우 1페이지에서 5개의 상품을 불러온다`() {
-        repeat(5) {
-            productRepository.save(imageUrl, title, price)
-        }
+        val products = products(5)
+        productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(5)
-        assertThat(actual).isEqualTo(productRepository.findRange(0, pageSize))
+        assertThat(actual).isEqualTo(products.take(5))
     }
 
     @Test
     fun `상품이 10개이고 1페이지인 경우 상품을 더 불러올 수 없다`() {
         // given
-        repeat(10) {
-            productRepository.save(imageUrl, title, price)
-        }
+        val products = products(10)
+        productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         // when
@@ -78,9 +68,8 @@ class ProductsViewModelTest {
     @Test
     fun `상품이 25개이고 1페이지인 경우 상품을 더 불러올 수 있다`() {
         // given
-        repeat(25) {
-            productRepository.save(imageUrl, title, price)
-        }
+        val products = products(25)
+        productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         // when
@@ -94,9 +83,8 @@ class ProductsViewModelTest {
     @Test
     fun `상품이 25개이고 2페이지로 이동하면 25개의 상품이 보인다`() {
         // given
-        repeat(25) {
-            productRepository.save(imageUrl, title, price)
-        }
+        val products = products(25)
+        productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         // when
@@ -105,14 +93,14 @@ class ProductsViewModelTest {
         // then
         val actual = viewModel.products.getOrAwaitValue()
         assertThat(actual).hasSize(25)
+        assertThat(actual).isEqualTo(products)
     }
 
     @Test
     fun `상품이 25개이고 2페이지인 경우 상품을 더 불러올 수 없다`() {
         // given
-        repeat(25) {
-            productRepository.save(imageUrl, title, price)
-        }
+        val products = products(25)
+        productRepository = FakeProductRepository(products)
         viewModel = ProductsViewModel(productRepository)
 
         // when
@@ -125,4 +113,8 @@ class ProductsViewModelTest {
     }
 
     private fun lastPosition(): Int = viewModel.products.getOrAwaitValue().size - 1
+
+    private fun products(size: Int): List<Product> {
+        return List(size) { Product(it.toLong(), imageUrl, title, price) }
+    }
 }

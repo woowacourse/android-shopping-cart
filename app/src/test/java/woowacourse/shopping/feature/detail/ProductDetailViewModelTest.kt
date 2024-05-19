@@ -5,10 +5,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
+import woowacourse.shopping.FakeCartRepository
+import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.cart.CartDummyRepository
 import woowacourse.shopping.data.cart.CartRepository
-import woowacourse.shopping.data.product.ProductDummyRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.imageUrl
@@ -20,20 +20,18 @@ import java.lang.IllegalArgumentException
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
     private lateinit var viewModel: ProductDetailViewModel
-    private val productRepository: ProductRepository = ProductDummyRepository
-    private val cartRepository: CartRepository = CartDummyRepository
+    private lateinit var productRepository: ProductRepository
+    private val cartRepository: CartRepository = FakeCartRepository()
 
     @BeforeEach
     fun setUp() {
-        productRepository.deleteAll()
-        cartRepository.deleteAll()
+        productRepository = FakeProductRepository(listOf(product(0L)))
     }
 
     @Test
     fun `상품 id에 맞는 상품을 불러온다`() {
         // given
-        val id = productRepository.save(imageUrl, title, price)
-        viewModel = ProductDetailViewModel(id, productRepository, cartRepository)
+        viewModel = ProductDetailViewModel(0L, productRepository, cartRepository)
 
         // when
         viewModel.loadProduct()
@@ -55,15 +53,14 @@ class ProductDetailViewModelTest {
     @Test
     fun `상품을 장바구니에 담는다`() {
         // given
-        val id = productRepository.save(imageUrl, title, price)
-        viewModel = ProductDetailViewModel(id, productRepository, cartRepository)
+        viewModel = ProductDetailViewModel(0L, productRepository, cartRepository)
         viewModel.loadProduct()
 
         // when
         viewModel.addCartProduct()
 
         // then
-        val actual = cartRepository.findAll().first()
+        val actual = cartRepository.findRange(0, 5).first()
         actual.product.assertThat(imageUrl, title, price)
         assertThat(actual.quantity.count).isEqualTo(1)
     }
@@ -77,4 +74,6 @@ class ProductDetailViewModelTest {
         assertThat(title).isEqualTo(expectedTitle)
         assertThat(price).isEqualTo(expectedPrice)
     }
+
+    private fun product(id: Long) = Product(id, imageUrl, title, price)
 }

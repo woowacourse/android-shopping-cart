@@ -18,8 +18,8 @@ class ProductDetailActivity : AppCompatActivity() {
     private val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModelFactory(
             intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE),
-            ProductDummyRepository,
-            CartDummyRepository,
+            ProductDummyRepository.getInstance(),
+            CartDummyRepository.getInstance(),
         )
     }
 

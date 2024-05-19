@@ -15,7 +15,7 @@ import woowacourse.shopping.feature.products.adapter.ProductsAdapter
 
 class ProductsActivity : AppCompatActivity() {
     private val binding: ActivityProductsBinding by lazy { ActivityProductsBinding.inflate(layoutInflater) }
-    private val viewModel by viewModels<ProductsViewModel> { ProductsViewModelFactory(ProductDummyRepository) }
+    private val viewModel by viewModels<ProductsViewModel> { ProductsViewModelFactory(ProductDummyRepository.getInstance()) }
     private lateinit var adapter: ProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

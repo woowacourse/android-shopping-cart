@@ -1,13 +1,14 @@
-package woowacourse.shopping.data.cart
+package woowacourse.shopping
 
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.math.min
 
-class CartDummyRepository private constructor() : CartRepository {
-    private val cart: MutableList<CartItem> = mutableListOf()
+class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRepository {
+    private val cart: MutableList<CartItem> = savedCartItems.toMutableList()
     private var id: Long = 0L
 
     override fun increaseQuantity(product: Product) {
@@ -49,14 +50,5 @@ class CartDummyRepository private constructor() : CartRepository {
 
     companion object {
         private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
-
-        @Volatile
-        private var instance: CartDummyRepository? = null
-
-        fun getInstance(): CartDummyRepository {
-            return instance ?: synchronized(this) {
-                CartDummyRepository()
-            }
-        }
     }
 }

@@ -9,7 +9,7 @@ import woowacourse.shopping.feature.cart.adapter.CartAdapter
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
-    private val viewModel by viewModels<CartViewModel> { CartViewModelFactory(CartDummyRepository) }
+    private val viewModel by viewModels<CartViewModel> { CartViewModelFactory(CartDummyRepository.getInstance()) }
     private lateinit var adapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

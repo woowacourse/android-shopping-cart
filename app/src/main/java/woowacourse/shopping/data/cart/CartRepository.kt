@@ -10,10 +10,6 @@ interface CartRepository {
 
     fun deleteCartItem(cartItem: CartItem)
 
-    fun deleteAll()
-
-    fun findAll(): List<CartItem>
-
     fun findRange(
         page: Int,
         pageSize: Int,
