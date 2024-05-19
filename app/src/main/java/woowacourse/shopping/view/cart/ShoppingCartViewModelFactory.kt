@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 
 class ShoppingCartViewModelFactory(private val repository: ProductRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(ShoppingCartFragment::class.java)) {
+        return if (modelClass.isAssignableFrom(ShoppingCartViewModel::class.java)) {
             ShoppingCartViewModel(repository) as T
         } else {
             throw IllegalArgumentException(UNKNOWN_VIEWMODEL)
