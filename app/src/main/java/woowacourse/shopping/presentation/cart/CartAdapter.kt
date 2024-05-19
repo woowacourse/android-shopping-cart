@@ -6,11 +6,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.presentation.BindableAdapter
 
 class CartAdapter(
-    private var orders: List<Order>,
     private val cartItemDeleteClickListener: CartItemDeleteClickListener,
-) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+) : RecyclerView.Adapter<CartAdapter.CartViewHolder>(), BindableAdapter<Order> {
+    private var orders: List<Order> = emptyList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -30,9 +32,9 @@ class CartAdapter(
         holder.bind(orders[position])
     }
 
-    fun replaceOrders(orders: List<Order>) {
+    override fun setData(data: List<Order>) {
         val currentSize = this.orders.size
-        this.orders = orders
+        this.orders = data
         notifyItemRangeRemoved(0, currentSize)
         notifyItemRangeInserted(0, this.orders.size)
     }
@@ -42,10 +44,10 @@ class CartAdapter(
         cartItemDeleteClickListener: CartItemDeleteClickListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
+
         init {
             binding.cartItemDeleteClickListener = cartItemDeleteClickListener
         }
-
         fun bind(order: Order) {
             binding.order = order
         }

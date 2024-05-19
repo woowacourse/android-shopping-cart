@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:shopping="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -53,7 +54,8 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@id/btn_previous_page"
             app:layout_constraintTop_toBottomOf="@id/appbar_cart"
-            tools:listitem="@layout/item_cart" />
+            tools:listitem="@layout/item_cart"
+            shopping:data="@{viewModel.orders}"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_previous_page"

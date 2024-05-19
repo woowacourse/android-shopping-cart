@@ -20,7 +20,7 @@ class CartActivity : AppCompatActivity() {
     }
     private lateinit var viewModel: CartViewModel
     private val adapter: CartAdapter by lazy {
-        CartAdapter(emptyList(), viewModel)
+        CartAdapter(viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +38,6 @@ class CartActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.adapter = adapter
-
-        viewModel.loadCurrentPageCartItems()
-        viewModel.orders.observe(this, adapter::replaceOrders)
 
         setSupportActionBar(binding.toolbarCart)
         supportActionBar?.setDisplayShowTitleEnabled(false)

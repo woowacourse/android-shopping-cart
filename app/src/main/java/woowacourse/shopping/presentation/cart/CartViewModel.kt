@@ -24,6 +24,10 @@ class CartViewModel(
 
     private var hasNext: Boolean = true
 
+    init {
+        loadCurrentPageCartItems()
+    }
+
     fun loadPreviousPageCartItems() {
         _currentPage.value = currentPage.value?.minus(1)
         loadCurrentPageCartItems()
