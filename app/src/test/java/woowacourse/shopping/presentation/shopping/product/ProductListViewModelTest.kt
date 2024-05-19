@@ -28,7 +28,7 @@ class ProductListViewModelTest {
     fun `test`() {
         // given
         val product = product()
-        val expectProducts = listOf(product.toShoppingUiModel(), ShoppingUiModel.Plus)
+        val expectProducts = listOf(product.toShoppingUiModel(), ShoppingUiModel.LoadMore)
         every { shoppingRepository.products(emptyList()) } returns listOf(product)
         every { shoppingRepository.canLoadMoreProducts(emptyList()) } returns true
         // when

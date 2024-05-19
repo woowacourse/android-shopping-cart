@@ -8,7 +8,7 @@ sealed class ShoppingUiModel(val viewType: Int) {
         val imageUrl: String,
     ) : ShoppingUiModel(ITEM_VIEW_TYPE_PRODUCT)
 
-    data object Plus : ShoppingUiModel(ITEM_VIEW_TYPE_PLUS)
+    data object LoadMore : ShoppingUiModel(ITEM_VIEW_TYPE_PLUS)
 
     companion object {
         const val ITEM_VIEW_TYPE_PRODUCT = 0
