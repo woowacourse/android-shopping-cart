@@ -1,6 +1,5 @@
 package woowacourse.shopping.cart
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -44,7 +43,6 @@ class CartItemRecyclerViewAdapter(
     override fun getItemCount(): Int = values.size.coerceAtMost(COUNT_PER_PAGE)
 
     fun updateData(newData: List<Product>) {
-        Log.d(TAG, "updateData: ")
         this.values = newData
 
         if (newData.isEmpty()) {
@@ -66,7 +64,6 @@ class CartItemRecyclerViewAdapter(
     }
 
     companion object {
-        private const val TAG = "CartItemRecyclerViewAdapter"
         private const val COUNT_PER_PAGE = 5
     }
 }
