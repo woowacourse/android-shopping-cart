@@ -23,10 +23,9 @@ class ShoppingCartFragment : Fragment() {
     private val adapter: CartItemRecyclerViewAdapter by lazy {
         CartItemRecyclerViewAdapter(
             emptyList(),
-            onClick = { cartItemId ->
-                viewModel.deleteItem(cartItemId)
-            },
-        )
+        ) { cartItemId ->
+            viewModel.deleteItem(cartItemId)
+        }
     }
 
     override fun onCreateView(

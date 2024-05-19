@@ -8,8 +8,8 @@ import woowacourse.shopping.databinding.HolderCartBinding
 
 class CartItemRecyclerViewAdapter(
     private var values: List<Product>,
-    private val onClick: (id: Int) -> Unit,
-) : RecyclerView.Adapter<CartItemRecyclerViewAdapter.ViewHolder>() {
+    private val onCartItemListener: OnCartItemListener,
+) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -21,19 +21,13 @@ class CartItemRecyclerViewAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ViewHolder {
-        return ViewHolder(
-            HolderCartBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false,
-            ),
-            onClick = { id -> onClick(id) },
-        )
-    }
+    ): ShoppingCartItemViewHolder =
+        ShoppingCartItemViewHolder(
+            HolderCartBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+        ) { onCartItemListener.onClick(it) }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
+        holder: ShoppingCartItemViewHolder,
         position: Int,
     ) {
         val item = values[position]
@@ -50,17 +44,6 @@ class CartItemRecyclerViewAdapter(
             return
         }
         notifyItemRangeChanged(0, itemCount)
-    }
-
-    inner class ViewHolder(
-        private val binding: HolderCartBinding,
-        private val onClick: (id: Int) -> Unit,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product) {
-            binding.product = product
-            binding.cartProductDelete.setOnClickListener { onClick(product.id) }
-        }
     }
 
     companion object {
