@@ -10,7 +10,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.DefaultCartRepository
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
@@ -20,13 +20,11 @@ import woowacourse.shopping.presentation.cart.ShoppingCartFragment
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
-    private val viewModel: ProductDetailViewModel by lazy {
-        val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
-        ViewModelProvider(
-            this,
-            ProductDetailViewModel.factory(DefaultShoppingRepository(), DefaultCartRepository()),
-        )[ProductDetailViewModel::class.java]
-            .apply { loadProduct(id) }
+    private val viewModel by viewModels<ProductDetailViewModel> {
+        ProductDetailViewModel.factory(
+            DefaultShoppingRepository(),
+            DefaultCartRepository(),
+        )
     }
 
     override fun onViewCreated(
@@ -38,6 +36,8 @@ class ProductDetailFragment :
             it.lifecycleOwner = viewLifecycleOwner
             it.vm = viewModel
         }
+        val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
+        viewModel.loadProduct(id)
         initAppBar()
         binding?.btnProductCart?.setOnClickListener {
             viewModel.addCartProduct()

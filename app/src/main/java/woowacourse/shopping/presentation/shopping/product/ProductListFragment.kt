@@ -10,7 +10,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
@@ -23,11 +23,10 @@ import woowacourse.shopping.presentation.util.dp
 
 class ProductListFragment :
     BindingFragment<FragmentProductListBinding>(R.layout.fragment_product_list) {
-    private val viewModel: ProductListViewModel by lazy {
-        ViewModelProvider(
-            this,
-            ProductListViewModel.factory(DefaultShoppingRepository()),
-        )[ProductListViewModel::class.java].apply { loadProducts() }
+    private val viewModel by viewModels<ProductListViewModel> {
+        ProductListViewModel.factory(
+            DefaultShoppingRepository(),
+        )
     }
     private lateinit var productAdapter: ProductAdapter
 
@@ -41,6 +40,7 @@ class ProductListFragment :
             vm = viewModel
         }
 
+        viewModel.loadProducts()
         initAppBar()
         initViews()
         initObservers()
