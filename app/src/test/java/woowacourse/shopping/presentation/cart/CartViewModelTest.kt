@@ -40,7 +40,6 @@ class CartViewModelTest {
         cartViewModel.canLoadPrevPage.getOrAwaitValue() shouldBe false
     }
 
-
     @Test
     @DisplayName("현재 페이지가 1일 때, 다음 페이지로 이동하면, 페이지가 2가 된다")
     fun test1() {
