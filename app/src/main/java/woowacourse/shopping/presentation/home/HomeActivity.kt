@@ -25,7 +25,7 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         )[HomeViewModel::class.java]
     }
     private val adapter: ProductAdapter by lazy {
-        ProductAdapter(emptyList(), viewModel.loadStatus.value ?: LoadStatus(), this, this)
+        ProductAdapter(this, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

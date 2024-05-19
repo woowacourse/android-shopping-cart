@@ -14,11 +14,12 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(
-    private var products: List<Product>,
-    private var loadStatus: LoadStatus,
     private val productItemClickListener: ProductItemClickListener,
     private val loadClickListener: LoadClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var products: List<Product> = emptyList()
+    private var loadStatus: LoadStatus = LoadStatus()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
