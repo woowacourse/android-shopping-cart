@@ -1,25 +1,36 @@
 package woowacourse.shopping.cart
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.FiveCartItemPagingStrategy
+import woowacourse.shopping.ShoppingCartViewModelFactory
 import woowacourse.shopping.databinding.FragmentCartListBinding
+import woowacourse.shopping.repository.DummyShoppingCartItemRepository
 
 class CartFragment : Fragment() {
-    private val viewModel: CartViewModel by viewModels()
-    private val adapter: CartItemRecyclerViewAdapter by lazy {
-        CartItemRecyclerViewAdapter(
-            viewModel.itemsInShoppingCartPage.value ?: emptyList(),
-            onClick = { deleteItemId ->
-                viewModel.deleteItem(deleteItemId)
-            }
-        )
-    }
     private var _binding: FragmentCartListBinding? = null
     private val binding get() = _binding!!
+
+    private val factory = ShoppingCartViewModelFactory(DummyShoppingCartItemRepository(FiveCartItemPagingStrategy()))
+
+    private val viewModel: ShoppingCartViewModel by lazy {
+        ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
+    }
+
+    private val adapter: CartItemRecyclerViewAdapter by lazy {
+        CartItemRecyclerViewAdapter(
+            viewModel.itemsInCurrentPage.value ?: emptyList(),
+            onClick = { deleteItemId ->
+                // TODO: implement delete item
+                Log.d(TAG, "deleteItem: $deleteItemId")
+            },
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,20 +49,20 @@ class CartFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.vm = viewModel
+        binding.shoppingCartViewModel = viewModel
         binding.lifecycleOwner = this
 
         binding.productDetailToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
-        viewModel.currentPage.observe(viewLifecycleOwner) {
-            viewModel.updateItemsInShoppingCart()
-            adapter.updateData(viewModel.itemsInShoppingCartPage.value ?: emptyList())
-        }
-
-        viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) {
+        viewModel.itemsInCurrentPage.observe(viewLifecycleOwner) {
+            Log.d(TAG, "onViewCreated: itemsInCurrentPage: ${viewModel.itemsInCurrentPage.value}")
             adapter.updateData(it)
         }
+    }
+
+    companion object {
+        private const val TAG = "CartFragment"
     }
 }

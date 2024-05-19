@@ -97,6 +97,7 @@ class ShoppingCartViewModel(
         if (currentPage.value == FIRST_PAGE) return
 
         _currentPage.value = _currentPage.value?.minus(1)
+        _isLastPage.value = shoppingCartItemRepository.isFinalPage(currentPage.value ?: 1)
 
         _itemsInCurrentPage.postValue(
             shoppingCartItemRepository.loadPagedCartItems(
