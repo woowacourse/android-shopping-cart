@@ -29,9 +29,11 @@ class ProductListFragment : Fragment() {
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
             viewModel.loadedProducts.value ?: emptyList(),
-            onClick = { id -> navigateToProductDetail(id) },
+            onClick = { productId -> navigateToProductDetail(productId) },
         )
     }
+
+    private fun navigateToProductDetail(id: Int) = navigateToFragment(ProductDetailFragment.newInstance(id))
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,6 +43,7 @@ class ProductListFragment : Fragment() {
         _binding = FragmentProductListBinding.inflate(inflater)
         binding.productDetailList.adapter = adapter
         binding.vm = viewModel
+
         showLoadMoreButton()
         return binding.root
     }
@@ -59,17 +62,21 @@ class ProductListFragment : Fragment() {
                     val totalItemCount = layoutManager.itemCount
                     val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
 
-                    if (totalItemCount == lastVisibleItem + 1 &&
-                        viewModel.isLastPage.value == false
-                    ) {
+                    if (viewModel.isLastPage.value == false && hasMoreItems(totalItemCount, lastVisibleItem)) {
                         binding.loadMoreButton.visibility = View.VISIBLE
-                    } else {
-                        binding.loadMoreButton.visibility = View.GONE
+                        return
                     }
+
+                    binding.loadMoreButton.visibility = View.GONE
                 }
             },
         )
     }
+
+    private fun hasMoreItems(
+        totalItemCount: Int,
+        lastVisibleItem: Int,
+    ) = totalItemCount == lastVisibleItem + 1
 
     override fun onViewCreated(
         view: View,
@@ -77,49 +84,28 @@ class ProductListFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.productListToolbar.setNavigationOnClickListener {
-            navigateToCart()
-        }
+        binding.productListToolbar.setOnMenuItemClickListener(::navigateToMenuItem)
 
-        binding.productListToolbar.setOnMenuItemClickListener {
-            clickCartButton(it)
-        }
-        viewModel.loadedProducts.observe(viewLifecycleOwner) {
-            adapter.updateData(it)
+        viewModel.loadedProducts.observe(viewLifecycleOwner) { products ->
+            adapter.updateData(products)
         }
     }
 
-    private fun clickCartButton(it: MenuItem) =
+    private fun navigateToMenuItem(it: MenuItem) =
         when (it.itemId) {
-            R.id.action_cart -> {
-                navigateToCart()
-                true
-            }
+            R.id.action_cart -> navigateToShoppingCart()
 
             else -> false
         }
 
-    private fun navigateToCart() {
-        val cartFragment = CartFragment()
-
-        parentFragmentManager.beginTransaction().apply {
-            replace(R.id.container, cartFragment)
-            addToBackStack(null)
-            commit()
-        }
+    private fun navigateToShoppingCart(): Boolean {
+        navigateToFragment(CartFragment())
+        return true
     }
 
-    private fun navigateToProductDetail(id: Int) {
-        val productDetailFragment =
-            ProductDetailFragment().apply {
-                arguments =
-                    Bundle().apply {
-                        putInt("productId", id)
-                    }
-            }
-
+    private fun navigateToFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction().apply {
-            replace(R.id.container, productDetailFragment)
+            replace(R.id.container, fragment)
             addToBackStack(null)
             commit()
         }

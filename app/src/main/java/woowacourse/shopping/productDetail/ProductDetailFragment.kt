@@ -82,8 +82,7 @@ class ProductDetailFragment : Fragment() {
 
         fun newInstance(productId: Int): ProductDetailFragment {
             val fragment = ProductDetailFragment()
-            val bundle = Bundle()
-            bundle.putInt(PRODUCT_ID, productId)
+            val bundle = Bundle().apply { putInt(PRODUCT_ID, productId) }
             fragment.arguments = bundle
             return fragment
         }
