@@ -6,15 +6,21 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.FiveCartItemPagingStrategy
+import woowacourse.shopping.ProductDetailViewModelFactory
 import woowacourse.shopping.R
+import woowacourse.shopping.TwentyItemsPagingStrategy
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
+import woowacourse.shopping.repository.DummyShoppingCartItemRepository
+import woowacourse.shopping.repository.DummyShoppingProductsRepository
 
 class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
 
-    private val viewModel: ProductDetailViewModel by viewModels()
+    private lateinit var factory: ProductDetailViewModelFactory
+    private lateinit var viewModel: ProductDetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,12 +29,19 @@ class ProductDetailFragment : Fragment() {
     ): View {
         _binding = FragmentProductDetailBinding.inflate(inflater)
 
+        arguments?.let {
+            factory =
+                ProductDetailViewModelFactory(
+                    it.getInt("productId"),
+                    DummyShoppingProductsRepository(TwentyItemsPagingStrategy()),
+                    DummyShoppingCartItemRepository(FiveCartItemPagingStrategy()),
+                )
+            viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]
+        }
+
         binding.vm = viewModel
         binding.lifecycleOwner = this
 
-        arguments?.let {
-            viewModel.productId = it.getInt("productId")
-        }
         return binding.root
     }
 
