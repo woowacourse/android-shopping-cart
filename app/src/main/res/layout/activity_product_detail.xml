@@ -82,7 +82,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:textColor="@color/white"
-            android:onClick="@{()-> vm.onAddToCartButtonClick()}"
+            android:onClick="@{()-> vm.addToCart()}"
             app:layout_constraintBottom_toBottomOf="parent" />
 
 

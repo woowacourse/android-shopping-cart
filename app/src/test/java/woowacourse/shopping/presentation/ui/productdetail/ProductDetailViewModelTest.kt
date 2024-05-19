@@ -56,7 +56,7 @@ class ProductDetailViewModelTest {
         initViewModel()
 
         // when
-        viewModel.onAddToCartButtonClick()
+        viewModel.addToCart()
 
         // then
         verify { shoppingCartRepository.addOrder(STUB_PRODUCT_A) }

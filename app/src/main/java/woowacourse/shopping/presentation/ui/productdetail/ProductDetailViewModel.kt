@@ -23,11 +23,11 @@ class ProductDetailViewModel(
 
     init {
         savedStateHandle.get<Int>(PUT_EXTRA_PRODUCT_ID)?.let { productId ->
-            findByProductId(productId)
+            loadProductDetails(productId)
         }
     }
 
-    private fun findByProductId(id: Int) {
+    private fun loadProductDetails(id: Int) {
         productRepository.findProductById(id).onSuccess { productValue ->
             _product.value = productValue
         }.onFailure { e ->
@@ -38,7 +38,7 @@ class ProductDetailViewModel(
         }
     }
 
-    fun onAddToCartButtonClick() {
+    fun addToCart() {
         product.value?.let { product ->
             shoppingCartRepository.addOrder(product)
             showMessage(ProductDetailMessage.AddToCartSuccessMessage)
