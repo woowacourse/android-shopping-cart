@@ -2,20 +2,18 @@ package woowacourse.shopping.presentation.ui.detail
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.Menu
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 
-class DetailActivity : AppCompatActivity(), DetailClickListener {
-    private lateinit var binding: ActivityDetailBinding
+class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_detail) {
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
@@ -25,25 +23,23 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setUpToolbar()
-
-        binding.lifecycleOwner = this
+    override fun onCreateSetup() {
         binding.viewModel = viewModel
-        binding.clickListener = this
+        setUpToolbar()
+        observeViewModel()
     }
 
     private fun setUpToolbar() {
         val toolbar: MaterialToolbar = binding.toolbarDetail
         setSupportActionBar(toolbar)
-
-        toolbar.setOnMenuItemClickListener {
+        toolbar.setNavigationOnClickListener {
             finish()
-            true
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.navigateToShoppingCart.observe(this) {
+            navigateToCart()
         }
     }
 
@@ -52,12 +48,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onClick(productId: Long) {
-        viewModel.createShoppingCartItem()
-        navigate()
-    }
-
-    private fun navigate() {
+    private fun navigateToCart() {
         startActivity(
             CartActivity.createIntent(context = this),
         )
