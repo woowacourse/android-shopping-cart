@@ -19,7 +19,7 @@ import woowacourse.shopping.repository.DummyShoppingProductsRepository
 
 class ProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
 
     private val factory = ProductListViewModelFactory(DummyShoppingProductsRepository(TwentyItemsPagingStrategy()))
     private val viewModel: ProductListViewModel by lazy {

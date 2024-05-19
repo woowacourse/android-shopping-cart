@@ -11,10 +11,10 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 
 class ProductDetailFragment : Fragment() {
-    private val viewModel: ProductDetailViewModel by viewModels()
-
     private var _binding: FragmentProductDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
+
+    private val viewModel: ProductDetailViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
