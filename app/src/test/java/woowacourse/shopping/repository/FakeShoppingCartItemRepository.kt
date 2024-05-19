@@ -9,7 +9,7 @@ class FakeShoppingCartItemRepository(
     private val pagingStrategy: PagingStrategy<Product> = FiveCartItemPagingStrategy(),
 ) : ShoppingCartItemRepository {
     override fun addCartItem(product: Product): Int {
-        val addedProduct = product.copy(id = cartItems.size + 1)
+        val addedProduct = product.copy()
         cartItems.add(addedProduct)
         return addedProduct.id
     }
