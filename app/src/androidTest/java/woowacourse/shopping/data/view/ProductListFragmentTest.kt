@@ -2,6 +2,7 @@ package woowacourse.shopping.data.view
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
@@ -14,6 +15,7 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.view.MainActivity
 import woowacourse.shopping.view.products.ProductsListFragment
+import woowacourse.shopping.view.products.adapter.viewholder.ProductViewHolder
 
 @RunWith(AndroidJUnit4::class)
 class ProductListFragmentTest {
@@ -36,8 +38,18 @@ class ProductListFragmentTest {
     }
 
     @Test
-    fun `데이터가_모두_로드되지_않은_경우_더보기_버튼은_보여지지_않아야_한다`() {
+    fun `데이터가_모두_보여지지_않은_경우_더보기_버튼은_보여지지_않아야_한다`() {
         onView(withId(R.id.btn_more_product))
             .check(matches(not(isDisplayed())))
+    }
+
+    @Test
+    fun `데이터가_모두_로드된_경우_더보기_버튼이_보여진다`() {
+        onView(withId(R.id.rv_products))
+            .perform(RecyclerViewActions.scrollToPosition<ProductViewHolder>(17))
+
+        Thread.sleep(1000)
+
+        onView(withId(R.id.btn_more_product)).check(matches(isDisplayed()))
     }
 }
