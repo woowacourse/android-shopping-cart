@@ -13,23 +13,23 @@ class ProductListViewModel(
 ) : ViewModel() {
     private val _products = MutableLiveData<List<ShoppingUiModel>>(emptyList())
     val products: LiveData<List<ShoppingUiModel>> = _products
+    var currentPage = 0
 
     fun loadProducts() {
-        val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
-        val currentProductIds = currentProducts.map { it.id }
-
-        val newProducts =
-            shoppingRepository.products(exceptProducts = currentProductIds)
+        val loadProducts =
+            shoppingRepository.products(currentPage++, PRODUCT_AMOUNT)
                 .map { it.toShoppingUiModel() }
 
-        if (shoppingRepository.canLoadMoreProducts(currentProductIds)) {
-            _products.value = currentProducts + newProducts + ShoppingUiModel.Plus
+        if (shoppingRepository.canLoadMoreProducts(currentPage, PRODUCT_AMOUNT)) {
+            _products.value = loadProducts + ShoppingUiModel.Plus
         } else {
-            _products.value = currentProducts + newProducts
+            _products.value = loadProducts
         }
     }
 
     companion object {
+        private const val PRODUCT_AMOUNT: Int = 20
+
         fun factory(repository: ShoppingRepository): ViewModelProvider.Factory {
             return BaseViewModelFactory { ProductListViewModel(repository) }
         }

@@ -4,11 +4,14 @@ import woowacourse.shopping.domain.Product
 
 interface ShoppingDataSource {
     fun products(
-        exceptProducts: List<Long>,
-        amount: Int,
+        currentPage: Int,
+        pageSize: Int,
     ): List<Product>
 
     fun productById(id: Long): Product?
 
-    fun canLoadMoreProducts(exceptProducts: List<Long>): Boolean
+    fun canLoadMoreProducts(
+        currentPage: Int,
+        pageSize: Int,
+    ): Boolean
 }

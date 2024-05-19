@@ -47,17 +47,23 @@ object DummyShoppingDataSource : ShoppingDataSource {
             }
 
     override fun products(
-        exceptProducts: List<Long>,
-        amount: Int,
+        currentPage: Int,
+        pageSize: Int,
     ): List<Product> {
-        return products.filterNot { it.id in exceptProducts }.take(amount)
+        val fromIndex = currentPage * pageSize
+        val toIndex = (fromIndex + pageSize).coerceAtMost(products.size)
+        return products.subList(fromIndex, toIndex)
     }
 
     override fun productById(id: Long): Product? {
         return products.find { it.id == id }
     }
 
-    override fun canLoadMoreProducts(exceptProducts: List<Long>): Boolean {
-        return products.any { it.id !in exceptProducts }
+    override fun canLoadMoreProducts(
+        currentPage: Int,
+        pageSize: Int,
+    ): Boolean {
+        val fromIndex = currentPage * pageSize
+        return fromIndex < products.size
     }
 }
