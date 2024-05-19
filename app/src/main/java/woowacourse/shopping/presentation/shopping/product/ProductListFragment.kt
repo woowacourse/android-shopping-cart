@@ -16,7 +16,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.cart.ShoppingCartFragment
+import woowacourse.shopping.presentation.cart.CartFragment
 import woowacourse.shopping.presentation.shopping.detail.ProductDetailFragment
 import woowacourse.shopping.presentation.shopping.product.adpater.ProductAdapter
 import woowacourse.shopping.presentation.util.dp
@@ -59,9 +59,9 @@ class ProductListFragment :
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_cart) {
                         parentFragmentManager.commit {
-                            replace<ShoppingCartFragment>(
+                            replace<CartFragment>(
                                 R.id.fragment_container_shopping,
-                                ShoppingCartFragment.TAG,
+                                CartFragment.TAG,
                             )
                             addToBackStack(TAG)
                         }

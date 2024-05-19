@@ -15,17 +15,17 @@ import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.util.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class, MockKExtension::class)
-class ShoppingCartViewModelTest {
+class CartViewModelTest {
     @MockK
     lateinit var cartRepository: CartRepository
 
-    private lateinit var shoppingCartViewModel: ShoppingCartViewModel
+    private lateinit var cartViewModel: CartViewModel
 
     @BeforeEach
     fun setUp() {
         every { cartRepository.cartProducts(1) } returns listOf(cartProduct())
         every { cartRepository.canLoadMoreCartProducts(1) } returns true
-        shoppingCartViewModel = ShoppingCartViewModel(cartRepository)
+        cartViewModel = CartViewModel(cartRepository)
     }
 
     @Test
@@ -33,9 +33,9 @@ class ShoppingCartViewModelTest {
     fun test0() {
         verify(exactly = 1) { cartRepository.cartProducts(1) }
         verify(exactly = 1) { cartRepository.canLoadMoreCartProducts(1) }
-        shoppingCartViewModel.currentPage.getOrAwaitValue() shouldBe 1
-        shoppingCartViewModel.canLoadNextPage.getOrAwaitValue() shouldBe true
-        shoppingCartViewModel.canLoadPrevPage.getOrAwaitValue() shouldBe false
+        cartViewModel.currentPage.getOrAwaitValue() shouldBe 1
+        cartViewModel.canLoadNextPage.getOrAwaitValue() shouldBe true
+        cartViewModel.canLoadPrevPage.getOrAwaitValue() shouldBe false
     }
 
     @Test
@@ -46,10 +46,10 @@ class ShoppingCartViewModelTest {
         every { cartRepository.cartProducts(nextPage) } returns listOf(cartProduct())
         every { cartRepository.canLoadMoreCartProducts(nextPage) } returns true
         // when
-        shoppingCartViewModel.plusPage()
+        cartViewModel.plusPage()
         // then
         verify(exactly = 1) { cartRepository.cartProducts(nextPage) }
         verify(exactly = 1) { cartRepository.canLoadMoreCartProducts(nextPage) }
-        shoppingCartViewModel.currentPage.getOrAwaitValue() shouldBe nextPage
+        cartViewModel.currentPage.getOrAwaitValue() shouldBe nextPage
     }
 }

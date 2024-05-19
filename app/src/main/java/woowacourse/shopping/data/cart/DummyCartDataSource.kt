@@ -3,12 +3,12 @@ package woowacourse.shopping.data.cart
 import woowacourse.shopping.data.shopping.DummyShoppingDataSource
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ShoppingCart
+import woowacourse.shopping.domain.Cart
 
 object DummyCartDataSource : CartDataSource {
     private const val PRODUCT_AMOUNT = 5
     private var cart =
-        ShoppingCart(
+        Cart(
             DummyShoppingDataSource.products.take(30),
         )
     private val products: List<CartProduct> get() = cart.cartProducts()

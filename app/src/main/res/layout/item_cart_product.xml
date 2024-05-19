@@ -25,7 +25,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_shopping_cart_product_title"
+                android:id="@+id/tv_cart_product_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
@@ -33,13 +33,13 @@
                 android:maxLines="1"
                 android:text="@{cartProduct.product.name}"
                 android:textAppearance="@style/H2"
-                app:layout_constraintEnd_toStartOf="@id/iv_shooping_cart_close"
+                app:layout_constraintEnd_toStartOf="@id/iv_cart_item_delete"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="오둥이 스위트콘" />
 
             <ImageView
-                android:id="@+id/iv_shooping_cart_close"
+                android:id="@+id/iv_cart_item_delete"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:src="@drawable/ic_close_24"
@@ -47,17 +47,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/iv_shooping_cart_product_image"
+                android:id="@+id/iv_cart_product_image"
                 imageUrl="@{cartProduct.product.imageUrl}"
                 android:layout_width="136dp"
                 android:layout_height="72dp"
                 android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_shopping_cart_product_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_cart_product_title"
                 tools:background="@color/black" />
 
             <TextView
-                android:id="@+id/tv_shooping_cart_product_price"
+                android:id="@+id/tv_cart_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/B2"

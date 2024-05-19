@@ -14,11 +14,11 @@ import woowacourse.shopping.data.cart.DefaultCartRepository
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 
-class ShoppingCartFragment :
+class CartFragment :
     BindingFragment<FragmentShoppingCartBinding>(R.layout.fragment_shopping_cart) {
     private lateinit var adapter: CartAdapter
-    override val viewModel by viewModels<ShoppingCartViewModel> {
-        ShoppingCartViewModel.factory(
+    override val viewModel by viewModels<CartViewModel> {
+        CartViewModel.factory(
             DefaultCartRepository(),
         )
     }
@@ -72,6 +72,6 @@ class ShoppingCartFragment :
     }
 
     companion object {
-        val TAG: String? = ShoppingCartFragment::class.java.canonicalName
+        val TAG: String? = CartFragment::class.java.canonicalName
     }
 }

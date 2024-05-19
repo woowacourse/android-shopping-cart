@@ -43,7 +43,7 @@ class CartAdapter(private val onClickItem: (position: Int) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(product: CartProductUi) {
             binding.cartProduct = product
-            binding.ivShoopingCartClose.setOnClickListener {
+            binding.ivCartItemDelete.setOnClickListener {
                 onClickItem(absoluteAdapterPosition)
             }
         }

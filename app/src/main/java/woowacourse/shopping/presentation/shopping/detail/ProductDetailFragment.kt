@@ -16,7 +16,7 @@ import woowacourse.shopping.data.cart.DefaultCartRepository
 import woowacourse.shopping.data.shopping.DefaultShoppingRepository
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.presentation.base.BindingFragment
-import woowacourse.shopping.presentation.cart.ShoppingCartFragment
+import woowacourse.shopping.presentation.cart.CartFragment
 
 class ProductDetailFragment :
     BindingFragment<FragmentProductDetailBinding>(R.layout.fragment_product_detail) {
@@ -76,9 +76,9 @@ class ProductDetailFragment :
 
     private fun navigateToShoppingCart() {
         parentFragmentManager.commit {
-            replace<ShoppingCartFragment>(
+            replace<CartFragment>(
                 R.id.fragment_container_shopping,
-                ShoppingCartFragment.TAG,
+                CartFragment.TAG,
             )
             addToBackStack(TAG)
         }
