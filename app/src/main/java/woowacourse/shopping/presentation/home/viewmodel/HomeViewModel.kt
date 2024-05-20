@@ -1,10 +1,11 @@
-package woowacourse.shopping.presentation.home
+package woowacourse.shopping.presentation.home.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.home.LoadStatus
 
 class HomeViewModel(
     private val productRepository: ProductRepository,

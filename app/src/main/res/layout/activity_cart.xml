@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.presentation.cart.CartViewModel" />
+            type="woowacourse.shopping.presentation.cart.viewmodel.CartViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

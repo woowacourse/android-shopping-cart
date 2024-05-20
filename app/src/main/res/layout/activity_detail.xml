@@ -8,7 +8,7 @@
 
         <variable
             name="detailViewModel"
-            type="woowacourse.shopping.presentation.detail.DetailViewModel" />
+            type="woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

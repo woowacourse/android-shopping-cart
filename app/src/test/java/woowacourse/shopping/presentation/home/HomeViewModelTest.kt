@@ -9,6 +9,7 @@ import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.FakeProductRepository
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.dummy.DummyProducts
+import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class HomeViewModelTest {

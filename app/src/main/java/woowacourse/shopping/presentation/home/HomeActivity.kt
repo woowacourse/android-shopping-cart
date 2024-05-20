@@ -15,6 +15,9 @@ import woowacourse.shopping.presentation.detail.DetailActivity
 import woowacourse.shopping.presentation.home.adapter.LoadClickListener
 import woowacourse.shopping.presentation.home.adapter.ProductAdapter
 import woowacourse.shopping.presentation.home.adapter.ProductItemClickListener
+import woowacourse.shopping.presentation.home.adapter.ProductsGridLayoutManager
+import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
+import woowacourse.shopping.presentation.home.viewmodel.HomeViewModelFactory
 
 class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickListener {
     private val binding: ActivityHomeBinding by lazy {

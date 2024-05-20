@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.presentation.home.HomeViewModel" />
+            type="woowacourse.shopping.presentation.home.viewmodel.HomeViewModel" />
 
         <variable
             name="productAdapter"

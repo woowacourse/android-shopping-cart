@@ -8,6 +8,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.presentation.cart.viewmodel.CartViewModel
 import woowacourse.shopping.presentation.dummy.DummyCartItems
 import woowacourse.shopping.presentation.dummy.DummyProducts
 

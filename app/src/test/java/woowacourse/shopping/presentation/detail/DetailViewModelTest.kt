@@ -8,6 +8,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
+import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.presentation.dummy.DummyProducts
 
 @ExtendWith(InstantTaskExecutorExtension::class)

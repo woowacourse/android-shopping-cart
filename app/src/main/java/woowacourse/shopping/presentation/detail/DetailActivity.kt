@@ -14,6 +14,8 @@ import woowacourse.shopping.data.datasource.DefaultProducts
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
+import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
     private val binding: ActivityDetailBinding by lazy {

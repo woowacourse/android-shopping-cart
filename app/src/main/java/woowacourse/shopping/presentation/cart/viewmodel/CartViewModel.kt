@@ -1,10 +1,12 @@
-package woowacourse.shopping.presentation.cart
+package woowacourse.shopping.presentation.cart.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.cart.Order
+import woowacourse.shopping.presentation.cart.PageInformation
 
 class CartViewModel(
     private val cartRepository: CartRepository,

@@ -14,6 +14,8 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.cart.adapter.CartAdapter
 import woowacourse.shopping.presentation.cart.adapter.CartItemDeleteClickListener
+import woowacourse.shopping.presentation.cart.viewmodel.CartViewModel
+import woowacourse.shopping.presentation.cart.viewmodel.CartViewModelFactory
 
 class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
     private val binding: ActivityCartBinding by lazy {
