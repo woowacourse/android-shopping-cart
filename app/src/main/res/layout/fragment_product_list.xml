@@ -36,10 +36,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="26dp"
+            android:layout_marginStart="@dimen/top_bar_margin_start"
             android:text="@string/product_list_page_title_text"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="@dimen/top_bar_font_size_title"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
             app:layout_constraintStart_toStartOf="@id/vw_product_list_top_bar"
@@ -48,7 +48,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/top_bar_margin_end"
             android:background="@android:color/transparent"
             android:onClick="@{()->productActionListener.clickShoppingCart()}"
             android:src="@drawable/ic_cart"
