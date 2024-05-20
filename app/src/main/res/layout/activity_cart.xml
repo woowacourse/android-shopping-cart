@@ -35,8 +35,8 @@
             android:layout_height="42dp"
             android:layout_marginStart="115dp"
             android:background="@drawable/selector_left_button"
-            android:clickable="@{viewModel.canMovePreviousPage}"
-            android:enabled="@{viewModel.canMovePreviousPage}"
+            android:clickable="@{viewModel.cartPage.notFirst}"
+            android:enabled="@{viewModel.cartPage.notFirst}"
             android:onClick="@{() -> viewModel.minusPageNum()}"
             android:text="@string/previous_page"
             android:textColor="@color/white"
@@ -51,7 +51,7 @@
             android:layout_width="45dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:text="@{Integer.toString(viewModel.pageNumber)}"
+            android:text="@{Integer.toString(viewModel.cartPage.number)}"
             android:textColor="@color/gray5"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -61,14 +61,13 @@
             app:layout_constraintTop_toBottomOf="@id/rv_cart"
             tools:text="1" />
 
-
         <Button
             android:id="@+id/btn_next"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:background="@drawable/selector_right_button"
-            android:clickable="@{viewModel.canMoveNextPage}"
-            android:enabled="@{viewModel.canMoveNextPage}"
+            android:clickable="@{viewModel.cartPage.isNotLast(viewModel.cartItems.size)}"
+            android:enabled="@{viewModel.cartPage.isNotLast(viewModel.cartItems.size)}"
             android:onClick="@{() -> viewModel.plusPageNum()}"
             android:text="@string/next_page"
             android:textColor="@color/white"
