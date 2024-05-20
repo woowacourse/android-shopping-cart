@@ -6,4 +6,6 @@ interface ProductRepository {
     fun fetchSinglePage(page: Int): List<Product>
 
     fun fetchProduct(id: Long): Product
+
+    fun fetchProducts(ids: List<Long>): List<Product>
 }

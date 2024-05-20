@@ -50,16 +50,16 @@ class CartViewModel(
     fun loadCurrentPageCartItems() {
         val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return, PAGE_SIZE)
         hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return, PAGE_SIZE).isNotEmpty()
+        val products = productRepository.fetchProducts(cartItems.map { it.productId })
 
         val orders =
-            cartItems.map {
-                val productInformation = productRepository.fetchProduct(it.productId)
+            cartItems.zip(products).map {
                 Order(
-                    cartItemId = it.id,
-                    image = productInformation.imageSource,
-                    productName = productInformation.name,
-                    quantity = it.quantity,
-                    price = it.quantity * productInformation.price,
+                    cartItemId = it.first.id,
+                    image = it.second.imageSource,
+                    productName = it.second.name,
+                    quantity = it.first.quantity,
+                    price = it.first.quantity * it.second.price,
                 )
             }
 

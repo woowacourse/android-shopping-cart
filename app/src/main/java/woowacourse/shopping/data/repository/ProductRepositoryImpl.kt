@@ -13,6 +13,10 @@ class ProductRepositoryImpl(private val productDataSource: ProductDataSource) : 
         return productDataSource.getProductById(id)
     }
 
+    override fun fetchProducts(ids: List<Long>): List<Product> {
+        return productDataSource.getProductByIds(ids)
+    }
+
     companion object {
         private const val PAGE_SIZE = 20
     }

@@ -22,4 +22,8 @@ object DefaultProducts : ProductDataSource {
     override fun getProductById(id: Long): Product {
         return products.first { it.id == id }
     }
+
+    override fun getProductByIds(ids: List<Long>): List<Product> {
+        return ids.map { id -> products.first { it.id == id } }
+    }
 }
