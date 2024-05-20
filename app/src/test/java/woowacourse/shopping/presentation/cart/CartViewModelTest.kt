@@ -46,7 +46,7 @@ class CartViewModelTest {
 
         viewmodel.onCartItemDelete(1L)
         verify { cartRepository.removeCartItem(capture(deletedItemId)) }
-        assert(deletedItemId.captured == 1L)
+        assertThat(deletedItemId.captured).isEqualTo(1L)
         verify { cartRepository.fetchCartItems(0) }
     }
 }
