@@ -7,14 +7,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.datasource.DefaultProducts
-import woowacourse.shopping.data.model.Product
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.BindableAdapter
 import woowacourse.shopping.presentation.cart.CartActivity
@@ -27,7 +23,7 @@ class HomeActivity : AppCompatActivity() {
     private val viewModel: HomeViewModel by viewModels {
         val application = application as ShoppingApplication
         HomeViewModelFactory(
-            application.productRepository
+            application.productRepository,
         )
     }
     private val adapter: ProductAdapter by lazy {
@@ -78,17 +74,15 @@ class HomeActivity : AppCompatActivity() {
             startActivity(
                 DetailActivity.newIntent(
                     this,
-                    event.getContentIfNotHandled() ?: return@observe
-                )
+                    event.getContentIfNotHandled() ?: return@observe,
+                ),
             )
         }
     }
 }
 
 @BindingAdapter("shopping:data")
-fun <T> RecyclerView.setData(
-    data: List<T>?,
-) {
+fun <T> RecyclerView.setData(data: List<T>?) {
     if (data == null) return
     if (adapter is BindableAdapter<*>) {
         (adapter as BindableAdapter<T>).setData(data)
@@ -96,9 +90,7 @@ fun <T> RecyclerView.setData(
 }
 
 @BindingAdapter("shopping:loadStatus")
-fun RecyclerView.setLoadStatus(
-    loadStatus: LoadStatus?,
-) {
+fun RecyclerView.setLoadStatus(loadStatus: LoadStatus?) {
     if (loadStatus == null) return
     if (adapter is ProductAdapter) {
         (adapter as ProductAdapter).updateLoadStatus(loadStatus)

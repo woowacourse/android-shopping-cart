@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.detail
 
+import androidx.lifecycle.SavedStateHandle
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
@@ -19,13 +20,12 @@ class DetailViewModelTest {
     @BeforeEach
     fun setUp() {
         cartRepository = mockk<CartRepository>(relaxed = true)
-        detailViewModel = DetailViewModel(FakeProductRepository(), cartRepository)
+        detailViewModel =
+            DetailViewModel(FakeProductRepository(), cartRepository, 1, SavedStateHandle())
     }
 
     @Test
     fun `상품 아이디를 활용하여 상품 상세 정보를 불러온다`() {
-        detailViewModel.loadProductInformation(1)
-
         val productInformation = detailViewModel.productInformation.value
 
         assertThat(productInformation).isEqualTo(

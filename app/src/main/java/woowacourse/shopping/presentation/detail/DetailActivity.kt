@@ -9,16 +9,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.datasource.DefaultCart
-import woowacourse.shopping.data.datasource.DefaultProducts
-import woowacourse.shopping.data.repository.CartRepositoryImpl
-import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
-import woowacourse.shopping.presentation.home.HomeViewModel
-import woowacourse.shopping.presentation.home.HomeViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
     private val binding: ActivityDetailBinding by lazy {
@@ -27,25 +20,19 @@ class DetailActivity : AppCompatActivity() {
 
     private val viewModel: DetailViewModel by viewModels {
         val application = application as ShoppingApplication
+        val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
         DetailViewModelFactory(
             application.productRepository,
             application.cartRepository,
+            productId,
         )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            initializeProductInformation()
-        }
         initializeBindingVariables()
         initializeToolbar()
         observeEvents()
-    }
-
-    private fun initializeProductInformation() {
-        val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
-        viewModel.loadProductInformation(productId)
     }
 
     private fun initializeToolbar() {
@@ -63,8 +50,8 @@ class DetailActivity : AppCompatActivity() {
             if (event.hasBeenHandled) return@observe
             showToastMessage(
                 getString(
-                    event.getContentIfNotHandled()?.stringResourceId ?: return@observe
-                )
+                    event.getContentIfNotHandled()?.stringResourceId ?: return@observe,
+                ),
             )
         }
     }

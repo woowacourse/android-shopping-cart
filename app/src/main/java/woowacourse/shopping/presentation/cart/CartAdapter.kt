@@ -44,10 +44,10 @@ class CartAdapter(
         cartItemEventListener: CartItemEventListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
-
         init {
             binding.cartItemDeleteClickListener = cartItemEventListener
         }
+
         fun bind(order: Order) {
             binding.order = order
         }

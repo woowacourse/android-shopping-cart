@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.BindableAdapter
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(
-    private val homeItemClickListener: HomeItemEventListener
+    private val homeItemClickListener: HomeItemEventListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), BindableAdapter<Product> {
     private var products: List<Product> = emptyList()
     private var loadStatus: LoadStatus = LoadStatus()
@@ -80,10 +80,10 @@ class ProductAdapter(
         homeItemClickListener: HomeItemEventListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
-
         init {
             binding.homeItemClickListener = homeItemClickListener
         }
+
         fun bind(product: Product) {
             binding.product = product
         }
@@ -92,11 +92,11 @@ class ProductAdapter(
     class LoadingViewHolder(
         private val binding: ItemLoadMoreBinding,
         homeItemClickListener: HomeItemEventListener,
-        ) : RecyclerView.ViewHolder(binding.root) {
-
+    ) : RecyclerView.ViewHolder(binding.root) {
         init {
             binding.homeItemClickListener = homeItemClickListener
         }
+
         fun bind(loadStatus: LoadStatus) {
             binding.loadStatus = loadStatus
         }
