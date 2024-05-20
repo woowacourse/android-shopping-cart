@@ -41,11 +41,7 @@ fun setPrice(
     view: TextView,
     price: Long?,
 ) {
-    price?.let {
-        view.text = view.context.getString(R.string.price_format, it)
-    } ?: run {
-        view.text = ""
-    }
+    view.text = price?.let { view.context.getString(R.string.price_format, it) } ?: ""
 }
 
 @BindingAdapter("app:setLoadMoreBtnVisibility")
