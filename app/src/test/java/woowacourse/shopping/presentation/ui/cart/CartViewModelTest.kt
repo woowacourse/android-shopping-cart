@@ -137,7 +137,7 @@ class CartViewModelTest {
         viewModel.loadPage(0)
 
         // when
-        viewModel.deleteItem(0)
+        viewModel.onDeleteItemClick(0)
 
         // then
         val state = viewModel.cartItemsState.getOrAwaitValue()
@@ -156,7 +156,7 @@ class CartViewModelTest {
         viewModel.loadPage(0)
 
         // when
-        viewModel.deleteItem(1)
+        viewModel.onDeleteItemClick(1)
         viewModel.loadNextPage()
 
         // then
@@ -176,7 +176,7 @@ class CartViewModelTest {
         viewModel.loadPage(0)
 
         // when
-        viewModel.deleteItem(0)
+        viewModel.onDeleteItemClick(0)
         viewModel.loadPreviousPage()
 
         // then
@@ -196,7 +196,7 @@ class CartViewModelTest {
         viewModel.loadPage(0)
 
         // when
-        viewModel.deleteItem(0)
+        viewModel.onDeleteItemClick(0)
 
         // then
         val currentPage = viewModel.currentPage.getOrAwaitValue()
