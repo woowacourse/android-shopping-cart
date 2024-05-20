@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.home
 
 interface HomeItemClickListener {
-    fun onProductItemClick(id: Long)
+    fun navigateToProductDetail(id: Long)
 
-    fun onLoadClick()
+    fun loadNextPage()
 }

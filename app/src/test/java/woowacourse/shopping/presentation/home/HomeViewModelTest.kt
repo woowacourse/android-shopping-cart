@@ -50,7 +50,7 @@ class HomeViewModelTest {
 
     @Test
     fun `더보기 작업을 수행하면 다음 페이지를 불러온다`() {
-        homeViewModel.onLoadClick()
+        homeViewModel.loadNextPage()
         val actualResult = homeViewModel.products.getOrAwaitValue()
         assertThat(actualResult).isEqualTo(
             listOf(

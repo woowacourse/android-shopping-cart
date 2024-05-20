@@ -42,11 +42,11 @@ class HomeViewModel(
         }
     }
 
-    override fun onProductItemClick(id: Long) {
+    override fun navigateToProductDetail(id: Long) {
         _navigateToDetailEvent.value = Event(id)
     }
 
-    override fun onLoadClick() {
+    override fun loadNextPage() {
         loadProducts()
     }
 }
