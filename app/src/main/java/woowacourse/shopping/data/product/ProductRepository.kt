@@ -11,6 +11,8 @@ interface ProductRepository {
         pageSize: Int,
     ): List<Product>
 
+    fun totalCount(): Int
+
     companion object {
         private const val NOT_INITIALIZE_INSTANCE_MESSAGE = "초기화된 인스턴스가 없습니다."
 

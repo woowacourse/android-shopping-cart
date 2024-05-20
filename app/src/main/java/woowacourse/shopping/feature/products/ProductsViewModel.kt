@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.Product
+import kotlin.math.ceil
 
 class ProductsViewModel(private val productRepository: ProductRepository) : ViewModel() {
     private val _products = MutableLiveData<List<Product>>(emptyList())
@@ -14,9 +15,11 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
     val showLoadMore: LiveData<Boolean> get() = _showLoadMore
 
     private var page: Int = INITIALIZE_PAGE
+    private var maxPage: Int = INITIALIZE_PAGE
 
     init {
         loadPage()
+        loadMaxPage()
     }
 
     fun loadPage() {
@@ -25,8 +28,14 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
         _showLoadMore.value = false
     }
 
+    private fun loadMaxPage() {
+        val totalProductCount = productRepository.totalCount()
+        maxPage = ceil(totalProductCount.toDouble() / PAGE_SIZE).toInt()
+    }
+
     fun changeSeeMoreVisibility(lastPosition: Int) {
-        _showLoadMore.value = (lastPosition + 1) % PAGE_SIZE == 0 && lastPosition + 1 == _products.value?.size
+        _showLoadMore.value =
+            (lastPosition + 1) % PAGE_SIZE == 0 && lastPosition + 1 == _products.value?.size && page < maxPage
     }
 
     companion object {

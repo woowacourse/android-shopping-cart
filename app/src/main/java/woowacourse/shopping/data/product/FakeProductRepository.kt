@@ -19,6 +19,8 @@ class FakeProductRepository(savedProducts: List<Product> = emptyList()) : Produc
         return products.map { it.value }.subList(fromIndex, toIndex)
     }
 
+    override fun totalCount(): Int = products.size
+
     companion object {
         private const val INVALID_ID_MESSAGE = "해당하는 id의 상품이 존재하지 않습니다."
     }
