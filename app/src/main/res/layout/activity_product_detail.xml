@@ -53,38 +53,69 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_name" />
 
         <TextView
-            android:id="@+id/tv_product_price_comment"
+            android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="18dp"
-            android:text="@string/product_price_comment"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/split_line" />
-
-        <TextView
-            android:id="@+id/tv_product_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:layout_marginEnd="18dp"
             android:text="@{@string/product_price(vm.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/split_line"
             tools:text="99,800원" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="14dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/split_line">
+
+            <Button
+                android:id="@+id/btn_minus_product"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@color/white_no_border_line"
+                android:text="@string/minus"
+                android:textColor="@color/gray5"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@color/white_no_border_line"
+                android:gravity="center"
+                android:textColor="@color/gray5"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                tools:text="3" />
+
+            <Button
+                android:id="@+id/btn_plus_product"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@color/white_no_border_line"
+                android:text="@string/plus"
+                android:textColor="@color/gray5"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/btn_add_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_add_product_button"
+            android:enabled="@{!vm.error}"
             android:onClick="@{()->cartButtonClickListener.onClick()}"
             android:text="@string/add_product_to_cart"
-            android:enabled="@{!vm.error}"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
