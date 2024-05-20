@@ -3,11 +3,18 @@ package woowacourse.shopping.model.data
 import woowacourse.shopping.model.Product
 
 interface CartDao {
+    fun itemSize(): Int
+
     fun save(product: Product): Long
 
     fun find(id: Long): Product
 
     fun findAll(): List<Product>
+
+    fun getProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<Product>
 
     fun deleteAll()
 

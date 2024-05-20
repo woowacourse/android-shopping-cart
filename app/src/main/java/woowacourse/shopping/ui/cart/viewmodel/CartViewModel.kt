@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartDao
-import kotlin.math.min
 
 class CartViewModel(private val cartDao: CartDao) : ViewModel() {
     private val cartPageManager by lazy { CartPageManager(PAGE_SIZE) }
@@ -20,7 +19,6 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
 
     val pageNumber: LiveData<Int> get() = _pageNumber
 
-    private val items: MutableList<Product> = mutableListOf()
     private val _cart: MutableLiveData<List<Product>> = MutableLiveData()
     val cart: LiveData<List<Product>> get() = _cart
 
@@ -31,9 +29,8 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
 
     fun removeCartItem(productId: Long) {
         cartDao.delete(productId)
-        items.remove(items.find { it.id == productId })
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(items.size)
-        _cart.value = getProducts()
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartDao.itemSize())
+        _cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
     }
 
     fun plusPageNum() {
@@ -49,25 +46,16 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
     }
 
     private fun loadCartItems() {
-        items.clear()
-        items.addAll(cartDao.findAll())
-        _cart.value = getProducts()
-    }
-
-    private fun getProducts(): List<Product> {
-        val fromIndex = (cartPageManager.pageNum - OFFSET) * PAGE_SIZE
-        val toIndex = min(fromIndex + PAGE_SIZE, items.size)
-        return items.toList().subList(fromIndex, toIndex)
+        _cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
     }
 
     private fun updatePageState() {
         _pageNumber.value = cartPageManager.pageNum
         _canMovePreviousPage.value = cartPageManager.canMovePreviousPage()
-        _canMoveNextPage.value = cartPageManager.canMoveNextPage(items.size)
+        _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartDao.itemSize())
     }
 
     companion object {
         const val PAGE_SIZE = 5
-        private const val OFFSET = 1
     }
 }
