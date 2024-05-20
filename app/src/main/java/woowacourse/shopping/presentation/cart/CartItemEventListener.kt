@@ -1,5 +1,5 @@
 package woowacourse.shopping.presentation.cart
 
-interface CartItemDeleteClickListener {
+interface CartItemEventListener {
     fun onCartItemDelete(cartItemId: Long)
 }

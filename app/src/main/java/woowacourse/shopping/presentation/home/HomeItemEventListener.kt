@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.home
 
-interface HomeItemClickListener {
+interface HomeItemEventListener {
     fun navigateToProductDetail(id: Long)
 
     fun loadNextPage()

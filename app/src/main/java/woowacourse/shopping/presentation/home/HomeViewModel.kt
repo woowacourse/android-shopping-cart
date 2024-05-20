@@ -9,7 +9,7 @@ import woowacourse.shopping.presentation.util.Event
 
 class HomeViewModel(
     private val productRepository: ProductRepository,
-) : ViewModel(), HomeItemClickListener {
+) : ViewModel(), HomeItemEventListener {
     private var page: Int = 0
 
     private val _products: MutableLiveData<List<Product>> =

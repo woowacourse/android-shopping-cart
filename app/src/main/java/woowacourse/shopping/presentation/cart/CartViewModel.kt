@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.repository.ProductRepository
 class CartViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-) : ViewModel(), CartItemDeleteClickListener {
+) : ViewModel(), CartItemEventListener {
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int>
         get() = _currentPage
