@@ -14,7 +14,7 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
-    private val _cartItemSavedState: MutableLiveData<ProductDetailState> = MutableLiveData(ProductDetailState.Idle)
+    private val _cartItemSavedState: MutableLiveData<ProductDetailState> = MutableLiveData()
     val cartItemSavedState: LiveData<ProductDetailState> get() = _cartItemSavedState
 
     init {
@@ -34,6 +34,5 @@ class ProductDetailViewModel(
         }.onFailure {
             _cartItemSavedState.value = ProductDetailState.Fail
         }
-        _cartItemSavedState.value = ProductDetailState.Idle
     }
 }

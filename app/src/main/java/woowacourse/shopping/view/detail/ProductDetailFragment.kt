@@ -48,7 +48,6 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
             when (it) {
                 is ProductDetailState.Success -> showAddCartSuccessMessage()
                 is ProductDetailState.Fail -> showAddCartErrorMessage()
-                is ProductDetailState.Idle -> {}
             }
         }
     }
