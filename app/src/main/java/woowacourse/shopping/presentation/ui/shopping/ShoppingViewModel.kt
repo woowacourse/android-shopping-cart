@@ -10,10 +10,6 @@ import woowacourse.shopping.presentation.state.UIState
 class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
     ViewModel(),
     ShoppingButtonClickListener {
-    private var _products: List<Product> = emptyList()
-    val products: List<Product>
-        get() = _products
-
     private val _shoppingUiState = MutableLiveData<UIState<List<Product>>>()
     val shoppingUiState: LiveData<UIState<List<Product>>> = _shoppingUiState
 
@@ -27,12 +23,11 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
 
     fun loadProducts() {
         try {
-            val productsData = repository.findProductsByPage()
-            _products += productsData
-            if (productsData.isEmpty()) {
+            val products = repository.findProductsByPage()
+            if (products.isEmpty()) {
                 _shoppingUiState.value = UIState.Empty
             } else {
-                _shoppingUiState.value = UIState.Success(productsData)
+                _shoppingUiState.value = UIState.Success(products)
             }
         } catch (e: Exception) {
             _shoppingUiState.value = UIState.Error(e)
