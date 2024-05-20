@@ -48,7 +48,7 @@ class ProductDetailViewModelTest {
         viewModel.loadProduct()
 
         // then
-        assertThat(viewModel.productLoadError.getOrAwaitValue()).isTrue
+        assertThat(viewModel.productLoadError.getOrAwaitValue().peekContent()).isTrue
     }
 
     @Test
@@ -64,7 +64,7 @@ class ProductDetailViewModelTest {
         val actual = cartRepository.findRange(0, 5).first()
         actual.product.assertThat(imageUrl, title, price)
         assertThat(actual.quantity.count).isEqualTo(1)
-        assertThat(viewModel.isSuccessAddCart.value).isTrue
+        assertThat(viewModel.isSuccessAddCart.getOrAwaitValue().peekContent()).isTrue
     }
 
     private fun Product.assertThat(

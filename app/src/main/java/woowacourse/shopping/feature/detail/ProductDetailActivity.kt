@@ -54,7 +54,8 @@ class ProductDetailActivity : AppCompatActivity() {
             viewModel.addCartProduct()
         }
 
-        viewModel.isSuccessAddCart.observe(this) { isSuccess ->
+        viewModel.isSuccessAddCart.observe(this) { isSuccessEvent ->
+            val isSuccess = isSuccessEvent.getContentIfNotHandled() ?: return@observe
             if (isSuccess) {
                 showAddCartSuccessDialog()
             } else {
@@ -87,7 +88,8 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun initializeProductLoadError() {
-        viewModel.productLoadError.observe(this) { isError ->
+        viewModel.productLoadError.observe(this) { isErrorEvent ->
+            val isError = isErrorEvent.getContentIfNotHandled() ?: return@observe
             if (!isError) return@observe
             showErrorSnackBar()
         }

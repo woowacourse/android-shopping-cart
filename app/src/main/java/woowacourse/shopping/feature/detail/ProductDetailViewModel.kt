@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.Product
@@ -15,20 +16,20 @@ class ProductDetailViewModel(
     private val _product = MutableLiveData<Product>()
     val product: LiveData<Product> get() = _product
 
-    private val _productLoadError = MutableLiveData<Boolean>(false)
-    val productLoadError: LiveData<Boolean> get() = _productLoadError
+    private val _productLoadError = MutableLiveData<Event<Boolean>>()
+    val productLoadError: LiveData<Event<Boolean>> get() = _productLoadError
 
-    private val _isSuccessAddCart = MutableLiveData<Boolean>()
-    val isSuccessAddCart: LiveData<Boolean> get() = _isSuccessAddCart
+    private val _isSuccessAddCart = MutableLiveData<Event<Boolean>>()
+    val isSuccessAddCart: LiveData<Event<Boolean>> get() = _isSuccessAddCart
 
     fun loadProduct() {
         runCatching {
             productRepository.find(productId)
         }.onSuccess {
             _product.value = it
-            _productLoadError.value = false
+            _productLoadError.value = Event(false)
         }.onFailure {
-            _productLoadError.value = true
+            _productLoadError.value = Event(true)
         }
     }
 
@@ -36,9 +37,9 @@ class ProductDetailViewModel(
         runCatching {
             cartRepository.increaseQuantity(_product.value ?: return)
         }.onSuccess {
-            _isSuccessAddCart.value = true
+            _isSuccessAddCart.value = Event(true)
         }.onFailure {
-            _isSuccessAddCart.value = false
+            _isSuccessAddCart.value = Event(false)
         }
     }
 }
