@@ -21,10 +21,6 @@ class DummyProductStore : ProductStore {
         return products.find { it.id == findId } ?: throw IllegalArgumentException("해당하는 상품이 없습니다.")
     }
 
-    override fun findById(findId: Int): Product? {
-        return products.find { it.id == findId }
-    }
-
     companion object {
         private const val COUNT_PER_LOAD = 20
     }

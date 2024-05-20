@@ -14,7 +14,18 @@ class ProductDetailViewModel : ViewModel() {
         get() = productStore.findById(productId)
 
     fun addProductToCart() {
-        if (ShoppingCart.productIds.contains(productId)) return
+        if (ShoppingCart.cartItems.any { it.productId == productId }) {
+            addProductCount()
+            return
+        }
         ShoppingCart.addProductToCart(productId)
+    }
+
+    fun addProductCount() {
+        ShoppingCart.addProductCount(productId)
+    }
+
+    fun subtractProductCount() {
+        ShoppingCart.subtractProductCount(productId)
     }
 }

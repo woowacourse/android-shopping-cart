@@ -1,14 +1,34 @@
 package woowacourse.shopping.db
 
 object ShoppingCart {
-    private val _productIds = mutableListOf<Int>()
-    val productIds get() = _productIds.toList()
+    private val _cartItems = mutableListOf<CartItem>()
+    val cartItems get() = _cartItems.toList()
 
     fun addProductToCart(productId: Int) {
-        _productIds.add(productId)
+        val item = _cartItems.find { it.productId == productId }
+        if (item != null) {
+            item.quantity++
+        } else {
+            _cartItems.add(CartItem(productId, 1))
+        }
     }
 
     fun delete(productId: Int) {
-        _productIds.remove(productId)
+        _cartItems.removeAll { it.productId == productId }
+    }
+
+    fun addProductCount(productId: Int) {
+        _cartItems.find { it.productId == productId }?.quantity?.plus(1)
+    }
+
+    fun subtractProductCount(productId: Int) {
+        val item = _cartItems.find { it.productId == productId }
+        if (item != null) {
+            if (item.quantity > 1) {
+                item.quantity--
+            } else {
+                _cartItems.remove(item)
+            }
+        }
     }
 }
