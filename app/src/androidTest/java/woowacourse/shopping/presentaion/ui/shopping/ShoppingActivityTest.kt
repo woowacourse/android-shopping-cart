@@ -47,7 +47,7 @@ class ShoppingActivityTest {
     @Test
     fun `스크롤이_가장_아래로_내려가면_더보기_버튼이_보인다`() {
         onView(withId(R.id.rv_product_list))
-            .perform(RecyclerViewActions.scrollToPosition<ShoppingViewHolder>(9))
+            .perform(RecyclerViewActions.scrollToPosition<ShoppingViewHolder>(19))
 
         Thread.sleep(1000)
 

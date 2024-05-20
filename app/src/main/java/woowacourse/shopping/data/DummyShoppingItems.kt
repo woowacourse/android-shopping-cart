@@ -67,7 +67,7 @@ object DummyShoppingItems {
                         "%2FMjAyMzEwMjlfNCAg%2FMDAxNjk4NTY4MDU4MzI1.jbHZDZihchAU2omlt5kKT2Y-sIMLAeFmK-N124BfwSkg.5" +
                         "5nLXObBCS97UUPyExqsV1HEa_2HY6kS4MSlg0JJ12Eg.JPEG" +
                         ".sisia81%2FCK_pc0030942615.jpg&type=sc960_832",
-                name = "올리브",
+                name = "1 올리브",
                 price = 10000,
             ),
             Product(
@@ -279,7 +279,7 @@ object DummyShoppingItems {
                 imageUrl =
                     "https://search.pstatic.net/common/?src=http%3A%2F%2Fimgnews.naver.net" +
                         "%2Fimage%2F277%2F2013%2F11%2F10%2F2013111012173878553_1_59_20131110122101.jpg&type=sc960_832",
-                name = "논산 설향 딸기",
+                name = "3 논산 설향 딸기",
                 price = 10000,
             ),
             Product(
@@ -347,5 +347,43 @@ object DummyShoppingItems {
                 name = "4 대전 장인약과",
                 price = 10000,
             ),
+            Product(
+                id = 37L,
+                imageUrl =
+                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net" +
+                        "%2FMjAyNDAxMDVfNjYg%2FMDAxNzA0NDU0MTYwMTAx.4pxrLnIdvFp8KDGAnGkbl8zHo5Mcn0d-yD7pzToeiSsg.lF4rd6908c0" +
+                        "j_7kfxBr_u4MSdjq73RkhzKfRk7Z6VUMg.JPEG." +
+                        "rbxod123%2F1704454160034.jpg&type=sc960_832",
+                name = "4 라라스윗 바닐라",
+                price = 10000,
+            ),
+            Product(
+                id = 38L,
+                imageUrl =
+                "https://search.pstatic.net/common/?src=http%3A%2F%2Fshop1.phinf.naver.net" +
+                        "%2F20220419_195%2F1650332783362X5wqH_JPEG%2F51468679090044420_1417181296.jpg&type=sc960_832",
+                name = "4 청포도",
+                price = 10000,
+            ),
+            Product(
+                id = 39L,
+                imageUrl =
+                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net" +
+                        "%2FMjAyNDA0MjZfMTU4%2FMDAxNzE0MTI0NzA4ODY5.oeDm3aXfYKCwJBx6W5pvgeGbEnv9Pl9M7-KS8RSdES" +
+                        "gg.---7jVzxMg2CyWfdaymPSlVDOf-VtgmZiU4bThZNDEsg." +
+                        "JPEG%2F3.jpg&type=sc960_832",
+                name = "4 유기농 쑥",
+                price = 10000,
+            ),
+            Product(
+                id = 40L,
+                imageUrl =
+                "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net" +
+                        "%2FMjAyNDA0MjhfMjA0%2FMDAxNzE0MjMyNDEwMjUy.oPmks3C6DLu9bbeU1ZAAbQsuDNU0STlZmESokn_L32I" +
+                        "g.qNELX5_3ojNWAuh9ggXIx_YuLe7N9wqJDp6CsxwKp-0g.JPEG" +
+                        "%2Fart_1455355748.jpg&type=sc960_832",
+                name = "4 대저 토마토",
+                price = 10000,
+            )
         )
 }

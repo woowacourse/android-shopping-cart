@@ -21,9 +21,9 @@ class ShoppingViewModelTest {
     }
 
     @Test
-    fun `10개 이하의 데이터가 존재할때는 isLoadMoreButtonVisible의 값에는 항상 false가 저장된다`() {
+    fun `20개 이하의 데이터가 존재할때는 isLoadMoreButtonVisible의 값에는 항상 false가 저장된다`() {
         every { repository.findProductsByPage() } returns
-            List(8) {
+            List(19) {
                 Product(
                     id = it.toLong(),
                     name = "Product $it",
@@ -40,9 +40,9 @@ class ShoppingViewModelTest {
     }
 
     @Test
-    fun `10개 초과의 데이터가 존재하고 isVisible이 true라면 isLoadMoreButtonVisible의 값은 true가 저장된다`() {
+    fun `20개 초과의 데이터가 존재하고 isVisible이 true라면 isLoadMoreButtonVisible의 값은 true가 저장된다`() {
         every { repository.findProductsByPage() } returns
-            List(11) {
+            List(21) {
                 Product(
                     id = it.toLong(),
                     name = "Product $it",
@@ -59,9 +59,9 @@ class ShoppingViewModelTest {
     }
 
     @Test
-    fun `10개 초과의 데이터가 존재하고 isVisible이 false라면 isLoadMoreButtonVisible의 값은 false 저장된다`() {
+    fun `20개 초과의 데이터가 존재하고 isVisible이 false라면 isLoadMoreButtonVisible의 값은 false 저장된다`() {
         every { repository.findProductsByPage() } returns
-            List(11) {
+            List(21) {
                 Product(
                     id = it.toLong(),
                     name = "Product $it",
