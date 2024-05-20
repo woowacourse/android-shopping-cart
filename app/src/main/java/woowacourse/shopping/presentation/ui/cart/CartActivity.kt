@@ -28,15 +28,24 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setUpToolbar()
+        setUpViews()
 
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+    }
 
+    private fun setUpViews() {
+        setUpToolbar()
+        setUpRecyclerViewAdapter()
+        setUpUIState()
+    }
+
+    private fun setUpRecyclerViewAdapter() {
         adapter = CartAdapter(this)
         binding.recyclerView.adapter = adapter
+    }
 
-        binding.viewModel = viewModel
-
+    private fun setUpUIState() {
         viewModel.cartItemsState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
