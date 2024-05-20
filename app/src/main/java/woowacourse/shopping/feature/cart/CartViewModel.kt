@@ -40,14 +40,15 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     fun deleteCartItem(cartItem: CartItem) {
+        cartRepository.deleteCartItem(cartItem)
         if (isEmptyLastPage()) {
             movePreviousPage()
+            return
         }
         updateDeletedCart(cartItem)
     }
 
     private fun updateDeletedCart(cartItem: CartItem) {
-        cartRepository.deleteCartItem(cartItem)
         _cart.value = _cart.value?.apply { remove(cartItem) }
         totalCartCount.value = totalCartCount.value?.minus(1)
     }
