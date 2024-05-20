@@ -27,13 +27,19 @@ class ProductDetailFragment :
         )
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
+            viewModel.loadProduct(id)
+        }
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        val id = arguments?.getLong(PRODUCT_ID, -1) ?: -1
-        viewModel.loadProduct(id)
         binding?.also {
             it.lifecycleOwner = viewLifecycleOwner
             it.vm = viewModel

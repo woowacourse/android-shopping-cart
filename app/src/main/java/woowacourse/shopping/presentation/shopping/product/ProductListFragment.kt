@@ -26,6 +26,13 @@ class ProductListFragment :
     }
     private lateinit var productAdapter: ProductAdapter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            viewModel.loadProducts()
+        }
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -35,7 +42,6 @@ class ProductListFragment :
             lifecycleOwner = viewLifecycleOwner
             vm = viewModel
         }
-        viewModel.loadProducts()
         initAppBar()
         initViews()
         initObservers()
