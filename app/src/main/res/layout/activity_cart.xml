@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.ui.cart.viewmodel.CartViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="18dp"
+        android:paddingBottom="50dp"
+        tools:context=".ui.cart.CartActivity">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_cart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingBottom="60dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/btn_previous"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/item_cart" />
+
+        <Button
+            android:id="@+id/btn_previous"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="115dp"
+            android:background="@drawable/selector_left_button"
+            android:clickable="@{vm.canMovePreviousPage}"
+            android:enabled="@{vm.canMovePreviousPage}"
+            android:text="@string/previous_page"
+            android:onClick="@{() -> vm.minusPageNum()}"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart" />
+
+        <TextView
+            android:id="@+id/tv_page_number"
+            android:layout_width="45dp"
+            android:layout_height="42dp"
+            android:gravity="center"
+            android:text="@{vm.pageNumber.toString()}"
+            android:textColor="@color/gray5"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_next"
+            app:layout_constraintStart_toEndOf="@id/btn_previous"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart"
+            tools:text="1" />
+
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/selector_right_button"
+            android:text="@string/next_page"
+            android:textColor="@color/white"
+            android:clickable="@{vm.canMoveNextPage}"
+            android:enabled="@{vm.canMoveNextPage}"
+            android:onClick="@{() -> vm.plusPageNum()}"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_page_number"
+            app:layout_constraintTop_toBottomOf="@id/rv_cart" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
