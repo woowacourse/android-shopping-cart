@@ -17,7 +17,6 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
 class CartActivity : AppCompatActivity(), CartClickListener {
     private lateinit var binding: ActivityCartBinding
-    private lateinit var adapter: CartAdapter
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
             repository = CartRepositoryImpl((ShoppingApplication.getInstance()).database),
@@ -36,19 +35,20 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
     private fun setUpViews() {
         setUpToolbar()
-        setUpRecyclerViewAdapter()
         setUpUIState()
     }
 
-    private fun setUpRecyclerViewAdapter() {
-        adapter = CartAdapter(this)
+    private fun setUpRecyclerViewAdapter(): CartAdapter {
+        val adapter = CartAdapter(this)
         binding.recyclerView.adapter = adapter
+        return adapter
     }
 
     private fun setUpUIState() {
+        val adapter = setUpRecyclerViewAdapter()
         viewModel.cartItemsState.observe(this) { state ->
             when (state) {
-                is UIState.Success -> showData(state.data)
+                is UIState.Success -> showData(state.data, adapter)
                 is UIState.Empty -> {}
                 is UIState.Error ->
                     showError(
@@ -58,7 +58,10 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         }
     }
 
-    private fun showData(data: List<CartItem>) {
+    private fun showData(
+        data: List<CartItem>,
+        adapter: CartAdapter,
+    ) {
         adapter.loadData(data)
     }
 
