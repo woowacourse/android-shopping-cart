@@ -23,6 +23,10 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     private var maxPage: Int = INITIALIZE_PAGE
 
+    init {
+        loadCart()
+    }
+
     fun loadCart() {
         val page = _page.value ?: INITIALIZE_PAGE
         _cart.value = cartRepository.findRange(page, PAGE_SIZE)
