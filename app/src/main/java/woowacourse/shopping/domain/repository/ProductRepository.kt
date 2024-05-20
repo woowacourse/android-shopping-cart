@@ -19,4 +19,9 @@ interface ProductRepository {
     ): List<CartItem>
 
     fun deleteCartItem(itemId: Long)
+
+    fun hasNextPage(
+        currentPage: Int,
+        itemsPerPage: Int,
+    ): Boolean
 }

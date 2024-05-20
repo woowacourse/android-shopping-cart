@@ -25,4 +25,7 @@ interface CartItemDao {
 
     @Query("DELETE FROM $CART_ITEMS_DB_NAME WHERE id = :itemId")
     fun deleteCartItemById(itemId: Long)
+
+    @Query("SELECT COUNT(*) FROM $CART_ITEMS_DB_NAME")
+    fun getItemCount(): Int
 }

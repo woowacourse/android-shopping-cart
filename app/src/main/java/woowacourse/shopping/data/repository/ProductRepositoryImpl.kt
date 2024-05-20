@@ -46,6 +46,17 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         cartItemDao.deleteCartItemById(itemId)
     }
 
+    override fun hasNextPage(
+        currentPage: Int,
+        itemsPerPage: Int,
+    ): Boolean {
+        var totalItemCount = 0
+        thread { totalItemCount = cartItemDao.getItemCount() }.join()
+        val totalPageCount = (totalItemCount + itemsPerPage - 1) / itemsPerPage
+
+        return currentPage < totalPageCount
+    }
+
     companion object {
         const val ERROR_SAVE_DATA_ID = -1L
     }

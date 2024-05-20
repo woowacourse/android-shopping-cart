@@ -49,17 +49,13 @@ class ShoppingCartViewModel(
     }
 
     override fun onPreviousPageButtonClicked() {
-        if (isPrevButtonActivated.value ?: isExistPrevPage()) {
-            _currentPage.value = _currentPage.value?.minus(1)
-            updatePagedData()
-        }
+        _currentPage.value = _currentPage.value?.minus(1)
+        updatePagedData()
     }
 
     override fun onNextPageButtonClicked() {
-        if (isNextButtonActivated.value ?: isExistNextPage()) {
-            _currentPage.value = _currentPage.value?.plus(1)
-            updatePagedData()
-        }
+        _currentPage.value = _currentPage.value?.plus(1)
+        updatePagedData()
     }
 
     private fun updatePagedData() {
@@ -80,18 +76,9 @@ class ShoppingCartViewModel(
     }
 
     private fun updateButtonState() {
-        _isPrevButtonActivated.value = isExistPrevPage()
-        _isNextButtonActivated.value = isExistNextPage()
-    }
-
-    private fun isExistNextPage(): Boolean {
         val pageNumber = currentPage.value ?: 1
-        return pageNumber * 3 < shoppingCart.getItemCount()
-    }
-
-    private fun isExistPrevPage(): Boolean {
-        val pageNumber = currentPage.value ?: 1
-        return pageNumber > 1
+        _isPrevButtonActivated.value = pageNumber > MIN_PAGE_COUNT
+        _isNextButtonActivated.value = repository.hasNextPage(pageNumber, CART_ITEM_PAGE_SIZE)
     }
 
     companion object {

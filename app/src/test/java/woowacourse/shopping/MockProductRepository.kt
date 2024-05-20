@@ -74,6 +74,16 @@ class MockProductRepository : ProductRepository {
         cartItems.removeIf { it.id == itemId }
     }
 
+    override fun hasNextPage(
+        currentPage: Int,
+        itemsPerPage: Int,
+    ): Boolean {
+        val totalItemCount = cartItems.size
+        val totalPageCount = (totalItemCount + itemsPerPage - 1) / itemsPerPage
+
+        return currentPage < totalPageCount
+    }
+
     companion object {
         private const val DEFAULT_ID = -1L
         private val defaultProduct =
