@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
-import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.domain.Product
@@ -52,21 +51,17 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         viewModel.products.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
-                is UiState.Success -> handleSuccessState(state)
+                is UiState.Success -> handleSuccessState(state.data)
             }
         }
     }
 
-    private fun handleSuccessState(state: UiState.Success<Product>) {
-        binding.tvName.text = state.data.name
-        binding.tvPriceValue.text = getString(R.string.price_format_kor, state.data.price)
+    private fun handleSuccessState(product: Product) {
+        binding.product = product
         binding.tvAddCart.setOnClickListener {
             finish()
-            viewModel.saveCartItem(state.data)
+            viewModel.saveCartItem(product)
         }
-        Glide.with(this)
-            .load(state.data.imgUrl)
-            .into(binding.ivProduct)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

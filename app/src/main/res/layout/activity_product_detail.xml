@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.Product" />
 
     </data>
 
@@ -17,6 +20,7 @@
             android:id="@+id/iv_product"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            bindLoadImage="@{product.imgUrl}"
             android:background="@drawable/ic_launcher_background"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1"
@@ -26,6 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:text="@{product.name}"
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="18dp"
             android:textSize="20sp"
+            bindTextFormattedCurrency="@{product.price}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_price"
             tools:text="10000원" />
