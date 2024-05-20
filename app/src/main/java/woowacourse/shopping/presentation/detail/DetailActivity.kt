@@ -15,7 +15,7 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 
-class DetailActivity : AppCompatActivity(), AddCompleteListener {
+class DetailActivity : AppCompatActivity() {
     private val binding: ActivityDetailBinding by lazy {
         ActivityDetailBinding.inflate(layoutInflater)
     }
@@ -34,8 +34,11 @@ class DetailActivity : AppCompatActivity(), AddCompleteListener {
 
         viewModel.loadProductInformation(productId)
 
+        viewModel.addComplete.observe(this) {
+            Toast.makeText(this, getString(R.string.message_add_to_cart_complete), Toast.LENGTH_SHORT).show()
+        }
+
         binding.detailViewModel = viewModel
-        binding.addCompleteListener = this
         binding.lifecycleOwner = this
 
         setSupportActionBar(binding.toolbarDetail)
@@ -54,10 +57,6 @@ class DetailActivity : AppCompatActivity(), AddCompleteListener {
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onAddComplete() {
-        Toast.makeText(this, getString(R.string.message_add_to_cart_complete), Toast.LENGTH_SHORT).show()
     }
 
     companion object {

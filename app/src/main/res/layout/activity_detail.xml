@@ -7,10 +7,6 @@
     <data>
 
         <variable
-            name="addCompleteListener"
-            type="woowacourse.shopping.presentation.detail.AddCompleteListener" />
-
-        <variable
             name="detailViewModel"
             type="woowacourse.shopping.presentation.detail.DetailViewModel" />
     </data>
@@ -101,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint_900"
-            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.id, addCompleteListener)}"
+            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.id)}"
             android:text="@string/detail_add_to_cart_button"
             android:textColor="@color/white"
             android:textSize="20sp"

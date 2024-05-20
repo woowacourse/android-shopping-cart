@@ -15,15 +15,16 @@ class DetailViewModel(
     val productInformation: LiveData<Product>
         get() = _productInformation
 
+    private val _addComplete: MutableLiveData<Boolean> = MutableLiveData()
+    val addComplete: LiveData<Boolean>
+        get() = _addComplete
+
     fun loadProductInformation(id: Long) {
         _productInformation.value = productRepository.fetchProduct(id)
     }
 
-    fun addToCart(
-        id: Long,
-        addCompleteListener: AddCompleteListener,
-    ) {
+    fun addToCart(id: Long) {
         cartRepository.addCartItem(productId = id, quantity = 1)
-        addCompleteListener.onAddComplete()
+        _addComplete.value = true
     }
 }
