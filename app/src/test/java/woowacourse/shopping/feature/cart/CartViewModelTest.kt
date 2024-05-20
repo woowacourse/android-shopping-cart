@@ -38,10 +38,9 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(5)
         cartRepository = FakeCartRepository(cartItems)
-        viewModel = CartViewModel(cartRepository)
 
         // when
-        viewModel.loadCart()
+        viewModel = CartViewModel(cartRepository)
 
         // then
         val actual = viewModel.cart.getOrAwaitValue()
@@ -54,10 +53,9 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(3)
         cartRepository = FakeCartRepository(cartItems)
-        viewModel = CartViewModel(cartRepository)
 
         // when
-        viewModel.loadCart()
+        viewModel = CartViewModel(cartRepository)
 
         // then
         val actual = viewModel.cart.getOrAwaitValue()
@@ -70,10 +68,9 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(5)
         cartRepository = FakeCartRepository(cartItems)
-        viewModel = CartViewModel(cartRepository)
 
         // when
-        viewModel.loadCart()
+        viewModel = CartViewModel(cartRepository)
 
         // then
         val actual = viewModel.hasPage.getOrAwaitValue()
@@ -85,10 +82,9 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(6)
         cartRepository = FakeCartRepository(cartItems)
-        viewModel = CartViewModel(cartRepository)
 
         // when
-        viewModel.loadCart()
+        viewModel = CartViewModel(cartRepository)
 
         // then
         val actual = viewModel.cart.getOrAwaitValue()
@@ -101,10 +97,9 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(6)
         cartRepository = FakeCartRepository(cartItems)
-        viewModel = CartViewModel(cartRepository)
 
         // when
-        viewModel.loadCart()
+        viewModel = CartViewModel(cartRepository)
 
         // then
         val actual = viewModel.hasNextPage.getOrAwaitValue()
@@ -116,10 +111,9 @@ class CartViewModelTest {
         // given
         val cartItems = cartItems(6)
         cartRepository = FakeCartRepository(cartItems)
-        viewModel = CartViewModel(cartRepository)
 
         // when
-        viewModel.loadCart()
+        viewModel = CartViewModel(cartRepository)
 
         // then
         val actual = viewModel.hasPreviousPage.getOrAwaitValue()
@@ -212,7 +206,6 @@ class CartViewModelTest {
         val cartItems = cartItems(1)
         cartRepository = FakeCartRepository(cartItems)
         viewModel = CartViewModel(cartRepository)
-        viewModel.loadCart()
 
         // when
         val cartItem = viewModel.cart.getOrAwaitValue().first()

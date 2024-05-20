@@ -19,7 +19,6 @@ import org.hamcrest.CoreMatchers.allOf
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import woowacourse.shopping.FakeProductRepository
 import woowacourse.shopping.R
 import woowacourse.shopping.data.product.FakeProductRepository
 import woowacourse.shopping.data.product.ProductRepository

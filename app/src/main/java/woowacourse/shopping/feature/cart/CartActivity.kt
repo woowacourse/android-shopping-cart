@@ -24,7 +24,6 @@ class CartActivity : AppCompatActivity() {
     private fun initializeView() {
         initializeToolbar()
         initializeCartAdapter()
-        viewModel.loadCart()
     }
 
     private fun initializeToolbar() {
