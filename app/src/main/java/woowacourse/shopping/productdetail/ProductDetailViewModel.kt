@@ -8,15 +8,20 @@ import woowacourse.shopping.ShoppingCartRepository
 import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingCartItem
+import woowacourse.shopping.productlist.ProductUiModel
+import woowacourse.shopping.productlist.toProductUiModel
 
 class ProductDetailViewModel(
     private val shoppingRepository: ShoppingRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
+    private val _productUi: MutableLiveData<ProductUiModel> = MutableLiveData()
+    val productUi: LiveData<ProductUiModel> get() = _productUi
+
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
-    private val _isAddSuccess: MutableLiveData<Boolean> = MutableLiveData(false)
+    private val _isAddSuccess: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val isAddSuccess: LiveData<Boolean> get() = _isAddSuccess
 
     fun loadProductDetail(productId: Long) {
@@ -24,6 +29,7 @@ class ProductDetailViewModel(
             shoppingRepository.productById(productId)
         }.onSuccess {
             _product.value = it
+            _productUi.value = it.toProductUiModel()
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }

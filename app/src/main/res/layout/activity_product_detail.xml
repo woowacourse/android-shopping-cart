@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.productdetail.ProductDetailViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
+            app:loadImage="@{viewModel.productUi.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -28,6 +34,7 @@
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/black"
             android:textSize="24sp"
+            android:text="@{viewModel.productUi.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_product_detail_product"
             tools:text="[든든] 든든든 스위트콘" />
@@ -63,6 +70,7 @@
             android:fontFamily="@font/roboto"
             android:textColor="@color/black"
             android:textSize="20sp"
+            app:formattedPrice="@{viewModel.productUi.price}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider_product_detail"
             tools:text="10,000원" />
@@ -75,6 +83,7 @@
             android:fontFamily="@font/roboto_bold"
             android:text="@string/product_detail_add_cart_btn"
             android:textSize="20sp"
+            android:onClickListener="@{() -> viewModel.addProductToCart()}"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

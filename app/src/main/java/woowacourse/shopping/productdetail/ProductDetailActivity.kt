@@ -21,18 +21,15 @@ class ProductDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
 
         showProductDetail(productId)
-
-        supportActionBar?.setDisplayShowTitleEnabled(false)
-        binding.btnProductDetailAddCart.setOnClickListener {
-            viewModel.addProductToCart()
-        }
 
         viewModel.isAddSuccess.observe(this) {
             if (it) {
@@ -43,19 +40,6 @@ class ProductDetailActivity : AppCompatActivity() {
 
     private fun showProductDetail(productId: Long) {
         viewModel.loadProductDetail(productId)
-        viewModel.product.observe(this) {
-            showProductDetailView(it.toProductUiModel())
-        }
-    }
-
-    private fun showProductDetailView(productUi: ProductUiModel) {
-        with(binding) {
-            Glide.with(this@ProductDetailActivity)
-                .load(productUi.imageUrl)
-                .into(ivProductDetailProduct)
-            tvProductDetailName.text = productUi.name
-            tvProductDetailPrice.text = getString(R.string.product_price_format, productUi.price)
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
