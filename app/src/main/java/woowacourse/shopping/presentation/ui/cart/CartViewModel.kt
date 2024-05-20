@@ -33,7 +33,7 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     }
 
     private fun updatePageControlVisibility(totalItems: Int) {
-        _isPageControlVisible.postValue(totalItems > PAGE_SIZE)
+        _isPageControlVisible.value = totalItems > PAGE_SIZE
     }
 
     fun loadPage(page: Int) {
@@ -51,32 +51,32 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     fun loadCartItems() {
         try {
             val cartItems =
-                repository.findAllPagedItems(_currentPage.value ?: DEFAULT_PAGE, PAGE_SIZE).items
+                repository.findAllPagedItems(currentPage.value ?: DEFAULT_PAGE, PAGE_SIZE).items
             if (cartItems.isEmpty()) {
-                _cartUiState.postValue(UIState.Empty)
-                _isEmpty.postValue(true)
+                _cartUiState.value = UIState.Empty
+                _isEmpty.value = true
             } else {
-                _cartUiState.postValue(UIState.Success(cartItems))
-                _isEmpty.postValue(false)
+                _cartUiState.value = UIState.Success(cartItems)
+                _isEmpty.value = false
             }
         } catch (e: Exception) {
-            _cartUiState.postValue(UIState.Error(e))
+            _cartUiState.value = UIState.Error(e)
         }
     }
 
     fun loadNextPage() {
-        val nextPage = (_currentPage.value ?: DEFAULT_PAGE) + PAGE_STEP
+        val nextPage = (currentPage.value ?: DEFAULT_PAGE) + PAGE_STEP
         loadPage(nextPage)
     }
 
     fun loadPreviousPage() {
-        val prevPage = (_currentPage.value ?: DEFAULT_PAGE) - PAGE_STEP
+        val prevPage = (currentPage.value ?: DEFAULT_PAGE) - PAGE_STEP
         loadPage(prevPage)
     }
 
     fun deleteItem(itemId: Long) {
         repository.delete(itemId)
-        loadPage(_currentPage.value ?: DEFAULT_PAGE)
+        loadPage(currentPage.value ?: DEFAULT_PAGE)
     }
 
     companion object {

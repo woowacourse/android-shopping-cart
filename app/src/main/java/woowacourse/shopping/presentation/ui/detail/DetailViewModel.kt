@@ -28,9 +28,9 @@ class DetailViewModel(
         try {
             val productData = shoppingRepository.findProductById(productId)
             _product = productData
-            _detailUiState.postValue(UIState.Success(_product))
+            _detailUiState.value = UIState.Success(product)
         } catch (e: Exception) {
-            _detailUiState.postValue(UIState.Error(e))
+            _detailUiState.value = UIState.Error(e)
         }
     }
 

@@ -30,20 +30,20 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
             val productsData = repository.findProductsByPage()
             _products += productsData
             if (productsData.isEmpty()) {
-                _shoppingUiState.postValue(UIState.Empty)
+                _shoppingUiState.value = UIState.Empty
             } else {
-                _shoppingUiState.postValue(UIState.Success(productsData))
+                _shoppingUiState.value = UIState.Success(productsData)
             }
         } catch (e: Exception) {
-            _shoppingUiState.postValue(UIState.Error(e))
+            _shoppingUiState.value = UIState.Error(e)
         }
     }
 
     fun updateLoadMoreButtonVisibility(isVisible: Boolean) {
         if (repository.canLoadMore()) {
-            _isLoadMoreButtonVisible.postValue(isVisible)
+            _isLoadMoreButtonVisible.value = isVisible
         } else {
-            _isLoadMoreButtonVisible.postValue(false)
+            _isLoadMoreButtonVisible.value = false
         }
     }
 
