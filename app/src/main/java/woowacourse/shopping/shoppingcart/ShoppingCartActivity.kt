@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.util.ViewModelFactory
 
@@ -34,7 +35,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         viewModel.loadCartItems(DEFAULT_CURRENT_PAGE)
         viewModel.updatePageSize()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Cart"
+        supportActionBar?.title = getString(R.string.action_bar_title_shopping_cart_activity)
     }
 
     private fun updateView() {

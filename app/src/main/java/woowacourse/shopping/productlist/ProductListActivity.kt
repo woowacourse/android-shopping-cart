@@ -30,7 +30,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
             viewModel.loadProducts(adapter.itemCount)
         }
 
-        supportActionBar?.title = "Shopping"
+        supportActionBar?.title = getString(R.string.action_bar_title_product_list_activity)
     }
 
     private fun attachAdapter() {
