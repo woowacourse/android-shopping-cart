@@ -18,6 +18,9 @@ class ProductDetailViewModel(
     private val _productLoadError = MutableLiveData<Boolean>(false)
     val productLoadError: LiveData<Boolean> get() = _productLoadError
 
+    private val _isSuccessAddCart = MutableLiveData<Boolean>()
+    val isSuccessAddCart: LiveData<Boolean> get() = _isSuccessAddCart
+
     fun loadProduct() {
         runCatching {
             productRepository.find(productId)
@@ -30,6 +33,12 @@ class ProductDetailViewModel(
     }
 
     fun addCartProduct() {
-        cartRepository.increaseQuantity(_product.value ?: return)
+        runCatching {
+            cartRepository.increaseQuantity(_product.value ?: return)
+        }.onSuccess {
+            _isSuccessAddCart.value = true
+        }.onFailure {
+            _isSuccessAddCart.value = false
+        }
     }
 }

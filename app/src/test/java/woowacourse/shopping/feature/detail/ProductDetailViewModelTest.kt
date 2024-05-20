@@ -64,6 +64,7 @@ class ProductDetailViewModelTest {
         val actual = cartRepository.findRange(0, 5).first()
         actual.product.assertThat(imageUrl, title, price)
         assertThat(actual.quantity.count).isEqualTo(1)
+        assertThat(viewModel.isSuccessAddCart.value).isTrue
     }
 
     private fun Product.assertThat(

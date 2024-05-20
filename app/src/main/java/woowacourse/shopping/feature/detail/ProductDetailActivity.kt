@@ -3,6 +3,7 @@ package woowacourse.shopping.feature.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -51,14 +52,21 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun initializeAddCartButton() {
         binding.btnProductDetailAddCart.setOnClickListener {
             viewModel.addCartProduct()
-            showAddCartDialog()
+        }
+
+        viewModel.isSuccessAddCart.observe(this) { isSuccess ->
+            if (isSuccess) {
+                showAddCartSuccessDialog()
+            } else {
+                showAddCartFailureToast()
+            }
         }
     }
 
-    private fun showAddCartDialog() {
+    private fun showAddCartSuccessDialog() {
         AlertDialog.Builder(this)
-            .setTitle(getString(R.string.add_cart_done_title))
-            .setMessage(getString(R.string.add_cart_done_content))
+            .setTitle(getString(R.string.add_cart_success_title))
+            .setMessage(getString(R.string.add_cart_success))
             .setPositiveButton(getString(R.string.common_move)) { _, _ ->
                 navigateToCartView()
             }
@@ -67,6 +75,10 @@ class ProductDetailActivity : AppCompatActivity() {
             }
             .setCancelable(false)
             .show()
+    }
+
+    private fun showAddCartFailureToast() {
+        Toast.makeText(this, R.string.add_cart_failure, Toast.LENGTH_SHORT).show()
     }
 
     private fun navigateToCartView() {
