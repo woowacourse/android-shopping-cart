@@ -18,6 +18,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
+import woowacourse.shopping.presentation.home.adapter.LoadingViewHolder
+import woowacourse.shopping.presentation.home.adapter.ProductAdapter
+import woowacourse.shopping.presentation.home.adapter.ProductViewHolder
 
 @RunWith(AndroidJUnit4::class)
 class HomeActivityTest {
@@ -44,7 +47,7 @@ class HomeActivityTest {
                     matches(
                         matchViewHolderAtPosition(
                             20,
-                            ProductAdapter.LoadingViewHolder::class.java,
+                            LoadingViewHolder::class.java,
                         ),
                     ),
                 )
@@ -68,7 +71,7 @@ class HomeActivityTest {
                 .perform(RecyclerViewActions.scrollToLastPosition<RecyclerView.ViewHolder>())
                 .perform(
                     // Trouble Shooting : 아이템의 특성(withText 등)을 찾기보다는 포지션을 활용하는 것이 좋음
-                    RecyclerViewActions.actionOnItemAtPosition<ProductAdapter.LoadingViewHolder>(
+                    RecyclerViewActions.actionOnItemAtPosition<LoadingViewHolder>(
                         20,
                         ViewActions.click(),
                     ),
@@ -77,7 +80,7 @@ class HomeActivityTest {
                     matches(
                         matchViewHolderAtPosition(
                             20,
-                            ProductAdapter.ProductViewHolder::class.java,
+                            ProductViewHolder::class.java,
                         ),
                     ),
                 )
@@ -97,9 +100,9 @@ class HomeActivityTest {
                 if (view !is RecyclerView) return false
                 val viewHolder = view.findViewHolderForAdapterPosition(position)
                 return viewHolder != null &&
-                    viewHolderClass.isInstance(
-                        viewHolder,
-                    )
+                        viewHolderClass.isInstance(
+                            viewHolder,
+                        )
             }
         }
     }

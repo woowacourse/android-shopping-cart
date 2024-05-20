@@ -13,7 +13,7 @@
 
         <variable
             name="productAdapter"
-            type="woowacourse.shopping.presentation.home.ProductAdapter" />
+            type="woowacourse.shopping.presentation.home.adapter.ProductAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

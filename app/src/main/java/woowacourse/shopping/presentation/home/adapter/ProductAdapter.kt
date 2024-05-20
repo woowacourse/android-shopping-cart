@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.home
+package woowacourse.shopping.presentation.home.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +11,9 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.presentation.home.LoadClickListener
+import woowacourse.shopping.presentation.home.LoadStatus
+import woowacourse.shopping.presentation.home.ProductItemClickListener
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(
@@ -53,7 +56,7 @@ class ProductAdapter(
         }
     }
 
-    override fun getItemCount(): Int = products.size + 1
+    override fun getItemCount(): Int = products.size + ADD_MORE_COUNT
 
     override fun getItemViewType(position: Int): Int {
         return if (position < products.size) {
@@ -73,36 +76,10 @@ class ProductAdapter(
         this.loadStatus = loadStatus
     }
 
-    class ProductViewHolder(
-        private val binding: ItemProductBinding,
-        productItemClickListener: ProductItemClickListener,
-    ) :
-        RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.productItemClickListener = productItemClickListener
-        }
-
-        fun bind(product: Product) {
-            binding.product = product
-        }
-    }
-
-    class LoadingViewHolder(
-        private val binding: ItemLoadMoreBinding,
-        loadClickListener: LoadClickListener,
-    ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.loadClickListener = loadClickListener
-        }
-
-        fun bind(loadStatus: LoadStatus) {
-            binding.loadStatus = loadStatus
-        }
-    }
-
     companion object {
         const val TYPE_PRODUCT = 1000
         const val TYPE_LOAD = 1001
+        private const val ADD_MORE_COUNT = 1
         private const val EXCEPTION_ILLEGAL_VIEW_TYPE = "유효하지 않은 뷰 타입입니다."
     }
 }

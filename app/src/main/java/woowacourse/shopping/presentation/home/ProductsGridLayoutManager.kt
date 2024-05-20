@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.home
 
 import androidx.recyclerview.widget.GridLayoutManager
+import woowacourse.shopping.presentation.home.adapter.ProductAdapter
 
 class ProductsGridLayoutManager(
     private val adapter: ProductAdapter,
