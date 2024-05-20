@@ -9,5 +9,7 @@ interface ProductDao {
 
     fun findAll(): List<Product>
 
+    fun getProducts(): List<Product>
+
     fun deleteAll()
 }
