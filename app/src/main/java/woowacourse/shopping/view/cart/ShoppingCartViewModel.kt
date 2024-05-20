@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.view.Event
 import kotlin.concurrent.thread
 
 class ShoppingCartViewModel(
@@ -23,6 +24,12 @@ class ShoppingCartViewModel(
 
     private val _pagedData: MutableLiveData<List<CartItem>> = MutableLiveData(emptyList())
     val pagedData: LiveData<List<CartItem>> get() = _pagedData
+
+    private val _navigateToBack = MutableLiveData<Event<Boolean>>()
+    val navigateToBack: LiveData<Event<Boolean>> get() = _navigateToBack
+
+    private val _navigateToDetail = MutableLiveData<Event<Long>>()
+    val navigateToDetail: LiveData<Event<Long>> get() = _navigateToDetail
 
     init {
         loadCartItems()
@@ -56,6 +63,14 @@ class ShoppingCartViewModel(
     override fun onNextPageButtonClicked() {
         _currentPage.value = _currentPage.value?.plus(1)
         updatePagedData()
+    }
+
+    override fun onBackButtonClicked() {
+        _navigateToBack.value = Event(true)
+    }
+
+    override fun onCartItemClicked(productId: Long) {
+        _navigateToDetail.value = Event(productId)
     }
 
     private fun updatePagedData() {

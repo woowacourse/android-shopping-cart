@@ -10,10 +10,6 @@
             type="woowacourse.shopping.view.cart.ShoppingCartActionHandler" />
 
         <variable
-            name="navigationActionHandler"
-            type="woowacourse.shopping.view.cart.NavigationActionHandler" />
-
-        <variable
             name="cartItem"
             type="woowacourse.shopping.domain.model.CartItem" />
     </data>
@@ -23,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:background="@drawable/shape_border"
-        android:onClick="@{() -> navigationActionHandler.onCartItemClicked(cartItem.product.id)}">
+        android:onClick="@{() -> shoppingCartActionHandler.onCartItemClicked(cartItem.product.id)}">
 
         <TextView
             android:id="@+id/tv_cart_item_name"
@@ -39,7 +35,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/iv_cart_item_image"
-            app:layout_constraintEnd_toStartOf="@id/btn_close"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="PET-보틀" />

@@ -6,4 +6,8 @@ interface ShoppingCartActionHandler {
     fun onPreviousPageButtonClicked()
 
     fun onNextPageButtonClicked()
+
+    fun onBackButtonClicked()
+
+    fun onCartItemClicked(productId: Long)
 }

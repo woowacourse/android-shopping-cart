@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
@@ -12,7 +11,7 @@ import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
-class ShoppingCartFragment : Fragment(), NavigationActionHandler {
+class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentShoppingCartBinding? = null
     val binding: FragmentShoppingCartBinding get() = _binding!!
     private lateinit var adapter: ShoppingCartAdapter
@@ -44,11 +43,9 @@ class ShoppingCartFragment : Fragment(), NavigationActionHandler {
     private fun setupDataBinding() {
         binding.viewModel = shoppingCartViewModel
         binding.shoppingCartActionHandler = shoppingCartViewModel
-        binding.navigationActionHandler = this
         adapter =
             ShoppingCartAdapter(
                 shoppingCartActionHandler = shoppingCartViewModel,
-                navigationActionHandler = this,
             )
         binding.rvShoppingCart.adapter = adapter
     }
@@ -57,13 +54,17 @@ class ShoppingCartFragment : Fragment(), NavigationActionHandler {
         shoppingCartViewModel.pagedData.observe(viewLifecycleOwner) {
             adapter.updateCartItems(it)
         }
+
+        shoppingCartViewModel.navigateToBack.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { parentFragmentManager.popBackStack() }
+        }
+
+        shoppingCartViewModel.navigateToDetail.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { navigateToDetail(it) }
+        }
     }
 
-    override fun onBackButtonClicked() {
-        parentFragmentManager.popBackStack()
-    }
-
-    override fun onCartItemClicked(productId: Long) {
+    private fun navigateToDetail(productId: Long) {
         val productFragment =
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
@@ -78,8 +79,6 @@ class ShoppingCartFragment : Fragment(), NavigationActionHandler {
             .addToBackStack(null)
             .commit()
     }
-
-    private fun showMaxItemMessage() = Toast.makeText(this.context, R.string.max_paging_data_message, Toast.LENGTH_SHORT).show()
 
     companion object {
         const val DEFAULT_ITEM_SIZE = 0

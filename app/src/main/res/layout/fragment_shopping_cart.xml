@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -13,10 +14,6 @@
         <variable
             name="shoppingCartActionHandler"
             type="woowacourse.shopping.view.cart.ShoppingCartActionHandler" />
-
-        <variable
-            name="navigationActionHandler"
-            type="woowacourse.shopping.view.cart.NavigationActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/top_bar_margin_start"
             android:background="@android:color/transparent"
-            android:onClick="@{() -> navigationActionHandler.onBackButtonClicked()}"
+            android:onClick="@{() -> shoppingCartActionHandler.onBackButtonClicked()}"
             android:src="@drawable/ic_arrow_back"
             app:layout_constraintBottom_toBottomOf="@id/vw_cart_top_bar"
             app:layout_constraintStart_toStartOf="@id/vw_cart_top_bar"
@@ -85,8 +82,8 @@
                 android:id="@+id/btn_prev"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:clickable="@{viewModel.isPrevButtonActivated}"
                 android:background="@{viewModel.isPrevButtonActivated ? @color/primary : @color/gray}"
+                android:clickable="@{viewModel.isPrevButtonActivated}"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:onClick="@{() -> shoppingCartActionHandler.onPreviousPageButtonClicked()}"
@@ -108,8 +105,8 @@
                 android:id="@+id/btn_next"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:clickable="@{viewModel.isNextButtonActivated}"
                 android:background="@{viewModel.isNextButtonActivated ? @color/primary : @color/gray}"
+                android:clickable="@{viewModel.isNextButtonActivated}"
                 android:minWidth="0dp"
                 android:minHeight="0dp"
                 android:onClick="@{() -> shoppingCartActionHandler.onNextPageButtonClicked()}"
