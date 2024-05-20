@@ -9,6 +9,11 @@ interface ProductRepository {
         pagingSize: Int,
     ): List<Product>
 
+    fun hasNextProductPage(
+        offset: Int,
+        pagingSize: Int,
+    ): Boolean
+
     fun getProduct(productId: Long): Product
 
     fun addCartItem(product: Product): Long
@@ -20,7 +25,7 @@ interface ProductRepository {
 
     fun deleteCartItem(itemId: Long)
 
-    fun hasNextPage(
+    fun hasNextCartItemPage(
         currentPage: Int,
         itemsPerPage: Int,
     ): Boolean

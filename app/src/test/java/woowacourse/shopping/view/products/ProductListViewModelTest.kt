@@ -25,6 +25,6 @@ class ProductListViewModelTest {
         viewModel = ProductListViewModel(repository)
 
         val result = viewModel.products.getOrAwaitValue()
-        assertThat(result.size).isEqualTo(20)
+        assertThat(result.items.size).isEqualTo(20)
     }
 }

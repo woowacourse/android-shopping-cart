@@ -21,4 +21,6 @@ class ProductDao {
             products.drop(offset)
         }.take(pagingSize)
     }
+
+    fun getProductCount(): Int = products.size
 }

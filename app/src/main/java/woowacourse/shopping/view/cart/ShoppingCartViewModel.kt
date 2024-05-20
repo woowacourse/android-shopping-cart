@@ -93,7 +93,7 @@ class ShoppingCartViewModel(
     private fun updateButtonState() {
         val pageNumber = currentPage.value ?: 1
         _isPrevButtonActivated.value = pageNumber > MIN_PAGE_COUNT
-        _isNextButtonActivated.value = repository.hasNextPage(pageNumber, CART_ITEM_PAGE_SIZE)
+        _isNextButtonActivated.value = repository.hasNextCartItemPage(pageNumber, CART_ITEM_PAGE_SIZE)
     }
 
     companion object {

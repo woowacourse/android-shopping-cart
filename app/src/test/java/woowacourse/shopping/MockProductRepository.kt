@@ -48,6 +48,13 @@ class MockProductRepository : ProductRepository {
         return products.subList(offset, pagingSize)
     }
 
+    override fun hasNextProductPage(
+        offset: Int,
+        pagingSize: Int,
+    ): Boolean {
+        return offset + pagingSize < products.size
+    }
+
     override fun getProduct(productId: Long): Product {
         return products.firstOrNull { it.id == productId } ?: defaultProduct
     }
@@ -74,7 +81,7 @@ class MockProductRepository : ProductRepository {
         cartItems.removeIf { it.id == itemId }
     }
 
-    override fun hasNextPage(
+    override fun hasNextCartItemPage(
         currentPage: Int,
         itemsPerPage: Int,
     ): Boolean {

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
@@ -46,11 +47,20 @@ class ProductsListFragment : Fragment() {
         binding.productListActionHandler = productListViewModel
         adapter = ProductAdapter(productListActionHandler = productListViewModel)
         binding.rvProducts.adapter = adapter
+        val layoutManager = GridLayoutManager(context, 2)
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    if (adapter.getItemViewType(position) == ProductAdapter.LOAD_MORE_VIEW_TYPE) return 2
+                    return 1
+                }
+            }
+        binding.rvProducts.layoutManager = layoutManager
     }
 
     private fun observeData() {
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
-            adapter.updateProducts(addedProducts = products)
+            adapter.updateProducts(addedProducts = products.items, products.hasNextPage)
         }
 
         productListViewModel.navigateToCart.observe(viewLifecycleOwner) {
@@ -60,8 +70,8 @@ class ProductsListFragment : Fragment() {
         }
 
         productListViewModel.navigateToDetail.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
-                navigateToDetail(it)
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
             }
         }
     }

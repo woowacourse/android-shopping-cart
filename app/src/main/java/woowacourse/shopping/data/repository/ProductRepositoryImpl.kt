@@ -21,6 +21,13 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         return productDao.findPagingProducts(offset, pagingSize)
     }
 
+    override fun hasNextProductPage(
+        offset: Int,
+        pagingSize: Int,
+    ): Boolean {
+        return offset + pagingSize < productDao.getProductCount()
+    }
+
     override fun getProduct(productId: Long): Product {
         val product = productDao.findProductById(productId)
         return product ?: throw NoSuchDataException()
@@ -46,7 +53,7 @@ class ProductRepositoryImpl(context: Context) : ProductRepository {
         cartItemDao.deleteCartItemById(itemId)
     }
 
-    override fun hasNextPage(
+    override fun hasNextCartItemPage(
         currentPage: Int,
         itemsPerPage: Int,
     ): Boolean {
