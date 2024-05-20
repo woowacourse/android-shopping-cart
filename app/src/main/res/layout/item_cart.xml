@@ -50,11 +50,54 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="12dp"
             android:scaleType="fitXY"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:src="@drawable/close_button" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="42dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/tv_product_price"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/btn_minus_product"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@color/white_no_border_line"
+                android:text="@string/minus"
+                android:textColor="@color/gray5"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_count"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@color/white_no_border_line"
+                android:gravity="center"
+                android:textColor="@color/gray5"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                tools:text="3" />
+
+            <Button
+                android:id="@+id/btn_plus_product"
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:background="@color/white_no_border_line"
+                android:text="@string/plus"
+                android:textColor="@color/gray5"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_product_price"
