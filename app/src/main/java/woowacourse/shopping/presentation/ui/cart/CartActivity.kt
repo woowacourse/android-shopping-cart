@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import woowacourse.shopping.R
@@ -53,11 +52,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     private fun observeErrorEventUpdates() {
         viewModel.error.observe(this) {
             when (it) {
-                true -> {
-                    Toast.makeText(this, getString(R.string.error_load_cart), Toast.LENGTH_SHORT)
-                        .show()
-                }
-
+                true -> showToast(getString(R.string.error_load_cart))
                 false -> {}
             }
         }

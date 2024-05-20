@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.base
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -18,6 +19,11 @@ abstract class BindingActivity<T : ViewDataBinding> : AppCompatActivity() {
     }
 
     abstract fun initStartView(savedInstanceState: Bundle?)
+
+    protected fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT)
+            .show()
+    }
 
     override fun onDestroy() {
         super.onDestroy()

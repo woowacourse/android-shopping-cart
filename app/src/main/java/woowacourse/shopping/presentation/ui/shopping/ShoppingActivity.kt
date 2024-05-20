@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.ui.shopping
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
@@ -55,14 +54,10 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     private fun observeErrorEventUpdates() {
         viewModel.error.observe(this) {
             when (it) {
-                true -> handleErrorState()
+                true -> showToast(getString(R.string.all_product_loaded))
                 false -> {}
             }
         }
-    }
-
-    private fun handleErrorState() {
-        Toast.makeText(this, "아이템을 모두 불러왔습니다.", Toast.LENGTH_SHORT).show()
     }
 
     private fun observeProductUpdates() {

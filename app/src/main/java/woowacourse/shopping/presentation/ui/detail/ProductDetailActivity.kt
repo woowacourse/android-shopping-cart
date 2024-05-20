@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
@@ -36,15 +35,10 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private fun observeErrorEventUpdates() {
         viewModel.error.observe(this) {
             when (it) {
-                true -> showToast()
+                true -> showToast(getString(R.string.product_not_found))
                 false -> {}
             }
         }
-    }
-
-    private fun showToast() {
-        Toast.makeText(this, getString(R.string.product_not_found), Toast.LENGTH_SHORT)
-            .show()
     }
 
     private fun observeProductsUpdates() {
