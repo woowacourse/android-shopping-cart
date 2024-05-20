@@ -8,7 +8,7 @@ import woowacourse.shopping.model.Product
 
 class ProductsAdapter(private val onClickProductItem: OnClickProductItem) :
     RecyclerView.Adapter<ProductsViewHolder>() {
-    private var products: List<Product> = emptyList()
+    private val products: MutableList<Product> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -34,7 +34,7 @@ class ProductsAdapter(private val onClickProductItem: OnClickProductItem) :
         val positionStart = insertedProducts.size
         val itemCount = insertedProducts.size - products.size
 
-        products = insertedProducts
+        products.addAll(insertedProducts.subList(products.size, insertedProducts.size))
         notifyItemRangeChanged(positionStart, itemCount)
     }
 }
