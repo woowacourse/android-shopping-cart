@@ -11,7 +11,7 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.utils.NoSuchDataException
 
-class ProductDetailFragment : Fragment(), OnClickDetail {
+class ProductDetailFragment : Fragment() {
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
 
@@ -40,7 +40,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
 
     private fun setupDataBinding() {
         binding.viewModel = productDetailViewModel
-        binding.onClickDetail = this
+        binding.detailActionHandler = productDetailViewModel
     }
 
     private fun observeData() {
@@ -49,6 +49,10 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
                 is ProductDetailState.Success -> showAddCartSuccessMessage()
                 is ProductDetailState.Fail -> showAddCartErrorMessage()
             }
+        }
+
+        productDetailViewModel.navigateToBack.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { parentFragmentManager.popBackStack() }
         }
     }
 
@@ -60,16 +64,6 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         super.onDestroyView()
         _binding = null
     }
-
-    override fun clickClose() {
-        parentFragmentManager.popBackStack()
-    }
-
-    override fun clickAddCart() {
-        productDetailViewModel.addShoppingCartItem()
-    }
-
-    private fun showLoadErrorMessage() = showToastMessage(R.string.error_load_data_message)
 
     private fun showAddCartSuccessMessage() = showToastMessage(R.string.success_save_cart_item_message)
 

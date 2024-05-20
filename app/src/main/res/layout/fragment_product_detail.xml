@@ -10,8 +10,8 @@
             type="woowacourse.shopping.view.detail.ProductDetailViewModel" />
 
         <variable
-            name="onClickDetail"
-            type="woowacourse.shopping.view.detail.OnClickDetail" />
+            name="detailActionHandler"
+            type="woowacourse.shopping.view.detail.DetailActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/top_bar_margin_end"
             android:background="@android:color/transparent"
-            android:onClick="@{() -> onClickDetail.clickClose()}"
+            android:onClick="@{() -> detailActionHandler.onCloseButtonClicked()}"
             android:src="@drawable/ic_close_24"
             app:layout_constraintBottom_toBottomOf="@id/vw_detail_top_bar"
             app:layout_constraintEnd_toEndOf="@id/vw_detail_top_bar"
@@ -106,7 +106,7 @@
             android:background="@color/primary"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:onClick="@{()->onClickDetail.clickAddCart()}"
+            android:onClick="@{()->detailActionHandler.onAddCartButtonClicked()}"
             android:padding="0dp"
             android:text="@string/add_cart_text"
             android:textColor="@color/white"
