@@ -20,7 +20,7 @@ class CartActivity : AppCompatActivity(), CartClickListener {
     private lateinit var adapter: CartAdapter
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
-            repository = CartRepositoryImpl((application as ShoppingApplication).database),
+            repository = CartRepositoryImpl((ShoppingApplication.getInstance()).database),
         )
     }
 
