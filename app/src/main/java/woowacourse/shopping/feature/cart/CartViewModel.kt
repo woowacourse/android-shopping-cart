@@ -8,8 +8,8 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.model.CartItem
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
-    private val _cart = MutableLiveData<List<CartItem>>()
-    val cart: LiveData<List<CartItem>> get() = _cart
+    private val _cart = MutableLiveData<MutableList<CartItem>>()
+    val cart: LiveData<List<CartItem>> = _cart.map { it.toList() }
 
     private val _page = MutableLiveData<Int>(INITIALIZE_PAGE)
     val page: LiveData<Int> get() = _page
@@ -29,7 +29,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     private fun loadCart() {
         val page = _page.value ?: INITIALIZE_PAGE
-        _cart.value = cartRepository.findRange(page, PAGE_SIZE)
+        _cart.value = cartRepository.findRange(page, PAGE_SIZE).toMutableList()
         loadTotalCartCount()
     }
 
@@ -40,12 +40,16 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     fun deleteCartItem(cartItem: CartItem) {
-        cartRepository.deleteCartItem(cartItem)
         if (isEmptyLastPage()) {
             movePreviousPage()
-            return
         }
-        loadCart()
+        updateDeletedCart(cartItem)
+    }
+
+    private fun updateDeletedCart(cartItem: CartItem) {
+        cartRepository.deleteCartItem(cartItem)
+        _cart.value = _cart.value?.apply { remove(cartItem) }
+        totalCartCount.value = totalCartCount.value?.minus(1)
     }
 
     private fun isEmptyLastPage(): Boolean {
