@@ -15,6 +15,7 @@ import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewType
+import woowacourse.shopping.presentation.util.EventObserver
 
 class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHandler {
     override val layoutResourceId: Int
@@ -52,12 +53,12 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         }
 
     private fun observeErrorEventUpdates() {
-        viewModel.error.observe(this) {
-            when (it) {
-                true -> showToast(getString(R.string.all_product_loaded))
-                false -> {}
-            }
-        }
+        viewModel.error.observe(
+            this,
+            EventObserver {
+                showToast(it.message)
+            },
+        )
     }
 
     private fun observeProductUpdates() {
