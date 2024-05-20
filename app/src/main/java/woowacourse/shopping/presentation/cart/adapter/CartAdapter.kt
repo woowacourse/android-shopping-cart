@@ -1,14 +1,15 @@
-package woowacourse.shopping.presentation.cart
+package woowacourse.shopping.presentation.cart.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.presentation.cart.Order
 
 class CartAdapter(
     private var orders: List<Order>,
     private val cartItemDeleteClickListener: CartItemDeleteClickListener,
-) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -19,14 +20,17 @@ class CartAdapter(
         return CartViewHolder(binding, cartItemDeleteClickListener)
     }
 
-    override fun getItemCount(): Int = orders.size
-
     override fun onBindViewHolder(
-        holder: CartViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        holder.bind(orders[position])
+        when (holder) {
+            is CartViewHolder -> holder.bind(orders[position])
+            else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)
+        }
     }
+
+    override fun getItemCount(): Int = orders.size
 
     fun replaceOrders(orders: List<Order>) {
         val currentSize = this.orders.size
@@ -35,16 +39,7 @@ class CartAdapter(
         notifyItemRangeInserted(0, this.orders.size)
     }
 
-    class CartViewHolder(
-        private val binding: ItemCartBinding,
-        cartItemDeleteClickListener: CartItemDeleteClickListener,
-    ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.cartItemDeleteClickListener = cartItemDeleteClickListener
-        }
-
-        fun bind(order: Order) {
-            binding.order = order
-        }
+    companion object {
+        private const val EXCEPTION_ILLEGAL_VIEW_TYPE = "유효하지 않은 뷰 타입입니다."
     }
 }

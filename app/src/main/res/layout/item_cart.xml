@@ -8,7 +8,7 @@
 
         <variable
             name="cartItemDeleteClickListener"
-            type="woowacourse.shopping.presentation.cart.CartItemDeleteClickListener" />
+            type="woowacourse.shopping.presentation.cart.adapter.CartItemDeleteClickListener" />
 
         <variable
             name="order"

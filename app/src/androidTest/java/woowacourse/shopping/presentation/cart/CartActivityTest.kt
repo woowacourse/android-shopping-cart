@@ -48,7 +48,7 @@ class CartActivityTest {
             matches(
                 matchViewHolderAtPosition(
                     0,
-                    CartAdapter.CartViewHolder::class.java,
+                    RecyclerView.ViewHolder::class.java,
                 ),
             ),
         )
@@ -65,7 +65,7 @@ class CartActivityTest {
             matches(
                 matchViewHolderAtPosition(
                     0,
-                    CartAdapter.CartViewHolder::class.java,
+                    RecyclerView.ViewHolder::class.java,
                 ),
             ),
         )

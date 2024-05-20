@@ -12,7 +12,9 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.presentation.home.adapter.LoadClickListener
 import woowacourse.shopping.presentation.home.adapter.ProductAdapter
+import woowacourse.shopping.presentation.home.adapter.ProductItemClickListener
 
 class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickListener {
     private val binding: ActivityHomeBinding by lazy {

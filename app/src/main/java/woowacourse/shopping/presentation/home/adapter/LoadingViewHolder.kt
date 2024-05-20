@@ -2,7 +2,6 @@ package woowacourse.shopping.presentation.home.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
-import woowacourse.shopping.presentation.home.LoadClickListener
 import woowacourse.shopping.presentation.home.LoadStatus
 
 class LoadingViewHolder(
