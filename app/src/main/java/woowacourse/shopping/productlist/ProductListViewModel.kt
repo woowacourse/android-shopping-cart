@@ -18,6 +18,10 @@ class ProductListViewModel(
 
     val totalSize: Int = repository.productsTotalSize()
 
+    init {
+        loadProducts(PRODUCTS_START_POSITION)
+    }
+
     fun loadProducts(startPosition: Int) {
         runCatching {
             repository.products(startPosition, PRODUCTS_OFFSET_SIZE)
@@ -31,6 +35,7 @@ class ProductListViewModel(
     }
 
     companion object {
+        private const val PRODUCTS_START_POSITION = 0
         private const val PRODUCTS_OFFSET_SIZE = 20
     }
 }
