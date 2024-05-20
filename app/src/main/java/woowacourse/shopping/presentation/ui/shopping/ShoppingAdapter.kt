@@ -31,9 +31,11 @@ class ShoppingAdapter(
         return products.size
     }
 
-    fun loadData(addedProducts: List<Product>) {
-        val positionStart = products.size
-        products += addedProducts
-        notifyItemRangeInserted(positionStart, addedProducts.size)
+    fun loadData(newProducts: List<Product>) {
+        val oldSize = products.size
+        val newSize = newProducts.size
+        val addSize = newSize - oldSize
+        products += newProducts.subList(oldSize, newSize)
+        notifyItemRangeInserted(oldSize, addSize)
     }
 }

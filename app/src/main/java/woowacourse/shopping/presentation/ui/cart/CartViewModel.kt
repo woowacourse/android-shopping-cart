@@ -10,8 +10,9 @@ import woowacourse.shopping.presentation.state.UIState
 class CartViewModel(private val repository: CartRepository) : ViewModel() {
     private var lastPage: Int = DEFAULT_PAGE
 
-    private val _cartUiState = MutableLiveData<UIState<List<CartItem>>>()
-    val cartUiState: LiveData<UIState<List<CartItem>>> = _cartUiState
+    private val _cartUiState = MutableLiveData<UIState<List<CartItem>>>(UIState.Empty)
+    val cartUiState: LiveData<UIState<List<CartItem>>>
+        get() = _cartUiState
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
     val currentPage: LiveData<Int> = _currentPage

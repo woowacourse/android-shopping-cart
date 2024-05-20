@@ -13,8 +13,9 @@ class DetailViewModel(
     private val shoppingRepository: ShoppingItemsRepository,
     private val productId: Long,
 ) : ViewModel() {
-    private val _detailUiState = MutableLiveData<UIState<Product>>()
-    val detailUiState: LiveData<UIState<Product>> = _detailUiState
+    private val _detailUiState = MutableLiveData<UIState<Product>>(UIState.Empty)
+    val detailUiState: LiveData<UIState<Product>>
+        get() = _detailUiState
 
     private lateinit var _product: Product
     val product: Product

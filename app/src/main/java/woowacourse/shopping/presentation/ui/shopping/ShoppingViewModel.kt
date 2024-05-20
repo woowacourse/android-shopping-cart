@@ -10,12 +10,15 @@ import woowacourse.shopping.presentation.state.UIState
 class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
     ViewModel(),
     ShoppingButtonClickListener {
-    private val _shoppingUiState = MutableLiveData<UIState<List<Product>>>()
-    val shoppingUiState: LiveData<UIState<List<Product>>> = _shoppingUiState
+    private val _shoppingUiState = MutableLiveData<UIState<List<Product>>>(UIState.Empty)
+    val shoppingUiState: LiveData<UIState<List<Product>>>
+        get() = _shoppingUiState
 
     private val _isLoadMoreButtonVisible = MutableLiveData(false)
     val isLoadMoreButtonVisible: LiveData<Boolean>
         get() = _isLoadMoreButtonVisible
+
+    private val loadedProducts: MutableList<Product> = mutableListOf()
 
     init {
         loadProducts()
@@ -27,7 +30,8 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
             if (products.isEmpty()) {
                 _shoppingUiState.value = UIState.Empty
             } else {
-                _shoppingUiState.value = UIState.Success(products)
+                _shoppingUiState.value = UIState.Success(loadedProducts + products)
+                loadedProducts += products
             }
         } catch (e: Exception) {
             _shoppingUiState.value = UIState.Error(e)
