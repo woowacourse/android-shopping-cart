@@ -35,7 +35,8 @@ class ProductDetailActivity : AppCompatActivity() {
     private fun initializeView() {
         initializeToolbar()
         initializeAddCartButton()
-        loadProduct()
+        initializeProductLoadError()
+        viewModel.loadProduct()
     }
 
     private fun initializeToolbar() {
@@ -73,10 +74,9 @@ class ProductDetailActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun loadProduct() {
-        runCatching {
-            viewModel.loadProduct()
-        }.onFailure {
+    private fun initializeProductLoadError() {
+        viewModel.productLoadError.observe(this) { isError ->
+            if (!isError) return@observe
             showErrorSnackBar()
         }
     }

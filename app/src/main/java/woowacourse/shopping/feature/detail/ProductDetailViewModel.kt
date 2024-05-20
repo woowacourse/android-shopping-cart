@@ -15,8 +15,18 @@ class ProductDetailViewModel(
     private val _product = MutableLiveData<Product>()
     val product: LiveData<Product> get() = _product
 
+    private val _productLoadError = MutableLiveData<Boolean>(false)
+    val productLoadError: LiveData<Boolean> get() = _productLoadError
+
     fun loadProduct() {
-        _product.value = productRepository.find(productId)
+        runCatching {
+            productRepository.find(productId)
+        }.onSuccess {
+            _product.value = it
+            _productLoadError.value = false
+        }.onFailure {
+            _productLoadError.value = true
+        }
     }
 
     fun addCartProduct() {

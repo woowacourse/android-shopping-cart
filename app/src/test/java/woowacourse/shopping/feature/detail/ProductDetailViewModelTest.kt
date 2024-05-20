@@ -3,7 +3,6 @@ package woowacourse.shopping.feature.detail
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.cart.CartRepository
@@ -15,7 +14,6 @@ import woowacourse.shopping.imageUrl
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.price
 import woowacourse.shopping.title
-import java.lang.IllegalArgumentException
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductDetailViewModelTest {
@@ -42,12 +40,15 @@ class ProductDetailViewModelTest {
     }
 
     @Test
-    fun `상품 id에 해당하는 상품이 없는 경우 예외가 발생한다`() {
+    fun `상품 id에 해당하는 상품이 없는 경우 에러가 발생한다`() {
+        // given
         viewModel = ProductDetailViewModel(-1L, productRepository, cartRepository)
 
-        assertThrows<IllegalArgumentException> {
-            viewModel.loadProduct()
-        }
+        // when
+        viewModel.loadProduct()
+
+        // then
+        assertThat(viewModel.productLoadError.getOrAwaitValue()).isTrue
     }
 
     @Test
