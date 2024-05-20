@@ -1,30 +1,23 @@
 package woowacourse.shopping.presentation.ui.shoppingcart
 
-import android.view.View
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.domain.model.Order
+import woowacourse.shopping.presentation.common.hideIf
+import woowacourse.shopping.presentation.common.showIf
 
 @BindingAdapter("recyclerViewVisible")
 fun RecyclerView.bindRecyclerViewVisible(orderList: List<Order>?) {
     orderList?.let { items ->
-        if (items.isEmpty()) {
-            this.visibility = View.GONE
-        } else {
-            this.visibility = View.VISIBLE
-        }
+        hideIf(items.isEmpty())
     }
 }
 
 @BindingAdapter("emptyTextVisible")
 fun TextView.binEmptyTextVisible(orderList: List<Order>?) {
     orderList?.let { items ->
-        if (items.isEmpty()) {
-            this.visibility = View.VISIBLE
-        } else {
-            this.visibility = View.GONE
-        }
+        showIf(items.isEmpty())
     }
 }
 
@@ -48,9 +41,5 @@ fun TextView.bindPageNavigationTextVisible(
     orderList: List<Order>?,
 ) {
     if (currentPage == null || orderList == null) return
-    if (currentPage == 0 && orderList.size < ShoppingCartViewModel.PAGE_SIZE) {
-        this.visibility = View.GONE
-    } else {
-        this.visibility = View.VISIBLE
-    }
+    hideIf(currentPage == 0 && orderList.size < ShoppingCartViewModel.PAGE_SIZE)
 }
