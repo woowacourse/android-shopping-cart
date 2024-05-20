@@ -1,9 +1,10 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.ProductsRepository
 
-object DummyShoppingItems {
-    val items =
+object DummyShoppingItems : ProductsRepository {
+    override val items =
         listOf(
             Product.of(
                 name = "[든든] 동원 스위트콘1",

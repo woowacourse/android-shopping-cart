@@ -1,10 +1,11 @@
 package woowacourse.shopping.data
 
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.repository.ProductsRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 
-class ShoppingItemsRepositoryImpl : ShoppingItemsRepository {
-    private val items: List<Product> = DummyShoppingItems.items
+class ShoppingItemsRepositoryImpl(productsRepository: ProductsRepository = DummyShoppingItems) : ShoppingItemsRepository {
+    private val items: List<Product> = productsRepository.items
 
     override fun fetchProductsSize(): Int {
         return items.size
