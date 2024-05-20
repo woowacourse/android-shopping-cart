@@ -35,14 +35,14 @@ class CartViewModel(
         }
     }
 
-    fun plusPage() {
+    fun moveToNextPage() {
         val currentPage = _currentPage.value ?: return
         if (cartRepository.canLoadMoreCartProducts(currentPage)) {
             _currentPage.value = currentPage + INCREMENT_AMOUNT
         }
     }
 
-    fun minusPage() {
+    fun moveToPreviousPage() {
         val currentPage = _currentPage.value ?: return
         if (currentPage > 1) {
             _currentPage.value = currentPage - INCREMENT_AMOUNT
