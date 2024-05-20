@@ -7,10 +7,13 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.ProductDao
 
 class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel() {
+    private val items = mutableListOf<Product>()
+
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
     val products: LiveData<List<Product>> get() = _products
 
     fun loadProducts() {
-        _products.value = productDao.getProducts()
+        items.addAll(productDao.getProducts())
+        _products.value = items
     }
 }

@@ -30,7 +30,8 @@ class ProductAdapter(
 
     fun setData(newProducts: List<Product>) {
         val positionStart = products.size
-        products.addAll(newProducts)
-        notifyItemRangeInserted(positionStart, newProducts.size)
+        val itemCount = newProducts.size - products.size
+        products.addAll(newProducts.subList(positionStart, newProducts.size))
+        notifyItemRangeInserted(positionStart, itemCount)
     }
 }
