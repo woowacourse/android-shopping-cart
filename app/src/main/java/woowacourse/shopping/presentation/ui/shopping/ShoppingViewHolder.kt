@@ -8,9 +8,9 @@ class ShoppingViewHolder(private val binding: ItemProductBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(
         product: Product,
-        viewModel: ShoppingViewModel,
+        actionHandler: ShoppingActionHandler,
     ) {
         binding.product = product
-        binding.viewModel = viewModel
+        binding.actionHandler = actionHandler
     }
 }

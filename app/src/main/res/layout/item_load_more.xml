@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel" />
+            name="actionHandler"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_height="50dp"
             android:background="@color/purple_200"
             android:gravity="center"
-            android:onClick="@{() ->  viewModel.onLoadMoreButtonClick()}"
+            android:onClick="@{() ->  actionHandler.onLoadMoreButtonClick()}"
             android:text="@string/load_more"
             android:textColor="@color/white"
             android:textSize="20dp"

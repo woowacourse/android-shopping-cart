@@ -5,9 +5,9 @@ import woowacourse.shopping.databinding.ItemLoadMoreBinding
 
 class LoadMoreViewHolder(
     binding: ItemLoadMoreBinding,
-    viewModel: ShoppingViewModel,
+    actionHandler: ShoppingActionHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.viewModel = viewModel
+        binding.actionHandler = actionHandler
     }
 }

@@ -8,7 +8,7 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 
 class ShoppingAdapter(
-    private val viewModel: ShoppingViewModel,
+    private val actionHandler: ShoppingActionHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: MutableList<ShoppingItem> = mutableListOf()
 
@@ -49,7 +49,7 @@ class ShoppingAdapter(
             VIEW_TYPE_LOAD_MORE -> {
                 val binding =
                     ItemLoadMoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                LoadMoreViewHolder(binding, viewModel)
+                LoadMoreViewHolder(binding, actionHandler)
             }
 
             else -> throw IllegalArgumentException("Unknown view type")
@@ -63,7 +63,7 @@ class ShoppingAdapter(
         when (holder) {
             is ShoppingViewHolder -> {
                 val product = (items[position] as ShoppingItem.ProductType).product
-                holder.bind(product, viewModel)
+                holder.bind(product, actionHandler)
             }
         }
     }

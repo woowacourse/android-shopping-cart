@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.shopping
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +9,9 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.state.UIState
 
-class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewModel() {
+class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
+    ViewModel(),
+    ShoppingActionHandler {
     private val _currentPage = MutableLiveData(0)
     private val currentPage: LiveData<Int> = _currentPage
 
@@ -43,11 +46,11 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewM
         _currentPage.value = 0
     }
 
-    fun onProductClick(productId: Long) {
+    override fun onProductClick(productId: Long) {
         _navigateToProductDetail.postValue(productId)
     }
 
-    fun onLoadMoreButtonClick() {
+    override fun onLoadMoreButtonClick() {
         val nextPage = (_currentPage.value ?: 0) + 1
         _currentPage.value = nextPage
     }
