@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.CartItem
 
 class CartAdapter(
-    private val viewModel: CartViewModel,
+    private val actionHandler: CartActionHandler,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
 
@@ -24,7 +24,7 @@ class CartAdapter(
         position: Int,
     ) {
         val cartItem = cartItems[position]
-        return holder.bind(cartItem, viewModel)
+        return holder.bind(cartItem, actionHandler)
     }
 
     override fun getItemCount(): Int {

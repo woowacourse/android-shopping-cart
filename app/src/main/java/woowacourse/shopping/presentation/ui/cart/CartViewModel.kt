@@ -9,7 +9,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.state.UIState
 
-class CartViewModel(private val repository: CartRepository) : ViewModel() {
+class CartViewModel(private val repository: CartRepository) : ViewModel(), CartActionHandler {
     private val pageSize = PAGE_SIZE
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
@@ -77,11 +77,11 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
         loadPage(prevPage)
     }
 
-    fun onProductClick(productId: Long) {
+    override fun onProductClick(productId: Long) {
         _navigateToProductDetail.postValue(productId)
     }
 
-    fun deleteItem(cartItemId: Long) {
+    override fun onDeleteItemClick(cartItemId: Long) {
         repository.delete(cartItemId)
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }

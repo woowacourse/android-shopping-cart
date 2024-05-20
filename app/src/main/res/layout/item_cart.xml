@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="woowacourse.shopping.presentation.ui.cart.CartViewModel" />
+            name="actionHandler"
+            type="woowacourse.shopping.presentation.ui.cart.CartActionHandler" />
 
         <variable
             name="cartItem"
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:onClick="@{() -> viewModel.onProductClick(cartItem.productId)}"
+        android:onClick="@{() -> actionHandler.onProductClick(cartItem.productId)}"
         android:background="@drawable/shopping_cart_item_gridview">
 
         <TextView
@@ -70,7 +70,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_margin="12dp"
-            android:onClick="@{() -> viewModel.deleteItem(cartItem.id)}"
+            android:onClick="@{() -> actionHandler.onDeleteItemClick(cartItem.id)}"
             android:src="@drawable/ic_back"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
