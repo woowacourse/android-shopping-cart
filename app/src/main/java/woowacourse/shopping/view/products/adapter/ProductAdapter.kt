@@ -1,16 +1,15 @@
 package woowacourse.shopping.view.products.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.view.products.ProductActionListener
+import woowacourse.shopping.view.products.ProductListActionHandler
 import woowacourse.shopping.view.products.adapter.viewholder.ProductViewHolder
 
 class ProductAdapter(
-    private val productActionListener: ProductActionListener,
+    private val productListActionHandler: ProductListActionHandler,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()
 
@@ -19,7 +18,7 @@ class ProductAdapter(
         viewType: Int,
     ): ProductViewHolder {
         val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(view, productActionListener)
+        return ProductViewHolder(view, productListActionHandler)
     }
 
     override fun getItemCount(): Int {
@@ -33,14 +32,13 @@ class ProductAdapter(
         val item = products[position]
         holder.bind(item)
 
-        if (position == itemCount - 1) {
-            productActionListener.showMoreButton(true)
-        } else {
-            productActionListener.showMoreButton(false)
-        }
+//        if (position == itemCount - 1) {
+//            productActionListener.showMoreButton(true)
+//        } else {
+//            productActionListener.showMoreButton(false)
+//        }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateProducts(addedProducts: List<Product>) {
         val startPosition = products.size
         products = products + addedProducts

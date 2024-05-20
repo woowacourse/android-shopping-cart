@@ -13,12 +13,8 @@
             type="Boolean" />
 
         <variable
-            name="productActionListener"
-            type="woowacourse.shopping.view.products.ProductActionListener" />
-
-        <variable
-            name="loadPagingDataListener"
-            type="woowacourse.shopping.view.products.LoadPagingDataListener" />
+            name="productListActionHandler"
+            type="woowacourse.shopping.view.products.ProductListActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -50,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/top_bar_margin_end"
             android:background="@android:color/transparent"
-            android:onClick="@{()->productActionListener.clickShoppingCart()}"
+            android:onClick="@{()->productListActionHandler.onShoppingCartButtonClicked()}"
             android:src="@drawable/ic_cart"
             app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
             app:layout_constraintEnd_toEndOf="@id/vw_product_list_top_bar"
@@ -75,7 +71,7 @@
             android:background="@color/primary"
             android:minWidth="0dp"
             android:minHeight="0dp"
-            android:onClick="@{()->loadPagingDataListener.clickLoadPagingData()}"
+            android:onClick="@{()->productListActionHandler.onMoreButtonClicked()}"
             android:text="@string/product_list_more_data_button"
             android:textColor="@color/white"
             android:textSize="20sp"

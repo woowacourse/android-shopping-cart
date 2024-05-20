@@ -13,7 +13,7 @@ import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
 
-class ProductsListFragment : Fragment(), ProductActionListener {
+class ProductsListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private lateinit var adapter: ProductAdapter
@@ -43,9 +43,8 @@ class ProductsListFragment : Fragment(), ProductActionListener {
     }
 
     private fun setUpDataBinding() {
-        binding.productActionListener = this
-        binding.loadPagingDataListener = productListViewModel
-        adapter = ProductAdapter(productActionListener = this)
+        binding.productListActionHandler = productListViewModel
+        adapter = ProductAdapter(productListActionHandler = productListViewModel)
         binding.rvProducts.adapter = adapter
     }
 
@@ -54,34 +53,30 @@ class ProductsListFragment : Fragment(), ProductActionListener {
             adapter.updateProducts(addedProducts = products)
         }
 
-        productListViewModel.allDataLoaded.observe(viewLifecycleOwner) {
-            if (it) {
-                showMaxItemMessage()
-                showMoreButton(false)
+        productListViewModel.navigateToCart.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                navigateToShoppingCart()
+            }
+        }
+
+        productListViewModel.navigateToDetail.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let {
+                navigateToDetail(it)
             }
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun navigateToShoppingCart() {
+        val shoppingCartFragment = ShoppingCartFragment()
+        changeFragment(shoppingCartFragment)
     }
 
-    override fun clickProductItem(productId: Long) {
+    private fun navigateToDetail(productId: Long) {
         val productFragment =
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
             }
         changeFragment(productFragment)
-    }
-
-    override fun clickShoppingCart() {
-        val shoppingCartFragment = ShoppingCartFragment()
-        changeFragment(shoppingCartFragment)
-    }
-
-    override fun showMoreButton(isLoadLastItem: Boolean) {
-        binding.isVisible = isLoadLastItem
     }
 
     private fun changeFragment(nextFragment: Fragment) {
@@ -90,6 +85,11 @@ class ProductsListFragment : Fragment(), ProductActionListener {
             .add(R.id.fragment_container, nextFragment)
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun showMaxItemMessage() = Toast.makeText(this.context, R.string.max_paging_data_message, Toast.LENGTH_SHORT).show()

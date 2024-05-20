@@ -8,15 +8,15 @@
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
-            name="onClickProduct"
-            type="woowacourse.shopping.view.products.ProductActionListener" />
+            name="productListActionHandler"
+            type="woowacourse.shopping.view.products.ProductListActionHandler" />
     </data>
 
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
-        android:onClick="@{()->onClickProduct.clickProductItem(product.id)}"
+        android:onClick="@{()->productListActionHandler.onProductItemClicked(product.id)}"
         android:orientation="vertical">
 
         <ImageView
