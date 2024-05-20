@@ -37,8 +37,10 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private fun observeErrorMessage() {
         viewModel.errorMsg.observe(this) { event ->
             event.getContentIfNotHandled()?.let {
-                toast = Toast.makeText(this, it, Toast.LENGTH_SHORT)
-                toast?.show()
+                if (it.isNotEmpty()) {
+                    toast = Toast.makeText(this, it, Toast.LENGTH_SHORT)
+                    toast?.show()
+                }
             }
         }
     }
