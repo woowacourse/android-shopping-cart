@@ -39,16 +39,6 @@ class CartViewModel(
         loadCurrentPageCartItems()
     }
 
-    fun removeCartItem(cartItemId: Long) {
-        cartRepository.removeCartItem(cartItemId = cartItemId)
-
-        if (orders.value?.size == 1 && currentPage.value != 0) {
-            _currentPage.value = currentPage.value?.minus(1)
-        }
-
-        loadCurrentPageCartItems()
-    }
-
     fun loadCurrentPageCartItems() {
         val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
         hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
@@ -69,6 +59,16 @@ class CartViewModel(
         _orders.value = orders
     }
 
+    override fun onCartItemDelete(cartItemId: Long) {
+        cartRepository.removeCartItem(cartItemId = cartItemId)
+
+        if (orders.value?.size == 1 && currentPage.value != 0) {
+            _currentPage.value = currentPage.value?.minus(1)
+        }
+
+        loadCurrentPageCartItems()
+    }
+
     private fun setPageInformation() {
         if (currentPage.value == 0) {
             _pageInformation.value =
@@ -83,10 +83,6 @@ class CartViewModel(
                     nextPageEnabled = hasNext,
                 )
         }
-    }
-
-    override fun onCartItemDelete(cartItemId: Long) {
-        removeCartItem(cartItemId)
     }
 }
 

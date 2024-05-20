@@ -44,7 +44,7 @@ class CartViewModelTest {
         val deletedItemId = slot<Long>()
         val viewmodel = CartViewModel(cartRepository, productRepository)
 
-        viewmodel.removeCartItem(1L)
+        viewmodel.onCartItemDelete(1L)
         verify { cartRepository.removeCartItem(capture(deletedItemId)) }
         assert(deletedItemId.captured == 1L)
         verify { cartRepository.fetchCartItems(0) }
