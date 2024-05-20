@@ -31,7 +31,7 @@ class CartViewModelTest {
         viewModel.loadPage(0)
 
         // when
-        val state = viewModel.uiState.getOrAwaitValue()
+        val state = viewModel.cartUiState.getOrAwaitValue()
 
         // then
         assertThat(state).isEqualTo(UIState.Empty)
@@ -49,7 +49,7 @@ class CartViewModelTest {
         viewModel.loadCartItems()
 
         // then
-        val state = viewModel.uiState.getOrAwaitValue()
+        val state = viewModel.cartUiState.getOrAwaitValue()
         assertThat(state).isEqualTo(UIState.Success(listOf(testCartItem0)))
     }
 
@@ -141,7 +141,7 @@ class CartViewModelTest {
         viewModel.deleteItem(0)
 
         // then
-        val state = viewModel.uiState.getOrAwaitValue()
+        val state = viewModel.cartUiState.getOrAwaitValue()
         assertThat(state).isEqualTo(UIState.Empty)
     }
 

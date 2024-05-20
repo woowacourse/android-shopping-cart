@@ -5,11 +5,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.databinding.BindingAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.ui.shopping.ShoppingAdapter
 
 @BindingAdapter("app:imageUrl")
 fun loadImage(
@@ -23,15 +20,6 @@ fun loadImage(
             .error(R.drawable.ic_launcher_background)
             .into(view)
     }
-}
-
-@BindingAdapter("app:products")
-fun setItems(
-    recyclerView: RecyclerView,
-    products: List<Product>?,
-) {
-    val items = products ?: return
-    (recyclerView.adapter as ShoppingAdapter).updateData(items)
 }
 
 @BindingAdapter("app:price")

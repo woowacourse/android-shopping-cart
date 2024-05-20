@@ -33,6 +33,7 @@ class CartActivityTest {
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
         cartRepository = CartRepositoryImpl((context as ShoppingApplication).database)
+        cartRepository.deleteAll()
     }
 
     @After

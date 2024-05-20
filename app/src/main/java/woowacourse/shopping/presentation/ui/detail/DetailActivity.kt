@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
@@ -12,6 +13,7 @@ import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
+import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 
 class DetailActivity : AppCompatActivity(), DetailClickListener {
@@ -31,12 +33,28 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbarDetail)
         setUpDataBinding()
+        observeViewModel()
     }
 
     private fun setUpDataBinding() {
         binding.lifecycleOwner = this
         binding.clickListener = this
         binding.viewModel = viewModel
+    }
+
+    private fun observeViewModel() {
+        viewModel.detailUiState.value
+        viewModel.detailUiState.observe(this) { state ->
+            if (state is UIState.Error) {
+                showError(
+                    state.exception.message ?: getString(R.string.unknown_error),
+                )
+            }
+        }
+    }
+
+    private fun showError(errorMessage: String) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

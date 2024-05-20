@@ -11,7 +11,6 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.ui.FakeCartRepositoryImpl
 import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
-import woowacourse.shopping.presentation.ui.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class DetailViewModelTest {
@@ -22,7 +21,7 @@ class DetailViewModelTest {
     private val product =
         Product(
             id = 0L,
-            name = "대전 장인약과 | 장인더 파지약과",
+            name = "1 대전 장인약과",
             price = 10000,
             imageUrl =
                 "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
@@ -34,15 +33,15 @@ class DetailViewModelTest {
     @BeforeEach
     fun setUp() {
         testCartRepository = FakeCartRepositoryImpl()
-        every { shoppingRepository.findProductItem(any()) } returns product
+        every { shoppingRepository.findProductById(any()) } returns product
         viewModel = DetailViewModel(testCartRepository, shoppingRepository, 0L)
     }
 
     @Test
     fun `선택된 상품의 상세 정보를 가져온다`() {
-        val actual = viewModel.product.getOrAwaitValue()
+        val actual = viewModel.product
 
-        assertThat(actual.name).isEqualTo("대전 장인약과 | 장인더 파지약과")
+        assertThat(actual.name).isEqualTo("1 대전 장인약과")
         assertThat(actual.price).isEqualTo(10000)
         assertThat(actual.imageUrl).isEqualTo(
             "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver." +
@@ -62,7 +61,6 @@ class DetailViewModelTest {
     @Test
     fun `상품을 장바구니에 담으면 장바구니의 사이즈가 증가한다`() {
         viewModel.createShoppingCartItem()
-        viewModel.product.getOrAwaitValue()
         val actual = testCartRepository.size()
 
         assertThat(actual).isEqualTo(1)

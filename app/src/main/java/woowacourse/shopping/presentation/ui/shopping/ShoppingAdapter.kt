@@ -36,8 +36,4 @@ class ShoppingAdapter(
         products += addedProducts
         notifyItemRangeInserted(positionStart, addedProducts.size)
     }
-
-    fun updateData(products: List<Product>) {
-        this.products = products
-    }
 }

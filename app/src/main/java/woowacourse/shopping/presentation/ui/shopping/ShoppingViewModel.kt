@@ -7,16 +7,15 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
 import woowacourse.shopping.presentation.state.UIState
 
-class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewModel(), ShoppingButtonClickListener {
-    private var offset = 0
-    private lateinit var productsData: List<Product>
-
-    private val _uiState = MutableLiveData<UIState<List<Product>>>()
-    val uiState: LiveData<UIState<List<Product>>> = _uiState
-
-    private val _products = MutableLiveData<List<Product>>(emptyList())
-    val products: LiveData<List<Product>>
+class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
+    ViewModel(),
+    ShoppingButtonClickListener {
+    private var _products: List<Product> = emptyList()
+    val products: List<Product>
         get() = _products
+
+    private val _shoppingUiState = MutableLiveData<UIState<List<Product>>>()
+    val shoppingUiState: LiveData<UIState<List<Product>>> = _shoppingUiState
 
     private val _isLoadMoreButtonVisible = MutableLiveData(false)
     val isLoadMoreButtonVisible: LiveData<Boolean>
@@ -26,36 +25,30 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) : ViewM
         loadProducts()
     }
 
-    private fun getProducts(): List<Product> {
-        val fromIndex = offset
-        offset = Integer.min(offset + PAGE_SIZE, productsData.size)
-        return productsData.subList(fromIndex, offset)
-    }
-
     fun loadProducts() {
         try {
-            productsData = repository.getAllProducts()
+            val productsData = repository.findProductsByPage()
+            _products += productsData
             if (productsData.isEmpty()) {
-                _uiState.postValue(UIState.Empty)
+                _shoppingUiState.postValue(UIState.Empty)
             } else {
-                _uiState.postValue(UIState.Success(productsData))
+                _shoppingUiState.postValue(UIState.Success(productsData))
             }
-            _products.postValue(_products.value.orEmpty() + getProducts())
         } catch (e: Exception) {
-            _uiState.postValue(UIState.Error(e))
+            _shoppingUiState.postValue(UIState.Error(e))
         }
     }
 
     fun updateLoadMoreButtonVisibility(isVisible: Boolean) {
-        if (productsData.size < PAGE_SIZE || offset == productsData.size) {
-            _isLoadMoreButtonVisible.postValue(false)
-        } else {
+        if (repository.canLoadMore()) {
             _isLoadMoreButtonVisible.postValue(isVisible)
+        } else {
+            _isLoadMoreButtonVisible.postValue(false)
         }
     }
 
     companion object {
-        private const val PAGE_SIZE = 10
+        const val PAGE_SIZE = 10
     }
 
     override fun onLoadMoreButtonClick() {

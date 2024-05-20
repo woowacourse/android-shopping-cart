@@ -8,11 +8,10 @@ import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.state.UIState
 
 class CartViewModel(private val repository: CartRepository) : ViewModel() {
-    private val pageSize = PAGE_SIZE
     private var lastPage: Int = DEFAULT_PAGE
 
-    private val _uiState = MutableLiveData<UIState<List<CartItem>>>()
-    val uiState: LiveData<UIState<List<CartItem>>> = _uiState
+    private val _cartUiState = MutableLiveData<UIState<List<CartItem>>>()
+    val cartUiState: LiveData<UIState<List<CartItem>>> = _cartUiState
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
     val currentPage: LiveData<Int> = _currentPage
@@ -34,12 +33,12 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     }
 
     private fun updatePageControlVisibility(totalItems: Int) {
-        _isPageControlVisible.postValue(totalItems > pageSize)
+        _isPageControlVisible.postValue(totalItems > PAGE_SIZE)
     }
 
     fun loadPage(page: Int) {
         val totalItems = repository.size()
-        lastPage = (totalItems - PAGE_STEP) / pageSize
+        lastPage = (totalItems - PAGE_STEP) / PAGE_SIZE
 
         _currentPage.value = page.coerceIn(DEFAULT_PAGE, lastPage)
         _isFirstPage.value = _currentPage.value == DEFAULT_PAGE
@@ -51,17 +50,17 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
 
     fun loadCartItems() {
         try {
-            val items =
-                repository.findAllPagedItems(_currentPage.value ?: DEFAULT_PAGE, pageSize).items
-            if (items.isEmpty()) {
-                _uiState.postValue(UIState.Empty)
+            val cartItems =
+                repository.findAllPagedItems(_currentPage.value ?: DEFAULT_PAGE, PAGE_SIZE).items
+            if (cartItems.isEmpty()) {
+                _cartUiState.postValue(UIState.Empty)
                 _isEmpty.postValue(true)
             } else {
-                _uiState.postValue(UIState.Success(items))
+                _cartUiState.postValue(UIState.Success(cartItems))
                 _isEmpty.postValue(false)
             }
         } catch (e: Exception) {
-            _uiState.postValue(UIState.Error(e))
+            _cartUiState.postValue(UIState.Error(e))
         }
     }
 

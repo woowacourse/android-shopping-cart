@@ -44,7 +44,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
     }
 
     private fun observeViewModel() {
-        viewModel.uiState.observe(this) { state ->
+        viewModel.shoppingUiState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
                 is UIState.Empty -> showData(emptyList())

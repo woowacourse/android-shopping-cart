@@ -6,29 +6,41 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
+import woowacourse.shopping.presentation.state.UIState
 
 class DetailViewModel(
     private val cartRepository: CartRepository,
     private val shoppingRepository: ShoppingItemsRepository,
     private val productId: Long,
 ) : ViewModel() {
-    private val _product = MutableLiveData<Product>()
-    val product: LiveData<Product>
+    private val _detailUiState = MutableLiveData<UIState<Product>>()
+    val detailUiState: LiveData<UIState<Product>> = _detailUiState
+
+    private lateinit var _product: Product
+    val product: Product
         get() = _product
 
     init {
-        loadProductData()
+        loadProduct()
     }
 
-    private fun loadProductData() {
-        _product.postValue(shoppingRepository.findProductItem(productId))
+    private fun loadProduct() {
+        try {
+            val productData = shoppingRepository.findProductById(productId)
+            _product = productData
+            _detailUiState.postValue(UIState.Success(_product))
+        } catch (e: Exception) {
+            _detailUiState.postValue(UIState.Error(e))
+        }
     }
 
     fun createShoppingCartItem() {
-        val item = product.value ?: return
-        cartRepository.insert(
-            product = item,
-            quantity = 1,
-        )
+        val item = detailUiState.value ?: return
+        if (item is UIState.Success) {
+            cartRepository.insert(
+                product = item.data,
+                quantity = 1,
+            )
+        }
     }
 }

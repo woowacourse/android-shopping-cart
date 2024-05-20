@@ -45,7 +45,7 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
     }
 
     private fun observeViewModel() {
-        viewModel.uiState.observe(this) { state ->
+        viewModel.cartUiState.observe(this) { state ->
             when (state) {
                 is UIState.Success -> showData(state.data)
                 is UIState.Empty -> showData(emptyList())
