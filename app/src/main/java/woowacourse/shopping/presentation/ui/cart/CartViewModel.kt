@@ -83,6 +83,8 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
 
+    fun isCartEmpty(): Boolean = cartItemsState.value == UIState.Empty
+
     companion object {
         private const val PAGE_SIZE = 5
         private const val DEFAULT_PAGE = 0

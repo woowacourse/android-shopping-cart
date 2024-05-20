@@ -7,9 +7,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
-import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.shopping.ShoppingAdapter
 
 @BindingAdapter("app:imageUrl")
@@ -44,7 +42,7 @@ fun setPrice(
     view.text = price?.let { view.context.getString(R.string.price_format, it) } ?: ""
 }
 
-@BindingAdapter("app:setLoadMoreBtnVisibility")
+@BindingAdapter("app:visibility")
 fun setLoadMoreBtnVisibility(
     view: TextView,
     isVisible: Boolean?,
@@ -56,6 +54,7 @@ fun setLoadMoreBtnVisibility(
     }
 }
 
+/*
 @BindingAdapter("app:cartViewVisibility")
 fun setViewVisibility(
     view: View,
@@ -76,6 +75,27 @@ fun setViewVisibility(
             } else {
                 view.visibility = View.VISIBLE
             }
+        }
+    }
+}
+*/
+
+@BindingAdapter("app:cartViewVisibility")
+fun setViewVisibility(
+    view: View,
+    isVisible: Boolean?,
+) {
+    if (isVisible == true) {
+        if (view is TextView) {
+            view.visibility = View.GONE
+        } else {
+            view.visibility = View.VISIBLE
+        }
+    } else {
+        if (view is TextView) {
+            view.visibility = View.VISIBLE
+        } else {
+            view.visibility = View.GONE
         }
     }
 }
