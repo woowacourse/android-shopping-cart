@@ -1,12 +1,12 @@
 package woowacourse.shopping.view.cart.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.view.cart.ShoppingCartActionHandler
+import woowacourse.shopping.view.cart.ShoppingCartViewModel
 import woowacourse.shopping.view.cart.adapter.viewholder.ShoppingCartViewHolder
 
 class ShoppingCartAdapter(
@@ -35,9 +35,15 @@ class ShoppingCartAdapter(
         holder.bind(item)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun updateCartItems(cartItems: List<CartItem>) {
         this.cartItems = cartItems
-        notifyDataSetChanged()
+        val changedItemNextIndex = cartItems.size + 1
+        if (cartItems.size != ShoppingCartViewModel.CART_ITEM_PAGE_SIZE) {
+            notifyItemRangeRemoved(
+                changedItemNextIndex,
+                changedItemNextIndex + ShoppingCartViewModel.CART_ITEM_PAGE_SIZE,
+            )
+        }
+        notifyItemRangeChanged(0, cartItems.size)
     }
 }

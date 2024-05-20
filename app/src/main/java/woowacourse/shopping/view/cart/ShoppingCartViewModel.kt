@@ -99,7 +99,7 @@ class ShoppingCartViewModel(
     companion object {
         private const val DEFAULT_ITEM_SIZE = 0
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5
-        private const val CART_ITEM_PAGE_SIZE = 3
+        const val CART_ITEM_PAGE_SIZE = 3
         private const val MIN_PAGE_COUNT = 1
     }
 }
