@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="cart_toolbar_title">Cart</string>
+
+    <string name="product_price">%,d원</string>
+    <string name="exit_item_title">exit</string>
+    <string name="cart_item_title">cart</string>
+    <string name="product_detail_price">가격</string>
+    <string name="see_more">더보기</string>
+
+    <string name="product_detail_add_cart">장바구니 담기</string>
+    <string name="add_cart_done_title">장바구니 담기 완료</string>
+    <string name="add_cart_done_content">상품을 장바구니에 담았습니다.\n장바구니로 이동하시겠습니까?</string>
+    <string name="common_error">예기치 못한 오류가 발생했습니다.\n이전 화면으로 돌아가시겠습니까?</string>
+    <string name="common_confirm">확인</string>
+    <string name="common_move">이동</string>
+    <string name="common_cancel">취소</string>
+
+    <string name="previous_page">&lt;</string>
+    <string name="next_page">&gt;</string>
 </resources>
