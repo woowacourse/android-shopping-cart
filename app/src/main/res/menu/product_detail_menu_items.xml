@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_product_detai_closed"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_closed_white"
+        android:title="@string/product_detail_close_title"/>
+
+</menu>
