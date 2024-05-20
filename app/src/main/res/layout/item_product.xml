@@ -14,6 +14,7 @@
         android:id="@+id/item_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="12dp">
 
         <ImageView
@@ -21,10 +22,10 @@
             android:layout_width="154dp"
             android:layout_height="154dp"
             android:scaleType="fitStart"
+            app:imageUrl="@{product.imageUrl}"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_launcher_background"
-            app:imageUrl="@{product.imageUrl}"/>
+            tools:src="@drawable/ic_launcher_background" />
 
         <TextView
             android:id="@+id/tv_product_name"
@@ -53,6 +54,16 @@
             app:layout_constraintStart_toStartOf="@id/tv_product_name"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10,000원" />
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="68dp"
+            android:src="@drawable/ic_plus"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
