@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
+import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.Product
@@ -16,7 +17,7 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
 class ShoppingActivity : BaseActivity<ActivityShoppingBinding>(R.layout.activity_shopping) {
     private val viewModel: ShoppingViewModel by viewModels {
-        ShoppingViewModelFactory(ShoppingItemsRepositoryImpl())
+        ShoppingViewModelFactory(ShoppingItemsRepositoryImpl((application as ShoppingApplication).shoppingDataSource))
     }
     private lateinit var adapter: ShoppingAdapter
 

@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 class CartActivity : BaseActivity<ActivityCartBinding>(R.layout.activity_cart) {
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
-            repository = CartRepositoryImpl((application as ShoppingApplication).database),
+            repository = CartRepositoryImpl((application as ShoppingApplication).cartDatabase),
         )
     }
     private lateinit var adapter: CartAdapter

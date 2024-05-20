@@ -30,7 +30,7 @@ class CartActivityTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        cartRepository = CartRepositoryImpl((context as ShoppingApplication).database)
+        cartRepository = CartRepositoryImpl((context as ShoppingApplication).cartDatabase)
         cartRepository.deleteAll()
     }
 
