@@ -37,7 +37,6 @@ class ProductDetailActivity : AppCompatActivity() {
         initializeToolbar()
         initializeAddCartButton()
         initializeProductLoadError()
-        viewModel.loadProduct()
     }
 
     private fun initializeToolbar() {

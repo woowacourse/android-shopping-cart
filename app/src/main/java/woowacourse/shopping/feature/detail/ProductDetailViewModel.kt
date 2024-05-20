@@ -22,7 +22,11 @@ class ProductDetailViewModel(
     private val _isSuccessAddCart = MutableLiveData<Event<Boolean>>()
     val isSuccessAddCart: LiveData<Event<Boolean>> get() = _isSuccessAddCart
 
-    fun loadProduct() {
+    init {
+        loadProduct()
+    }
+
+    private fun loadProduct() {
         runCatching {
             productRepository.find(productId)
         }.onSuccess {

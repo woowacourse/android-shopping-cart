@@ -28,26 +28,16 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `상품 id에 맞는 상품을 불러온다`() {
-        // given
         viewModel = ProductDetailViewModel(0L, productRepository, cartRepository)
 
-        // when
-        viewModel.loadProduct()
-
-        // then
         val actual = viewModel.product.getOrAwaitValue()
         actual.assertThat(imageUrl, title, price)
     }
 
     @Test
     fun `상품 id에 해당하는 상품이 없는 경우 에러가 발생한다`() {
-        // given
         viewModel = ProductDetailViewModel(-1L, productRepository, cartRepository)
 
-        // when
-        viewModel.loadProduct()
-
-        // then
         assertThat(viewModel.productLoadError.getOrAwaitValue().peekContent()).isTrue
     }
 
@@ -55,7 +45,6 @@ class ProductDetailViewModelTest {
     fun `상품을 장바구니에 담는다`() {
         // given
         viewModel = ProductDetailViewModel(0L, productRepository, cartRepository)
-        viewModel.loadProduct()
 
         // when
         viewModel.addCartProduct()
