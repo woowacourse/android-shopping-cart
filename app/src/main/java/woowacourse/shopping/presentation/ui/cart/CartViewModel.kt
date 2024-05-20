@@ -80,7 +80,7 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     }
 
     companion object {
-        private const val PAGE_SIZE = 5
+        const val PAGE_SIZE = 5
         private const val DEFAULT_PAGE = 0
         private const val PAGE_STEP = 1
     }
