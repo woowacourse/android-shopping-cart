@@ -16,7 +16,7 @@ object DummyCartRepository : CartRepository {
 
     override fun delete(product: Product): Result<Long> =
         runCatching {
-            cartMap.remove(product)
+            cartMap.remove(product) ?: throw NoSuchElementException()
             product.id
         }
 

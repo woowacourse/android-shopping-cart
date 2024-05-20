@@ -32,7 +32,7 @@ class ShoppingViewModel(private val repository: ProductRepository = DummyProduct
                 newItemCount = it.size
                 currentPage++
             }.onFailure {
-                _error.value = Event(Error.ProductNotFound)
+                _error.value = Event(Error.ProductItemsNotFound)
             }
         }
     }

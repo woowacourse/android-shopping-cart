@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.presentation.ui.Error
 import woowacourse.shopping.presentation.ui.UiState
+import woowacourse.shopping.presentation.util.Event
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     var maxPage: Int = 0
@@ -17,8 +19,8 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     private val _carts = MutableLiveData<UiState<List<Cart>>>(UiState.None)
 
-    private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
-    val error: LiveData<Boolean> = _error
+    private val _error = MutableLiveData<Event<Error>>()
+    val error: LiveData<Event<Error>> = _error
 
     val carts: LiveData<UiState<List<Cart>>> get() = _carts
 
@@ -28,10 +30,9 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun loadProductByPage() {
         cartRepository.load(currentPage, PAGE_SIZE).onSuccess {
-            _error.value = false
             _carts.value = UiState.Success(it)
         }.onFailure {
-            _error.value = true
+            _error.value = Event(Error.CartItemsNotFound)
         }
     }
 
@@ -55,17 +56,14 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun deleteProduct(product: Product) {
         cartRepository.delete(product).onSuccess {
-            _error.value = false
             updateMaxPage()
             loadProductByPage()
         }.onFailure {
-            _error.value = true
+            _error.value = Event(Error.CartItemNotDeleted)
         }
     }
 
     companion object {
         private const val PAGE_SIZE = 5
-        const val CART_LOAD_ERROR = "LOAD ERROR"
-        const val CART_DELETE_ERROR = "DELETE ERROR"
     }
 }

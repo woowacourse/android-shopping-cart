@@ -13,6 +13,7 @@ import woowacourse.shopping.domain.Product
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
+import woowacourse.shopping.presentation.util.EventObserver
 
 class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     override val layoutResourceId: Int
@@ -50,12 +51,12 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
     }
 
     private fun observeErrorEventUpdates() {
-        viewModel.error.observe(this) {
-            when (it) {
-                true -> showToast(getString(R.string.error_load_cart))
-                false -> {}
-            }
-        }
+        viewModel.error.observe(
+            this,
+            EventObserver {
+                showToast(it.message)
+            },
+        )
     }
 
     private fun observeCartUpdates() {
