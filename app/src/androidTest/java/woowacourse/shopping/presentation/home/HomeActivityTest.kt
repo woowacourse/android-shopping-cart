@@ -19,7 +19,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.home.adapter.LoadingViewHolder
-import woowacourse.shopping.presentation.home.adapter.ProductAdapter
 import woowacourse.shopping.presentation.home.adapter.ProductViewHolder
 
 @RunWith(AndroidJUnit4::class)
@@ -100,9 +99,9 @@ class HomeActivityTest {
                 if (view !is RecyclerView) return false
                 val viewHolder = view.findViewHolderForAdapterPosition(position)
                 return viewHolder != null &&
-                        viewHolderClass.isInstance(
-                            viewHolder,
-                        )
+                    viewHolderClass.isInstance(
+                        viewHolder,
+                    )
             }
         }
     }
