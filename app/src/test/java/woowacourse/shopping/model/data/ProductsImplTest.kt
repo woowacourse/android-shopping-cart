@@ -3,6 +3,7 @@ package woowacourse.shopping.model.data
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import woowacourse.shopping.model.Product
 
 class ProductsImplTest {
@@ -42,9 +43,12 @@ class ProductsImplTest {
         val actual = ProductsImpl.findAll()
 
         // then
-        assertThat(actual[0].name).isEqualTo("갤럭시북")
-        assertThat(actual[1].name).isEqualTo("맥북")
-        assertThat(actual[2].name).isEqualTo("그램")
+        assertAll(
+            "모든 상품을 확인",
+            { assertThat(actual[0].name).isEqualTo("갤럭시북") },
+            { assertThat(actual[1].name).isEqualTo("맥북") },
+            { assertThat(actual[2].name).isEqualTo("그램") },
+        )
     }
 
     @Test

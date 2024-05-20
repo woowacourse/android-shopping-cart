@@ -8,7 +8,8 @@ data class CartPage(val number: Int = DEFAULT_PAGE_NUM) {
     }
 
     fun minus(): CartPage {
-        return CartPage(number - OFFSET)
+        val changedNumber = (number - OFFSET).coerceAtLeast(1)
+        return CartPage(changedNumber)
     }
 
     fun isNotFirst(): Boolean {

@@ -17,6 +17,8 @@ class ProductDetailViewModelTest {
     @BeforeEach
     fun setUp() {
         viewModel = ProductDetailViewModel(ProductsImpl, CartsImpl)
+        ProductsImpl.deleteAll()
+        CartsImpl.deleteAll()
     }
 
     @Test
@@ -41,7 +43,7 @@ class ProductDetailViewModelTest {
         viewModel.addProductToCart()
 
         // then
-        assertEquals(CartsImpl.find(0), product.copy(id = 0))
+        assertEquals(CartsImpl.find(0), product)
     }
 
     companion object {
