@@ -11,9 +11,7 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.presentation.home.LoadClickListener
 import woowacourse.shopping.presentation.home.LoadStatus
-import woowacourse.shopping.presentation.home.ProductItemClickListener
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(

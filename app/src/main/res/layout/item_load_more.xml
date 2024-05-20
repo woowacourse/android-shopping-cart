@@ -13,7 +13,7 @@
 
         <variable
             name="loadClickListener"
-            type="woowacourse.shopping.presentation.home.LoadClickListener" />
+            type="woowacourse.shopping.presentation.home.adapter.LoadClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
