@@ -27,8 +27,8 @@
             android:layout_marginHorizontal="12dp"
             android:onClick="@{() -> loadClickListener.onLoadClick()}"
             android:text="@string/home_load_more_button"
-            shopping:loadStatus="@{loadStatus}"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            shopping:loadStatus="@{loadStatus}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
