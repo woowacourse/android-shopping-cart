@@ -10,7 +10,6 @@ class ProductAdapter(
     private val itemClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private val products: MutableList<Product> = mutableListOf()
-    private var currentOffset = DEFAULT_OFFSET
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,15 +29,8 @@ class ProductAdapter(
     }
 
     fun setData(newProducts: List<Product>) {
+        val currentProductsSize = products.size
         products.addAll(newProducts)
-        notifyItemRangeInserted(
-            newProducts.size * currentOffset,
-            newProducts.size,
-        )
-        currentOffset++
-    }
-
-    companion object {
-        private const val DEFAULT_OFFSET = 1
+        notifyItemRangeInserted(currentProductsSize, newProducts.size)
     }
 }
