@@ -67,16 +67,14 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         return true
     }
 
-    override fun onClick(productId: Long) {
+    override fun onPutCartButtonClick(productId: Long) {
         viewModel.createShoppingCartItem()
-        navigate()
-    }
-
-    private fun navigate() {
+        Toast.makeText(this, PUR_CART_MESSAGE, Toast.LENGTH_SHORT).show()
         startActivity(CartActivity.createIntent(context = this))
     }
 
     companion object {
+        private const val PUR_CART_MESSAGE = "장바구니에 상품이 추가되었습니다!"
         const val PRODUCT_ID = "product_id"
         const val INVALID_PRODUCT_ID = -1L
 

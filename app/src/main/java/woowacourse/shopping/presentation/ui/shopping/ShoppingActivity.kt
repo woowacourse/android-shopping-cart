@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.ui.shopping
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -80,10 +79,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
         adapter.loadData(data)
     }
 
-    private fun navigateToShoppingCart() {
-        startActivity(CartActivity.createIntent(context = this))
-    }
-
     private fun showError(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
@@ -94,7 +89,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        navigateToShoppingCart()
+        startActivity(CartActivity.createIntent(context = this))
         return true
     }
 

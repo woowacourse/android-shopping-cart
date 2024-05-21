@@ -46,12 +46,12 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
         }
     }
 
-    companion object {
-        const val PAGE_SIZE = 20
-    }
-
     override fun onLoadMoreButtonClick() {
         loadProducts()
         updateLoadMoreButtonVisibility(false)
+    }
+
+    companion object {
+        const val PAGE_SIZE = 20
     }
 }

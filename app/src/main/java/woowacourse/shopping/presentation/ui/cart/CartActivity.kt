@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.ui.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -50,10 +49,9 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
             when (state) {
                 is UIState.Success -> showData(state.data)
                 is UIState.Empty -> showData(emptyList())
-                is UIState.Error ->
-                    showError(
-                        state.exception.message ?: getString(R.string.unknown_error),
-                    )
+                is UIState.Error -> showError(
+                    state.exception.message ?: getString(R.string.unknown_error),
+                )
             }
         }
     }
@@ -77,9 +75,12 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
 
     override fun onDeleteButtonClick(itemId: Long) {
         viewModel.deleteItem(itemId)
+        Toast.makeText(this, DELETE_ITEM_MESSAGE, Toast.LENGTH_SHORT).show()
     }
 
     companion object {
+        private const val DELETE_ITEM_MESSAGE = "장바구니에서 상품을 삭제했습니다!"
+
         fun createIntent(context: Context): Intent {
             return Intent(context, CartActivity::class.java)
         }
