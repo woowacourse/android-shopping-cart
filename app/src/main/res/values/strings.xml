@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="won">%,d원</string>
+    <string name="left_arrow"><![CDATA[<]]></string>
+    <string name="right_arrow"><![CDATA[>]]></string>
+    <string name="price_format">가격</string>
+    <string name="add_cart">장바구니 담기</string>
+    <string name="detail_title">Detail</string>
+    <string name="product_not_found">아이템을 찾을 수 없습니다</string>
+    <string name="cart_title">Cart</string>
+    <string name="error_load_cart">카트 불러오기에 실패했습니다</string>
 </resources>
