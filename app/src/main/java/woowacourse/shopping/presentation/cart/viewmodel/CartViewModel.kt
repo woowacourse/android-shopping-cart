@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.cart.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,8 +38,8 @@ class CartViewModel(
         loadCurrentPageCartItems()
     }
 
-    fun removeAllCartItem(cartItemId: Long) {
-        cartRepository.removeAllCartItem(cartItemId = cartItemId)
+    fun removeAllCartItem(productId: Long) {
+        cartRepository.removeAllCartItem(productId = productId)
 
         if (orders.value?.size == 1 && currentPage.value != 0) {
             _currentPage.value = currentPage.value?.minus(1)

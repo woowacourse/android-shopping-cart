@@ -23,7 +23,7 @@ object DefaultCart : CartDataSource {
         } else {
             cartItems[productId] =
                 existingCartItem.copy(
-                    quantity = quantity + 1,
+                    quantity = existingCartItem.quantity + 1,
                 )
         }
         return productId
@@ -37,15 +37,16 @@ object DefaultCart : CartDataSource {
         if (existingCartItem != null && existingCartItem.quantity >= 1) {
             cartItems[productId] =
                 existingCartItem.copy(
-                    quantity = quantity - 1,
+                    quantity = existingCartItem.quantity - 1,
                 )
+            if (cartItems[productId]?.quantity == 0) removeAllCartItem(productId)
         }
         return productId
     }
 
-    override fun removeAllCartItem(cartItemId: Long): Long {
-        cartItems.values.removeIf { it.id == cartItemId }
-        return cartItemId
+    override fun removeAllCartItem(productId: Long): Long {
+        cartItems.remove(productId)
+        return productId
     }
 
     override fun deleteAll() {

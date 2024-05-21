@@ -28,7 +28,7 @@ class CartRepositoryImpl(
         return cartDataSource.removeCartItem(productId, quantity)
     }
 
-    override fun removeAllCartItem(cartItemId: Long): Long {
-        return cartDataSource.removeAllCartItem(cartItemId)
+    override fun removeAllCartItem(productId: Long): Long {
+        return cartDataSource.removeAllCartItem(productId)
     }
 }
