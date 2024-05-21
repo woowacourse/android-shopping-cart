@@ -16,7 +16,7 @@ import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 
-class DetailActivity : AppCompatActivity(), DetailClickListener {
+class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
@@ -38,17 +38,21 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
 
     private fun setUpDataBinding() {
         binding.lifecycleOwner = this
-        binding.clickListener = this
         binding.viewModel = viewModel
     }
 
     private fun observeViewModel() {
-        viewModel.detailUiState.value
         viewModel.detailUiState.observe(this) { state ->
             if (state is UIState.Error) {
                 showError(
                     state.exception.message ?: getString(R.string.unknown_error),
                 )
+            }
+        }
+
+        viewModel.navigateToCart.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                putCartItem()
             }
         }
     }
@@ -67,8 +71,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         return true
     }
 
-    override fun onPutCartButtonClick(productId: Long) {
-        viewModel.createShoppingCartItem()
+    fun putCartItem() {
         Toast.makeText(this, PUR_CART_MESSAGE, Toast.LENGTH_SHORT).show()
         startActivity(CartActivity.createIntent(context = this))
     }

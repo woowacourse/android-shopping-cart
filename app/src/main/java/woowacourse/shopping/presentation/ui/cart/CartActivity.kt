@@ -47,10 +47,7 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
     private fun observeViewModel() {
         viewModel.cartUiState.observe(this) { state ->
             when (state) {
-                is UIState.Success -> {
-                    showData(state.data)
-                    Toast.makeText(this, DELETE_ITEM_MESSAGE, Toast.LENGTH_SHORT).show()
-                }
+                is UIState.Success -> showData(state.data)
                 is UIState.Empty -> showData(emptyList())
                 is UIState.Error ->
                     showError(

@@ -6,16 +6,21 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
+import woowacourse.shopping.presentation.state.Event
 import woowacourse.shopping.presentation.state.UIState
 
 class DetailViewModel(
     private val cartRepository: CartRepository,
     private val shoppingRepository: ShoppingItemsRepository,
     private val productId: Long,
-) : ViewModel() {
+) : ViewModel(), DetailClickListener {
     private val _detailUiState = MutableLiveData<UIState<Product>>(UIState.Empty)
     val detailUiState: LiveData<UIState<Product>>
         get() = _detailUiState
+
+    private val _navigateToCart = MutableLiveData<Event<Boolean>>()
+    val navigateToCart: LiveData<Event<Boolean>>
+        get() = _navigateToCart
 
     private lateinit var _product: Product
     val product: Product
@@ -43,5 +48,10 @@ class DetailViewModel(
                 quantity = 1,
             )
         }
+    }
+
+    override fun onPutCartButtonClick() {
+        createShoppingCartItem()
+        _navigateToCart.value = Event(true)
     }
 }
