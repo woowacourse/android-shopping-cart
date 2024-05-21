@@ -75,9 +75,9 @@
             android:text="@string/plus"
             android:textColor="@color/gray_500"
             android:textSize="30sp"
-            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:visibility="@{product.quantity.isMin()}" />
 
         <include
             android:id="@+id/btn_add_cart_quantity"
@@ -86,10 +86,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:visibility="gone"
+            app:bundle="@{addCartQuantityBundle}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="parent"
-            app:bundle="@{addCartQuantityBundle}"
+            app:visibility="@{!product.quantity.isMin()}"
             tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
