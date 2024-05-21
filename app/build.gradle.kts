@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("de.mannodermaus.android-junit5") version "1.10.0.0"
+    id("kotlin-kapt")
 }
 
 android {
@@ -16,7 +17,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments["runnerBuilder"] = "de.mannodermaus.junit5.AndroidJUnit5Builder"
+        testInstrumentationRunnerArguments["runnerBuilder"] =
+            "de.mannodermaus.junit5.AndroidJUnit5Builder"
     }
 
     buildTypes {
@@ -41,6 +43,12 @@ android {
             excludes += "win32-x86*/**"
         }
     }
+    dataBinding {
+        enable = true
+    }
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 dependencies {
@@ -59,5 +67,7 @@ dependencies {
     androidTestImplementation("org.assertj:assertj-core:3.25.3")
     androidTestImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     androidTestImplementation("de.mannodermaus.junit5:android-test-core:1.3.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
     androidTestRuntimeOnly("de.mannodermaus.junit5:android-test-runner:1.3.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
