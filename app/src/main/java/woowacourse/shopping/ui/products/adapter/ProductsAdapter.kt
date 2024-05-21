@@ -5,8 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
+import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
-class ProductsAdapter(private val onClickProductItem: OnClickProductItem) :
+class ProductsAdapter(
+    private val onClickProductItem: OnClickProductItem,
+    private val onIncreaseProductQuantity: OnIncreaseProductQuantity,
+    private val onDecreaseProductQuantity: OnDecreaseProductQuantity,
+) :
     RecyclerView.Adapter<ProductsViewHolder>() {
     private val products: MutableList<Product> = mutableListOf()
 
@@ -23,7 +29,12 @@ class ProductsAdapter(private val onClickProductItem: OnClickProductItem) :
         holder: ProductsViewHolder,
         position: Int,
     ) {
-        holder.bind(onClickProductItem, products[position])
+        holder.bind(
+            products[position],
+            onClickProductItem,
+            onIncreaseProductQuantity,
+            onDecreaseProductQuantity,
+        )
     }
 
     override fun getItemCount(): Int {
@@ -36,5 +47,11 @@ class ProductsAdapter(private val onClickProductItem: OnClickProductItem) :
 
         products.addAll(insertedProducts.subList(products.size, insertedProducts.size))
         notifyItemRangeChanged(positionStart, itemCount)
+    }
+
+    fun replaceProduct(replacedProduct: Product) {
+        val replacedProductPosition = products.indexOfFirst { it.id == replacedProduct.id }
+        products[replacedProductPosition] = replacedProduct
+        notifyItemChanged(replacedProductPosition)
     }
 }

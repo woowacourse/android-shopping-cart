@@ -3,11 +3,15 @@ package woowacourse.shopping.ui.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.Product
 import kotlin.math.ceil
 
-class ProductsViewModel(private val productRepository: ProductRepository) : ViewModel() {
+class ProductsViewModel(
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+) : ViewModel() {
     private val _products = MutableLiveData<List<Product>>(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
@@ -16,6 +20,9 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
 
     private var page: Int = INITIALIZE_PAGE
     private var maxPage: Int = INITIALIZE_PAGE
+
+    private val _changedProductQuantity = MutableLiveData<Product>()
+    val changedProductQuantity: LiveData<Product> get() = _changedProductQuantity
 
     init {
         loadPage()
@@ -36,6 +43,18 @@ class ProductsViewModel(private val productRepository: ProductRepository) : View
     fun changeSeeMoreVisibility(lastPosition: Int) {
         _showLoadMore.value =
             (lastPosition + 1) % PAGE_SIZE == 0 && lastPosition + 1 == _products.value?.size && page < maxPage
+    }
+
+    fun decreaseQuantity(product: Product) {
+        cartRepository.decreaseQuantity(product)
+        var quantity = product.quantity
+        _changedProductQuantity.value = product.copy(quantity = --quantity)
+    }
+
+    fun increaseQuantity(product: Product) {
+        cartRepository.increaseQuantity(product)
+        var quantity = product.quantity
+        _changedProductQuantity.value = product.copy(quantity = ++quantity)
     }
 
     companion object {

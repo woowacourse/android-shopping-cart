@@ -14,8 +14,8 @@ class Quantity(val count: Int = DEFAULT_VALUE) {
     fun isMin() = count == MIN_VALUE
 
     companion object {
-        private const val DEFAULT_VALUE = 1
+        private const val DEFAULT_VALUE = 0
         private const val MAX_VALUE = 99
-        private const val MIN_VALUE = 1
+        private const val MIN_VALUE = 0
     }
 }

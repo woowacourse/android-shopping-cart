@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.ui.cart.CartActivity
@@ -14,8 +15,15 @@ import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductsAdapter
 
 class ProductsActivity : AppCompatActivity() {
-    private val binding: ActivityProductsBinding by lazy { ActivityProductsBinding.inflate(layoutInflater) }
-    private val viewModel by viewModels<ProductsViewModel> { ProductsViewModelFactory(ProductRepository.getInstance()) }
+    private val binding: ActivityProductsBinding by lazy {
+        ActivityProductsBinding.inflate(layoutInflater)
+    }
+    private val viewModel by viewModels<ProductsViewModel> {
+        ProductsViewModelFactory(
+            ProductRepository.getInstance(),
+            CartRepository.getInstance(),
+        )
+    }
     private lateinit var adapter: ProductsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,12 +43,23 @@ class ProductsActivity : AppCompatActivity() {
 
     private fun initializeProductAdapter() {
         adapter =
-            ProductsAdapter(onClickProductItem = { productId ->
-                navigateToProductDetailView(productId)
-            })
+            ProductsAdapter(
+                onClickProductItem = { productId ->
+                    navigateToProductDetailView(productId)
+                },
+                onIncreaseProductQuantity = { product ->
+                    viewModel.increaseQuantity(product)
+                },
+                onDecreaseProductQuantity = { product ->
+                    viewModel.decreaseQuantity(product)
+                },
+            )
         binding.rvProducts.adapter = adapter
         viewModel.products.observe(this) {
             adapter.insertProducts(it)
+        }
+        viewModel.changedProductQuantity.observe(this) {
+            adapter.replaceProduct(it)
         }
     }
 

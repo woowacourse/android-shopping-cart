@@ -8,6 +8,11 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.Product" />
+
+        <variable
+            name="addCartQuantityBundle"
+            type="woowacourse.shopping.ui.utils.AddCartQuantityBundle" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -66,9 +71,11 @@
             android:layout_marginBottom="8dp"
             android:background="@drawable/shape_product_add_cart_button"
             android:gravity="center"
+            android:onClick="@{() -> addCartQuantityBundle.onIncreaseProductQuantity.invoke(product)}"
             android:text="@string/plus"
             android:textColor="@color/gray_500"
             android:textSize="30sp"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -79,8 +86,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
             app:layout_constraintEnd_toEndOf="parent"
+            app:bundle="@{addCartQuantityBundle}"
             tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
