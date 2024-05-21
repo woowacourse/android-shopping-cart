@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.cart.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,11 +29,31 @@ class CartViewModel(
 
     fun loadPreviousPageCartItems() {
         _currentPage.value = currentPage.value?.minus(1)
+
         loadCurrentPageCartItems()
     }
 
     fun loadNextPageCartItems() {
         _currentPage.value = currentPage.value?.plus(1)
+
+        loadCurrentPageCartItems()
+    }
+
+    fun addCartITem(
+        productId: Long,
+        quantity: Int,
+    ) {
+        cartRepository.addCartItem(productId, quantity)
+
+        loadCurrentPageCartItems()
+    }
+
+    fun removeCartItem(
+        productId: Long,
+        quantity: Int,
+    ) {
+        cartRepository.removeCartItem(productId, quantity)
+
         loadCurrentPageCartItems()
     }
 

@@ -12,13 +12,11 @@ class FakeCartRepository(
         productId: Long,
         quantity: Int,
     ): Long {
-        cartItems.add(
-            CartItem(
-                id = id,
-                productId = productId,
-                quantity = quantity,
-            ),
-        )
+        val cartItem = cartItems[productId.toInt() - 1]
+        cartItems[productId.toInt() - 1] =
+            cartItem.copy(
+                quantity = cartItem.quantity + 1,
+            )
         return id++
     }
 
@@ -26,7 +24,11 @@ class FakeCartRepository(
         productId: Long,
         quantity: Int,
     ): Long {
-        cartItems.removeIf { it.productId == productId }
+        val cartItem = cartItems[productId.toInt() - 1]
+        cartItems[productId.toInt() - 1] =
+            cartItem.copy(
+                quantity = cartItem.quantity - 1,
+            )
         return productId
     }
 

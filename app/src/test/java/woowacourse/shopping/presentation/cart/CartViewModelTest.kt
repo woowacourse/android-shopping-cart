@@ -50,6 +50,29 @@ class CartViewModelTest {
     }
 
     @Test
+    fun `장바구니 상품 갯수를 증가시킬 수 있다`() {
+        val orders = cartViewModel.orders
+
+        cartViewModel.addCartITem(1, 1)
+
+        val actual = orders.getOrAwaitValue().first { it.product.id == 1L }.quantity
+
+        assertThat(actual).isEqualTo(2)
+    }
+
+    @Test
+    fun `장바구니 상품 갯수를 감소시킬 수 있다`() {
+        val orders = cartViewModel.orders
+
+        cartViewModel.addCartITem(1, 1)
+        cartViewModel.removeCartItem(1, 1)
+
+        val actual = orders.getOrAwaitValue().first { it.product.id == 1L }.quantity
+
+        assertThat(actual).isEqualTo(1)
+    }
+
+    @Test
     fun `장바구니에 담긴 상품을 삭제할 수 있다`() {
         val orders = cartViewModel.orders
 

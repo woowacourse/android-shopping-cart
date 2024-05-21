@@ -34,12 +34,11 @@ object DefaultCart : CartDataSource {
         quantity: Int,
     ): Long {
         val existingCartItem = cartItems[productId]
-        if (existingCartItem != null && existingCartItem.quantity >= 1) {
+        if (existingCartItem != null && existingCartItem.quantity > 1) {
             cartItems[productId] =
                 existingCartItem.copy(
                     quantity = existingCartItem.quantity - 1,
                 )
-            if (cartItems[productId]?.quantity == 0) removeAllCartItem(productId)
         }
         return productId
     }
