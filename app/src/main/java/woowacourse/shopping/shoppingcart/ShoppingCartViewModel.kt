@@ -6,6 +6,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ShoppingCartRepository
+import woowacourse.shopping.uimodel.CartItemUiModel
+import woowacourse.shopping.uimodel.toCartItemUiModel
 import kotlin.math.ceil
 
 class ShoppingCartViewModel(

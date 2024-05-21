@@ -8,8 +8,8 @@ import woowacourse.shopping.ShoppingCartRepository
 import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.productlist.ProductUiModel
-import woowacourse.shopping.productlist.toProductUiModel
+import woowacourse.shopping.uimodel.ProductUiModel
+import woowacourse.shopping.uimodel.toProductUiModel
 
 class ProductDetailViewModel(
     private val shoppingRepository: ShoppingRepository,

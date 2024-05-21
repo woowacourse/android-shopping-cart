@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.productlist.toProductUiModel
+import woowacourse.shopping.uimodel.toProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
 import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue

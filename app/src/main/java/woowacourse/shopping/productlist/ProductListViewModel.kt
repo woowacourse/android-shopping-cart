@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.uimodel.ProductUiModel
+import woowacourse.shopping.uimodel.toProductUiModel
 
 class ProductListViewModel(
     private val repository: ShoppingRepository,

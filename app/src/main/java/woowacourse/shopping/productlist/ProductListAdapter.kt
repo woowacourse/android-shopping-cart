@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductListBinding
+import woowacourse.shopping.uimodel.ProductUiModel
 
 class ProductListAdapter(
     private val onClick: ProductListClickAction,
