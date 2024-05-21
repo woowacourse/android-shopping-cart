@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
+        <variable
+            name="actionHandler"
+            type="woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler" />
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:onClick="@{() -> actionHandler.onClickProduct(product.id)}">
+
+        <ImageView
+            android:id="@+id/iv_product_thumbnail"
+            urlToImage="@{product.imageUrl}"
+            android:layout_width="154dp"
+            android:layout_height="154dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/img_dummy_product_thumbnail" />
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="9dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_product_thumbnail"
+            tools:text="홍차" />
+
+
+        <TextView
+            android:id="@+id/tv_product_price"
+            priceToCurrency="@{product.price}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/gray5"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/tv_product_name"
+            app:layout_constraintStart_toStartOf="@+id/tv_product_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
+            tools:text="10,000원" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

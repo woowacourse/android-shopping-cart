@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.ui.shoppingcart.ShoppingCartActivity">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_order_list"
+            recyclerViewVisible="@{vm.uiState.pagingOrder.orderList}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="71dp"
+            android:orientation="vertical"
+            android:visibility="visible"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/tv_page"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/holder_order" />
+
+        <TextView
+            emptyTextVisible="@{vm.uiState.pagingOrder.orderList}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/empty_shopping_cart_title"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/tv_page"
+            app:layout_constraintEnd_toEndOf="@+id/rv_order_list"
+            app:layout_constraintStart_toStartOf="@+id/rv_order_list"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_pre_page"
+            currentPage="@{vm.uiState.pagingOrder.currentPage}"
+            orderList="@{vm.uiState.pagingOrder.orderList}"
+            prePageBtnSelect="@{vm.uiState.pagingOrder.currentPage}"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/selector_pre_page_btn"
+            android:gravity="center"
+            android:onClick="@{() -> vm.onClickPrePage()}"
+            android:text="@string/tv_pre_page_title"
+            android:textColor="@color/white"
+            android:textSize="19dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_page"
+            app:layout_constraintEnd_toStartOf="@+id/tv_page"
+            app:layout_constraintTop_toTopOf="@+id/tv_page" />
+
+        <TextView
+            android:id="@+id/tv_page"
+            currentPage="@{vm.uiState.pagingOrder.currentPage}"
+            orderList="@{vm.uiState.pagingOrder.orderList}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="62dp"
+            android:text="@{String.valueOf(vm.uiState.pagingOrder.currentPage + 1)}"
+            android:textColor="@color/gray5"
+            android:textSize="22dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="1" />
+
+        <TextView
+            android:id="@+id/tv_next_page"
+            currentPage="@{vm.uiState.pagingOrder.currentPage}"
+            nextPageBtnSelect="@{vm.uiState.pagingOrder.last}"
+            orderList="@{vm.uiState.pagingOrder.orderList}"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/selector_next_page_btn"
+            android:gravity="center"
+            android:onClick="@{() -> vm.onClickNextPage()}"
+            android:text="@string/tv_next_page_title"
+            android:textColor="@color/white"
+            android:textSize="19dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_page"
+            app:layout_constraintStart_toEndOf="@+id/tv_page"
+            app:layout_constraintTop_toTopOf="@+id/tv_page" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

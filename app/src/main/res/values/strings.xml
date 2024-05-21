@@ -1,3 +1,31 @@
 <resources>
     <string name="app_name">Shopping</string>
+
+    <!--    상품 목록-->
+    <string name="show_more_products_title">더보기</string>
+    <string name="empty_show_more_title">더이상 상품이 없습니다.</string>
+
+    <!--    상품 상세-->
+    <string name="product_detail_title"></string>
+    <string name="detail_price_title">가격</string>
+    <string name="product_detail_close_title">닫기</string>
+
+    <!--    장바구니-->
+    <string name="cart_title">Cart</string>
+    <string name="shopping_cart_title">장바구니</string>
+    <string name="tv_pre_page_title"><![CDATA[<]]></string>
+    <string name="tv_next_page_title"><![CDATA[>]]></string>
+
+
+    <!--    공통-->
+    <string name="price_format_kor"> %,d원</string>
+    <string name="empty_shopping_cart_title">장바구니가 없습니다.</string>
+
+
+    <!--    메시지-->
+    <string name="unforeseen_error_message">예상치 못한 에러가 발생했습니다</string>
+    <string name="no_such_element_exception_message">해당 상품 정보가 없습니다.</string>
+    <string name="add_to_cart_success_message">상품을 성공적으로 장바구니에 담았습니다.</string>
+
+
 </resources>

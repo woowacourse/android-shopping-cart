@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="woowacourse.shopping.presentation.ui.productdetail.ProductDetailViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.ui.productdetail.ProductDetailActivity">
+
+        <ImageView
+            android:id="@+id/iv_product_detail"
+            android:layout_width="match_parent"
+            android:layout_height="360dp"
+            android:scaleType="centerCrop"
+            urlToImage="@{vm.product.imageUrl}"
+            tools:src="@drawable/img_dummy_product_thumbnail"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="18dp"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:text="@{vm.product.name}"
+            app:layout_constraintTop_toBottomOf="@id/iv_product_detail"
+            tools:text="동원 스위트 콘"
+            tools:layout_editor_absoluteX="16dp" />
+
+        <View
+            android:id="@+id/product_detail_divide_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="17dp"
+            android:background="@color/gray6"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_name"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="18dp"
+            android:text="@string/detail_price_title"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line" />
+
+        <TextView
+            android:id="@+id/tv_product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="18dp"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            priceToCurrency="@{vm.product.price}"
+            tools:text="99,800"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line" />
+
+        <TextView
+            android:id="@+id/tv_add_to_cart"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/green"
+            android:text="장바구니 담기"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:onClick="@{()-> vm.onAddToCartButtonClick()}"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
