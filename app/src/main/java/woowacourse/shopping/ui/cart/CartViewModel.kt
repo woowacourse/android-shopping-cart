@@ -34,7 +34,7 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     private fun loadTotalCartCount() {
-        val totalCartCount = cartRepository.count()
+        val totalCartCount = cartRepository.totalProductCount()
         this.totalCartCount.value = totalCartCount
         maxPage = (totalCartCount - 1) / PAGE_SIZE
     }

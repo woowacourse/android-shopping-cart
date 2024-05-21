@@ -45,7 +45,13 @@ class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRep
         return cart.subList(fromIndex, toIndex)
     }
 
-    override fun count(): Int = cart.size
+    override fun totalProductCount(): Int = cart.size
+
+    override fun totalQuantityCount(): Int {
+        return cart.fold(0) { total, cartItem ->
+            total + cartItem.quantity.count
+        }
+    }
 
     companion object {
         private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."

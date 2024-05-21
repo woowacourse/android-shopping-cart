@@ -17,7 +17,9 @@ interface CartRepository {
         pageSize: Int,
     ): List<CartItem>
 
-    fun count(): Int
+    fun totalProductCount(): Int
+
+    fun totalQuantityCount(): Int
 
     companion object {
         private const val NOT_INITIALIZE_INSTANCE_MESSAGE = "초기화된 인스턴스가 없습니다."

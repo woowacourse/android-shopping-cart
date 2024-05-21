@@ -13,7 +13,7 @@ class DummyCartRepository private constructor() : CartRepository {
     override fun increaseQuantity(product: Product) {
         val oldCartItem = cart.find { it.product.id == product.id }
         if (oldCartItem == null) {
-            cart.add(CartItem(id++, product, Quantity()))
+            cart.add(CartItem(id++, product, Quantity(1)))
             return
         }
         var quantity = oldCartItem.quantity
@@ -45,7 +45,13 @@ class DummyCartRepository private constructor() : CartRepository {
         return cart.subList(fromIndex, toIndex)
     }
 
-    override fun count(): Int = cart.size
+    override fun totalProductCount(): Int = cart.size
+
+    override fun totalQuantityCount(): Int {
+        return cart.fold(0) { total, cartItem ->
+            total + cartItem.quantity.count
+        }
+    }
 
     companion object {
         private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."

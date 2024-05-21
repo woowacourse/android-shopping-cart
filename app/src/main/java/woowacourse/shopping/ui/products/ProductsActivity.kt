@@ -6,7 +6,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityProductsBinding
@@ -69,13 +68,8 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun initializeToolbar() {
-        binding.toolbarProducts.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.item_cart -> {
-                    navigateToCartView()
-                }
-            }
-            false
+        binding.ivProductsCart.setOnClickListener {
+            navigateToCartView()
         }
     }
 

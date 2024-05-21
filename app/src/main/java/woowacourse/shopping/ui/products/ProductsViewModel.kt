@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.Product
@@ -23,6 +24,8 @@ class ProductsViewModel(
 
     private val _changedProductQuantity = MutableLiveData<Product>()
     val changedProductQuantity: LiveData<Product> get() = _changedProductQuantity
+
+    val cartTotalCount: LiveData<Int> = _changedProductQuantity.map { cartRepository.totalQuantityCount() }
 
     init {
         loadPage()
