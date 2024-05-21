@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repsoitory.DummyData.STUB_PRODUCT_A
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_A
 import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.presentation.ui.utils.RecyclerViewItemCountAssertion

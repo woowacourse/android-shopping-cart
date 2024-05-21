@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.repsoitory
 
-import woowacourse.shopping.data.repsoitory.DummyData.STUB_PRODUCT_A
-import woowacourse.shopping.data.repsoitory.DummyData.STUB_PRODUCT_B
-import woowacourse.shopping.data.repsoitory.DummyData.STUB_PRODUCT_C
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_A
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_B
+import woowacourse.shopping.data.DummyData.STUB_PRODUCT_C
 import woowacourse.shopping.domain.model.PagingProduct
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductListRepository

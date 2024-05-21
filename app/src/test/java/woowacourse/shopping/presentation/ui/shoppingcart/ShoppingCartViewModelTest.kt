@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.repsoitory.DummyData
+import woowacourse.shopping.data.DummyData
 import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.domain.model.PagingOrder
 import woowacourse.shopping.getOrAwaitValue
