@@ -5,22 +5,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
-import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
-import woowacourse.shopping.view.FragmentChangeListener
+import woowacourse.shopping.view.MainFragmentListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 
 class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter {
-    private var fragmentChangeListener: FragmentChangeListener? = null
+    private var mainFragmentListener: MainFragmentListener? = null
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
     private val productDetailViewModel: ProductDetailViewModel by lazy {
@@ -36,8 +34,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentChangeListener) {
-            fragmentChangeListener = context
+        if (context is MainFragmentListener) {
+            mainFragmentListener = context
         }
     }
 
@@ -110,11 +108,11 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        fragmentChangeListener = null
+        mainFragmentListener = null
     }
 
     override fun clickClose() {
-        fragmentChangeListener?.popFragment()
+        mainFragmentListener?.popFragment()
     }
 
     override fun clickAddCart(product: Product) {

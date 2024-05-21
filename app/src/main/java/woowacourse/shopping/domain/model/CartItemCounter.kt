@@ -14,7 +14,6 @@ class CartItemCounter(
 
     fun increase(): ChangeCartItemResultState {
         itemCount++
-        Log.d("count",itemCount.toString())
         return ChangeCartItemResultState.Success
     }
 

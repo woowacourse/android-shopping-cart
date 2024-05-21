@@ -12,7 +12,7 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
-import woowacourse.shopping.view.FragmentChangeListener
+import woowacourse.shopping.view.MainFragmentListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
@@ -20,7 +20,7 @@ import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
 
 class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter {
-    private var fragmentChangeListener: FragmentChangeListener? = null
+    private var mainFragmentListener: MainFragmentListener? = null
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private val productListViewModel: ProductListViewModel by lazy {
@@ -36,8 +36,8 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentChangeListener) {
-            fragmentChangeListener = context
+        if (context is MainFragmentListener) {
+            mainFragmentListener = context
         }
     }
 
@@ -58,6 +58,8 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         initView()
         observeData()
     }
+
+
 
     private fun initView() {
         loadPagingData()
@@ -111,12 +113,15 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
             }
         }
+        mainFragmentListener?.observeProductList { updatedProducts ->
+            productListViewModel.updateProducts(updatedProducts)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        fragmentChangeListener = null
+        mainFragmentListener = null
     }
 
     override fun clickProductItem(productId: Long) {
@@ -124,12 +129,12 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
             }
-        fragmentChangeListener?.changeFragment(productFragment)
+        mainFragmentListener?.changeFragment(productFragment)
     }
 
     override fun clickShoppingCart() {
         val shoppingCartFragment = ShoppingCartFragment()
-        fragmentChangeListener?.changeFragment(shoppingCartFragment)
+        mainFragmentListener?.changeFragment(shoppingCartFragment)
     }
 
     override fun clickLoadPagingData() {

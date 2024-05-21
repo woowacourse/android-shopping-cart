@@ -10,10 +10,9 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
-import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
-import woowacourse.shopping.view.FragmentChangeListener
+import woowacourse.shopping.view.MainFragmentListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
@@ -21,7 +20,7 @@ import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
 class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCounter {
-    private var fragmentChangeListener: FragmentChangeListener? = null
+    private var mainFragmentListener: MainFragmentListener? = null
     private var _binding: FragmentShoppingCartBinding? = null
     val binding: FragmentShoppingCartBinding get() = _binding!!
 
@@ -34,8 +33,8 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is FragmentChangeListener) {
-            fragmentChangeListener = context
+        if (context is MainFragmentListener) {
+            mainFragmentListener = context
         }
     }
 
@@ -102,11 +101,11 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        fragmentChangeListener = null
+        mainFragmentListener = null
     }
 
     override fun clickBack() {
-        fragmentChangeListener?.popFragment()
+        mainFragmentListener?.popFragment()
     }
 
     override fun clickCartItem(productId: Long) {
@@ -114,7 +113,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
             ProductDetailFragment().apply {
                 arguments = ProductDetailFragment.createBundle(productId)
             }
-        fragmentChangeListener?.changeFragment(productFragment)
+        mainFragmentListener?.changeFragment(productFragment)
     }
 
     override fun clickRemoveCartItem(cartItemId: Long) {

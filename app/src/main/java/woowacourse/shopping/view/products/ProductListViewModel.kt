@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
+import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -57,6 +58,7 @@ class ProductListViewModel(
                                 product.cartItemCounter.itemCount
                             )
                         }
+
                         CartItemResult.NotExists -> {
                             shoppingCartRepository.addCartItem(product)
                         }
@@ -79,7 +81,7 @@ class ProductListViewModel(
 
     fun decreaseShoppingCart(product: Product) {
         try {
-            when(product.cartItemCounter.decrease()){
+            when (product.cartItemCounter.decrease()) {
                 ChangeCartItemResultState.Success -> {
                     when (val cartItemResult = getCartItemResult(product.id)) {
                         is CartItemResult.Exists -> {
@@ -93,6 +95,7 @@ class ProductListViewModel(
                     }
                     _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
                 }
+
                 ChangeCartItemResultState.Fail -> {
                     product.cartItemCounter.unSelectItem()
                     deleteCartItem(product)
@@ -129,6 +132,30 @@ class ProductListViewModel(
                 else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
+    }
+
+    fun updateProducts(items: Map<Long, Int>) {
+        _products.value = products.value?.map { product ->
+            val count = items[product.id]
+            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+            if (count != null) {
+                getUpdatedProduct(product,count)
+            } else {
+                product
+            }
+        }
+    }
+
+    private fun getUpdatedProduct(
+        product: Product,
+        count: Int,
+    ): Product {
+        return product.copy(
+            id = product.id,
+            name = product.name,
+            price = product.price,
+            cartItemCounter = CartItemCounter(count)
+        )
     }
 
     private fun getCartItemResult(productId: Long): CartItemResult {
