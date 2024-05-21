@@ -30,23 +30,28 @@ class CartViewModel(
     fun deleteProduct(item: CartProductUi) {
         val currentProducts = products.value ?: return
         if (currentProducts.contains(item)) {
-            _currentPage.value = _currentPage.value
             cartRepository.deleteCartProduct(item.product.id)
+            refreshCurrentPage()
         }
     }
 
     fun moveToNextPage() {
         val currentPage = _currentPage.value ?: return
         if (cartRepository.canLoadMoreCartProducts(currentPage)) {
-            _currentPage.value = currentPage + INCREMENT_AMOUNT
+            refreshCurrentPage(INCREMENT_AMOUNT)
         }
     }
 
     fun moveToPreviousPage() {
         val currentPage = _currentPage.value ?: return
         if (currentPage > 1) {
-            _currentPage.value = currentPage - INCREMENT_AMOUNT
+            refreshCurrentPage(-INCREMENT_AMOUNT)
         }
+    }
+
+    private fun refreshCurrentPage(increment: Int = 0) {
+        val currentPage = _currentPage.value ?: return
+        _currentPage.value = currentPage + increment
     }
 
     companion object {

@@ -13,7 +13,7 @@ class ProductListViewModel(
 ) : ViewModel() {
     private val _products = MutableLiveData<List<ShoppingUiModel>>(emptyList())
     val products: LiveData<List<ShoppingUiModel>> = _products
-    var currentPage = 0
+    private var currentPage = 0
 
     fun loadProducts() {
         val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
