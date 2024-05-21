@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.detail.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartDao
@@ -21,6 +22,11 @@ class ProductDetailViewModel(
 
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
+
+    val isInvalidCount: LiveData<Boolean> =
+        _product.map {
+            it.count == 0
+        }
 
     fun loadProduct(productId: Long) {
         runCatching {

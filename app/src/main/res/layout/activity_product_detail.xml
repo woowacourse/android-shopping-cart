@@ -100,7 +100,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_add_product_button"
-            android:enabled="@{!vm.error}"
+            android:enabled="@{!vm.error &amp;&amp; !vm.isInvalidCount}"
             android:onClick="@{()->cartButtonClickListener.onClick()}"
             android:text="@string/add_product_to_cart"
             android:textColor="@color/white"

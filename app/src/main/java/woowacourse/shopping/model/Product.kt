@@ -19,7 +19,7 @@ data class Product(
     }
 
     companion object {
-        private const val DEFAULT_COUNT = 1
+        private const val DEFAULT_COUNT = 0
         private const val OFFSET = 1
     }
 }
