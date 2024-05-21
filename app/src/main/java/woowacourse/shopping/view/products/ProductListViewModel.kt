@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.products
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,17 +25,16 @@ class ProductListViewModel(
     private val _cartItemCount: MutableLiveData<Int> = MutableLiveData(0)
     val cartItemCount: LiveData<Int> get() = _cartItemCount
 
-    init {
-        _cartItemCount.value = shoppingCartRepository.getTotalCartItemCount()
-    }
-
-
     private val _productListEvent: MutableSingleLiveData<ProductListEvent.SuccessEvent> =
         MutableSingleLiveData()
     val productListEvent: SingleLiveData<ProductListEvent.SuccessEvent> get() = _productListEvent
     private val _errorEvent: MutableSingleLiveData<ProductListEvent.ErrorEvent> =
         MutableSingleLiveData()
     val errorEvent: SingleLiveData<ProductListEvent.ErrorEvent> get() = _errorEvent
+
+    init {
+        updateTotalCount()
+    }
 
     fun loadPagingProduct() {
         try {
@@ -90,20 +90,22 @@ class ProductListViewModel(
 
     fun decreaseShoppingCart(product: Product) {
         try {
-            when(val cartItemResult = getCartItemResult(product.id)){
+            when (val cartItemResult = getCartItemResult(product.id)) {
                 is CartItemResult.Exists -> {
-                    when(product.cartItemCounter.decrease()){
+                    when (product.cartItemCounter.decrease()) {
                         ChangeCartItemResultState.Success -> {
                             shoppingCartRepository.updateCartItem(
                                 cartItemResult.cartItemId,
                                 product.cartItemCounter.itemCount
                             )
                         }
+
                         ChangeCartItemResultState.Fail -> {
-                            deleteCartItem(product,cartItemResult.cartItemId)
+                            deleteCartItem(product, cartItemResult.cartItemId)
                         }
                     }
                 }
+
                 CartItemResult.NotExists -> throw NoSuchDataException()
             }
             _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
@@ -121,7 +123,7 @@ class ProductListViewModel(
 
     private fun deleteCartItem(
         product: Product,
-        cartItemId:Long,
+        cartItemId: Long,
     ) {
         try {
             shoppingCartRepository.deleteCartItem(cartItemId)
@@ -137,6 +139,10 @@ class ProductListViewModel(
         }
     }
 
+    private fun updateTotalCount(){
+        _cartItemCount.value = shoppingCartRepository.getTotalCartItemCount()
+    }
+
     fun updateProducts(items: Map<Long, Int>) {
         _products.value = products.value?.map { product ->
             val count = items[product.id]
@@ -149,6 +155,7 @@ class ProductListViewModel(
         items.keys.forEach { productId ->
             _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(productId))
         }
+        updateTotalCount()
     }
 
     private fun getUpdatedProduct(

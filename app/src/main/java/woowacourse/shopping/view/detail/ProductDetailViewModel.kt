@@ -13,6 +13,7 @@ import woowacourse.shopping.domain.model.Product.Companion.DEFAULT_PRODUCT_ID
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 
 class ProductDetailViewModel(
     private val productRepository: ProductRepository,
@@ -106,11 +107,14 @@ class ProductDetailViewModel(
     }
 
     fun decreaseItemCounter() {
-        product.value?.cartItemCounter?.decrease()
-        _product.value = product.value?.cartItemCounter?.let {
-            product.value?.copy(
-                cartItemCounter = it
-            )
+        val productCount = product.value?.cartItemCounter?.itemCount ?: DEFAULT_ITEM_COUNT
+        if (productCount > DEFAULT_ITEM_COUNT){
+            product.value?.cartItemCounter?.decrease()
+            _product.value = product.value?.cartItemCounter?.let {
+                product.value?.copy(
+                    cartItemCounter = it
+                )
+            }
         }
     }
 
