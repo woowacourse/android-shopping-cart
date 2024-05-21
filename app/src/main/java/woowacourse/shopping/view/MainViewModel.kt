@@ -11,5 +11,4 @@ class MainViewModel : ViewModel() {
     fun saveUpdate(updateList: Map<Long, Int>) {
         _updateProductEvent.postValue(updateList)
     }
-
 }

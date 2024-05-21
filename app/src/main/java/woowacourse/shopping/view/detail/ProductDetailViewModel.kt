@@ -55,8 +55,6 @@ class ProductDetailViewModel(
                 cartItemCounter = it
             )
         }
-
-
     }
 
     fun decreaseItemCounter(){

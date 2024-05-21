@@ -36,10 +36,14 @@ class MainActivity : AppCompatActivity(), MainFragmentListener {
         supportFragmentManager.popBackStack()
     }
 
-    override fun observeProductList(products: (Map<Long,Int>) -> Unit) {
-        mainViewModel.updateProductEvent.observe(this){
+    override fun observeProductList(products: (Map<Long, Int>) -> Unit) {
+        mainViewModel.updateProductEvent.observe(this) {
             products(it)
         }
+    }
+
+    override fun saveUpdateProduct(productId: Long, count: Int) {
+        mainViewModel.saveUpdate(mapOf(productId to count))
     }
 
 }
