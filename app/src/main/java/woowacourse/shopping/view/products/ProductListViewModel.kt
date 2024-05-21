@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
+import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.NoSuchDataException
 
 class ProductListViewModel(
-    private val repository: ProductRepository,
+    private val productRepository: ProductRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
@@ -25,7 +28,7 @@ class ProductListViewModel(
     fun loadPagingProduct() {
         try {
             val itemSize = products.value?.size ?: DEFAULT_ITEM_SIZE
-            val pagingData = repository.loadPagingProducts(itemSize)
+            val pagingData = productRepository.loadPagingProducts(itemSize)
             _products.value = _products.value?.plus(pagingData)
             _productListState.value = ProductListState.LoadProductList.Success
         } catch (e: Exception) {
@@ -37,5 +40,18 @@ class ProductListViewModel(
                 else -> _errorState.value = ProductListState.ErrorState.NotKnownError
             }
         }
+    }
+
+    fun updateShoppingCart(
+        productId:Int,
+        itemCounter: CartItemCounter,
+    ){
+
+    }
+
+    fun deleteCartItem(
+        productId: Int,
+    ){
+
     }
 }

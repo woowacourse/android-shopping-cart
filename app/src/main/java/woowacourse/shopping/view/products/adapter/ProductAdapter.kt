@@ -11,6 +11,7 @@ import woowacourse.shopping.view.products.adapter.viewholder.ProductViewHolder
 
 class ProductAdapter(
     private val onClickProducts: OnClickProducts,
+    private val onClickCartItemCounter: OnClickCartItemCounter,
     private val isLoadLastItem: (Boolean) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()
@@ -20,7 +21,7 @@ class ProductAdapter(
         viewType: Int,
     ): ProductViewHolder {
         val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(view, onClickProducts)
+        return ProductViewHolder(view, onClickCartItemCounter,onClickProducts)
     }
 
     override fun getItemCount(): Int {
@@ -32,7 +33,7 @@ class ProductAdapter(
         position: Int,
     ) {
         val item = products[position]
-        holder.bind(item)
+        holder.bind(item,position)
 
         if (position == itemCount - 1) {
             isLoadLastItem(true)
@@ -46,5 +47,9 @@ class ProductAdapter(
         val startPosition = products.size
         products = products + addedProducts
         notifyItemRangeInserted(startPosition, addedProducts.size)
+    }
+
+    fun updateProduct(position: Int){
+        notifyItemChanged(position)
     }
 }
