@@ -7,6 +7,10 @@ object DefaultCart : CartDataSource {
     private val cartItems: MutableMap<Long, CartItem> = mutableMapOf()
     private var id: Long = 1
 
+    override fun totalCartCount(): Int {
+        return cartItems.size
+    }
+
     override fun getCartItem(productId: Long): CartItem? {
         return cartItems[productId]
     }

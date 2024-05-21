@@ -3,6 +3,8 @@ package woowacourse.shopping.data.datasource
 import woowacourse.shopping.data.model.CartItem
 
 interface CartDataSource {
+    fun totalCartCount(): Int
+
     fun getCartItem(productId: Long): CartItem?
 
     fun getCartItems(

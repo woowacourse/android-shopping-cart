@@ -9,9 +9,20 @@ import woowacourse.shopping.data.datasource.DefaultCart.getCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.minusCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.plusCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.removeAllCartItem
+import woowacourse.shopping.data.datasource.DefaultCart.totalCartCount
 import woowacourse.shopping.data.model.CartItem
 
 class DefaultCartTest {
+    @Test
+    fun `장바구니의 총 갯수를 가져올 수 있다`() {
+        mockkObject(DefaultCart) {
+            every { totalCartCount() } returns 0
+            val totalCartCount = totalCartCount()
+
+            assertThat(totalCartCount).isEqualTo(0)
+        }
+    }
+
     @Test
     fun `장바구니에 담은 아이템을 하나 가져올 수 있다`() {
         mockkObject(DefaultCart) {
