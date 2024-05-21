@@ -43,21 +43,8 @@ class CartAdapter(
 
 class CartViewHolder(private val binding: ItemCartBinding, val cartActionHandler: CartActionHandler) :
     RecyclerView.ViewHolder(binding.root) {
-    lateinit var product: Product
-
-    init {
-        binding.ivClose.setOnClickListener {
-            cartActionHandler.onDelete(product)
-        }
-    }
-
     fun bind(item: Cart) {
-        product = item.product
-        binding.tvName.text = item.product.name
-        Glide.with(binding.root.context)
-            .load(item.product.imgUrl)
-            .into(binding.ivCart)
-        binding.tvName.text = item.product.name
-        binding.tvPrice.text = binding.root.context.getString(R.string.won, item.product.price)
+        binding.cart = item
+        binding.cartActionHandler = cartActionHandler
     }
 }

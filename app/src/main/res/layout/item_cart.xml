@@ -3,6 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="cart"
+            type="woowacourse.shopping.domain.Cart" />
+        <variable
+            name="cartActionHandler"
+            type="woowacourse.shopping.presentation.ui.cart.CartActionHandler" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,7 +28,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
-            tools:src="@drawable/ic_close_white" />
+            tools:src="@drawable/ic_close_white"
+            cartImgUrl="@{cart.product.imgUrl}"/>
 
         <ImageView
             android:id="@+id/iv_close"
@@ -30,7 +40,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@id/tv_name"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            android:onClick="@{() -> cartActionHandler.onDelete(cart.product)}"/>
 
         <TextView
             android:id="@+id/tv_price"
@@ -40,7 +51,8 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_close"
-            tools:text="000원" />
+            tools:text="000원"
+            android:text="@{@string/won(cart.product.price)}"/>
 
         <TextView
             android:id="@+id/tv_name"
@@ -54,8 +66,7 @@
             app:layout_constraintEnd_toStartOf="@id/iv_close"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="상품 제목" />
+            tools:text="상품 제목"
+            android:text="@{cart.product.name}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <data />
 </layout>
