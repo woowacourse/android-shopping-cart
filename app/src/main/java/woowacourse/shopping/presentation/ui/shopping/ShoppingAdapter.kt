@@ -10,8 +10,7 @@ import woowacourse.shopping.domain.model.ShoppingType
 import woowacourse.shopping.domain.model.ShoppingType.Companion.PRODUCT_VIEW_TYPE
 
 class ShoppingAdapter(
-    private val itemClickListener: ShoppingClickListener.ShoppingItemClickListener,
-    private val buttonClickListener: ShoppingClickListener.ShoppingButtonClickListener,
+    val clickListener: ShoppingClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val shoppingTypes: MutableList<ShoppingType> = mutableListOf()
 
@@ -37,10 +36,10 @@ class ShoppingAdapter(
     ) {
         val shoppingContent = shoppingTypes[position]
         if (holder is ProductViewHolder && shoppingContent is ShoppingType.ProductType) {
-            holder.bind(shoppingContent.product, itemClickListener)
+            holder.bind(shoppingContent.product, clickListener)
         }
         if (holder is LoadMoreButtonViewHolder) {
-            holder.bind(buttonClickListener)
+            holder.bind(clickListener)
         }
     }
 

@@ -16,7 +16,7 @@ import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class ShoppingActivity : AppCompatActivity(), ShoppingClickListener.ShoppingItemClickListener {
+class ShoppingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
     private val viewModel: ShoppingViewModel by viewModels {
@@ -39,7 +39,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener.ShoppingItem
     }
 
     private fun setUpAdapter() {
-        adapter = ShoppingAdapter(this, viewModel)
+        adapter = ShoppingAdapter(viewModel)
         binding.rvProductList.adapter = adapter
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup =
@@ -63,6 +63,12 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener.ShoppingItem
                     )
             }
         }
+
+        viewModel.navigateToDetail.observe(this) {
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
+            }
+        }
     }
 
     private fun showData(data: List<Product>) {
@@ -83,7 +89,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener.ShoppingItem
         return true
     }
 
-    override fun onProductClick(productId: Long) {
+    fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
     }
 }
