@@ -18,4 +18,8 @@ class FakeProductRepository(
     override fun fetchProduct(id: Long): Product {
         return products.first { it.id == id }
     }
+
+    override fun fetchProducts(ids: List<Long>): List<Product> {
+        return products
+    }
 }
