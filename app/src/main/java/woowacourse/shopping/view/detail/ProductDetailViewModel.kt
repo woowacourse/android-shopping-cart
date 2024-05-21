@@ -37,6 +37,7 @@ class ProductDetailViewModel(
     fun loadProductItem(productId: Long) {
         try {
             val product = productRepository.getProduct(productId)
+            product.cartItemCounter.selectItem()
             _product.postValue(product)
             _productDetailState.value = ProductDetailState.LoadProductItem.Success
         } catch (e: Exception) {
@@ -44,6 +45,26 @@ class ProductDetailViewModel(
                 is NoSuchDataException -> _errorState.value = ProductDetailState.LoadProductItem.Fail
                 else -> _errorState.value = ProductDetailState.ErrorState.NotKnownError
             }
+        }
+    }
+
+    fun increaseItemCounter(){
+        product.value?.cartItemCounter?.increase()
+        _product.value = product.value?.cartItemCounter?.let {
+            product.value?.copy(
+                cartItemCounter = it
+            )
+        }
+
+
+    }
+
+    fun decreaseItemCounter(){
+        product.value?.cartItemCounter?.decrease()
+        _product.value = product.value?.cartItemCounter?.let {
+            product.value?.copy(
+                cartItemCounter = it
+            )
         }
     }
 }

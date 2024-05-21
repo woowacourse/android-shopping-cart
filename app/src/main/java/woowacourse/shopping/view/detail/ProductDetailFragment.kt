@@ -11,13 +11,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
+import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 
-class ProductDetailFragment : Fragment(), OnClickDetail {
+class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter {
     private var fragmentChangeListener: FragmentChangeListener? = null
     private var _binding: FragmentProductDetailBinding? = null
     val binding: FragmentProductDetailBinding get() = _binding!!
@@ -99,7 +100,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
     private fun initView() {
         binding.vm = productDetailViewModel
         binding.onClickDetail = this
-        binding.lifecycleOwner = this
+        binding.onClickCartItemCounter = this
+        binding.lifecycleOwner = viewLifecycleOwner
     }
 
     override fun onDestroyView() {
@@ -116,7 +118,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         productDetailViewModel.addShoppingCartItem(product)
     }
 
-    private fun showMessage(message: String) = Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
+    private fun showMessage(message: String) =
+        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
         fun createBundle(id: Long): Bundle {
@@ -124,5 +127,21 @@ class ProductDetailFragment : Fragment(), OnClickDetail {
         }
 
         private const val PRODUCT_ID = "productId"
+    }
+
+    override fun clickIncrease(
+        productId: Int,
+        itemPosition: Int,
+        cartItemCounter: CartItemCounter
+    ) {
+        productDetailViewModel.increaseItemCounter()
+    }
+
+    override fun clickDecrease(
+        productId: Int,
+        itemPosition: Int,
+        cartItemCounter: CartItemCounter
+    ) {
+        productDetailViewModel.decreaseItemCounter()
     }
 }
