@@ -20,6 +20,13 @@ class FakeCartRepository(
         return id++
     }
 
+    override fun plusCartItem(
+        productId: Long,
+        quantity: Int,
+    ): Long {
+        TODO("Not yet implemented")
+    }
+
     override fun removeCartItem(
         productId: Long,
         quantity: Int,
@@ -35,6 +42,10 @@ class FakeCartRepository(
     override fun removeAllCartItem(cartItemId: Long): Long {
         cartItems.removeIf { it.id == cartItemId }
         return cartItemId
+    }
+
+    override fun fetchCartItem(productId: Long): CartItem? {
+        TODO("Not yet implemented")
     }
 
     override fun fetchCartItems(
