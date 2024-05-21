@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.util.Event
 
 class DetailViewModel(
     private val productRepository: ProductRepository,
@@ -15,8 +16,8 @@ class DetailViewModel(
     val productInformation: LiveData<Product>
         get() = _productInformation
 
-    private val _addComplete: MutableLiveData<Boolean> = MutableLiveData()
-    val addComplete: LiveData<Boolean>
+    private val _addComplete = MutableLiveData<Event<Boolean>>()
+    val addComplete: LiveData<Event<Boolean>>
         get() = _addComplete
 
     fun loadProductInformation(id: Long) {
@@ -25,6 +26,6 @@ class DetailViewModel(
 
     fun addToCart(id: Long) {
         cartRepository.addCartItem(productId = id, quantity = 1)
-        _addComplete.value = true
+        _addComplete.value = Event(true)
     }
 }

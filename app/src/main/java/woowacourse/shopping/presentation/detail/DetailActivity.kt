@@ -37,7 +37,9 @@ class DetailActivity : AppCompatActivity() {
         viewModel.loadProductInformation(productId)
 
         viewModel.addComplete.observe(this) {
-            Toast.makeText(this, getString(R.string.message_add_to_cart_complete), Toast.LENGTH_SHORT).show()
+            it.getContentIfNotHandled()?.let {
+                Toast.makeText(this, getString(R.string.message_add_to_cart_complete), Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.detailViewModel = viewModel
