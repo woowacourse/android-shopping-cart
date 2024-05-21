@@ -30,15 +30,10 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             when (state) {
                 is UiState.None -> {}
                 is UiState.Success -> {
-                    binding.tvName.text = state.data.name
-                    binding.tvPriceValue.text = getString(R.string.won, state.data.price)
                     binding.tvAddCart.setOnClickListener {
                         finish()
                         viewModel.saveCartItem(state.data)
                     }
-                    Glide.with(this)
-                        .load(state.data.imgUrl)
-                        .into(binding.ivProduct)
                 }
             }
         }
