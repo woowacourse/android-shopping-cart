@@ -3,6 +3,8 @@ package woowacourse.shopping.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.MutableSingleLiveData
+import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.data.Product
 import woowacourse.shopping.repository.ShoppingCartItemRepository
@@ -10,7 +12,7 @@ import woowacourse.shopping.repository.ShoppingCartItemRepository
 class ShoppingCartViewModel(
     private val shoppingCartItemRepository: ShoppingCartItemRepository,
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
-) : ViewModel() {
+) : ViewModel(), CartItemRecyclerViewAdapter.OnProductItemClickListener {
     val currentPage: LiveData<Int> get() = _currentPage
 
     private var _itemsInCurrentPage =
@@ -25,17 +27,19 @@ class ShoppingCartViewModel(
         )
     val isLastPage: LiveData<Boolean> get() = _isLastPage
 
+    private var _deletedItemId: MutableSingleLiveData<Int> = MutableSingleLiveData()
+    val deletedItemId: SingleLiveData<Int> get() = _deletedItemId
+
     fun nextPage() {
         if (isLastPage.value == true) return
 
         _currentPage.value = _currentPage.value?.plus(PAGE_MOVE_COUNT)
         _isLastPage.value = shoppingCartItemRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
 
-        _itemsInCurrentPage.postValue(
+        _itemsInCurrentPage.value =
             shoppingCartItemRepository.loadPagedCartItems(
                 currentPage.value ?: currentPageIsNullException(),
-            ),
-        )
+            )
     }
 
     fun previousPage() {
@@ -61,6 +65,10 @@ class ShoppingCartViewModel(
         )
 
         _isLastPage.value = shoppingCartItemRepository.isFinalPage(currentPage.value ?: currentPageIsNullException())
+    }
+
+    override fun onClick(productId: Int) {
+        _deletedItemId.setValue(productId)
     }
 
     companion object {

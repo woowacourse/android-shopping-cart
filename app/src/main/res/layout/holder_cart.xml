@@ -10,8 +10,8 @@
             type="woowacourse.shopping.data.Product" />
 
         <variable
-            name="onCartItemListener"
-            type="woowacourse.shopping.OnProductItemClickListener" />
+            name="onProductItemClickListener"
+            type="woowacourse.shopping.cart.CartItemRecyclerViewAdapter.OnProductItemClickListener" />
 
     </data>
 
@@ -43,7 +43,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_margin="10dp"
-            android:onClick="@{() -> onCartItemListener.onClick(product.id)}"
+            android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
             android:src="@drawable/ic_x"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

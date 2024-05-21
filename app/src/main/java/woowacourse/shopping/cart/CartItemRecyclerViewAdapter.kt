@@ -3,14 +3,14 @@ package woowacourse.shopping.cart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.OnProductItemClickListener
 import woowacourse.shopping.data.Product
 import woowacourse.shopping.databinding.HolderCartBinding
 
 class CartItemRecyclerViewAdapter(
-    private var values: List<Product>,
     private val onProductItemClickListener: OnProductItemClickListener,
 ) : RecyclerView.Adapter<ShoppingCartItemViewHolder>() {
+    private var products: List<Product> = emptyList()
+
     private lateinit var recyclerView: RecyclerView
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -25,26 +25,28 @@ class CartItemRecyclerViewAdapter(
     ): ShoppingCartItemViewHolder =
         ShoppingCartItemViewHolder(
             HolderCartBinding.inflate(LayoutInflater.from(parent.context), parent, false),
-        ) { onProductItemClickListener.onClick(it) }
+            onProductItemClickListener,
+        )
 
     override fun onBindViewHolder(
         holder: ShoppingCartItemViewHolder,
         position: Int,
-    ) = holder.bind(values[position])
+    ) = holder.bind(products[position])
 
-    override fun getItemCount(): Int = values.size.coerceAtMost(COUNT_PER_PAGE)
+    override fun getItemCount(): Int = products.size
 
     fun updateData(newData: List<Product>) {
-        this.values = newData
-
+        val oldSize = products.size
+        this.products = newData.toList()
         if (newData.isEmpty()) {
-            notifyItemRangeRemoved(0, itemCount)
+            notifyItemRangeRemoved(0, oldSize)
             return
         }
+
         notifyItemRangeChanged(0, itemCount)
     }
 
-    companion object {
-        private const val COUNT_PER_PAGE = 5
+    interface OnProductItemClickListener {
+        fun onClick(productId: Int)
     }
 }

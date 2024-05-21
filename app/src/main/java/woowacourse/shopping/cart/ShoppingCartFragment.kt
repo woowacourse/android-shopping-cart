@@ -1,6 +1,7 @@
 package woowacourse.shopping.cart
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,11 +30,7 @@ class ShoppingCartFragment : Fragment() {
     }
 
     private val adapter: CartItemRecyclerViewAdapter by lazy {
-        CartItemRecyclerViewAdapter(
-            emptyList(),
-        ) { cartItemId ->
-            viewModel.deleteItem(cartItemId)
-        }
+        CartItemRecyclerViewAdapter(onProductItemClickListener = viewModel)
     }
 
     override fun onCreateView(
@@ -57,6 +54,7 @@ class ShoppingCartFragment : Fragment() {
         binding.lifecycleOwner = this
 
         initNavigation()
+        observeDeletedItem()
         observeItemsInCurrentPage()
     }
 
@@ -66,9 +64,20 @@ class ShoppingCartFragment : Fragment() {
         }
     }
 
+    private fun observeDeletedItem() {
+        viewModel.deletedItemId.observe(viewLifecycleOwner) { productId ->
+            viewModel.deleteItem(productId)
+        }
+    }
+
     private fun observeItemsInCurrentPage() {
         viewModel.itemsInCurrentPage.observe(viewLifecycleOwner) { products ->
+            Log.d(TAG, "observeItemsInCurrentPage: $products")
             adapter.updateData(products)
         }
+    }
+
+    companion object {
+        private const val TAG = "ShoppingCartFragment"
     }
 }

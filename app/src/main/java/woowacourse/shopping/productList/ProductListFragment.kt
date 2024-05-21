@@ -35,10 +35,7 @@ class ProductListFragment : Fragment() {
     }
 
     private val adapter: ProductRecyclerViewAdapter by lazy {
-        ProductRecyclerViewAdapter(
-            viewModel.loadedProducts.value ?: emptyList(),
-            onProductItemClickListener = viewModel,
-        )
+        ProductRecyclerViewAdapter(emptyList(), viewModel)
     }
 
     override fun onCreateView(
