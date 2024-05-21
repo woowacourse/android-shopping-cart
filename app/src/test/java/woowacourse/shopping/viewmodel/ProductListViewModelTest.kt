@@ -9,7 +9,6 @@ import woowacourse.shopping.DummyShoppingRepository
 import woowacourse.shopping.productlist.ProductListViewModel
 import woowacourse.shopping.productlist.toProductUiModel
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
-import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
@@ -26,7 +25,7 @@ class ProductListViewModelTest {
         viewModel.loadProducts(0)
 
         // given
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.products
 
         // then
         assertThat(actual).containsAll(DummyShoppingRepository.products(0, 20).map { it.toProductUiModel() })
@@ -41,10 +40,10 @@ class ProductListViewModelTest {
 
         // given
         viewModel.loadProducts(firstPosition)
-        val firstActual = viewModel.products.getOrAwaitValue()
+        val firstActual = viewModel.products
 
         viewModel.loadProducts(secondPosition)
-        val secondActual = viewModel.products.getOrAwaitValue()
+        val secondActual = viewModel.products
 
         // then
         assertThat(firstActual).containsAll(secondActual.subList(0, 19))
@@ -57,7 +56,7 @@ class ProductListViewModelTest {
         viewModel.loadProducts(0)
 
         // given
-        val firstActual = viewModel.products.getOrAwaitValue()
+        val firstActual = viewModel.products
 
         // then
         assertThat(firstActual.size).isEqualTo(20)
@@ -66,7 +65,7 @@ class ProductListViewModelTest {
         viewModel.loadProducts(20)
 
         // given
-        val secondActual = viewModel.products.getOrAwaitValue()
+        val secondActual = viewModel.products
 
         // then
         assertThat(secondActual.size).isEqualTo(40)

@@ -9,8 +9,9 @@ import woowacourse.shopping.ShoppingRepository
 class ProductListViewModel(
     private val repository: ShoppingRepository,
 ) : ViewModel() {
-    private val _products: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
-    val products: LiveData<List<ProductUiModel>> get() = _products
+    private val _products: MutableList<ProductUiModel> = mutableListOf()
+    val products: List<ProductUiModel>
+        get() = _products.toList()
 
     private val _currentSize: MutableLiveData<Int> = MutableLiveData()
     val currentSize: LiveData<Int> get() = _currentSize
@@ -24,11 +25,10 @@ class ProductListViewModel(
         runCatching {
             repository.products(startPosition, PRODUCTS_OFFSET_SIZE)
         }.onSuccess { newProducts ->
-            val currentItems = _products.value ?: emptyList()
-            val newProducts = newProducts.map { it.toProductUiModel() }
-            _products.value = currentItems + newProducts
-            _moreProducts.value = newProducts
-            _currentSize.value = _products.value?.size
+            val newProductsUiModel = newProducts.map { it.toProductUiModel() }
+            _products.addAll(newProductsUiModel)
+            _moreProducts.value = newProductsUiModel
+            _currentSize.value = _products.size
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
