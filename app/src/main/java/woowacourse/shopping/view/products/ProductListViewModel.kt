@@ -20,11 +20,17 @@ class ProductListViewModel(
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
+    private val _cartItemCount: MutableLiveData<Int> = MutableLiveData(0)
+    val cartItemCount: LiveData<Int> get() = _cartItemCount
+
+    init {
+        _cartItemCount.value = shoppingCartRepository.getTotalCartItemCount()
+    }
+
 
     private val _productListEvent: MutableSingleLiveData<ProductListEvent.SuccessEvent> =
         MutableSingleLiveData()
     val productListEvent: SingleLiveData<ProductListEvent.SuccessEvent> get() = _productListEvent
-
     private val _errorEvent: MutableSingleLiveData<ProductListEvent.ErrorEvent> =
         MutableSingleLiveData()
     val errorEvent: SingleLiveData<ProductListEvent.ErrorEvent> get() = _errorEvent
@@ -63,6 +69,7 @@ class ProductListViewModel(
                             shoppingCartRepository.addCartItem(product)
                         }
                     }
+                    _cartItemCount.value = _cartItemCount.value?.plus(1)
                     _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
                 }
 
@@ -93,6 +100,7 @@ class ProductListViewModel(
 
                         CartItemResult.NotExists -> throw NoSuchDataException()
                     }
+                    _cartItemCount.value = _cartItemCount.value?.minus(1)
                     _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
                 }
 
@@ -137,12 +145,14 @@ class ProductListViewModel(
     fun updateProducts(items: Map<Long, Int>) {
         _products.value = products.value?.map { product ->
             val count = items[product.id]
-            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
             if (count != null) {
                 getUpdatedProduct(product,count)
             } else {
                 product
             }
+        }
+        items.keys.forEach { productId ->
+            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(productId))
         }
     }
 

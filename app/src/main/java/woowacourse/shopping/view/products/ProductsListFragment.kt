@@ -2,6 +2,7 @@ package woowacourse.shopping.view.products
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +64,7 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
     private fun initView() {
         loadPagingData()
+        binding.vm = productListViewModel
         binding.onClickProduct = this
         binding.lifecycleOwner = viewLifecycleOwner
         adapter =

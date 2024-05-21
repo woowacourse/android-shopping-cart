@@ -11,7 +11,9 @@
         <variable
             name="isVisible"
             type="Boolean" />
-
+        <variable
+            name="vm"
+            type="woowacourse.shopping.view.products.ProductListViewModel" />
         <variable
             name="onClickProduct"
             type="woowacourse.shopping.view.products.OnClickProducts" />
@@ -41,16 +43,34 @@
             app:layout_constraintStart_toStartOf="@id/vw_product_list_top_bar"
             app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:background="@android:color/transparent"
-            android:onClick="@{()->onClickProduct.clickShoppingCart()}"
-            android:src="@drawable/ic_cart"
+
+        <LinearLayout
             app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
             app:layout_constraintEnd_toEndOf="@id/vw_product_list_top_bar"
-            app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
+            app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginEnd="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:onClick="@{()->onClickProduct.clickShoppingCart()}"
+                android:src="@drawable/ic_cart" />
+            <TextView
+                android:layout_marginStart="2dp"
+                tools:text ="1"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:visibility="@{vm.cartItemCount > 0 ? View.VISIBLE : View.GONE}"
+                android:text="@{String.valueOf(vm.cartItemCount)}"
+                android:textSize="14sp"
+                android:background="@drawable/ic_background_circle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_products"

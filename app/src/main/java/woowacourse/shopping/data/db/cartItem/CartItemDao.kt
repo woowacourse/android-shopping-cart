@@ -32,4 +32,7 @@ interface CartItemDao {
 
     @Query("SELECT * FROM $CART_ITEMS_DB_NAME WHERE productId = :productId")
     fun findCartItemByProductId(productId: Long): CartItemEntity?
+
+    @Query("SELECT SUM(count) FROM $CART_ITEMS_DB_NAME")
+    fun getTotalItemCount(): Int
 }
