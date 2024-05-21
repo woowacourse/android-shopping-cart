@@ -4,11 +4,8 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Product
 
 class CartAdapter(
     private val cartActionHandler: CartActionHandler,
