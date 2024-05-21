@@ -63,7 +63,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     private fun observeData() {
         productDetailViewModel.productDetailState.observe(viewLifecycleOwner) { productDetailState ->
             if (productDetailState == ProductDetailState.AddShoppingCart.Success) {
-                showMessage(
+                requireContext().makeToast(
                     requireContext().getString(
                         R.string.success_save_data,
                     ),
@@ -73,12 +73,14 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
         productDetailViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
                 ProductDetailState.AddShoppingCart.Fail ->
-                    showMessage(
-                        requireContext().getString(R.string.error_save_data),
+                    requireContext().makeToast(
+                        getString(R.string.error_save_data),
                     )
 
                 ProductDetailState.LoadProductItem.Fail -> {
-                    showMessage(requireContext().getString(R.string.error_data_load))
+                    requireContext().makeToast(
+                        getString(R.string.error_data_load)
+                    )
                     parentFragmentManager.popBackStack()
                 }
 
@@ -118,9 +120,6 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     override fun clickAddCart(product: Product) {
         productDetailViewModel.addShoppingCartItem(product)
     }
-
-    private fun showMessage(message: String) =
-        Toast.makeText(this.context, message, Toast.LENGTH_SHORT).show()
 
     companion object {
         fun createBundle(id: Long): Bundle {
