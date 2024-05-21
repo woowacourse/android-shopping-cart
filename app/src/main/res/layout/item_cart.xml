@@ -5,6 +5,13 @@
 
     <data>
 
+        <variable
+            name="cartItemUiModel"
+            type="woowacourse.shopping.shoppingcart.CartItemUiModel" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.shoppingcart.ShoppingCartClickAction" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,12 +29,14 @@
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/black"
             android:textSize="18sp"
+            android:text="@{cartItemUiModel.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="[든든] 동원 스위트콘" />
 
         <ImageView
             android:id="@+id/iv_cart_product"
+            app:loadImage="@{cartItemUiModel.imageUrl}"
             android:layout_width="136dp"
             android:layout_height="72dp"
             android:layout_marginTop="20dp"
@@ -46,6 +55,7 @@
             android:background="@android:color/transparent"
             android:padding="12dp"
             android:src="@drawable/ic_close"
+            android:onClickListener="@{()->clickListener.onItemRemoveBtnClicked(cartItemUiModel.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray_300" />
@@ -58,6 +68,7 @@
             android:layout_marginBottom="17dp"
             android:fontFamily="@font/roboto"
             android:textColor="@color/gray_500"
+            app:formattedPrice="@{cartItemUiModel.totalPrice}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="99,800원" />

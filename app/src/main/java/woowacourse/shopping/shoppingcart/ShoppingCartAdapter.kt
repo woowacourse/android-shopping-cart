@@ -3,30 +3,20 @@ package woowacourse.shopping.shoppingcart
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.productlist.ProductUiModel
 
 class ShoppingCartAdapter(
-    private val onClicked: ShoppingCartClickAction,
+    private val onClick: ShoppingCartClickAction,
 ) : RecyclerView.Adapter<ShoppingCartAdapter.ShoppingCartViewHolder>() {
-    private var items = emptyList<ProductUiModel>()
+    private var items = emptyList<CartItemUiModel>()
 
     class ShoppingCartViewHolder(
         private val binding: ItemCartBinding,
-        private val onClicked: ShoppingCartClickAction,
+        private val onClick: ShoppingCartClickAction,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun onBind(item: ProductUiModel) {
-            with(binding) {
-                tvItemCartName.text = item.name
-                Glide.with(itemView.context).load(item.imageUrl).into(ivCartProduct)
-                tvCartPrice.text =
-                    itemView.context.getString(R.string.product_price_format, item.price)
-                ibCartClose.setOnClickListener {
-                    onClicked.onItemRemoveBtnClicked(item.id)
-                }
-            }
+        fun onBind(item: CartItemUiModel) {
+            binding.cartItemUiModel = item
+            binding.clickListener = onClick
         }
     }
 
@@ -35,10 +25,10 @@ class ShoppingCartAdapter(
         viewType: Int,
     ): ShoppingCartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingCartViewHolder(binding, onClicked)
+        return ShoppingCartViewHolder(binding, onClick)
     }
 
-    fun submitList(updatedItems: List<ProductUiModel>) {
+    fun submitList(updatedItems: List<CartItemUiModel>) {
         items = updatedItems
         notifyDataSetChanged()
     }

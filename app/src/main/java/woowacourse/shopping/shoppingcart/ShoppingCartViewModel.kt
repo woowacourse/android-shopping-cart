@@ -6,15 +6,13 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ShoppingCartRepository
-import woowacourse.shopping.productlist.ProductUiModel
-import woowacourse.shopping.productlist.toProductUiModel
 import kotlin.math.ceil
 
 class ShoppingCartViewModel(
     private val repository: ShoppingCartRepository,
 ) : ViewModel() {
-    private val _cartItems: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
-    val cartItems: LiveData<List<ProductUiModel>> get() = _cartItems
+    private val _cartItemUiModels: MutableLiveData<List<CartItemUiModel>> = MutableLiveData()
+    val cartItemUiModels: LiveData<List<CartItemUiModel>> get() = _cartItemUiModels
 
     private val totalSize = MutableLiveData(DEFAULT_CART_ITEMS_SIZE)
 
@@ -45,7 +43,7 @@ class ShoppingCartViewModel(
         runCatching {
             repository.shoppingCartItems(currentPage - DEFAULT_CURRENT_PAGE, PAGE_SIZE)
         }.onSuccess { shoppingCartItems ->
-            _cartItems.value = shoppingCartItems.map { it.product.toProductUiModel() }
+            _cartItemUiModels.value = shoppingCartItems.map { it.toCartItemUiModel() }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }

@@ -39,7 +39,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
     }
 
     private fun updateView() {
-        viewModel.cartItems.observe(this) { cartItems ->
+        viewModel.cartItemUiModels.observe(this) { cartItems ->
             adapter.submitList(cartItems)
         }
 
