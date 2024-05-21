@@ -43,7 +43,7 @@ class CartViewModel(
         productId: Long,
         quantity: Int,
     ) {
-        cartRepository.addCartItem(productId, quantity)
+        cartRepository.plusCartItem(productId, quantity)
 
         loadCurrentPageCartItems()
     }
