@@ -1,16 +1,23 @@
 package woowacourse.shopping.presentation.home.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.home.LoadStatus
 
 class HomeViewModel(
     private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
     private var page: Int = 0
+
+    private val _totalCartCount: MutableLiveData<Int> = MutableLiveData(0)
+    val totalCartCount: LiveData<Int>
+        get() = _totalCartCount
 
     private val _products: MutableLiveData<List<Product>> =
         MutableLiveData<List<Product>>(emptyList())
@@ -20,6 +27,10 @@ class HomeViewModel(
     private val _loadStatus: MutableLiveData<LoadStatus> = MutableLiveData(LoadStatus())
     val loadStatus: LiveData<LoadStatus>
         get() = _loadStatus
+
+    fun loadTotalCartCount() {
+        _totalCartCount.value = cartRepository.fetchTotalCartCount()
+    }
 
     fun loadProducts() {
         _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
