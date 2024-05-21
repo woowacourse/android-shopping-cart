@@ -60,7 +60,7 @@ class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
     }
 
     override fun onCartItemDelete(cartItemId: Long) {
-        viewModel.removeCartItem(cartItemId)
+        viewModel.removeAllCartItem(cartItemId)
     }
 
     companion object {

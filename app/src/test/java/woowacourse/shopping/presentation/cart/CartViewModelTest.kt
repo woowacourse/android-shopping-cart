@@ -54,12 +54,12 @@ class CartViewModelTest {
         val orders = cartViewModel.orders
 
         cartViewModel.loadCurrentPageCartItems()
-        cartViewModel.removeCartItem(1)
-        cartViewModel.removeCartItem(2)
-        cartViewModel.removeCartItem(3)
-        cartViewModel.removeCartItem(4)
-        cartViewModel.removeCartItem(5)
-        cartViewModel.removeCartItem(6)
+        cartViewModel.removeAllCartItem(1)
+        cartViewModel.removeAllCartItem(2)
+        cartViewModel.removeAllCartItem(3)
+        cartViewModel.removeAllCartItem(4)
+        cartViewModel.removeAllCartItem(5)
+        cartViewModel.removeAllCartItem(6)
 
         assertThat(orders.getOrAwaitValue()).hasSize(1)
     }

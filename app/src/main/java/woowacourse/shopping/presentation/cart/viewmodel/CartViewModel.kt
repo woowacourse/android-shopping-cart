@@ -37,7 +37,7 @@ class CartViewModel(
         loadCurrentPageCartItems()
     }
 
-    fun removeCartItem(cartItemId: Long) {
+    fun removeAllCartItem(cartItemId: Long) {
         cartRepository.removeAllCartItem(cartItemId = cartItemId)
 
         if (orders.value?.size == 1 && currentPage.value != 0) {
