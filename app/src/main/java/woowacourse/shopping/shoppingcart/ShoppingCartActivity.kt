@@ -38,8 +38,11 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
     }
 
     private fun updateView() {
-        viewModel.cartItems.observe(this) { cartItems ->
-            adapter.replaceItems(cartItems)
+        viewModel.loadState.observe(this) { state ->
+            when (state) {
+                is LoadCartItemState.AddNextPageOfItem -> adapter.addItem(state.result)
+                is LoadCartItemState.InitView -> adapter.replaceItems(state.result)
+            }
         }
     }
 
@@ -52,11 +55,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
 
     override fun onItemRemoveBtnClicked(id: Long) {
         viewModel.deleteCartItem(id)
-//        viewModel.isDeleteSuccess.observe(this, EventObserver { isSuccess ->
-//            if (isSuccess) {
-//                adapter.deleteItemByProductId(id)
-//            }
-//        })
+        adapter.deleteItemByProductId(id)
     }
 
     companion object {

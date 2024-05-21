@@ -56,7 +56,7 @@ class ShoppingCartAdapter(
     fun deleteItemByProductId(productId: Long) {
         val deleteIndex = items.indexOfFirst { it.id == productId }
         items.removeAt(deleteIndex)
-        notifyDataSetChanged()
+        notifyItemRemoved(deleteIndex)
     }
 
     fun addItem(item: ProductUiModel) {

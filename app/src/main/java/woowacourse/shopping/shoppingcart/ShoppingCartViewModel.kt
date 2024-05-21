@@ -6,24 +6,16 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ShoppingRepository
-import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.productlist.toProductUiModel
-import woowacourse.shopping.util.Event
 import kotlin.math.ceil
 
 class ShoppingCartViewModel(
     private val repository: ShoppingRepository,
 ) : ViewModel() {
-    private val _cartItems: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
-    val cartItems: LiveData<List<ProductUiModel>> get() = _cartItems
-
     private val totalPage = MutableLiveData(NO_CART_ITEM)
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(DEFAULT_CURRENT_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
-
-    private val _isDeleteSuccess: MutableLiveData<Event<Boolean>> = MutableLiveData(Event(false))
-    val isDeleteSuccess: LiveData<Event<Boolean>> get() = _isDeleteSuccess
 
     private val _loadState: MutableLiveData<LoadCartItemState> =
         MutableLiveData<LoadCartItemState>()
@@ -59,8 +51,7 @@ class ShoppingCartViewModel(
             val currentPage = _currentPage?.value ?: DEFAULT_CURRENT_PAGE
             repository.shoppingCartItems(currentPage - DEFAULT_CURRENT_PAGE, PAGE_SIZE)
         }.onSuccess { shoppingCartItems ->
-            _cartItems.value = shoppingCartItems.map { it.product.toProductUiModel() }
-            _loadState.value = LoadCartItemState.InitView
+            _loadState.value = LoadCartItemState.InitView(shoppingCartItems.map { it.product.toProductUiModel() })
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -70,12 +61,10 @@ class ShoppingCartViewModel(
         runCatching {
             repository.deleteShoppingCartItem(productId)
         }.onSuccess {
+            if (_currentPage.value != totalPage.value) {
+                loadCartItemOfNextPage()
+            }
             updatePageCount()
-            loadCartItems()
-            _isDeleteSuccess.value = Event(true)
-//            if (_currentPage.value != totalPage.value) {
-//                loadCartItemOfNextPage()
-//            }
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -84,11 +73,9 @@ class ShoppingCartViewModel(
     private fun loadCartItemOfNextPage() {
         runCatching {
             val currentPage = _currentPage?.value ?: DEFAULT_CURRENT_PAGE
-            repository.shoppingCartItemByPosition(currentPage, PAGE_SIZE, MAX_POSITION_OF_ITEM)
+            repository.shoppingCartItemByPosition(currentPage - 1, PAGE_SIZE, MAX_POSITION_OF_ITEM)
         }.onSuccess { shoppingCartItem ->
-            val previousCartItems = requireNotNull(_cartItems.value)
-            _cartItems.value = previousCartItems + shoppingCartItem.product.toProductUiModel()
-            _loadState.value = LoadCartItemState.AddNextPageOfItem
+            _loadState.value = LoadCartItemState.AddNextPageOfItem(shoppingCartItem.product.toProductUiModel())
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }

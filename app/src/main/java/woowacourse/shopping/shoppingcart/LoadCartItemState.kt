@@ -1,7 +1,10 @@
 package woowacourse.shopping.shoppingcart
 
-sealed interface LoadCartItemState {
-    data object InitView : LoadCartItemState
+import woowacourse.shopping.productlist.ProductUiModel
+import woowacourse.shopping.util.UiState
 
-    data object AddNextPageOfItem : LoadCartItemState
+sealed interface LoadCartItemState : UiState {
+    data class InitView(override val result: List<ProductUiModel>) : LoadCartItemState, UiState.Complete<List<ProductUiModel>>
+
+    data class AddNextPageOfItem(override val result: ProductUiModel) : LoadCartItemState, UiState.Complete<ProductUiModel>
 }
