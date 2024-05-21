@@ -7,6 +7,7 @@ import woowacourse.shopping.databinding.ItemMoreLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.products.ProductListActionHandler
+import woowacourse.shopping.view.products.adapter.ProductItemType.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.view.products.adapter.viewholder.ProductListViewHolder
 import woowacourse.shopping.view.products.adapter.viewholder.ProductListViewHolder.LoadMoreViewHolder
 import woowacourse.shopping.view.products.adapter.viewholder.ProductListViewHolder.ProductViewHolder
@@ -14,11 +15,10 @@ import woowacourse.shopping.view.products.adapter.viewholder.ProductListViewHold
 class ProductAdapter(
     private val productListActionHandler: ProductListActionHandler,
 ) : RecyclerView.Adapter<ProductListViewHolder>() {
-    private var products: List<Product> = emptyList()
-    private var shouldShowMore: Boolean = false
+    private var productItems: List<ProductItemType> = emptyList()
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1) LOAD_MORE_VIEW_TYPE else PRODUCT_VIEW_TYPE
+        return productItems[position].viewType
     }
 
     override fun onCreateViewHolder(
@@ -40,31 +40,33 @@ class ProductAdapter(
     }
 
     override fun getItemCount(): Int {
-        return products.size + 1
+        return productItems.size
     }
 
     override fun onBindViewHolder(
         holder: ProductListViewHolder,
         position: Int,
     ) {
-        when (holder) {
-            is ProductViewHolder -> holder.bind(products[position])
-            is LoadMoreViewHolder -> holder.bind(shouldShowMore)
+        when (val content = productItems[position]) {
+            is ProductItemType.ProductItem -> (holder as ProductViewHolder).bind(content.product)
+            is ProductItemType.LoadMore -> (holder as LoadMoreViewHolder).bind()
         }
     }
 
     fun updateProducts(
-        addedProducts: List<Product>,
+        newProducts: List<Product>,
         hasNextPage: Boolean,
     ) {
-        val startPosition = products.size
-        products = products + addedProducts
-        shouldShowMore = hasNextPage
-        notifyItemRangeInserted(startPosition, addedProducts.size)
-    }
-
-    companion object {
-        const val PRODUCT_VIEW_TYPE = 0
-        const val LOAD_MORE_VIEW_TYPE = 1
+        val startPosition = productItems.size
+        val productTypes = newProducts.map { ProductItemType.ProductItem(it) }
+        val insertedItems =
+            if (hasNextPage) {
+                productTypes + ProductItemType.LoadMore()
+            } else {
+                productTypes
+            }
+        val newItemsSize = insertedItems.size - startPosition
+        this.productItems = insertedItems
+        notifyItemRangeInserted(startPosition, newItemsSize)
     }
 }

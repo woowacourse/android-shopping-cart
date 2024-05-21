@@ -4,12 +4,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
-        <variable
-            name="shouldShowMore"
-            type="Boolean" />
-
         <variable
             name="productListActionHandler"
             type="woowacourse.shopping.view.products.ProductListActionHandler" />
@@ -33,7 +27,6 @@
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:visibility="@{shouldShowMore ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

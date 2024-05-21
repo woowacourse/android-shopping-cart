@@ -22,9 +22,8 @@ sealed class ProductListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding: ItemMoreLoadBinding,
         private val actionHandler: ProductListActionHandler,
     ) : ProductListViewHolder(binding.root) {
-        fun bind(shouldShowMore: Boolean) {
+        fun bind() {
             binding.productListActionHandler = actionHandler
-            binding.shouldShowMore = shouldShowMore
         }
     }
 }

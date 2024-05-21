@@ -13,6 +13,7 @@ import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
+import woowacourse.shopping.view.products.adapter.ProductItemType.Companion.LOAD_MORE_VIEW_TYPE
 
 class ProductsListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
@@ -51,7 +52,7 @@ class ProductsListFragment : Fragment() {
         layoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    if (adapter.getItemViewType(position) == ProductAdapter.LOAD_MORE_VIEW_TYPE) return 2
+                    if (adapter.getItemViewType(position) == LOAD_MORE_VIEW_TYPE) return 2
                     return 1
                 }
             }
@@ -60,7 +61,7 @@ class ProductsListFragment : Fragment() {
 
     private fun observeData() {
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
-            adapter.updateProducts(addedProducts = products.items, products.hasNextPage)
+            adapter.updateProducts(newProducts = products.items, products.hasNextPage)
         }
 
         productListViewModel.navigateToCart.observe(viewLifecycleOwner) {

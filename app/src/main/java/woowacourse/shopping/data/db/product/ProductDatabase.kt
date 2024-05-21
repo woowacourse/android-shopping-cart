@@ -21,7 +21,7 @@ object ProductDatabase {
                 id = 2L,
                 imageUrl = "https://s3-alpha-sig.figma.com/img/1e9f/f403/c410c794ab4d26aa3aa0c0c2eab7cb36?Expires=1716768000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=JLgPHKD8pgLS6Fhfw9hjusvszdk0GBM5T7xDDdgyyFbrRe~UcEv-9HrxsDwxdzbWBU~f80Y1kQrt4T2JqDqMVdUeQPNyhcKdca7~k06QPwPy5BQl01IiCCR--OdYwNitwXTr917kkfrdUY6HBeEGMZD~v1MydZqLuGi0~Xwaickjd34pz-5g3JoGmDISNh8nRw0p-Vlb0dUPSgKCkmONZ9bmGX26TpWU~urwZlh6gq7zTu6zDSzNYHhP-4W78rbOZVI~07fWWzlZOhi~rI9W53qI5XeRHkvKikl40tB2v09PpM6mFbqZfVVoFZ0iLWxw8k39bT0YXnLgia0Pn-pFxw__",
                 price = 12_000,
-                name = "PET보틀-밀크티(600ml)",
+                name = "2 PET보틀-밀크티(600ml)",
             ),
             Product(
                 id = 3L,
@@ -123,7 +123,7 @@ object ProductDatabase {
                 id = 19L,
                 imageUrl = "https://s3-alpha-sig.figma.com/img/05ef/e578/d81445480aff1872344a6b1b35323488?Expires=1716768000&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=M4f1eRJD9cBxm2tCvzA2tg0dDm63Zu22-WK8EtTWXDnemL9qYi0DzipwbS-wx8tqy~fHLbxWUGQnA9zFlcQAG9NTxKjhu55XgvQHfdQOlXGik1GMJKIINPKGTq09iIfG-xM0Cs~4il-E8C3M7wFcfky5PqicFvNhedNCtMt7orA-sbe2us5qJEBiRnzUawFyqXliyo-NeqOCke87O-nmNMKsEM70x-9gsaFoMfPWXfJE95tSaWU4WVgqRzK91WYo2TivZ2gw68PSajjTTjrJsh0v89nUZ9ZyrNK~TyqdXXSCKA2uGes5t9Eh6I4k59rjUfDtfFv46yo5cNsxfEjEFg__",
                 price = 30_000,
-                name = "PET보틀-정사각형(1000ml) 딸기생과일",
+                name = "19 PET보틀-정사각형(1000ml) 딸기생과일",
             ),
             Product(
                 id = 20L,

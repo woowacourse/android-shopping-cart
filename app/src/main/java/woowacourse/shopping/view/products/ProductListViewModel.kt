@@ -26,7 +26,8 @@ class ProductListViewModel(
         val loadedItems = products.value?.items ?: emptyList()
         val pagingData = repository.loadPagingProducts(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
         val hasNextPage = repository.hasNextProductPage(loadedItems.size, PRODUCT_LOAD_PAGING_SIZE)
-        _products.value = PagingResult(pagingData, hasNextPage)
+
+        _products.value = PagingResult(loadedItems + pagingData, hasNextPage)
     }
 
     override fun onProductItemClicked(productId: Long) {
