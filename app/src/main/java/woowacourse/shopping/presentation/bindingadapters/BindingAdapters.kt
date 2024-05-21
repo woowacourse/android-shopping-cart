@@ -54,32 +54,6 @@ fun setLoadMoreBtnVisibility(
     }
 }
 
-/*
-@BindingAdapter("app:cartViewVisibility")
-fun setViewVisibility(
-    view: View,
-    uiState: UIState<List<CartItem>>?,
-) {
-    when (uiState) {
-        is UIState.Empty -> {
-            if (view is TextView) {
-                view.visibility = View.VISIBLE
-            } else {
-                view.visibility = View.GONE
-            }
-        }
-
-        else -> {
-            if (view is TextView) {
-                view.visibility = View.GONE
-            } else {
-                view.visibility = View.VISIBLE
-            }
-        }
-    }
-}
-*/
-
 @BindingAdapter("app:cartViewVisibility")
 fun setViewVisibility(
     view: View,
