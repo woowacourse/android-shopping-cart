@@ -35,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
 
         viewModel.loadProductInformation(productId)
+        viewModel.loadCartItem(productId)
 
         viewModel.addComplete.observe(this) {
             it.getContentIfNotHandled()?.let {
