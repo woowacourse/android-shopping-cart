@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="position"
+            type="java.lang.Integer" />
+
+        <variable
+            name="onClickCartItemCounter"
+            type="woowacourse.shopping.view.cartcounter.OnClickCartItemCounter" />
 
         <variable
             name="onClickShoppingCart"
@@ -62,7 +69,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_cart_item_name" />
-
+        <include
+            layout="@layout/product_quantity_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:productId = "@{cartItem.product.id}"
+            app:position = "@{position}"
+            app:cartItemCounter="@{cartItem.cartItemCounter}"
+            app:layout_constraintBottom_toTopOf="@id/tv_cart_item_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_close"
+            app:onClickCartItemCounter="@{onClickCartItemCounter}" />
         <TextView
             android:id="@+id/tv_cart_item_price"
             android:layout_width="wrap_content"

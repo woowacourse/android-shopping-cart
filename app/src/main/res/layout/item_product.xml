@@ -3,12 +3,19 @@
 
     <data>
         <variable
+            name="position"
+            type="java.lang.Integer" />
+        <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
             name="onClickProduct"
             type="woowacourse.shopping.view.products.OnClickProducts" />
+
+        <variable
+            name="onClickCartItemCounter"
+            type="woowacourse.shopping.view.cartcounter.OnClickCartItemCounter" />
     </data>
 
     <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -19,12 +26,29 @@
         android:onClick="@{()->onClickProduct.clickProductItem(product.id)}"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/iv_product_image"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="154dp"
-            android:layout_gravity="center"
-            app:bindingImageUrl="@{product.imageUrl}" />
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/iv_product_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:bindingImageUrl="@{product.imageUrl}" />
+
+            <include
+                layout="@layout/product_quantity_selection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:position = "@{position}"
+                app:productId = "@{product.id}"
+                app:cartItemCounter="@{product.cartItemCounter}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:onClickCartItemCounter="@{onClickCartItemCounter}" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Space
             android:layout_width="0dp"

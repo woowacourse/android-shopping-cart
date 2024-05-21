@@ -11,6 +11,10 @@
         <variable
             name="onClickDetail"
             type="woowacourse.shopping.view.detail.OnClickDetail" />
+
+        <variable
+            name="onClickCartItemCounter"
+            type="woowacourse.shopping.view.cartcounter.OnClickCartItemCounter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,27 +79,29 @@
             app:layout_constraintTop_toBottomOf="@id/tv_detail_product_name" />
 
         <TextView
-            android:id="@+id/tv_detail_product_price_head"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
-            android:layout_marginTop="16dp"
-            android:text="가격"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vw_divider" />
-
-        <TextView
             android:id="@+id/tv_detail_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="16dp"
             android:text="@{@string/formatted_price(vm.product.price)}"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@id/tv_detail_product_price_head"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_detail_product_price_head"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vw_divider"
             tools:text="10,000원" />
+
+        <include
+            layout="@layout/product_quantity_selection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:position = "@{0}"
+            app:productId = "@{vm.product.id}"
+            app:cartItemCounter="@{vm.product.cartItemCounter}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_detail_product_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_detail_product_price"
+            app:onClickCartItemCounter="@{onClickCartItemCounter}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"
