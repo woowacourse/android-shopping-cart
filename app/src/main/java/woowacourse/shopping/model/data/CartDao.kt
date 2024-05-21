@@ -16,6 +16,10 @@ interface CartDao {
         pageSize: Int,
     ): List<Cart>
 
+    fun plusCartCount(cartId: Long)
+
+    fun minusCartCount(cartId: Long)
+
     fun deleteAll()
 
     fun delete(id: Long)

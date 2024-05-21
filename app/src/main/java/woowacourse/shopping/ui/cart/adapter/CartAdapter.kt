@@ -9,6 +9,8 @@ import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 
 class CartAdapter(
     private val itemRemoveClickListener: (Long) -> Unit,
+    private val plusCountClickListener: (Long) -> Unit,
+    private val minusCountClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
     private val cart: MutableList<Cart> = mutableListOf()
 
@@ -17,7 +19,12 @@ class CartAdapter(
         viewType: Int,
     ): CartViewHolder {
         val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CartViewHolder(binding, itemRemoveClickListener)
+        return CartViewHolder(
+            binding,
+            itemRemoveClickListener,
+            plusCountClickListener,
+            minusCountClickListener,
+        )
     }
 
     override fun onBindViewHolder(

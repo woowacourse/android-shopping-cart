@@ -127,16 +127,16 @@ class CartActivityTest {
     }
 
     companion object {
-        private val MAC_BOOK = Product(imageUrl = "", name = "맥북", price = 100)
-        private val IPHONE = Product(imageUrl = "", name = "아이폰", price = 5)
+        private val MAC_BOOK = Product(imageUrl = "", name = "맥북", price = 100, count = 1)
+        private val IPHONE = Product(imageUrl = "", name = "아이폰", price = 5, count = 1)
 
         @JvmStatic
         @BeforeClass
         fun setUp() {
             repeat(5) {
-                CartsImpl.save(Cart(product = MAC_BOOK, count = 1))
+                CartsImpl.save(Cart(product = MAC_BOOK))
             }
-            CartsImpl.save(Cart(product = IPHONE, count = 1))
+            CartsImpl.save(Cart(product = IPHONE))
         }
     }
 }

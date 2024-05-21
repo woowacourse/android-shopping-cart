@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="18dp"
-            android:text="@{@string/product_price(vm.product.price)}"
+            android:text="@{@string/product_price(vm.product.totalPrice)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,8 +78,8 @@
             android:layout_marginEnd="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/split_line"
-            bind:countButtonClickListener = "@{countButtonClickListener}"
-            bind:count="@{String.valueOf(vm.count)}" />
+            bind:count="@{String.valueOf(vm.product.count)}"
+            bind:countButtonClickListener="@{countButtonClickListener}" />
 
         <Button
             android:id="@+id/btn_add_product"

@@ -44,5 +44,17 @@ object ProductsImpl : ProductDao {
         return products.values.toList().subList(fromIndex, currentOffset)
     }
 
+    override fun plusProductCount(productId: Long) {
+        products[productId]?.let {
+            products[productId] = it.inc()
+        }
+    }
+
+    override fun minusProductCount(productId: Long) {
+        products[productId]?.let {
+            products[productId] = it.dec()
+        }
+    }
+
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)
 }

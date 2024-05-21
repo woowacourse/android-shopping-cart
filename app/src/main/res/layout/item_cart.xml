@@ -10,6 +10,10 @@
             name="cart"
             type="woowacourse.shopping.model.Cart" />
 
+        <variable
+            name="countButtonClickListener"
+            type="woowacourse.shopping.ui.CountButtonClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -66,7 +70,8 @@
             android:layout_marginBottom="6dp"
             app:layout_constraintBottom_toTopOf="@id/tv_product_price"
             app:layout_constraintEnd_toEndOf="parent"
-            bind:count="@{String.valueOf(cart.count)}" />
+            bind:count="@{String.valueOf(cart.product.count)}"
+            bind:countButtonClickListener="@{countButtonClickListener}" />
 
         <TextView
             android:id="@+id/tv_product_price"
@@ -74,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="17dp"
-            android:text="@{@string/product_price(cart.product.price)}"
+            android:text="@{@string/product_price(cart.product.totalPrice)}"
             android:textColor="@color/gray5"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -45,6 +45,16 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
         updatePageState()
     }
 
+    fun plusCount(cartId: Long) {
+        cartDao.plusCartCount(cartId)
+        loadCartItems()
+    }
+
+    fun minusCount(cartId: Long) {
+        cartDao.minusCartCount(cartId)
+        loadCartItems()
+    }
+
     private fun loadCartItems() {
         _cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
     }

@@ -41,5 +41,17 @@ object CartsImpl : CartDao {
         return carts.values.toList().subList(fromIndex, toIndex)
     }
 
+    override fun plusCartCount(cartId: Long) {
+        carts[cartId]?.let {
+            carts[cartId] = it.copy(product = it.product.inc())
+        }
+    }
+
+    override fun minusCartCount(cartId: Long) {
+        carts[cartId]?.let {
+            carts[cartId] = it.copy(product = it.product.dec())
+        }
+    }
+
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)
 }

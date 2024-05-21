@@ -11,5 +11,9 @@ interface ProductDao {
 
     fun getProducts(): List<Product>
 
+    fun plusProductCount(productId: Long)
+
+    fun minusProductCount(productId: Long)
+
     fun deleteAll()
 }

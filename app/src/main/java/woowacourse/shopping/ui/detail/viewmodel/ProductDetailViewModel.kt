@@ -22,9 +22,6 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
-    private val _count: MutableLiveData<Int> = MutableLiveData(DEFAULT_COUNT)
-    val count: LiveData<Int> get() = _count
-
     fun loadProduct(productId: Long) {
         runCatching {
             productDao.find(productId)
@@ -39,19 +36,19 @@ class ProductDetailViewModel(
 
     fun addProductToCart() {
         _product.value?.let {
-            cartDao.save(Cart(product = it, count = _count.value ?: DEFAULT_COUNT))
+            cartDao.save(Cart(product = it))
         }
     }
 
     fun plusCount() {
-        _count.value?.let {
-            _count.value = it + OFFSET
+        _product.value?.let {
+            _product.value = it.inc()
         }
     }
 
     fun minusCount() {
-        _count.value?.let {
-            _count.value = (it - OFFSET).coerceAtLeast(DEFAULT_COUNT)
+        _product.value?.let {
+            _product.value = it.dec()
         }
     }
 
@@ -59,10 +56,5 @@ class ProductDetailViewModel(
         if (this.value?.hasBeenHandled == false) {
             value?.let { this.value = Event(it) }
         }
-    }
-
-    companion object {
-        private const val DEFAULT_COUNT = 1
-        private const val OFFSET = 1
     }
 }

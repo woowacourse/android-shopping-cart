@@ -32,9 +32,9 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 상품을 담으면 장바구니 화면에서 보여야 한다`() {
         // given
-        CartsImpl.save(Cart(product = CHAIR, count = 1))
-        CartsImpl.save(Cart(product = CAR, count = 1))
-        CartsImpl.save(Cart(product = UMBRELLA, count = 1))
+        CartsImpl.save(Cart(product = CHAIR))
+        CartsImpl.save(Cart(product = CAR))
+        CartsImpl.save(Cart(product = UMBRELLA))
 
         // when
         viewModel = CartViewModel(CartsImpl)
@@ -48,9 +48,9 @@ class CartViewModelTest {
     @Test
     fun `상품을 지울 수 있어야 한다`() {
         // given
-        CartsImpl.save(Cart(product = CHAIR, count = 1))
-        val productId = CartsImpl.save(Cart(product = CAR, count = 1))
-        CartsImpl.save(Cart(product = UMBRELLA, count = 1))
+        CartsImpl.save(Cart(product = CHAIR))
+        val productId = CartsImpl.save(Cart(product = CAR))
+        CartsImpl.save(Cart(product = UMBRELLA))
 
         // when
         viewModel = CartViewModel(CartsImpl)
@@ -62,8 +62,8 @@ class CartViewModelTest {
     }
 
     companion object {
-        private val CHAIR = Product(imageUrl = "", name = "의자", price = 1000)
-        private val CAR = Product(imageUrl = "", name = "자동차", price = 100)
-        private val UMBRELLA = Product(imageUrl = "", name = "우산", price = 10000)
+        private val CHAIR = Product(imageUrl = "", name = "의자", price = 1000, count = 1)
+        private val CAR = Product(imageUrl = "", name = "자동차", price = 100, count = 1)
+        private val UMBRELLA = Product(imageUrl = "", name = "우산", price = 10000, count = 1)
     }
 }
