@@ -61,28 +61,27 @@
             app:layout_constraintTop_toBottomOf="@id/tv_product_detail_title" />
 
         <TextView
+            android:id="@+id/tv_product_detail_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@string/product_detail_price"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_product_detail" />
-
-        <TextView
-            android:id="@+id/tv_product_detail_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="18dp"
             android:text="@{@string/product_price(viewModel.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/divider_product_detail"
             tools:text="99,800원" />
+
+        <include
+            android:id="@+id/btn_add_cart_quantity"
+            layout="@layout/button_add_cart_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/divider_product_detail" />
 
         <Button
             android:id="@+id/btn_product_detail_add_cart"

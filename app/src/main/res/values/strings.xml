@@ -5,7 +5,6 @@
     <string name="product_price">%,d원</string>
     <string name="exit_item_title">exit</string>
     <string name="cart_item_title">cart</string>
-    <string name="product_detail_price">가격</string>
     <string name="load_more">더보기</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
