@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentaion.ui.shopping
 
 import android.content.Intent
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -9,13 +10,11 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import org.hamcrest.CoreMatchers.not
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
-import woowacourse.shopping.presentation.ui.shopping.ShoppingViewHolder
 
 @RunWith(AndroidJUnit4::class)
 class ShoppingActivityTest {
@@ -40,14 +39,9 @@ class ShoppingActivityTest {
     }
 
     @Test
-    fun `초기_화면에는_더보기_버튼이_보이지_않는다`() {
-        onView(withId(R.id.btn_load_more)).check(matches(not(isDisplayed())))
-    }
-
-    @Test
     fun `스크롤이_가장_아래로_내려가면_더보기_버튼이_보인다`() {
         onView(withId(R.id.rv_product_list))
-            .perform(RecyclerViewActions.scrollToPosition<ShoppingViewHolder>(19))
+            .perform(RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(20))
 
         Thread.sleep(1000)
 

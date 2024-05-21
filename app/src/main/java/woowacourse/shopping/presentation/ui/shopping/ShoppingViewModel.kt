@@ -9,14 +9,14 @@ import woowacourse.shopping.presentation.state.UIState
 
 class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
     ViewModel(),
-    ShoppingButtonClickListener {
+    ShoppingClickListener.ShoppingButtonClickListener {
     private val _shoppingUiState = MutableLiveData<UIState<List<Product>>>(UIState.Empty)
     val shoppingUiState: LiveData<UIState<List<Product>>>
         get() = _shoppingUiState
 
-    private val _isLoadMoreButtonVisible = MutableLiveData(false)
-    val isLoadMoreButtonVisible: LiveData<Boolean>
-        get() = _isLoadMoreButtonVisible
+    private val _canLoadMore = MutableLiveData(false)
+    val canLoadMore: LiveData<Boolean>
+        get() = _canLoadMore
 
     private val loadedProducts: MutableList<Product> = mutableListOf()
 
@@ -30,6 +30,7 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
             if (products.isEmpty()) {
                 _shoppingUiState.value = UIState.Empty
             } else {
+                _canLoadMore.value = repository.canLoadMore()
                 _shoppingUiState.value = UIState.Success(loadedProducts + products)
                 loadedProducts += products
             }
@@ -38,17 +39,8 @@ class ShoppingViewModel(private val repository: ShoppingItemsRepository) :
         }
     }
 
-    fun updateLoadMoreButtonVisibility(isVisible: Boolean) {
-        if (repository.canLoadMore()) {
-            _isLoadMoreButtonVisible.value = isVisible
-        } else {
-            _isLoadMoreButtonVisible.value = false
-        }
-    }
-
     override fun onLoadMoreButtonClick() {
         loadProducts()
-        updateLoadMoreButtonVisibility(false)
     }
 
     companion object {

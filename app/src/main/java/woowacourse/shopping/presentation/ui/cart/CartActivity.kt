@@ -49,9 +49,10 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
             when (state) {
                 is UIState.Success -> showData(state.data)
                 is UIState.Empty -> showData(emptyList())
-                is UIState.Error -> showError(
-                    state.exception.message ?: getString(R.string.unknown_error),
-                )
+                is UIState.Error ->
+                    showError(
+                        state.exception.message ?: getString(R.string.unknown_error),
+                    )
             }
         }
     }

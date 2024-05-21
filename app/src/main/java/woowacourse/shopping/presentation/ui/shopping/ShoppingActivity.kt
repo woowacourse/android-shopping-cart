@@ -6,16 +6,17 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ShoppingType.Companion.LOAD_MORE_BUTTON_VIEW_TYPE
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
+class ShoppingActivity : AppCompatActivity(), ShoppingClickListener.ShoppingItemClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
     private val viewModel: ShoppingViewModel by viewModels {
@@ -27,7 +28,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
         binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbarMain)
-        setUpLoadMoreButton()
         setUpAdapter()
         setUpDataBinding()
         observeViewModel()
@@ -39,8 +39,17 @@ class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
     }
 
     private fun setUpAdapter() {
-        adapter = ShoppingAdapter(this)
+        adapter = ShoppingAdapter(this, viewModel)
         binding.rvProductList.adapter = adapter
+        val layoutManager = GridLayoutManager(this, 2)
+        layoutManager.spanSizeLookup =
+            object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    if (adapter.getItemViewType(position) == LOAD_MORE_BUTTON_VIEW_TYPE) return 2
+                    return 1
+                }
+            }
+        binding.rvProductList.layoutManager = layoutManager
     }
 
     private fun observeViewModel() {
@@ -56,27 +65,8 @@ class ShoppingActivity : AppCompatActivity(), ShoppingItemClickListener {
         }
     }
 
-    private fun setUpLoadMoreButton() {
-        binding.rvProductList.addOnScrollListener(
-            object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(
-                    recyclerView: RecyclerView,
-                    dx: Int,
-                    dy: Int,
-                ) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (!recyclerView.canScrollVertically(1)) {
-                        viewModel.updateLoadMoreButtonVisibility(true)
-                    } else {
-                        if (dy < 0) viewModel.updateLoadMoreButtonVisibility(false)
-                    }
-                }
-            },
-        )
-    }
-
     private fun showData(data: List<Product>) {
-        adapter.loadData(data)
+        adapter.loadData(data, viewModel.canLoadMore.value ?: false)
     }
 
     private fun showError(errorMessage: String) {

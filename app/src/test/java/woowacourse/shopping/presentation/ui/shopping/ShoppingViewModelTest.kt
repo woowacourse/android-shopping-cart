@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
+import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -21,8 +22,39 @@ class ShoppingViewModelTest {
     }
 
     @Test
-    fun `20개 이하의 데이터가 존재할때는 isLoadMoreButtonVisible의 값에는 항상 false가 저장된다`() {
-        every { repository.findProductsByPage() } returns
+    fun `초기 로딩 시 빈 데이터가 주어지면 UIState는 Empty로 설정된다`() {
+        every { repository.findProductsByPage() } returns emptyList()
+        every { repository.canLoadMore() } returns false
+
+        viewModel.loadProducts()
+
+        assertEquals(UIState.Empty, viewModel.shoppingUiState.value)
+        assertEquals(false, viewModel.canLoadMore.value)
+    }
+
+    @Test
+    fun `초기 로딩 시 데이터가 주어지면 UIState는 Success로 설정된다`() {
+        val products =
+            List(20) {
+                Product(
+                    id = it.toLong(),
+                    name = "Product $it",
+                    price = 1000,
+                    imageUrl = "URL $it",
+                )
+            }
+        every { repository.findProductsByPage() } returns products
+        every { repository.canLoadMore() } returns true
+
+        viewModel.loadProducts()
+
+        assertEquals(UIState.Success(products), viewModel.shoppingUiState.value)
+        assertEquals(true, viewModel.canLoadMore.value)
+    }
+
+    @Test
+    fun `로드된 데이터가 20개 이하이면 canLoadMore는 false로 설정된다`() {
+        val products =
             List(19) {
                 Product(
                     id = it.toLong(),
@@ -31,49 +63,11 @@ class ShoppingViewModelTest {
                     imageUrl = "URL $it",
                 )
             }
+        every { repository.findProductsByPage() } returns products
         every { repository.canLoadMore() } returns false
 
         viewModel.loadProducts()
-        viewModel.updateLoadMoreButtonVisibility(true)
 
-        assertEquals(false, viewModel.isLoadMoreButtonVisible.value)
-    }
-
-    @Test
-    fun `20개 초과의 데이터가 존재하고 isVisible이 true라면 isLoadMoreButtonVisible의 값은 true가 저장된다`() {
-        every { repository.findProductsByPage() } returns
-            List(21) {
-                Product(
-                    id = it.toLong(),
-                    name = "Product $it",
-                    price = 1000,
-                    imageUrl = "URL $it",
-                )
-            }
-        every { repository.canLoadMore() } returns true
-
-        viewModel.loadProducts()
-        viewModel.updateLoadMoreButtonVisibility(true)
-
-        assertEquals(true, viewModel.isLoadMoreButtonVisible.value)
-    }
-
-    @Test
-    fun `20개 초과의 데이터가 존재하고 isVisible이 false라면 isLoadMoreButtonVisible의 값은 false 저장된다`() {
-        every { repository.findProductsByPage() } returns
-            List(21) {
-                Product(
-                    id = it.toLong(),
-                    name = "Product $it",
-                    price = 1000,
-                    imageUrl = "URL $it",
-                )
-            }
-        every { repository.canLoadMore() } returns true
-
-        viewModel.loadProducts()
-        viewModel.updateLoadMoreButtonVisibility(false)
-
-        assertEquals(false, viewModel.isLoadMoreButtonVisible.value)
+        assertEquals(false, viewModel.canLoadMore.value)
     }
 }

@@ -3,39 +3,66 @@ package woowacourse.shopping.presentation.ui.shopping
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.databinding.ItemLoadMoreButtonBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ShoppingType
+import woowacourse.shopping.domain.model.ShoppingType.Companion.PRODUCT_VIEW_TYPE
 
 class ShoppingAdapter(
-    private val clickListener: ShoppingItemClickListener,
-) : RecyclerView.Adapter<ShoppingViewHolder>() {
-    private var products: List<Product> = emptyList()
+    private val itemClickListener: ShoppingClickListener.ShoppingItemClickListener,
+    private val buttonClickListener: ShoppingClickListener.ShoppingButtonClickListener,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private val shoppingTypes: MutableList<ShoppingType> = mutableListOf()
+
+    override fun getItemViewType(position: Int): Int {
+        return shoppingTypes[position].viewType
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): ShoppingViewHolder {
-        val binding = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingViewHolder(binding)
+    ): RecyclerView.ViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        return if (viewType == PRODUCT_VIEW_TYPE) {
+            ProductViewHolder(ItemProductBinding.inflate(inflater, parent, false))
+        } else {
+            LoadMoreButtonViewHolder(ItemLoadMoreButtonBinding.inflate(inflater, parent, false))
+        }
     }
 
     override fun onBindViewHolder(
-        holder: ShoppingViewHolder,
+        holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        val product = products[position]
-        return holder.bind(product, clickListener)
+        val shoppingContent = shoppingTypes[position]
+        if (holder is ProductViewHolder && shoppingContent is ShoppingType.ProductType) {
+            holder.bind(shoppingContent.product, itemClickListener)
+        }
+        if (holder is LoadMoreButtonViewHolder) {
+            holder.bind(buttonClickListener)
+        }
     }
 
     override fun getItemCount(): Int {
-        return products.size
+        return shoppingTypes.size
     }
 
-    fun loadData(newProducts: List<Product>) {
-        val oldSize = products.size
-        val newSize = newProducts.size
-        val addSize = newSize - oldSize
-        products += newProducts.subList(oldSize, newSize)
-        notifyItemRangeInserted(oldSize, addSize)
+    fun loadData(
+        data: List<Product>,
+        canLoadMore: Boolean,
+    ) {
+        val currentSize = if (shoppingTypes.isEmpty()) 0 else shoppingTypes.size - 1
+        val items = data.subList(currentSize, data.size).map(ShoppingType::ProductType)
+
+        shoppingTypes.removeLastOrNull()
+        shoppingTypes += items
+
+        if (canLoadMore) {
+            shoppingTypes += ShoppingType.LoadMoreType()
+            notifyItemRangeInserted(shoppingTypes.size, items.size + 1)
+        } else {
+            notifyItemRangeInserted(shoppingTypes.size, items.size)
+        }
     }
 }
