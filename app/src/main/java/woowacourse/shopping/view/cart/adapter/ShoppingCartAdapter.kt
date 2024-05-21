@@ -11,6 +11,7 @@ import woowacourse.shopping.view.cart.adapter.viewholder.ShoppingCartViewHolder
 
 class ShoppingCartAdapter(
     private val onClickShoppingCart: OnClickShoppingCart,
+    private val onClickCartItemCounter: OnClickCartItemCounter,
     private val loadLastItem: () -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
@@ -21,7 +22,7 @@ class ShoppingCartAdapter(
     ): ShoppingCartViewHolder {
         val view =
             ItemShoppingCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingCartViewHolder(view, onClickShoppingCart)
+        return ShoppingCartViewHolder(view,onClickCartItemCounter, onClickShoppingCart)
     }
 
     override fun getItemCount(): Int {
@@ -33,7 +34,8 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         val item = cartItems[position]
-        holder.bind(item)
+        item.cartItemCounter.selectItem()
+        holder.bind(item,position)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -46,5 +48,9 @@ class ShoppingCartAdapter(
         }
         this.cartItems = cartItems
         notifyDataSetChanged()
+    }
+
+    fun updateCartItem(position: Int){
+        notifyItemChanged(position)
     }
 }
