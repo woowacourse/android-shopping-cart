@@ -22,7 +22,7 @@ class ProductListViewModel(
             repository.products(_products.value?.size ?: 0, PRODUCTS_OFFSET_SIZE)
         }.onSuccess { newProducts ->
             val newProductsUiModel = newProducts.map { it.toProductUiModel() }
-            _products.value = newProductsUiModel + (_products.value ?: emptyList())
+            _products.value = (_products.value ?: emptyList()) + newProductsUiModel
             _moreProducts.value = newProductsUiModel
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
