@@ -38,7 +38,7 @@ class CartItemRecyclerViewAdapter(
         this.values = newData
 
         if (newData.isEmpty()) {
-            notifyItemRemoved(0)
+            notifyItemRangeRemoved(0, itemCount)
             return
         }
         notifyItemRangeChanged(0, itemCount)
