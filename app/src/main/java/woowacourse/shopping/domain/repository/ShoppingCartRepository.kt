@@ -1,6 +1,7 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 
 interface ShoppingCartRepository {
@@ -12,4 +13,8 @@ interface ShoppingCartRepository {
     ): List<CartItem>
 
     fun deleteCartItem(itemId: Long)
+
+    fun getCartItemResultFromProductId(productId: Long): CartItemResult
+
+    fun updateCartItem(itemId : Long,count: Int)
 }

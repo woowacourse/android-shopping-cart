@@ -130,7 +130,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     }
 
     override fun clickIncrease(
-        productId: Long,
+        product: Product,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
@@ -138,7 +138,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     }
 
     override fun clickDecrease(
-        productId: Long,
+        product: Product,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {

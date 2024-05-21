@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
 import woowacourse.shopping.domain.model.CartItemCounter
+import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
@@ -43,15 +44,34 @@ class ProductListViewModel(
     }
 
     fun updateShoppingCart(
-        productId:Int,
+        product: Product,
         itemCounter: CartItemCounter,
-    ){
+    ) {
+        val cartItemResult =
+            shoppingCartRepository.getCartItemResultFromProductId(productId = product.id)
+        when (cartItemResult) {
+            is CartItemResult.Exists -> {
+                shoppingCartRepository.updateCartItem(
+                    cartItemResult.cartItemId,
+                    itemCounter.itemCount
+                )
+            }
 
+            CartItemResult.NotExists -> {
+                shoppingCartRepository.addCartItem(product)
+            }
+        }
     }
 
-    fun deleteCartItem(
-        productId: Int,
-    ){
+    fun deleteCartItem(productId: Long) {
+        val cartItemResult =
+            shoppingCartRepository.getCartItemResultFromProductId(productId = productId)
+        when (cartItemResult) {
+            is CartItemResult.Exists -> shoppingCartRepository.deleteCartItem(cartItemResult.cartItemId)
 
+            CartItemResult.NotExists -> {
+                // view toast NotExists
+            }
+        }
     }
 }

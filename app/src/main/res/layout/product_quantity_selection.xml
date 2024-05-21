@@ -5,9 +5,11 @@
 
     <data>
         <import type="android.view.View" />
+
         <variable
-            name="productId"
-            type="java.lang.Long" />
+            name="product"
+            type="woowacourse.shopping.domain.model.Product" />
+
         <variable
             name="position"
             type="java.lang.Integer" />
@@ -35,7 +37,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{()->onClickCartItemCounter.clickDecrease(productId,position,cartItemCounter)}"
+            android:onClick="@{()->onClickCartItemCounter.clickDecrease(product,position,cartItemCounter)}"
             android:text="-"
             android:textColor="@color/gray_5"
             android:textSize="22sp"
@@ -55,7 +57,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{()->onClickCartItemCounter.clickIncrease(productId,position,cartItemCounter)}"
+            android:onClick="@{()->onClickCartItemCounter.clickIncrease(product,position,cartItemCounter)}"
             android:text="+"
             android:textColor="@color/gray_5"
             android:textSize="22sp"
@@ -69,7 +71,7 @@
         android:src="@drawable/ic_plus_cart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:onClick="@{()->onClickCartItemCounter.clickIncrease(productId,position,cartItemCounter)}"
+        android:onClick="@{()->onClickCartItemCounter.clickIncrease(product,position,cartItemCounter)}"
         android:visibility="@{cartItemCounter.isSelected ? View.GONE : View.VISIBLE}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

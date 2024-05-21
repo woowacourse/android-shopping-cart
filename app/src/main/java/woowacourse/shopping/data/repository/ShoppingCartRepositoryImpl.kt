@@ -1,9 +1,11 @@
 package woowacourse.shopping.data.repository
 
 import android.content.Context
+import android.util.Log
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.NoSuchDataException
@@ -16,7 +18,7 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
         thread {
             val addedCartItemId =
                 cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
-            if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
+            if (addedCartItemId == ERROR_DATA_ID) throw NoSuchDataException()
         }
     }
 
@@ -40,11 +42,39 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
         if (deleteId == ERROR_DELETE_DATA_ID) throw NoSuchDataException()
     }
 
+    override fun getCartItemResultFromProductId(productId: Long): CartItemResult {
+        var cartItem: CartItem? = CartItem.defaultCartItem
+        thread {
+            cartItem = cartItemDao.findCartItemByProductId(productId)?.toCartItem()
+        }.join()
+        return when(cartItem?.id) {
+            null -> CartItemResult.NotExists
+            ERROR_DATA_ID -> throw NoSuchDataException()
+            else -> {
+                val itemId = cartItem?.id ?: throw NoSuchDataException()
+                val itemCounter = cartItem?.cartItemCounter ?: throw NoSuchDataException()
+                CartItemResult.Exists(
+                    cartItemId = itemId,
+                    counter = itemCounter,
+                )
+            }
+        }
+    }
+
+    override fun updateCartItem(itemId: Long, count: Int) {
+        var updateDataId = ERROR_UPDATE_DATA_ID
+        thread {
+            updateDataId = cartItemDao.updateCartItemCount(itemId, count)
+        }.join()
+        if (updateDataId== ERROR_UPDATE_DATA_ID) throw NoSuchDataException()
+    }
+
     companion object {
         const val CART_ITEM_LOAD_PAGING_SIZE = 5
         const val CART_ITEM_PAGE_SIZE = 3
-        const val ERROR_SAVE_DATA_ID = -1L
+        const val ERROR_DATA_ID = -1L
         const val ERROR_DELETE_DATA_ID = 0
+        const val ERROR_UPDATE_DATA_ID = 0
         const val DEFAULT_ITEM_SIZE = 0
     }
 }

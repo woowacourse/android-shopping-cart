@@ -38,7 +38,7 @@ class ProductDetailViewModel(
         try {
             val product = productRepository.getProduct(productId)
             product.cartItemCounter.selectItem()
-            _product.postValue(product)
+            _product.value = product
             _productDetailState.value = ProductDetailState.LoadProductItem.Success
         } catch (e: Exception) {
             when (e) {

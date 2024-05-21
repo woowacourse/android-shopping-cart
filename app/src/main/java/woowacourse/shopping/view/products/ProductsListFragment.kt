@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.products
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.domain.model.CartItemCounter
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
@@ -84,6 +86,7 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
                     requireContext().makeToast(
                         getString(R.string.max_paging_data),
                     )
+
                 ProductListState.ErrorState.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
@@ -120,16 +123,18 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
     }
 
     override fun clickIncrease(
-        productId: Long,
+        product: Product,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
         cartItemCounter.selectItem()
-        val resultState =  cartItemCounter.increase()
-        when(resultState){
+        val resultState = cartItemCounter.increase()
+        when (resultState) {
             ChangeCartItemResultState.Success -> {
                 adapter.updateProduct(itemPosition)
+                productListViewModel.updateShoppingCart(product,cartItemCounter)
             }
+
             ChangeCartItemResultState.Fail -> requireContext().makeToast(
                 getString(R.string.max_cart_item),
             )
@@ -137,17 +142,20 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
     }
 
     override fun clickDecrease(
-        productId: Long,
+        product: Product,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
         val resultState = cartItemCounter.decrease()
-        when(resultState){
+        when (resultState) {
             ChangeCartItemResultState.Success -> {
                 adapter.updateProduct(itemPosition)
+                productListViewModel.updateShoppingCart(product,cartItemCounter)
             }
-            ChangeCartItemResultState.Fail -> {
 
+            ChangeCartItemResultState.Fail -> {
+                product.cartItemCounter.unSelectItem()
+                productListViewModel.deleteCartItem(productId = product.id)
                 requireContext().makeToast(
                     getString(R.string.delete_cart_item),
                 )

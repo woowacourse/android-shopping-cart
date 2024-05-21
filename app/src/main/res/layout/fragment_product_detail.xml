@@ -96,7 +96,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:position = "@{0}"
-            app:productId = "@{vm.product.id}"
+            app:product = "@{vm.product}"
             app:cartItemCounter="@{vm.product.cartItemCounter}"
             app:layout_constraintBottom_toBottomOf="@id/tv_detail_product_price"
             app:layout_constraintEnd_toEndOf="parent"

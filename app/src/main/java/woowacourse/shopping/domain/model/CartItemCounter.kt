@@ -29,6 +29,10 @@ class CartItemCounter(
         isSelected = true
     }
 
+    fun unSelectItem(){
+        isSelected = false
+    }
+
     companion object {
         const val DEFAULT_ITEM_COUNT = 0
         const val DEFAULT_ITEM_SELECTED = false

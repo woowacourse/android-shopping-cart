@@ -11,6 +11,7 @@ import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
 import woowacourse.shopping.domain.model.CartItemCounter
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
@@ -151,7 +152,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
     }
 
     override fun clickIncrease(
-        productId: Long,
+        product: Product,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
@@ -166,7 +167,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
     }
 
     override fun clickDecrease(
-        productId: Long,
+        product: Product,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
