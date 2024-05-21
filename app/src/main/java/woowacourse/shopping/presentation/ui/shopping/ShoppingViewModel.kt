@@ -13,8 +13,8 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
 
     private val numberOfProduct: Int by lazy { repository.fetchProductsSize() }
 
-    private val _isBtnVisibleCondition = MutableLiveData<Boolean>()
-    val isBtnVisibleCondition: LiveData<Boolean> = _isBtnVisibleCondition
+    private val _showLoadMore = MutableLiveData<Boolean>()
+    val showLoadMore: LiveData<Boolean> = _showLoadMore
 
     private var offset = 0
 
@@ -29,7 +29,7 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
     }
 
     private fun initializeProducts() {
-        offset = Integer.min(offset + PAGE_SIZE, numberOfProduct)
+        calculateNextOffset()
         val initialProducts = loadProducts(offset)
         _products.postValue(initialProducts)
     }
@@ -47,8 +47,12 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
 
     private fun getProducts(): List<Product> {
         val currentOffset = offset
-        offset = Integer.min(offset + PAGE_SIZE, numberOfProduct)
+        calculateNextOffset()
         return loadProducts(currentOffset, offset)
+    }
+
+    private fun calculateNextOffset() {
+        offset = Integer.min(offset + PAGE_SIZE, numberOfProduct)
     }
 
     private fun loadProducts() {
@@ -60,11 +64,11 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
     }
 
     fun showLoadMoreBtn() {
-        _isBtnVisibleCondition.postValue(true)
+        _showLoadMore.postValue(true)
     }
 
     fun hideLoadMoreBtn() {
-        _isBtnVisibleCondition.postValue(false)
+        _showLoadMore.postValue(false)
     }
 
     companion object {
