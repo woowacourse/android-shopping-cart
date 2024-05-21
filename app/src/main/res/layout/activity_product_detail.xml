@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="woowacourse.shopping.feature.detail.ProductDetailViewModel" />
+            type="woowacourse.shopping.ui.detail.ProductDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".feature.detail.ProductDetailActivity">
+        tools:context=".ui.detail.ProductDetailActivity">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_detail"
