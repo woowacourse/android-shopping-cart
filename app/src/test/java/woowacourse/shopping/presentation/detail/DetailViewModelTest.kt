@@ -8,6 +8,7 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
+import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.detail.viewmodel.DetailViewModel
 import woowacourse.shopping.presentation.dummy.DummyProducts
 
@@ -19,6 +20,25 @@ class DetailViewModelTest {
     fun setUp() {
         detailViewModel =
             DetailViewModel(FakeProductRepository(DummyProducts().products), FakeCartRepository(mutableListOf()))
+    }
+
+    @Test
+    fun `상품 갯수를 늘린다`() {
+        detailViewModel.addQuantity()
+
+        val quantity = detailViewModel.quantity.getOrAwaitValue()
+
+        assertThat(quantity).isEqualTo(2)
+    }
+
+    @Test
+    fun `상품 갯수를 줄인다`() {
+        detailViewModel.addQuantity()
+        detailViewModel.minusQuantity()
+
+        val quantity = detailViewModel.quantity.getOrAwaitValue()
+
+        assertThat(quantity).isEqualTo(1)
     }
 
     @Test
