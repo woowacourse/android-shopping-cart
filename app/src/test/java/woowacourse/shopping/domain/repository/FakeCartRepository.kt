@@ -22,7 +22,7 @@ class FakeCartRepository(
         return id++
     }
 
-    override fun removeCartItem(cartItemId: Long): Long {
+    override fun removeAllCartItem(cartItemId: Long): Long {
         cartItems.removeIf { it.id == cartItemId }
         return cartItemId
     }
