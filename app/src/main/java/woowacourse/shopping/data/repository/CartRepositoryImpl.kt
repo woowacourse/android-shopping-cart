@@ -7,6 +7,10 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
+    override fun fetchCartItem(productId: Long): CartItem? {
+        return cartDataSource.getCartItem(productId)
+    }
+
     override fun fetchCartItems(
         page: Int,
         pageSize: Int,
@@ -19,6 +23,13 @@ class CartRepositoryImpl(
         quantity: Int,
     ): Long {
         return cartDataSource.addCartItem(productId, quantity)
+    }
+
+    override fun plusCartItem(
+        productId: Long,
+        quantity: Int,
+    ): Long {
+        return cartDataSource.plusCartItem(productId, quantity)
     }
 
     override fun removeCartItem(

@@ -12,11 +12,6 @@ class FakeCartRepository(
         productId: Long,
         quantity: Int,
     ): Long {
-        val cartItem = cartItems[productId.toInt() - 1]
-        cartItems[productId.toInt() - 1] =
-            cartItem.copy(
-                quantity = cartItem.quantity + 1,
-            )
         return id++
     }
 
@@ -24,7 +19,12 @@ class FakeCartRepository(
         productId: Long,
         quantity: Int,
     ): Long {
-        TODO("Not yet implemented")
+        val cartItem = cartItems[productId.toInt() - 1]
+        cartItems[productId.toInt() - 1] =
+            cartItem.copy(
+                quantity = cartItem.quantity + 1,
+            )
+        return productId
     }
 
     override fun removeCartItem(
@@ -39,13 +39,13 @@ class FakeCartRepository(
         return productId
     }
 
-    override fun removeAllCartItem(cartItemId: Long): Long {
-        cartItems.removeIf { it.id == cartItemId }
-        return cartItemId
+    override fun removeAllCartItem(productId: Long): Long {
+        cartItems.removeIf { it.id == productId }
+        return productId
     }
 
     override fun fetchCartItem(productId: Long): CartItem? {
-        TODO("Not yet implemented")
+        return cartItems.first { it.productId == productId }
     }
 
     override fun fetchCartItems(
