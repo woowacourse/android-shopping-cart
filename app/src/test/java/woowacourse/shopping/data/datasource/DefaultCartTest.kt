@@ -8,7 +8,7 @@ import woowacourse.shopping.data.datasource.DefaultCart.addCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.getCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.plusCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.removeAllCartItem
-import woowacourse.shopping.data.datasource.DefaultCart.removeCartItem
+import woowacourse.shopping.data.datasource.DefaultCart.minusCartItem
 import woowacourse.shopping.data.model.CartItem
 
 class DefaultCartTest {
@@ -45,9 +45,9 @@ class DefaultCartTest {
     @Test
     fun `장바구니에 상품 수량을 줄일 수 있다`() {
         mockkObject(DefaultCart) {
-            every { removeCartItem(any(), any()) } returns 1
+            every { minusCartItem(any(), any()) } returns 1
             plusCartItem(1, 1)
-            val secondItemId = removeCartItem(1, 1)
+            val secondItemId = minusCartItem(1, 1)
 
             assertThat(secondItemId).isEqualTo(1)
         }

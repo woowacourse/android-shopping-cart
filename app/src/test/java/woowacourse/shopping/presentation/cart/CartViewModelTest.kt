@@ -65,7 +65,7 @@ class CartViewModelTest {
         val orders = cartViewModel.orders
 
         cartViewModel.addCartITem(1, 1)
-        cartViewModel.removeCartItem(1, 1)
+        cartViewModel.minusCartItem(1, 1)
 
         val actual = orders.getOrAwaitValue().first { it.product.id == 1L }.quantity
 

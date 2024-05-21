@@ -48,11 +48,11 @@ class CartViewModel(
         loadCurrentPageCartItems()
     }
 
-    fun removeCartItem(
+    fun minusCartItem(
         productId: Long,
         quantity: Int,
     ) {
-        cartRepository.removeCartItem(productId, quantity)
+        cartRepository.minusCartItem(productId, quantity)
 
         loadCurrentPageCartItems()
     }

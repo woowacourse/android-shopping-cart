@@ -27,7 +27,7 @@ class FakeCartRepository(
         return productId
     }
 
-    override fun removeCartItem(
+    override fun minusCartItem(
         productId: Long,
         quantity: Int,
     ): Long {

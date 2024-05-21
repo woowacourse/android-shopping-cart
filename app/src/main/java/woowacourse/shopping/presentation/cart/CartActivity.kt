@@ -64,7 +64,7 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
     }
 
     override fun onCartItemRemove(productId: Long) {
-        viewModel.removeCartItem(productId, 1)
+        viewModel.minusCartItem(productId, 1)
     }
 
     override fun onCartItemDelete(cartItemId: Long) {

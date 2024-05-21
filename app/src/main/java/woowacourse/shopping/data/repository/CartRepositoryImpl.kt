@@ -32,11 +32,11 @@ class CartRepositoryImpl(
         return cartDataSource.plusCartItem(productId, quantity)
     }
 
-    override fun removeCartItem(
+    override fun minusCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
-        return cartDataSource.removeCartItem(productId, quantity)
+        return cartDataSource.minusCartItem(productId, quantity)
     }
 
     override fun removeAllCartItem(productId: Long): Long {

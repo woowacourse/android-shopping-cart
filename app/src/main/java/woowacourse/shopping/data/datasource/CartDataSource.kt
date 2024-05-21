@@ -20,7 +20,7 @@ interface CartDataSource {
         quantity: Int,
     ): Long
 
-    fun removeCartItem(
+    fun minusCartItem(
         productId: Long,
         quantity: Int,
     ): Long
