@@ -1,11 +1,10 @@
 package woowacourse.shopping.domain.model
 
-import android.util.Log
 import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 
 class CartItemCounter(
     count: Int = DEFAULT_ITEM_COUNT,
-    isSelected: Boolean =  DEFAULT_ITEM_SELECTED,
+    isSelected: Boolean = DEFAULT_ITEM_SELECTED,
 ) {
     var itemCount: Int = count
         private set
@@ -19,24 +18,27 @@ class CartItemCounter(
 
     fun decrease(): ChangeCartItemResultState {
         itemCount--
-        return if (itemCount > MIN_ITEM_COUNT) {
+        return if (itemCount > DEFAULT_ITEM_COUNT) {
             ChangeCartItemResultState.Success
-        } else{
+        } else {
             ChangeCartItemResultState.Fail
         }
     }
 
-    fun selectItem(){
+    fun updateCount(count: Int) {
+        itemCount = count
+    }
+
+    fun selectItem() {
         isSelected = true
     }
 
-    fun unSelectItem(){
+    fun unSelectItem() {
         isSelected = false
     }
 
     companion object {
         const val DEFAULT_ITEM_COUNT = 0
-        const val MIN_ITEM_COUNT = 1
         const val DEFAULT_ITEM_SELECTED = false
     }
 }

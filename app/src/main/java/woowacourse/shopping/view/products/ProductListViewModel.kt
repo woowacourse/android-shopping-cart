@@ -3,6 +3,7 @@ package woowacourse.shopping.view.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.model.CartItemEntity.Companion.DEFAULT_CART_ITEM_COUNT
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
 import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.CartItemResult
@@ -54,28 +55,29 @@ class ProductListViewModel(
 
     fun increaseShoppingCart(product: Product) {
         try {
-            when (product.cartItemCounter.increase()) {
-                ChangeCartItemResultState.Success -> {
-                    product.cartItemCounter.selectItem()
-                    when (val cartItemResult = getCartItemResult(product.id)) {
-                        is CartItemResult.Exists -> {
+            when (val cartItemResult = getCartItemResult(product.id)) {
+                is CartItemResult.Exists -> {
+                    when (cartItemResult.counter.increase()) {
+                        ChangeCartItemResultState.Success -> {
                             shoppingCartRepository.updateCartItem(
                                 cartItemResult.cartItemId,
-                                product.cartItemCounter.itemCount
+                                cartItemResult.counter.itemCount,
                             )
                         }
 
-                        CartItemResult.NotExists -> {
-                            shoppingCartRepository.addCartItem(product)
-                        }
+                        ChangeCartItemResultState.Fail -> throw NoSuchDataException()
                     }
-                    _cartItemCount.value = _cartItemCount.value?.plus(1)
-                    _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+                    product.cartItemCounter.updateCount(cartItemResult.counter.itemCount)
                 }
 
-                ChangeCartItemResultState.Fail -> throw NoSuchDataException()
+                CartItemResult.NotExists -> {
+                    shoppingCartRepository.addCartItem(product)
+                    product.cartItemCounter.updateCount(DEFAULT_CART_ITEM_COUNT)
+                }
             }
-
+            product.cartItemCounter.selectItem()
+            _cartItemCount.value = _cartItemCount.value?.plus(DEFAULT_CART_ITEM_COUNT)
+            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
@@ -88,27 +90,25 @@ class ProductListViewModel(
 
     fun decreaseShoppingCart(product: Product) {
         try {
-            when (product.cartItemCounter.decrease()) {
-                ChangeCartItemResultState.Success -> {
-                    when (val cartItemResult = getCartItemResult(product.id)) {
-                        is CartItemResult.Exists -> {
+            when(val cartItemResult = getCartItemResult(product.id)){
+                is CartItemResult.Exists -> {
+                    when(product.cartItemCounter.decrease()){
+                        ChangeCartItemResultState.Success -> {
                             shoppingCartRepository.updateCartItem(
                                 cartItemResult.cartItemId,
                                 product.cartItemCounter.itemCount
                             )
                         }
-
-                        CartItemResult.NotExists -> throw NoSuchDataException()
+                        ChangeCartItemResultState.Fail -> {
+                            deleteCartItem(product,cartItemResult.cartItemId)
+                        }
                     }
-                    _cartItemCount.value = _cartItemCount.value?.minus(1)
-                    _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
                 }
-
-                ChangeCartItemResultState.Fail -> {
-                    product.cartItemCounter.unSelectItem()
-                    deleteCartItem(product)
-                }
+                CartItemResult.NotExists -> throw NoSuchDataException()
             }
+            _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
+            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
@@ -119,17 +119,12 @@ class ProductListViewModel(
         }
     }
 
-    private fun deleteCartItem(product: Product) {
+    private fun deleteCartItem(
+        product: Product,
+        cartItemId:Long,
+    ) {
         try {
-            when (val cartItemResult = getCartItemResult(product.id)) {
-                is CartItemResult.Exists -> {
-                    shoppingCartRepository.deleteCartItem(cartItemResult.cartItemId)
-                }
-
-                CartItemResult.NotExists -> {
-                    _errorEvent.postValue(ProductListEvent.DeleteProductEvent.Fail)
-                }
-            }
+            shoppingCartRepository.deleteCartItem(cartItemId)
             product.cartItemCounter.unSelectItem()
             _productListEvent.postValue(ProductListEvent.DeleteProductEvent.Success(product.id))
         } catch (e: Exception) {
@@ -146,7 +141,7 @@ class ProductListViewModel(
         _products.value = products.value?.map { product ->
             val count = items[product.id]
             if (count != null) {
-                getUpdatedProduct(product,count)
+                getUpdatedProduct(product, count)
             } else {
                 product
             }

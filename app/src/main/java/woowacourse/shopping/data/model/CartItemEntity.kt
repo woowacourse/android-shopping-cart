@@ -13,7 +13,7 @@ data class CartItemEntity(
     val id: Long = 0L,
     val product: Product,
     val productId: Long = product.id,
-    val count: Int = DEFAULT_ITEM_COUNT,
+    val count: Int = DEFAULT_CART_ITEM_COUNT,
 ) {
     fun toCartItem(): CartItem {
         return CartItem(
@@ -29,7 +29,7 @@ data class CartItemEntity(
     }
 
     companion object {
-        private const val DEFAULT_ITEM_COUNT = 1
+        const val DEFAULT_CART_ITEM_COUNT = 1
         fun makeCartItemEntity(product: Product): CartItemEntity {
             return CartItemEntity(product = product)
         }
