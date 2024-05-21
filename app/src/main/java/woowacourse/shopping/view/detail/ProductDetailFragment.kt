@@ -17,6 +17,7 @@ import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 
 class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter {
     private var fragmentChangeListener: FragmentChangeListener? = null
@@ -130,7 +131,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     }
 
     override fun clickIncrease(
-        productId: Int,
+        productId: Long,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
@@ -138,7 +139,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     }
 
     override fun clickDecrease(
-        productId: Int,
+        productId: Long,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {

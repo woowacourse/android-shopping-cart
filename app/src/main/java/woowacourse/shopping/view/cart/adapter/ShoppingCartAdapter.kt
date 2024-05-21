@@ -8,6 +8,7 @@ import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.view.cart.OnClickShoppingCart
 import woowacourse.shopping.view.cart.adapter.viewholder.ShoppingCartViewHolder
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 
 class ShoppingCartAdapter(
     private val onClickShoppingCart: OnClickShoppingCart,

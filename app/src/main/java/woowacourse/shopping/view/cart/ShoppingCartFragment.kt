@@ -15,6 +15,8 @@ import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
+import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
 class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCounter {
@@ -149,7 +151,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
     }
 
     override fun clickIncrease(
-        productId: Int,
+        productId: Long,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
@@ -164,7 +166,7 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
     }
 
     override fun clickDecrease(
-        productId: Int,
+        productId: Long,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {

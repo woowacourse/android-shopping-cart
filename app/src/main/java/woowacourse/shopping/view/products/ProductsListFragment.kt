@@ -15,10 +15,12 @@ import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
+import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
+import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
 
-class ProductsListFragment : Fragment(), OnClickProducts,OnClickCartItemCounter {
+class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter {
     private var fragmentChangeListener: FragmentChangeListener? = null
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
@@ -118,7 +120,7 @@ class ProductsListFragment : Fragment(), OnClickProducts,OnClickCartItemCounter 
     }
 
     override fun clickIncrease(
-        productId: Int,
+        productId: Long,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
@@ -135,7 +137,7 @@ class ProductsListFragment : Fragment(), OnClickProducts,OnClickCartItemCounter 
     }
 
     override fun clickDecrease(
-        productId: Int,
+        productId: Long,
         itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
