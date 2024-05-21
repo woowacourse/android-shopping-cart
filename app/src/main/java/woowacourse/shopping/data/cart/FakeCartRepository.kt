@@ -36,7 +36,10 @@ class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRep
         cart.add(oldCartItem.copy(product = newProduct))
     }
 
-    override fun changeQuantity(product: Product, quantity: Quantity) {
+    override fun changeQuantity(
+        product: Product,
+        quantity: Quantity,
+    ) {
         val newProduct = product.copy(quantity = quantity)
         val oldCartItem = cart.find { it.product.id == product.id }
         if (oldCartItem == null) {
