@@ -70,7 +70,9 @@ class ProductListViewModel(
         val cartItemResult =
             shoppingCartRepository.getCartItemResultFromProductId(productId = productId)
         when (cartItemResult) {
-            is CartItemResult.Exists -> shoppingCartRepository.deleteCartItem(cartItemResult.cartItemId)
+            is CartItemResult.Exists -> {
+                shoppingCartRepository.deleteCartItem(cartItemResult.cartItemId)
+            }
 
             CartItemResult.NotExists -> {
                 // view toast NotExists

@@ -151,30 +151,22 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
         binding.onNextButton = shoppingCartViewModel.isExistNextPage()
     }
 
-    override fun clickIncrease(
-        product: Product,
-        itemPosition: Int,
-        cartItemCounter: CartItemCounter
-    ) {
+    override fun clickIncrease(product: Product, cartItemCounter: CartItemCounter) {
         cartItemCounter.selectItem()
         val resultState =  cartItemCounter.increase()
         when(resultState){
             ChangeCartItemResultState.Success -> {
-                adapter.updateCartItem(itemPosition)
+                adapter.updateCartItem(product.id)
             }
             ChangeCartItemResultState.Fail -> {}
         }
     }
 
-    override fun clickDecrease(
-        product: Product,
-        itemPosition: Int,
-        cartItemCounter: CartItemCounter
-    ) {
+    override fun clickDecrease(product: Product, cartItemCounter: CartItemCounter) {
         val resultState = cartItemCounter.decrease()
         when(resultState){
             ChangeCartItemResultState.Success -> {
-                adapter.updateCartItem(itemPosition)
+                adapter.updateCartItem(product.id)
             }
             ChangeCartItemResultState.Fail -> {
 

@@ -123,14 +123,13 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
     override fun clickIncrease(
         product: Product,
-        itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
         cartItemCounter.selectItem()
         val resultState = cartItemCounter.increase()
         when (resultState) {
             ChangeCartItemResultState.Success -> {
-                adapter.updateProduct(itemPosition)
+                adapter.updateProduct(product.id)
                 productListViewModel.updateShoppingCart(product,cartItemCounter)
             }
 
@@ -142,13 +141,12 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
     override fun clickDecrease(
         product: Product,
-        itemPosition: Int,
         cartItemCounter: CartItemCounter
     ) {
         val resultState = cartItemCounter.decrease()
         when (resultState) {
             ChangeCartItemResultState.Success -> {
-                adapter.updateProduct(itemPosition)
+                adapter.updateProduct(product.id)
                 productListViewModel.updateShoppingCart(product,cartItemCounter)
             }
 

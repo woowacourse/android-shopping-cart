@@ -16,6 +16,7 @@ class ProductAdapter(
     private val isLoadLastItem: (Boolean) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()
+    private val productPosition : HashMap<Long,Int> = hashMapOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -34,7 +35,8 @@ class ProductAdapter(
         position: Int,
     ) {
         val item = products[position]
-        holder.bind(item,position)
+        holder.bind(item)
+        productPosition[item.id] = position
 
         if (position == itemCount - 1) {
             isLoadLastItem(true)
@@ -50,7 +52,10 @@ class ProductAdapter(
         notifyItemRangeInserted(startPosition, addedProducts.size)
     }
 
-    fun updateProduct(position: Int){
-        notifyItemChanged(position)
+    fun updateProduct(productId: Long){
+        val position = productPosition[productId]
+        if (position != null){
+            notifyItemChanged(position)
+        }
     }
 }

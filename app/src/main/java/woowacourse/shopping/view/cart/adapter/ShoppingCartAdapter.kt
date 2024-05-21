@@ -16,6 +16,7 @@ class ShoppingCartAdapter(
     private val loadLastItem: () -> Unit,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
+    private var productPosition: HashMap<Long,Int> = hashMapOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -35,8 +36,9 @@ class ShoppingCartAdapter(
         position: Int,
     ) {
         val item = cartItems[position]
+        productPosition[item.product.id] = position
         item.cartItemCounter.selectItem()
-        holder.bind(item,position)
+        holder.bind(item)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -51,7 +53,10 @@ class ShoppingCartAdapter(
         notifyDataSetChanged()
     }
 
-    fun updateCartItem(position: Int){
-        notifyItemChanged(position)
+    fun updateCartItem(productId: Long){
+        val position = productPosition[productId]
+        if (position != null) {
+            notifyItemChanged(position)
+        }
     }
 }
