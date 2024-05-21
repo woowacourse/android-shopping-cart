@@ -10,13 +10,11 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
-import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.ShoppingCartFragment
-import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
@@ -79,6 +77,20 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
             adapter.updateProducts(addedProducts = products)
         }
+        productListViewModel.productListEvent.observe(viewLifecycleOwner) { productListEvent ->
+            when (productListEvent) {
+                is ProductListEvent.DeleteProductEvent.Success -> {
+                    requireContext().makeToast(
+                        getString(R.string.delete_cart_item),
+                    )
+                    adapter.updateProduct(productListEvent.productId)
+                }
+
+                is ProductListEvent.UpdateProductEvent.Success -> {
+                    adapter.updateProduct(productListEvent.productId)
+                }
+            }
+        }
         productListViewModel.errorEvent.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
                 ProductListEvent.LoadProductEvent.Fail ->
@@ -91,8 +103,12 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
                         getString(R.string.error_default),
                     )
 
-                ProductListEvent.UpdateProductEvent.Fail -> TODO()
-                ProductListEvent.DeleteProductEvent.Fail -> TODO()
+                ProductListEvent.UpdateProductEvent.Fail,
+                ProductListEvent.DeleteProductEvent.Fail -> requireContext()
+                    .makeToast(
+                        getString(R.string.error_update_cart_item),
+                    )
+
             }
         }
     }
@@ -124,40 +140,11 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         productListViewModel.loadPagingProduct()
     }
 
-    override fun clickIncrease(
-        product: Product,
-    ) {
-        product.cartItemCounter.selectItem()
-        val resultState = product.cartItemCounter.increase()
-        when (resultState) {
-            ChangeCartItemResultState.Success -> {
-                adapter.updateProduct(product.id)
-                productListViewModel.updateShoppingCart(product,product.cartItemCounter)
-            }
-
-            ChangeCartItemResultState.Fail -> requireContext().makeToast(
-                getString(R.string.max_cart_item),
-            )
-        }
+    override fun clickIncrease(product: Product) {
+        productListViewModel.increaseShoppingCart(product)
     }
 
-    override fun clickDecrease(
-        product: Product,
-    ) {
-        val resultState = product.cartItemCounter.decrease()
-        when (resultState) {
-            ChangeCartItemResultState.Success -> {
-                adapter.updateProduct(product.id)
-                productListViewModel.updateShoppingCart(product,product.cartItemCounter)
-            }
-
-            ChangeCartItemResultState.Fail -> {
-                product.cartItemCounter.unSelectItem()
-                productListViewModel.deleteCartItem(product)
-                requireContext().makeToast(
-                    getString(R.string.delete_cart_item),
-                )
-            }
-        }
+    override fun clickDecrease(product: Product) {
+        productListViewModel.decreaseShoppingCart(product)
     }
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
-import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -12,6 +11,7 @@ import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.utils.SingleLiveData
+import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
@@ -20,9 +20,9 @@ class ProductListViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
-    private val _productListEvent: MutableSingleLiveData<ProductListEvent> =
+    private val _productListEvent: MutableSingleLiveData<ProductListEvent.SuccessEvent> =
         MutableSingleLiveData()
-    val productListEvent: SingleLiveData<ProductListEvent> get() = _productListEvent
+    val productListEvent: SingleLiveData<ProductListEvent.SuccessEvent> get() = _productListEvent
 
     private val _errorEvent: MutableSingleLiveData<ProductListEvent.ErrorEvent> =
         MutableSingleLiveData()
@@ -33,7 +33,6 @@ class ProductListViewModel(
             val itemSize = products.value?.size ?: DEFAULT_ITEM_SIZE
             val pagingData = productRepository.loadPagingProducts(itemSize)
             _products.value = _products.value?.plus(pagingData)
-            _productListEvent.postValue(ProductListEvent.LoadProductEvent.Success)
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
@@ -46,40 +45,72 @@ class ProductListViewModel(
         }
     }
 
-    fun updateShoppingCart(
-        product: Product,
-        itemCounter: CartItemCounter,
-    ) {
+    fun increaseShoppingCart(product: Product) {
         try {
-            val cartItemResult =
-                shoppingCartRepository.getCartItemResultFromProductId(productId = product.id)
-            when (cartItemResult) {
-                is CartItemResult.Exists -> {
-                    shoppingCartRepository.updateCartItem(
-                        cartItemResult.cartItemId,
-                        itemCounter.itemCount
-                    )
+            when (product.cartItemCounter.increase()) {
+                ChangeCartItemResultState.Success -> {
+                    product.cartItemCounter.selectItem()
+                    when (val cartItemResult = getCartItemResult(product.id)) {
+                        is CartItemResult.Exists -> {
+                            shoppingCartRepository.updateCartItem(
+                                cartItemResult.cartItemId,
+                                product.cartItemCounter.itemCount
+                            )
+                        }
+                        CartItemResult.NotExists -> {
+                            shoppingCartRepository.addCartItem(product)
+                        }
+                    }
+                    _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
                 }
 
-                CartItemResult.NotExists -> {
-                    shoppingCartRepository.addCartItem(product)
-                }
+                ChangeCartItemResultState.Fail -> throw NoSuchDataException()
             }
-            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
-        } catch (e: Exception){
-            when (e){
+
+        } catch (e: Exception) {
+            when (e) {
                 is NoSuchDataException ->
                     _errorEvent.postValue(ProductListEvent.UpdateProductEvent.Fail)
+
                 else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
     }
 
-    fun deleteCartItem(product: Product) {
-        try{
-            val cartItemResult =
-                shoppingCartRepository.getCartItemResultFromProductId(productId = product.id)
-            when (cartItemResult) {
+    fun decreaseShoppingCart(product: Product) {
+        try {
+            when(product.cartItemCounter.decrease()){
+                ChangeCartItemResultState.Success -> {
+                    when (val cartItemResult = getCartItemResult(product.id)) {
+                        is CartItemResult.Exists -> {
+                            shoppingCartRepository.updateCartItem(
+                                cartItemResult.cartItemId,
+                                product.cartItemCounter.itemCount
+                            )
+                        }
+
+                        CartItemResult.NotExists -> throw NoSuchDataException()
+                    }
+                    _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+                }
+                ChangeCartItemResultState.Fail -> {
+                    product.cartItemCounter.unSelectItem()
+                    deleteCartItem(product)
+                }
+            }
+        } catch (e: Exception) {
+            when (e) {
+                is NoSuchDataException ->
+                    _errorEvent.postValue(ProductListEvent.UpdateProductEvent.Fail)
+
+                else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
+            }
+        }
+    }
+
+    private fun deleteCartItem(product: Product) {
+        try {
+            when (val cartItemResult = getCartItemResult(product.id)) {
                 is CartItemResult.Exists -> {
                     shoppingCartRepository.deleteCartItem(cartItemResult.cartItemId)
                 }
@@ -90,12 +121,17 @@ class ProductListViewModel(
             }
             product.cartItemCounter.unSelectItem()
             _productListEvent.postValue(ProductListEvent.DeleteProductEvent.Success(product.id))
-        } catch (e: Exception){
-            when(e){
+        } catch (e: Exception) {
+            when (e) {
                 is NoSuchDataException ->
                     _errorEvent.postValue(ProductListEvent.DeleteProductEvent.Fail)
+
                 else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
+    }
+
+    private fun getCartItemResult(productId: Long): CartItemResult {
+        return shoppingCartRepository.getCartItemResultFromProductId(productId = productId)
     }
 }
