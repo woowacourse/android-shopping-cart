@@ -16,7 +16,7 @@ class ShoppingCartViewModel(
     private val _cartItems: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
     val cartItems: LiveData<List<ProductUiModel>> get() = _cartItems
 
-    private val totalSize = MutableLiveData<Int>(0)
+    private val totalSize = MutableLiveData(DEFAULT_CART_ITEMS_SIZE)
 
     private val _currentPage: MutableLiveData<Int> = MutableLiveData<Int>(DEFAULT_CURRENT_PAGE)
     val currentPage: LiveData<Int> get() = _currentPage
@@ -32,9 +32,9 @@ class ShoppingCartViewModel(
             addSource(totalSize) { value = checkIsRightBtnEnable() }
         }
 
-    private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(1)?.not() ?: false
+    private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(DEFAULT_CURRENT_PAGE)?.not() ?: false
 
-    private fun checkIsRightBtnEnable() = (totalSize.value != 0) && (_currentPage.value?.equals(totalSize.value))?.not() ?: false
+    private fun checkIsRightBtnEnable() = (totalSize.value != DEFAULT_CART_ITEMS_SIZE) && (_currentPage.value?.equals(totalSize.value))?.not() ?: false
 
     fun updatePageSize() {
         val totalItemSize = repository.shoppingCartSize()
@@ -69,6 +69,7 @@ class ShoppingCartViewModel(
     }
 
     companion object {
+        private const val DEFAULT_CART_ITEMS_SIZE = 0
         private const val PAGE_SIZE = 5
         private const val DEFAULT_CURRENT_PAGE = 1
     }
