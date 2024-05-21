@@ -5,12 +5,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.Product
 
-class TwentyItemsPagingStrategyTest {
+class NumberPagingStrategyTest {
     private lateinit var pagingStrategy: PagingStrategy<Product>
 
     @BeforeEach
     fun setUp() {
-        pagingStrategy = TwentyItemsPagingStrategy()
+        pagingStrategy = NumberPagingStrategy(countPerLoad = 20)
     }
 
     @Test

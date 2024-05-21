@@ -7,9 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import woowacourse.shopping.FiveCartItemPagingStrategy
+import woowacourse.shopping.NonePagingStrategy
 import woowacourse.shopping.R
-import woowacourse.shopping.TwentyItemsPagingStrategy
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.repository.DummyShoppingCartItemRepository
@@ -43,8 +42,8 @@ class ProductDetailFragment : Fragment() {
                 UniversalViewModelFactory {
                     ProductDetailViewModel(
                         it.getInt(PRODUCT_ID),
-                        DummyShoppingProductsRepository(TwentyItemsPagingStrategy()),
-                        DummyShoppingCartItemRepository(FiveCartItemPagingStrategy()),
+                        DummyShoppingProductsRepository(NonePagingStrategy()),
+                        DummyShoppingCartItemRepository(NonePagingStrategy()),
                     )
                 }
             viewModel = ViewModelProvider(this, factory)[ProductDetailViewModel::class.java]

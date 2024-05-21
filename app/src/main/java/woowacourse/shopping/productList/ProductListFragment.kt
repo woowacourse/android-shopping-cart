@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.R
-import woowacourse.shopping.TwentyItemsPagingStrategy
 import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.cart.ShoppingCartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
@@ -23,7 +23,11 @@ class ProductListFragment : Fragment() {
 
     private val factory: UniversalViewModelFactory =
         UniversalViewModelFactory {
-            ProductListViewModel(DummyShoppingProductsRepository(TwentyItemsPagingStrategy()))
+            ProductListViewModel(
+                DummyShoppingProductsRepository(
+                    NumberPagingStrategy(countPerLoad = 20),
+                ),
+            )
         }
 
     private val viewModel: ProductListViewModel by lazy {

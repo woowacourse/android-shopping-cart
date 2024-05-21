@@ -3,14 +3,14 @@ package woowacourse.shopping.repository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import woowacourse.shopping.TwentyItemsPagingStrategy
+import woowacourse.shopping.NumberPagingStrategy
 
 class DummyShoppingProductsRepositoryTest {
     private lateinit var dummyShoppingProductsRepository: ShoppingProductsRepository
 
     @BeforeEach
     fun setUp() {
-        dummyShoppingProductsRepository = DummyShoppingProductsRepository(TwentyItemsPagingStrategy())
+        dummyShoppingProductsRepository = DummyShoppingProductsRepository(NumberPagingStrategy(countPerLoad = 20))
     }
 
     @Test

@@ -1,12 +1,12 @@
 package woowacourse.shopping.repository
 
-import woowacourse.shopping.FiveCartItemPagingStrategy
+import woowacourse.shopping.NumberPagingStrategy
 import woowacourse.shopping.PagingStrategy
 import woowacourse.shopping.data.Product
 
 class FakeShoppingCartItemRepository(
     private val cartItems: MutableList<Product> = mutableListOf(),
-    private val pagingStrategy: PagingStrategy<Product> = FiveCartItemPagingStrategy(),
+    private val pagingStrategy: PagingStrategy<Product> = NumberPagingStrategy(countPerLoad = 5),
 ) : ShoppingCartItemRepository {
     override fun addCartItem(product: Product): Int {
         val addedProduct = product.copy()
