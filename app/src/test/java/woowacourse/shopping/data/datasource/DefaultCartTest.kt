@@ -6,9 +6,9 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import woowacourse.shopping.data.datasource.DefaultCart.addCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.getCartItem
+import woowacourse.shopping.data.datasource.DefaultCart.minusCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.plusCartItem
 import woowacourse.shopping.data.datasource.DefaultCart.removeAllCartItem
-import woowacourse.shopping.data.datasource.DefaultCart.minusCartItem
 import woowacourse.shopping.data.model.CartItem
 
 class DefaultCartTest {
