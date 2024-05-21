@@ -7,6 +7,10 @@ import woowacourse.shopping.domain.repository.CartRepository
 class CartRepositoryImpl(
     private val cartDataSource: CartDataSource,
 ) : CartRepository {
+    override fun fetchTotalCartCount(): Int {
+        return cartDataSource.totalCartCount()
+    }
+
     override fun fetchCartItem(productId: Long): CartItem? {
         return cartDataSource.getCartItem(productId)
     }

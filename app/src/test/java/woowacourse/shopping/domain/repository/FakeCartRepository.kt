@@ -44,6 +44,10 @@ class FakeCartRepository(
         return productId
     }
 
+    override fun fetchTotalCartCount(): Int {
+        return cartItems.size
+    }
+
     override fun fetchCartItem(productId: Long): CartItem? {
         return cartItems.first { it.productId == productId }
     }
