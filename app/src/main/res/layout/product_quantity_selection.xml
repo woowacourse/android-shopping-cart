@@ -13,9 +13,6 @@
         <variable
             name="onClickCartItemCounter"
             type="woowacourse.shopping.view.cartcounter.OnClickCartItemCounter" />
-        <variable
-            name="cartItemCounter"
-            type="woowacourse.shopping.domain.model.CartItemCounter" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -27,14 +24,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="@{cartItemCounter.isSelected ? View.VISIBLE : View.GONE}"
+        android:visibility="@{product.cartItemCounter.isSelected ? View.VISIBLE : View.GONE}"
         android:background="@drawable/shape_border_not_line">
 
         <TextView
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{()->onClickCartItemCounter.clickDecrease(product,cartItemCounter)}"
+            android:onClick="@{()->onClickCartItemCounter.clickDecrease(product)}"
             android:text="-"
             android:textColor="@color/gray_5"
             android:textSize="22sp"
@@ -44,7 +41,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:text="@{String.valueOf(cartItemCounter.itemCount)}"
+            android:text="@{String.valueOf(product.cartItemCounter.itemCount)}"
             android:textColor="@color/gray_5"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -54,7 +51,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:gravity="center"
-            android:onClick="@{()->onClickCartItemCounter.clickIncrease(product,cartItemCounter)}"
+            android:onClick="@{()->onClickCartItemCounter.clickIncrease(product)}"
             android:text="+"
             android:textColor="@color/gray_5"
             android:textSize="22sp"
@@ -68,7 +65,7 @@
         android:src="@drawable/ic_plus_cart"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:onClick="@{()->onClickCartItemCounter.clickIncrease(product,cartItemCounter)}"
-        android:visibility="@{cartItemCounter.isSelected ? View.GONE : View.VISIBLE}" />
+        android:onClick="@{()->onClickCartItemCounter.clickIncrease(product)}"
+        android:visibility="@{product.cartItemCounter.isSelected ? View.GONE : View.VISIBLE}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

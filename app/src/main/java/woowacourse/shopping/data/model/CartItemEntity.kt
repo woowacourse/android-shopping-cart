@@ -18,8 +18,13 @@ data class CartItemEntity(
     fun toCartItem(): CartItem {
         return CartItem(
             id = id,
-            product = product,
-            cartItemCounter = CartItemCounter(count = count)
+            product = product.copy(
+                id = product.id,
+                cartItemCounter = CartItemCounter(count),
+                imageUrl = product.imageUrl,
+                name = product.name,
+                price = product.price,
+            ),
         )
     }
 

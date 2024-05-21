@@ -79,7 +79,7 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
             adapter.updateProducts(addedProducts = products)
         }
-        productListViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+        productListViewModel.errorEvent.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
                 ProductListEvent.LoadProductEvent.Fail ->
                     requireContext().makeToast(
@@ -90,6 +90,9 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
                     requireContext().makeToast(
                         getString(R.string.error_default),
                     )
+
+                ProductListEvent.UpdateProductEvent.Fail -> TODO()
+                ProductListEvent.DeleteProductEvent.Fail -> TODO()
             }
         }
     }
@@ -123,14 +126,13 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
     override fun clickIncrease(
         product: Product,
-        cartItemCounter: CartItemCounter
     ) {
-        cartItemCounter.selectItem()
-        val resultState = cartItemCounter.increase()
+        product.cartItemCounter.selectItem()
+        val resultState = product.cartItemCounter.increase()
         when (resultState) {
             ChangeCartItemResultState.Success -> {
                 adapter.updateProduct(product.id)
-                productListViewModel.updateShoppingCart(product,cartItemCounter)
+                productListViewModel.updateShoppingCart(product,product.cartItemCounter)
             }
 
             ChangeCartItemResultState.Fail -> requireContext().makeToast(
@@ -141,18 +143,17 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
     override fun clickDecrease(
         product: Product,
-        cartItemCounter: CartItemCounter
     ) {
-        val resultState = cartItemCounter.decrease()
+        val resultState = product.cartItemCounter.decrease()
         when (resultState) {
             ChangeCartItemResultState.Success -> {
                 adapter.updateProduct(product.id)
-                productListViewModel.updateShoppingCart(product,cartItemCounter)
+                productListViewModel.updateShoppingCart(product,product.cartItemCounter)
             }
 
             ChangeCartItemResultState.Fail -> {
                 product.cartItemCounter.unSelectItem()
-                productListViewModel.deleteCartItem(productId = product.id)
+                productListViewModel.deleteCartItem(product)
                 requireContext().makeToast(
                     getString(R.string.delete_cart_item),
                 )

@@ -52,7 +52,7 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
             ERROR_DATA_ID -> throw NoSuchDataException()
             else -> {
                 val itemId = cartItem?.id ?: throw NoSuchDataException()
-                val itemCounter = cartItem?.cartItemCounter ?: throw NoSuchDataException()
+                val itemCounter = cartItem?.product?.cartItemCounter ?: throw NoSuchDataException()
                 CartItemResult.Exists(
                     cartItemId = itemId,
                     counter = itemCounter,

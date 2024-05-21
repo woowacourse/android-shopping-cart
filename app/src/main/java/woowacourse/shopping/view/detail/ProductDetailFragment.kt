@@ -129,11 +129,11 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
         private const val PRODUCT_ID = "productId"
     }
 
-    override fun clickIncrease(product: Product, cartItemCounter: CartItemCounter) {
+    override fun clickIncrease(product: Product) {
         productDetailViewModel.increaseItemCounter()
     }
 
-    override fun clickDecrease(product: Product, cartItemCounter: CartItemCounter) {
+    override fun clickDecrease(product: Product) {
         productDetailViewModel.decreaseItemCounter()
     }
 }

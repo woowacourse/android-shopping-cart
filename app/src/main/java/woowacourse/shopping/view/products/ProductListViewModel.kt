@@ -24,9 +24,9 @@ class ProductListViewModel(
         MutableSingleLiveData()
     val productListEvent: SingleLiveData<ProductListEvent> get() = _productListEvent
 
-    private val _errorState: MutableSingleLiveData<ProductListEvent.ErrorEvent> =
+    private val _errorEvent: MutableSingleLiveData<ProductListEvent.ErrorEvent> =
         MutableSingleLiveData()
-    val errorState: SingleLiveData<ProductListEvent.ErrorEvent> get() = _errorState
+    val errorEvent: SingleLiveData<ProductListEvent.ErrorEvent> get() = _errorEvent
 
     fun loadPagingProduct() {
         try {
@@ -37,11 +37,11 @@ class ProductListViewModel(
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorState.postValue(
+                    _errorEvent.postValue(
                         ProductListEvent.LoadProductEvent.Fail
                     )
 
-                else -> _errorState.postValue(ProductListEvent.ErrorEvent.NotKnownError)
+                else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
     }
@@ -50,32 +50,51 @@ class ProductListViewModel(
         product: Product,
         itemCounter: CartItemCounter,
     ) {
-        val cartItemResult =
-            shoppingCartRepository.getCartItemResultFromProductId(productId = product.id)
-        when (cartItemResult) {
-            is CartItemResult.Exists -> {
-                shoppingCartRepository.updateCartItem(
-                    cartItemResult.cartItemId,
-                    itemCounter.itemCount
-                )
-            }
+        try {
+            val cartItemResult =
+                shoppingCartRepository.getCartItemResultFromProductId(productId = product.id)
+            when (cartItemResult) {
+                is CartItemResult.Exists -> {
+                    shoppingCartRepository.updateCartItem(
+                        cartItemResult.cartItemId,
+                        itemCounter.itemCount
+                    )
+                }
 
-            CartItemResult.NotExists -> {
-                shoppingCartRepository.addCartItem(product)
+                CartItemResult.NotExists -> {
+                    shoppingCartRepository.addCartItem(product)
+                }
+            }
+            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
+        } catch (e: Exception){
+            when (e){
+                is NoSuchDataException ->
+                    _errorEvent.postValue(ProductListEvent.UpdateProductEvent.Fail)
+                else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
     }
 
-    fun deleteCartItem(productId: Long) {
-        val cartItemResult =
-            shoppingCartRepository.getCartItemResultFromProductId(productId = productId)
-        when (cartItemResult) {
-            is CartItemResult.Exists -> {
-                shoppingCartRepository.deleteCartItem(cartItemResult.cartItemId)
-            }
+    fun deleteCartItem(product: Product) {
+        try{
+            val cartItemResult =
+                shoppingCartRepository.getCartItemResultFromProductId(productId = product.id)
+            when (cartItemResult) {
+                is CartItemResult.Exists -> {
+                    shoppingCartRepository.deleteCartItem(cartItemResult.cartItemId)
+                }
 
-            CartItemResult.NotExists -> {
-                // view toast NotExists
+                CartItemResult.NotExists -> {
+                    _errorEvent.postValue(ProductListEvent.DeleteProductEvent.Fail)
+                }
+            }
+            product.cartItemCounter.unSelectItem()
+            _productListEvent.postValue(ProductListEvent.DeleteProductEvent.Success(product.id))
+        } catch (e: Exception){
+            when(e){
+                is NoSuchDataException ->
+                    _errorEvent.postValue(ProductListEvent.DeleteProductEvent.Fail)
+                else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
     }

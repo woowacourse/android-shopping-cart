@@ -72,7 +72,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             app:product = "@{cartItem.product}"
-            app:cartItemCounter="@{cartItem.cartItemCounter}"
             app:layout_constraintBottom_toTopOf="@id/tv_cart_item_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_close"
