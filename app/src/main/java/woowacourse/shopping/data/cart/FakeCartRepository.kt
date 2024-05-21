@@ -11,25 +11,40 @@ class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRep
     private var id: Long = 0L
 
     override fun increaseQuantity(product: Product) {
+        var oldProductQuantity = product.quantity
+        val newProduct = product.copy(quantity = ++oldProductQuantity)
+
         val oldCartItem = cart.find { it.product.id == product.id }
         if (oldCartItem == null) {
-            cart.add(CartItem(id++, product, Quantity()))
+            cart.add(CartItem(id++, newProduct))
             return
         }
-        var quantity = oldCartItem.quantity
         cart.remove(oldCartItem)
-        cart.add(oldCartItem.copy(quantity = ++quantity))
+        cart.add(oldCartItem.copy(product = newProduct))
     }
 
     override fun decreaseQuantity(product: Product) {
+        var oldProductQuantity = product.quantity
+        val newProduct = product.copy(quantity = --oldProductQuantity)
+
         val oldCartItem = cart.find { it.product.id == product.id }
         oldCartItem ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
         cart.remove(oldCartItem)
-        if (oldCartItem.quantity.isMin()) {
+        if (oldProductQuantity.isMin()) {
             return
         }
-        var quantity = oldCartItem.quantity
-        cart.add(oldCartItem.copy(quantity = --quantity))
+        cart.add(oldCartItem.copy(product = newProduct))
+    }
+
+    override fun changeQuantity(product: Product, quantity: Quantity) {
+        val newProduct = product.copy(quantity = quantity)
+        val oldCartItem = cart.find { it.product.id == product.id }
+        if (oldCartItem == null) {
+            cart.add(CartItem(id++, newProduct))
+            return
+        }
+        cart.add(oldCartItem.copy(product = newProduct))
+        cart.remove(oldCartItem)
     }
 
     override fun deleteCartItem(cartItem: CartItem) {
@@ -49,7 +64,7 @@ class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRep
 
     override fun totalQuantityCount(): Int {
         return cart.fold(0) { total, cartItem ->
-            total + cartItem.quantity.count
+            total + cartItem.product.quantity.count
         }
     }
 

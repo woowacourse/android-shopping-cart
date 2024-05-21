@@ -2,6 +2,7 @@ package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.concurrent.Volatile
 
@@ -9,6 +10,11 @@ interface CartRepository {
     fun increaseQuantity(product: Product)
 
     fun decreaseQuantity(product: Product)
+
+    fun changeQuantity(
+        product: Product,
+        quantity: Quantity,
+    )
 
     fun deleteCartItem(cartItem: CartItem)
 
