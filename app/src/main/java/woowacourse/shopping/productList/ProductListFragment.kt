@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.TwentyItemsPagingStrategy
+import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.cart.ShoppingCartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.productDetail.ProductDetailFragment
@@ -20,7 +21,11 @@ class ProductListFragment : Fragment() {
     private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
 
-    private val factory = ProductListViewModelFactory(DummyShoppingProductsRepository(TwentyItemsPagingStrategy()))
+    private val factory: UniversalViewModelFactory =
+        UniversalViewModelFactory {
+            ProductListViewModel(DummyShoppingProductsRepository(TwentyItemsPagingStrategy()))
+        }
+
     private val viewModel: ProductListViewModel by lazy {
         ViewModelProvider(this, factory)[ProductListViewModel::class.java]
     }

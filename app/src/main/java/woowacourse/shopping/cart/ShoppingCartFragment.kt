@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.FiveCartItemPagingStrategy
+import woowacourse.shopping.UniversalViewModelFactory
 import woowacourse.shopping.databinding.FragmentCartListBinding
 import woowacourse.shopping.repository.DummyShoppingCartItemRepository
 
@@ -14,7 +15,8 @@ class ShoppingCartFragment : Fragment() {
     private var _binding: FragmentCartListBinding? = null
     private val binding get() = _binding ?: throw IllegalStateException("FragmentCartListBinding is not initialized")
 
-    private val factory = ShoppingCartViewModelFactory(DummyShoppingCartItemRepository(FiveCartItemPagingStrategy()))
+    private val factory: UniversalViewModelFactory =
+        UniversalViewModelFactory { ShoppingCartViewModel(DummyShoppingCartItemRepository(FiveCartItemPagingStrategy())) }
 
     private val viewModel: ShoppingCartViewModel by lazy {
         ViewModelProvider(this, factory)[ShoppingCartViewModel::class.java]
