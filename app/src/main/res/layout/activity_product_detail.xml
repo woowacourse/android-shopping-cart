@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{@string/product_price(viewModel.product.price)}"
+            android:text="@{@string/product_price(viewModel.productTotalPrice)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="14dp"
+            app:bundle="@{viewModel.addCartQuantityBundle}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/divider_product_detail" />
 
