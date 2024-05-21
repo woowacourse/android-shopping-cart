@@ -12,7 +12,18 @@ object CartsImpl : CartDao {
     override fun itemSize() = carts.size
 
     override fun save(cart: Cart): Long {
-        carts[id] = cart.copy(id = id)
+        val oldCart =
+            carts.keys.find { it == cart.id }?.let {
+                carts[it]
+            }
+
+        if (oldCart == null) {
+            carts[id] = cart.copy(id = id)
+            return id++
+        }
+        val count = oldCart.product.count + cart.product.count
+        carts.remove(oldCart.id)
+        carts[id] = oldCart.copy(product = oldCart.product.copy(count = count))
         return id++
     }
 
