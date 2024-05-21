@@ -69,6 +69,14 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
         if (updateDataId== ERROR_UPDATE_DATA_ID) throw NoSuchDataException()
     }
 
+    override fun getTotalCartItemCount(): Int {
+        var totalCount  = 0
+        thread {
+            totalCount = cartItemDao.getTotalItemCount()
+        }.join()
+        return totalCount
+    }
+
     companion object {
         const val CART_ITEM_LOAD_PAGING_SIZE = 5
         const val CART_ITEM_PAGE_SIZE = 3

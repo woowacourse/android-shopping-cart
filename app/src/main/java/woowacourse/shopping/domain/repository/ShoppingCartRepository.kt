@@ -17,4 +17,6 @@ interface ShoppingCartRepository {
     fun getCartItemResultFromProductId(productId: Long): CartItemResult
 
     fun updateCartItem(itemId : Long,count: Int)
+
+    fun getTotalCartItemCount(): Int
 }
