@@ -2,7 +2,7 @@ package woowacourse.shopping.data
 
 import woowacourse.shopping.model.Product
 
-class CartRepository {
+object CartRepository {
 
     private val cartProducts: MutableList<Product> = mutableListOf()
     fun addCartProduct(product: Product) {
