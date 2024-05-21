@@ -3,7 +3,6 @@ package woowacourse.shopping.ui.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -23,23 +22,21 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         initBinding()
+        initToolbar()
         setCartAdapter()
         observeCartItems()
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_cart)
         binding.vm = viewModel
         binding.lifecycleOwner = this
+    }
+
+    private fun initToolbar() {
+        binding.toolbarCart.setNavigationOnClickListener {
+            finish()
+        }
     }
 
     private fun observeCartItems() {

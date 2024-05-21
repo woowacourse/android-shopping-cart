@@ -1,8 +1,6 @@
 package woowacourse.shopping.ui.products
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
@@ -33,16 +31,21 @@ class ProductContentsActivity : AppCompatActivity() {
 
         initBinding()
         setProductAdapter()
+        initToolbar()
         observeProductItems()
         loadItems()
         setOnRecyclerViewScrollListener()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_cart -> CartActivity.startActivity(this)
+    private fun initToolbar() {
+        binding.toolbarProducts.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_cart -> {
+                    CartActivity.startActivity(this)
+                }
+            }
+            false
         }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initBinding() {
@@ -93,11 +96,6 @@ class ProductContentsActivity : AppCompatActivity() {
             .findLastCompletelyVisibleItemPosition() == adapterItemSize()
 
     private fun adapterItemSize() = adapter.itemCount - OFFSET
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_product_contents, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
 
     companion object {
         private const val OFFSET = 1

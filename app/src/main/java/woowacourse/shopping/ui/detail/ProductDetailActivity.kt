@@ -3,8 +3,6 @@ package woowacourse.shopping.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -32,21 +30,10 @@ class ProductDetailActivity :
         super.onCreate(savedInstanceState)
 
         initBinding()
+        initToolbar()
         showProductDetail()
         setOnListener()
         observeErrorMessage()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_product_detail, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_close -> finish()
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onClick() {
@@ -62,6 +49,15 @@ class ProductDetailActivity :
 
     override fun minusCount() {
         viewModel.minusCount()
+    }
+
+    private fun initToolbar() {
+        binding.toolbarDetail.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_close -> finish()
+            }
+            false
+        }
     }
 
     private fun initBinding() {

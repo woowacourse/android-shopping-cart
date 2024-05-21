@@ -25,14 +25,28 @@
         android:layout_height="match_parent"
         tools:context=".ui.detail.ProductDetailActivity">
 
-        <ImageView
-            android:id="@+id/iv_product_image"
-            android:layout_width="match_parent"
-            android:layout_height="360dp"
-            android:scaleType="fitXY"
-            app:imageUrl="@{vm.product.imageUrl}"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_detail"
+            style="@style/ToolbarStyle"
+            app:layout_constraintBottom_toTopOf="@+id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/menu_product_detail"
+            app:title="@string/app_name">
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <ImageView
+            android:id="@+id/iv_product_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            app:imageUrl="@{vm.product.imageUrl}"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
