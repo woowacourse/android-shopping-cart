@@ -35,6 +35,24 @@
             shopping:productThumbnail="@{product.imageSource}"
             tools:src="@drawable/ic_launcher_background" />
 
+        <include
+            layout="@layout/layout_add_to_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_detail"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="12dp"/>
+
+        <include
+            layout="@layout/layout_quantity_manipulation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_detail"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="12dp"/>
+
         <TextView
             android:id="@+id/tv_product_title_detail"
             android:layout_width="0dp"

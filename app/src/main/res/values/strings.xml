@@ -19,4 +19,7 @@
     <string name="format_price">%,d원</string>
     <string name="navigation_previous_button"><![CDATA[<]]></string>
     <string name="navigation_next_button"><![CDATA[>]]></string>
+
+    <string name="button_minus">-</string>
+    <string name="button_plus">+</string>
 </resources>
