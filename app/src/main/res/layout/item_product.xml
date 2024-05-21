@@ -64,11 +64,11 @@
             android:layout_height="48dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="68dp"
+            android:onClick="@{()->viewModel.onItemPlusButtonClick(product.id)}"
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{()->viewModel.onItemPlusButtonClick(product.id)}"
-            app:setVisibleByCondition="@{viewModel.isItemPlusButtonVisible[product.idInt]}"/>
+            app:setVisibleByCondition="@{viewModel.isItemPlusButtonVisible[product.idInt]}" />
 
         <LinearLayout
             android:layout_width="126dp"
@@ -76,10 +76,10 @@
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="68dp"
             android:background="@color/white"
-            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:setVisibleByCondition="@{!(viewModel.isItemPlusButtonVisible[product.idInt])}">
 
             <TextView
                 android:layout_width="42dp"
@@ -87,13 +87,14 @@
                 android:gravity="center"
                 android:text="-"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="@{()->viewModel.onItemDecreaseButtonClick(product.id)}"/>
 
             <TextView
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="1"
+                android:text="@{Integer.toString(viewModel.itemCount[product.idInt])}"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -103,7 +104,8 @@
                 android:gravity="center"
                 android:text="+"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="@{()->viewModel.onItemIncreaseButtonClick(product.id)}"/>
 
         </LinearLayout>
 

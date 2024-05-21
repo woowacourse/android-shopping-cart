@@ -20,13 +20,12 @@ object CommonBindingAdapters {
     @BindingAdapter("setVisibleByCondition")
     @JvmStatic
     fun setVisibleByCondition(
-        view: ImageView,
+        view: View,
         condition: Boolean,
     ) {
-        if (condition)
-            {
-                view.visibility = View.VISIBLE
-            } else {
+        if (condition) {
+            view.visibility = View.VISIBLE
+        } else {
             view.visibility = View.INVISIBLE
         }
     }
