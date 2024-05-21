@@ -11,14 +11,20 @@ object DefaultCart : CartDataSource {
         productId: Long,
         quantity: Int,
     ): Long {
-        cartItems.add(
-            CartItem(
-                id = id,
-                productId = productId,
-                quantity = quantity,
-            ),
-        )
-        return id++
+        val itemIndex = cartItems.indexOfFirst { productId == it.productId }
+        if (itemIndex == -1) {
+            cartItems.add(
+                CartItem(
+                    id = id,
+                    productId = productId,
+                    quantity = quantity,
+                ),
+            )
+            return id++
+        }
+        val cartItem = cartItems[itemIndex]
+        cartItems[itemIndex] = cartItem.copy(quantity = cartItem.quantity + quantity)
+        return cartItem.id
     }
 
     override fun deleteCartItem(cartItemId: Long): Long {
