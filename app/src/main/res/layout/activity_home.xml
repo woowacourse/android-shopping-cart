@@ -8,6 +8,10 @@
         <import type="android.view.View" />
 
         <variable
+            name="homeClickListener"
+            type="woowacourse.shopping.presentation.home.HomeClickListener" />
+
+        <variable
             name="viewModel"
             type="woowacourse.shopping.presentation.home.viewmodel.HomeViewModel" />
 
@@ -40,6 +44,24 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:src="@drawable/ic_mint_round"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@{String.valueOf(viewModel.totalCartCount)}"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/ic_mint_round"
+                    android:textColor="@color/white"
+                    android:layout_height="wrap_content"/>
+
+                <ImageView
+                    android:id="@+id/iv_shopping_cart"
+                    android:onClick="@{() -> homeClickListener.moveToCart()}"
+                    android:src="@drawable/ic_shopping_cart"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_height="wrap_content"/>
 
             </androidx.appcompat.widget.Toolbar>
 
