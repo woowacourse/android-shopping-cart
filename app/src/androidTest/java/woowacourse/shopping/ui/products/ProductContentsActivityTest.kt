@@ -45,7 +45,7 @@ class ProductContentsActivityTest {
 
     @Test
     fun `화면이_띄워지면_장바구니_이동_버튼이_보인다`() {
-        onView(withId(R.id.menu_cart))
+        onView(withId(R.id.iv_cart))
             .check(matches(isDisplayed()))
     }
 

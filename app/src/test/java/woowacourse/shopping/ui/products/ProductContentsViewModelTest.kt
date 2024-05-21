@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 
@@ -17,7 +18,7 @@ class ProductContentsViewModelTest {
     @BeforeEach
     fun setUp() {
         ProductsImpl.deleteAll()
-        viewModel = ProductContentsViewModel(ProductsImpl)
+        viewModel = ProductContentsViewModel(ProductsImpl, CartsImpl)
     }
 
     @Test

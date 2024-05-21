@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.products
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
+import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
@@ -23,7 +25,7 @@ class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
     private lateinit var adapter: ProductAdapter
     private val viewModel: ProductContentsViewModel by viewModels {
-        ProductContentsViewModelFactory(ProductsImpl)
+        ProductContentsViewModelFactory(ProductsImpl, CartsImpl)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,14 +39,14 @@ class ProductContentsActivity : AppCompatActivity() {
         setOnRecyclerViewScrollListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadCartItems()
+    }
+
     private fun initToolbar() {
-        binding.toolbarProducts.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.iv_cart -> {
-                    CartActivity.startActivity(this)
-                }
-            }
-            false
+        binding.ivCart.setOnClickListener {
+            CartActivity.startActivity(this)
         }
     }
 
@@ -105,4 +107,9 @@ class ProductContentsActivity : AppCompatActivity() {
 @BindingAdapter("imageUrl")
 fun ImageView.bindUrlToImage(imageUrl: String?) {
     urlToImage(context, imageUrl)
+}
+
+@BindingAdapter("isVisible")
+fun TextView.setIsVisible(isVisible: Boolean) {
+    visibility = if (isVisible) View.VISIBLE else View.GONE
 }
