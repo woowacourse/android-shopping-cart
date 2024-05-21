@@ -7,6 +7,8 @@
     <string name="cart_item_title">cart</string>
     <string name="product_detail_price">가격</string>
     <string name="load_more">더보기</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
 
     <string name="product_detail_add_cart">장바구니 담기</string>
     <string name="add_cart_success_title">장바구니 담기 완료</string>
