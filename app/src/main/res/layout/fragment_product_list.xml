@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.view.products.ProductListViewModel" />
+
+        <variable
+            name="productListActionHandler"
+            type="woowacourse.shopping.view.products.ProductListActionHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true">
+
+        <View
+            android:id="@+id/vw_product_list_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/gray_5"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/top_bar_margin_start"
+            android:text="@string/product_list_page_title_text"
+            android:textColor="@color/white"
+            android:textSize="@dimen/top_bar_font_size_title"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
+            app:layout_constraintStart_toStartOf="@id/vw_product_list_top_bar"
+            app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/top_bar_margin_end"
+            android:background="@android:color/transparent"
+            android:onClick="@{()->productListActionHandler.onShoppingCartButtonClicked()}"
+            android:src="@drawable/ic_cart"
+            app:layout_constraintBottom_toBottomOf="@id/vw_product_list_top_bar"
+            app:layout_constraintEnd_toEndOf="@id/vw_product_list_top_bar"
+            app:layout_constraintTop_toTopOf="@id/vw_product_list_top_bar" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_products"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="14dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vw_product_list_top_bar"
+            app:spanCount="2"
+            tools:listitem="@layout/item_product" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

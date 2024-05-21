@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Shopping</string>
+    <string name="formatted_price">%1$,d원</string>
+    <string name="add_cart_text">장바구니 담기</string>
+
+    <string name="max_paging_data_message">모든 데이터가 로드 되었습니다.</string>
+    <string name="error_save_cart_item_message">장바구니에 담기지 않았습니다!</string>
+    <string name="success_save_cart_item_message">장바구니에 담겼습니다!</string>
+    <string name="error_load_data_message">데이터가 없습니다!</string>
+    <string name="shopping_cart_page_title_text">Cart</string>
+    <string name="product_detail_price_header">가격</string>
+    <string name="product_list_page_title_text">Shopping</string>
+    <string name="product_list_more_data_button">더보기</string>
 </resources>
