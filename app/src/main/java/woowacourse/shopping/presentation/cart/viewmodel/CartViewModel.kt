@@ -56,10 +56,8 @@ class CartViewModel(
             cartItems.zip(products).map {
                 Order(
                     cartItemId = it.first.id,
-                    image = it.second.imageSource,
-                    productName = it.second.name,
                     quantity = it.first.quantity,
-                    price = it.first.quantity * it.second.price,
+                    product = it.second,
                 )
             }
 

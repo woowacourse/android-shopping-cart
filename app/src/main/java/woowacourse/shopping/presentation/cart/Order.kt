@@ -1,9 +1,9 @@
 package woowacourse.shopping.presentation.cart
 
+import woowacourse.shopping.data.model.Product
+
 data class Order(
     val cartItemId: Long,
-    val productName: String,
-    val image: String,
     val quantity: Int,
-    val price: Int,
+    val product: Product,
 )
