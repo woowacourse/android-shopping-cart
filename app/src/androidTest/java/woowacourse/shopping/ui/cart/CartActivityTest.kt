@@ -16,6 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
+import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.ui.cart.adapter.CartViewHolder
@@ -133,9 +134,9 @@ class CartActivityTest {
         @BeforeClass
         fun setUp() {
             repeat(5) {
-                CartsImpl.save(MAC_BOOK)
+                CartsImpl.save(Cart(product = MAC_BOOK, count = 1))
             }
-            CartsImpl.save(IPHONE)
+            CartsImpl.save(Cart(product = IPHONE, count = 1))
         }
     }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
+import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
@@ -31,33 +32,33 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 상품을 담으면 장바구니 화면에서 보여야 한다`() {
         // given
-        CartsImpl.save(CHAIR)
-        CartsImpl.save(CAR)
-        CartsImpl.save(UMBRELLA)
+        CartsImpl.save(Cart(product = CHAIR, count = 1))
+        CartsImpl.save(Cart(product = CAR, count = 1))
+        CartsImpl.save(Cart(product = UMBRELLA, count = 1))
 
         // when
         viewModel = CartViewModel(CartsImpl)
 
         // then
-        assertThat(viewModel.cart.getOrAwaitValue()[0].name).isEqualTo("의자")
-        assertThat(viewModel.cart.getOrAwaitValue()[1].name).isEqualTo("자동차")
-        assertThat(viewModel.cart.getOrAwaitValue()[2].name).isEqualTo("우산")
+        assertThat(viewModel.cart.getOrAwaitValue()[0].product.name).isEqualTo("의자")
+        assertThat(viewModel.cart.getOrAwaitValue()[1].product.name).isEqualTo("자동차")
+        assertThat(viewModel.cart.getOrAwaitValue()[2].product.name).isEqualTo("우산")
     }
 
     @Test
     fun `상품을 지울 수 있어야 한다`() {
         // given
-        CartsImpl.save(CHAIR)
-        val productId = CartsImpl.save(CAR)
-        CartsImpl.save(UMBRELLA)
+        CartsImpl.save(Cart(product = CHAIR, count = 1))
+        val productId = CartsImpl.save(Cart(product = CAR, count = 1))
+        CartsImpl.save(Cart(product = UMBRELLA, count = 1))
 
         // when
         viewModel = CartViewModel(CartsImpl)
         viewModel.removeCartItem(productId)
 
         // then
-        assertThat(viewModel.cart.getOrAwaitValue()[0].name).isEqualTo("의자")
-        assertThat(viewModel.cart.getOrAwaitValue()[1].name).isEqualTo("우산")
+        assertThat(viewModel.cart.getOrAwaitValue()[0].product.name).isEqualTo("의자")
+        assertThat(viewModel.cart.getOrAwaitValue()[1].product.name).isEqualTo("우산")
     }
 
     companion object {

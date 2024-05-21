@@ -3,6 +3,7 @@ package woowacourse.shopping.ui.detail.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartDao
 import woowacourse.shopping.model.data.ProductDao
@@ -35,7 +36,7 @@ class ProductDetailViewModel(
 
     fun addProductToCart() {
         _product.value?.let {
-            cartDao.save(it)
+            cartDao.save(Cart(product = it, count = 1))
         }
     }
 

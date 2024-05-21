@@ -1,20 +1,20 @@
 package woowacourse.shopping.model.data
 
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Cart
 
 interface CartDao {
     fun itemSize(): Int
 
-    fun save(product: Product): Long
+    fun save(cart: Cart): Long
 
-    fun find(id: Long): Product
+    fun find(id: Long): Cart
 
-    fun findAll(): List<Product>
+    fun findAll(): List<Cart>
 
     fun getProducts(
         page: Int,
         pageSize: Int,
-    ): List<Product>
+    ): List<Cart>
 
     fun deleteAll()
 
