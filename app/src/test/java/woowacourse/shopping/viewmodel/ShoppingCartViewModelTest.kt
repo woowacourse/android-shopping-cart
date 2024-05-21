@@ -6,9 +6,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.DummyShoppingRepository
+import woowacourse.shopping.UserShoppingCartRepository
 import woowacourse.shopping.domain.ShoppingCartItem
-import woowacourse.shopping.uimodel.toProductUiModel
 import woowacourse.shopping.shoppingcart.ShoppingCartViewModel
+import woowacourse.shopping.uimodel.toCartItemUiModel
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
 import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue
 
@@ -18,16 +19,16 @@ class ShoppingCartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ShoppingCartViewModel(DummyShoppingRepository)
+        viewModel = ShoppingCartViewModel(UserShoppingCartRepository)
 
         val cartItem = ShoppingCartItem(DummyShoppingRepository.productById(STUB_PRODUCT_ID))
-        val shoppingCart = DummyShoppingRepository.shoppingCart(0)
-        DummyShoppingRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
+        val shoppingCart = UserShoppingCartRepository.shoppingCart(0)
+        UserShoppingCartRepository.updateShoppingCart(shoppingCart.addItem(cartItem))
     }
 
     @AfterEach
     fun tearDown() {
-        DummyShoppingRepository.deleteShoppingCartItem(STUB_PRODUCT_ID)
+        UserShoppingCartRepository.deleteShoppingCartItem(STUB_PRODUCT_ID)
     }
 
     @Test
@@ -36,24 +37,25 @@ class ShoppingCartViewModelTest {
         viewModel.loadCartItems(CURRENT_PAGE)
 
         // given
-        val actual = viewModel.cartItems.getOrAwaitValue()
+        val actual = viewModel.cartItemUiModels.getOrAwaitValue()
 
         // then
-        assertThat(actual).containsExactly(DummyShoppingRepository.productById(0).toProductUiModel())
+        assertThat(actual).containsExactly(
+            UserShoppingCartRepository.shoppingCart(0).items[0].toCartItemUiModel())
     }
 
     @Test
     fun `데이터를 삭제하면, 카트 아이템의 개수가 1개 줄어든다`() {
         // when
         viewModel.loadCartItems(CURRENT_PAGE)
-        val previous = viewModel.cartItems.getOrAwaitValue()
+        val previous = viewModel.cartItemUiModels.getOrAwaitValue()
         assertThat(previous.size).isEqualTo(1)
 
         // given
         viewModel.deleteCartItem(0)
 
         // then
-        val actual = viewModel.cartItems.getOrAwaitValue()
+        val actual = viewModel.cartItemUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(0)
     }
 

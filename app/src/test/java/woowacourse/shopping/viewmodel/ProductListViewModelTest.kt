@@ -21,9 +21,6 @@ class ProductListViewModelTest {
 
     @Test
     fun `0부터 19의 위치에 해당하는 데이터를 로드한다`() {
-        // when
-        viewModel.loadProducts(0)
-
         // given
         val actual = viewModel.products.getOrAwaitValue()
 
@@ -39,22 +36,18 @@ class ProductListViewModelTest {
         val secondPosition = 20
 
         // given
-        viewModel.loadProducts(firstPosition)
         val firstActual = viewModel.products.getOrAwaitValue()
 
         viewModel.loadProducts(secondPosition)
         val secondActual = viewModel.products.getOrAwaitValue()
 
         // then
-        assertThat(firstActual).containsAll(secondActual.subList(0, 19))
-        assertThat(firstActual).doesNotContainAnyElementsOf(secondActual.subList(20, 40))
+        assertThat(firstActual).containsAll(secondActual.subList(firstPosition, 19))
+        assertThat(firstActual).doesNotContainAnyElementsOf(secondActual.subList(secondPosition, 40))
     }
 
     @Test
     fun `데이터를 로드할 때 마다, 데이터의 개수가 20개씩 추가된다`() {
-        // when
-        viewModel.loadProducts(0)
-
         // given
         val firstActual = viewModel.products.getOrAwaitValue()
 
