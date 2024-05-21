@@ -3,7 +3,7 @@ package woowacourse.shopping.data.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import woowacourse.shopping.data.db.dao.ProductDao
-import woowacourse.shopping.data.db.entity.ProductEntity
+import woowacourse.shopping.data.db.model.ProductEntity
 
 @Database(
     version = 1,
