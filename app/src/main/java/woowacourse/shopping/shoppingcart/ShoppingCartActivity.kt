@@ -21,7 +21,7 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         binding = ActivityShoppingCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.lifecycleOwner = this
-        binding.vm = viewModel
+        binding.viewModel = viewModel
 
         initShoppingCart()
 

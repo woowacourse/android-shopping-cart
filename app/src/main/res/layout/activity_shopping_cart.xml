@@ -6,7 +6,7 @@
     <data>
 
         <variable
-            name="vm"
+            name="viewModel"
             type="woowacourse.shopping.shoppingcart.ShoppingCartViewModel" />
 
     </data>
@@ -32,8 +32,8 @@
             android:layout_width="42dp"
             android:layout_height="0dp"
             android:background="@drawable/ic_left"
-            android:enabled="@{vm.isLeftBtnEnable}"
-            android:onClick="@{() -> vm.previousPage()}"
+            android:enabled="@{viewModel.isLeftBtnEnable}"
+            android:onClick="@{() -> viewModel.previousPage()}"
             android:text="@string/btn_left_text"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/tv_shopping_cart_page_count"
@@ -50,7 +50,7 @@
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="62dp"
             android:fontFamily="@font/roboto"
-            android:text="@{String.valueOf(vm.currentPage)}"
+            android:text="@{String.valueOf(viewModel.currentPage)}"
             android:textColor="@color/gray_700"
             android:textSize="22dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -64,8 +64,8 @@
             android:layout_width="42dp"
             android:layout_height="0dp"
             android:background="@drawable/sel_shopping_cart_right_btn"
-            android:enabled="@{vm.isRightBtnEnable}"
-            android:onClick="@{()-> vm.nextPage()}"
+            android:enabled="@{viewModel.isRightBtnEnable}"
+            android:onClick="@{()-> viewModel.nextPage()}"
             android:src="@drawable/ic_close"
             android:text="@string/btn_right_text"
             android:textColor="@color/white"
