@@ -8,6 +8,10 @@
         <variable
             name="product"
             type="woowacourse.shopping.model.Product" />
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.ui.products.ProductContentsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +66,9 @@
             android:layout_marginBottom="68dp"
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            android:onClick="@{()->viewModel.onItemPlusButtonClick(product.id)}"
+            app:setVisibleByCondition="@{viewModel.isItemPlusButtonVisible[product.idInt]}"/>
 
         <LinearLayout
             android:layout_width="126dp"

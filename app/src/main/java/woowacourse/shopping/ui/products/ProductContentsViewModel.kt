@@ -14,10 +14,21 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
     val products: LiveData<List<Product>> get() = _products
 
+    private val _isItemPlusButtonVisible: MutableLiveData<MutableList<Boolean>> = MutableLiveData()
+    val isItemPlusButtonVisible: LiveData<MutableList<Boolean>> get() = _isItemPlusButtonVisible
+
+    fun onItemPlusButtonClick(id: Long) {
+        val temp = _isItemPlusButtonVisible.value
+        temp?.set(id.toInt(), false)
+        _isItemPlusButtonVisible.value = temp
+    }
+
     fun loadProducts() {
         items.clear()
-        items.addAll(productDao.findAll())
+        val allProducts = productDao.findAll()
+        items.addAll(allProducts)
         _products.value = getProducts()
+        _isItemPlusButtonVisible.value = List(allProducts.size) { true }.toMutableList()
     }
 
     private fun getProducts(): List<Product> {

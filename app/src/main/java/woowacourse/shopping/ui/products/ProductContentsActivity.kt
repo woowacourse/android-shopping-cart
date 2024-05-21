@@ -36,7 +36,7 @@ class ProductContentsActivity : AppCompatActivity() {
 
     private fun setProductAdapter() {
         adapter =
-            ProductAdapter { productId ->
+            ProductAdapter(viewModel, this) { productId ->
                 ProductDetailActivity.startActivity(this, productId)
             }
         binding.rvProducts.adapter = adapter
