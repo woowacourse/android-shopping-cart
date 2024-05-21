@@ -22,6 +22,14 @@ class FakeCartRepository(
         return id++
     }
 
+    override fun removeCartItem(
+        productId: Long,
+        quantity: Int,
+    ): Long {
+        cartItems.removeIf { it.productId == productId }
+        return productId
+    }
+
     override fun removeAllCartItem(cartItemId: Long): Long {
         cartItems.removeIf { it.id == cartItemId }
         return cartItemId
