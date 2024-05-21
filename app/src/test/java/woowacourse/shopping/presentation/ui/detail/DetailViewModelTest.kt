@@ -29,7 +29,6 @@ class DetailViewModelTest {
     fun setUp() {
         testCartRepository = FakeCartRepositoryImpl()
         every { shoppingRepository.findProductItem(any()) } returns product
-        // every { cartRepository.insert(any()) }
         viewModel = DetailViewModel(testCartRepository, shoppingRepository, 0L)
     }
 

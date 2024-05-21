@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import io.mockk.*
+import io.mockk.every
+import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -51,13 +52,13 @@ class ShoppingViewModelTest {
     fun `더보기 버튼을 노출할 수 있다`() {
         viewModel.showLoadMoreBtn()
 
-        assertEquals(true, viewModel.isBtnVisibleCondition.value)
+        assertEquals(true, viewModel.showLoadMore.value)
     }
 
     @Test
     fun `더보기 버튼을 숨길 수 있다`() {
         viewModel.hideLoadMoreBtn()
 
-        assertEquals(false, viewModel.isBtnVisibleCondition.value)
+        assertEquals(false, viewModel.showLoadMore.value)
     }
 }

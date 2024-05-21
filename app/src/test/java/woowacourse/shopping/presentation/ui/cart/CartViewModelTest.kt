@@ -1,35 +1,21 @@
 package woowacourse.shopping.presentation.ui.cart
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.ui.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.testCartItem0
-import woowacourse.shopping.presentation.ui.testProduct0
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
-    private lateinit var viewModel: CartViewModel
-    private lateinit var testCartRepository: CartRepository
-
-    @BeforeEach
-    fun setUp() {
-        testCartRepository = FakeCartRepositoryImpl()
-        viewModel = CartViewModel(testCartRepository)
-        testCartRepository.deleteAll()
-    }
-
     @Test
     fun `장바구니에 담긴 상품이 비었을 때를 확인할 수 있다`() {
-        // given
-        testCartRepository.deleteAll()
-        viewModel.loadPage(0)
-
-        // when
+        // given & when
+        val cartRepository = FakeCartRepositoryImpl(emptyList<CartItem>().toMutableList())
+        val viewModel = CartViewModel(cartRepository)
         val state = viewModel.cartItemsState.getOrAwaitValue()
 
         // then
@@ -39,10 +25,8 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품을 확인할 수 있다`() {
         // given
-        testCartRepository.insert(
-            product = testProduct0,
-            quantity = 1,
-        )
+        val cartRepository = FakeCartRepositoryImpl(List(1) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
 
         // then
         val state = viewModel.cartItemsState.getOrAwaitValue()
@@ -52,15 +36,8 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 5개 미만일 때 페이지 컨트롤이 보이지 않는다`() {
         // given
-        repeat(4) {
-            testCartRepository.insert(
-                product = testProduct0,
-                quantity = 1,
-            )
-        }
-
-        // when
-        // viewModel.loadCartItems()
+        val cartRepository = FakeCartRepositoryImpl(List(4) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
 
         // then
         val isVisible = viewModel.isPageControlVisible.getOrAwaitValue()
@@ -70,12 +47,8 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담긴 상품이 5개 초과일 때 페이지 컨트롤이 보인다`() {
         // given
-        repeat(6) {
-            testCartRepository.insert(
-                product = testProduct0,
-                quantity = 1,
-            )
-        }
+        val cartRepository = FakeCartRepositoryImpl(List(6) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
 
         // when
         viewModel.loadPage(0)
@@ -88,13 +61,8 @@ class CartViewModelTest {
     @Test
     fun `아이템이 6개 이상이면 다음 페이지로 이동할 수 있다`() {
         // given
-        repeat(6) {
-            testCartRepository.insert(
-                product = testProduct0,
-                quantity = 1,
-            )
-        }
-        // viewModel.loadCartItems()
+        val cartRepository = FakeCartRepositoryImpl(List(6) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
 
         // when
         viewModel.loadNextPage()
@@ -107,14 +75,8 @@ class CartViewModelTest {
     @Test
     fun `첫 페이지에서 이전 페이지로 이동할 수 없다`() {
         // given
-        repeat(6) {
-            testCartRepository.insert(
-                product = testProduct0,
-                quantity = 1,
-            )
-        }
-        // viewModel.loadCartItems()
-
+        val cartRepository = FakeCartRepositoryImpl(List(6) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
         // when
         viewModel.loadPreviousPage()
 
@@ -127,11 +89,8 @@ class CartViewModelTest {
     @Test
     fun `아이템을 삭제할 수 있다`() {
         // given
-        testCartRepository.insert(
-            product = testProduct0,
-            quantity = 1,
-        )
-        // viewModel.loadCartItems()
+        val cartRepository = FakeCartRepositoryImpl(List(1) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
 
         // when
         viewModel.deleteItem(0)
@@ -144,12 +103,8 @@ class CartViewModelTest {
     @Test
     fun `아이템을 삭제하고 다음 페이지로 이동할 수 있다`() {
         // given
-        repeat(7) {
-            testCartRepository.insert(
-                product = testProduct0,
-                quantity = 1,
-            )
-        }
+        val cartRepository = FakeCartRepositoryImpl(List(7) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
         viewModel.loadPage(0)
 
         // when
@@ -164,13 +119,8 @@ class CartViewModelTest {
     @Test
     fun `아이템을 삭제하고 이전 페이지로 이동할 수 있다`() {
         // given
-        repeat(6) {
-            testCartRepository.insert(
-                product = testProduct0,
-                quantity = 1,
-            )
-        }
-        // viewModel.loadCartItems()
+        val cartRepository = FakeCartRepositoryImpl(List(6) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
 
         // when
         viewModel.deleteItem(0)
@@ -184,12 +134,8 @@ class CartViewModelTest {
     @Test
     fun `아이템이 6개일때 삭제하면 첫번째 페이지로 넘어가고 페이지 컨트롤이 보이지 않는다`() {
         // given
-        repeat(6) {
-            testCartRepository.insert(
-                product = testProduct0,
-                quantity = 1,
-            )
-        }
+        val cartRepository = FakeCartRepositoryImpl(List(6) { testCartItem0 }.toMutableList())
+        val viewModel = CartViewModel(cartRepository)
         viewModel.loadPage(0)
 
         // when
