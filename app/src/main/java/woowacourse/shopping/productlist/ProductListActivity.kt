@@ -26,10 +26,6 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         attachAdapter()
         showProducts()
 
-        binding.btnLoadMoreProducts.setOnClickListener {
-            viewModel.loadProducts(adapter.itemCount)
-        }
-
         supportActionBar?.title = "Shopping"
     }
 
@@ -39,7 +35,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     }
 
     private fun showProducts() {
-        viewModel.loadProducts(INITIAL_POSITION)
+        viewModel.loadProducts()
         viewModel.moreProducts.observe(this) { moreProducts ->
             adapter.submitList(moreProducts)
         }
@@ -60,9 +56,5 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     override fun onProductClicked(id: Long) {
         startActivity(ProductDetailActivity.newInstance(this, id))
-    }
-
-    companion object {
-        private const val INITIAL_POSITION = 0
     }
 }

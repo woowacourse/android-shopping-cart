@@ -43,7 +43,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/product_list_load_more_products"
-                android:visibility="@{vm.currentSize == vm.totalSize ? View.GONE : View.VISIBLE}"
+                android:onClick="@{() -> vm.loadProducts()}"
+                android:visibility="@{vm.products.size == vm.totalSize ? View.GONE: View.VISIBLE }"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rcv_product_list" />
 

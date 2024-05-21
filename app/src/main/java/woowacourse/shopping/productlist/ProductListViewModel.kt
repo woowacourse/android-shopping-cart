@@ -9,26 +9,21 @@ import woowacourse.shopping.ProductRepository
 class ProductListViewModel(
     private val repository: ProductRepository,
 ) : ViewModel() {
-    private val _products: MutableList<ProductUiModel> = mutableListOf()
-    val products: List<ProductUiModel>
-        get() = _products.toList()
-
-    private val _currentSize: MutableLiveData<Int> = MutableLiveData()
-    val currentSize: LiveData<Int> get() = _currentSize
+    private val _products: MutableLiveData<List<ProductUiModel>> = MutableLiveData(emptyList())
+    val products: LiveData<List<ProductUiModel>> get() = _products
 
     private val _moreProducts: MutableLiveData<List<ProductUiModel>> = MutableLiveData()
     val moreProducts: LiveData<List<ProductUiModel>> get() = _moreProducts
 
     val totalSize: Int = repository.productsTotalSize()
 
-    fun loadProducts(startPosition: Int) {
+    fun loadProducts() {
         runCatching {
-            repository.products(startPosition, PRODUCTS_OFFSET_SIZE)
+            repository.products(_products.value?.size ?: 0, PRODUCTS_OFFSET_SIZE)
         }.onSuccess { newProducts ->
             val newProductsUiModel = newProducts.map { it.toProductUiModel() }
-            _products.addAll(newProductsUiModel)
+            _products.value = newProductsUiModel + (_products.value ?: emptyList())
             _moreProducts.value = newProductsUiModel
-            _currentSize.value = _products.size
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
