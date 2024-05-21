@@ -40,7 +40,7 @@ class ProductContentsActivity : AppCompatActivity() {
     private fun initToolbar() {
         binding.toolbarProducts.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.menu_cart -> {
+                R.id.iv_cart -> {
                     CartActivity.startActivity(this)
                 }
             }
