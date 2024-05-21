@@ -2,8 +2,8 @@ package woowacourse.shopping.data.model
 
 data class CartItem(
     val id: Long = 1,
-    val productId: Long,
     val quantity: Int = 1,
+    val productId: Long,
 ) {
     init {
         require(id >= MINIMUM_ID) { EXCEPTION_ILLEGAL_ID }

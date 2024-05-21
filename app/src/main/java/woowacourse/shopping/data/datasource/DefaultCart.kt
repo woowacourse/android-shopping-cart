@@ -4,25 +4,33 @@ import woowacourse.shopping.data.model.CartItem
 import kotlin.math.min
 
 object DefaultCart : CartDataSource {
-    private val cartItems: MutableList<CartItem> = mutableListOf()
+    private val cartItems: MutableMap<Long, CartItem> = mutableMapOf()
     private var id: Long = 1
 
     override fun addCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
-        cartItems.add(
-            CartItem(
-                id = id,
-                productId = productId,
-                quantity = quantity,
-            ),
-        )
-        return id++
+        val existingCartItem = cartItems[productId]
+        if (existingCartItem == null) {
+            cartItems[productId] =
+                CartItem(
+                    id = id,
+                    quantity = quantity,
+                    productId = productId,
+                )
+            id++
+        } else {
+            cartItems[productId] =
+                existingCartItem.copy(
+                    quantity = quantity + 1,
+                )
+        }
+        return productId
     }
 
     override fun deleteCartItem(cartItemId: Long): Long {
-        cartItems.removeIf { it.id == cartItemId }
+        cartItems.values.removeIf { it.id == cartItemId }
         return cartItemId
     }
 
@@ -39,6 +47,6 @@ object DefaultCart : CartDataSource {
 
         if (fromIndex > toIndex) return emptyList()
 
-        return cartItems.subList(fromIndex, toIndex)
+        return cartItems.values.toList().subList(fromIndex, toIndex)
     }
 }
