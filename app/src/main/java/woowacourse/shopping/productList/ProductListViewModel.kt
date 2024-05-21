@@ -3,6 +3,8 @@ package woowacourse.shopping.productList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.MutableSingleLiveData
+import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.data.Product
 import woowacourse.shopping.repository.ShoppingProductsRepository
@@ -10,7 +12,7 @@ import woowacourse.shopping.repository.ShoppingProductsRepository
 class ProductListViewModel(
     private val productsRepository: ShoppingProductsRepository,
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(FIRST_PAGE),
-) : ViewModel() {
+) : ViewModel(), ProductRecyclerViewAdapter.OnProductItemClickListener {
     val currentPage: LiveData<Int> get() = _currentPage
 
     private val _loadedProducts: MutableLiveData<List<Product>> =
@@ -27,6 +29,9 @@ class ProductListViewModel(
         )
     val isLastPage: LiveData<Boolean> get() = _isLastPage
 
+    private var _detailProductDestinationId: MutableSingleLiveData<Int> = MutableSingleLiveData()
+    val detailProductDestinationId: SingleLiveData<Int> get() = _detailProductDestinationId
+
     fun loadNextPageProducts() {
         if (isLastPage.value == true) return
         _currentPage.value = _currentPage.value?.plus(PAGE_MOVE_COUNT)
@@ -40,7 +45,12 @@ class ProductListViewModel(
             }
     }
 
+    override fun onClick(productId: Int) {
+        _detailProductDestinationId.setValue(productId)
+    }
+
     companion object {
+        private val TAG = ProductListViewModel::class.java.simpleName
         private const val FIRST_PAGE = 1
         private const val PAGE_MOVE_COUNT = 1
     }

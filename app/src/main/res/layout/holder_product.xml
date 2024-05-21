@@ -11,7 +11,7 @@
 
         <variable
             name="onProductItemClickListener"
-            type="woowacourse.shopping.OnProductItemClickListener" />
+            type="woowacourse.shopping.productList.ProductRecyclerViewAdapter.OnProductItemClickListener" />
 
     </data>
 

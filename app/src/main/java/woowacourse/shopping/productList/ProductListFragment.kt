@@ -28,10 +28,9 @@ class ProductListFragment : Fragment() {
     private val adapter: ProductRecyclerViewAdapter by lazy {
         ProductRecyclerViewAdapter(
             viewModel.loadedProducts.value ?: emptyList(),
-        ) { productId -> navigateToProductDetail(productId) }
+            onProductItemClickListener = viewModel,
+        )
     }
-
-    private fun navigateToProductDetail(id: Int) = navigateToFragment(ProductDetailFragment.newInstance(id))
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,8 +83,19 @@ class ProductListFragment : Fragment() {
 
         binding.productListToolbar.setOnMenuItemClickListener(::navigateToMenuItem)
 
+        observeLoadedProducts()
+        observeDetailProductDestination()
+    }
+
+    private fun observeLoadedProducts() {
         viewModel.loadedProducts.observe(viewLifecycleOwner) { products ->
             adapter.updateData(products)
+        }
+    }
+
+    private fun observeDetailProductDestination() {
+        viewModel.detailProductDestinationId.observe(viewLifecycleOwner) { productId ->
+            navigateToProductDetail(productId)
         }
     }
 
@@ -100,6 +110,8 @@ class ProductListFragment : Fragment() {
         navigateToFragment(ShoppingCartFragment())
         return true
     }
+
+    private fun navigateToProductDetail(id: Int) = navigateToFragment(ProductDetailFragment.newInstance(id))
 
     private fun navigateToFragment(fragment: Fragment) {
         parentFragmentManager.beginTransaction().apply {

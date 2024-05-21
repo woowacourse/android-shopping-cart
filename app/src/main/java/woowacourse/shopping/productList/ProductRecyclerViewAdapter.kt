@@ -3,7 +3,6 @@ package woowacourse.shopping.productList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import woowacourse.shopping.OnProductItemClickListener
 import woowacourse.shopping.data.Product
 import woowacourse.shopping.databinding.HolderProductBinding
 
@@ -21,7 +20,8 @@ class ProductRecyclerViewAdapter(
                 parent,
                 false,
             ),
-        ) { onProductItemClickListener.onClick(it) }
+            onProductItemClickListener,
+        )
 
     override fun onBindViewHolder(
         holder: ProductsItemViewHolder,
@@ -33,5 +33,9 @@ class ProductRecyclerViewAdapter(
     fun updateData(newData: List<Product>) {
         this.values = newData
         notifyItemRangeInserted(values.size, newData.size)
+    }
+
+    interface OnProductItemClickListener {
+        fun onClick(productId: Int)
     }
 }
