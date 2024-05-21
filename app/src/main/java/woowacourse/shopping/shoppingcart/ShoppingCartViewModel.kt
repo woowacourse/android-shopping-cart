@@ -61,7 +61,7 @@ class ShoppingCartViewModel(
         runCatching {
             repository.deleteShoppingCartItem(productId)
         }.onSuccess {
-            if (_currentPage.value != totalPage.value) {
+            if (_currentPage.value != totalPage.value && totalPage.value != 0) {
                 loadCartItemOfNextPage()
             }
             updatePageCount()

@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ShoppingRepository
+import woowacourse.shopping.ProductRepository
 
 class ProductListViewModel(
-    private val repository: ShoppingRepository,
+    private val repository: ProductRepository,
 ) : ViewModel() {
     private val _products: MutableList<ProductUiModel> = mutableListOf()
     val products: List<ProductUiModel>
