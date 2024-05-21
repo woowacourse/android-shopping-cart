@@ -8,12 +8,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductListItem
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.ProductDetailActivity
-import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingAdapter
+import woowacourse.shopping.presentation.ui.shopping.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.shopping.adapter.ShoppingViewType
 import woowacourse.shopping.presentation.util.EventObserver
 
@@ -23,7 +24,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
 
     private val viewModel: ShoppingViewModel by viewModels { ViewModelFactory() }
 
-    private val adapter: ShoppingAdapter = ShoppingAdapter(this)
+    private val adapter: ProductListAdapter = ProductListAdapter(this)
 
     override fun initStartView(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
@@ -32,6 +33,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         initAdapter()
         observeErrorEventUpdates()
         observeProductUpdates()
+        observeRecentProductUpdates()
     }
 
     private fun initAdapter() {
@@ -44,10 +46,11 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     private fun getSpanManager() =
         object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
-                return if (adapter.getItemViewType(position) == ShoppingViewType.Product.value) {
-                    ShoppingViewType.Product.span
-                } else {
-                    ShoppingViewType.LoadMore.span
+                val viewTypeValue = adapter.getItemViewType(position)
+                return when (ShoppingViewType.of(viewTypeValue)) {
+                    ShoppingViewType.RecentProduct -> ShoppingViewType.RecentProduct.span
+                    ShoppingViewType.Product -> ShoppingViewType.Product.span
+                    ShoppingViewType.LoadMore -> ShoppingViewType.LoadMore.span
                 }
             }
         }
@@ -71,7 +74,29 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     }
 
     private fun handleFinishState(newProducts: UiState.Success<List<Product>>) {
-        adapter.insertItemsAtPosition(viewModel.maxPosition, newProducts.data)
+        val items =
+            newProducts.data.map {
+                ProductListItem.ShoppingProductItem(
+                    it.id,
+                    it.name,
+                    it.imgUrl,
+                    it.price,
+                )
+            }
+        adapter.insertProductItemsAtPosition(viewModel.maxPosition, items)
+    }
+
+    private fun observeRecentProductUpdates() {
+        viewModel.recentProducts.observe(this) { state ->
+            when (state) {
+                is UiState.Success ->
+                    adapter.insertRecentProductItems(
+                        ProductListItem.RecentProductItems(state.data),
+                    )
+
+                UiState.None -> {}
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
