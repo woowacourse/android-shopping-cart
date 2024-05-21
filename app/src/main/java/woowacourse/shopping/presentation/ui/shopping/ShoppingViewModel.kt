@@ -29,8 +29,10 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
     }
 
     private fun initializeProducts() {
-        calculateNextOffset()
-        val initialProducts = loadProducts(offset)
+        val nextOffSet = calculateNextOffset()
+        val initialProducts = loadProducts(nextOffSet)
+        if (nextOffSet != initialProducts.size) throw IllegalStateException("Something went wrong, please try again..")
+        offset = nextOffSet
         _products.postValue(initialProducts)
     }
 
@@ -47,13 +49,11 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
 
     private fun getProducts(): List<Product> {
         val currentOffset = offset
-        calculateNextOffset()
+        offset = calculateNextOffset()
         return loadProducts(currentOffset, offset)
     }
 
-    private fun calculateNextOffset() {
-        offset = Integer.min(offset + PAGE_SIZE, numberOfProduct)
-    }
+    private fun calculateNextOffset(): Int = Integer.min(offset + PAGE_SIZE, numberOfProduct)
 
     private fun loadProducts() {
         val currentProducts = products.value

@@ -2,6 +2,7 @@ package woowacourse.shopping.presentation.ui.shopping
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -51,12 +52,16 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         adapter = ShoppingAdapter(this)
         binding.rvProductList.adapter = adapter
 
-        viewModel.products.observe(
-            this,
-            Observer { products ->
-                adapter.loadData(products)
-            },
-        )
+        try {
+            viewModel.products.observe(
+                this,
+                Observer { products ->
+                    adapter.loadData(products)
+                },
+            )
+        } catch (exception: Exception) {
+            Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun checkLoadMoreBtnVisibility() {
