@@ -11,9 +11,9 @@ import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListPagingSource
 
-class ProductListViewModel(
-    productRepository: ProductRepository,
-) : BaseViewModel(), ProductListActionHandler {
+class ProductListViewModel(productRepository: ProductRepository) :
+    BaseViewModel(),
+    ProductListActionHandler {
     private val _uiState: MutableLiveData<ProductListUiState> =
         MutableLiveData(ProductListUiState())
     val uiState: LiveData<ProductListUiState> get() = _uiState
@@ -28,7 +28,7 @@ class ProductListViewModel(
         loadProductList()
     }
 
-    override fun navigateToProductDetail(productId: Int) {
+    override fun navigateToProductDetail(productId: Long) {
         _navigateAction.emit(ProductListNavigateAction.NavigateToProductDetail(productId = productId))
     }
 

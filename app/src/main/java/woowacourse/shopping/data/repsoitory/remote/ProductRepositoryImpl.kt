@@ -1,11 +1,11 @@
-package woowacourse.shopping.data.repsoitory
+package woowacourse.shopping.data.repsoitory.remote
 
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import kotlin.math.min
 
 class ProductRepositoryImpl(private val productList: MutableList<Product>) : ProductRepository {
-    override fun findProductById(id: Int): Result<Product> =
+    override fun findProductById(id: Long): Result<Product> =
         runCatching {
             productList.find { it.id == id } ?: throw NoSuchElementException()
         }

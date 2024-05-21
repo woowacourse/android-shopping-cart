@@ -10,7 +10,7 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
-import woowacourse.shopping.presentation.ui.shoppingcart.adapter.OrderListAdapter
+import woowacourse.shopping.presentation.ui.shoppingcart.adapter.CartProductsAdapter
 
 class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     override val layoutResourceId: Int get() = R.layout.activity_shopping_cart
@@ -19,7 +19,7 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
         ShoppingCartViewModel.factory((application as ShoppingApplication).shoppingCartRepository)
     }
 
-    private val adapter: OrderListAdapter by lazy { OrderListAdapter(viewModel) }
+    private val adapter: CartProductsAdapter by lazy { CartProductsAdapter(viewModel) }
 
     override fun initStartView() {
         initActionBar()
@@ -43,12 +43,12 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
     }
 
     private fun initAdapter() {
-        binding.rvOrderList.adapter = adapter
+        binding.rvCartProducts.adapter = adapter
     }
 
     private fun initObserve() {
         viewModel.uiState.observe(this) { uiState ->
-            adapter.updateOrderList(uiState.pagingOrder.orders)
+            adapter.updateCartProducts(uiState.pagingCartProduct.products)
         }
 
         viewModel.message.observeEvent(this) { message ->

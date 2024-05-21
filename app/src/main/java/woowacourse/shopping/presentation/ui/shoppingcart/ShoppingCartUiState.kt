@@ -1,13 +1,13 @@
 package woowacourse.shopping.presentation.ui.shoppingcart
 
-import woowacourse.shopping.domain.model.Order
+import woowacourse.shopping.domain.model.Product
 
 data class ShoppingCartUiState(
-    val pagingOrder: PagingOrder = PagingOrder(),
+    val pagingCartProduct: PagingCartProduct = PagingCartProduct(),
 )
 
-data class PagingOrder(
-    val orders: List<Order> = emptyList(),
+data class PagingCartProduct(
+    val products: List<Product> = emptyList(),
     val currentPage: Int = 0,
     val last: Boolean = true,
 )

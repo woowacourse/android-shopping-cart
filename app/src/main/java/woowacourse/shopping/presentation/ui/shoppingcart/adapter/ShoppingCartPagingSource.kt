@@ -1,16 +1,22 @@
 package woowacourse.shopping.presentation.ui.shoppingcart.adapter
 
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
-import woowacourse.shopping.presentation.ui.shoppingcart.PagingOrder
+import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.presentation.ui.shoppingcart.PagingCartProduct
 
 class ShoppingCartPagingSource(private val repository: ShoppingCartRepository) {
-    fun load(page: Int): Result<PagingOrder> {
-        val result = repository.getPagingOrder(page = page, pageSize = PAGING_SIZE)
+    private var maxOffset = 0
+    private var last = true
+
+    fun load(page: Int): Result<PagingCartProduct> {
+        println(page)
+        val result = repository.getCartProductsPaged(page = page, pageSize = PAGING_SIZE)
+        maxOffset = repository.getCartProductsTotal().getOrThrow()
+        println(result)
 
         return result.fold(
-            onSuccess = { pagingOrder ->
-                val last = pagingOrder.maxOffSet <= (PAGING_SIZE * (page + 1))
-                Result.success(PagingOrder(pagingOrder.orders, page, last))
+            onSuccess = { cardProducts ->
+                last = maxOffset <= (PAGING_SIZE * (page + 1))
+                Result.success(PagingCartProduct(cardProducts, page, last))
             },
             onFailure = { e ->
                 Result.failure(e)

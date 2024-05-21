@@ -7,11 +7,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity.Companion.PUT_EXTRA_PRODUCT_ID
+import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
@@ -22,12 +23,12 @@ class ProductDetailViewModel(
     val product: LiveData<Product> get() = _product
 
     init {
-        savedStateHandle.get<Int>(PUT_EXTRA_PRODUCT_ID)?.let { productId ->
-            loadProductDetails(productId)
+        savedStateHandle.get<Long>(PUT_EXTRA_PRODUCT_ID)?.let { productId ->
+            findByProductId(productId)
         }
     }
 
-    private fun loadProductDetails(id: Int) {
+    private fun findByProductId(id: Long) {
         productRepository.findProductById(id).onSuccess { productValue ->
             _product.value = productValue
         }.onFailure { e ->
@@ -40,8 +41,19 @@ class ProductDetailViewModel(
 
     fun addToCart() {
         product.value?.let { product ->
-            shoppingCartRepository.addOrder(product)
-            showMessage(ProductDetailMessage.AddToCartSuccessMessage)
+            thread {
+                shoppingCartRepository.insertCartProduct(
+                    productId = product.id,
+                    name = product.name,
+                    price = product.price,
+                    quantity = 1,
+                    imageUrl = product.imageUrl,
+                ).onSuccess {
+                    showMessage(ProductDetailMessage.AddToCartSuccessMessage)
+                }.onFailure {
+                    showMessage(MessageProvider.DefaultErrorMessage)
+                }
+            }
         }
     }
 
@@ -52,9 +64,9 @@ class ProductDetailViewModel(
         ): ViewModelProvider.Factory {
             return BaseViewModelFactory { extras ->
                 ProductDetailViewModel(
-                    extras.createSavedStateHandle(),
-                    productRepository,
-                    shoppingCartRepository,
+                    savedStateHandle = extras.createSavedStateHandle(),
+                    productRepository = productRepository,
+                    shoppingCartRepository = shoppingCartRepository,
                 )
             }
         }

@@ -74,7 +74,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
 
         fun startActivity(
             context: Context,
-            id: Int,
+            id: Long,
         ) {
             val intent = Intent(context, ProductDetailActivity::class.java)
             intent.putExtra(PUT_EXTRA_PRODUCT_ID, id)

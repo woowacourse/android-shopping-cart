@@ -23,39 +23,39 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_order_list"
+            android:id="@+id/rv_cart_products"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="71dp"
             android:orientation="vertical"
-            android:visibility="@{vm.uiState.pagingOrder.orders.isEmpty() ? View.GONE : View.VISIBLE }"
+            android:visibility="@{vm.uiState.pagingCartProduct.products.isEmpty() ? View.GONE : View.VISIBLE }"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/tv_page"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/holder_order" />
+            tools:listitem="@layout/holder_cart_product" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/empty_shopping_cart_title"
-            android:visibility="@{vm.uiState.pagingOrder.orders.isEmpty() ? View.VISIBLE : View.GONE }"
+            android:visibility="@{vm.uiState.pagingCartProduct.products.isEmpty() ? View.VISIBLE : View.GONE }"
             app:layout_constraintBottom_toTopOf="@+id/tv_page"
-            app:layout_constraintEnd_toEndOf="@+id/rv_order_list"
-            app:layout_constraintStart_toStartOf="@+id/rv_order_list"
+            app:layout_constraintEnd_toEndOf="@+id/rv_cart_products"
+            app:layout_constraintStart_toStartOf="@+id/rv_cart_products"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <Button
             android:id="@+id/tv_pre_page"
-            currentPage="@{vm.uiState.pagingOrder.currentPage}"
-            last="@{vm.uiState.pagingOrder.last}"
+            currentPage="@{vm.uiState.pagingCartProduct.currentPage}"
+            last="@{vm.uiState.pagingCartProduct.last}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/selector_pre_page_btn"
-            android:enabled="@{vm.uiState.pagingOrder.currentPage != 0}"
+            android:enabled="@{vm.uiState.pagingCartProduct.currentPage != 0}"
             android:gravity="center"
             android:onClick="@{() -> vm.loadPreviousPage()}"
             android:text="@string/tv_pre_page_title"
@@ -68,12 +68,12 @@
 
         <TextView
             android:id="@+id/tv_page"
-            currentPage="@{vm.uiState.pagingOrder.currentPage}"
-            last="@{vm.uiState.pagingOrder.last}"
+            currentPage="@{vm.uiState.pagingCartProduct.currentPage}"
+            last="@{vm.uiState.pagingCartProduct.last}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="62dp"
-            android:text="@{String.valueOf(vm.uiState.pagingOrder.currentPage + 1)}"
+            android:text="@{String.valueOf(vm.uiState.pagingCartProduct.currentPage + 1)}"
             android:textColor="@color/gray5"
             android:textSize="22dp"
             android:textStyle="bold"
@@ -84,13 +84,13 @@
 
         <Button
             android:id="@+id/tv_next_page"
-            currentPage="@{vm.uiState.pagingOrder.currentPage}"
-            last="@{vm.uiState.pagingOrder.last}"
+            currentPage="@{vm.uiState.pagingCartProduct.currentPage}"
+            last="@{vm.uiState.pagingCartProduct.last}"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/selector_next_page_btn"
-            android:enabled="@{vm.uiState.pagingOrder.last != true}"
+            android:enabled="@{vm.uiState.pagingCartProduct.last != true}"
             android:gravity="center"
             android:onClick="@{() -> vm.loadNextPage()}"
             android:text="@string/tv_next_page_title"
