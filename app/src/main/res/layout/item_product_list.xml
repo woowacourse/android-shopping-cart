@@ -5,15 +5,24 @@
 
     <data>
 
+        <variable
+            name="productUiModel"
+            type="woowacourse.shopping.productlist.ProductUiModel" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.productlist.ProductListClickAction" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp">
+        android:layout_margin="6dp"
+        android:onClickListener="@{()->clickListener.onProductClicked(productUiModel.id)}">
 
         <ImageView
             android:id="@+id/iv_product_item"
+            loadImage="@{productUiModel.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
@@ -31,6 +40,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/roboto_bold"
             android:maxLines="1"
+            android:text="@{productUiModel.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,6 +51,7 @@
 
         <TextView
             android:id="@+id/tv_product_list_price"
+            formattedPrice="@{productUiModel.price}"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"

@@ -3,8 +3,6 @@ package woowacourse.shopping.productlist
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ItemProductListBinding
 
 class ProductListAdapter(
@@ -17,15 +15,8 @@ class ProductListAdapter(
         private val onClick: ProductListClickAction,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(item: ProductUiModel) {
-            with(binding) {
-                tvProductListName.text = item.name
-                tvProductListPrice.text =
-                    itemView.context.getString(R.string.product_price_format, item.price)
-                Glide.with(itemView.context).load(item.imageUrl).into(ivProductItem)
-                root.setOnClickListener {
-                    onClick.onProductClicked(item.id)
-                }
-            }
+            binding.productUiModel = item
+            binding.clickListener = onClick
         }
     }
 
