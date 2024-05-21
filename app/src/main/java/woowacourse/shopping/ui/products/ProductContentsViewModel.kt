@@ -26,20 +26,20 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
                 set(id.toInt(), false)
             }
         val temp = _itemCount.value!!
-        temp[id.toInt()] += 1
+        temp[id.toInt()] += CHANGED_ITEM_COUNT
         _itemCount.value = temp
     }
 
     fun onItemDecreaseButtonClick(id: Long) {
         val temp = _itemCount.value!!
-        if (temp[id.toInt()] == 0) return
-        temp[id.toInt()] -= 1
+        if (temp[id.toInt()] == MINIMUM_ITEM_COUNT) return
+        temp[id.toInt()] -= CHANGED_ITEM_COUNT
         _itemCount.value = temp
     }
 
     fun onItemIncreaseButtonClick(id: Long) {
         val temp = _itemCount.value!!
-        temp[id.toInt()] += 1
+        temp[id.toInt()] += CHANGED_ITEM_COUNT
         _itemCount.value = temp
     }
 
@@ -49,7 +49,7 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
         items.addAll(allProducts)
         _products.value = getProducts()
         _isItemPlusButtonVisible.value = List(allProducts.size) { true }.toMutableList()
-        _itemCount.value = List(allProducts.size) { 0 }.toMutableList()
+        _itemCount.value = List(allProducts.size) { MINIMUM_ITEM_COUNT }.toMutableList()
     }
 
     private fun getProducts(): List<Product> {
@@ -63,5 +63,7 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
     companion object {
         private const val DEFAULT_OFFSET = 0
         const val LOAD_LIMIT = 20
+        private const val MINIMUM_ITEM_COUNT = 0
+        private const val CHANGED_ITEM_COUNT = 1
     }
 }
