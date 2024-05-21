@@ -7,20 +7,30 @@ object DefaultCart : CartDataSource {
     private val cartItems: MutableMap<Long, CartItem> = mutableMapOf()
     private var id: Long = 1
 
+    override fun getCartItem(productId: Long): CartItem? {
+        return cartItems[productId]
+    }
+
     override fun addCartItem(
         productId: Long,
         quantity: Int,
     ): Long {
+        cartItems[productId] =
+            CartItem(
+                id = id,
+                quantity = quantity,
+                productId = productId,
+            )
+        id++
+        return productId
+    }
+
+    override fun plusCartItem(
+        productId: Long,
+        quantity: Int,
+    ): Long {
         val existingCartItem = cartItems[productId]
-        if (existingCartItem == null) {
-            cartItems[productId] =
-                CartItem(
-                    id = id,
-                    quantity = quantity,
-                    productId = productId,
-                )
-            id++
-        } else {
+        if (existingCartItem != null) {
             cartItems[productId] =
                 existingCartItem.copy(
                     quantity = existingCartItem.quantity + 1,
