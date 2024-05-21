@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="woowacourse.shopping.productdetail.ProductDetailViewModel" />
@@ -18,11 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
-            app:loadImage="@{viewModel.productUi.imageUrl}"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:loadImage="@{viewModel.productUi.imageUrl}"
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
@@ -32,9 +33,9 @@
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/roboto_bold"
+            android:text="@{viewModel.productUi.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
-            android:text="@{viewModel.productUi.name}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_product_detail_product"
             tools:text="[든든] 든든든 스위트콘" />
@@ -81,9 +82,9 @@
             android:layout_height="wrap_content"
             android:background="@color/emerald"
             android:fontFamily="@font/roboto_bold"
+            android:onClickListener="@{() -> viewModel.addProductToCart()}"
             android:text="@string/product_detail_add_cart_btn"
             android:textSize="20sp"
-            android:onClickListener="@{() -> viewModel.addProductToCart()}"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

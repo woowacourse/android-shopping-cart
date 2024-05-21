@@ -8,7 +8,6 @@
         <variable
             name="viewModel"
             type="woowacourse.shopping.shoppingcart.ShoppingCartViewModel" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
