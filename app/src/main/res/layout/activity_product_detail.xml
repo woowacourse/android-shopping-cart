@@ -65,48 +65,14 @@
             app:layout_constraintTop_toBottomOf="@id/split_line"
             tools:text="99,800원" />
 
-        <LinearLayout
+        <include
+            layout="@layout/layout_product_count_selection"
             android:layout_width="wrap_content"
-            android:layout_height="42dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
             android:layout_marginEnd="14dp"
-            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/split_line">
-
-            <Button
-                android:id="@+id/btn_minus_product"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:background="@color/white_no_border_line"
-                android:text="@string/minus"
-                android:textColor="@color/gray5"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_count"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:background="@color/white_no_border_line"
-                android:gravity="center"
-                android:textColor="@color/gray5"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                tools:text="3" />
-
-            <Button
-                android:id="@+id/btn_plus_product"
-                android:layout_width="42dp"
-                android:layout_height="match_parent"
-                android:background="@color/white_no_border_line"
-                android:text="@string/plus"
-                android:textColor="@color/gray5"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
+            app:layout_constraintTop_toBottomOf="@id/split_line" />
 
         <Button
             android:id="@+id/btn_add_product"
