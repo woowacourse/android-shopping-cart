@@ -10,13 +10,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
+import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.FragmentChangeListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
-class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
+class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCounter {
     private var fragmentChangeListener: FragmentChangeListener? = null
     private var _binding: FragmentShoppingCartBinding? = null
     val binding: FragmentShoppingCartBinding get() = _binding!!
@@ -54,13 +55,14 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     }
 
     private fun initView() {
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = shoppingCartViewModel
         shoppingCartViewModel.loadPagingCartItemList(CART_ITEM_LOAD_PAGING_SIZE)
         binding.onClickShoppingCart = this
         adapter =
             ShoppingCartAdapter(
                 onClickShoppingCart = this,
+                onClickCartItemCounter = this,
                 loadLastItem = {
                     shoppingCartViewModel.loadPagingCartItemList(CART_ITEM_LOAD_PAGING_SIZE)
                 },
@@ -144,5 +146,36 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart {
     private fun updateImageButtonColor() {
         binding.onPrevButton = shoppingCartViewModel.isExistPrevPage()
         binding.onNextButton = shoppingCartViewModel.isExistNextPage()
+    }
+
+    override fun clickIncrease(
+        productId: Int,
+        itemPosition: Int,
+        cartItemCounter: CartItemCounter
+    ) {
+        cartItemCounter.selectItem()
+        val resultState =  cartItemCounter.increase()
+        when(resultState){
+            ChangeCartItemResultState.Success -> {
+                adapter.updateCartItem(itemPosition)
+            }
+            ChangeCartItemResultState.Fail -> {}
+        }
+    }
+
+    override fun clickDecrease(
+        productId: Int,
+        itemPosition: Int,
+        cartItemCounter: CartItemCounter
+    ) {
+        val resultState = cartItemCounter.decrease()
+        when(resultState){
+            ChangeCartItemResultState.Success -> {
+                adapter.updateCartItem(itemPosition)
+            }
+            ChangeCartItemResultState.Fail -> {
+
+            }
+        }
     }
 }
