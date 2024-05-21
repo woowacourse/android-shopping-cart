@@ -9,7 +9,9 @@ import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.utils.MutableSingleLiveData
 import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.utils.SingleLiveData
 
 class ProductListViewModel(
     private val productRepository: ProductRepository,
@@ -18,27 +20,28 @@ class ProductListViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
 
-    private val _productListState: MutableLiveData<ProductListState> =
-        MutableLiveData()
-    val productListState: LiveData<ProductListState> get() = _productListState
+    private val _productListEvent: MutableSingleLiveData<ProductListEvent> =
+        MutableSingleLiveData()
+    val productListEvent: SingleLiveData<ProductListEvent> get() = _productListEvent
 
-    private val _errorState: MutableLiveData<ProductListState.ErrorState> =
-        MutableLiveData()
-    val errorState: LiveData<ProductListState.ErrorState> get() = _errorState
+    private val _errorState: MutableSingleLiveData<ProductListEvent.ErrorEvent> =
+        MutableSingleLiveData()
+    val errorState: SingleLiveData<ProductListEvent.ErrorEvent> get() = _errorState
 
     fun loadPagingProduct() {
         try {
             val itemSize = products.value?.size ?: DEFAULT_ITEM_SIZE
             val pagingData = productRepository.loadPagingProducts(itemSize)
             _products.value = _products.value?.plus(pagingData)
-            _productListState.value = ProductListState.LoadProductList.Success
+            _productListEvent.postValue(ProductListEvent.LoadProductEvent.Success)
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
-                    _errorState.value =
-                        ProductListState.LoadProductList.Fail
+                    _errorState.postValue(
+                        ProductListEvent.LoadProductEvent.Fail
+                    )
 
-                else -> _errorState.value = ProductListState.ErrorState.NotKnownError
+                else -> _errorState.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
         }
     }

@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.products
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -82,12 +81,12 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         }
         productListViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
-                ProductListState.LoadProductList.Fail ->
+                ProductListEvent.LoadProductEvent.Fail ->
                     requireContext().makeToast(
                         getString(R.string.max_paging_data),
                     )
 
-                ProductListState.ErrorState.NotKnownError ->
+                ProductListEvent.ErrorEvent.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
                     )
