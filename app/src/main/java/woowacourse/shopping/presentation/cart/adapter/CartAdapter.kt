@@ -8,7 +8,7 @@ import woowacourse.shopping.presentation.cart.Order
 
 class CartAdapter(
     private var orders: List<Order>,
-    private val cartItemDeleteClickListener: CartItemDeleteClickListener,
+    private val cartItemClickListener: CartItemClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -17,7 +17,7 @@ class CartAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ItemCartBinding =
             ItemCartBinding.inflate(layoutInflater, parent, false)
-        return CartViewHolder(binding, cartItemDeleteClickListener)
+        return CartViewHolder(binding, cartItemClickListener)
     }
 
     override fun onBindViewHolder(

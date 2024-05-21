@@ -13,11 +13,11 @@ import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.cart.adapter.CartAdapter
-import woowacourse.shopping.presentation.cart.adapter.CartItemDeleteClickListener
+import woowacourse.shopping.presentation.cart.adapter.CartItemClickListener
 import woowacourse.shopping.presentation.cart.viewmodel.CartViewModel
 import woowacourse.shopping.presentation.cart.viewmodel.CartViewModelFactory
 
-class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
+class CartActivity : AppCompatActivity(), CartItemClickListener {
     private val binding: ActivityCartBinding by lazy {
         ActivityCartBinding.inflate(layoutInflater)
     }
@@ -57,6 +57,14 @@ class CartActivity : AppCompatActivity(), CartItemDeleteClickListener {
             android.R.id.home -> finish()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCartItemAdd(productId: Long) {
+        viewModel.addCartITem(productId, 1)
+    }
+
+    override fun onCartItemRemove(productId: Long) {
+        viewModel.removeCartItem(productId, 1)
     }
 
     override fun onCartItemDelete(cartItemId: Long) {
