@@ -29,6 +29,17 @@ object DefaultCart : CartDataSource {
         return productId
     }
 
+    override fun removeCartItem(productId: Long, quantity: Int): Long {
+        val existingCartItem = cartItems[productId]
+        if (existingCartItem != null && existingCartItem.quantity >= 1) {
+            cartItems[productId] =
+                existingCartItem.copy(
+                    quantity = quantity - 1,
+                )
+        }
+        return productId
+    }
+
     override fun removeAllCartItem(cartItemId: Long): Long {
         cartItems.values.removeIf { it.id == cartItemId }
         return cartItemId
