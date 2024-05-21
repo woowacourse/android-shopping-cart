@@ -15,7 +15,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class CartActivity : AppCompatActivity(), CartItemClickListener {
+class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
     private val viewModel: CartViewModel by viewModels {
@@ -40,7 +40,7 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
     }
 
     private fun setUpAdapter() {
-        adapter = CartAdapter(this)
+        adapter = CartAdapter(viewModel)
         binding.rvCart.adapter = adapter
     }
 
@@ -53,6 +53,18 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
                     showError(
                         state.exception.message ?: getString(R.string.unknown_error),
                     )
+            }
+        }
+
+        viewModel.navigateToDetail.observe(this) {
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
+            }
+        }
+
+        viewModel.notifyDeletion.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                alertDeletion()
             }
         }
     }
@@ -70,12 +82,11 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
         return true
     }
 
-    override fun onCartItemClick(productId: Long) {
+    fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
     }
 
-    override fun onDeleteButtonClick(itemId: Long) {
-        viewModel.deleteItem(itemId)
+    fun alertDeletion() {
         Toast.makeText(this, DELETE_ITEM_MESSAGE, Toast.LENGTH_SHORT).show()
     }
 

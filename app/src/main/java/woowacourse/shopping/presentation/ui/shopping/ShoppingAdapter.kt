@@ -10,7 +10,7 @@ import woowacourse.shopping.domain.model.ShoppingType
 import woowacourse.shopping.domain.model.ShoppingType.Companion.PRODUCT_VIEW_TYPE
 
 class ShoppingAdapter(
-    val clickListener: ShoppingClickListener
+    val clickListener: ShoppingClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val shoppingTypes: MutableList<ShoppingType> = mutableListOf()
 
