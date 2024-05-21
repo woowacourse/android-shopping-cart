@@ -18,9 +18,10 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
     val isItemPlusButtonVisible: LiveData<MutableList<Boolean>> get() = _isItemPlusButtonVisible
 
     fun onItemPlusButtonClick(id: Long) {
-        val temp = _isItemPlusButtonVisible.value
-        temp?.set(id.toInt(), false)
-        _isItemPlusButtonVisible.value = temp
+        _isItemPlusButtonVisible.value =
+            _isItemPlusButtonVisible.value?.apply {
+                set(id.toInt(), false)
+            }
     }
 
     fun loadProducts() {
