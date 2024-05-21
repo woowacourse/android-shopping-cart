@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.presentation.base.BindingActivity
@@ -20,13 +21,11 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
 
     override fun initStartView() {
         initTitle()
-
+        binding.rvCarts.adapter = cartAdapter
         binding.cartActionHandler = viewModel
-        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
         viewModel.loadProductByOffset()
-        binding.rvCarts.adapter = cartAdapter
-
         initObserver()
     }
 
@@ -36,6 +35,12 @@ class CartActivity : BindingActivity<ActivityCartBinding>() {
                 is UiState.None -> {}
                 is UiState.Success -> {
                     cartAdapter.updateList(it.data)
+                    with(binding) {
+                        layoutPage.isVisible = viewModel.maxOffset > 0
+                        btnRight.isEnabled = viewModel.offSet < viewModel.maxOffset
+                        btnLeft.isEnabled = viewModel.offSet > 0
+                        tvPageCount.text = (viewModel.offSet + OFFSET_BASE).toString()
+                    }
                 }
             }
         }

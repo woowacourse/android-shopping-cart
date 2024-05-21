@@ -24,7 +24,7 @@ fun TextView.setProductPrice(viewModel: ProductDetailViewModel) {
 
 @BindingAdapter("productSrc")
 fun ImageView.setProductSrc(viewModel: ProductDetailViewModel) {
-    if(viewModel.products.value is UiState.Success) Glide.with(this)
+    if(viewModel.products.value is UiState.Success) Glide.with(this.context)
         .load((viewModel.products.value as UiState.Success<Product>).data.imgUrl)
         .into(this)
 }

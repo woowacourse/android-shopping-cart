@@ -20,6 +20,9 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
     override fun initStartView() {
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
         title = getString(R.string.detail_title)
 
         val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
