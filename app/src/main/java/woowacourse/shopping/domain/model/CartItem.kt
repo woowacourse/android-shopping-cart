@@ -5,9 +5,10 @@ data class CartItem(
     val product: Product,
 ) {
     companion object {
+        const val DEFAULT_CART_ITEM_ID = -1L
         val defaultCartItem =
             CartItem(
-                -1L,
+                DEFAULT_CART_ITEM_ID,
                 Product.defaultProduct,
             )
     }

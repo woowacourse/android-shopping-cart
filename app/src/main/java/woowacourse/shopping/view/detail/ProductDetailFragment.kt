@@ -59,30 +59,35 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     }
 
     private fun observeData() {
-        productDetailViewModel.productDetailState.observe(viewLifecycleOwner) { productDetailState ->
-            if (productDetailState == ProductDetailState.AddShoppingCart.Success) {
-                requireContext().makeToast(
-                    requireContext().getString(
-                        R.string.success_save_data,
-                    ),
-                )
+        productDetailViewModel.productDetailEvent.observe(viewLifecycleOwner) { productDetailState ->
+            when(productDetailState){
+                is ProductDetailEvent.AddShoppingCart.Success -> {
+                    mainFragmentListener?.saveUpdateProduct(
+                        productDetailState.productId,
+                        productDetailState.count,
+                    )
+                    requireContext().makeToast(
+                        getString(R.string.add_cart_text),
+                    )
+                }
             }
         }
-        productDetailViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+
+        productDetailViewModel.errorEvent.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
-                ProductDetailState.AddShoppingCart.Fail ->
+                ProductDetailEvent.AddShoppingCart.Fail ->
                     requireContext().makeToast(
                         getString(R.string.error_save_data),
                     )
 
-                ProductDetailState.LoadProductItem.Fail -> {
+                ProductDetailEvent.LoadProductItem.Fail -> {
                     requireContext().makeToast(
                         getString(R.string.error_data_load)
                     )
                     parentFragmentManager.popBackStack()
                 }
 
-                ProductDetailState.ErrorState.NotKnownError ->
+                ProductDetailEvent.ErrorEvent.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
                     )
@@ -95,7 +100,15 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     }
 
     private fun loadProduct() {
-        productDetailViewModel.loadProductItem(receiveId())
+        try {
+            productDetailViewModel.loadProductItem(receiveId())
+            productDetailViewModel
+        } catch (e: NoSuchDataException){
+            requireContext().makeToast(
+                getString(R.string.error_data_load),
+            )
+            clickClose()
+        }
     }
 
     private fun initView() {
@@ -119,19 +132,19 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
         productDetailViewModel.addShoppingCartItem(product)
     }
 
-    companion object {
-        fun createBundle(id: Long): Bundle {
-            return Bundle().apply { putLong(PRODUCT_ID, id) }
-        }
-
-        private const val PRODUCT_ID = "productId"
-    }
-
     override fun clickIncrease(product: Product) {
         productDetailViewModel.increaseItemCounter()
     }
 
     override fun clickDecrease(product: Product) {
         productDetailViewModel.decreaseItemCounter()
+    }
+
+    companion object {
+        fun createBundle(id: Long): Bundle {
+            return Bundle().apply { putLong(PRODUCT_ID, id) }
+        }
+
+        private const val PRODUCT_ID = "productId"
     }
 }

@@ -3,7 +3,13 @@ package woowacourse.shopping.view.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.ERROR_DATA_ID
+import woowacourse.shopping.domain.model.CartItem.Companion.DEFAULT_CART_ITEM_ID
+import woowacourse.shopping.domain.model.CartItemCounter
+import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_COUNT
+import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.Product.Companion.DEFAULT_PRODUCT_ID
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.NoSuchDataException
@@ -14,41 +20,83 @@ class ProductDetailViewModel(
 ) : ViewModel() {
     private val _product: MutableLiveData<Product> = MutableLiveData(Product.defaultProduct)
     val product: LiveData<Product> get() = _product
+    private var cartItemId: Long = DEFAULT_CART_ITEM_ID
 
-    private val _errorState: MutableLiveData<ProductDetailState.ErrorState> =
+    private val _errorEvent: MutableLiveData<ProductDetailEvent.ErrorEvent> =
         MutableLiveData()
-    val errorState: LiveData<ProductDetailState.ErrorState> get() = _errorState
+    val errorEvent: LiveData<ProductDetailEvent.ErrorEvent> get() = _errorEvent
 
-    private val _productDetailState = MutableLiveData<ProductDetailState>()
-    val productDetailState: LiveData<ProductDetailState> = _productDetailState
+    private val _productDetailEvent = MutableLiveData<ProductDetailEvent.SuccessEvent>()
+    val productDetailEvent: LiveData<ProductDetailEvent.SuccessEvent> = _productDetailEvent
 
     fun addShoppingCartItem(product: Product) {
         try {
-            shoppingCartRepository.addCartItem(product)
-            _productDetailState.value = ProductDetailState.AddShoppingCart.Success
+            checkValidProduct(product)
+            when(cartItemId){
+                DEFAULT_CART_ITEM_ID -> {
+                    shoppingCartRepository.addCartItem(product)
+                }
+                else -> {
+                    shoppingCartRepository.updateCartItem(
+                        cartItemId,
+                        product.cartItemCounter.itemCount,
+                    )
+                }
+            }
+            _productDetailEvent.value = ProductDetailEvent.AddShoppingCart.Success(
+                productId = product.id,
+                count = product.cartItemCounter.itemCount
+            )
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorState.value = ProductDetailState.AddShoppingCart.Fail
-                else -> _errorState.value = ProductDetailState.ErrorState.NotKnownError
+                is NoSuchDataException -> _errorEvent.value =
+                    ProductDetailEvent.AddShoppingCart.Fail
+
+                else -> _errorEvent.value = ProductDetailEvent.ErrorEvent.NotKnownError
             }
         }
     }
 
     fun loadProductItem(productId: Long) {
         try {
+            val loadItemCounter = loadProductItemCount(productId)
             val product = productRepository.getProduct(productId)
             product.cartItemCounter.selectItem()
+            product.cartItemCounter.updateCount(loadItemCounter.itemCount)
             _product.value = product
-            _productDetailState.value = ProductDetailState.LoadProductItem.Success
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorState.value = ProductDetailState.LoadProductItem.Fail
-                else -> _errorState.value = ProductDetailState.ErrorState.NotKnownError
+                is NoSuchDataException -> _errorEvent.value =
+                    ProductDetailEvent.LoadProductItem.Fail
+
+                else -> _errorEvent.value = ProductDetailEvent.ErrorEvent.NotKnownError
             }
         }
     }
 
-    fun increaseItemCounter(){
+    private fun loadProductItemCount(productId: Long): CartItemCounter {
+        return try {
+            when (val result = shoppingCartRepository.getCartItemResultFromProductId(productId = productId)) {
+                is CartItemResult.Exists -> {
+                    cartItemId = result.cartItemId
+                    result.counter
+                }
+                CartItemResult.NotExists -> {
+                     CartItemCounter()
+                }
+            }
+        } catch (e: Exception) {
+            when (e) {
+                is NoSuchDataException -> _errorEvent.value =
+                    ProductDetailEvent.LoadProductItem.Fail
+
+                else -> _errorEvent.value = ProductDetailEvent.ErrorEvent.NotKnownError
+            }
+            CartItemCounter()
+        }
+    }
+
+    fun increaseItemCounter() {
         product.value?.cartItemCounter?.increase()
         _product.value = product.value?.cartItemCounter?.let {
             product.value?.copy(
@@ -57,12 +105,17 @@ class ProductDetailViewModel(
         }
     }
 
-    fun decreaseItemCounter(){
+    fun decreaseItemCounter() {
         product.value?.cartItemCounter?.decrease()
         _product.value = product.value?.cartItemCounter?.let {
             product.value?.copy(
                 cartItemCounter = it
             )
         }
+    }
+
+    private fun checkValidProduct(product: Product){
+        if (product.id == DEFAULT_PRODUCT_ID) throw NoSuchDataException()
+        if (product.cartItemCounter.itemCount == DEFAULT_ITEM_COUNT) throw NoSuchDataException()
     }
 }

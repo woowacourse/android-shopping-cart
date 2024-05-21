@@ -8,9 +8,10 @@ data class Product(
     val cartItemCounter: CartItemCounter = CartItemCounter(),
 ) {
     companion object {
+        const val DEFAULT_PRODUCT_ID = -1L
         val defaultProduct =
             Product(
-                -1L,
+                DEFAULT_PRODUCT_ID,
                 "",
                 0,
                 "",

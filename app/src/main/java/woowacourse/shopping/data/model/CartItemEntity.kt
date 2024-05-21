@@ -13,7 +13,7 @@ data class CartItemEntity(
     val id: Long = 0L,
     val product: Product,
     val productId: Long = product.id,
-    val count: Int = DEFAULT_CART_ITEM_COUNT,
+    val count: Int = product.cartItemCounter.itemCount,
 ) {
     fun toCartItem(): CartItem {
         return CartItem(
