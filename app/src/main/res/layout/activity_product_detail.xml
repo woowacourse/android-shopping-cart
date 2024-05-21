@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -12,6 +13,10 @@
         <variable
             name="cartButtonClickListener"
             type="woowacourse.shopping.ui.detail.CartButtonClickListener" />
+
+        <variable
+            name="countButtonClickListener"
+            type="woowacourse.shopping.ui.CountButtonClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +77,9 @@
             android:layout_marginTop="18dp"
             android:layout_marginEnd="14dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/split_line" />
+            app:layout_constraintTop_toBottomOf="@id/split_line"
+            bind:countButtonClickListener = "@{countButtonClickListener}"
+            bind:count="@{String.valueOf(vm.count)}" />
 
         <Button
             android:id="@+id/btn_add_product"

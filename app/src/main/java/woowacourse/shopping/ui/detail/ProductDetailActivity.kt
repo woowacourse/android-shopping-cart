@@ -13,10 +13,14 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.ui.CountButtonClickListener
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModelFactory
 
-class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
+class ProductDetailActivity :
+    AppCompatActivity(),
+    CartButtonClickListener,
+    CountButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
     private val viewModel: ProductDetailViewModel by viewModels {
@@ -29,20 +33,8 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
 
         initBinding()
         showProductDetail()
-        setOnCartButtonClickListener()
-
+        setOnListener()
         observeErrorMessage()
-    }
-
-    private fun observeErrorMessage() {
-        viewModel.errorMsg.observe(this) { event ->
-            event.getContentIfNotHandled()?.let {
-                if (it.isNotEmpty()) {
-                    toast = Toast.makeText(this, it, Toast.LENGTH_SHORT)
-                    toast?.show()
-                }
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -57,25 +49,45 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onClick() {
+        viewModel.addProductToCart()
+        toast?.cancel()
+        toast = Toast.makeText(this, getString(R.string.add_cart_complete), Toast.LENGTH_SHORT)
+        toast?.show()
+    }
+
+    override fun plusCount() {
+        viewModel.plusCount()
+    }
+
+    override fun minusCount() {
+        viewModel.minusCount()
+    }
+
     private fun initBinding() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_detail)
         binding.vm = viewModel
         binding.lifecycleOwner = this
     }
 
-    private fun setOnCartButtonClickListener() {
-        binding.cartButtonClickListener = this
-    }
-
     private fun showProductDetail() {
         viewModel.loadProduct(productId)
     }
 
-    override fun onClick() {
-        viewModel.addProductToCart()
-        toast?.cancel()
-        toast = Toast.makeText(this, getString(R.string.add_cart_complete), Toast.LENGTH_SHORT)
-        toast?.show()
+    private fun setOnListener() {
+        binding.cartButtonClickListener = this
+        binding.countButtonClickListener = this
+    }
+
+    private fun observeErrorMessage() {
+        viewModel.errorMsg.observe(this) { event ->
+            event.getContentIfNotHandled()?.let {
+                if (it.isNotEmpty()) {
+                    toast = Toast.makeText(this, it, Toast.LENGTH_SHORT)
+                    toast?.show()
+                }
+            }
+        }
     }
 
     private fun productId() =

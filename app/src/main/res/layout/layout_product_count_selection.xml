@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
 
         <variable
-            name="cart"
-            type="woowacourse.shopping.model.Cart" />
+            name="count"
+            type="String" />
+
+        <variable
+            name="countButtonClickListener"
+            type="woowacourse.shopping.ui.CountButtonClickListener" />
 
     </data>
 
@@ -21,6 +26,7 @@
             android:background="@color/white_no_border_line"
             android:text="@string/minus"
             android:textColor="@color/gray5"
+            android:onClick="@{()->countButtonClickListener.minusCount()}"
             android:textSize="22sp"
             android:textStyle="bold" />
 
@@ -30,7 +36,7 @@
             android:layout_height="match_parent"
             android:background="@color/white_no_border_line"
             android:gravity="center"
-            android:text="@{String.valueOf(cart.count)}"
+            android:text="@{count}"
             android:textColor="@color/gray5"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -42,6 +48,7 @@
             android:layout_height="match_parent"
             android:background="@color/white_no_border_line"
             android:text="@string/plus"
+            android:onClick="@{()->countButtonClickListener.plusCount()}"
             android:textColor="@color/gray5"
             android:textSize="22sp"
             android:textStyle="bold" />
