@@ -29,7 +29,7 @@ object DefaultCart : CartDataSource {
         return productId
     }
 
-    override fun deleteCartItem(cartItemId: Long): Long {
+    override fun removeAllCartItem(cartItemId: Long): Long {
         cartItems.values.removeIf { it.id == cartItemId }
         return cartItemId
     }
