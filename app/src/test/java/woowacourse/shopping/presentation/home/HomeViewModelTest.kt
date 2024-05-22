@@ -19,9 +19,11 @@ class HomeViewModelTest {
 
     @BeforeEach
     fun setup() {
-        homeViewModel = HomeViewModel(
-            FakeProductRepository(DummyProducts().products),
-            FakeCartRepository(DummyCartItems().cartItems))
+        homeViewModel =
+            HomeViewModel(
+                FakeProductRepository(DummyProducts().products),
+                FakeCartRepository(DummyCartItems().cartItems),
+            )
     }
 
     @Test
