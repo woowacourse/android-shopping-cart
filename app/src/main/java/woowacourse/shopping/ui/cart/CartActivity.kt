@@ -45,7 +45,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun setCartAdapter() {
         adapter =
-            CartAdapter { productId ->
+            CartAdapter(viewModel, this) { productId ->
                 viewModel.removeCartItem(productId)
             }
         binding.rvCart.adapter = adapter

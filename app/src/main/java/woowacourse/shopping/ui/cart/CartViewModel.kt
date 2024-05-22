@@ -26,17 +26,21 @@ class CartViewModel(
 
     private val allProducts = productDao.findAll()
 
-    private val tempOrder get() = ordersRepository.getAllData()
+    private val allOrders get() = ordersRepository.getAllData()
+
+    private val _orderCount: MutableLiveData<List<Int>> = MutableLiveData()
+    val orderCount: LiveData<List<Int>> get() = _orderCount
 
     val cartItems
         get() =
-            tempOrder.map { orderEntity ->
+            allOrders.map { orderEntity ->
                 allProducts.first { it.id == orderEntity.productId }
             }
 
     fun loadCartItems() {
         _cartPage.value = CartPage()
         _cart.value = getProducts()
+        _orderCount.value = getProductsCount()
     }
 
     fun removeCartItem(productId: Long) {
@@ -60,6 +64,12 @@ class CartViewModel(
         val fromIndex = (cartPage.value!!.number - OFFSET) * PAGE_SIZE
         val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
         return cartItems.toList().subList(fromIndex, toIndex)
+    }
+
+    private fun getProductsCount(): List<Int> {
+        val fromIndex = (cartPage.value!!.number - OFFSET) * PAGE_SIZE
+        val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
+        return allOrders.map { it.quantity }.subList(fromIndex, toIndex)
     }
 
     companion object {
