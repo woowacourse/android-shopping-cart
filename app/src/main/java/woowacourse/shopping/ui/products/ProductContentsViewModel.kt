@@ -25,20 +25,20 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
             _isItemPlusButtonVisible.value?.apply {
                 set(id.toInt(), false)
             }
-        val temp = _itemCount.value!!
+        val temp = _itemCount.value ?: mutableListOf()
         temp[id.toInt()] += CHANGED_ITEM_COUNT
         _itemCount.value = temp
     }
 
     fun onItemDecreaseButtonClick(id: Long) {
-        val temp = _itemCount.value!!
+        val temp = _itemCount.value ?: mutableListOf()
         if (temp[id.toInt()] == MINIMUM_ITEM_COUNT) return
         temp[id.toInt()] -= CHANGED_ITEM_COUNT
         _itemCount.value = temp
     }
 
     fun onItemIncreaseButtonClick(id: Long) {
-        val temp = _itemCount.value!!
+        val temp = _itemCount.value ?: mutableListOf()
         temp[id.toInt()] += CHANGED_ITEM_COUNT
         _itemCount.value = temp
     }
