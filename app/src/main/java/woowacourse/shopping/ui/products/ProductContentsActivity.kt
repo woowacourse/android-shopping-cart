@@ -18,7 +18,7 @@ class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
     private lateinit var adapter: ProductAdapter
     private val viewModel by lazy {
-        ViewModelProvider(this, ProductContentsViewModelFactory(ProductsImpl))
+        ViewModelProvider(this, ProductContentsViewModelFactory(ProductsImpl, this.applicationContext))
             .get(ProductContentsViewModel::class.java)
     }
 

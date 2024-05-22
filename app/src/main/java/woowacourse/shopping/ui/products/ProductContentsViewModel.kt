@@ -1,13 +1,22 @@
 package woowacourse.shopping.ui.products
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.data.OrderEntity
+import woowacourse.shopping.model.data.OrdersRepository
 import woowacourse.shopping.model.data.ProductDao
+import kotlin.concurrent.thread
 import kotlin.math.min
 
-class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel() {
+class ProductContentsViewModel(
+    private val productDao: ProductDao,
+    application: Context,
+) : ViewModel() {
+    private val ordersRepository = OrdersRepository(application)
+
     private var currentOffset = DEFAULT_OFFSET
     private val items: MutableList<Product> = mutableListOf()
 
@@ -20,22 +29,6 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
     private val _itemCount: MutableLiveData<MutableList<Int>> = MutableLiveData()
     val itemCount: LiveData<MutableList<Int>> get() = _itemCount
 
-    fun onItemPlusButtonClick(id: Long) {
-        setItemPlusButtonVisible(id, false)
-        val temp = _itemCount.value ?: mutableListOf()
-        temp[id.toInt()] += CHANGED_ITEM_COUNT
-        _itemCount.value = temp
-    }
-
-    fun onItemDecreaseButtonClick(id: Long) {
-        val temp = _itemCount.value ?: mutableListOf()
-        if (temp[id.toInt()] == MINIMUM_ITEM_COUNT) {
-            setItemPlusButtonVisible(id, true)
-        }
-        temp[id.toInt()] -= CHANGED_ITEM_COUNT
-        _itemCount.value = temp
-    }
-
     private fun setItemPlusButtonVisible(
         id: Long,
         condition: Boolean,
@@ -44,10 +37,34 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
             _isItemPlusButtonVisible.value?.apply { set(id.toInt(), condition) }
     }
 
+    fun onItemPlusButtonClick(id: Long) {
+        setItemPlusButtonVisible(id, false)
+        val temp = _itemCount.value ?: mutableListOf()
+        temp[id.toInt()] += ITEM_COUNT_CHANGE
+        _itemCount.value = temp
+        thread {
+            ordersRepository.insert(OrderEntity(id, temp[id.toInt()]))
+        }.join()
+    }
+
     fun onItemIncreaseButtonClick(id: Long) {
         val temp = _itemCount.value ?: mutableListOf()
-        temp[id.toInt()] += CHANGED_ITEM_COUNT
+        temp[id.toInt()] += ITEM_COUNT_CHANGE
         _itemCount.value = temp
+        thread {
+            ordersRepository.insert(OrderEntity(id, temp[id.toInt()]))
+        }.join()
+    }
+
+    fun onItemDecreaseButtonClick(id: Long) {
+        val temp = _itemCount.value ?: mutableListOf()
+        temp[id.toInt()] -= ITEM_COUNT_CHANGE
+        _itemCount.value = temp
+        thread { ordersRepository.insert(OrderEntity(id, temp[id.toInt()])) }.join()
+        if (temp[id.toInt()] == DEFAULT_ITEM_COUNT) {
+            setItemPlusButtonVisible(id, true)
+            thread { ordersRepository.deleteById(id) }.join()
+        }
     }
 
     fun loadProducts() {
@@ -71,7 +88,6 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
         private const val DEFAULT_OFFSET = 0
         const val LOAD_LIMIT = 20
         private const val DEFAULT_ITEM_COUNT = 0
-        private const val MINIMUM_ITEM_COUNT = 1
-        private const val CHANGED_ITEM_COUNT = 1
+        private const val ITEM_COUNT_CHANGE = 1
     }
 }

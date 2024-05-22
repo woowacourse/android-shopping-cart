@@ -1,5 +1,6 @@
 package woowacourse.shopping.model.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -9,17 +10,17 @@ import androidx.room.Query
 @Dao
 interface OrderDao {
     @Query("SELECT * FROM `order`")
-    fun getAll(): List<OrderEntity>
+    fun getAll(): LiveData<List<OrderEntity>>
 
     @Query("DELETE FROM `order`")
     fun deleteAll()
 
-    @Query("SELECT * FROM `order` ORDER BY id DESC LIMIT 1")
-    fun getLast(): OrderEntity
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg tickets: OrderEntity)
+    fun insert(vararg orders: OrderEntity)
 
     @Delete
-    fun delete(tickets: OrderEntity)
+    fun delete(order: OrderEntity)
+
+    @Query("DELETE FROM `order` WHERE productId = :id")
+    fun deleteById(id: Long)
 }

@@ -7,7 +7,6 @@ import java.io.Serializable
 
 @Entity(tableName = "order")
 data class OrderEntity(
-    @PrimaryKey(autoGenerate = true) val key: Long = 0,
-    @ColumnInfo(name = "id") val id: Long,
+    @PrimaryKey val productId: Long,
     @ColumnInfo(name = "quantity") val quantity: Int,
 ) : Serializable
