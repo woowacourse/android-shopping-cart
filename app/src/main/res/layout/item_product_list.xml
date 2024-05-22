@@ -26,10 +26,61 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
+            tools:src="@drawable/ic_launcher_background"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        
+        <ImageView
+            android:id="@+id/button_product_list_add_to_cart"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/oval_white_plus_button"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_item"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="invisible"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintStart_toStartOf="@id/iv_product_item"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_item"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
+            android:background="@drawable/rect_white_round"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/button_product_item_minus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/oval_white_minus_button"
+                app:layout_constraintDimensionRatio="1:1"/>
+            
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="1"
+                android:textSize="18sp"/>
+
+            <ImageView
+                android:id="@+id/button_product_item_plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/oval_white_plus_button"
+                app:layout_constraintDimensionRatio="1:1"/>
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/tv_product_list_name"

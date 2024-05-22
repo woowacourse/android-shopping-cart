@@ -65,7 +65,6 @@
             android:background="@drawable/sel_shopping_cart_right_btn"
             android:enabled="@{viewModel.isRightBtnEnable}"
             android:onClick="@{()-> viewModel.nextPage()}"
-            android:src="@drawable/ic_close"
             android:text="@string/btn_right_text"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@id/tv_shopping_cart_page_count"

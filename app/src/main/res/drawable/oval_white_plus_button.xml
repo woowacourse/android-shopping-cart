@@ -3,15 +3,15 @@
     <item>
         <shape android:shape="oval">
             <size
-                android:width="100dp"
-                android:height="100dp"/>
+                android:width="48dp"
+                android:height="48dp"/>
             <padding
-                android:left="25dp"
-                android:right="25dp"
-                android:top="25dp"
-                android:bottom="25dp"/>
+                android:left="12dp"
+                android:right="12dp"
+                android:top="12dp"
+                android:bottom="12dp"/>
             <corners
-                android:radius="10dp"/>
+                android:radius="5dp"/>
             <solid
                 android:color="@color/white"/>
         </shape>
@@ -20,9 +20,9 @@
     <item>
         <shape android:shape="line">
             <size
-                android:width="20dp"/>
+                android:width="18dp"/>
             <stroke
-                android:width="5dp"
+                android:width="3dp"
                 android:color="@color/gray_700"/>
         </shape>
     </item>
@@ -33,9 +33,9 @@
             android:toDegrees="90">
             <shape android:shape="line">
                 <size
-                    android:height="20dp"/>
+                    android:height="18dp"/>
                 <stroke
-                    android:width="5dp"
+                    android:width="3dp"
                     android:color="@color/gray_700"/>
             </shape>
         </rotate>
