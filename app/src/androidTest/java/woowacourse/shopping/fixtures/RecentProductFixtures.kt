@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.fixtures
 
 import woowacourse.shopping.data.db.entity.RecentProductEntity
 import java.time.LocalDateTime
@@ -11,4 +11,10 @@ fun recentProductEntity(
     createdTime: LocalDateTime = DEFAULT_DATE_TIME,
 ): RecentProductEntity {
     return RecentProductEntity(id, createdTime)
+}
+
+fun recentProductEntities(
+    vararg products: RecentProductEntity,
+): List<RecentProductEntity> {
+    return products.toList()
 }

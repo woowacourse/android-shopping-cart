@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.fixtures
 
 import woowacourse.shopping.data.db.entity.CartEntity
 

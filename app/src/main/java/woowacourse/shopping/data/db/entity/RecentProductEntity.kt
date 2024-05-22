@@ -6,6 +6,6 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "RecentProduct")
 data class RecentProductEntity(
-    @PrimaryKey val id: Long,
+    @PrimaryKey val productId: Long,
     val createdTime: LocalDateTime,
 )

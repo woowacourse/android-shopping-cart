@@ -24,8 +24,8 @@ import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.data.cart.FakeCartRepository
 import woowacourse.shopping.domain.entity.Cart
 import woowacourse.shopping.domain.entity.Product
-import woowacourse.shopping.product
-import woowacourse.shopping.products
+import woowacourse.shopping.fixtures.product
+import woowacourse.shopping.fixtures.products
 import woowacourse.shopping.util.clickChildViewWithId
 import woowacourse.shopping.util.testApplicationContext
 import woowacourse.shopping.util.withItemCount

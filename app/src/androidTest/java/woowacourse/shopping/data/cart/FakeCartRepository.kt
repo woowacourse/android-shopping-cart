@@ -3,7 +3,7 @@ package woowacourse.shopping.data.cart
 import woowacourse.shopping.domain.entity.Cart
 import woowacourse.shopping.domain.entity.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.product
+import woowacourse.shopping.fixtures.product
 
 class FakeCartRepository(
     private var cart: Cart = Cart(),
