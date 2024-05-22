@@ -74,7 +74,6 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
                     dx: Int,
                     dy: Int,
                 ) {
-                    super.onScrolled(recyclerView, dx, dy)
                     if (!recyclerView.canScrollVertically(1)) {
                         viewModel.showLoadMoreByCondition()
                     } else {
