@@ -26,6 +26,9 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
 
+    private val _isAddToCart: MutableLiveData<Boolean> = MutableLiveData()
+    val isAddToCart: LiveData<Boolean> get() = _isAddToCart
+
     private val _navigateAction: MutableLiveData<Event<ProductDetailNavigateAction>> =
         MutableLiveData(null)
     val navigateAction: LiveData<Event<ProductDetailNavigateAction>> get() = _navigateAction
@@ -71,6 +74,7 @@ class ProductDetailViewModel(
                     quantity = product.quantity,
                     imageUrl = product.imageUrl,
                 ).onSuccess {
+                    _isAddToCart.postValue(true)
                     showMessage(ProductDetailMessage.AddToCartSuccessMessage)
                 }.onFailure {
                     showMessage(MessageProvider.DefaultErrorMessage)
@@ -99,8 +103,16 @@ class ProductDetailViewModel(
 
     fun navigateToProductList() {
         _product.value?.let { value ->
-            val updatedProducts = UpdatedProducts(mutableMapOf(value.id to value))
-            _navigateAction.emit(ProductDetailNavigateAction.NavigateToProductList(updatedProducts))
+            if (isAddToCart.value == true) {
+                val updatedProducts = UpdatedProducts(mutableMapOf(value.id to value))
+                _navigateAction.emit(
+                    ProductDetailNavigateAction.NavigateToProductList(
+                        updatedProducts,
+                    ),
+                )
+            } else {
+                _navigateAction.emit(ProductDetailNavigateAction.NavigateToPrevious)
+            }
         }
     }
 

@@ -52,6 +52,8 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
                     setResult(Activity.RESULT_OK, intent)
                     finish()
                 }
+
+                is ProductDetailNavigateAction.NavigateToPrevious -> finish()
             }
         }
 
