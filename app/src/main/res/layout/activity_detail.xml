@@ -16,7 +16,6 @@
         android:layout_height="match_parent"
         tools:context=".view.shopping.ShoppingActivity">
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar_detail"
             android:layout_width="match_parent"
@@ -47,7 +46,6 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
 
         <ImageView
             android:id="@+id/iv_detail_product_image"
@@ -83,28 +81,26 @@
             app:layout_constraintTop_toBottomOf="@id/tv_detail_product_name" />
 
         <TextView
+            android:id="@+id/tv_detail_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="가격"
             android:textColor="@color/black"
             android:textSize="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            tools:text="10,000원" />
 
-        <TextView
-            android:id="@+id/tv_detail_price"
+        <include
+            android:id="@+id/btn_quantity_control"
+            layout="@layout/btn_quantity_control"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="18dp"
-            android:textColor="@color/black"
-            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            app:price="@{viewModel.product.price}"
-            tools:text="10,000원" />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
             android:id="@+id/btn_put_cart"
@@ -122,5 +118,40 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="35dp"
+            android:background="@drawable/shopping_cart_item_gridview"
+            app:layout_constraintBottom_toTopOf="@id/btn_put_cart"
+            app:layout_constraintLeft_toLeftOf="@id/tv_detail_price"
+            app:layout_constraintRight_toRightOf="@id/btn_quantity_control">
+
+            <TextView
+                android:id="@+id/tv_recent_viewed_product_title"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="16dp"
+                android:text="마지막으로 본 상품"
+                android:textColor="@color/green_300"
+                android:textSize="12dp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_recent_viewed_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/gray_500"
+                android:textSize="18dp"
+                app:layout_constraintLeft_toLeftOf="@id/tv_recent_viewed_product_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_recent_viewed_product_title"
+                tools:text="PET보틀-정사각형(500ml)" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

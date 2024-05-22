@@ -10,6 +10,6 @@ class SharedPrefs(context: Context) {
         )
 
     companion object {
-        private const val RECENT_VIEWED_PRODUCT = "revent_viewed_product"
+        private const val RECENT_VIEWED_PRODUCT = "recent_viewed_product"
     }
 }
