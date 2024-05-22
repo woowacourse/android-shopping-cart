@@ -34,6 +34,10 @@ class ProductListViewModel(productRepository: ProductRepository) :
         _navigateAction.emit(ProductListNavigateAction.NavigateToProductDetail(productId = productId))
     }
 
+    fun navigateToShoppingCart() {
+        _navigateAction.emit(ProductListNavigateAction.NavigateToShoppingCart)
+    }
+
     private fun loadProductList() {
         productListPagingSource.load().onSuccess { pagingProduct ->
             _uiState.value?.let { state ->
@@ -42,7 +46,13 @@ class ProductListViewModel(productRepository: ProductRepository) :
                         productList = state.pagingProduct.productList + pagingProduct.productList,
                         last = pagingProduct.last,
                     )
-                _uiState.value = state.copy(pagingProduct = nowPagingProduct)
+                val cartCount = nowPagingProduct.productList.sumOf { it.quantity }
+
+                _uiState.value =
+                    state.copy(
+                        pagingProduct = nowPagingProduct,
+                        cartCount = state.checkCartCount(cartCount),
+                    )
             }
         }.onFailure { e ->
             _uiState.value?.let { state ->
@@ -74,6 +84,7 @@ class ProductListViewModel(productRepository: ProductRepository) :
                 state.copy(
                     pagingProduct = PagingProduct(productList = newProductList),
                     recentlyProductPosition = position,
+                    cartCount = state.checkCartCount(1),
                 )
         }
     }
@@ -95,6 +106,7 @@ class ProductListViewModel(productRepository: ProductRepository) :
                 state.copy(
                     pagingProduct = PagingProduct(productList = newProductList),
                     recentlyProductPosition = position,
+                    cartCount = state.checkCartCount(-1),
                 )
         }
     }
