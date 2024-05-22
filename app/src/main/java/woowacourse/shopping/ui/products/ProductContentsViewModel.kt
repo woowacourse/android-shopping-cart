@@ -42,18 +42,14 @@ class ProductContentsViewModel(
         val temp = _itemCount.value ?: mutableListOf()
         temp[id.toInt()] += ITEM_COUNT_CHANGE
         _itemCount.value = temp
-        thread {
-            ordersRepository.insert(OrderEntity(id, temp[id.toInt()]))
-        }.join()
+        ordersRepository.insert(OrderEntity(id, temp[id.toInt()]))
     }
 
     fun onItemIncreaseButtonClick(id: Long) {
         val temp = _itemCount.value ?: mutableListOf()
         temp[id.toInt()] += ITEM_COUNT_CHANGE
         _itemCount.value = temp
-        thread {
-            ordersRepository.insert(OrderEntity(id, temp[id.toInt()]))
-        }.join()
+        ordersRepository.insert(OrderEntity(id, temp[id.toInt()]))
     }
 
     fun onItemDecreaseButtonClick(id: Long) {
@@ -63,7 +59,7 @@ class ProductContentsViewModel(
         thread { ordersRepository.insert(OrderEntity(id, temp[id.toInt()])) }.join()
         if (temp[id.toInt()] == DEFAULT_ITEM_COUNT) {
             setItemPlusButtonVisible(id, true)
-            thread { ordersRepository.deleteById(id) }.join()
+            ordersRepository.deleteById(id)
         }
     }
 

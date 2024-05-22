@@ -1,21 +1,38 @@
 package woowacourse.shopping.ui.cart
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.CartPage
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartDao
+import woowacourse.shopping.model.data.OrdersRepository
+import woowacourse.shopping.model.data.ProductDao
 import kotlin.math.min
 
-class CartViewModel(private val cartDao: CartDao) : ViewModel() {
+class CartViewModel(
+    private val cartDao: CartDao,
+    private val productDao: ProductDao,
+    applicationContext: Context,
+) : ViewModel() {
+    private val ordersRepository = OrdersRepository(applicationContext)
+
     private val _cartPage: MutableLiveData<CartPage> = MutableLiveData()
     val cartPage: LiveData<CartPage> get() = _cartPage
 
     private val _cart: MutableLiveData<List<Product>> = MutableLiveData()
     val cart: LiveData<List<Product>> get() = _cart
 
-    val cartItems get() = cartDao.findAll()
+    private val allProducts = productDao.findAll()
+
+    private val tempOrder get() = ordersRepository.getAllData()
+
+    val cartItems
+        get() =
+            tempOrder.map { orderEntity ->
+                allProducts.first { it.id == orderEntity.productId }
+            }
 
     fun loadCartItems() {
         _cartPage.value = CartPage()

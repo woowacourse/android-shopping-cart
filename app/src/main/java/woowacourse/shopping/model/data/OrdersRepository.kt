@@ -1,25 +1,35 @@
 package woowacourse.shopping.model.data
 
 import android.content.Context
-import androidx.lifecycle.LiveData
+import kotlin.concurrent.thread
 
 class OrdersRepository(application: Context) {
     private val database = OrderDatabase.getDatabase(application)
     private val orderDao: OrderDao = database.orderDao()
 
-    fun getAllData(): LiveData<List<OrderEntity>> {
-        return orderDao.getAll()
+    fun getAllData(): List<OrderEntity> {
+        var orders: List<OrderEntity> = emptyList()
+        thread {
+            orders = orderDao.getAll()
+        }.join()
+        return orders
     }
 
     fun insert(entity: OrderEntity) {
-        orderDao.insert(entity)
+        thread {
+            orderDao.insert(entity)
+        }.join()
     }
 
     fun deleteAll() {
-        orderDao.deleteAll()
+        thread {
+            orderDao.deleteAll()
+        }.join()
     }
 
     fun deleteById(id: Long) {
-        orderDao.deleteById(id)
+        thread {
+            orderDao.deleteById(id)
+        }.join()
     }
 }
