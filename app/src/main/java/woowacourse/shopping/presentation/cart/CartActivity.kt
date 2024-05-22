@@ -30,6 +30,17 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        initViewModel()
+        initBinding()
+        initObserver()
+        initToolBar()
+    }
+
+    private fun initObserver() {
+        viewModel.orders.observe(this, adapter::replaceOrders)
+    }
+
+    private fun initViewModel() {
         viewModel =
             ViewModelProvider(
                 this,
@@ -38,14 +49,15 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
                     ProductRepositoryImpl(DefaultProducts),
                 ),
             )[CartViewModel::class.java]
+    }
 
+    private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.adapter = adapter
+    }
 
-        viewModel.loadCurrentPageCartItems()
-        viewModel.orders.observe(this, adapter::replaceOrders)
-
+    private fun initToolBar() {
         setSupportActionBar(binding.toolbarCart)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
