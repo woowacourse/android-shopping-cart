@@ -10,7 +10,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.model.data.CartsImpl
-import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.data.ProductWithQuantitiesImpl
 import woowacourse.shopping.ui.CountButtonClickListener
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModelFactory
@@ -22,9 +22,9 @@ class ProductDetailActivity :
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
     private val viewModel: ProductDetailViewModel by viewModels {
-        ProductDetailViewModelFactory(ProductsImpl, CartsImpl)
+        ProductDetailViewModelFactory(ProductWithQuantitiesImpl, CartsImpl)
     }
-    private val productId by lazy { productId() }
+    private val productWithQuantityId by lazy { productWithQuantityId() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +67,7 @@ class ProductDetailActivity :
     }
 
     private fun showProductDetail() {
-        viewModel.loadProduct(productId)
+        viewModel.loadProduct(productWithQuantityId)
     }
 
     private fun setOnListener() {
@@ -86,9 +86,9 @@ class ProductDetailActivity :
         }
     }
 
-    private fun productId() =
+    private fun productWithQuantityId() =
         intent.getLongExtra(
-            ProductDetailKey.EXTRA_PRODUCT_KEY,
+            ProductDetailKey.EXTRA_PRODUCT_WITH_QUANTITY_KEY,
             EXTRA_DEFAULT_VALUE,
         )
 
@@ -99,7 +99,7 @@ class ProductDetailActivity :
             context: Context,
             productId: Long,
         ) = Intent(context, ProductDetailActivity::class.java).run {
-            putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
+            putExtra(ProductDetailKey.EXTRA_PRODUCT_WITH_QUANTITY_KEY, productId)
             context.startActivity(this)
         }
     }

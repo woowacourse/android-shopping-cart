@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:text="@{cart.product.name}"
+            android:text="@{cart.productWithQuantity.product.name}"
             android:textColor="@color/gray5"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -55,7 +55,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="12dp"
             android:scaleType="fitXY"
-            app:imageUrl="@{cart.product.imageUrl}"
+            app:imageUrl="@{cart.productWithQuantity.product.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name"
@@ -70,7 +70,7 @@
             android:layout_marginBottom="6dp"
             app:layout_constraintBottom_toTopOf="@id/tv_product_price"
             app:layout_constraintEnd_toEndOf="parent"
-            bind:count="@{String.valueOf(cart.product.count)}"
+            bind:count="@{String.valueOf(cart.productWithQuantity.quantity.value)}"
             bind:countButtonClickListener="@{countButtonClickListener}" />
 
         <TextView
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="17dp"
-            android:text="@{@string/product_price(cart.product.totalPrice)}"
+            android:text="@{@string/product_price(cart.productWithQuantity.totalPrice)}"
             android:textColor="@color/gray5"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
