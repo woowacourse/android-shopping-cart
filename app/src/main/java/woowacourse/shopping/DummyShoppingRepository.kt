@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCart
 import woowacourse.shopping.domain.ShoppingCartItem
 import woowacourse.shopping.domain.User
@@ -26,6 +27,10 @@ object DummyShoppingRepository : ShoppingRepository {
         return cartItems.subList(fromIndex, toIndex)
     }
 
+    override fun cartItemByProductId(productId: Long): ShoppingCartItem =
+        shoppingCart().items.firstOrNull { it.product.id == productId }
+            ?: error("$productId 에 해당하는 product가 없습니다.")
+
     override fun shoppingCartItemByPosition(
         currentPage: Int,
         pageSize: Int,
@@ -48,5 +53,32 @@ object DummyShoppingRepository : ShoppingRepository {
             users.map {
                 if (it.id == users.first().id) it.copy(shoppingCart = shoppingCart) else it
             }
+    }
+
+    override fun increasedCartItem(productId: Long): QuantityUpdate {
+        val cartItem =
+            shoppingCart().items.firstOrNull { it.product.id == productId }
+                ?: error("$productId 에 해당하는 product가 없습니다.")
+        val updateResult = cartItem.increaseQuantity()
+        if (updateResult is QuantityUpdate.Success) updateCartItem(updateResult.value)
+        return updateResult
+    }
+
+    override fun updateCartItem(updatedCartItem: ShoppingCartItem) {
+        val shoppingCart = shoppingCart().updateItem(updatedCartItem)
+
+        this.users =
+            users.map {
+                if (it.id == users.first().id) it.copy(shoppingCart = shoppingCart) else it
+            }
+    }
+
+    override fun decreasedCartItem(productId: Long): QuantityUpdate {
+        val cartItem =
+            shoppingCart().items.firstOrNull { it.product.id == productId }
+                ?: error("$productId 에 해당하는 product가 없습니다.")
+        val updateResult = cartItem.decreaseQuantity()
+        if (updateResult is QuantityUpdate.Success) updateCartItem(updateResult.value)
+        return updateResult
     }
 }

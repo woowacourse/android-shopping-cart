@@ -1,5 +1,6 @@
 package woowacourse.shopping
 
+import woowacourse.shopping.domain.QuantityUpdate
 import woowacourse.shopping.domain.ShoppingCart
 import woowacourse.shopping.domain.ShoppingCartItem
 
@@ -10,6 +11,8 @@ interface ShoppingRepository {
         page: Int,
         pageSize: Int,
     ): List<ShoppingCartItem>
+
+    fun cartItemByProductId(productId: Long): ShoppingCartItem
 
     fun shoppingCartItemByPosition(
         currentPage: Int,
@@ -22,4 +25,10 @@ interface ShoppingRepository {
     fun shoppingCartSize(): Int
 
     fun updateShoppingCart(shoppingCart: ShoppingCart)
+
+    fun updateCartItem(updateCartItem: ShoppingCartItem)
+
+    fun increasedCartItem(productId: Long): QuantityUpdate
+
+    fun decreasedCartItem(productId: Long): QuantityUpdate
 }
