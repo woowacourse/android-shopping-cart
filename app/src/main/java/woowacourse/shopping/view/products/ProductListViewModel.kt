@@ -6,11 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.CartItemEntity.Companion.DEFAULT_CART_ITEM_COUNT
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
-import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_COUNT
 import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.RecentlyProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
 import woowacourse.shopping.utils.NoSuchDataException
@@ -20,11 +21,16 @@ import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 class ProductListViewModel(
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val recentlyProductRepository: RecentlyProductRepository,
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData(emptyList())
     val products: LiveData<List<Product>> get() = _products
     private val _cartItemCount: MutableLiveData<Int> = MutableLiveData(0)
     val cartItemCount: LiveData<Int> get() = _cartItemCount
+
+    private val _recentlyProducts: MutableLiveData<List<RecentlyProduct>> =
+        MutableLiveData(emptyList())
+    val recentlyProducts: LiveData<List<RecentlyProduct>> get() = _recentlyProducts
 
     private val _productListEvent: MutableSingleLiveData<ProductListEvent.SuccessEvent> =
         MutableSingleLiveData()
@@ -33,8 +39,10 @@ class ProductListViewModel(
         MutableSingleLiveData()
     val errorEvent: SingleLiveData<ProductListEvent.ErrorEvent> get() = _errorEvent
 
+
     init {
         updateTotalCount()
+        loadPagingRecentlyProduct()
     }
 
     fun loadPagingProduct() {
@@ -51,6 +59,15 @@ class ProductListViewModel(
 
                 else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
             }
+        }
+    }
+
+    private fun loadPagingRecentlyProduct() {
+        try {
+            val pagingData = recentlyProductRepository.getRecentlyProductList()
+            _recentlyProducts.value = pagingData
+        } catch (e: Exception) {
+            _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
         }
     }
 
@@ -147,7 +164,7 @@ class ProductListViewModel(
     fun updateProducts(items: Map<Long, Int>) {
         products.value?.forEach {
             val count = items[it.id]
-            if (count != null){
+            if (count != null) {
                 if (count == DEFAULT_ITEM_COUNT) it.cartItemCounter.unSelectItem()
                 it.cartItemCounter.updateCount(count)
                 _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(it.id))

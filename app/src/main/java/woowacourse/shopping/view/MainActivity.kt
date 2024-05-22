@@ -45,5 +45,4 @@ class MainActivity : AppCompatActivity(), MainFragmentListener {
     override fun saveUpdateProduct(productId: Long, count: Int) {
         mainViewModel.saveUpdate(mapOf(productId to count))
     }
-
 }

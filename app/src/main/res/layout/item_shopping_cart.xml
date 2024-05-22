@@ -81,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:text="@{@string/formatted_price(cartItem.product.price)}"
+            android:text="@{@string/formatted_price(cartItem.product.price * cartItem.product.cartItemCounter.itemCount)}"
             android:textColor="@color/gray_5"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_item_image"
             app:layout_constraintEnd_toEndOf="parent"

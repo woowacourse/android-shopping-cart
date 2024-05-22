@@ -2,16 +2,17 @@ package woowacourse.shopping.view.products
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentlyProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.MainFragmentListener
 import woowacourse.shopping.view.ViewModelFactory
@@ -19,6 +20,7 @@ import woowacourse.shopping.view.cart.ShoppingCartFragment
 import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 import woowacourse.shopping.view.products.adapter.ProductAdapter
+import woowacourse.shopping.view.products.adapter.RecentlyAdapter
 
 class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter {
     private var mainFragmentListener: MainFragmentListener? = null
@@ -29,11 +31,13 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
             ProductListViewModel(
                 productRepository = ProductRepositoryImpl(),
                 shoppingCartRepository = ShoppingCartRepositoryImpl(requireContext()),
+                recentlyProductRepository = RecentlyProductRepositoryImpl(requireContext()),
             )
         }
         viewModelFactory.create(ProductListViewModel::class.java)
     }
-    private lateinit var adapter: ProductAdapter
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentlyAdapter: RecentlyAdapter
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -65,19 +69,28 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         binding.vm = productListViewModel
         binding.onClickProduct = this
         binding.lifecycleOwner = viewLifecycleOwner
-        adapter =
+        productAdapter =
             ProductAdapter(
                 onClickProducts = this,
                 onClickCartItemCounter = this,
             ) { isLoadLastItem ->
                 binding.isVisible = isLoadLastItem
             }
-        binding.rvProducts.adapter = adapter
+        binding.rvProducts.adapter = productAdapter
+        recentlyAdapter =
+            RecentlyAdapter(
+                onClickProducts = this
+            )
+        binding.horizontalView.rvRecentlyProduct.adapter = recentlyAdapter
     }
 
     private fun observeData() {
+        productListViewModel.recentlyProducts.observe(viewLifecycleOwner){ recentlyData ->
+            recentlyAdapter.updateProducts(recentlyData)
+        }
+
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
-            adapter.updateProducts(addedProducts = products)
+            productAdapter.updateProducts(addedProducts = products)
         }
         productListViewModel.productListEvent.observe(viewLifecycleOwner) { productListEvent ->
             when (productListEvent) {
@@ -85,11 +98,11 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
                     requireContext().makeToast(
                         getString(R.string.delete_cart_item),
                     )
-                    adapter.updateProduct(productListEvent.productId)
+                    productAdapter.updateProduct(productListEvent.productId)
                 }
 
                 is ProductListEvent.UpdateProductEvent.Success -> {
-                    adapter.updateProduct(productListEvent.productId)
+                    productAdapter.updateProduct(productListEvent.productId)
                 }
             }
         }
@@ -139,6 +152,14 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
 
     override fun clickLoadPagingData() {
         loadPagingData()
+    }
+
+    override fun clickRecentlyItem(recentlyProduct: RecentlyProduct) {
+        val productFragment =
+            ProductDetailFragment().apply {
+                arguments = ProductDetailFragment.createBundle(recentlyProduct.productId)
+            }
+        mainFragmentListener?.changeFragment(productFragment)
     }
 
     private fun loadPagingData() {
