@@ -1,12 +1,14 @@
 package woowacourse.shopping.data.cart
 
+import android.content.Context
 import woowacourse.shopping.data.shopping.DummyShoppingDataSource
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 
-object DummyCartDataSource : CartDataSource {
-    private const val PRODUCT_AMOUNT = 5
+class DummyCartDataSource(context: Context) : CartDataSource {
+    private val cartDao = CartDatabase.getInstance(context).dao()
+    private val PRODUCT_AMOUNT = 5
     private var cart =
         Cart(
             DummyShoppingDataSource.products.take(30),

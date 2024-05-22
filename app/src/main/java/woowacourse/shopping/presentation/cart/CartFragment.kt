@@ -19,7 +19,7 @@ class CartFragment :
     private lateinit var adapter: CartAdapter
     override val viewModel by viewModels<CartViewModel> {
         CartViewModel.factory(
-            DefaultCartRepository(),
+            DefaultCartRepository(requireContext()),
         )
     }
 

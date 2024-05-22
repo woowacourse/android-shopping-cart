@@ -1,11 +1,13 @@
 package woowacourse.shopping.data.cart
 
+import android.content.Context
 import woowacourse.shopping.data.shopping.DummyShoppingDataSource
 import woowacourse.shopping.data.shopping.ShoppingDataSource
 import woowacourse.shopping.domain.CartProduct
 
 class DefaultCartRepository(
-    private val cartDataSource: CartDataSource = DummyCartDataSource,
+    private val context: Context,
+    private val cartDataSource: CartDataSource = DummyCartDataSource(context),
     private val shoppingDataSource: ShoppingDataSource = DummyShoppingDataSource,
 ) : CartRepository {
     override fun cartProducts(currentPage: Int): List<CartProduct> {
