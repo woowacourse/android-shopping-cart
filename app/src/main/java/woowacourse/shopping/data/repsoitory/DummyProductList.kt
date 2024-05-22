@@ -72,11 +72,11 @@ object DummyProductList : ProductListRepository {
     ): Result<PagingProduct> =
         runCatching {
             val fromIndex = page * pageSize
-            val toIndex = min(fromIndex + pageSize, DummyProductList.productList.size)
-            val last = toIndex == DummyProductList.productList.size
+            val toIndex = min(fromIndex + pageSize, productList.size)
+            val last = toIndex == productList.size
             PagingProduct(
                 currentPage = page,
-                productList = DummyProductList.productList.subList(fromIndex, toIndex),
+                productList = productList.subList(fromIndex, toIndex),
                 isLastPage = last,
             )
         }

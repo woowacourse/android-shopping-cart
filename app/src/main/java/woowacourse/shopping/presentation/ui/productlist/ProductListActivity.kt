@@ -5,6 +5,7 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repsoitory.DummyProductList
+import woowacourse.shopping.data.repsoitory.DummyShoppingCart
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
@@ -21,15 +22,21 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     private val viewModel: ProductListViewModel by viewModels {
         ProductListViewModelFactory(
             DummyProductList,
+            DummyShoppingCart,
         )
     }
 
     private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
 
     override fun initStartView() {
+        initPage()
         initDataBinding()
         initAdapter()
         initObserve()
+    }
+
+    private fun initPage() {
+        viewModel.initPage()
     }
 
     private fun initDataBinding() {

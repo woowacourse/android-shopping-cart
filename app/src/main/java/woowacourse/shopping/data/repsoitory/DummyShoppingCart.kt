@@ -36,11 +36,10 @@ object DummyShoppingCart : ShoppingCartRepository {
                 it.product.id == product.id
             } ?: throw NoSuchElementException()
 
-        if (order.quantity - 1 <= 0)
-            {
-                removeOrder(order.id)
-                return
-            }
+        if (order.quantity - 1 <= 0) {
+            removeOrder(order.id)
+            return
+        }
 
         orders[order.id] = order.copy(quantity = order.quantity - 1)
     }
@@ -51,6 +50,10 @@ object DummyShoppingCart : ShoppingCartRepository {
 
     override fun removeAllOrder() {
         orders.clear()
+    }
+
+    override fun getOrders(): List<Order> {
+        return orders
     }
 
     override fun getPagingOrder(
