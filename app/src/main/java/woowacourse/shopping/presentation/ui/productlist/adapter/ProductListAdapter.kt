@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderLoadMoreBinding
 import woowacourse.shopping.databinding.HolderProductBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.common.ProductCountHandler
 import woowacourse.shopping.presentation.ui.productlist.PagingProduct
 import woowacourse.shopping.presentation.ui.productlist.ProductListActionHandler
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.ProductListViewHolder.LoadMoreViewHolder
@@ -14,6 +15,7 @@ import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapt
 
 class ProductListAdapter(
     private val actionHandler: ProductListActionHandler,
+    private val productCountHandler: ProductCountHandler,
     private var pagingProduct: PagingProduct = PagingProduct(emptyList(), true),
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
     override fun getItemViewType(position: Int): Int {
@@ -31,6 +33,7 @@ class ProductListAdapter(
                 ProductViewHolder(
                     HolderProductBinding.inflate(inflater, parent, false),
                     actionHandler,
+                    productCountHandler,
                 )
             }
 
@@ -50,7 +53,7 @@ class ProductListAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(pagingProduct.productList[position])
+            is ProductViewHolder -> holder.bind(pagingProduct.productList[position], position)
             is LoadMoreViewHolder -> holder.bind(pagingProduct.last)
         }
     }
@@ -67,14 +70,24 @@ class ProductListAdapter(
         }
     }
 
+    fun updateProduct(position: Int) {
+        notifyItemChanged(position)
+    }
+
     sealed class ProductListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         class ProductViewHolder(
             private val binding: HolderProductBinding,
             private val actionHandler: ProductListActionHandler,
+            private val productCountHandler: ProductCountHandler,
         ) : ProductListViewHolder(binding.root) {
-            fun bind(product: Product) {
+            fun bind(
+                product: Product,
+                position: Int,
+            ) {
                 binding.product = product
+                binding.position = position
                 binding.actionHandler = actionHandler
+                binding.productCountHandler = productCountHandler
             }
         }
 

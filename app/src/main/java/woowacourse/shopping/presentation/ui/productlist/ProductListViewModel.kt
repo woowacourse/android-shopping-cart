@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.ui.productlist
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -9,11 +10,13 @@ import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.base.Event
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
+import woowacourse.shopping.presentation.common.ProductCountHandler
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListPagingSource
 
 class ProductListViewModel(productRepository: ProductRepository) :
     BaseViewModel(),
-    ProductListActionHandler {
+    ProductListActionHandler,
+    ProductCountHandler {
     private val _uiState: MutableLiveData<ProductListUiState> =
         MutableLiveData(ProductListUiState())
     val uiState: LiveData<ProductListUiState> get() = _uiState
@@ -53,6 +56,51 @@ class ProductListViewModel(productRepository: ProductRepository) :
 
     override fun loadMoreProducts() {
         loadProductList()
+    }
+
+    override fun addProductQuantity(
+        productId: Long,
+        position: Int,
+    ) {
+        Log.d("Ttt", "플러스 눌림")
+
+        _uiState.value?.let { state ->
+            val newProductList =
+                state.pagingProduct.productList.map { product ->
+                    if (product.id == productId) {
+                        product.copy(quantity = product.quantity + 1)
+                    } else {
+                        product
+                    }
+                }
+            _uiState.value =
+                state.copy(
+                    pagingProduct = PagingProduct(productList = newProductList),
+                    recentlyProductPosition = position,
+                )
+        }
+    }
+
+    override fun minusProductQuantity(
+        productId: Long,
+        position: Int,
+    ) {
+        Log.d("Ttt", "마이너스 눌림")
+        _uiState.value?.let { state ->
+            val newProductList =
+                state.pagingProduct.productList.map { product ->
+                    if (product.id == productId) {
+                        product.copy(quantity = product.quantity - 1)
+                    } else {
+                        product
+                    }
+                }
+            _uiState.value =
+                state.copy(
+                    pagingProduct = PagingProduct(productList = newProductList),
+                    recentlyProductPosition = position,
+                )
+        }
     }
 
     companion object {

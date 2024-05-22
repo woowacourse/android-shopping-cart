@@ -4,6 +4,7 @@ import woowacourse.shopping.domain.model.Product
 
 data class ProductListUiState(
     val pagingProduct: PagingProduct = PagingProduct(),
+    val recentlyProductPosition: Int = 0,
 )
 
 data class PagingProduct(

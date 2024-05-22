@@ -22,7 +22,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         ProductListViewModel.factory((application as ShoppingApplication).productRepository)
     }
 
-    private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel) }
+    private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel, viewModel) }
 
     override fun initStartView() {
         initDataBinding()
@@ -56,6 +56,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
 
         viewModel.uiState.observe(this) { state ->
             adapter.updateProductList(state.pagingProduct)
+            adapter.updateProduct(state.recentlyProductPosition)
         }
 
         viewModel.message.observeEvent(this) { message ->
