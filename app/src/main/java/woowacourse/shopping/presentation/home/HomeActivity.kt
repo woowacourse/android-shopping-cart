@@ -39,7 +39,6 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
     override fun onResume() {
         super.onResume()
         viewModel.loadTotalCartCount()
-        viewModel.loadProducts()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +56,10 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         binding.lifecycleOwner = this
         binding.homeClickListener = this
 
-        viewModel.products.observe(this) {
+        viewModel.orders.observe(this) {
             adapter.addProducts(it)
         }
+
         viewModel.loadStatus.observe(this) {
             adapter.updateLoadStatus(it)
         }

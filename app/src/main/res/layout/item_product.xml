@@ -6,9 +6,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="product"
-            type="woowacourse.shopping.data.model.Product" />
+            name="order"
+            type="woowacourse.shopping.presentation.cart.Order" />
 
         <variable
             name="productItemClickListener"
@@ -26,13 +28,13 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/description_thumbnail"
-            android:onClick="@{() -> productItemClickListener.onProductItemClick(product.id)}"
+            android:onClick="@{() -> productItemClickListener.onProductItemClick(order.product.id)}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            shopping:productThumbnail="@{product.imageSource}"
+            shopping:productThumbnail="@{order.product.imageSource}"
             tools:src="@drawable/ic_launcher_background" />
 
         <ImageView
@@ -41,8 +43,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:onClick="@{() -> productItemClickListener.addCartItem(product.id) }"
+            android:onClick="@{() -> productItemClickListener.addCartItem(order.product.id) }"
             android:src="@drawable/ic_circle_plus"
+            android:visibility="@{order.quantity == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
             app:layout_constraintEnd_toEndOf="@id/iv_product_detail" />
 
@@ -54,7 +57,7 @@
             android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{order.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -70,7 +73,7 @@
             android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{@string/format_price(product.price)}"
+            android:text="@{@string/format_price(order.product.price)}"
             android:textColor="@color/gray_500"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

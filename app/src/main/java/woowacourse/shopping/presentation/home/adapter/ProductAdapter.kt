@@ -8,9 +8,9 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.presentation.cart.Order
 import woowacourse.shopping.presentation.home.LoadStatus
 import java.lang.IllegalArgumentException
 
@@ -18,7 +18,7 @@ class ProductAdapter(
     private val productItemClickListener: ProductItemClickListener,
     private val loadClickListener: LoadClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var products: List<Product> = emptyList()
+    private var orders: List<Order> = emptyList()
     private var loadStatus: LoadStatus = LoadStatus()
 
     override fun onCreateViewHolder(
@@ -48,26 +48,25 @@ class ProductAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(products[position])
+            is ProductViewHolder -> holder.bind(orders[position])
             is LoadingViewHolder -> holder.bind(loadStatus)
             else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)
         }
     }
 
-    override fun getItemCount(): Int = products.size + ADD_MORE_COUNT
+    override fun getItemCount(): Int = orders.size + ADD_MORE_COUNT
 
     override fun getItemViewType(position: Int): Int {
-        return if (position < products.size) {
+        return if (position < orders.size) {
             TYPE_PRODUCT
         } else {
             TYPE_LOAD
         }
     }
 
-    fun addProducts(insertedProducts: List<Product>) {
-        val previousSize = products.size
-        products += insertedProducts
-        notifyItemRangeInserted(previousSize, insertedProducts.size)
+    fun addProducts(insertedProducts: List<Order>) {
+        orders = insertedProducts
+        notifyDataSetChanged()
     }
 
     fun updateLoadStatus(loadStatus: LoadStatus) {
