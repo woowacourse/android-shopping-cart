@@ -56,7 +56,7 @@ class ProductDetailViewModel(
                 ProductDetailEvent.AddShoppingCart.Success(
                     productId = product.id,
                     count = product.cartItemCounter.itemCount,
-                )
+                ),
             )
         } catch (e: Exception) {
             when (e) {
@@ -197,7 +197,6 @@ class ProductDetailViewModel(
             if (recentlyProduct.productId != product.id) {
                 saveRecentlyProduct(product)
             }
-
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException -> _errorEvent.postValue(ProductDetailEvent.UpdateRecentlyProductItem.Fail)
