@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+
+        <variable
+            name="clickListener"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingClickListener" />
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/activity_shopping"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".presentation.shopping.ShoppingActivity">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar_main"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/gray_500"
+            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/main_menu"
+            app:title="Shopping"
+            app:titleTextColor="@color/white" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_product_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="14dp"
+            android:layout_marginTop="14dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_load_more"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_main"
+            app:product="@{viewModel.products}"
+            tools:itemCount="10"
+            tools:listitem="@layout/item_product" />
+
+        <TextView
+            android:id="@+id/btn_load_more"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@color/purple_200"
+            android:gravity="center"
+            android:onClick="@{() -> viewModel.loadNextProducts()}"
+            android:text="Load More"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:visibility="@{viewModel.showLoadMore}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_product_list"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
