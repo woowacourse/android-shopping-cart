@@ -22,9 +22,7 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
 
     fun onItemPlusButtonClick(id: Long) {
         _isItemPlusButtonVisible.value =
-            _isItemPlusButtonVisible.value?.apply {
-                set(id.toInt(), false)
-            }
+            _isItemPlusButtonVisible.value?.apply { set(id.toInt(), false) }
         val temp = _itemCount.value ?: mutableListOf()
         temp[id.toInt()] += CHANGED_ITEM_COUNT
         _itemCount.value = temp
@@ -32,7 +30,10 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
 
     fun onItemDecreaseButtonClick(id: Long) {
         val temp = _itemCount.value ?: mutableListOf()
-        if (temp[id.toInt()] == MINIMUM_ITEM_COUNT) return
+        if (temp[id.toInt()] == MINIMUM_ITEM_COUNT) {
+            _isItemPlusButtonVisible.value =
+                _isItemPlusButtonVisible.value?.apply { set(id.toInt(), true) }
+        }
         temp[id.toInt()] -= CHANGED_ITEM_COUNT
         _itemCount.value = temp
     }
@@ -49,7 +50,7 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
         items.addAll(allProducts)
         _products.value = getProducts()
         _isItemPlusButtonVisible.value = List(allProducts.size) { true }.toMutableList()
-        _itemCount.value = List(allProducts.size) { MINIMUM_ITEM_COUNT }.toMutableList()
+        _itemCount.value = List(allProducts.size) { DEFAULT_ITEM_COUNT }.toMutableList()
     }
 
     private fun getProducts(): List<Product> {
@@ -63,7 +64,8 @@ class ProductContentsViewModel(private val productDao: ProductDao) : ViewModel()
     companion object {
         private const val DEFAULT_OFFSET = 0
         const val LOAD_LIMIT = 20
-        private const val MINIMUM_ITEM_COUNT = 0
+        private const val DEFAULT_ITEM_COUNT = 0
+        private const val MINIMUM_ITEM_COUNT = 1
         private const val CHANGED_ITEM_COUNT = 1
     }
 }
