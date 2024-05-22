@@ -16,6 +16,7 @@
 
 장바구니 ROOM DB 만들기
 why?? Product Api 는 있고, Cart, SearchedProduct Api 는 없다고 가정
+Product Api 는 MockServer 를 활용해서 만들어서 실제 서버랑 비슷하게 만들어보자. 
 
 - [x]: CartEntity - product id, 수량만 저장
 - [x]: RecentProductEntity - 조회한 Product id, CreateDateTime
@@ -28,8 +29,9 @@ why?? Product Api 는 있고, Cart, SearchedProduct Api 는 없다고 가정
   - [x]: product 의 id 에 해당 하는 상품을 삭제한다.
   - [x]: 카트 상품을 저장한 후, 저장된 카트 상품을 불러온다.
   - [x]: 카트 상품들을 모두 삭제 한다. (추후 요구사항이 생길지도 모르자나?!)
-- [ ]: Product List 서버 만둘기
-- [ ]: Service Test
+- : Product List 서버 만둘기
+  - [x]: MockServer 를 활용해서 상품 목록 내려주는 Service 만들기
+- [x]: Service Test
 
 ## Domain
 

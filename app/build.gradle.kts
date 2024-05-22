@@ -69,12 +69,12 @@ dependencies {
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
     implementation("com.github.bumptech.glide:glide:4.14.2")
     kapt("com.github.bumptech.glide:compiler:4.14.2")
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     // unit test
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.assertj:assertj-core:3.25.3")
     testImplementation("io.kotest:kotest-runner-junit5:5.8.0")
     testImplementation("io.mockk:mockk:1.13.2")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
     // instrument test
     androidTestImplementation("io.mockk:mockk-android:1.13.3")
     debugImplementation("androidx.fragment:fragment-testing:1.6.2")
