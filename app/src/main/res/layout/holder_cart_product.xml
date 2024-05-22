@@ -7,12 +7,21 @@
     <data>
 
         <variable
+            name="position"
+            type="int" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
             name="actionHandler"
             type="woowacourse.shopping.presentation.ui.shoppingcart.ShoppingCartActionHandler" />
+
+        <variable
+            name="productCountHandler"
+            type="woowacourse.shopping.presentation.common.ProductCountHandler" />
+
 
     </data>
 
@@ -55,6 +64,19 @@
             app:layout_constraintStart_toStartOf="@+id/tv_product_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_product_name"
             tools:src="@drawable/img_dummy_product_thumbnail" />
+
+        <include
+            android:id="@+id/include_product_count"
+            layout="@layout/include_product_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="6dp"
+            app:actionHandler="@{productCountHandler}"
+            app:layout_constraintBottom_toTopOf="@+id/tv_product_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:position="@{position}"
+            app:product="@{product}" />
 
         <TextView
             android:id="@+id/tv_product_price"

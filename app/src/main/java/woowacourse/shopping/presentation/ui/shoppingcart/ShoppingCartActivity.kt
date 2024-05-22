@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.ui.shoppingcart
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.MenuItem
@@ -10,6 +12,7 @@ import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
+import woowacourse.shopping.presentation.ui.productlist.ProductListActivity
 import woowacourse.shopping.presentation.ui.shoppingcart.adapter.CartProductsAdapter
 
 class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
@@ -19,7 +22,7 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
         ShoppingCartViewModel.factory((application as ShoppingApplication).shoppingCartRepository)
     }
 
-    private val adapter: CartProductsAdapter by lazy { CartProductsAdapter(viewModel) }
+    private val adapter: CartProductsAdapter by lazy { CartProductsAdapter(viewModel, viewModel) }
 
     override fun initStartView() {
         initActionBar()
@@ -56,17 +59,31 @@ class ShoppingCartActivity : BaseActivity<ActivityShoppingCartBinding>() {
                 is MessageProvider.DefaultErrorMessage -> showSnackbar(message.getMessage(this))
             }
         }
+
+        viewModel.navigateAction.observeEvent(this) { navigateAction ->
+            when (navigateAction) {
+                is ShoppingCartNavigateAction.NavigateToProductList -> {
+                    val intent = ProductListActivity.getIntent(this, navigateAction.updatedProducts)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        finish()
+        viewModel.navigateToProductList()
         return true
     }
 
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        viewModel.navigateToProductList()
+    }
+
     companion object {
-        fun startActivity(context: Context) {
-            val intent = Intent(context, ShoppingCartActivity::class.java)
-            context.startActivity(intent)
+        fun getIntent(context: Context): Intent {
+            return Intent(context, ShoppingCartActivity::class.java)
         }
     }
 }

@@ -13,6 +13,7 @@ import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
 import woowacourse.shopping.presentation.common.ProductCountHandler
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListPagingSource
+import woowacourse.shopping.presentation.ui.shoppingcart.UpdatedProducts
 import kotlin.concurrent.thread
 
 class ProductListViewModel(
@@ -62,14 +63,14 @@ class ProductListViewModel(
                     _uiState.postValue(
                         state.copy(
                             pagingProduct = nowPagingProduct,
-                            cartCount = state.checkCartCount(cartCount),
+                            cartCount = cartCount,
                         ),
                     )
                 }
             }.onFailure { e ->
                 _uiState.value?.let { state ->
                     val newPagingProduct = state.pagingProduct.copy(last = true)
-                    _uiState.value = state.copy(pagingProduct = newPagingProduct)
+                    _uiState.postValue(state.copy(pagingProduct = newPagingProduct))
                 }
                 showMessage(MessageProvider.DefaultErrorMessage)
             }
@@ -78,6 +79,26 @@ class ProductListViewModel(
 
     override fun loadMoreProducts() {
         loadProductList()
+    }
+
+    fun updateProducts(updatedProducts: UpdatedProducts) {
+        uiState.value?.let { state ->
+            val newProductList =
+                state.pagingProduct.productList.mapIndexed { position, product ->
+
+                    val findProduct = updatedProducts.getProduct(productId = product.id)
+                    if (findProduct == null) {
+                        product
+                    } else {
+                        _uiState.value = uiState.value?.copy(recentlyProductPosition = position)
+                        product.copy(quantity = findProduct.quantity)
+                    }
+                }
+            val cartCount = newProductList.sumOf { it.quantity }
+
+            _uiState.value =
+                state.copy(pagingProduct = PagingProduct(newProductList), cartCount = cartCount)
+        }
     }
 
     override fun addProductQuantity(
@@ -98,7 +119,7 @@ class ProductListViewModel(
                 state.copy(
                     pagingProduct = PagingProduct(productList = newProductList),
                     recentlyProductPosition = position,
-                    cartCount = state.checkCartCount(1),
+                    cartCount = state.cartCount + 1,
                 )
         }
     }
@@ -139,7 +160,7 @@ class ProductListViewModel(
                 state.copy(
                     pagingProduct = PagingProduct(productList = newProductList),
                     recentlyProductPosition = position,
-                    cartCount = state.checkCartCount(-1),
+                    cartCount = state.cartCount - 1,
                 )
         }
     }

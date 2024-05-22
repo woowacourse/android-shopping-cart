@@ -47,7 +47,7 @@
             android:backgroundTint="@color/green"
             android:gravity="center"
             android:maxLength="2"
-            android:text="@{String.valueOf(vm.uiState.cartCount)}"
+            android:text="@{String.valueOf(vm.uiState.cartTotalCount)}"
             android:textColor="@color/white"
             android:textSize="14dp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_cart_count"

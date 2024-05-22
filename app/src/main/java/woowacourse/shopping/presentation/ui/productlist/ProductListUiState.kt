@@ -7,13 +7,13 @@ data class ProductListUiState(
     val recentlyProductPosition: Int = 0,
     val cartCount: Int = 0,
 ) {
-    fun checkCartCount(count: Int): Int {
-        return if (cartCount + count >= MAX_CART_COUNT) {
-            MAX_CART_COUNT
-        } else {
-            cartCount + count
-        }
-    }
+    val cartTotalCount: Int
+        get() =
+            if (cartCount >= MAX_CART_COUNT) {
+                MAX_CART_COUNT
+            } else {
+                cartCount
+            }
 
     companion object {
         const val MAX_CART_COUNT = 99
