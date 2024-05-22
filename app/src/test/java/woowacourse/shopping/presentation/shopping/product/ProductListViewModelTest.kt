@@ -9,7 +9,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.data.shopping.ShoppingRepository
+import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.domain.product
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension

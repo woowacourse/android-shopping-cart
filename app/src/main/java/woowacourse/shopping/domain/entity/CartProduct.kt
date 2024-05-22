@@ -1,4 +1,4 @@
-package woowacourse.shopping.domain
+package woowacourse.shopping.domain.entity
 
 data class CartProduct(
     val product: Product,

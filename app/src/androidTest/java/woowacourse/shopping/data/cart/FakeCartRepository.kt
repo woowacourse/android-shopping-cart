@@ -1,7 +1,8 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.entity.Cart
+import woowacourse.shopping.domain.entity.CartProduct
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.product
 
 class FakeCartRepository(

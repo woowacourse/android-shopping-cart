@@ -2,6 +2,7 @@ package woowacourse.shopping.domain
 
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
+import woowacourse.shopping.domain.entity.Cart
 
 class ShoppingCartTest {
     @Test

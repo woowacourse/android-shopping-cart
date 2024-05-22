@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.shopping
 
 import androidx.annotation.VisibleForTesting
+import woowacourse.shopping.domain.repository.ShoppingRepository
 
 object ShoppingRepositoryInjector {
     @Volatile

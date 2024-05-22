@@ -22,8 +22,8 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.data.cart.FakeCartRepository
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.entity.Cart
+import woowacourse.shopping.domain.entity.Product
 import woowacourse.shopping.product
 import woowacourse.shopping.products
 import woowacourse.shopping.util.clickChildViewWithId

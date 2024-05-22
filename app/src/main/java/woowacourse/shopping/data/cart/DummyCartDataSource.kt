@@ -1,9 +1,9 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.data.shopping.DummyShoppingDataSource
-import woowacourse.shopping.domain.Cart
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.entity.Cart
+import woowacourse.shopping.domain.entity.CartProduct
+import woowacourse.shopping.domain.entity.Product
 
 object DummyCartDataSource : CartDataSource {
     private const val START_PAGE = 1

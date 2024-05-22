@@ -1,6 +1,6 @@
-package woowacourse.shopping.data.shopping
+package woowacourse.shopping.domain.repository
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.entity.Product
 
 interface ShoppingRepository {
     fun products(exceptProducts: List<Long>): List<Product>

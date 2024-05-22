@@ -1,7 +1,7 @@
 package woowacourse.shopping.data.cart
 
-import woowacourse.shopping.domain.CartProduct
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.entity.CartProduct
+import woowacourse.shopping.domain.entity.Product
 
 interface CartDataSource {
     fun loadCartProducts(

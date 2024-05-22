@@ -2,6 +2,7 @@ package woowacourse.shopping.data.cart
 
 import androidx.annotation.VisibleForTesting
 import woowacourse.shopping.data.shopping.DummyShoppingDataSource
+import woowacourse.shopping.domain.repository.CartRepository
 
 object CartRepositoryInjector {
     @Volatile

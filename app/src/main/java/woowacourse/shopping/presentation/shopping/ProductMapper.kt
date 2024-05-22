@@ -1,6 +1,6 @@
 package woowacourse.shopping.presentation.shopping
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.entity.Product
 import woowacourse.shopping.presentation.shopping.detail.ProductUi
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 

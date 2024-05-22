@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.shopping
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.entity.Product
 
 interface ShoppingDataSource {
     fun products(

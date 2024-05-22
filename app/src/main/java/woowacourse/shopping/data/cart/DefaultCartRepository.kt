@@ -1,7 +1,8 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.data.shopping.ShoppingDataSource
-import woowacourse.shopping.domain.CartProduct
+import woowacourse.shopping.domain.entity.CartProduct
+import woowacourse.shopping.domain.repository.CartRepository
 
 class DefaultCartRepository(
     private val cartDataSource: CartDataSource,

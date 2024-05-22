@@ -1,5 +1,7 @@
 package woowacourse.shopping.domain
 
+import woowacourse.shopping.domain.entity.Product
+
 fun product(
     id: Long = 1,
     price: Int = 1000,

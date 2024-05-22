@@ -1,6 +1,6 @@
 package woowacourse.shopping.data.shopping
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.entity.Product
 
 object DummyShoppingDataSource : ShoppingDataSource {
     val products: List<Product> =
