@@ -20,13 +20,13 @@ interface ShoppingCartDao {
     @Query("SELECT * FROM cartProductEntity WHERE productId = :productId")
     fun findCartProduct(productId: Long): CartProductEntity
 
-    @Query("SELECT * FROM cartProductEntity LIMIT :pageSize OFFSET (:page * :pageSize)")
+    @Query("SELECT * FROM cartProductEntity ORDER BY createAt DESC LIMIT :pageSize OFFSET (:page * :pageSize)")
     fun getCartProductsPaged(
         page: Int,
         pageSize: Int,
     ): List<CartProductEntity>
 
-    @Query("SELECT * FROM cartProductEntity")
+    @Query("SELECT * FROM cartProductEntity ORDER BY createAt DESC")
     fun getAllCartProducts(): List<CartProductEntity>
 
     @Query("SELECT COUNT(*) FROM cartProductEntity")

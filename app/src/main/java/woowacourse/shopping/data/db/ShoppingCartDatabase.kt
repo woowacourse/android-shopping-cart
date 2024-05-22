@@ -4,10 +4,12 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import woowacourse.shopping.data.dao.ShoppingCartDao
 import woowacourse.shopping.data.model.local.CartProductEntity
 
 @Database(entities = [CartProductEntity::class], version = 1)
+@TypeConverters(ProductHistoryTypeConverters::class)
 abstract class ShoppingCartDatabase : RoomDatabase() {
     abstract fun dao(): ShoppingCartDao
 

@@ -2,6 +2,7 @@ package woowacourse.shopping.data.model.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDateTime
 
 @Entity(tableName = "cartProductEntity")
 data class CartProductEntity(
@@ -10,4 +11,5 @@ data class CartProductEntity(
     val price: Int,
     val quantity: Int,
     val imageUrl: String,
+    val createAt: LocalDateTime,
 )

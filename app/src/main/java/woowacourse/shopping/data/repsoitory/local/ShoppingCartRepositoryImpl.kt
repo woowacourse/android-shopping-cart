@@ -5,6 +5,7 @@ import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.data.model.local.CartProductEntity
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import java.time.LocalDateTime
 
 class ShoppingCartRepositoryImpl(private val dao: ShoppingCartDao) : ShoppingCartRepository {
     override fun insertCartProduct(
@@ -22,6 +23,7 @@ class ShoppingCartRepositoryImpl(private val dao: ShoppingCartDao) : ShoppingCar
                     price = price,
                     quantity = quantity,
                     imageUrl = imageUrl,
+                    createAt = LocalDateTime.now(),
                 )
             dao.insertCartProduct(cartProductEntity = cartProductEntity)
         }
