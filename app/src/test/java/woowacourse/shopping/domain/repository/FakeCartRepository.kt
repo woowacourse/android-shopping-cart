@@ -12,6 +12,7 @@ class FakeCartRepository(
         productId: Long,
         quantity: Int,
     ): Long {
+        cartItems.add(CartItem(id, 1, productId))
         return id++
     }
 

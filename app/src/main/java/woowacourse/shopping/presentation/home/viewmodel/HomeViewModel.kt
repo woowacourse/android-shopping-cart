@@ -31,16 +31,20 @@ class HomeViewModel(
         _totalCartCount.value = cartRepository.fetchTotalCartCount()
     }
 
+    fun addCartItem(productId: Long) {
+        cartRepository.addCartItem(productId, 1)
+
+        loadTotalCartCount()
+    }
+
     fun loadProducts() {
         _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
         _products.value = productRepository.fetchSinglePage(page++)
 
-        products.value?.let {
-            _loadStatus.value =
-                loadStatus.value?.copy(
-                    loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
-                    isLoadingPage = false,
-                )
-        }
+        _loadStatus.value =
+            loadStatus.value?.copy(
+                loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
+                isLoadingPage = false,
+            )
     }
 }

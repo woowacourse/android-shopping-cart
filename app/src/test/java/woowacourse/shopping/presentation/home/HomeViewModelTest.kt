@@ -32,6 +32,15 @@ class HomeViewModelTest {
 
         val actualResult = homeViewModel.totalCartCount.getOrAwaitValue()
 
+        assertThat(actualResult).isEqualTo(6)
+    }
+
+    @Test
+    fun `장바구니에 아이템을 추가한다`() {
+        homeViewModel.addCartItem(7)
+
+        val actualResult = homeViewModel.totalCartCount.getOrAwaitValue()
+
         assertThat(actualResult).isEqualTo(7)
     }
 
