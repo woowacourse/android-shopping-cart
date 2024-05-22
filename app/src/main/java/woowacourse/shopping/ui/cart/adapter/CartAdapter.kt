@@ -29,7 +29,12 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(cart[position], onClickExit, onIncreaseProductQuantity, onDecreaseProductQuantity)
+        holder.bind(
+            cart[position],
+            onClickExit,
+            onIncreaseProductQuantity,
+            onDecreaseProductQuantity
+        )
     }
 
     override fun getItemCount(): Int {
@@ -47,5 +52,11 @@ class CartAdapter(
         val replacedCartItemPosition = cart.indexOfFirst { it.id == replacedCartItem.id }
         cart[replacedCartItemPosition] = replacedCartItem
         notifyItemChanged(replacedCartItemPosition)
+    }
+
+    fun removeCartItemById(removedCartItemId: Long) {
+        val removedCartItemPosition = cart.indexOfFirst { it.id == removedCartItemId }
+        cart.removeAt(removedCartItemPosition)
+        notifyItemRemoved(removedCartItemPosition)
     }
 }

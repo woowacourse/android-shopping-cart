@@ -27,6 +27,9 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     private val _changedCartItemQuantity = MutableLiveData<CartItem>()
     val changedCartItemQuantity: LiveData<CartItem> get() = _changedCartItemQuantity
 
+    private val _removedCartItemId = MutableLiveData<Long>()
+    val removedCartItemId: LiveData<Long> get() = _removedCartItemId
+
     init {
         loadCart()
     }
@@ -85,8 +88,15 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     fun decreaseQuantity(product: Product) {
+        val decreaseQuantityCartItem = cartRepository.find(product)
         cartRepository.decreaseQuantity(product)
-        _changedCartItemQuantity.value = cartRepository.find(product)
+        runCatching {
+            cartRepository.find(product)
+        }.onSuccess {
+            _changedCartItemQuantity.value = it
+        }.onFailure {
+            _removedCartItemId.value = decreaseQuantityCartItem.id
+        }
     }
 
     companion object {

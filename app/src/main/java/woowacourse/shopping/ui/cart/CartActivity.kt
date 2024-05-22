@@ -47,5 +47,9 @@ class CartActivity : AppCompatActivity() {
         viewModel.changedCartItemQuantity.observe(this) {
             adapter.replaceCartItem(it)
         }
+
+        viewModel.removedCartItemId.observe(this) {
+            adapter.removeCartItemById(it)
+        }
     }
 }
