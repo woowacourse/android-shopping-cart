@@ -31,6 +31,14 @@ class ShoppingCartRepositoryImpl(private val dao: ShoppingCartDao) : ShoppingCar
             dao.findCartProduct(productId = productId).toDomain()
         }
 
+    override fun updateCartProduct(
+        productId: Long,
+        quantity: Int,
+    ): Result<Unit> =
+        runCatching {
+            dao.updateCartProduct(productId = productId, quantity = quantity)
+        }
+
     override fun getCartProductsPaged(
         page: Int,
         pageSize: Int,

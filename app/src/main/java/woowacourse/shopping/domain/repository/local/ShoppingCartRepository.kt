@@ -13,6 +13,11 @@ interface ShoppingCartRepository {
 
     fun findCartProduct(productId: Long): Result<Product>
 
+    fun updateCartProduct(
+        productId: Long,
+        quantity: Int,
+    ): Result<Unit>
+
     fun getCartProductsPaged(
         page: Int,
         pageSize: Int,

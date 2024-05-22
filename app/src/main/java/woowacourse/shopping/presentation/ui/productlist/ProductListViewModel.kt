@@ -125,7 +125,11 @@ class ProductListViewModel(
             val newProductList =
                 state.pagingProduct.productList.map { product ->
                     if (product.id == productId) {
-                        deleteCartProduct(productId)
+                        if (product.quantity == 1) {
+                            deleteCartProduct(productId)
+                        } else {
+                            updateCartProduct(productId, product.quantity - 1)
+                        }
                         product.copy(quantity = product.quantity - 1)
                     } else {
                         product
@@ -144,6 +148,20 @@ class ProductListViewModel(
         thread {
             shoppingCartRepository.deleteCartProduct(
                 productId = productId,
+            ).onFailure {
+                // TODO 예외처리
+            }
+        }
+    }
+
+    private fun updateCartProduct(
+        productId: Long,
+        quantity: Int,
+    ) {
+        thread {
+            shoppingCartRepository.updateCartProduct(
+                productId = productId,
+                quantity = quantity,
             ).onFailure {
                 // TODO 예외처리
             }
