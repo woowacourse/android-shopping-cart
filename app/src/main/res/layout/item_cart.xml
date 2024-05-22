@@ -82,7 +82,7 @@
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@{String.valueOf(viewModel.orderCount[product.idInt])}"
+                android:text="@{String.valueOf(viewModel.orderCounts[product.idInt])}"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="17dp"
-            android:text="@{@string/product_price(product.price)}"
+            android:text="@{@string/product_price(viewModel.orderPrices[product.idInt])}"
             android:textColor="@color/gray5"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

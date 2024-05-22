@@ -28,8 +28,11 @@ class CartViewModel(
 
     private val allOrders get() = ordersRepository.getAllData()
 
-    private val _orderCount: MutableLiveData<List<Int>> = MutableLiveData()
-    val orderCount: LiveData<List<Int>> get() = _orderCount
+    private val _orderCounts: MutableLiveData<List<Int>> = MutableLiveData()
+    val orderCounts: LiveData<List<Int>> get() = _orderCounts
+
+    private val _orderPrices: MutableLiveData<List<Int>> = MutableLiveData()
+    val orderPrices: LiveData<List<Int>> get() = _orderPrices
 
     val cartItems
         get() =
@@ -40,7 +43,8 @@ class CartViewModel(
     fun loadCartItems() {
         _cartPage.value = CartPage()
         _cart.value = getProducts()
-        _orderCount.value = getProductsCount()
+        _orderCounts.value = getProductsCount()
+        _orderPrices.value = getProductsTotalPrices()
     }
 
     fun removeCartItem(productId: Long) {
@@ -70,6 +74,12 @@ class CartViewModel(
         val fromIndex = (cartPage.value!!.number - OFFSET) * PAGE_SIZE
         val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
         return allOrders.map { it.quantity }.subList(fromIndex, toIndex)
+    }
+
+    private fun getProductsTotalPrices(): List<Int> {
+        val productsPrice = getProducts().map { it.price }
+        val productsCount = getProductsCount()
+        return productsPrice.zip(productsCount) { first, second -> first * second }
     }
 
     companion object {
