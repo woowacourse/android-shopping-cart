@@ -26,6 +26,9 @@ interface ShoppingCartDao {
         pageSize: Int,
     ): List<CartProductEntity>
 
+    @Query("SELECT * FROM cartProductEntity")
+    fun getAllCartProducts(): List<CartProductEntity>
+
     @Query("SELECT COUNT(*) FROM cartProductEntity")
     fun getCartProductsTotal(): Int
 

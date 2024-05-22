@@ -3,7 +3,9 @@ package woowacourse.shopping.presentation.ui.productlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.base.Event
@@ -11,11 +13,15 @@ import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
 import woowacourse.shopping.presentation.common.ProductCountHandler
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListPagingSource
+import kotlin.concurrent.thread
 
-class ProductListViewModel(productRepository: ProductRepository) :
+class ProductListViewModel(
+    productRepository: ProductRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
+) :
     BaseViewModel(),
-    ProductListActionHandler,
-    ProductCountHandler {
+        ProductListActionHandler,
+        ProductCountHandler {
     private val _uiState: MutableLiveData<ProductListUiState> =
         MutableLiveData(ProductListUiState())
     val uiState: LiveData<ProductListUiState> get() = _uiState
@@ -24,7 +30,11 @@ class ProductListViewModel(productRepository: ProductRepository) :
         MutableLiveData(null)
     val navigateAction: LiveData<Event<ProductListNavigateAction>> get() = _navigateAction
 
-    private val productListPagingSource = ProductListPagingSource(repository = productRepository)
+    private val productListPagingSource =
+        ProductListPagingSource(
+            productRepository = productRepository,
+            shoppingCartRepository = shoppingCartRepository,
+        )
 
     init {
         loadProductList()
@@ -39,27 +49,30 @@ class ProductListViewModel(productRepository: ProductRepository) :
     }
 
     private fun loadProductList() {
-        productListPagingSource.load().onSuccess { pagingProduct ->
-            _uiState.value?.let { state ->
-                val nowPagingProduct =
-                    PagingProduct(
-                        productList = state.pagingProduct.productList + pagingProduct.productList,
-                        last = pagingProduct.last,
-                    )
-                val cartCount = nowPagingProduct.productList.sumOf { it.quantity }
+        thread {
+            productListPagingSource.load().onSuccess { pagingProduct ->
+                _uiState.value?.let { state ->
+                    val nowPagingProduct =
+                        PagingProduct(
+                            productList = state.pagingProduct.productList + pagingProduct.productList,
+                            last = pagingProduct.last,
+                        )
+                    val cartCount = nowPagingProduct.productList.sumOf { it.quantity }
 
-                _uiState.value =
-                    state.copy(
-                        pagingProduct = nowPagingProduct,
-                        cartCount = state.checkCartCount(cartCount),
+                    _uiState.postValue(
+                        state.copy(
+                            pagingProduct = nowPagingProduct,
+                            cartCount = state.checkCartCount(cartCount),
+                        ),
                     )
+                }
+            }.onFailure { e ->
+                _uiState.value?.let { state ->
+                    val newPagingProduct = state.pagingProduct.copy(last = true)
+                    _uiState.value = state.copy(pagingProduct = newPagingProduct)
+                }
+                showMessage(MessageProvider.DefaultErrorMessage)
             }
-        }.onFailure { e ->
-            _uiState.value?.let { state ->
-                val newPagingProduct = state.pagingProduct.copy(last = true)
-                _uiState.value = state.copy(pagingProduct = newPagingProduct)
-            }
-            showMessage(MessageProvider.DefaultErrorMessage)
         }
     }
 
@@ -75,6 +88,7 @@ class ProductListViewModel(productRepository: ProductRepository) :
             val newProductList =
                 state.pagingProduct.productList.map { product ->
                     if (product.id == productId) {
+                        insertCartProduct(product)
                         product.copy(quantity = product.quantity + 1)
                     } else {
                         product
@@ -89,6 +103,20 @@ class ProductListViewModel(productRepository: ProductRepository) :
         }
     }
 
+    private fun insertCartProduct(product: Product) {
+        thread {
+            shoppingCartRepository.insertCartProduct(
+                productId = product.id,
+                name = product.name,
+                price = product.price,
+                quantity = product.quantity + 1,
+                imageUrl = product.imageUrl,
+            ).onFailure {
+                // TODO 예외처리
+            }
+        }
+    }
+
     override fun minusProductQuantity(
         productId: Long,
         position: Int,
@@ -97,6 +125,7 @@ class ProductListViewModel(productRepository: ProductRepository) :
             val newProductList =
                 state.pagingProduct.productList.map { product ->
                     if (product.id == productId) {
+                        deleteCartProduct(productId)
                         product.copy(quantity = product.quantity - 1)
                     } else {
                         product
@@ -111,10 +140,23 @@ class ProductListViewModel(productRepository: ProductRepository) :
         }
     }
 
+    private fun deleteCartProduct(productId: Long) {
+        thread {
+            shoppingCartRepository.deleteCartProduct(
+                productId = productId,
+            ).onFailure {
+                // TODO 예외처리
+            }
+        }
+    }
+
     companion object {
-        fun factory(productRepository: ProductRepository): ViewModelProvider.Factory {
+        fun factory(
+            productRepository: ProductRepository,
+            shoppingCartRepository: ShoppingCartRepository,
+        ): ViewModelProvider.Factory {
             return BaseViewModelFactory {
-                ProductListViewModel(productRepository)
+                ProductListViewModel(productRepository, shoppingCartRepository)
             }
         }
     }

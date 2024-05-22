@@ -39,6 +39,11 @@ class ShoppingCartRepositoryImpl(private val dao: ShoppingCartDao) : ShoppingCar
             dao.getCartProductsPaged(page = page, pageSize = pageSize).map { it.toDomain() }
         }
 
+    override fun getAllCartProducts(): Result<List<Product>> =
+        runCatching {
+            dao.getAllCartProducts().map { it.toDomain() }
+        }
+
     override fun getCartProductsTotal(): Result<Int> =
         runCatching {
             dao.getCartProductsTotal()

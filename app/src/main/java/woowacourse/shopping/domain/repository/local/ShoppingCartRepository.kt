@@ -18,6 +18,8 @@ interface ShoppingCartRepository {
         pageSize: Int,
     ): Result<List<Product>>
 
+    fun getAllCartProducts(): Result<List<Product>>
+
     fun getCartProductsTotal(): Result<Int>
 
     fun deleteCartProduct(productId: Long): Result<Unit>
