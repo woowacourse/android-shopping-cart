@@ -68,9 +68,8 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun initializeToolbar() {
-        binding.ivProductsCart.setOnClickListener {
-            navigateToCartView()
-        }
+        binding.ivProductsCart.setOnClickListener { navigateToCartView() }
+        binding.tvProductsCartCount.setOnClickListener { navigateToCartView() }
     }
 
     private fun navigateToCartView() {
