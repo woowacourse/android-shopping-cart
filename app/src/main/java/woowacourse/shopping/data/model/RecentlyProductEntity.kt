@@ -15,6 +15,7 @@ data class RecentlyProductEntity(
 ){
     fun toRecentlyProduct(): RecentlyProduct{
         return RecentlyProduct(
+            id = id,
             productId = productId,
             imageUrl = imageUrl,
             name = name,

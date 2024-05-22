@@ -8,14 +8,17 @@ import woowacourse.shopping.domain.repository.RecentlyProductRepository
 import woowacourse.shopping.utils.NoSuchDataException
 import kotlin.concurrent.thread
 
-class RecentlyProductRepositoryImpl(context: Context): RecentlyProductRepository {
-    private val recentlyProductDao = RecentlyProductDatabase.getInstance(context).recentlyProductDao()
+class RecentlyProductRepositoryImpl(context: Context) : RecentlyProductRepository {
+    private val recentlyProductDao =
+        RecentlyProductDatabase.getInstance(context).recentlyProductDao()
 
     override fun addRecentlyProduct(recentlyProduct: RecentlyProduct) {
         thread {
-            val addedItemId =
-                recentlyProductDao.addRecentlyProduct(RecentlyProductEntity.makeRecentlyProductEntity(recentlyProduct))
-            if (addedItemId == ERROR_DATA_ID) throw NoSuchDataException()
+            recentlyProductDao.addRecentlyProduct(
+                RecentlyProductEntity.makeRecentlyProductEntity(
+                    recentlyProduct
+                )
+            )
         }
     }
 
@@ -23,18 +26,19 @@ class RecentlyProductRepositoryImpl(context: Context): RecentlyProductRepository
         var recentlyProduct = RecentlyProduct.defaultRecentlyProduct
         thread {
             val firstProduct = recentlyProductDao.getMostRecentlyProduct()?.toRecentlyProduct()
-            if (firstProduct != null){
+            if (firstProduct != null) {
                 recentlyProduct = firstProduct
             }
         }.join()
-        if (recentlyProduct.productId == ERROR_DATA_ID) throw NoSuchDataException()
         return recentlyProduct
     }
 
     override fun getRecentlyProductList(): List<RecentlyProduct> {
         var pagingData = emptyList<RecentlyProduct>()
         thread {
-            pagingData = recentlyProductDao.findPagingRecentlyProduct(CURRENT_CART_ITEM_LOAD_PAGING_SIZE).map { it.toRecentlyProduct() }
+            pagingData =
+                recentlyProductDao.findPagingRecentlyProduct(CURRENT_CART_ITEM_LOAD_PAGING_SIZE)
+                    .map { it.toRecentlyProduct() }
         }.join()
         return pagingData
     }

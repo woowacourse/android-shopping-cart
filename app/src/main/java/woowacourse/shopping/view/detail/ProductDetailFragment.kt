@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
+import woowacourse.shopping.data.repository.RecentlyProductRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.MainFragmentListener
@@ -27,6 +29,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
                 ProductDetailViewModel(
                     productRepository = ProductRepositoryImpl(),
                     shoppingCartRepository = ShoppingCartRepositoryImpl(requireContext()),
+                    recentlyProductRepository = RecentlyProductRepositoryImpl(requireContext()),
                 )
             }
         viewModelFactory.create(ProductDetailViewModel::class.java)
@@ -59,6 +62,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     }
 
     private fun observeData() {
+
         productDetailViewModel.productDetailEvent.observe(viewLifecycleOwner) { productDetailState ->
             when(productDetailState){
                 is ProductDetailEvent.AddShoppingCart.Success -> {
@@ -90,6 +94,11 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
                 ProductDetailEvent.ErrorEvent.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
+                    )
+
+                ProductDetailEvent.LoadRecentlyProductItem.Fail ->
+                    requireContext().makeToast(
+                        getString(R.string.error_recently_product_item),
                     )
             }
         }
@@ -130,6 +139,10 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
 
     override fun clickAddCart(product: Product) {
         productDetailViewModel.addShoppingCartItem(product)
+    }
+
+    override fun clickRecently(recentlyProduct: RecentlyProduct) {
+        productDetailViewModel.updateRecentlyProduct(recentlyProduct)
     }
 
     override fun clickIncrease(product: Product) {

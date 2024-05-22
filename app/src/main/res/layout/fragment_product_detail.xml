@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
         <variable
             name="vm"
             type="woowacourse.shopping.view.detail.ProductDetailViewModel" />
@@ -95,11 +96,41 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            app:product = "@{vm.product}"
             app:layout_constraintBottom_toBottomOf="@id/tv_detail_product_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_detail_product_price"
-            app:onClickCartItemCounter="@{onClickCartItemCounter}" />
+            app:onClickCartItemCounter="@{onClickCartItemCounter}"
+            app:product="@{vm.product}" />
+
+        <LinearLayout
+            android:onClick="@{()->onClickDetail.clickRecently(vm.recentlyProduct)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btn_add_cart"
+            app:layout_constraintTop_toBottomOf="@+id/tv_detail_product_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:background="@drawable/shape_border"
+            android:orientation="vertical"
+            android:paddingHorizontal="18dp"
+            android:paddingVertical="16dp"
+            android:visibility="@{vm.recentlyProduct.productId != -1L ? View.VISIBLE : View.GONE}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:text="@string/last_view_subject"
+                android:textColor="@color/primary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{vm.recentlyProduct.name}"
+                tools:text="PET보틀-정사각형(500ml)" />
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_cart"
