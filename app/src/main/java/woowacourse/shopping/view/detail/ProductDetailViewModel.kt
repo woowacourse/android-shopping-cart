@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_
 import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.Product.Companion.DEFAULT_PRODUCT_ID
+import woowacourse.shopping.domain.model.RecentlyProduct
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.utils.MutableSingleLiveData
@@ -24,6 +25,9 @@ class ProductDetailViewModel(
     private val _product: MutableLiveData<Product> = MutableLiveData(Product.defaultProduct)
     val product: LiveData<Product> get() = _product
     private var cartItemId: Long = DEFAULT_CART_ITEM_ID
+
+    private val _recentlyProduct: MutableLiveData<RecentlyProduct> = MutableLiveData(RecentlyProduct.defaultRecentlyProduct)
+    val recentlyProduct: LiveData<RecentlyProduct> get() = _recentlyProduct
 
     private val _errorEvent: MutableSingleLiveData<ProductDetailEvent.ErrorEvent> =
         MutableSingleLiveData()
