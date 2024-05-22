@@ -1,8 +1,12 @@
 package woowacourse.shopping.data.db.product
 
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.mockwebserver.MockWebServer
 import woowacourse.shopping.domain.model.Product
 
 object ProductDatabase {
+
     val products =
         listOf(
             Product(
