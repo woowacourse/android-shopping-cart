@@ -8,6 +8,10 @@
         <variable
             name="cartItem"
             type="woowacourse.shopping.model.CartItem" />
+
+        <variable
+            name="addCartQuantityBundle"
+            type="woowacourse.shopping.ui.utils.AddCartQuantityBundle" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,6 +49,18 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/gray_200" />
 
+        <include
+            android:id="@+id/btn_add_cart_quantity"
+            layout="@layout/button_add_cart_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="6dp"
+            app:bundle="@{addCartQuantityBundle}"
+            app:layout_constraintBottom_toTopOf="@id/tv_cart_product_price"
+            app:layout_constraintEnd_toEndOf="@id/iv_cart_exit"
+            app:layout_constraintTop_toBottomOf="@id/iv_cart_exit" />
+
         <ImageView
             android:id="@+id/iv_cart_product"
             android:layout_width="136dp"
@@ -61,12 +77,12 @@
             android:id="@+id/tv_cart_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="17dp"
             android:text="@{@string/product_price(cartItem.product.price)}"
             android:textColor="@color/gray_500"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/iv_cart_product"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/iv_cart_exit"
             tools:text="99,800원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

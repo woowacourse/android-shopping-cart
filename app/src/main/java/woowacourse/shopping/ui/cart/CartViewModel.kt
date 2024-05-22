@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     private val _cart = MutableLiveData<MutableList<CartItem>>()
@@ -22,6 +23,9 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     val isEmptyCart: LiveData<Boolean> = _cart.map { it.isEmpty() }
 
     private var maxPage: Int = INITIALIZE_PAGE
+
+    private val _changedCartItemQuantity = MutableLiveData<CartItem>()
+    val changedCartItemQuantity: LiveData<CartItem> get() = _changedCartItemQuantity
 
     init {
         loadCart()
@@ -73,6 +77,16 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     fun movePreviousPage() {
         _page.value = _page.value?.minus(1)
         loadCart()
+    }
+
+    fun increaseQuantity(product: Product) {
+        cartRepository.increaseQuantity(product)
+        _changedCartItemQuantity.value = cartRepository.find(product)
+    }
+
+    fun decreaseQuantity(product: Product) {
+        cartRepository.decreaseQuantity(product)
+        _changedCartItemQuantity.value = cartRepository.find(product)
     }
 
     companion object {

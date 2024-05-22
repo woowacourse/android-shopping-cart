@@ -33,11 +33,19 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initializeCartAdapter() {
-        adapter = CartAdapter(onClickExit = { viewModel.deleteCartItem(it) })
+        adapter = CartAdapter(
+            onClickExit = { viewModel.deleteCartItem(it) },
+            onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
+            onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
+        )
         binding.rvCart.adapter = adapter
 
         viewModel.cart.observe(this) {
             adapter.changeCartItems(it)
+        }
+
+        viewModel.changedCartItemQuantity.observe(this) {
+            adapter.replaceCartItem(it)
         }
     }
 }

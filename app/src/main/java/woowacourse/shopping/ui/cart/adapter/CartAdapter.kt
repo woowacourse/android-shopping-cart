@@ -6,11 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
+import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
 class CartAdapter(
     private val onClickExit: OnClickExit,
+    private val onIncreaseProductQuantity: OnIncreaseProductQuantity,
+    private val onDecreaseProductQuantity: OnDecreaseProductQuantity,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private var cart: List<CartItem> = emptyList()
+    private val cart: MutableList<CartItem> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -25,7 +29,7 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(onClickExit, cart[position])
+        holder.bind(cart[position], onClickExit, onIncreaseProductQuantity, onDecreaseProductQuantity)
     }
 
     override fun getItemCount(): Int {
@@ -34,7 +38,14 @@ class CartAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun changeCartItems(cartItems: List<CartItem>) {
-        this.cart = cartItems
+        cart.clear()
+        cart.addAll(cartItems)
         notifyDataSetChanged()
+    }
+
+    fun replaceCartItem(replacedCartItem: CartItem) {
+        val replacedCartItemPosition = cart.indexOfFirst { it.id == replacedCartItem.id }
+        cart[replacedCartItemPosition] = replacedCartItem
+        notifyItemChanged(replacedCartItemPosition)
     }
 }

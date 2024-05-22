@@ -54,6 +54,10 @@ class DummyCartRepository private constructor() : CartRepository {
         cart.remove(cartItem)
     }
 
+    override fun find(product: Product): CartItem {
+        return cart.find { it.product.id == product.id } ?: throw IllegalArgumentException(CANNOT_FIND_MESSAGE)
+    }
+
     override fun findRange(
         page: Int,
         pageSize: Int,
@@ -73,6 +77,7 @@ class DummyCartRepository private constructor() : CartRepository {
 
     companion object {
         private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
+        private const val CANNOT_FIND_MESSAGE = "해당하는 장바구니 상품이 존재하지 않습니다."
 
         @Volatile
         private var instance: DummyCartRepository? = null
