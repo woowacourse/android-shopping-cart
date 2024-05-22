@@ -13,6 +13,8 @@ class Quantity(val count: Int = DEFAULT_VALUE) {
 
     fun isMin() = count == MIN_VALUE
 
+    fun isGreaterThanMin() = count > MIN_VALUE
+
     companion object {
         private const val DEFAULT_VALUE = 0
         private const val MAX_VALUE = 99
