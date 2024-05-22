@@ -8,6 +8,11 @@ import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.ui.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.testCartItem0
+import woowacourse.shopping.presentation.ui.testCartItem1
+import woowacourse.shopping.presentation.ui.testCartItem2
+import woowacourse.shopping.presentation.ui.testCartItem3
+import woowacourse.shopping.presentation.ui.testCartItem4
+import woowacourse.shopping.presentation.ui.testCartItem5
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {
@@ -49,9 +54,6 @@ class CartViewModelTest {
         // given
         val cartRepository = FakeCartRepositoryImpl(List(6) { testCartItem0 }.toMutableList())
         val viewModel = CartViewModel(cartRepository)
-
-        // when
-        viewModel.loadPage(0)
 
         // then
         val isVisible = viewModel.isPageControlVisible.getOrAwaitValue()
@@ -105,7 +107,6 @@ class CartViewModelTest {
         // given
         val cartRepository = FakeCartRepositoryImpl(List(7) { testCartItem0 }.toMutableList())
         val viewModel = CartViewModel(cartRepository)
-        viewModel.loadPage(0)
 
         // when
         viewModel.deleteItem(1)
@@ -134,16 +135,18 @@ class CartViewModelTest {
     @Test
     fun `아이템이 6개일때 삭제하면 첫번째 페이지로 넘어가고 페이지 컨트롤이 보이지 않는다`() {
         // given
-        val cartRepository = FakeCartRepositoryImpl(List(6) { testCartItem0 }.toMutableList())
+        val list = listOf<CartItem>(testCartItem0, testCartItem1, testCartItem2, testCartItem3, testCartItem4, testCartItem5)
+        val cartRepository = FakeCartRepositoryImpl(list.toMutableList())
         val viewModel = CartViewModel(cartRepository)
-        viewModel.loadPage(0)
 
         // when
-        viewModel.deleteItem(0)
+        viewModel.deleteItem(testCartItem0.id)
 
         // then
         val currentPage = viewModel.currentPage.getOrAwaitValue()
         val isVisible = viewModel.isPageControlVisible.getOrAwaitValue()
+        val size = viewModel.totalItemSize.getOrAwaitValue()
+        assertThat(size).isEqualTo(5)
         assertThat(currentPage).isEqualTo(0)
         assertThat(isVisible).isFalse()
     }

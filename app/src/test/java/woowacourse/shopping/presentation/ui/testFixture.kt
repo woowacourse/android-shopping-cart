@@ -53,3 +53,31 @@ val testCartItem2 =
         imgUrl = "https://image1.com",
         quantity = 3,
     )
+
+val testCartItem3 =
+    CartItem(
+        id = 3,
+        productId = 2,
+        productName = "채드다",
+        price = 1200,
+        imgUrl = "https://image1.com",
+        quantity = 3,
+    )
+val testCartItem4 =
+    CartItem(
+        id = 4,
+        productId = 2,
+        productName = "채드다",
+        price = 1200,
+        imgUrl = "https://image1.com",
+        quantity = 3,
+    )
+val testCartItem5 =
+    CartItem(
+        id = 5,
+        productId = 2,
+        productName = "채드다",
+        price = 1200,
+        imgUrl = "https://image1.com",
+        quantity = 3,
+    )

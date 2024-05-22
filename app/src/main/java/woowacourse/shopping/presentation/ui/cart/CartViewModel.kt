@@ -24,8 +24,10 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
         currentPage.map { page ->
             page == lastPage
         }
+    private val _totalItemSize = MutableLiveData<Int>(repository.size())
+    val totalItemSize: LiveData<Int> = _totalItemSize
 
-    private val _isPageControlVisible = MutableLiveData<Boolean>()
+    private val _isPageControlVisible = MutableLiveData<Boolean>(((totalItemSize.value ?: 0) > PAGE_SIZE))
     val isPageControlVisible: LiveData<Boolean> = _isPageControlVisible
 
     private var lastPage: Int = DEFAULT_PAGE
@@ -53,34 +55,35 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     }
 
     init {
-        loadPage(_currentPage.value ?: DEFAULT_PAGE)
+        loadPage()
     }
 
-    private fun updatePageControlVisibility(totalItems: Int) {
-        _isPageControlVisible.postValue(totalItems > pageSize)
+    private fun updatePageControlVisibility() {
+        _totalItemSize.postValue(repository.size())
+        lastPage = ((totalItemSize.value ?: 0) - PAGE_STEP) / pageSize
+        _isPageControlVisible.postValue((totalItemSize.value ?: 0) > pageSize)
     }
 
-    fun loadPage(page: Int) {
-        val totalItems = repository.size()
-        lastPage = (totalItems - PAGE_STEP) / pageSize
-
-        _currentPage.value = page.coerceIn(DEFAULT_PAGE, lastPage)
-        updatePageControlVisibility(totalItems)
+    private fun loadPage() {
+        _currentPage.value = currentPage.value?.coerceIn(DEFAULT_PAGE, lastPage)
+        updatePageControlVisibility()
     }
 
     fun loadNextPage() {
-        val nextPage = (_currentPage.value ?: DEFAULT_PAGE) + PAGE_STEP
-        loadPage(nextPage)
+        val nextPage = (currentPage.value ?: DEFAULT_PAGE) + PAGE_STEP
+        _currentPage.value = nextPage.coerceIn(DEFAULT_PAGE, lastPage)
+        updatePageControlVisibility()
     }
 
     fun loadPreviousPage() {
-        val prevPage = (_currentPage.value ?: DEFAULT_PAGE) - PAGE_STEP
-        loadPage(prevPage)
+        val prevPage = (currentPage.value ?: DEFAULT_PAGE) - PAGE_STEP
+        _currentPage.value = prevPage.coerceIn(DEFAULT_PAGE, lastPage)
+        updatePageControlVisibility()
     }
 
     fun deleteItem(itemId: Long) {
         repository.delete(itemId)
-        loadPage(_currentPage.value ?: DEFAULT_PAGE)
+        loadPage()
     }
 
     fun isCartEmpty(): Boolean = cartItemsState.value == UIState.Empty
