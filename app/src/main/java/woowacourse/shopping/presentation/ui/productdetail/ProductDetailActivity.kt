@@ -20,6 +20,7 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         ProductDetailViewModel.factory(
             (application as ShoppingApplication).productRepository,
             (application as ShoppingApplication).shoppingCartRepository,
+            (application as ShoppingApplication).productHistoryRepository,
         )
     }
 

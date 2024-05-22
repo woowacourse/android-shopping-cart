@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
@@ -19,6 +20,7 @@ import kotlin.concurrent.thread
 class ProductListViewModel(
     productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val productHistoryRepository: ProductHistoryRepository,
 ) :
     BaseViewModel(),
         ProductListActionHandler,
@@ -39,6 +41,7 @@ class ProductListViewModel(
 
     init {
         loadProductList()
+        getProductHistory()
     }
 
     override fun navigateToProductDetail(productId: Long) {
@@ -79,6 +82,17 @@ class ProductListViewModel(
 
     override fun loadMoreProducts() {
         loadProductList()
+    }
+
+    fun getProductHistory() {
+        thread {
+            productHistoryRepository.getProductHistory(10)
+                .onSuccess { productHistorys ->
+                    _uiState.value?.let { state ->
+                        _uiState.postValue(state.copy(productHistorys = productHistorys))
+                    }
+                }.onFailure { showMessage(MessageProvider.DefaultErrorMessage) }
+        }
     }
 
     fun updateProducts(updatedProducts: UpdatedProducts) {
@@ -193,9 +207,14 @@ class ProductListViewModel(
         fun factory(
             productRepository: ProductRepository,
             shoppingCartRepository: ShoppingCartRepository,
+            productHistoryRepository: ProductHistoryRepository,
         ): ViewModelProvider.Factory {
             return BaseViewModelFactory {
-                ProductListViewModel(productRepository, shoppingCartRepository)
+                ProductListViewModel(
+                    productRepository,
+                    shoppingCartRepository,
+                    productHistoryRepository,
+                )
             }
         }
     }

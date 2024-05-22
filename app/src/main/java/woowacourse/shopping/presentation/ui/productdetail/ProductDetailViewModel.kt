@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
 import woowacourse.shopping.presentation.base.BaseViewModel
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
@@ -22,6 +23,7 @@ class ProductDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val productRepository: ProductRepository,
     private val shoppingCartRepository: ShoppingCartRepository,
+    private val productHistoryRepository: ProductHistoryRepository,
 ) : BaseViewModel(), ProductCountHandler {
     private val _product: MutableLiveData<Product> = MutableLiveData()
     val product: LiveData<Product> get() = _product
@@ -42,6 +44,7 @@ class ProductDetailViewModel(
     private fun findByProductId(id: Long) {
         productRepository.findProductById(id).onSuccess { productValue ->
             _product.value = productValue
+            insertProductHistory(productValue)
             findProduct(id)
         }.onFailure { e ->
             when (e) {
@@ -116,16 +119,29 @@ class ProductDetailViewModel(
         }
     }
 
+    private fun insertProductHistory(productValue: Product) {
+        thread {
+            productHistoryRepository.insertProductHistory(
+                productId = productValue.id,
+                name = productValue.name,
+                price = productValue.price,
+                imageUrl = productValue.imageUrl,
+            ).onFailure { showMessage(MessageProvider.DefaultErrorMessage) }
+        }
+    }
+
     companion object {
         fun factory(
             productRepository: ProductRepository,
             shoppingCartRepository: ShoppingCartRepository,
+            productHistoryRepository: ProductHistoryRepository,
         ): ViewModelProvider.Factory {
             return BaseViewModelFactory { extras ->
                 ProductDetailViewModel(
                     savedStateHandle = extras.createSavedStateHandle(),
                     productRepository = productRepository,
                     shoppingCartRepository = shoppingCartRepository,
+                    productHistoryRepository = productHistoryRepository,
                 )
             }
         }

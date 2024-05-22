@@ -13,6 +13,7 @@ import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity
+import woowacourse.shopping.presentation.ui.productlist.adapter.ProductHistoryListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapter.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.presentation.ui.productlist.adapter.ProductListAdapterManager
@@ -26,10 +27,16 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         ProductListViewModel.factory(
             (application as ShoppingApplication).productRepository,
             (application as ShoppingApplication).shoppingCartRepository,
+            (application as ShoppingApplication).productHistoryRepository,
         )
     }
 
-    private val adapter: ProductListAdapter by lazy { ProductListAdapter(viewModel, viewModel) }
+    private val productListAdapter: ProductListAdapter by lazy {
+        ProductListAdapter(viewModel, viewModel)
+    }
+    private val productHistoryListAdapter: ProductHistoryListAdapter by lazy {
+        ProductHistoryListAdapter(viewModel)
+    }
 
     private val filterActivityLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -48,6 +55,7 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
                     viewModel.updateProducts(products)
                 }
             }
+            viewModel.getProductHistory()
         }
 
     override fun initStartView() {
@@ -64,9 +72,11 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     }
 
     private fun initAdapter() {
-        binding.rvProductList.adapter = adapter
+        binding.rvProductList.adapter = productListAdapter
         binding.rvProductList.layoutManager =
-            ProductListAdapterManager(this, adapter, 2, PRODUCT_VIEW_TYPE)
+            ProductListAdapterManager(this, productListAdapter, 2, PRODUCT_VIEW_TYPE)
+
+        binding.rvProductHistoryList.adapter = productHistoryListAdapter
     }
 
     private fun initObserve() {
@@ -86,8 +96,9 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
         }
 
         viewModel.uiState.observe(this) { state ->
-            adapter.updateProductList(state.pagingProduct)
-            adapter.updateProduct(state.recentlyProductPosition)
+            productListAdapter.updateProductList(state.pagingProduct)
+            productListAdapter.updateProduct(state.recentlyProductPosition)
+            productHistoryListAdapter.updateProductHistorys(state.productHistorys)
         }
 
         viewModel.message.observeEvent(this) { message ->

@@ -1,9 +1,11 @@
 package woowacourse.shopping.presentation.ui.productlist
 
 import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductHistory
 
 data class ProductListUiState(
     val pagingProduct: PagingProduct = PagingProduct(),
+    val productHistorys: List<ProductHistory> = emptyList(),
     val recentlyProductPosition: Int = 0,
     val cartCount: Int = 0,
 ) {
