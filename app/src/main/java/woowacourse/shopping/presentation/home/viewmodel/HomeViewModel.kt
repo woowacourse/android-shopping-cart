@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.home.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.home.HomeActionHandler
@@ -50,17 +51,7 @@ class HomeViewModel(
 
         val cartItem = cartRepository.fetchCartItem(productId)
 
-        _orders.value =
-            _orders.value?.map {
-                if (it.product.id == cartItem?.productId) {
-                    it.copy(
-                        cartItemId = cartItem.id,
-                        quantity = cartItem.quantity,
-                    )
-                } else {
-                    it
-                }
-            }
+        updateOrder(cartItem)
     }
 
     fun minusCartItem(productId: Long) {
@@ -68,17 +59,7 @@ class HomeViewModel(
 
         val cartItem = cartRepository.fetchCartItem(productId)
 
-        _orders.value =
-            _orders.value?.map {
-                if (it.product.id == cartItem?.productId) {
-                    it.copy(
-                        cartItemId = cartItem.id,
-                        quantity = cartItem.quantity,
-                    )
-                } else {
-                    it
-                }
-            }
+        updateOrder(cartItem)
     }
 
     fun addCartItem(productId: Long) {
@@ -86,8 +67,13 @@ class HomeViewModel(
 
         val cartItem = cartRepository.fetchCartItem(productId)
 
+        updateOrder(cartItem)
+        loadTotalCartCount()
+    }
+
+    private fun updateOrder(cartItem: CartItem?) {
         _orders.value =
-            _orders.value?.map {
+            orders.value?.map {
                 if (it.product.id == cartItem?.productId) {
                     it.copy(
                         cartItemId = cartItem.id,
@@ -97,8 +83,6 @@ class HomeViewModel(
                     it
                 }
             }
-
-        loadTotalCartCount()
     }
 
     fun loadProducts() {

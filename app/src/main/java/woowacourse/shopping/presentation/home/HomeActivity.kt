@@ -43,17 +43,23 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val layoutManager =
+        initBinding()
+        initObserver()
+        initToolBar()
+    }
+
+    private fun initBinding() {
+        binding.rvHome.layoutManager =
             GridLayoutManager(this, 2).apply {
                 spanSizeLookup = ProductsGridLayoutManager(adapter)
             }
-
-        binding.rvHome.layoutManager = layoutManager
         binding.productAdapter = adapter
         binding.viewModel = viewModel
         binding.homeActionHandler = viewModel
         binding.lifecycleOwner = this
+    }
 
+    private fun initObserver() {
         viewModel.orders.observe(this) {
             adapter.addProducts(it)
         }
@@ -73,7 +79,9 @@ class HomeActivity : AppCompatActivity() {
                 startActivity(CartActivity.newIntent(this))
             }
         }
+    }
 
+    private fun initToolBar() {
         setSupportActionBar(binding.toolbarHome)
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }
