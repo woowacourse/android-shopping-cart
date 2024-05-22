@@ -68,7 +68,7 @@
             android:src="@drawable/ic_plus"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:setVisibleByCondition="@{viewModel.isItemPlusButtonVisible[product.idInt]}" />
+            app:setVisibleByCondition="@{viewModel.isItemPlusButtonVisible[product.id]}" />
 
         <LinearLayout
             android:layout_width="126dp"
@@ -79,7 +79,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:setVisibleByCondition="@{!(viewModel.isItemPlusButtonVisible[product.idInt])}">
+            app:setVisibleByCondition="@{!(viewModel.isItemPlusButtonVisible[product.id])}">
 
             <TextView
                 android:layout_width="42dp"
@@ -94,7 +94,7 @@
                 android:layout_width="42dp"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@{Integer.toString(viewModel.itemCount[product.idInt])}"
+                android:text="@{Integer.toString(viewModel.itemCount[product.id])}"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 

@@ -23,42 +23,43 @@ class ProductContentsViewModel(
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
     val products: LiveData<List<Product>> get() = _products
 
-    private val _isItemPlusButtonVisible: MutableLiveData<MutableList<Boolean>> = MutableLiveData()
-    val isItemPlusButtonVisible: LiveData<MutableList<Boolean>> get() = _isItemPlusButtonVisible
+    private val _isItemPlusButtonVisible: MutableLiveData<MutableMap<Long, Boolean>> = MutableLiveData(mutableMapOf())
+    val isItemPlusButtonVisible: LiveData<MutableMap<Long, Boolean>> get() = _isItemPlusButtonVisible
 
-    private val _itemCount: MutableLiveData<MutableList<Int>> = MutableLiveData()
-    val itemCount: LiveData<MutableList<Int>> get() = _itemCount
+    private val _itemCount: MutableLiveData<MutableMap<Long, Int>> = MutableLiveData(mutableMapOf())
+    val itemCount: LiveData<MutableMap<Long, Int>> get() = _itemCount
 
-    private fun setItemPlusButtonVisible(
-        id: Long,
-        condition: Boolean,
-    ) {
-        _isItemPlusButtonVisible.value =
-            _isItemPlusButtonVisible.value?.apply { set(id.toInt(), condition) }
+    private fun setItemPlusButtonVisible() {
+        val allProducts = productDao.findAll()
+        allProducts.forEach {
+            _isItemPlusButtonVisible.value!![it.id] = (_itemCount.value!![it.id] == 0)
+        }
+        val temp = _isItemPlusButtonVisible.value
+        _isItemPlusButtonVisible.value = temp
     }
 
     fun onItemPlusButtonClick(id: Long) {
-        setItemPlusButtonVisible(id, false)
-        val temp = _itemCount.value ?: mutableListOf()
-        temp[id.toInt()] += ITEM_COUNT_CHANGE
+        val temp = _itemCount.value ?: mutableMapOf()
+        temp[id] = temp[id]!! + ITEM_COUNT_CHANGE
         _itemCount.value = temp
-        ordersRepository.insert(OrderEntity(id, temp[id.toInt()]))
+        ordersRepository.insert(OrderEntity(id, temp[id]!!))
+        setItemPlusButtonVisible()
     }
 
     fun onItemIncreaseButtonClick(id: Long) {
-        val temp = _itemCount.value ?: mutableListOf()
-        temp[id.toInt()] += ITEM_COUNT_CHANGE
+        val temp = _itemCount.value ?: mutableMapOf()
+        temp[id] = temp[id]!! + ITEM_COUNT_CHANGE
         _itemCount.value = temp
-        ordersRepository.insert(OrderEntity(id, temp[id.toInt()]))
+        ordersRepository.insert(OrderEntity(id, temp[id]!!))
     }
 
     fun onItemDecreaseButtonClick(id: Long) {
-        val temp = _itemCount.value ?: mutableListOf()
-        temp[id.toInt()] -= ITEM_COUNT_CHANGE
+        val temp = _itemCount.value ?: mutableMapOf()
+        temp[id] = temp[id]!! - ITEM_COUNT_CHANGE
         _itemCount.value = temp
-        thread { ordersRepository.insert(OrderEntity(id, temp[id.toInt()])) }.join()
-        if (temp[id.toInt()] == DEFAULT_ITEM_COUNT) {
-            setItemPlusButtonVisible(id, true)
+        thread { ordersRepository.insert(OrderEntity(id, temp[id]!!)) }.join()
+        if (temp[id] == DEFAULT_ITEM_COUNT) {
+            setItemPlusButtonVisible()
             ordersRepository.deleteById(id)
         }
     }
@@ -68,8 +69,14 @@ class ProductContentsViewModel(
         val allProducts = productDao.findAll()
         items.addAll(allProducts)
         _products.value = getProducts()
-        _isItemPlusButtonVisible.value = List(allProducts.size) { true }.toMutableList()
-        _itemCount.value = List(allProducts.size) { DEFAULT_ITEM_COUNT }.toMutableList()
+        allProducts.forEach {
+            _itemCount.value!![it.id] = 0
+        }
+        val allOrders = ordersRepository.getAllData()
+        allOrders.forEach {
+            _itemCount.value!![it.productId] = it.quantity
+        }
+        setItemPlusButtonVisible()
     }
 
     private fun getProducts(): List<Product> {
