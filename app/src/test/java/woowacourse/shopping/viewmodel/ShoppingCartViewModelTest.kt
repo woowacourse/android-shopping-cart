@@ -50,7 +50,7 @@ class ShoppingCartViewModelTest {
         val actual = viewModel.loadState.getOrAwaitValue() as LoadCartItemState.InitView
 
         // then
-        assertThat(actual.result).containsExactly(DummyProductRepository.productById(0).toProductUiModel())
+        assertThat(actual.result).containsExactly(DummyProductRepository.productById(0).toProductUiModel(0))
     }
 
     @Test

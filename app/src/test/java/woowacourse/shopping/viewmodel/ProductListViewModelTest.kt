@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.DummyProductRepository
+import woowacourse.shopping.DummyShoppingRepository
+import woowacourse.shopping.productlist.LoadProductState
 import woowacourse.shopping.productlist.ProductListViewModel
 import woowacourse.shopping.productlist.toProductUiModel
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
@@ -16,7 +18,7 @@ class ProductListViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductListViewModel(DummyProductRepository)
+        viewModel = ProductListViewModel(DummyProductRepository, DummyShoppingRepository)
     }
 
     @Test
@@ -25,14 +27,14 @@ class ProductListViewModelTest {
         viewModel.loadProducts()
 
         // given
-        val actual = viewModel.products.getOrAwaitValue()
+        val actual = viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts
 
         // then
-        assertThat(actual).containsAll(
-            DummyProductRepository.products(0, 20).map { it.toProductUiModel() },
+        assertThat(actual.result.products).containsAll(
+            DummyProductRepository.products(0, 20).map { it.toProductUiModel(0) },
         )
-        assertThat(actual.last()).isEqualTo(
-            DummyProductRepository.productById(19).toProductUiModel(),
+        assertThat(actual.result.products.last()).isEqualTo(
+            DummyProductRepository.productById(19).toProductUiModel(0),
         )
     }
 
@@ -40,10 +42,10 @@ class ProductListViewModelTest {
     fun `0부터 19의 위치에 해당하는 데이터에, 20에서 39위치에 해당하는 데이터가 추가되는 형태로 데이터가 들어온다`() {
         // given
         viewModel.loadProducts()
-        val firstActual = viewModel.products.getOrAwaitValue()
+        val firstActual = (viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts).result.products
 
         viewModel.loadProducts()
-        val secondActual = viewModel.products.getOrAwaitValue()
+        val secondActual = (viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts).result.products
 
         // then
         assertThat(firstActual).containsAll(secondActual.subList(0, 19))
@@ -56,18 +58,18 @@ class ProductListViewModelTest {
         viewModel.loadProducts()
 
         // given
-        val firstActual = viewModel.products.getOrAwaitValue()
+        val firstActual = viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts
 
         // then
-        assertThat(firstActual.size).isEqualTo(20)
+        assertThat(firstActual.result.products).isEqualTo(20)
 
         // when
         viewModel.loadProducts()
 
         // given
-        val secondActual = viewModel.products.getOrAwaitValue()
+        val secondActual = viewModel.loadState.getOrAwaitValue() as LoadProductState.ShowProducts
 
         // then
-        assertThat(secondActual.size).isEqualTo(40)
+        assertThat(secondActual.result.products).isEqualTo(40)
     }
 }

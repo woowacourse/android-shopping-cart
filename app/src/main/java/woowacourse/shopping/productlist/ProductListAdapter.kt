@@ -14,7 +14,7 @@ class ProductListAdapter(
 
     class ProductListViewHolder(
         private val binding: ItemProductListBinding,
-        private val onClick: ProductListClickAction,
+        private val onClickHandler: ProductListClickAction,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(item: ProductUiModel) {
             with(binding) {
@@ -22,9 +22,9 @@ class ProductListAdapter(
                 tvProductListPrice.text =
                     itemView.context.getString(R.string.product_price_format, item.price)
                 itemView.context.imageUrlToSrc(item.imageUrl, ivProductItem)
-                root.setOnClickListener {
-                    onClick.onProductClicked(item.id)
-                }
+                binding.product = item
+                binding.onClick = onClickHandler
+                binding.executePendingBindings()
             }
         }
     }
@@ -47,9 +47,16 @@ class ProductListAdapter(
         return holder.onBind(items[position])
     }
 
-    fun submitList(products: List<ProductUiModel>) {
-        val previousCount = itemCount
+    fun submitItems(products: List<ProductUiModel>) {
+        val previous = items
+        items.clear()
         items.addAll(products)
-        notifyItemRangeInserted(previousCount, products.size)
+        notifyItemRangeInserted(previous.size, products.size)
+    }
+
+    fun changeProductInfo(product: ProductUiModel) {
+        val changeIndex = items.indexOfFirst { it.id == product.id }
+        items[changeIndex] = product
+        notifyItemChanged(changeIndex)
     }
 }

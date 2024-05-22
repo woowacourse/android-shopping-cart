@@ -8,4 +8,8 @@
     <string name="product_list_load_more_products">상품 더보기</string>
     <string name="menu_shopping_cart">장바구니</string>
     <string name="menu_close">닫기</string>
+    <string name="loading_error_message">에러가 발생했습니다. 다시 시도해주세요</string>
+    <string name="loading_message">로딩 중입니다. 잠시만 기다려주세요</string>
+    <string name="min_cart_item_message">1개부터 구매 가능합니다.</string>
+    <string name="max_cart_item_message">제한 수량 이상 구매할 수 없습니다.</string>
 </resources>

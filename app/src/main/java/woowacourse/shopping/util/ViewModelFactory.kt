@@ -16,8 +16,7 @@ class ViewModelFactory : ViewModelProvider.Factory {
             }
 
             modelClass.isAssignableFrom(ProductListViewModel::class.java) -> {
-                val repository = DummyProductRepository
-                ProductListViewModel(repository) as T
+                ProductListViewModel(DummyProductRepository, DummyShoppingRepository) as T
             }
 
             modelClass.isAssignableFrom(ShoppingCartViewModel::class.java) -> {
