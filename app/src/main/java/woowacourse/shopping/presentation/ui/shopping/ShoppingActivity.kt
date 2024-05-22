@@ -5,7 +5,6 @@ import android.view.Menu
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.MaterialToolbar
@@ -18,7 +17,11 @@ import woowacourse.shopping.presentation.ui.detail.DetailActivity
 class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
-    private val viewModel: ShoppingViewModel by viewModels { ShoppingViewModelFactory(ShoppingItemsRepositoryImpl()) }
+    private val viewModel: ShoppingViewModel by viewModels {
+        ShoppingViewModelFactory(
+            ShoppingItemsRepositoryImpl(),
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +58,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         try {
             viewModel.products.observe(
                 this,
-                Observer { products ->
-                    adapter.loadData(products)
-                },
-            )
+            ) { products ->
+                adapter.loadData(products)
+            }
         } catch (exception: Exception) {
             Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
         }
@@ -74,9 +76,9 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
                     if (!recyclerView.canScrollVertically(1)) {
-                        viewModel.showLoadMoreBtn()
+                        viewModel.showLoadMoreByCondition()
                     } else {
-                        if (dy < 0) viewModel.hideLoadMoreBtn()
+                        if (dy < 0) viewModel.hideLoadMore()
                     }
                 }
             },

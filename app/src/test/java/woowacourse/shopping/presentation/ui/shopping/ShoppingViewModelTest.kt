@@ -50,14 +50,14 @@ class ShoppingViewModelTest {
 
     @Test
     fun `더보기 버튼을 노출할 수 있다`() {
-        viewModel.showLoadMoreBtn()
+        viewModel.showLoadMore()
 
         assertEquals(true, viewModel.showLoadMore.value)
     }
 
     @Test
     fun `더보기 버튼을 숨길 수 있다`() {
-        viewModel.hideLoadMoreBtn()
+        viewModel.hideLoadMore()
 
         assertEquals(false, viewModel.showLoadMore.value)
     }

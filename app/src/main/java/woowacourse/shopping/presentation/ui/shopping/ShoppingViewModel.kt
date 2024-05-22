@@ -13,19 +13,19 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
 
     private val numberOfProduct: Int by lazy { repository.fetchProductsSize() }
 
-    private val _showLoadMore = MutableLiveData<Boolean>()
+    private val _showLoadMore = MutableLiveData<Boolean>(false)
     val showLoadMore: LiveData<Boolean> = _showLoadMore
 
     private var offset = 0
 
     init {
         initializeProducts()
-        hideLoadMoreBtn()
+        hideLoadMore()
     }
 
     fun loadNextProducts() {
         loadProducts()
-        hideLoadMoreBtn()
+        hideLoadMore()
     }
 
     private fun initializeProducts() {
@@ -63,11 +63,15 @@ class ShoppingViewModel(val repository: ShoppingItemsRepository) : ViewModel() {
         _products.postValue(currentProducts + nextProducts)
     }
 
-    fun showLoadMoreBtn() {
+    fun showLoadMoreByCondition() {
+        if (offset != numberOfProduct) showLoadMore()
+    }
+
+    fun showLoadMore() {
         _showLoadMore.postValue(true)
     }
 
-    fun hideLoadMoreBtn() {
+    fun hideLoadMore() {
         _showLoadMore.postValue(false)
     }
 
