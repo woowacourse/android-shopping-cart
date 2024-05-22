@@ -60,7 +60,7 @@ class ProductListViewModel(
         }
     }
 
-    private fun loadPagingRecentlyProduct() {
+    fun loadPagingRecentlyProduct() {
         try {
             val pagingData = recentlyProductRepository.getRecentlyProductList()
             _recentlyProducts.value = pagingData

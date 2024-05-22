@@ -19,9 +19,9 @@ sealed interface ProductDetailEvent {
         data object Fail : LoadProductItem, ErrorEvent
     }
 
-    sealed interface LoadRecentlyProductItem : ProductDetailEvent {
-        data object Success : LoadRecentlyProductItem
+    sealed interface UpdateRecentlyProductItem : ProductDetailEvent {
+        data object Success : UpdateRecentlyProductItem, SuccessEvent
 
-        data object Fail : LoadRecentlyProductItem, ErrorEvent
+        data object Fail : UpdateRecentlyProductItem, ErrorEvent
     }
 }

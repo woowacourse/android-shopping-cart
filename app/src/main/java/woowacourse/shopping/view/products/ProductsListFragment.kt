@@ -129,6 +129,9 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         mainFragmentListener?.observeProductList { updatedProducts ->
             productListViewModel.updateProducts(updatedProducts)
         }
+        mainFragmentListener?.observeRecentlyProduct {
+            productListViewModel.loadPagingRecentlyProduct()
+        }
     }
 
     override fun onDestroyView() {

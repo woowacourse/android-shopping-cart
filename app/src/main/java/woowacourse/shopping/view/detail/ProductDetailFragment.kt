@@ -73,6 +73,10 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
                         getString(R.string.add_cart_text),
                     )
                 }
+
+                ProductDetailEvent.UpdateRecentlyProductItem.Success -> {
+                    mainFragmentListener?.saveUpdateRecentlyProduct()
+                }
             }
         }
 
@@ -95,7 +99,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
                         getString(R.string.error_default),
                     )
 
-                ProductDetailEvent.LoadRecentlyProductItem.Fail ->
+                ProductDetailEvent.UpdateRecentlyProductItem.Fail ->
                     requireContext().makeToast(
                         getString(R.string.error_recently_product_item),
                     )

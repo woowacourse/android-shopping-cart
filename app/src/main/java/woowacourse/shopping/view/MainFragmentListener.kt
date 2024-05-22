@@ -13,4 +13,8 @@ interface MainFragmentListener {
         productId: Long,
         count: Int,
     )
+
+    fun observeRecentlyProduct(reset: () -> Unit)
+
+    fun saveUpdateRecentlyProduct()
 }

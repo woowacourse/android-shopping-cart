@@ -34,8 +34,8 @@ class ProductDetailViewModel(
         MutableSingleLiveData()
     val errorEvent: SingleLiveData<ProductDetailEvent.ErrorEvent> get() = _errorEvent
 
-    private val _productDetailEvent = MutableLiveData<ProductDetailEvent.SuccessEvent>()
-    val productDetailEvent: LiveData<ProductDetailEvent.SuccessEvent> = _productDetailEvent
+    private val _productDetailEvent = MutableSingleLiveData<ProductDetailEvent.SuccessEvent>()
+    val productDetailEvent: SingleLiveData<ProductDetailEvent.SuccessEvent> = _productDetailEvent
 
     fun addShoppingCartItem(product: Product) {
         try {
@@ -52,11 +52,12 @@ class ProductDetailViewModel(
                     )
                 }
             }
-            _productDetailEvent.value =
+            _productDetailEvent.postValue(
                 ProductDetailEvent.AddShoppingCart.Success(
                     productId = product.id,
                     count = product.cartItemCounter.itemCount,
                 )
+            )
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
@@ -172,6 +173,7 @@ class ProductDetailViewModel(
             product.cartItemCounter.updateCount(loadItemCounter.itemCount)
             _product.value = product
             _recentlyProduct.value = RecentlyProduct.defaultRecentlyProduct
+            _productDetailEvent.postValue(ProductDetailEvent.UpdateRecentlyProductItem.Success)
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->
@@ -191,12 +193,14 @@ class ProductDetailViewModel(
         try {
             val recentlyProduct = recentlyProductRepository.getMostRecentlyProduct()
             _recentlyProduct.value = recentlyProduct
+            _productDetailEvent.postValue(ProductDetailEvent.UpdateRecentlyProductItem.Success)
             if (recentlyProduct.productId != product.id) {
                 saveRecentlyProduct(product)
             }
+
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.postValue(ProductDetailEvent.LoadRecentlyProductItem.Fail)
+                is NoSuchDataException -> _errorEvent.postValue(ProductDetailEvent.UpdateRecentlyProductItem.Fail)
                 else -> _errorEvent.postValue(ProductDetailEvent.ErrorEvent.NotKnownError)
             }
         }

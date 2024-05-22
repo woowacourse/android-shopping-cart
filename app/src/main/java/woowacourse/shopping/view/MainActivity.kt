@@ -46,6 +46,16 @@ class MainActivity : AppCompatActivity(), MainFragmentListener {
         productId: Long,
         count: Int,
     ) {
-        mainViewModel.saveUpdate(mapOf(productId to count))
+        mainViewModel.saveUpdateProduct(mapOf(productId to count))
+    }
+
+    override fun observeRecentlyProduct(reset: () -> Unit) {
+        mainViewModel.updateRecentlyProductEvent.observe(this) {
+            reset()
+        }
+    }
+
+    override fun saveUpdateRecentlyProduct() {
+        mainViewModel.saveUpdateRecentlyProduct()
     }
 }
