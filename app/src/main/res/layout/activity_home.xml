@@ -8,8 +8,8 @@
         <import type="android.view.View" />
 
         <variable
-            name="homeClickListener"
-            type="woowacourse.shopping.presentation.home.HomeClickListener" />
+            name="homeActionHandler"
+            type="woowacourse.shopping.presentation.home.HomeActionHandler" />
 
         <variable
             name="viewModel"
@@ -61,7 +61,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:onClick="@{() -> homeClickListener.moveToCart()}"
+                    android:onClick="@{() -> homeActionHandler.onMoveToCart()}"
                     android:src="@drawable/ic_shopping_cart" />
 
             </androidx.appcompat.widget.Toolbar>

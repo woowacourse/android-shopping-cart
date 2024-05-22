@@ -6,12 +6,14 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.cart.Order
+import woowacourse.shopping.presentation.home.HomeActionHandler
 import woowacourse.shopping.presentation.home.LoadStatus
+import woowacourse.shopping.util.Event
 
 class HomeViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-) : ViewModel() {
+) : ViewModel(), HomeActionHandler {
     private var page: Int = 0
 
     private val _totalCartCount: MutableLiveData<Int> = MutableLiveData(0)
@@ -26,6 +28,14 @@ class HomeViewModel(
     private val _loadStatus: MutableLiveData<LoadStatus> = MutableLiveData(LoadStatus())
     val loadStatus: LiveData<LoadStatus>
         get() = _loadStatus
+
+    private val _onProductClicked = MutableLiveData<Event<Long>>()
+    val onProductClicked: LiveData<Event<Long>>
+        get() = _onProductClicked
+
+    private val _onCartClicked = MutableLiveData<Event<Unit>>()
+    val onCartClicked: LiveData<Event<Unit>>
+        get() = _onCartClicked
 
     init {
         loadProducts()
@@ -112,5 +122,29 @@ class HomeViewModel(
                 loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
                 isLoadingPage = false,
             )
+    }
+
+    override fun onProductItemClick(id: Long) {
+        _onProductClicked.value = Event(id)
+    }
+
+    override fun onMoveToCart() {
+        _onCartClicked.value = Event(Unit)
+    }
+
+    override fun onAddCartItem(id: Long) {
+        addCartItem(id)
+    }
+
+    override fun onCartItemAdd(id: Long) {
+        plusCartItem(id)
+    }
+
+    override fun onCartItemRemove(id: Long) {
+        minusCartItem(id)
+    }
+
+    override fun onLoadClick() {
+        loadProducts()
     }
 }

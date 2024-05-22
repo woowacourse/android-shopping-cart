@@ -11,12 +11,12 @@ import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.cart.Order
+import woowacourse.shopping.presentation.home.HomeActionHandler
 import woowacourse.shopping.presentation.home.LoadStatus
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(
-    private val productItemClickListener: ProductItemClickListener,
-    private val loadClickListener: LoadClickListener,
+    private val homeActionHandler: HomeActionHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var orders: List<Order> = emptyList()
     private var loadStatus: LoadStatus = LoadStatus()
@@ -30,13 +30,13 @@ class ProductAdapter(
             TYPE_PRODUCT -> {
                 val binding: ItemProductBinding =
                     ItemProductBinding.inflate(layoutInflater, parent, false)
-                ProductViewHolder(binding, productItemClickListener)
+                ProductViewHolder(binding, homeActionHandler)
             }
 
             TYPE_LOAD -> {
                 val binding: ItemLoadMoreBinding =
                     ItemLoadMoreBinding.inflate(layoutInflater, parent, false)
-                LoadingViewHolder(binding, loadClickListener)
+                LoadingViewHolder(binding, homeActionHandler)
             }
 
             else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)

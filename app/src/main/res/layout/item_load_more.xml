@@ -12,8 +12,8 @@
             type="woowacourse.shopping.presentation.home.LoadStatus" />
 
         <variable
-            name="loadClickListener"
-            type="woowacourse.shopping.presentation.home.adapter.LoadClickListener" />
+            name="homeActionHandler"
+            type="woowacourse.shopping.presentation.home.HomeActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
-            android:onClick="@{() -> loadClickListener.onLoadClick()}"
+            android:onClick="@{() -> homeActionHandler.onLoadClick()}"
             android:text="@string/home_load_more_button"
             app:layout_constraintBottom_toBottomOf="parent"
             shopping:loadStatus="@{loadStatus}" />

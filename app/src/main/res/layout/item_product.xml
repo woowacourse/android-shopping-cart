@@ -13,8 +13,8 @@
             type="woowacourse.shopping.presentation.cart.Order" />
 
         <variable
-            name="productItemClickListener"
-            type="woowacourse.shopping.presentation.home.adapter.ProductItemClickListener" />
+            name="homeActionHandler"
+            type="woowacourse.shopping.presentation.home.HomeActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +28,7 @@
             android:layout_height="0dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/description_thumbnail"
-            android:onClick="@{() -> productItemClickListener.onProductItemClick(order.product.id)}"
+            android:onClick="@{() -> homeActionHandler.onProductItemClick(order.product.id)}"
             android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:onClick="@{() -> productItemClickListener.addCartItem(order.product.id) }"
+            android:onClick="@{() -> homeActionHandler.onAddCartItem(order.product.id) }"
             android:src="@drawable/ic_circle_plus"
             android:visibility="@{order.quantity == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
@@ -66,7 +66,7 @@
                 android:id="@+id/iv_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> productItemClickListener.onCartItemRemove(order.product.id)}"
+                android:onClick="@{() -> homeActionHandler.onCartItemRemove(order.product.id)}"
                 android:padding="12dp"
                 android:src="@drawable/ic_minus"
                 />
@@ -85,7 +85,7 @@
                 android:id="@+id/iv_plus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> productItemClickListener.onCartItemAdd(order.product.id)}"
+                android:onClick="@{() -> homeActionHandler.onCartItemAdd(order.product.id)}"
                 android:padding="12dp"
                 android:src="@drawable/ic_plus"/>
         </LinearLayout>

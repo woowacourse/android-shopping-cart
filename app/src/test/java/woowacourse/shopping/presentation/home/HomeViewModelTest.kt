@@ -50,9 +50,10 @@ class HomeViewModelTest {
         homeViewModel.addCartItem(7)
         homeViewModel.plusCartItem(7)
 
-        val actualResult = homeViewModel.orders.getOrAwaitValue().first {
-            it.product.id == 7L
-        }
+        val actualResult =
+            homeViewModel.orders.getOrAwaitValue().first {
+                it.product.id == 7L
+            }
 
         assertThat(actualResult.quantity).isEqualTo(2)
     }
@@ -63,9 +64,10 @@ class HomeViewModelTest {
         homeViewModel.plusCartItem(7)
         homeViewModel.minusCartItem(7)
 
-        val actualResult = homeViewModel.orders.getOrAwaitValue().first {
-            it.product.id == 7L
-        }
+        val actualResult =
+            homeViewModel.orders.getOrAwaitValue().first {
+                it.product.id == 7L
+            }
 
         assertThat(actualResult.quantity).isEqualTo(1)
     }

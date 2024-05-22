@@ -2,14 +2,15 @@ package woowacourse.shopping.presentation.home.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
+import woowacourse.shopping.presentation.home.HomeActionHandler
 import woowacourse.shopping.presentation.home.LoadStatus
 
 class LoadingViewHolder(
     private val binding: ItemLoadMoreBinding,
-    loadClickListener: LoadClickListener,
+    homeActionHandler: HomeActionHandler,
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.loadClickListener = loadClickListener
+        binding.homeActionHandler = homeActionHandler
     }
 
     fun bind(loadStatus: LoadStatus) {

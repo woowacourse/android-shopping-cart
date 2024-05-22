@@ -11,14 +11,12 @@ import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
-import woowacourse.shopping.presentation.home.adapter.LoadClickListener
 import woowacourse.shopping.presentation.home.adapter.ProductAdapter
-import woowacourse.shopping.presentation.home.adapter.ProductItemClickListener
 import woowacourse.shopping.presentation.home.adapter.ProductsGridLayoutManager
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModelFactory
 
-class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickListener, HomeClickListener {
+class HomeActivity : AppCompatActivity() {
     private val binding: ActivityHomeBinding by lazy {
         ActivityHomeBinding.inflate(layoutInflater)
     }
@@ -33,7 +31,7 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         )[HomeViewModel::class.java]
     }
     private val adapter: ProductAdapter by lazy {
-        ProductAdapter(this, this)
+        ProductAdapter(viewModel)
     }
 
     override fun onResume() {
@@ -53,8 +51,8 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         binding.rvHome.layoutManager = layoutManager
         binding.productAdapter = adapter
         binding.viewModel = viewModel
+        binding.homeActionHandler = viewModel
         binding.lifecycleOwner = this
-        binding.homeClickListener = this
 
         viewModel.orders.observe(this) {
             adapter.addProducts(it)
@@ -64,31 +62,19 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
             adapter.updateLoadStatus(it)
         }
 
+        viewModel.onProductClicked.observe(this) {
+            it.getContentIfNotHandled()?.let { productId ->
+                startActivity(DetailActivity.newIntent(this, productId))
+            }
+        }
+
+        viewModel.onCartClicked.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                startActivity(CartActivity.newIntent(this))
+            }
+        }
+
         setSupportActionBar(binding.toolbarHome)
         supportActionBar?.setDisplayShowTitleEnabled(false)
-    }
-
-    override fun onProductItemClick(id: Long) {
-        startActivity(DetailActivity.newIntent(this, id))
-    }
-
-    override fun addCartItem(id: Long) {
-        viewModel.addCartItem(id)
-    }
-
-    override fun onCartItemAdd(id: Long) {
-        viewModel.plusCartItem(id)
-    }
-
-    override fun onCartItemRemove(id: Long) {
-        viewModel.minusCartItem(id)
-    }
-
-    override fun onLoadClick() {
-        viewModel.loadProducts()
-    }
-
-    override fun moveToCart() {
-        startActivity(CartActivity.newIntent(this))
     }
 }

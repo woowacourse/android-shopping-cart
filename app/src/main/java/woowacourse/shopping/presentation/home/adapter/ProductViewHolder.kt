@@ -3,14 +3,15 @@ package woowacourse.shopping.presentation.home.adapter
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.presentation.cart.Order
+import woowacourse.shopping.presentation.home.HomeActionHandler
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,
-    productItemClickListener: ProductItemClickListener,
+    homeActionHandler: HomeActionHandler,
 ) :
     RecyclerView.ViewHolder(binding.root) {
     init {
-        binding.productItemClickListener = productItemClickListener
+        binding.homeActionHandler = homeActionHandler
     }
 
     fun bind(order: Order) {
