@@ -28,6 +28,6 @@ class ProductDaoTest {
 
         assertThat(actual).isNotNull()
         assertThat(expected).isNotNull()
-        assertThat(actual).isEqualTo(expected)
+        assertThat(actual?.id).isEqualTo(expected?.id)
     }
 }

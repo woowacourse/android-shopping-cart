@@ -14,7 +14,6 @@ import woowacourse.shopping.view.products.adapter.viewholder.ProductViewHolder
 class ProductAdapter(
     private val onClickProducts: OnClickProducts,
     private val onClickCartItemCounter: OnClickCartItemCounter,
-    private val isLoadLastItem: (Boolean) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()
     private val productPosition : HashMap<Long,Int> = hashMapOf()
@@ -38,12 +37,6 @@ class ProductAdapter(
         val item = products[position]
         holder.bind(item)
         productPosition[item.id] = position
-
-        if (position == itemCount - 1) {
-            isLoadLastItem(true)
-        } else {
-            isLoadLastItem(false)
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

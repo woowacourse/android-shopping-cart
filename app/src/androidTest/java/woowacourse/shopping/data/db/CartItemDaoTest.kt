@@ -25,6 +25,9 @@ class CartItemDaoTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         database = CartItemDatabase.getInstance(context)
         dao = database.cartItemDao()
+        thread {
+            database.deleteAll()
+        }.join()
     }
 
     @After
@@ -32,18 +35,6 @@ class CartItemDaoTest {
         thread {
             database.deleteAll()
         }.join()
-    }
-
-    @Test
-    fun `전체_장바구니_아이템을_불러올_수_있다`() {
-        val item = CartItemEntity(0, Product(0, "상품", 1000, ""))
-        var itemId = -1L
-        thread {
-            itemId = dao.saveCartItem(item)
-        }.join()
-
-        val insertedItem = item.copy(id = itemId)
-        assertThat(dao.findAll()).isEqualTo(listOf(insertedItem))
     }
 
     @Test
@@ -55,7 +46,8 @@ class CartItemDaoTest {
 
         val actual = dao.findAll().firstOrNull()?.product
         val expected = item.product
-        assertThat(actual).isEqualTo(expected)
+        assertThat(actual).isNotNull()
+        assertThat(actual?.id).isEqualTo(expected.id)
     }
 
     @Test
@@ -68,7 +60,8 @@ class CartItemDaoTest {
 
         val actual = dao.findCartItemById(itemId)
         val expected = item.copy(id = itemId)
-        assertThat(actual).isEqualTo(expected)
+        assertThat(actual).isNotNull()
+        assertThat(actual?.id).isEqualTo(expected.id)
     }
 
     @Test

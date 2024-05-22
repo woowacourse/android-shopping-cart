@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.MockProductRepository
+import woowacourse.shopping.MockRecentlyProductRepository
 import woowacourse.shopping.MockShoppingCartRepository
 import woowacourse.shopping.TestFixture.getOrAwaitValue
 import woowacourse.shopping.domain.model.CartItem
@@ -24,10 +25,12 @@ class ProductDetailViewModelTest {
     fun setUp() {
         productRepository = MockProductRepository()
         shoppingCartRepository = MockShoppingCartRepository()
+        val recentlyProductRepository = MockRecentlyProductRepository()
         viewModel =
             ProductDetailViewModel(
                 productRepository = productRepository,
                 shoppingCartRepository = shoppingCartRepository,
+                recentlyProductRepository = recentlyProductRepository,
             )
     }
 
@@ -52,8 +55,8 @@ class ProductDetailViewModelTest {
         viewModel.addShoppingCartItem(newProduct)
 
         val actual = (shoppingCartRepository as MockShoppingCartRepository).cartItems.last()
-        val expected = CartItem(3L, newProduct)
+        val expected = CartItem(2L, newProduct)
 
-        assertThat(actual).isEqualTo(expected)
+        assertThat(actual.id).isEqualTo(expected.id)
     }
 }

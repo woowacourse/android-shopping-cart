@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.MockShoppingCartRepository
 import woowacourse.shopping.TestFixture.getOrAwaitValue
+import woowacourse.shopping.domain.model.CartItemCounter
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
 import woowacourse.shopping.view.cart.ShoppingCartViewModel
 
@@ -38,7 +39,7 @@ class ShoppingCartViewModelTest {
         val before = viewModel.shoppingCart.cartItems.getOrAwaitValue()
         Assertions.assertThat(before.size).isEqualTo(3)
 
-        viewModel.deleteShoppingCartItem(0)
+        viewModel.deleteShoppingCartItem(0,0, CartItemCounter())
 
         val result = viewModel.shoppingCart.cartItems.getOrAwaitValue()
         Assertions.assertThat(result.size).isEqualTo(2)

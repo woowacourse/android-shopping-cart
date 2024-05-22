@@ -73,9 +73,7 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
             ProductAdapter(
                 onClickProducts = this,
                 onClickCartItemCounter = this,
-            ) { isLoadLastItem ->
-                binding.isVisible = isLoadLastItem
-            }
+            )
         binding.rvProducts.adapter = productAdapter
         recentlyAdapter =
             RecentlyAdapter(
@@ -85,7 +83,7 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
     }
 
     private fun observeData() {
-        productListViewModel.recentlyProducts.observe(viewLifecycleOwner){ recentlyData ->
+        productListViewModel.recentlyProducts.observe(viewLifecycleOwner) { recentlyData ->
             recentlyAdapter.updateProducts(recentlyData)
         }
 

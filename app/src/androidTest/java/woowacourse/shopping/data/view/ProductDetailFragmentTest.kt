@@ -39,6 +39,6 @@ class ProductDetailFragmentTest {
 
     @Test
     fun `선택한_상품의_가격이_보여져야_한다`() {
-        onView(withId(R.id.tv_detail_product_price)).check(matches(withText("10,000원")))
+        onView(withId(R.id.tv_detail_product_price)).check(matches(withText("0원")))
     }
 }

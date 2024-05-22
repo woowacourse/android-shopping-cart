@@ -35,14 +35,11 @@ class MockProductRepository : ProductRepository {
             ),
         )
 
-    override fun loadPagingProducts(
-        offset: Int,
-        pagingSize: Int,
-    ): List<Product> {
+    override fun loadPagingProducts(offset: Int): List<Product> {
         repeat(5) {
             products.addAll(products)
         }
-        return products.subList(offset, pagingSize)
+        return products.subList(offset, 3)
     }
 
     override fun getProduct(productId: Long): Product {
