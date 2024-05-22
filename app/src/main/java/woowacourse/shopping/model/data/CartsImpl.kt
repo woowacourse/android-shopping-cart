@@ -13,18 +13,38 @@ object CartsImpl : CartDao {
 
     override fun save(cart: Cart): Long {
         val oldCart =
-            carts.keys.find { it == cart.id }?.let {
-                carts[it]
-            }
+            carts.values.find { it.productWithQuantity.product.id == cart.productWithQuantity.product.id }
+                ?.let {
+                    carts[it.id]
+                }
 
         if (oldCart == null) {
             carts[id] = cart.copy(id = id)
             return id++
         }
-        val count = oldCart.product.count + cart.product.count
+        val quantity = oldCart.productWithQuantity.quantity.plus(cart.productWithQuantity.quantity)
         carts.remove(oldCart.id)
-        carts[id] = oldCart.copy(product = oldCart.product.copy(count = count))
-        return id++
+
+        carts[oldCart.id] =
+            oldCart.copy(productWithQuantity = oldCart.productWithQuantity.copy(quantity = quantity))
+
+        return oldCart.id
+    }
+
+    override fun decreaseQuantity(cart: Cart) {
+        val oldCart =
+            carts.values.find { it.productWithQuantity.product.id == cart.productWithQuantity.product.id }
+                ?.let {
+                    carts[it.id]
+                } ?: return
+
+        val quantity = oldCart.productWithQuantity.quantity.plus(cart.productWithQuantity.quantity)
+        if (quantity.value == 0) {
+            delete(oldCart.id)
+            return
+        }
+        carts[oldCart.id] =
+            oldCart.copy(productWithQuantity = oldCart.productWithQuantity.copy(quantity = quantity))
     }
 
     override fun deleteAll() {
@@ -54,13 +74,13 @@ object CartsImpl : CartDao {
 
     override fun plusCartCount(cartId: Long) {
         carts[cartId]?.let {
-            carts[cartId] = it.copy(product = it.product.inc())
+            carts[cartId] = it.copy(productWithQuantity = it.productWithQuantity.inc())
         }
     }
 
     override fun minusCartCount(cartId: Long) {
         carts[cartId]?.let {
-            carts[cartId] = it.copy(product = it.product.dec())
+            carts[cartId] = it.copy(productWithQuantity = it.productWithQuantity.dec())
         }
     }
 

@@ -5,13 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.model.Cart
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.data.CartDao
-import woowacourse.shopping.model.data.ProductDao
+import woowacourse.shopping.model.data.ProductWithQuantityDao
 import woowacourse.shopping.ui.utils.Event
 
 class ProductDetailViewModel(
-    private val productDao: ProductDao,
+    private val productWithQuantityDao: ProductWithQuantityDao,
     private val cartDao: CartDao,
 ) : ViewModel() {
     private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -20,20 +20,20 @@ class ProductDetailViewModel(
     private val _errorMsg: MutableLiveData<Event<String>> = MutableLiveData(Event(""))
     val errorMsg: LiveData<Event<String>> get() = _errorMsg
 
-    private val _product: MutableLiveData<Product> = MutableLiveData()
-    val product: LiveData<Product> get() = _product
+    private val _productWithQuantity: MutableLiveData<ProductWithQuantity> = MutableLiveData()
+    val productWithQuantity: LiveData<ProductWithQuantity> get() = _productWithQuantity
 
     val isInvalidCount: LiveData<Boolean> =
-        _product.map {
-            it.count == 0
+        _productWithQuantity.map {
+            it.quantity.value == 0
         }
 
-    fun loadProduct(productId: Long) {
+    fun loadProduct(productWithQuantityId: Long) {
         runCatching {
-            productDao.find(productId)
+            productWithQuantityDao.find(productWithQuantityId)
         }.onSuccess {
             _error.value = false
-            _product.value = it
+            _productWithQuantity.value = it
         }.onFailure {
             _error.value = true
             _errorMsg.setErrorHandled(it.message.toString())
@@ -41,20 +41,20 @@ class ProductDetailViewModel(
     }
 
     fun addProductToCart() {
-        _product.value?.let {
-            cartDao.save(Cart(product = it))
+        _productWithQuantity.value?.let {
+            cartDao.save(Cart(productWithQuantity = it))
         }
     }
 
     fun plusCount() {
-        _product.value?.let {
-            _product.value = it.inc()
+        _productWithQuantity.value?.let {
+            _productWithQuantity.value = it.inc()
         }
     }
 
     fun minusCount() {
-        _product.value?.let {
-            _product.value = it.dec()
+        _productWithQuantity.value?.let {
+            _productWithQuantity.value = it.dec()
         }
     }
 

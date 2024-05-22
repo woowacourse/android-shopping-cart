@@ -15,18 +15,21 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.model.Quantity
+import woowacourse.shopping.model.data.ProductWithQuantitiesImpl
 
 @RunWith(AndroidJUnit4::class)
 class ProductDetailActivityTest {
-    private val product: Product = ProductsImpl.find(productId)
+    private val productWithQuantity: ProductWithQuantity =
+        ProductWithQuantitiesImpl.find(productQuantityId)
 
     private val intent =
         Intent(
             ApplicationProvider.getApplicationContext(),
             ProductDetailActivity::class.java,
         ).run {
-            putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
+            putExtra(ProductDetailKey.EXTRA_PRODUCT_WITH_QUANTITY_KEY, productQuantityId)
         }
 
     @get:Rule
@@ -36,7 +39,7 @@ class ProductDetailActivityTest {
     fun `화면이_띄워지면_상품명이_보인다`() {
         onView(withId(R.id.tv_product_name))
             .check(matches(isDisplayed()))
-            .check(matches(withText(product.name)))
+            .check(matches(withText(productWithQuantity.product.name)))
     }
 
     @Test
@@ -55,12 +58,18 @@ class ProductDetailActivityTest {
 
     companion object {
         private val MAC_BOOK = Product(imageUrl = "", name = "맥북1", price = 9000)
-        private var productId = -1L
+        private var productQuantityId = -1L
 
         @JvmStatic
         @BeforeClass
         fun setUp() {
-            productId = ProductsImpl.save(MAC_BOOK)
+            productQuantityId =
+                ProductWithQuantitiesImpl.save(
+                    ProductWithQuantity(
+                        product = MAC_BOOK,
+                        quantity = Quantity(1),
+                    ),
+                )
         }
     }
 }

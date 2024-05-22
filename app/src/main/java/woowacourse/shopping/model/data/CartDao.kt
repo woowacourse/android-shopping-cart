@@ -7,6 +7,8 @@ interface CartDao {
 
     fun save(cart: Cart): Long
 
+    fun decreaseQuantity(cart: Cart)
+
     fun find(id: Long): Cart
 
     fun findAll(): List<Cart>

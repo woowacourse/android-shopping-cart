@@ -18,6 +18,8 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 
@@ -127,16 +129,32 @@ class CartActivityTest {
     }
 
     companion object {
-        private val MAC_BOOK = Product(imageUrl = "", name = "맥북", price = 100, count = 1)
-        private val IPHONE = Product(imageUrl = "", name = "아이폰", price = 5, count = 1)
+        private val MAC_BOOK = Product(imageUrl = "", name = "맥북", price = 100)
+        private val IPHONE = Product(id = 6L, imageUrl = "", name = "아이폰", price = 5)
 
         @JvmStatic
         @BeforeClass
         fun setUp() {
             repeat(5) {
-                CartsImpl.save(Cart(product = MAC_BOOK))
+                CartsImpl.save(
+                    Cart(
+                        productWithQuantity =
+                            ProductWithQuantity(
+                                product = MAC_BOOK.copy(id = it.toLong()),
+                                quantity = Quantity(1),
+                            ),
+                    ),
+                )
             }
-            CartsImpl.save(Cart(product = IPHONE))
+            CartsImpl.save(
+                Cart(
+                    productWithQuantity =
+                        ProductWithQuantity(
+                            product = IPHONE,
+                            quantity = Quantity(1),
+                        ),
+                ),
+            )
         }
     }
 }

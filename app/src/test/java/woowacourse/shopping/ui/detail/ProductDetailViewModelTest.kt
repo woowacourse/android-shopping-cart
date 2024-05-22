@@ -8,8 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.data.CartsImpl
-import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.data.ProductWithQuantitiesImpl
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -18,27 +20,27 @@ class ProductDetailViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        ProductsImpl.deleteAll()
+        ProductWithQuantitiesImpl.deleteAll()
         CartsImpl.deleteAll()
-        viewModel = ProductDetailViewModel(ProductsImpl, CartsImpl)
+        viewModel = ProductDetailViewModel(ProductWithQuantitiesImpl, CartsImpl)
     }
 
     @Test
     fun `선택한 상품이 불러와진다`() {
         // given
-        val productId = ProductsImpl.save(product)
+        val productId = ProductWithQuantitiesImpl.save(product)
 
         // when
         viewModel.loadProduct(productId)
 
         // then
-        assertEquals(viewModel.product.getOrAwaitValue(), product.copy(id = productId))
+        assertEquals(viewModel.productWithQuantity.getOrAwaitValue(), product.copy(id = productId))
     }
 
     @Test
     fun `상품이 장바구니에 담긴다`() {
         // given
-        val productId = ProductsImpl.save(product)
+        val productId = ProductWithQuantitiesImpl.save(product)
         viewModel.loadProduct(productId)
 
         // when
@@ -50,6 +52,10 @@ class ProductDetailViewModelTest {
     }
 
     companion object {
-        private val product = Product(imageUrl = "", name = "맥북", price = 100)
+        private val product =
+            ProductWithQuantity(
+                product = Product(id = 0L, imageUrl = "", name = "맥북", price = 100),
+                quantity = Quantity(1),
+            )
     }
 }
