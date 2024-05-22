@@ -7,6 +7,8 @@ interface UiState {
         val result: T
     }
 
+    interface Fail
+
     interface Error : UiState {
         val throwable: Throwable?
     }

@@ -5,12 +5,23 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="onClick"
+            type="woowacourse.shopping.productlist.ProductListClickAction" />
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.productlist.ProductUiModel" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp">
+        android:layout_margin="6dp"
+        android:onClick="@{() -> onClick.onProductClicked(product.id)}">
 
         <ImageView
             android:id="@+id/iv_product_item"
@@ -20,7 +31,33 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:background="@android:color/transparent"
+            android:onClick="@{() -> onClick.onIntoCartClicked(product.id)}"
+            android:src="@drawable/ic_count_plus"
+            android:visibility="@{product.cartItemCount==0 ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ViewStub
+            android:id="@+id/viewstub_product_list_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginBottom="8dp"
+            android:layout="@layout/item_viewstub_product_count"
+            android:visibility="@{product.cartItemCount!=0 ? View.VISIBLE : View.GONE}"
+            app:inflatedVisibility="@{product.cartItemCount!=0}"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
+            app:onClick="@{onClick}"
+            app:product="@{product}" />
 
         <TextView
             android:id="@+id/tv_product_list_name"
