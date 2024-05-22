@@ -30,7 +30,7 @@ class CartViewModelTest {
         viewModel.deleteCartItem(cartItems.first())
 
         // then
-        assertThat(viewModel.cart.getOrAwaitValue()).hasSize(0)
+        assertThat(viewModel.productUiModels.getOrAwaitValue()).hasSize(0)
     }
 
     @Test
@@ -43,7 +43,7 @@ class CartViewModelTest {
         viewModel = CartViewModel(cartRepository)
 
         // then
-        val actual = viewModel.cart.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(5)
         assertThat(actual).isEqualTo(cartItems.take(5))
     }
@@ -58,7 +58,7 @@ class CartViewModelTest {
         viewModel = CartViewModel(cartRepository)
 
         // then
-        val actual = viewModel.cart.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(3)
         assertThat(actual).isEqualTo(cartItems.take(3))
     }
@@ -87,7 +87,7 @@ class CartViewModelTest {
         viewModel = CartViewModel(cartRepository)
 
         // then
-        val actual = viewModel.cart.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(5)
         assertThat(actual).isEqualTo(cartItems.take(5))
     }
@@ -161,7 +161,7 @@ class CartViewModelTest {
         viewModel.moveNextPage()
 
         // then
-        val actual = viewModel.cart.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(1)
         assertThat(actual).isEqualTo(cartItems.slice(5..5))
     }
@@ -178,7 +178,7 @@ class CartViewModelTest {
         viewModel.movePreviousPage()
 
         // then
-        val actual = viewModel.cart.getOrAwaitValue()
+        val actual = viewModel.productUiModels.getOrAwaitValue()
         assertThat(actual).hasSize(5)
         assertThat(actual).isEqualTo(cartItems.take(5))
     }
@@ -192,7 +192,7 @@ class CartViewModelTest {
         viewModel.moveNextPage()
 
         // when
-        val lastOneCartItem = viewModel.cart.getOrAwaitValue().first()
+        val lastOneCartItem = viewModel.productUiModels.getOrAwaitValue().first()
         viewModel.deleteCartItem(lastOneCartItem)
 
         // then
@@ -208,7 +208,7 @@ class CartViewModelTest {
         viewModel = CartViewModel(cartRepository)
 
         // when
-        val cartItem = viewModel.cart.getOrAwaitValue().first()
+        val cartItem = viewModel.productUiModels.getOrAwaitValue().first()
         viewModel.deleteCartItem(cartItem)
 
         // then

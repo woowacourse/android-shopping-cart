@@ -1,13 +1,14 @@
 package woowacourse.shopping.ui.utils
 
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.Quantity
 
 class AddCartQuantityBundle(
-    val product: Product,
+    val productId: Long,
+    val quantity: Quantity,
     val onIncreaseProductQuantity: OnIncreaseProductQuantity,
     val onDecreaseProductQuantity: OnDecreaseProductQuantity,
 )
 
-typealias OnIncreaseProductQuantity = (product: Product) -> Unit
+typealias OnIncreaseProductQuantity = (productId: Long) -> Unit
 
-typealias OnDecreaseProductQuantity = (product: Product) -> Unit
+typealias OnDecreaseProductQuantity = (productId: Long) -> Unit

@@ -4,12 +4,18 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartAdapter
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
-    private val viewModel by viewModels<CartViewModel> { CartViewModelFactory(CartRepository.getInstance()) }
+    private val viewModel by viewModels<CartViewModel> {
+        CartViewModelFactory(
+            ProductRepository.getInstance(),
+            CartRepository.getInstance(),
+        )
+    }
     private lateinit var adapter: CartAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,23 +39,16 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun initializeCartAdapter() {
-        adapter = CartAdapter(
-            onClickExit = { viewModel.deleteCartItem(it) },
-            onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
-            onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
-        )
+        adapter =
+            CartAdapter(
+                onClickExit = { viewModel.deleteCartItem(it) },
+                onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
+                onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
+            )
         binding.rvCart.adapter = adapter
 
-        viewModel.cart.observe(this) {
+        viewModel.productUiModels.observe(this) {
             adapter.changeCartItems(it)
-        }
-
-        viewModel.changedCartItemQuantity.observe(this) {
-            adapter.replaceCartItem(it)
-        }
-
-        viewModel.removedCartItemId.observe(this) {
-            adapter.removeCartItemById(it)
         }
     }
 }

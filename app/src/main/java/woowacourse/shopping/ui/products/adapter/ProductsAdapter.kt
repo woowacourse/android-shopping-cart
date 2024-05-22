@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.ui.products.ProductUiModel
 import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
 import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
@@ -14,7 +14,7 @@ class ProductsAdapter(
     private val onDecreaseProductQuantity: OnDecreaseProductQuantity,
 ) :
     RecyclerView.Adapter<ProductsViewHolder>() {
-    private val products: MutableList<Product> = mutableListOf()
+    private val productUiModels: MutableList<ProductUiModel> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,7 +30,7 @@ class ProductsAdapter(
         position: Int,
     ) {
         holder.bind(
-            products[position],
+            productUiModels[position],
             onClickProductItem,
             onIncreaseProductQuantity,
             onDecreaseProductQuantity,
@@ -38,20 +38,20 @@ class ProductsAdapter(
     }
 
     override fun getItemCount(): Int {
-        return products.size
+        return productUiModels.size
     }
 
-    fun insertProducts(insertedProducts: List<Product>) {
-        val positionStart = insertedProducts.size
-        val itemCount = insertedProducts.size - products.size
+    fun insertProducts(insertedProductUiModel: List<ProductUiModel>) {
+        val positionStart = insertedProductUiModel.size
+        val itemCount = insertedProductUiModel.size - productUiModels.size
 
-        products.addAll(insertedProducts.subList(products.size, insertedProducts.size))
+        productUiModels.addAll(insertedProductUiModel.subList(productUiModels.size, insertedProductUiModel.size))
         notifyItemRangeChanged(positionStart, itemCount)
     }
 
-    fun replaceProduct(replacedProduct: Product) {
-        val replacedProductPosition = products.indexOfFirst { it.id == replacedProduct.id }
-        products[replacedProductPosition] = replacedProduct
+    fun replaceProduct(replacedProductUiModel: ProductUiModel) {
+        val replacedProductPosition = productUiModels.indexOfFirst { it.productId == replacedProductUiModel.productId }
+        productUiModels[replacedProductPosition] = replacedProductUiModel
         notifyItemChanged(replacedProductPosition)
     }
 }

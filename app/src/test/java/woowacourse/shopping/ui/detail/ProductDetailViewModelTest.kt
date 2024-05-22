@@ -30,7 +30,7 @@ class ProductDetailViewModelTest {
     fun `상품 id에 맞는 상품을 불러온다`() {
         viewModel = ProductDetailViewModel(0L, productRepository, cartRepository)
 
-        val actual = viewModel.product.getOrAwaitValue()
+        val actual = viewModel.productUiModel.getOrAwaitValue()
         actual.assertThat(imageUrl, title, price)
     }
 

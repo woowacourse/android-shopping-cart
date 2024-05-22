@@ -43,18 +43,12 @@ class ProductsActivity : AppCompatActivity() {
     private fun initializeProductAdapter() {
         adapter =
             ProductsAdapter(
-                onClickProductItem = { productId ->
-                    navigateToProductDetailView(productId)
-                },
-                onIncreaseProductQuantity = { product ->
-                    viewModel.increaseQuantity(product)
-                },
-                onDecreaseProductQuantity = { product ->
-                    viewModel.decreaseQuantity(product)
-                },
+                onClickProductItem = { navigateToProductDetailView(it) },
+                onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
+                onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
             )
         binding.rvProducts.adapter = adapter
-        viewModel.products.observe(this) {
+        viewModel.productUiModels.observe(this) {
             adapter.insertProducts(it)
         }
         viewModel.changedProductQuantity.observe(this) {

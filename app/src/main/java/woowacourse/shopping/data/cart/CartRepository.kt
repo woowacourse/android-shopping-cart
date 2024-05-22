@@ -1,24 +1,23 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.model.CartItem
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.concurrent.Volatile
 
 interface CartRepository {
-    fun increaseQuantity(product: Product)
+    fun increaseQuantity(productId: Long)
 
-    fun decreaseQuantity(product: Product)
+    fun decreaseQuantity(productId: Long)
 
     fun changeQuantity(
-        product: Product,
+        productId: Long,
         quantity: Quantity,
     )
 
-    fun deleteCartItem(cartItem: CartItem)
+    fun deleteCartItem(productId: Long)
 
-    fun find(product: Product): CartItem
+    fun find(productId: Long): CartItem
 
     fun findRange(
         page: Int,
@@ -26,8 +25,6 @@ interface CartRepository {
     ): List<CartItem>
 
     fun totalProductCount(): Int
-
-    fun totalQuantityCount(): Int
 
     companion object {
         private const val NOT_INITIALIZE_INSTANCE_MESSAGE = "초기화된 인스턴스가 없습니다."

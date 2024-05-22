@@ -5,12 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
+import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.model.CartItem
-import woowacourse.shopping.model.Product
+import woowacourse.shopping.ui.products.ProductUiModel
 
-class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
-    private val _cart = MutableLiveData<MutableList<CartItem>>()
-    val cart: LiveData<List<CartItem>> = _cart.map { it.toList() }
+class CartViewModel(
+    private val productRepository: ProductRepository,
+    private val cartRepository: CartRepository,
+) : ViewModel() {
+    private val _productUiModels = MutableLiveData<MutableList<ProductUiModel>>()
+    val productUiModels: LiveData<List<ProductUiModel>> = _productUiModels.map { it.toList() }
 
     private val _page = MutableLiveData<Int>(INITIALIZE_PAGE)
     val page: LiveData<Int> get() = _page
@@ -20,15 +24,9 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     val hasPage: LiveData<Boolean> = totalCartCount.map { changePageVisibility(it) }
     val hasPreviousPage: LiveData<Boolean> = _page.map { changePreviousPageVisibility(it) }
     val hasNextPage: LiveData<Boolean> = _page.map { changeNextPageVisibility(it) }
-    val isEmptyCart: LiveData<Boolean> = _cart.map { it.isEmpty() }
+    val isEmptyCart: LiveData<Boolean> = _productUiModels.map { it.isEmpty() }
 
     private var maxPage: Int = INITIALIZE_PAGE
-
-    private val _changedCartItemQuantity = MutableLiveData<CartItem>()
-    val changedCartItemQuantity: LiveData<CartItem> get() = _changedCartItemQuantity
-
-    private val _removedCartItemId = MutableLiveData<Long>()
-    val removedCartItemId: LiveData<Long> get() = _removedCartItemId
 
     init {
         loadCart()
@@ -36,8 +34,16 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     private fun loadCart() {
         val page = _page.value ?: INITIALIZE_PAGE
-        _cart.value = cartRepository.findRange(page, PAGE_SIZE).toMutableList()
+        val cart = cartRepository.findRange(page, PAGE_SIZE)
+        _productUiModels.value = cart.toProductUiModels().toMutableList()
         loadTotalCartCount()
+    }
+
+    private fun List<CartItem>.toProductUiModels(): List<ProductUiModel> {
+        return map {
+            val product = productRepository.find(it.productId)
+            ProductUiModel.from(product, it.quantity)
+        }
     }
 
     private fun loadTotalCartCount() {
@@ -46,17 +52,21 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         maxPage = (totalCartCount - 1) / PAGE_SIZE
     }
 
-    fun deleteCartItem(cartItem: CartItem) {
-        cartRepository.deleteCartItem(cartItem)
+    fun deleteCartItem(productId: Long) {
+        cartRepository.deleteCartItem(productId)
         if (isEmptyLastPage()) {
             movePreviousPage()
             return
         }
-        updateDeletedCart(cartItem)
+        updateDeletedCart(productId)
     }
 
-    private fun updateDeletedCart(cartItem: CartItem) {
-        _cart.value = _cart.value?.apply { remove(cartItem) }
+    private fun updateDeletedCart(productId: Long) {
+        _productUiModels.value =
+            _productUiModels.value?.apply {
+                val productUiModel = find { productId == it.productId }
+                remove(productUiModel)
+            }
         totalCartCount.value = totalCartCount.value?.minus(1)
     }
 
@@ -82,20 +92,34 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         loadCart()
     }
 
-    fun increaseQuantity(product: Product) {
-        cartRepository.increaseQuantity(product)
-        _changedCartItemQuantity.value = cartRepository.find(product)
+    fun increaseQuantity(productId: Long) {
+        cartRepository.increaseQuantity(productId)
+        val index = _productUiModels.value?.indexOfFirst { it.productId == productId } ?: return
+        _productUiModels.value =
+            _productUiModels.value?.apply {
+                var changedQuantity = this[index].quantity
+                this[index] = this[index].copy(quantity = ++changedQuantity)
+            }
     }
 
-    fun decreaseQuantity(product: Product) {
-        val decreaseQuantityCartItem = cartRepository.find(product)
-        cartRepository.decreaseQuantity(product)
+    fun decreaseQuantity(productId: Long) {
+        val decreaseQuantityPosition =
+            _productUiModels.value?.indexOfFirst { it.productId == productId } ?: return
+        cartRepository.decreaseQuantity(productId)
         runCatching {
-            cartRepository.find(product)
+            cartRepository.find(productId)
         }.onSuccess {
-            _changedCartItemQuantity.value = it
+            _productUiModels.value =
+                _productUiModels.value?.apply {
+                    val changedProductUiModel = this[decreaseQuantityPosition]
+                    var changedQuantity = changedProductUiModel.quantity
+                    this[decreaseQuantityPosition] = changedProductUiModel.copy(quantity = --changedQuantity)
+                }
         }.onFailure {
-            _removedCartItemId.value = decreaseQuantityCartItem.id
+            _productUiModels.value =
+                _productUiModels.value?.also {
+                    it.removeAt(decreaseQuantityPosition)
+                }
         }
     }
 

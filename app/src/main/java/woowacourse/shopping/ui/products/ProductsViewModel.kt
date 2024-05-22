@@ -13,8 +13,8 @@ class ProductsViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
-    private val _products = MutableLiveData<List<Product>>(emptyList())
-    val products: LiveData<List<Product>> get() = _products
+    private val _productUiModels = MutableLiveData<MutableList<ProductUiModel>>(mutableListOf())
+    val productUiModels: LiveData<List<ProductUiModel>> = _productUiModels.map { it.toList() }
 
     private val _showLoadMore = MutableLiveData<Boolean>(false)
     val showLoadMore: LiveData<Boolean> get() = _showLoadMore
@@ -22,10 +22,11 @@ class ProductsViewModel(
     private var page: Int = INITIALIZE_PAGE
     private var maxPage: Int = INITIALIZE_PAGE
 
-    private val _changedProductQuantity = MutableLiveData<Product>()
-    val changedProductQuantity: LiveData<Product> get() = _changedProductQuantity
+    private val _changedProductQuantity = MutableLiveData<ProductUiModel>()
+    val changedProductQuantity: LiveData<ProductUiModel> get() = _changedProductQuantity
 
-    val cartTotalCount: LiveData<Int> = _changedProductQuantity.map { cartRepository.totalQuantityCount() }
+    private val _cartTotalCount = MutableLiveData<Int>(0)
+    val cartTotalCount: LiveData<Int> get() = _cartTotalCount
 
     init {
         loadPage()
@@ -33,9 +34,19 @@ class ProductsViewModel(
     }
 
     fun loadPage() {
-        val currentProducts = _products.value ?: emptyList()
-        _products.value = currentProducts + productRepository.findRange(page++, PAGE_SIZE)
+        val currentProductsUiModel = _productUiModels.value ?: emptyList()
+        val products = productRepository.findRange(page++, PAGE_SIZE)
+        _productUiModels.value =
+            (currentProductsUiModel + products.toProductsUiModel()).toMutableList()
         _showLoadMore.value = false
+    }
+
+    private fun List<Product>.toProductsUiModel(): List<ProductUiModel> {
+        return map { product ->
+            runCatching { cartRepository.find(product.id) }
+                .map { ProductUiModel.from(product, it.quantity) }
+                .getOrElse { ProductUiModel.from(product) }
+        }
     }
 
     private fun loadMaxPage() {
@@ -45,19 +56,35 @@ class ProductsViewModel(
 
     fun changeSeeMoreVisibility(lastPosition: Int) {
         _showLoadMore.value =
-            (lastPosition + 1) % PAGE_SIZE == 0 && lastPosition + 1 == _products.value?.size && page < maxPage
+            (lastPosition + 1) % PAGE_SIZE == 0 && lastPosition + 1 == _productUiModels.value?.size && page < maxPage
     }
 
-    fun decreaseQuantity(product: Product) {
-        cartRepository.decreaseQuantity(product)
-        var quantity = product.quantity
-        _changedProductQuantity.value = product.copy(quantity = --quantity)
+    fun decreaseQuantity(productId: Long) {
+        val productUiModel = _productUiModels.value?.find { it.productId == productId } ?: return
+        cartRepository.decreaseQuantity(productId)
+        _cartTotalCount.value = (_cartTotalCount.value ?: 0) - 1
+        var changedQuantity = productUiModel.quantity
+        val new = productUiModel.copy(quantity = --changedQuantity)
+        _changedProductQuantity.value = new
+        _productUiModels.value =
+            _productUiModels.value?.apply {
+                val index = indexOfFirst { it.productId == productId }
+                this[index] = new
+            }
     }
 
-    fun increaseQuantity(product: Product) {
-        cartRepository.increaseQuantity(product)
-        var quantity = product.quantity
-        _changedProductQuantity.value = product.copy(quantity = ++quantity)
+    fun increaseQuantity(productId: Long) {
+        val productUiModel = _productUiModels.value?.find { it.productId == productId } ?: return
+        cartRepository.increaseQuantity(productId)
+        _cartTotalCount.value = (_cartTotalCount.value ?: 0) + 1
+        var changedQuantity = productUiModel.quantity
+        val newProductUiModel = productUiModel.copy(quantity = ++changedQuantity)
+        _changedProductQuantity.value = newProductUiModel
+        _productUiModels.value =
+            _productUiModels.value?.apply {
+                val index = indexOfFirst { it.productId == productId }
+                this[index] = newProductUiModel
+            }
     }
 
     companion object {

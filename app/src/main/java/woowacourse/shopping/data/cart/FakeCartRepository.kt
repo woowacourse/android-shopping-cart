@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.cart
 
 import woowacourse.shopping.model.CartItem
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
 import java.lang.IllegalArgumentException
 import kotlin.math.min
@@ -10,52 +9,50 @@ class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRep
     private val cart: MutableList<CartItem> = savedCartItems.toMutableList()
     private var id: Long = 0L
 
-    override fun increaseQuantity(product: Product) {
-        var oldProductQuantity = product.quantity
-        val newProduct = product.copy(quantity = ++oldProductQuantity)
-
-        val oldCartItem = cart.find { it.product.id == product.id }
+    override fun increaseQuantity(productId: Long) {
+        val oldCartItem = cart.find { it.productId == productId }
         if (oldCartItem == null) {
-            cart.add(CartItem(id++, newProduct))
+            cart.add(CartItem(id++, productId, Quantity(1)))
             return
         }
         cart.remove(oldCartItem)
-        cart.add(oldCartItem.copy(product = newProduct))
+        var quantity = oldCartItem.quantity
+        cart.add(oldCartItem.copy(quantity = ++quantity))
     }
 
-    override fun decreaseQuantity(product: Product) {
-        var oldProductQuantity = product.quantity
-        val newProduct = product.copy(quantity = --oldProductQuantity)
-
-        val oldCartItem = cart.find { it.product.id == product.id }
+    override fun decreaseQuantity(productId: Long) {
+        val oldCartItem = cart.find { it.productId == productId }
         oldCartItem ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
+
         cart.remove(oldCartItem)
-        if (oldProductQuantity.isMin()) {
+        if (oldCartItem.quantity.count == 1) {
             return
         }
-        cart.add(oldCartItem.copy(product = newProduct))
+        var quantity = oldCartItem.quantity
+        cart.add(oldCartItem.copy(quantity = --quantity))
     }
 
     override fun changeQuantity(
-        product: Product,
+        productId: Long,
         quantity: Quantity,
     ) {
-        val newProduct = product.copy(quantity = quantity)
-        val oldCartItem = cart.find { it.product.id == product.id }
+        val oldCartItem = cart.find { it.productId == productId }
         if (oldCartItem == null) {
-            cart.add(CartItem(id++, newProduct))
+            cart.add(CartItem(id++, productId, quantity))
             return
         }
-        cart.add(oldCartItem.copy(product = newProduct))
         cart.remove(oldCartItem)
+        cart.add(oldCartItem.copy(quantity = quantity))
     }
 
-    override fun deleteCartItem(cartItem: CartItem) {
-        cart.remove(cartItem)
+    override fun deleteCartItem(productId: Long) {
+        val deleteCartItem =
+            cart.find { it.productId == productId } ?: throw IllegalArgumentException(CANNOT_DELETE_MESSAGE)
+        cart.remove(deleteCartItem)
     }
 
-    override fun find(product: Product): CartItem {
-        return cart.find { it.product.id == product.id } ?: throw IllegalArgumentException(CANNOT_FIND_MESSAGE)
+    override fun find(productId: Long): CartItem {
+        return cart.find { it.productId == productId } ?: throw IllegalArgumentException(CANNOT_FIND_MESSAGE)
     }
 
     override fun findRange(
@@ -68,12 +65,6 @@ class FakeCartRepository(savedCartItems: List<CartItem> = emptyList()) : CartRep
     }
 
     override fun totalProductCount(): Int = cart.size
-
-    override fun totalQuantityCount(): Int {
-        return cart.fold(0) { total, cartItem ->
-            total + cartItem.product.quantity.count
-        }
-    }
 
     companion object {
         private const val CANNOT_DELETE_MESSAGE = "삭제할 수 없습니다."
