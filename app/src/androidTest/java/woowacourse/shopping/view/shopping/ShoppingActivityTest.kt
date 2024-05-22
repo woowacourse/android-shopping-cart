@@ -34,7 +34,7 @@ class ShoppingActivityTest {
 
     @Test
     fun `화면에_장바구니_버튼이_보인다`() {
-        onView(withId(R.id.shopping_cart)).check(matches(isDisplayed()))
+        onView(withId(R.id.btn_shopping_cart)).check(matches(isDisplayed()))
     }
 
     @Test

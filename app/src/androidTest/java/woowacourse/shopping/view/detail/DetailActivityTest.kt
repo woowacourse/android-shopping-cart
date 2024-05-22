@@ -48,7 +48,7 @@ class DetailActivityTest {
 
     @Test
     fun `X_버튼을_클릭하면_상품_상세_페이지가_종료된다`() {
-        onView(withId((R.id.back_action))).perform(click())
+        onView(withId((R.id.btn_finish))).perform(click())
         activityRule.scenario.onActivity { activity ->
             assert(activity.isFinishing)
         }
