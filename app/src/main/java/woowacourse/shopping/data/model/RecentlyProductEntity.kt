@@ -12,8 +12,8 @@ data class RecentlyProductEntity(
     val productId: Long,
     val imageUrl: String,
     val name: String,
-){
-    fun toRecentlyProduct(): RecentlyProduct{
+) {
+    fun toRecentlyProduct(): RecentlyProduct {
         return RecentlyProduct(
             id = id,
             productId = productId,
@@ -23,9 +23,7 @@ data class RecentlyProductEntity(
     }
 
     companion object {
-        fun makeRecentlyProductEntity(
-            recentlyProduct: RecentlyProduct,
-        ): RecentlyProductEntity{
+        fun makeRecentlyProductEntity(recentlyProduct: RecentlyProduct): RecentlyProductEntity {
             return RecentlyProductEntity(
                 productId = recentlyProduct.productId,
                 name = recentlyProduct.name,

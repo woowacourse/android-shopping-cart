@@ -27,13 +27,14 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
     private var _binding: FragmentProductListBinding? = null
     val binding: FragmentProductListBinding get() = _binding!!
     private val productListViewModel: ProductListViewModel by lazy {
-        val viewModelFactory = ViewModelFactory {
-            ProductListViewModel(
-                productRepository = ProductRepositoryImpl(),
-                shoppingCartRepository = ShoppingCartRepositoryImpl(requireContext()),
-                recentlyProductRepository = RecentlyProductRepositoryImpl(requireContext()),
-            )
-        }
+        val viewModelFactory =
+            ViewModelFactory {
+                ProductListViewModel(
+                    productRepository = ProductRepositoryImpl(),
+                    shoppingCartRepository = ShoppingCartRepositoryImpl(requireContext()),
+                    recentlyProductRepository = RecentlyProductRepositoryImpl(requireContext()),
+                )
+            }
         viewModelFactory.create(ProductListViewModel::class.java)
     }
     private lateinit var productAdapter: ProductAdapter
@@ -77,7 +78,7 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         binding.rvProducts.adapter = productAdapter
         recentlyAdapter =
             RecentlyAdapter(
-                onClickProducts = this
+                onClickProducts = this,
             )
         binding.horizontalView.rvRecentlyProduct.adapter = recentlyAdapter
     }
@@ -117,11 +118,12 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
                     )
 
                 ProductListEvent.UpdateProductEvent.Fail,
-                ProductListEvent.DeleteProductEvent.Fail -> requireContext()
-                    .makeToast(
-                        getString(R.string.error_update_cart_item),
-                    )
-
+                ProductListEvent.DeleteProductEvent.Fail,
+                ->
+                    requireContext()
+                        .makeToast(
+                            getString(R.string.error_update_cart_item),
+                        )
             }
         }
         mainFragmentListener?.observeProductList { updatedProducts ->

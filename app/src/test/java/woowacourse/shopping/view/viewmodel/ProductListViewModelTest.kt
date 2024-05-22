@@ -9,8 +9,6 @@ import woowacourse.shopping.MockProductRepository
 import woowacourse.shopping.MockRecentlyProductRepository
 import woowacourse.shopping.MockShoppingCartRepository
 import woowacourse.shopping.TestFixture.getOrAwaitValue
-import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.domain.repository.RecentlyProductRepository
 import woowacourse.shopping.view.products.ProductListViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -22,11 +20,12 @@ class ProductListViewModelTest {
         val productRepository = MockProductRepository()
         val shoppingCartRepository = MockShoppingCartRepository()
         val recentlyProductRepository = MockRecentlyProductRepository()
-        viewModel = ProductListViewModel(
-            productRepository = productRepository,
-            shoppingCartRepository = shoppingCartRepository,
-            recentlyProductRepository = recentlyProductRepository,
-        )
+        viewModel =
+            ProductListViewModel(
+                productRepository = productRepository,
+                shoppingCartRepository = shoppingCartRepository,
+                recentlyProductRepository = recentlyProductRepository,
+            )
     }
 
     @Test

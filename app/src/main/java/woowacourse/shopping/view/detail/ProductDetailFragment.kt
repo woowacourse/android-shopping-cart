@@ -62,9 +62,8 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
     }
 
     private fun observeData() {
-
         productDetailViewModel.productDetailEvent.observe(viewLifecycleOwner) { productDetailState ->
-            when(productDetailState){
+            when (productDetailState) {
                 is ProductDetailEvent.AddShoppingCart.Success -> {
                     mainFragmentListener?.saveUpdateProduct(
                         productDetailState.productId,
@@ -86,7 +85,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
 
                 ProductDetailEvent.LoadProductItem.Fail -> {
                     requireContext().makeToast(
-                        getString(R.string.error_data_load)
+                        getString(R.string.error_data_load),
                     )
                     parentFragmentManager.popBackStack()
                 }
@@ -112,7 +111,7 @@ class ProductDetailFragment : Fragment(), OnClickDetail, OnClickCartItemCounter 
         try {
             productDetailViewModel.loadProductItem(receiveId())
             productDetailViewModel
-        } catch (e: NoSuchDataException){
+        } catch (e: NoSuchDataException) {
             requireContext().makeToast(
                 getString(R.string.error_data_load),
             )

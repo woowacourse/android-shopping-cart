@@ -19,7 +19,7 @@ class ProductRepositoryImpl : ProductRepository {
     }
 
     override fun getProduct(productId: Long): Product {
-        var product: Product?= null
+        var product: Product? = null
         thread {
             product = productDao.findProductById(productId)
         }.join()

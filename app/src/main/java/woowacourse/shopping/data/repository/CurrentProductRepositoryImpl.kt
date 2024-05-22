@@ -17,8 +17,8 @@ class CurrentProductRepositoryImpl(context: Context) : CurrentProductRepository 
             val addedRecentlyProductId =
                 recentlyProductDao.addRecentlyProduct(
                     RecentlyProductEntity.makeRecentlyProductEntity(
-                        recentlyProduct
-                    )
+                        recentlyProduct,
+                    ),
                 )
             if (addedRecentlyProductId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
         }
@@ -46,7 +46,7 @@ class CurrentProductRepositoryImpl(context: Context) : CurrentProductRepository 
         thread {
             deleteId = recentlyProductDao.deleteRecentlyProductById(id)
         }.join()
-        if (deleteId== ERROR_DELETE_DATA_ID) throw NoSuchDataException()
+        if (deleteId == ERROR_DELETE_DATA_ID) throw NoSuchDataException()
     }
 
     companion object {

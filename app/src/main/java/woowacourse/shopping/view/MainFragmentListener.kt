@@ -7,7 +7,10 @@ interface MainFragmentListener {
 
     fun popFragment()
 
-    fun observeProductList(products: (Map<Long,Int>)-> Unit)
+    fun observeProductList(products: (Map<Long, Int>) -> Unit)
 
-    fun saveUpdateProduct(productId: Long, count: Int)
+    fun saveUpdateProduct(
+        productId: Long,
+        count: Int,
+    )
 }

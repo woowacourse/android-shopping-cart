@@ -1,7 +1,5 @@
 package woowacourse.shopping.view.detail
 
-import woowacourse.shopping.view.cart.ShoppingCartEvent
-
 sealed interface ProductDetailEvent {
     sealed interface ErrorEvent : ProductDetailEvent {
         data object NotKnownError : ErrorEvent
@@ -21,9 +19,9 @@ sealed interface ProductDetailEvent {
         data object Fail : LoadProductItem, ErrorEvent
     }
 
-    sealed interface LoadRecentlyProductItem: ProductDetailEvent {
-        data object Success: LoadRecentlyProductItem
+    sealed interface LoadRecentlyProductItem : ProductDetailEvent {
+        data object Success : LoadRecentlyProductItem
 
-        data object Fail : LoadRecentlyProductItem,ErrorEvent
+        data object Fail : LoadRecentlyProductItem, ErrorEvent
     }
 }

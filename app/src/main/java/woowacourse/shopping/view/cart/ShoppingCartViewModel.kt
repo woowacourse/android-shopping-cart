@@ -44,19 +44,22 @@ class ShoppingCartViewModel(
             shoppingCartRepository.deleteCartItem(cartItemId)
             shoppingCart.deleteProduct(cartItemId)
             _shoppingCartEvent.value = ShoppingCartEvent.DeleteShoppingCart.Success
-            _shoppingCartEvent.value = ShoppingCartEvent.UpdateProductEvent.Success(
-                productId = productId,
-                count = itemCounter.itemCount,
-            )
+            _shoppingCartEvent.value =
+                ShoppingCartEvent.UpdateProductEvent.Success(
+                    productId = productId,
+                    count = itemCounter.itemCount,
+                )
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.postValue(
-                    ShoppingCartEvent.DeleteShoppingCart.Fail
-                )
+                is NoSuchDataException ->
+                    _errorEvent.postValue(
+                        ShoppingCartEvent.DeleteShoppingCart.Fail,
+                    )
 
-                else -> _errorEvent.postValue(
-                    ShoppingCartEvent.ErrorState.NotKnownError
-                )
+                else ->
+                    _errorEvent.postValue(
+                        ShoppingCartEvent.ErrorState.NotKnownError,
+                    )
             }
         }
     }
@@ -68,13 +71,15 @@ class ShoppingCartViewModel(
             shoppingCart.addProducts(pagingData)
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.postValue(
-                    ShoppingCartEvent.LoadCartItemList.Fail
-                )
+                is NoSuchDataException ->
+                    _errorEvent.postValue(
+                        ShoppingCartEvent.LoadCartItemList.Fail,
+                    )
 
-                else -> _errorEvent.postValue(
-                    ShoppingCartEvent.ErrorState.NotKnownError
-                )
+                else ->
+                    _errorEvent.postValue(
+                        ShoppingCartEvent.ErrorState.NotKnownError,
+                    )
             }
         }
     }
@@ -91,10 +96,10 @@ class ShoppingCartViewModel(
                             )
                             product.cartItemCounter.selectItem()
                             product.cartItemCounter.updateCount(cartItemResult.counter.itemCount)
-                            _shoppingCartEvent.value  =
+                            _shoppingCartEvent.value =
                                 ShoppingCartEvent.UpdateProductEvent.Success(
                                     productId = product.id,
-                                    count = product.cartItemCounter.itemCount
+                                    count = product.cartItemCounter.itemCount,
                                 )
                         }
 
@@ -127,23 +132,21 @@ class ShoppingCartViewModel(
                             _shoppingCartEvent.value =
                                 ShoppingCartEvent.UpdateProductEvent.Success(
                                     productId = product.id,
-                                    count = product.cartItemCounter.itemCount
+                                    count = product.cartItemCounter.itemCount,
                                 )
-
                         }
 
-                        ChangeCartItemResultState.Fail -> deleteShoppingCartItem(
-                            cartItemResult.cartItemId,
-                            itemCounter = cartItemResult.counter,
-                            productId = product.id,
-                        )
+                        ChangeCartItemResultState.Fail ->
+                            deleteShoppingCartItem(
+                                cartItemResult.cartItemId,
+                                itemCounter = cartItemResult.counter,
+                                productId = product.id,
+                            )
                     }
                 }
 
                 CartItemResult.NotExists -> throw NoSuchDataException()
             }
-
-
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->

@@ -11,12 +11,15 @@ import woowacourse.shopping.view.products.adapter.viewholder.RecentlyViewHolder
 
 class RecentlyAdapter(
     private val onClickProducts: OnClickProducts,
-):RecyclerView.Adapter<RecentlyViewHolder>() {
-    private var recentlyProducts : List<RecentlyProduct> = emptyList()
+) : RecyclerView.Adapter<RecentlyViewHolder>() {
+    private var recentlyProducts: List<RecentlyProduct> = emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentlyViewHolder {
-        val view = ItemRecentlyProductBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return RecentlyViewHolder(view,onClickProducts)
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecentlyViewHolder {
+        val view = ItemRecentlyProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RecentlyViewHolder(view, onClickProducts)
     }
 
     override fun getItemCount(): Int {
@@ -32,7 +35,7 @@ class RecentlyAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateProducts(recentlyProducts: List<RecentlyProduct>){
+    fun updateProducts(recentlyProducts: List<RecentlyProduct>) {
         this.recentlyProducts = recentlyProducts
         notifyDataSetChanged()
     }

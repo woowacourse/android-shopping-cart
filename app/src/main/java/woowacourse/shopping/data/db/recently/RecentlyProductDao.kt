@@ -15,9 +15,7 @@ interface RecentlyProductDao {
     fun getMostRecentlyProduct(): RecentlyProductEntity?
 
     @Query("SELECT * FROM $RECENTLY_ITEM_DB_NAME ORDER BY id DESC LIMIT :pagingSize")
-    fun findPagingRecentlyProduct(
-        pagingSize: Int
-    ): List<RecentlyProductEntity>
+    fun findPagingRecentlyProduct(pagingSize: Int): List<RecentlyProductEntity>
 
     @Query("DELETE FROM $RECENTLY_ITEM_DB_NAME WHERE id = :id")
     fun deleteRecentlyProductById(id: Long): Int

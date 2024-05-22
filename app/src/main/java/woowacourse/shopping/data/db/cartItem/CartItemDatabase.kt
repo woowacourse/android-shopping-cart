@@ -23,11 +23,12 @@ abstract class CartItemDatabase : RoomDatabase() {
         private var instance: CartItemDatabase? = null
         const val CART_ITEMS_DB_NAME = "cartItems"
 
-        private val MIGRATION_2_3 = object : Migration(2,3) {
-            override fun migrate(db: SupportSQLiteDatabase) {
-                db.execSQL("ALTER TABLE $CART_ITEMS_DB_NAME ADD COLUMN productId INTEGER NOT NULL DEFAULT 0")
+        private val MIGRATION_2_3 =
+            object : Migration(2, 3) {
+                override fun migrate(db: SupportSQLiteDatabase) {
+                    db.execSQL("ALTER TABLE $CART_ITEMS_DB_NAME ADD COLUMN productId INTEGER NOT NULL DEFAULT 0")
+                }
             }
-        }
 
         @Synchronized
         fun getInstance(context: Context): CartItemDatabase {

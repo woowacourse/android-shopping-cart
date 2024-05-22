@@ -1,7 +1,6 @@
 package woowacourse.shopping.data.repository
 
 import android.content.Context
-import android.util.Log
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase
 import woowacourse.shopping.data.model.CartItemEntity
 import woowacourse.shopping.domain.model.CartItem
@@ -47,7 +46,7 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
         thread {
             cartItem = cartItemDao.findCartItemByProductId(productId)?.toCartItem()
         }.join()
-        return when(cartItem?.id) {
+        return when (cartItem?.id) {
             null -> CartItemResult.NotExists
             ERROR_DATA_ID -> throw NoSuchDataException()
             else -> {
@@ -61,16 +60,19 @@ class ShoppingCartRepositoryImpl(context: Context) : ShoppingCartRepository {
         }
     }
 
-    override fun updateCartItem(itemId: Long, count: Int) {
+    override fun updateCartItem(
+        itemId: Long,
+        count: Int,
+    ) {
         var updateDataId = ERROR_UPDATE_DATA_ID
         thread {
             updateDataId = cartItemDao.updateCartItemCount(itemId, count)
         }.join()
-        if (updateDataId== ERROR_UPDATE_DATA_ID) throw NoSuchDataException()
+        if (updateDataId == ERROR_UPDATE_DATA_ID) throw NoSuchDataException()
     }
 
     override fun getTotalCartItemCount(): Int {
-        var totalCount  = 0
+        var totalCount = 0
         thread {
             totalCount = cartItemDao.getTotalItemCount()
         }.join()

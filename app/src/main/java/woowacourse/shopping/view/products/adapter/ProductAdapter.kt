@@ -1,7 +1,6 @@
 package woowacourse.shopping.view.products.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -16,14 +15,14 @@ class ProductAdapter(
     private val onClickCartItemCounter: OnClickCartItemCounter,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
     private var products: List<Product> = emptyList()
-    private val productPosition : HashMap<Long,Int> = hashMapOf()
+    private val productPosition: HashMap<Long, Int> = hashMapOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
     ): ProductViewHolder {
         val view = ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ProductViewHolder(view, onClickCartItemCounter,onClickProducts)
+        return ProductViewHolder(view, onClickCartItemCounter, onClickProducts)
     }
 
     override fun getItemCount(): Int {
@@ -46,9 +45,9 @@ class ProductAdapter(
         notifyItemRangeInserted(startPosition, addedProducts.size)
     }
 
-    fun updateProduct(productId: Long){
+    fun updateProduct(productId: Long) {
         val position = productPosition[productId]
-        if (position != null){
+        if (position != null) {
             notifyItemChanged(position)
         }
     }

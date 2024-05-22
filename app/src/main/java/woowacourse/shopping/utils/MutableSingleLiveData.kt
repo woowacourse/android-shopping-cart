@@ -1,7 +1,6 @@
 package woowacourse.shopping.utils
 
 class MutableSingleLiveData<T> : SingleLiveData<T> {
-
     constructor() : super()
 
     constructor(value: T) : super(value)

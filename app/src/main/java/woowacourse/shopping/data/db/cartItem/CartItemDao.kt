@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.db.cartItem
 
-
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
@@ -28,7 +27,10 @@ interface CartItemDao {
     fun deleteCartItemById(itemId: Long): Int
 
     @Query("UPDATE $CART_ITEMS_DB_NAME SET count = :count WHERE id = :itemId")
-    fun updateCartItemCount(itemId: Long, count: Int): Int
+    fun updateCartItemCount(
+        itemId: Long,
+        count: Int,
+    ): Int
 
     @Query("SELECT * FROM $CART_ITEMS_DB_NAME WHERE productId = :productId")
     fun findCartItemByProductId(productId: Long): CartItemEntity?

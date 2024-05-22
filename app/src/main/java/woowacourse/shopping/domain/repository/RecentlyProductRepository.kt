@@ -2,8 +2,7 @@ package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.RecentlyProduct
 
-interface  RecentlyProductRepository {
-
+interface RecentlyProductRepository {
     fun addRecentlyProduct(recentlyProduct: RecentlyProduct)
 
     fun getMostRecentlyProduct(): RecentlyProduct

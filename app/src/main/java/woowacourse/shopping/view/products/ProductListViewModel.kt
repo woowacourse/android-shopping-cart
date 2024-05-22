@@ -1,6 +1,5 @@
 package woowacourse.shopping.view.products
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -39,7 +38,6 @@ class ProductListViewModel(
         MutableSingleLiveData()
     val errorEvent: SingleLiveData<ProductListEvent.ErrorEvent> get() = _errorEvent
 
-
     init {
         updateTotalCount()
         loadPagingRecentlyProduct()
@@ -54,7 +52,7 @@ class ProductListViewModel(
             when (e) {
                 is NoSuchDataException ->
                     _errorEvent.postValue(
-                        ProductListEvent.LoadProductEvent.Fail
+                        ProductListEvent.LoadProductEvent.Fail,
                     )
 
                 else -> _errorEvent.postValue(ProductListEvent.ErrorEvent.NotKnownError)
@@ -114,7 +112,7 @@ class ProductListViewModel(
                         ChangeCartItemResultState.Success -> {
                             shoppingCartRepository.updateCartItem(
                                 cartItemResult.cartItemId,
-                                product.cartItemCounter.itemCount
+                                product.cartItemCounter.itemCount,
                             )
                         }
 
@@ -128,7 +126,6 @@ class ProductListViewModel(
             }
             _cartItemCount.value = _cartItemCount.value?.minus(DEFAULT_CART_ITEM_COUNT)
             _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(product.id))
-
         } catch (e: Exception) {
             when (e) {
                 is NoSuchDataException ->

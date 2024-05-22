@@ -12,21 +12,21 @@ import woowacourse.shopping.data.model.RecentlyProductEntity
     ],
     version = 1,
 )
-abstract class RecentlyProductDatabase: RoomDatabase() {
+abstract class RecentlyProductDatabase : RoomDatabase() {
     abstract fun recentlyProductDao(): RecentlyProductDao
 
     companion object {
-        private var instance: RecentlyProductDatabase?= null
+        private var instance: RecentlyProductDatabase? = null
         const val RECENTLY_ITEM_DB_NAME = "recentlyProducts"
 
         @Synchronized
         fun getInstance(context: Context): RecentlyProductDatabase {
             return instance
-                ?: synchronized(RecentlyProductDatabase::class){
+                ?: synchronized(RecentlyProductDatabase::class) {
                     Room.databaseBuilder(
                         context.applicationContext,
                         RecentlyProductDatabase::class.java,
-                        RECENTLY_ITEM_DB_NAME
+                        RECENTLY_ITEM_DB_NAME,
                     ).build()
                 }
         }

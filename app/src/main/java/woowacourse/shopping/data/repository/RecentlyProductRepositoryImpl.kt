@@ -16,8 +16,8 @@ class RecentlyProductRepositoryImpl(context: Context) : RecentlyProductRepositor
         thread {
             recentlyProductDao.addRecentlyProduct(
                 RecentlyProductEntity.makeRecentlyProductEntity(
-                    recentlyProduct
-                )
+                    recentlyProduct,
+                ),
             )
         }
     }

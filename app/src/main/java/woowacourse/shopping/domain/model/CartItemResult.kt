@@ -4,7 +4,7 @@ sealed interface CartItemResult {
     data class Exists(
         val cartItemId: Long,
         val counter: CartItemCounter,
-    ): CartItemResult
+    ) : CartItemResult
 
-    data object NotExists: CartItemResult
+    data object NotExists : CartItemResult
 }

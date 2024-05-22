@@ -7,7 +7,7 @@ interface CurrentProductRepository {
 
     fun getMostRecentlyProduct(): RecentlyProduct
 
-    fun getPagingRecentlyProduct():List<RecentlyProduct>
+    fun getPagingRecentlyProduct(): List<RecentlyProduct>
 
     fun removeRecentlyProduct(id: Long)
 }

@@ -52,19 +52,22 @@ class ProductDetailViewModel(
                     )
                 }
             }
-            _productDetailEvent.value = ProductDetailEvent.AddShoppingCart.Success(
-                productId = product.id,
-                count = product.cartItemCounter.itemCount
-            )
+            _productDetailEvent.value =
+                ProductDetailEvent.AddShoppingCart.Success(
+                    productId = product.id,
+                    count = product.cartItemCounter.itemCount,
+                )
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.postValue(
-                    ProductDetailEvent.AddShoppingCart.Fail
-                )
+                is NoSuchDataException ->
+                    _errorEvent.postValue(
+                        ProductDetailEvent.AddShoppingCart.Fail,
+                    )
 
-                else -> _errorEvent.postValue(
-                    ProductDetailEvent.ErrorEvent.NotKnownError
-                )
+                else ->
+                    _errorEvent.postValue(
+                        ProductDetailEvent.ErrorEvent.NotKnownError,
+                    )
             }
         }
     }
@@ -79,21 +82,25 @@ class ProductDetailViewModel(
             _product.value = product
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.postValue(
-                    ProductDetailEvent.LoadProductItem.Fail
-                )
+                is NoSuchDataException ->
+                    _errorEvent.postValue(
+                        ProductDetailEvent.LoadProductItem.Fail,
+                    )
 
-                else -> _errorEvent.postValue(
-                    ProductDetailEvent.ErrorEvent.NotKnownError
-                )
+                else ->
+                    _errorEvent.postValue(
+                        ProductDetailEvent.ErrorEvent.NotKnownError,
+                    )
             }
         }
     }
 
     private fun loadProductItemCount(productId: Long): CartItemCounter {
         return try {
-            when (val result =
-                shoppingCartRepository.getCartItemResultFromProductId(productId = productId)) {
+            when (
+                val result =
+                    shoppingCartRepository.getCartItemResultFromProductId(productId = productId)
+            ) {
                 is CartItemResult.Exists -> {
                     cartItemId = result.cartItemId
                     result.counter
@@ -105,13 +112,15 @@ class ProductDetailViewModel(
             }
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.postValue(
-                    ProductDetailEvent.LoadProductItem.Fail
-                )
+                is NoSuchDataException ->
+                    _errorEvent.postValue(
+                        ProductDetailEvent.LoadProductItem.Fail,
+                    )
 
-                else -> _errorEvent.postValue(
-                    ProductDetailEvent.ErrorEvent.NotKnownError
-                )
+                else ->
+                    _errorEvent.postValue(
+                        ProductDetailEvent.ErrorEvent.NotKnownError,
+                    )
             }
             CartItemCounter()
         }
@@ -119,22 +128,24 @@ class ProductDetailViewModel(
 
     fun increaseItemCounter() {
         product.value?.cartItemCounter?.increase()
-        _product.value = product.value?.cartItemCounter?.let {
-            product.value?.copy(
-                cartItemCounter = it
-            )
-        }
+        _product.value =
+            product.value?.cartItemCounter?.let {
+                product.value?.copy(
+                    cartItemCounter = it,
+                )
+            }
     }
 
     fun decreaseItemCounter() {
         val productCount = product.value?.cartItemCounter?.itemCount ?: DEFAULT_ITEM_COUNT
         if (productCount > DEFAULT_ITEM_COUNT) {
             product.value?.cartItemCounter?.decrease()
-            _product.value = product.value?.cartItemCounter?.let {
-                product.value?.copy(
-                    cartItemCounter = it
-                )
-            }
+            _product.value =
+                product.value?.cartItemCounter?.let {
+                    product.value?.copy(
+                        cartItemCounter = it,
+                    )
+                }
         }
     }
 
@@ -144,7 +155,7 @@ class ProductDetailViewModel(
                 productId = product.id,
                 imageUrl = product.imageUrl,
                 name = product.name,
-            )
+            ),
         )
     }
 
@@ -163,13 +174,15 @@ class ProductDetailViewModel(
             _recentlyProduct.value = RecentlyProduct.defaultRecentlyProduct
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.postValue(
-                    ProductDetailEvent.LoadProductItem.Fail
-                )
+                is NoSuchDataException ->
+                    _errorEvent.postValue(
+                        ProductDetailEvent.LoadProductItem.Fail,
+                    )
 
-                else -> _errorEvent.postValue(
-                    ProductDetailEvent.ErrorEvent.NotKnownError
-                )
+                else ->
+                    _errorEvent.postValue(
+                        ProductDetailEvent.ErrorEvent.NotKnownError,
+                    )
             }
         }
     }
