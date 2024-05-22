@@ -5,7 +5,6 @@ import woowacourse.shopping.data.db.cart.CartItemEntity
 import woowacourse.shopping.data.db.cart.toDomainModel
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.model.toEntity
 import woowacourse.shopping.domain.repository.CartRepository
 
@@ -61,18 +60,18 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
         return cartItemEntity?.toDomainModel() ?: throw IllegalArgumentException("데이터가 존재하지 않습니다.")
     }
 
-    override fun findAll(): ShoppingCart {
+    override fun findAll(): List<CartItem> {
         var cartItems: List<CartItem> = emptyList()
         threadAction {
             cartItems = dao.findAll().map { it.toDomainModel() }
         }
-        return ShoppingCart(cartItems)
+        return cartItems
     }
 
     override fun findAllPagedItems(
         page: Int,
         pageSize: Int,
-    ): ShoppingCart {
+    ): List<CartItem> {
         var cartItems: List<CartItem> = emptyList()
         val offset = page * pageSize
 
@@ -82,7 +81,7 @@ class CartRepositoryImpl(database: CartDatabase) : CartRepository {
                     .map { it.toDomainModel() }
         }
 
-        return ShoppingCart(cartItems)
+        return cartItems
     }
 
     override fun delete(cartItemId: Long) {

@@ -40,7 +40,7 @@ class DetailViewModel(
         }
     }
 
-    fun createShoppingCartItem() {
+    fun createCartItem() {
         val item = detailUiState.value ?: return
         if (item is UIState.Success) {
             cartRepository.insert(
@@ -51,7 +51,7 @@ class DetailViewModel(
     }
 
     override fun onPutCartButtonClick() {
-        createShoppingCartItem()
+        createCartItem()
         _navigateToCart.value = Event(true)
     }
 }

@@ -2,7 +2,6 @@ package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.ShoppingCart
 
 interface CartRepository {
     fun insert(
@@ -21,12 +20,12 @@ interface CartRepository {
 
     fun find(cartItemId: Long): CartItem
 
-    fun findAll(): ShoppingCart
+    fun findAll(): List<CartItem>
 
     fun findAllPagedItems(
         page: Int,
         pageSize: Int,
-    ): ShoppingCart
+    ): List<CartItem>
 
     fun delete(cartItemId: Long)
 

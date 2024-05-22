@@ -48,17 +48,15 @@
 - id: Long
 - name: String
 - price: Long
-- imgUrl: Url
+- imageUrl: Url
 
 ### CartItem
-
+- id: Long,
 - productId: Long
+- productName: String
+- price: Long
+- imgUrl: String
 - quantity: Int
-
-### ShoppingCart
-
-- items: List\<CartItem>
-- totalPrice: Long
 
 ### RecentViewedProducts
 

@@ -61,7 +61,7 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartI
     fun loadCartItems() {
         try {
             val cartItems =
-                repository.findAllPagedItems(currentPage.value ?: DEFAULT_PAGE, PAGE_SIZE).items
+                repository.findAllPagedItems(currentPage.value ?: DEFAULT_PAGE, PAGE_SIZE)
             if (cartItems.isEmpty()) {
                 _cartUiState.value = UIState.Empty
                 _isEmpty.value = true

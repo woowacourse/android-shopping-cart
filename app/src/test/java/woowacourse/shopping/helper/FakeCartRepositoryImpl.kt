@@ -2,7 +2,6 @@ package woowacourse.shopping.helper
 
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.model.ShoppingCart
 import woowacourse.shopping.domain.repository.CartRepository
 
 class FakeCartRepositoryImpl : CartRepository {
@@ -42,15 +41,15 @@ class FakeCartRepositoryImpl : CartRepository {
         return testCartItem0
     }
 
-    override fun findAll(): ShoppingCart {
-        return ShoppingCart(cartItems)
+    override fun findAll(): List<CartItem> {
+        return cartItems
     }
 
     override fun findAllPagedItems(
         page: Int,
         pageSize: Int,
-    ): ShoppingCart {
-        return ShoppingCart(cartItems)
+    ): List<CartItem> {
+        return cartItems
     }
 
     override fun delete(cartItemId: Long) {

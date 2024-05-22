@@ -60,7 +60,7 @@ class DetailViewModelTest {
 
     @Test
     fun `상품을 장바구니에 담으면 장바구니의 사이즈가 증가한다`() {
-        viewModel.createShoppingCartItem()
+        viewModel.createCartItem()
         val actual = testCartRepository.size()
 
         assertThat(actual).isEqualTo(1)
