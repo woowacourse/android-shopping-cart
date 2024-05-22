@@ -79,7 +79,9 @@ class HomeActivity : AppCompatActivity() {
         }
         viewModel.products.observe(this) {
             adapter.setData(it)
-            adapter.notifyDataSetChanged()
+        }
+        viewModel.changedPosition.observe(this) {
+            adapter.notifyItemChanged(it.getContentIfNotHandled() ?: return@observe)
         }
     }
 }

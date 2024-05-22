@@ -33,6 +33,10 @@ class HomeViewModel(
     val navigateToDetailEvent: LiveData<Event<Long>>
         get() = _navigateToDetailEvent
 
+    private val _changedPosition: MutableLiveData<Event<Int>> = MutableLiveData()
+    val changedPosition: LiveData<Event<Int>>
+        get() = _changedPosition
+
     init {
         loadProducts()
     }
@@ -87,10 +91,7 @@ class HomeViewModel(
                 } else it
             }
             _products.postValue(target)
-//            _products.postValue(
-//            )
-//            val index = products.value?.indexOfFirst { it.cartItem?.id == cartItemId }
-//            Log.i("TAG", "onQuantityChange: ${index}")
+            _changedPosition.postValue(Event(products.value?.indexOfFirst { it.cartItem?.id == cartItem.id } ?: return@thread))
         }
     }
 }
