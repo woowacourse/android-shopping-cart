@@ -12,7 +12,7 @@
 
         <variable
             name="order"
-            type="woowacourse.shopping.presentation.cart.Order" />
+            type="woowacourse.shopping.presentation.uistate.Order" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

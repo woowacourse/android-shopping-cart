@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.presentation.cart.Order
 import woowacourse.shopping.presentation.home.HomeActionHandler
-import woowacourse.shopping.presentation.home.LoadStatus
+import woowacourse.shopping.presentation.uistate.LoadStatus
+import woowacourse.shopping.presentation.uistate.Order
 import java.lang.IllegalArgumentException
 
 class ProductAdapter(

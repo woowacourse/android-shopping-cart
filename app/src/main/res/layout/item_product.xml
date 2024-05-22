@@ -10,7 +10,7 @@
 
         <variable
             name="order"
-            type="woowacourse.shopping.presentation.cart.Order" />
+            type="woowacourse.shopping.presentation.uistate.Order" />
 
         <variable
             name="homeActionHandler"

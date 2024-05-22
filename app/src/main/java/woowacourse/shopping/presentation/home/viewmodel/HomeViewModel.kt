@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
-import woowacourse.shopping.presentation.cart.Order
 import woowacourse.shopping.presentation.home.HomeActionHandler
-import woowacourse.shopping.presentation.home.LoadStatus
+import woowacourse.shopping.presentation.uistate.LoadStatus
+import woowacourse.shopping.presentation.uistate.Order
 import woowacourse.shopping.util.Event
 
 class HomeViewModel(

@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.cart
+package woowacourse.shopping.presentation.uistate
 
 data class PageInformation(
     val previousPageEnabled: Boolean = false,

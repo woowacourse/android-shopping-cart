@@ -9,7 +9,7 @@
 
         <variable
             name="loadStatus"
-            type="woowacourse.shopping.presentation.home.LoadStatus" />
+            type="woowacourse.shopping.presentation.uistate.LoadStatus" />
 
         <variable
             name="homeActionHandler"

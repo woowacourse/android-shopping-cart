@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.home
+package woowacourse.shopping.presentation.uistate
 
 data class LoadStatus(
     val loadingAvailable: Boolean = true,

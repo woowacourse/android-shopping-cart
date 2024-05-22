@@ -2,8 +2,8 @@ package woowacourse.shopping.presentation.home.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.presentation.cart.Order
 import woowacourse.shopping.presentation.home.HomeActionHandler
+import woowacourse.shopping.presentation.uistate.Order
 
 class ProductViewHolder(
     private val binding: ItemProductBinding,

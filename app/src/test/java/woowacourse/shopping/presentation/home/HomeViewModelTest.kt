@@ -9,10 +9,10 @@ import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.cart.Order
 import woowacourse.shopping.presentation.dummy.DummyCartItems
 import woowacourse.shopping.presentation.dummy.DummyProducts
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
+import woowacourse.shopping.presentation.uistate.Order
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class HomeViewModelTest {
