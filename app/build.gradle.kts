@@ -59,6 +59,10 @@ dependencies {
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.activity:activity-ktx:1.8.2")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
+    // room
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
     // third-party
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.7")
     implementation("com.github.bumptech.glide:glide:4.14.2")

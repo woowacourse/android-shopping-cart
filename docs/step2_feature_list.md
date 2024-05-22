@@ -12,14 +12,15 @@
   - Recent 상품 Detail 페이지 에서는 마지막 화면 이동 뷰가 안 보여야함
 - 마지막으로 본 상품 페이지에서 뒤로 가기를 하면 상품 목록으로 이동한다.
 
-## Data 
-
-- Product List
-  - 서버 만둘기
+## Data
 
 장바구니 ROOM DB 만들기
-- Cart - product id, 수량만 저장
-- 조회한 Product id, CreateDateTime
-- why?? Product Api 는 있고, Cart, SearchedProduct Api 는 없다고 가정
+why?? Product Api 는 있고, Cart, SearchedProduct Api 는 없다고 가정
+
+- [x]: CartEntity - product id, 수량만 저장
+- [x]: RecentProduct - 조회한 Product id, CreateDateTime
+- [ ]: Product List 서버 만둘기
+- [ ]: Dao Test
+- [ ]: Service Test
 
 ## Domain
