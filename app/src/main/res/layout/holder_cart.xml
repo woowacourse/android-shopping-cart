@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="woowacourse.shopping.data.Product" />
+
+        <variable
+            name="onProductItemClickListener"
+            type="woowacourse.shopping.cart.CartItemRecyclerViewAdapter.OnProductItemClickListener" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="152dp"
+        android:layout_margin="12dp"
+        android:background="@drawable/grey_border"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/cart_product_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="상품 이름" />
+
+        <ImageView
+            android:id="@+id/cart_product_delete"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_margin="10dp"
+            android:onClick="@{() -> onProductItemClickListener.onClick(product.id)}"
+            android:src="@drawable/ic_x"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/cart_product_image"
+            imageUrl="@{product.imgUrl}"
+            android:layout_width="136dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintStart_toStartOf="@id/cart_product_name"
+            app:layout_constraintTop_toBottomOf="@id/cart_product_name"
+            tools:src="@drawable/ic_launcher_background" />
+
+
+        <TextView
+            android:id="@+id/cart_product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="@{@string/price_format(product.price)}"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/cart_product_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="상품 가격" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
