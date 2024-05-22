@@ -76,6 +76,14 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         viewModel.addCartItem(id)
     }
 
+    override fun onCartItemAdd(id: Long) {
+        viewModel.plusCartItem(id)
+    }
+
+    override fun onCartItemRemove(id: Long) {
+        viewModel.minusCartItem(id)
+    }
+
     override fun onLoadClick() {
         viewModel.loadProducts()
     }
