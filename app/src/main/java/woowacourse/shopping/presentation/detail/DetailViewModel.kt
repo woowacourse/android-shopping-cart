@@ -5,11 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.R
+import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.util.Event
 import woowacourse.shopping.presentation.util.StringResource
+import kotlin.concurrent.thread
 
 class DetailViewModel(
     private val productRepository: ProductRepository,
@@ -17,8 +20,8 @@ class DetailViewModel(
     id: Long,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private val _productInformation: MutableLiveData<Product> = MutableLiveData()
-    val productInformation: LiveData<Product>
+    private val _productInformation: MutableLiveData<CartableProduct> = MutableLiveData()
+    val productInformation: LiveData<CartableProduct>
         get() = _productInformation
 
     private val _message: MutableLiveData<Event<StringResource>> = MutableLiveData()
@@ -36,12 +39,16 @@ class DetailViewModel(
     }
 
     fun addToCart(id: Long) {
-        cartRepository.addCartItem(productId = id, quantity = 1)
-        _message.value = Event(StringResource(R.string.message_add_to_cart_complete))
+        thread {
+            cartRepository.addCartItem(CartItem(productId = id, quantity = 1))
+            _message.postValue(Event(StringResource(R.string.message_add_to_cart_complete)))
+        }
     }
 
     private fun loadProductInformation(id: Long) {
-        _productInformation.value = productRepository.fetchProduct(id)
+        thread {
+            _productInformation.postValue(productRepository.fetchProduct(id))
+        }
     }
 
     companion object {

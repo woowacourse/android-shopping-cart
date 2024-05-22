@@ -3,8 +3,11 @@ package woowacourse.shopping.presentation.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import kotlin.concurrent.thread
 
 class CartViewModel(
     private val cartRepository: CartRepository,
@@ -14,9 +17,9 @@ class CartViewModel(
     val currentPage: LiveData<Int>
         get() = _currentPage
 
-    private val _orders: MutableLiveData<List<Order>> = MutableLiveData(emptyList())
-    val orders: LiveData<List<Order>>
-        get() = _orders
+    private val _cartableProducts: MutableLiveData<List<CartableProduct>> = MutableLiveData(emptyList())
+    val cartableProducts: LiveData<List<CartableProduct>>
+        get() = _cartableProducts
 
     private val _pageInformation: MutableLiveData<PageInformation> =
         MutableLiveData(PageInformation())
@@ -26,62 +29,64 @@ class CartViewModel(
     private var hasNext: Boolean = true
 
     init {
-        loadCurrentPageCartItems()
+        thread {
+            loadCurrentPageCartItems()
+        }
     }
 
     fun loadPreviousPageCartItems() {
-        _currentPage.value = currentPage.value?.minus(1)
-        loadCurrentPageCartItems()
+        thread {
+            _currentPage.postValue(currentPage.value?.minus(1))
+            loadCurrentPageCartItems()
+        }
     }
 
     fun loadNextPageCartItems() {
-        _currentPage.value = currentPage.value?.plus(1)
-        loadCurrentPageCartItems()
+        thread {
+            _currentPage.postValue(currentPage.value?.plus(1))
+            loadCurrentPageCartItems()
+        }
     }
 
     fun loadCurrentPageCartItems() {
-        val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
-        hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
-
-        val orders =
-            cartItems.map {
-                val productInformation = productRepository.fetchProduct(it.productId)
-                Order(
-                    cartItemId = it.id,
-                    image = productInformation.imageSource,
-                    productName = productInformation.name,
-                    quantity = it.quantity,
-                    price = it.quantity * productInformation.price,
-                )
-            }
-
+        val cartItems = productRepository.fetchSinglePage(currentPage.value ?: return)
+        hasNext = productRepository.fetchSinglePage(currentPage.value?.plus(1) ?: return).isNotEmpty()
         setPageInformation()
-        _orders.value = orders
+        _cartableProducts.postValue(cartItems)
     }
 
-    override fun onCartItemDelete(cartItemId: Long) {
-        cartRepository.removeCartItem(cartItemId = cartItemId)
-
-        if (orders.value?.size == 1 && currentPage.value != 0) {
-            _currentPage.value = currentPage.value?.minus(1)
+    override fun onCartItemDelete(cartableProduct: CartableProduct) {
+        cartableProduct.cartItem?.let {
+            val cartItem = CartItem(
+                it.id,
+                cartableProduct.product.id,
+                it.quantity
+            )
+            thread {
+                cartRepository.removeCartItem(cartItem)
+                if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
+                    _currentPage.postValue(currentPage.value?.minus(1))
+                }
+                loadCurrentPageCartItems()
+            }
         }
-
-        loadCurrentPageCartItems()
     }
 
     private fun setPageInformation() {
         if (currentPage.value == 0) {
-            _pageInformation.value =
+            _pageInformation.postValue(
                 pageInformation.value?.copy(
                     previousPageEnabled = false,
                     nextPageEnabled = hasNext,
                 )
+            )
         } else {
-            _pageInformation.value =
+            _pageInformation.postValue(
                 pageInformation.value?.copy(
                     previousPageEnabled = true,
                     nextPageEnabled = hasNext,
                 )
+            )
         }
     }
 }

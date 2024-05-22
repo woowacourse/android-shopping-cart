@@ -6,19 +6,25 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="product"
-            type="woowacourse.shopping.data.model.Product" />
+            name="cartableProduct"
+            type="woowacourse.shopping.data.model.CartableProduct" />
 
         <variable
             name="homeItemClickListener"
             type="woowacourse.shopping.presentation.home.HomeItemEventListener" />
+
+        <variable
+            name="quantityListener"
+            type="woowacourse.shopping.presentation.home.QuantityListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> homeItemClickListener.navigateToProductDetail(product.id)}"
+        android:onClick="@{() -> homeItemClickListener.navigateToProductDetail(cartableProduct.product.id)}"
         android:padding="8dp">
 
         <ImageView
@@ -32,26 +38,32 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            shopping:productThumbnail="@{product.imageSource}"
+            shopping:productThumbnail="@{cartableProduct.product.imageSource}"
             tools:src="@drawable/ic_launcher_background" />
 
         <include
             layout="@layout/layout_add_to_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
+            android:visibility="@{cartableProduct.quantity == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
             app:layout_constraintEnd_toEndOf="@id/iv_product_detail"
-            android:layout_marginBottom="12dp"
-            android:layout_marginEnd="12dp"/>
+            shopping:cartableProduct="@{cartableProduct}"
+            shopping:quantityListener="@{quantityListener}" />
 
         <include
             layout="@layout/layout_quantity_manipulation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
             app:layout_constraintEnd_toEndOf="@id/iv_product_detail"
-            android:layout_marginBottom="12dp"
-            android:layout_marginEnd="12dp"/>
+            android:visibility="@{cartableProduct.quantity > 0 ? View.VISIBLE : View.GONE}"
+            shopping:cartableProduct="@{cartableProduct}"
+            shopping:quantityListener="@{quantityListener}" />
 
         <TextView
             android:id="@+id/tv_product_title_detail"
@@ -61,7 +73,7 @@
             android:layout_marginTop="12dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{product.name}"
+            android:text="@{cartableProduct.product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -77,7 +89,7 @@
             android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{@string/format_price(product.price)}"
+            android:text="@{@string/format_price(cartableProduct.product.price)}"
             android:textColor="@color/gray_500"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"

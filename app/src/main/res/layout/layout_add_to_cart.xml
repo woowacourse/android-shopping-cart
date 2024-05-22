@@ -4,7 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <variable
+            name="cartableProduct"
+            type="woowacourse.shopping.data.model.CartableProduct" />
 
+        <variable
+            name="quantityListener"
+            type="woowacourse.shopping.presentation.home.QuantityListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,14 +20,15 @@
         android:padding="2dp">
 
         <ImageView
-            android:id="@+id/tv_addition"
+            android:id="@+id/iv_addition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_48"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="@{() -> quantityListener.onQuantityChange(cartableProduct.product.id, cartableProduct.cartItem.id, 1)}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

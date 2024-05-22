@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
+import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
@@ -18,8 +19,9 @@ import java.lang.IllegalArgumentException
 
 class ProductAdapter(
     private val homeItemClickListener: HomeItemEventListener,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), BindableAdapter<Product> {
-    private var products: List<Product> = emptyList()
+    private val quantityListener: QuantityListener,
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), BindableAdapter<CartableProduct> {
+    private var products: List<CartableProduct> = emptyList()
     private var loadStatus: LoadStatus = LoadStatus()
 
     override fun onCreateViewHolder(
@@ -31,7 +33,7 @@ class ProductAdapter(
             TYPE_PRODUCT -> {
                 val binding: ItemProductBinding =
                     DataBindingUtil.inflate(layoutInflater, R.layout.item_product, parent, false)
-                ProductViewHolder(binding, homeItemClickListener)
+                ProductViewHolder(binding, homeItemClickListener, quantityListener)
             }
 
             TYPE_LOAD -> {
@@ -65,7 +67,7 @@ class ProductAdapter(
         }
     }
 
-    override fun setData(data: List<Product>) {
+    override fun setData(data: List<CartableProduct>) {
         val previousSize = products.size
         products = data
         notifyItemRangeInserted(previousSize, data.size - previousSize)
@@ -78,14 +80,16 @@ class ProductAdapter(
     class ProductViewHolder(
         private val binding: ItemProductBinding,
         homeItemClickListener: HomeItemEventListener,
+        quantityListener: QuantityListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.homeItemClickListener = homeItemClickListener
+            binding.quantityListener = quantityListener
         }
 
-        fun bind(product: Product) {
-            binding.product = product
+        fun bind(product: CartableProduct) {
+            binding.cartableProduct = product
         }
     }
 

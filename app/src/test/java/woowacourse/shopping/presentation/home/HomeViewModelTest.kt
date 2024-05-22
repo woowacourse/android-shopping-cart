@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.domain.repository.FakeCartRepository
 import woowacourse.shopping.domain.repository.FakeProductRepository
 import woowacourse.shopping.getOrAwaitValue
 
@@ -15,7 +16,7 @@ class HomeViewModelTest {
 
     @BeforeEach
     fun setup() {
-        homeViewModel = HomeViewModel(FakeProductRepository())
+        homeViewModel = HomeViewModel(FakeProductRepository(), FakeCartRepository())
     }
 
     @Test

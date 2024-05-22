@@ -5,10 +5,16 @@ import woowacourse.shopping.data.model.CartItem
 interface CartRepository {
     fun fetchCartItems(page: Int): List<CartItem>
 
-    fun addCartItem(
-        productId: Long,
-        quantity: Int,
-    ): Long
+    fun fetchCartItem(cartItemId: Long): CartItem
 
-    fun removeCartItem(cartItemId: Long): Long
+    fun addCartItem(cartItem: CartItem): Long
+
+    fun updateQuantity(
+        cartItemId: Long,
+        quantity: Int
+    )
+
+    fun removeCartItem(cartItem: CartItem)
+
+    fun removeAll()
 }

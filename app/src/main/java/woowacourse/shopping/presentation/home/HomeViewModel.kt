@@ -1,20 +1,28 @@
 package woowacourse.shopping.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.local.PRODUCT_DATA
+import woowacourse.shopping.data.local.ShoppingDatabase
+import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.util.Event
+import kotlin.concurrent.thread
 
 class HomeViewModel(
     private val productRepository: ProductRepository,
-) : ViewModel(), HomeItemEventListener {
+    private val cartRepository: CartRepository,
+) : ViewModel(), HomeItemEventListener, QuantityListener {
     private var page: Int = 0
 
-    private val _products: MutableLiveData<List<Product>> =
-        MutableLiveData<List<Product>>(emptyList())
-    val products: LiveData<List<Product>>
+    private val _products: MutableLiveData<List<CartableProduct>> =
+        MutableLiveData<List<CartableProduct>>(emptyList())
+    val products: LiveData<List<CartableProduct>>
         get() = _products
 
     private val _loadStatus: MutableLiveData<LoadStatus> = MutableLiveData(LoadStatus())
@@ -31,14 +39,19 @@ class HomeViewModel(
 
     private fun loadProducts() {
         _loadStatus.value = loadStatus.value?.copy(isLoadingPage = true, loadingAvailable = false)
-        _products.value = products.value?.plus(productRepository.fetchSinglePage(page++))
 
-        products.value?.let {
-            _loadStatus.value =
-                loadStatus.value?.copy(
-                    loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
-                    isLoadingPage = false,
+        thread {
+            productRepository.addAll(PRODUCT_DATA)
+            _products.postValue(products.value?.plus(productRepository.fetchSinglePage(page++)))
+
+            products.value?.let {
+                _loadStatus.postValue(
+                    loadStatus.value?.copy(
+                        loadingAvailable = productRepository.fetchSinglePage(page).isNotEmpty(),
+                        isLoadingPage = false,
+                    )
                 )
+            }
         }
     }
 
@@ -48,5 +61,36 @@ class HomeViewModel(
 
     override fun loadNextPage() {
         loadProducts()
+    }
+
+    override fun onQuantityChange(productId: Long, cartItemId: Long?, quantity: Int) {
+        thread {
+            if (quantity <= -1) return@thread
+            val id = if (cartItemId == null) {
+                cartRepository.addCartItem(
+                    CartItem(
+                        productId = productId,
+                        quantity = quantity,
+                    )
+                )
+            } else {
+                cartRepository.updateQuantity(cartItemId, quantity)
+                cartItemId
+            }
+            Log.i("TAG", "onQuantityChange: $id")
+            val cartItem = cartRepository.fetchCartItem(id)
+            val target = products.value?.map {
+                if (it.cartItem?.id == id) {
+                    val item = it.copy(cartItem = cartItem)
+                    Log.i("TAG", "onQuantityChange: $item")
+                    item
+                } else it
+            }
+            _products.postValue(target)
+//            _products.postValue(
+//            )
+//            val index = products.value?.indexOfFirst { it.cartItem?.id == cartItemId }
+//            Log.i("TAG", "onQuantityChange: ${index}")
+        }
     }
 }

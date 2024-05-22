@@ -1,13 +1,29 @@
 package woowacourse.shopping.data.model
 
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.PrimaryKey
+
+@Entity(
+    tableName = "cart_item",
+    foreignKeys = [
+        ForeignKey(
+            entity = Product::class,
+            parentColumns = ["id"],
+            childColumns = ["productId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class CartItem(
-    val id: Long = 1,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long? = null,
     val productId: Long,
     val quantity: Int = 1,
 ) {
     init {
-        require(id >= MINIMUM_ID) { EXCEPTION_ILLEGAL_ID }
-        require(quantity >= MINIMUM_QUANTITY) { EXCEPTION_ILLEGAL_QUANTITY }
+//        require(id >= MINIMUM_ID) { EXCEPTION_ILLEGAL_ID }
+//        require(quantity >= MINIMUM_QUANTITY) { EXCEPTION_ILLEGAL_QUANTITY }
     }
 
     companion object {

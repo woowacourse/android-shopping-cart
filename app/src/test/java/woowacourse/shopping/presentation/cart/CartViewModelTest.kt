@@ -25,7 +25,7 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 담아놓은 상품들을 불러올 수 있다`() {
         cartViewModel.loadCurrentPageCartItems()
-        val orders = cartViewModel.orders.value
+        val orders = cartViewModel.cartableProducts.value
         assertThat(orders).isEqualTo(
             listOf(
                 Order(cartItemId = 1, image = "", productName = "Product 1", price = 1000, quantity = 1),

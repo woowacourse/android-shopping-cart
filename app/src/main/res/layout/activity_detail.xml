@@ -42,7 +42,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appbar_detail"
-            shopping:productThumbnail="@{detailViewModel.productInformation.imageSource}"
+            shopping:productThumbnail="@{detailViewModel.productInformation.product.imageSource}"
             tools:src="@drawable/ic_launcher_background" />
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_marginTop="16dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{detailViewModel.productInformation.name}"
+            android:text="@{detailViewModel.productInformation.product.name}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="@{@string/format_price(detailViewModel.productInformation.price)}"
+            android:text="@{@string/format_price(detailViewModel.productInformation.product.price)}"
             android:textColor="@color/black"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="@id/tv_product_title_detail"
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/mint_900"
-            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.id)}"
+            android:onClick="@{() -> detailViewModel.addToCart(detailViewModel.productInformation.product.id)}"
             android:text="@string/detail_add_to_cart_button"
             android:textColor="@color/white"
             android:textSize="20sp"

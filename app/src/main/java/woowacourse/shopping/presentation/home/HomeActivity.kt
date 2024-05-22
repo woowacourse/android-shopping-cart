@@ -24,11 +24,10 @@ class HomeActivity : AppCompatActivity() {
         val application = application as ShoppingApplication
         HomeViewModelFactory(
             application.productRepository,
+            application.cartRepository,
         )
     }
-    private val adapter: ProductAdapter by lazy {
-        ProductAdapter(viewModel)
-    }
+    private val adapter: ProductAdapter by lazy { ProductAdapter(viewModel, viewModel) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +76,10 @@ class HomeActivity : AppCompatActivity() {
                     event.getContentIfNotHandled() ?: return@observe,
                 ),
             )
+        }
+        viewModel.products.observe(this) {
+            adapter.setData(it)
+            adapter.notifyDataSetChanged()
         }
     }
 }
