@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View"/>
 
         <variable
             name="position"
@@ -72,6 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="6dp"
+            android:visibility="@{product.quantity == 0 ? View.GONE : View.VISIBLE}"
             app:actionHandler="@{productCountHandler}"
             app:layout_constraintBottom_toTopOf="@+id/tv_product_price"
             app:layout_constraintEnd_toEndOf="parent"

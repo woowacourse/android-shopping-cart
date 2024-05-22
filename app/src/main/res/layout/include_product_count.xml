@@ -28,7 +28,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/bg_white_radius4"
-        android:visibility="@{product.quantity == 0 ? View.GONE : View.VISIBLE}"
         app:layout_constraintBottom_toBottomOf="@+id/iv_product_thumbnail"
         app:layout_constraintEnd_toEndOf="parent">
 

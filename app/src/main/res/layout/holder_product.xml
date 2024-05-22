@@ -79,19 +79,20 @@
         <include
             android:id="@+id/include_product_count"
             layout="@layout/include_product_count"
+            android:visibility="@{product.quantity == 0 ? View.GONE : View.VISIBLE}"
             app:actionHandler="@{productCountHandler}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_product_thumbnail"
             app:layout_constraintEnd_toEndOf="parent"
-            app:position = "@{position}"
+            app:position="@{position}"
             app:product="@{product}" />
 
 
         <ImageButton
-            android:onClick="@{() -> productCountHandler.addProductQuantity(product.id, position)}"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="8dp"
             android:background="@drawable/bg_white_shape_oval"
+            android:onClick="@{() -> productCountHandler.addProductQuantity(product.id, position)}"
             android:src="@drawable/ic_plus"
             android:visibility="@{product.quantity == 0 ? View.VISIBLE : View.GONE}"
             app:backgroundTint="@color/white"
