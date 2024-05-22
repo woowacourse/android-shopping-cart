@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.detail.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -21,8 +22,8 @@ class DetailViewModel(
     val quantity: LiveData<Int>
         get() = _quantity
 
-    private val _addComplete = MutableLiveData<Event<Boolean>>()
-    val addComplete: LiveData<Event<Boolean>>
+    private val _addComplete = MutableLiveData<Event<CartItem>>()
+    val addComplete: LiveData<Event<CartItem>>
         get() = _addComplete
 
     init {
@@ -53,6 +54,6 @@ class DetailViewModel(
         quantity: Int,
     ) {
         cartRepository.addCartItem(productId = id, quantity = quantity)
-        _addComplete.value = Event(true)
+        _addComplete.value = Event(cartRepository.fetchCartItem(productId = id)!!)
     }
 }

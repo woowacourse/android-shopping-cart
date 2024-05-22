@@ -1,10 +1,14 @@
 package woowacourse.shopping.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class CartItem(
     val id: Long = 1,
     val quantity: Int = 1,
     val productId: Long,
-) {
+) : Parcelable {
     init {
         require(id >= MINIMUM_ID) { EXCEPTION_ILLEGAL_ID }
         require(quantity >= MINIMUM_QUANTITY) { EXCEPTION_ILLEGAL_QUANTITY }

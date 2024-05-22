@@ -1,22 +1,42 @@
 package woowacourse.shopping.presentation.home
 
+import android.os.Build.VERSION
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.data.datasource.DefaultCart
 import woowacourse.shopping.data.datasource.DefaultProducts
+import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.data.repository.ProductRepositoryImpl
 import woowacourse.shopping.databinding.ActivityHomeBinding
 import woowacourse.shopping.presentation.cart.CartActivity
 import woowacourse.shopping.presentation.detail.DetailActivity
+import woowacourse.shopping.presentation.detail.DetailActivity.Companion.DETAIL_RESULT_OK
+import woowacourse.shopping.presentation.detail.DetailActivity.Companion.EXTRA_CART_ITEM
 import woowacourse.shopping.presentation.home.adapter.ProductAdapter
 import woowacourse.shopping.presentation.home.adapter.ProductsGridLayoutManager
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModel
 import woowacourse.shopping.presentation.home.viewmodel.HomeViewModelFactory
 
 class HomeActivity : AppCompatActivity() {
+    private val detailActivityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result ->
+            if (result.resultCode == DETAIL_RESULT_OK) {
+                val cartItem: CartItem? =
+                    if (VERSION.SDK_INT >= 33) {
+                        result.data?.getParcelableExtra(EXTRA_CART_ITEM, CartItem::class.java)
+                    } else {
+                        result.data?.getParcelableExtra(EXTRA_CART_ITEM)
+                    }
+                viewModel.updateOrder(cartItem)
+            }
+        }
+
     private val binding: ActivityHomeBinding by lazy {
         ActivityHomeBinding.inflate(layoutInflater)
     }
@@ -70,7 +90,7 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel.onProductClicked.observe(this) {
             it.getContentIfNotHandled()?.let { productId ->
-                startActivity(DetailActivity.newIntent(this, productId))
+                detailActivityResultLauncher.launch(DetailActivity.newIntent(this, productId))
             }
         }
 

@@ -71,7 +71,7 @@ class HomeViewModel(
         loadTotalCartCount()
     }
 
-    private fun updateOrder(cartItem: CartItem?) {
+    fun updateOrder(cartItem: CartItem?) {
         _orders.value =
             orders.value?.map {
                 if (it.product.id == cartItem?.productId) {

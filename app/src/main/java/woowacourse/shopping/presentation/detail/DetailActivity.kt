@@ -48,12 +48,16 @@ class DetailActivity : AppCompatActivity() {
 
     private fun initObserver() {
         viewModel.addComplete.observe(this) {
-            it.getContentIfNotHandled()?.let {
+            it.getContentIfNotHandled()?.let { cartItem ->
                 Toast.makeText(
                     this,
                     getString(R.string.message_add_to_cart_complete),
                     Toast.LENGTH_SHORT,
                 ).show()
+
+                val resultIntent = Intent()
+                resultIntent.putExtra(EXTRA_CART_ITEM, cartItem)
+                setResult(DETAIL_RESULT_OK, resultIntent)
             }
         }
     }
@@ -85,6 +89,8 @@ class DetailActivity : AppCompatActivity() {
     companion object {
         private const val EXTRA_PRODUCT_ID = "extra_product_id"
         private const val DEFAULT_PRODUCT_ID = -1L
+        const val EXTRA_CART_ITEM = "extra_cart_item"
+        const val DETAIL_RESULT_OK = 1000
 
         fun newIntent(
             context: Context,
