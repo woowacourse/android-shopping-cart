@@ -1,12 +1,9 @@
 package woowacourse.shopping.presentation.home
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import woowacourse.shopping.R
 import woowacourse.shopping.data.datasource.DefaultCart
 import woowacourse.shopping.data.datasource.DefaultProducts
 import woowacourse.shopping.data.repository.CartRepositoryImpl
@@ -31,7 +28,7 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
             this,
             HomeViewModelFactory(
                 ProductRepositoryImpl(DefaultProducts),
-                CartRepositoryImpl(DefaultCart)
+                CartRepositoryImpl(DefaultCart),
             ),
         )[HomeViewModel::class.java]
     }
@@ -39,8 +36,8 @@ class HomeActivity : AppCompatActivity(), ProductItemClickListener, LoadClickLis
         ProductAdapter(this, this)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         viewModel.loadTotalCartCount()
     }
 
