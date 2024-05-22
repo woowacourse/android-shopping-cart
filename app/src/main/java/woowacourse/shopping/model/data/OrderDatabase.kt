@@ -11,16 +11,14 @@ abstract class OrderDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var databaseInstance: OrderDatabase? = null
+        private var instance: OrderDatabase? = null
 
         fun getDatabase(context: Context): OrderDatabase {
-            val instance =
-                Room.databaseBuilder(
-                    context.applicationContext,
-                    OrderDatabase::class.java,
-                    "alsong.db",
-                ).build()
-            return databaseInstance ?: synchronized(this) { instance }
+            return instance ?: synchronized(this) {
+                Room.databaseBuilder(context, OrderDatabase::class.java, "alsong.db")
+                    .build()
+                    .also { instance = it }
+            }
         }
     }
 }
