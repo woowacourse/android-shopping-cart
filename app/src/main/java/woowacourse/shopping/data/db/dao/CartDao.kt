@@ -1,6 +1,7 @@
 package woowacourse.shopping.data.db.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -13,7 +14,7 @@ interface CartDao {
     fun loadCart(offset: Int, size: Int): List<CartEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveCart(cart: CartEntity)
+    fun saveCart(cart: CartEntity): Long
 
     @Query("DELETE FROM Cart WHERE id = :id")
     fun deleteCart(id: Long)

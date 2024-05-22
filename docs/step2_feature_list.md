@@ -22,9 +22,13 @@ why?? Product Api 는 있고, Cart, SearchedProduct Api 는 없다고 가정
 - RecentProductDao
   - [x]: 최근 본 상품을 저장하고, id를 반환한다.
   - [x]: 최근 본 상품을 3개 저장 하고, 최근 상품 본 상품을 불러올 때, 저장된 시간 순으로 정렬 된다.
-- [x]: CartDao
+- : CartDao
+  - [x]: 카트 상품을 저장하고, id 를 반환한다
+  - [x]: 1개의 상품 만큼 건너 뛰고, 2개의 상품을 조회 한다.
+  - [x]: product 의 id 에 해당 하는 상품을 삭제한다.
+  - [x]: 카트 상품을 저장한 후, 저장된 카트 상품을 불러온다.
+  - [x]: 카트 상품들을 모두 삭제한다. (추후 요구사항이 생길지도 모르자나?!)
 - [ ]: Product List 서버 만둘기
-- [ ]: Dao Test
 - [ ]: Service Test
 
 ## Domain
