@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation.ui.productdetail
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.Menu
@@ -11,6 +13,7 @@ import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.presentation.base.BaseActivity
 import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.observeEvent
+import woowacourse.shopping.presentation.ui.productlist.ProductListActivity
 
 class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
     private val viewModel: ProductDetailViewModel by viewModels {
@@ -37,20 +40,38 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
         binding.apply {
             vm = viewModel
             lifecycleOwner = this@ProductDetailActivity
+            productCountHandler = viewModel
         }
     }
 
     private fun initObserve() {
+        viewModel.navigateAction.observeEvent(this) { navigateAction ->
+            when (navigateAction) {
+                is ProductDetailNavigateAction.NavigateToProductList -> {
+                    val intent = ProductListActivity.getIntent(this, navigateAction.updatedProducts)
+                    setResult(Activity.RESULT_OK, intent)
+                    finish()
+                }
+            }
+        }
+
         viewModel.message.observeEvent(this) { message ->
             when (message) {
-                is MessageProvider.DefaultErrorMessage ->
-                    showToastMessage(message.getMessage(this))
+                is MessageProvider.DefaultErrorMessage -> showToastMessage(message.getMessage(this))
 
                 is ProductDetailMessage.NoSuchElementErrorMessage ->
-                    showToastMessage(message.getMessage(this))
+                    showToastMessage(
+                        message.getMessage(
+                            this,
+                        ),
+                    )
 
                 is ProductDetailMessage.AddToCartSuccessMessage ->
-                    showSnackbar(message.getMessage(this)) {
+                    showSnackbar(
+                        message.getMessage(
+                            this,
+                        ),
+                    ) {
                         anchorView = binding.tvAddToCart
                     }
             }
@@ -64,21 +85,26 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_product_detai_closed -> finish()
+            R.id.menu_product_detai_closed -> viewModel.navigateToProductList()
         }
         return true
+    }
+
+    @SuppressLint("MissingSuperCall")
+    override fun onBackPressed() {
+        viewModel.navigateToProductList()
     }
 
     companion object {
         const val PUT_EXTRA_PRODUCT_ID = "product_id"
 
-        fun startActivity(
+        fun getIntent(
             context: Context,
             id: Long,
-        ) {
-            val intent = Intent(context, ProductDetailActivity::class.java)
-            intent.putExtra(PUT_EXTRA_PRODUCT_ID, id)
-            context.startActivity(intent)
+        ): Intent {
+            return Intent(context, ProductDetailActivity::class.java).apply {
+                putExtra(PUT_EXTRA_PRODUCT_ID, id)
+            }
         }
     }
 }

@@ -72,11 +72,11 @@ class ProductListActivity : BaseActivity<ActivityProductListBinding>() {
     private fun initObserve() {
         viewModel.navigateAction.observeEvent(this) { navigateAction ->
             when (navigateAction) {
-                is ProductListNavigateAction.NavigateToProductDetail ->
-                    ProductDetailActivity.startActivity(
-                        this,
-                        navigateAction.productId,
-                    )
+                is ProductListNavigateAction.NavigateToProductDetail -> {
+                    val intent =
+                        ProductDetailActivity.getIntent(this, navigateAction.productId)
+                    filterActivityLauncher.launch(intent)
+                }
 
                 is ProductListNavigateAction.NavigateToShoppingCart -> {
                     val intent = ShoppingCartActivity.getIntent(this)
