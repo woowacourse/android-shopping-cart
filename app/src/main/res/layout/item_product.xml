@@ -18,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{() -> clickListener.onProductClick(product.id)}"
-        android:padding="6dp">
+        android:paddingHorizontal="6dp"
+        android:paddingBottom="12dp">
 
         <ImageView
             android:id="@+id/iv_product"
@@ -31,16 +32,28 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_launcher_background" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/btn_add"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_margin="8dp"
-            android:background="@drawable/ic_add_shape"
+            android:background="@drawable/shape_circle"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/ic_plus"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintRight_toRightOf="@id/iv_product" />
+
+        <include
+            android:id="@+id/btn_quantity_control"
+            layout="@layout/button_quantity_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintLeft_toLeftOf="@id/iv_product"
             app:layout_constraintRight_toRightOf="@id/iv_product" />
 
         <TextView
@@ -54,6 +67,7 @@
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="@id/iv_product"
             app:layout_constraintStart_toStartOf="@id/iv_product"
             app:layout_constraintTop_toBottomOf="@id/iv_product"
             tools:text="PET보틀-정사각형" />
@@ -64,7 +78,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
+            android:paddingHorizontal="6dp"
             android:textSize="16dp"
+            app:layout_constraintRight_toRightOf="@id/iv_product"
             app:layout_constraintStart_toStartOf="@id/iv_product"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
             app:price="@{product.price}"

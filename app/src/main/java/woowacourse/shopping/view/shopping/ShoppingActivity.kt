@@ -1,8 +1,6 @@
 package woowacourse.shopping.view.shopping
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,7 +26,6 @@ class ShoppingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbarMain)
         setUpAdapter()
         setUpDataBinding()
         observeViewModel()
@@ -70,6 +67,12 @@ class ShoppingActivity : AppCompatActivity() {
                 navigateToDetail(productId)
             }
         }
+
+        viewModel.navigateToCart.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                navigateToCart()
+            }
+        }
     }
 
     private fun showData(data: List<Product>) {
@@ -80,17 +83,11 @@ class ShoppingActivity : AppCompatActivity() {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.shopping_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        startActivity(CartActivity.createIntent(context = this))
-        return true
-    }
-
-    fun navigateToDetail(productId: Long) {
+    private fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
+    }
+
+    private fun navigateToCart() {
+        startActivity(CartActivity.createIntent(this))
     }
 }

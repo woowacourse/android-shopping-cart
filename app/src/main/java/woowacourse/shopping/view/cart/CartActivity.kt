@@ -3,7 +3,6 @@ package woowacourse.shopping.view.cart
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +28,6 @@ class CartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbarCart)
         setUpAdapter()
         setUpDataBinding()
         observeViewModel()
@@ -68,6 +66,12 @@ class CartActivity : AppCompatActivity() {
                 alertDeletion()
             }
         }
+
+        viewModel.isBackButtonClicked.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                finish()
+            }
+        }
     }
 
     private fun showData(data: List<CartItem>) {
@@ -78,16 +82,11 @@ class CartActivity : AppCompatActivity() {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        finish()
-        return true
-    }
-
-    fun navigateToDetail(productId: Long) {
+    private fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
     }
 
-    fun alertDeletion() {
+    private fun alertDeletion() {
         Toast.makeText(this, DELETE_ITEM_MESSAGE, Toast.LENGTH_SHORT).show()
     }
 

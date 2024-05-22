@@ -38,6 +38,10 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartI
     val notifyDeletion: LiveData<Event<Boolean>>
         get() = _notifyDeletion
 
+    private val _isBackButtonClicked = MutableLiveData<Event<Boolean>>()
+    val isBackButtonClicked: LiveData<Event<Boolean>>
+        get() = _isBackButtonClicked
+
     init {
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
@@ -102,5 +106,9 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartI
     override fun onDeleteButtonClick(itemId: Long) {
         deleteItem(itemId)
         _notifyDeletion.value = Event(true)
+    }
+
+    override fun onBackButtonClick() {
+        _isBackButtonClicked.value = Event(true)
     }
 }

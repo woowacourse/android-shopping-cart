@@ -23,6 +23,10 @@ class ShoppingViewModel(private val repository: ShoppingRepository) :
     val navigateToDetail: LiveData<Event<Long>>
         get() = _navigateToDetail
 
+    private val _navigateToCart = MutableLiveData<Event<Boolean>>()
+    val navigateToCart: LiveData<Event<Boolean>>
+        get() = _navigateToCart
+
     private val loadedProducts: MutableList<Product> = mutableListOf()
 
     init {
@@ -46,6 +50,10 @@ class ShoppingViewModel(private val repository: ShoppingRepository) :
 
     override fun onLoadMoreButtonClick() {
         loadProducts()
+    }
+
+    override fun onShoppingCartButtonClick() {
+        _navigateToCart.value = Event(true)
     }
 
     companion object {

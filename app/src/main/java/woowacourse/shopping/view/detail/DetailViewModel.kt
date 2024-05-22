@@ -22,6 +22,10 @@ class DetailViewModel(
     val navigateToCart: LiveData<Event<Boolean>>
         get() = _navigateToCart
 
+    private val _isFinishButtonClicked = MutableLiveData<Event<Boolean>>()
+    val isFinishButtonClicked: LiveData<Event<Boolean>>
+        get() = _isFinishButtonClicked
+
     private lateinit var _product: Product
     val product: Product
         get() = _product
@@ -53,5 +57,9 @@ class DetailViewModel(
     override fun onPutCartButtonClick() {
         createCartItem()
         _navigateToCart.value = Event(true)
+    }
+
+    override fun onFinishButtonClick() {
+        _isFinishButtonClicked.value = Event(true)
     }
 }

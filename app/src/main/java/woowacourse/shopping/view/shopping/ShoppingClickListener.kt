@@ -4,4 +4,6 @@ interface ShoppingClickListener {
     fun onProductClick(productId: Long)
 
     fun onLoadMoreButtonClick()
+
+    fun onShoppingCartButtonClick()
 }

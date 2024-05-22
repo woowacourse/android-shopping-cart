@@ -5,12 +5,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.repository.CartRepository
-import woowacourse.shopping.view.state.UIState
 import woowacourse.shopping.helper.FakeCartRepositoryImpl
 import woowacourse.shopping.helper.InstantTaskExecutorExtension
 import woowacourse.shopping.helper.getOrAwaitValue
 import woowacourse.shopping.helper.testCartItem0
 import woowacourse.shopping.helper.testProduct0
+import woowacourse.shopping.view.state.UIState
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class CartViewModelTest {

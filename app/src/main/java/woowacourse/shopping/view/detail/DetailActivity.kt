@@ -3,8 +3,6 @@ package woowacourse.shopping.view.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -31,7 +29,6 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.toolbarDetail)
         setUpDataBinding()
         observeViewModel()
     }
@@ -55,23 +52,19 @@ class DetailActivity : AppCompatActivity() {
                 putCartItem()
             }
         }
+
+        viewModel.isFinishButtonClicked.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                finish()
+            }
+        }
     }
 
     private fun showError(errorMessage: String) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.detail_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        finish()
-        return true
-    }
-
-    fun putCartItem() {
+    private fun putCartItem() {
         Toast.makeText(this, PUR_CART_MESSAGE, Toast.LENGTH_SHORT).show()
         startActivity(CartActivity.createIntent(context = this))
     }
