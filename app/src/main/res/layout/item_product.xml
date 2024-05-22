@@ -29,7 +29,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@android:color/holo_green_dark" />
+            tools:src="@drawable/ic_launcher_background" />
+
+        <ImageView
+            android:id="@+id/btn_add"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/ic_add_shape"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product"
+            app:layout_constraintRight_toRightOf="@id/iv_product" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -44,7 +56,7 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@id/iv_product"
             app:layout_constraintTop_toBottomOf="@id/iv_product"
-            tools:text="PET보틀-정사각형어쩌구저쩌구" />
+            tools:text="PET보틀-정사각형" />
 
         <TextView
             android:id="@+id/tv_price"
