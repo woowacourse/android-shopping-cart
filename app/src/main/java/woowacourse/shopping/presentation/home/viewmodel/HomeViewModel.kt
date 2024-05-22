@@ -35,6 +35,42 @@ class HomeViewModel(
         _totalCartCount.value = cartRepository.fetchTotalCartCount()
     }
 
+    fun plusCartItem(productId: Long) {
+        cartRepository.plusCartItem(productId, 1)
+
+        val cartItem = cartRepository.fetchCartItem(productId)
+
+        _orders.value =
+            _orders.value?.map {
+                if (it.product.id == cartItem?.productId) {
+                    it.copy(
+                        cartItemId = cartItem.id,
+                        quantity = cartItem.quantity,
+                    )
+                } else {
+                    it
+                }
+            }
+    }
+
+    fun minusCartItem(productId: Long) {
+        cartRepository.minusCartItem(productId, 1)
+
+        val cartItem = cartRepository.fetchCartItem(productId)
+
+        _orders.value =
+            _orders.value?.map {
+                if (it.product.id == cartItem?.productId) {
+                    it.copy(
+                        cartItemId = cartItem.id,
+                        quantity = cartItem.quantity,
+                    )
+                } else {
+                    it
+                }
+            }
+    }
+
     fun addCartItem(productId: Long) {
         cartRepository.addCartItem(productId, 1)
 
