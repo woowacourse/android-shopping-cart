@@ -80,6 +80,10 @@ object CartsImpl : CartDao {
 
     override fun minusCartCount(cartId: Long) {
         carts[cartId]?.let {
+            if (it.productWithQuantity.quantity.value == 1) {
+                delete(cartId)
+                return
+            }
             carts[cartId] = it.copy(productWithQuantity = it.productWithQuantity.dec())
         }
     }
