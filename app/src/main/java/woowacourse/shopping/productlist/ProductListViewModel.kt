@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.ProductRepository
 import woowacourse.shopping.ShoppingRepository
 import woowacourse.shopping.domain.Product
@@ -19,6 +20,8 @@ class ProductListViewModel(
     val loadState: LiveData<LoadProductState> get() = _loadState
 
     val totalSize: Int = productRepository.productsTotalSize()
+
+    val totalCartItemCount = _loadState.map { it.currentProducts.totalCartItemCount() }
 
     private fun currentLoadState(): ProductUiModels = _loadState.value?.currentProducts ?: ProductUiModels.default()
 
@@ -70,12 +73,14 @@ class ProductListViewModel(
             shoppingRepository.decreasedCartItem(productId)
         }.onSuccess { result ->
             when (result) {
-                is QuantityUpdate.Success ->
+                is QuantityUpdate.Success -> {
+                    val updatedProduct = result.value.toProductUiModel()
                     _loadState.value =
                         LoadProductState.ChangeItemCount(
-                            result.value.toProductUiModel(),
-                            currentLoadState(),
+                            updatedProduct,
+                            currentLoadState().updateProduct(updatedProduct),
                         )
+                }
 
                 QuantityUpdate.Failure ->
                     deleteShoppingCart(productId)

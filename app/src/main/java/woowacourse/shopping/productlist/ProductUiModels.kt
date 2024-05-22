@@ -5,6 +5,8 @@ data class ProductUiModels(
 ) {
     fun totalProductCount(): Int = products.size
 
+    fun totalCartItemCount(): Int = products.filterNot { it.cartItemCount == 0 }.sumOf { it.cartItemCount }
+
     fun updateProduct(product: ProductUiModel): ProductUiModels =
         products.map { if (it.id == product.id) product else it }.let(::ProductUiModels)
 
