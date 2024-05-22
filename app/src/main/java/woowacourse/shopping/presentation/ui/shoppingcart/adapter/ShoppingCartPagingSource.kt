@@ -8,10 +8,8 @@ class ShoppingCartPagingSource(private val repository: ShoppingCartRepository) {
     private var last = true
 
     fun load(page: Int): Result<PagingCartProduct> {
-        println(page)
         val result = repository.getCartProductsPaged(page = page, pageSize = PAGING_SIZE)
         maxOffset = repository.getCartProductsTotal().getOrThrow()
-        println(result)
 
         return result.fold(
             onSuccess = { cardProducts ->

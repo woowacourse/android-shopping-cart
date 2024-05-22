@@ -27,8 +27,6 @@ class ShoppingCartViewModel(private val repository: ShoppingCartRepository) :
         thread {
             shoppingCartPagingSource.load(page).onSuccess { pagingCartProduct ->
                 _uiState.postValue(_uiState.value?.copy(pagingCartProduct = pagingCartProduct))
-                println(123124123)
-                println(_uiState.value.toString())
             }.onFailure {
                 showMessage(MessageProvider.DefaultErrorMessage)
             }

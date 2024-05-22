@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.ui.productlist
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -62,8 +61,6 @@ class ProductListViewModel(productRepository: ProductRepository) :
         productId: Long,
         position: Int,
     ) {
-        Log.d("Ttt", "플러스 눌림")
-
         _uiState.value?.let { state ->
             val newProductList =
                 state.pagingProduct.productList.map { product ->
@@ -85,7 +82,6 @@ class ProductListViewModel(productRepository: ProductRepository) :
         productId: Long,
         position: Int,
     ) {
-        Log.d("Ttt", "마이너스 눌림")
         _uiState.value?.let { state ->
             val newProductList =
                 state.pagingProduct.productList.map { product ->
