@@ -11,8 +11,8 @@ object DefaultCart : CartDataSource {
         return cartItems.size
     }
 
-    override fun getCartItem(productId: Long): CartItem? {
-        return cartItems[productId]
+    override fun getCartItem(productId: Long): CartItem {
+        return cartItems[productId] ?: CartItem(0, 1, 0)
     }
 
     override fun addCartItem(
