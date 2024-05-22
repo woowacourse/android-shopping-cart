@@ -138,7 +138,7 @@ class CartActivityTest {
             repeat(5) {
                 CartsImpl.save(
                     Cart(
-                        productWithQuantity =
+                        productWithQuantityId =
                             ProductWithQuantity(
                                 product = MAC_BOOK.copy(id = it.toLong()),
                                 quantity = Quantity(1),
@@ -148,7 +148,7 @@ class CartActivityTest {
             }
             CartsImpl.save(
                 Cart(
-                    productWithQuantity =
+                    productWithQuantityId =
                         ProductWithQuantity(
                             product = IPHONE,
                             quantity = Quantity(1),

@@ -39,6 +39,7 @@ class ProductContentsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.refreshProducts()
         viewModel.loadCartItems()
     }
 

@@ -7,8 +7,6 @@ interface CartDao {
 
     fun save(cart: Cart): Long
 
-    fun decreaseQuantity(cart: Cart)
-
     fun find(id: Long): Cart
 
     fun findAll(): List<Cart>
@@ -18,11 +16,11 @@ interface CartDao {
         pageSize: Int,
     ): List<Cart>
 
-    fun plusCartCount(cartId: Long)
-
-    fun minusCartCount(cartId: Long)
-
-    fun deleteAll()
+    fun minusQuantityByProductWithQuantityId(productWithQuantityId: Long)
 
     fun delete(id: Long)
+
+    fun deleteByProductWithQuantityId(productWithQuantityId: Long)
+
+    fun deleteAll()
 }

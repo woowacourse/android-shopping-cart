@@ -2,7 +2,7 @@ package woowacourse.shopping.ui.cart.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.ui.CountButtonClickListener
 
 class CartViewHolder(
@@ -12,22 +12,22 @@ class CartViewHolder(
     private val minusCountClickListener: (Long) -> Unit,
 ) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(cart: Cart) {
-        binding.cart = cart
+    fun bind(productWithQuantity: ProductWithQuantity) {
+        binding.productWithQuantity = productWithQuantity
         binding.ivRemove.setOnClickListener {
-            itemRemoveClickListener(cart.id)
+            itemRemoveClickListener(productWithQuantity.id)
         }
-        binding.countButtonClickListener = countButtonClickListener(cart)
+        binding.countButtonClickListener = countButtonClickListener(productWithQuantity)
     }
 
-    private fun countButtonClickListener(cart: Cart) =
+    private fun countButtonClickListener(productWithQuantity: ProductWithQuantity) =
         object : CountButtonClickListener {
             override fun plusCount() {
-                plusCountClickListener(cart.id)
+                plusCountClickListener(productWithQuantity.id)
             }
 
             override fun minusCount() {
-                minusCountClickListener(cart.id)
+                minusCountClickListener(productWithQuantity.id)
             }
         }
 }

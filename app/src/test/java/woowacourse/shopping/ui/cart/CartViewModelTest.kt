@@ -34,33 +34,33 @@ class CartViewModelTest {
     @Test
     fun `장바구니에 상품을 담으면 장바구니 화면에서 보여야 한다`() {
         // given
-        CartsImpl.save(Cart(productWithQuantity = CHAIR))
-        CartsImpl.save(Cart(productWithQuantity = CAR))
-        CartsImpl.save(Cart(productWithQuantity = UMBRELLA))
+        CartsImpl.save(Cart(productWithQuantityId = CHAIR))
+        CartsImpl.save(Cart(productWithQuantityId = CAR))
+        CartsImpl.save(Cart(productWithQuantityId = UMBRELLA))
 
         // when
         viewModel = CartViewModel(CartsImpl)
 
         // then
-        assertThat(viewModel.cart.getOrAwaitValue()[0].productWithQuantity.product.name).isEqualTo("의자")
-        assertThat(viewModel.cart.getOrAwaitValue()[1].productWithQuantity.product.name).isEqualTo("자동차")
-        assertThat(viewModel.cart.getOrAwaitValue()[2].productWithQuantity.product.name).isEqualTo("우산")
+        assertThat(viewModel.cart.getOrAwaitValue()[0].productWithQuantityId.product.name).isEqualTo("의자")
+        assertThat(viewModel.cart.getOrAwaitValue()[1].productWithQuantityId.product.name).isEqualTo("자동차")
+        assertThat(viewModel.cart.getOrAwaitValue()[2].productWithQuantityId.product.name).isEqualTo("우산")
     }
 
     @Test
     fun `상품을 지울 수 있어야 한다`() {
         // given
-        CartsImpl.save(Cart(productWithQuantity = CHAIR))
-        val id = CartsImpl.save(Cart(productWithQuantity = CAR))
-        CartsImpl.save(Cart(productWithQuantity = UMBRELLA))
+        CartsImpl.save(Cart(productWithQuantityId = CHAIR))
+        val id = CartsImpl.save(Cart(productWithQuantityId = CAR))
+        CartsImpl.save(Cart(productWithQuantityId = UMBRELLA))
 
         // when
         viewModel = CartViewModel(CartsImpl)
         viewModel.removeCartItem(id)
 
         // then
-        assertThat(viewModel.cart.getOrAwaitValue()[0].productWithQuantity.product.name).isEqualTo("의자")
-        assertThat(viewModel.cart.getOrAwaitValue()[1].productWithQuantity.product.name).isEqualTo("우산")
+        assertThat(viewModel.cart.getOrAwaitValue()[0].productWithQuantityId.product.name).isEqualTo("의자")
+        assertThat(viewModel.cart.getOrAwaitValue()[1].productWithQuantityId.product.name).isEqualTo("우산")
     }
 
     companion object {

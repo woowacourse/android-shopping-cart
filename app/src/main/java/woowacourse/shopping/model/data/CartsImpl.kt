@@ -12,39 +12,18 @@ object CartsImpl : CartDao {
     override fun itemSize() = carts.size
 
     override fun save(cart: Cart): Long {
-        val oldCart =
-            carts.values.find { it.productWithQuantity.product.id == cart.productWithQuantity.product.id }
-                ?.let {
-                    carts[it.id]
-                }
-
-        if (oldCart == null) {
+        val oldCart = carts.values.find { it.productWithQuantityId == cart.productWithQuantityId }
+        if (oldCart == null) { // 장바구니에 없는 상품인 경우
             carts[id] = cart.copy(id = id)
             return id++
         }
-        val quantity = oldCart.productWithQuantity.quantity.plus(cart.productWithQuantity.quantity)
-        carts.remove(oldCart.id)
-
-        carts[oldCart.id] =
-            oldCart.copy(productWithQuantity = oldCart.productWithQuantity.copy(quantity = quantity))
-
         return oldCart.id
     }
 
-    override fun decreaseQuantity(cart: Cart) {
+    override fun minusQuantityByProductWithQuantityId(productWithQuantityId: Long) {
         val oldCart =
-            carts.values.find { it.productWithQuantity.product.id == cart.productWithQuantity.product.id }
-                ?.let {
-                    carts[it.id]
-                } ?: return
-
-        val quantity = oldCart.productWithQuantity.quantity.plus(cart.productWithQuantity.quantity)
-        if (quantity.value == 0) {
-            delete(oldCart.id)
-            return
-        }
-        carts[oldCart.id] =
-            oldCart.copy(productWithQuantity = oldCart.productWithQuantity.copy(quantity = quantity))
+            carts.values.find { it.productWithQuantityId == productWithQuantityId } ?: return
+        minusCartCount(oldCart.id)
     }
 
     override fun deleteAll() {
@@ -53,6 +32,12 @@ object CartsImpl : CartDao {
 
     override fun delete(id: Long) {
         carts.remove(id)
+    }
+
+    override fun deleteByProductWithQuantityId(productWithQuantityId: Long) {
+        carts.values.find { it.productWithQuantityId == productWithQuantityId }?.let {
+            delete(it.id)
+        }
     }
 
     override fun find(id: Long): Cart {
@@ -72,21 +57,14 @@ object CartsImpl : CartDao {
         return carts.values.toList().subList(fromIndex, toIndex)
     }
 
-    override fun plusCartCount(cartId: Long) {
+    private fun minusCartCount(cartId: Long) {
         carts[cartId]?.let {
-            carts[cartId] = it.copy(productWithQuantity = it.productWithQuantity.inc())
+            if (it.findProductWithQuantity().quantity.value == 1) delete(cartId)
+            ProductWithQuantitiesImpl.minusCartCount(it.productWithQuantityId)
         }
     }
 
-    override fun minusCartCount(cartId: Long) {
-        carts[cartId]?.let {
-            if (it.productWithQuantity.quantity.value == 1) {
-                delete(cartId)
-                return
-            }
-            carts[cartId] = it.copy(productWithQuantity = it.productWithQuantity.dec())
-        }
-    }
+    fun Cart.findProductWithQuantity() = ProductWithQuantitiesImpl.find(this.productWithQuantityId)
 
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)
 }

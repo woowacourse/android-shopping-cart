@@ -11,5 +11,11 @@ interface ProductWithQuantityDao {
 
     fun getProducts(): List<ProductWithQuantity>
 
+    fun getLastProducts(): List<ProductWithQuantity>
+
+    fun plusCartCount(productWithQuantityId: Long)
+
+    fun minusCartCount(productWithQuantityId: Long)
+
     fun deleteAll()
 }

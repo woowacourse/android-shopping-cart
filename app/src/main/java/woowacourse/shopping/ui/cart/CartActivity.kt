@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.model.data.ProductWithQuantitiesImpl
 import woowacourse.shopping.ui.cart.adapter.CartAdapter
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModelFactory
@@ -16,7 +17,12 @@ import woowacourse.shopping.ui.cart.viewmodel.CartViewModelFactory
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private lateinit var adapter: CartAdapter
-    private val viewModel: CartViewModel by viewModels { CartViewModelFactory(CartsImpl) }
+    private val viewModel: CartViewModel by viewModels {
+        CartViewModelFactory(
+            ProductWithQuantitiesImpl,
+            CartsImpl,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +46,7 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun observeCartItems() {
-        viewModel.cart.observe(this) {
+        viewModel.productWithQuantity.observe(this) {
             adapter.setData(it)
         }
     }
@@ -49,9 +55,9 @@ class CartActivity : AppCompatActivity() {
         binding.rvCart.itemAnimator = null
         adapter =
             CartAdapter(
-                { cartId -> viewModel.removeCartItem(cartId) },
-                { cartId -> viewModel.plusCount(cartId) },
-                { cartId -> viewModel.minusCount(cartId) },
+                { viewModel.removeCartItem(it) },
+                { viewModel.plusCount(it) },
+                { viewModel.minusCount(it) },
             )
 
         binding.rvCart.adapter = adapter

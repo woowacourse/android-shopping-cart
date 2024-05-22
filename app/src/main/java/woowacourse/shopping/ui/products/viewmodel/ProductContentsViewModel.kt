@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.ProductWithQuantity
-import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.data.CartDao
+import woowacourse.shopping.model.data.CartsImpl.findProductWithQuantity
 import woowacourse.shopping.model.data.ProductWithQuantityDao
 
 class ProductContentsViewModel(
@@ -32,7 +32,7 @@ class ProductContentsViewModel(
             if (it.isEmpty()) {
                 DEFAULT_CART_ITEMS_COUNT
             } else {
-                it.sumOf { cartItem -> cartItem.productWithQuantity.quantity.value }
+                it.sumOf { cartItem -> cartItem.findProductWithQuantity().quantity.value }
             }
         }
 
@@ -45,41 +45,40 @@ class ProductContentsViewModel(
         _productWithQuantity.value = items
     }
 
+    fun refreshProducts() {
+        items.clear()
+        items.addAll(productWithQuantityDao.getLastProducts())
+        _productWithQuantity.value = items
+    }
+
     fun loadCartItems() {
         cart.value = cartDao.findAll()
     }
 
     fun plusCount(productId: Long) {
-        val productIndex = items.indexOfFirst { it.product.id == productId }
-        val newProduct = items[productIndex].copy(quantity = items[productIndex].quantity.inc())
-        items[productIndex] = newProduct
-        cartDao.save(Cart(productWithQuantity = newProduct.copy(quantity = Quantity(PLUS_OFFSET))))
+        val productWithQuantityIndex = items.indexOfFirst { it.product.id == productId }
+        val newProduct = items[productWithQuantityIndex].inc()
+
+        productWithQuantityDao.plusCartCount(newProduct.id)
+        cartDao.save(Cart(productWithQuantityId = newProduct.id))
+
+        items[productWithQuantityIndex] = newProduct
         _productWithQuantity.value = items
         loadCartItems()
     }
 
     fun minusCount(productId: Long) {
-        val productIndex = items.indexOfFirst { it.product.id == productId }
-        val newProduct = items[productIndex].copy(quantity = items[productIndex].quantity.dec())
-        items[productIndex] = newProduct
-        cartDao.decreaseQuantity(
-            Cart(
-                productWithQuantity =
-                    newProduct.copy(
-                        quantity =
-                            Quantity(
-                                MINUS_OFFSET,
-                            ),
-                    ),
-            ),
-        )
+        val productWithQuantityIndex = items.indexOfFirst { it.product.id == productId }
+        val newProduct = items[productWithQuantityIndex].dec()
+
+        productWithQuantityDao.minusCartCount(newProduct.id)
+
+        items[productWithQuantityIndex] = newProduct
         _productWithQuantity.value = items
         loadCartItems()
     }
 
     companion object {
         private const val DEFAULT_CART_ITEMS_COUNT = 0
-        private const val PLUS_OFFSET = 1
-        private const val MINUS_OFFSET = -1
     }
 }

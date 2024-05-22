@@ -3,11 +3,18 @@ package woowacourse.shopping.ui.cart.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartPageManager
+import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.data.CartDao
+import woowacourse.shopping.model.data.CartsImpl.findProductWithQuantity
+import woowacourse.shopping.model.data.ProductWithQuantityDao
 
-class CartViewModel(private val cartDao: CartDao) : ViewModel() {
+class CartViewModel(
+    private val productWithQuantityDao: ProductWithQuantityDao,
+    private val cartDao: CartDao,
+) : ViewModel() {
     private val cartPageManager by lazy { CartPageManager(PAGE_SIZE) }
     private val _pageNumber: MutableLiveData<Int> = MutableLiveData()
 
@@ -19,18 +26,22 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
 
     val pageNumber: LiveData<Int> get() = _pageNumber
 
-    private val _cart: MutableLiveData<List<Cart>> = MutableLiveData()
-    val cart: LiveData<List<Cart>> get() = _cart
+    private val cart: MutableLiveData<List<Cart>> = MutableLiveData()
+
+    val productWithQuantity: LiveData<List<ProductWithQuantity>> =
+        cart.map { carts ->
+            carts.map { it.findProductWithQuantity() }
+        }
 
     init {
         loadCartItems()
         updatePageState()
     }
 
-    fun removeCartItem(cartId: Long) {
-        cartDao.delete(cartId)
+    fun removeCartItem(productWithQuantityId: Long) {
+        cartDao.deleteByProductWithQuantityId(productWithQuantityId)
         _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartDao.itemSize())
-        _cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
+        cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
     }
 
     fun plusPageNum() {
@@ -45,18 +56,18 @@ class CartViewModel(private val cartDao: CartDao) : ViewModel() {
         updatePageState()
     }
 
-    fun plusCount(cartId: Long) {
-        cartDao.plusCartCount(cartId)
+    fun plusCount(productWithQuantityId: Long) {
+        productWithQuantityDao.plusCartCount(productWithQuantityId)
         loadCartItems()
     }
 
-    fun minusCount(cartId: Long) {
-        cartDao.minusCartCount(cartId)
+    fun minusCount(productWithQuantityId: Long) {
+        cartDao.minusQuantityByProductWithQuantityId(productWithQuantityId)
         loadCartItems()
     }
 
     private fun loadCartItems() {
-        _cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
+        cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
     }
 
     private fun updatePageState() {

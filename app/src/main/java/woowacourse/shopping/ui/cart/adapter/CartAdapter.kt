@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
-import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.ui.cart.viewmodel.CartViewModel
 
 class CartAdapter(
@@ -12,7 +12,7 @@ class CartAdapter(
     private val plusCountClickListener: (Long) -> Unit,
     private val minusCountClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<CartViewHolder>() {
-    private val cart: MutableList<Cart> = mutableListOf()
+    private val productWithQuantities: MutableList<ProductWithQuantity> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,23 +31,23 @@ class CartAdapter(
         holder: CartViewHolder,
         position: Int,
     ) {
-        holder.bind(cart[position])
+        holder.bind(productWithQuantities[position])
     }
 
-    override fun getItemCount(): Int = cart.size
+    override fun getItemCount(): Int = productWithQuantities.size
 
-    fun setData(carts: List<Cart>) {
-        addItems(carts)
-        if (cart.size != CartViewModel.PAGE_SIZE) {
-            notifyItemRangeRemoved(cart.size + OFFSET, CartViewModel.PAGE_SIZE - cart.size)
+    fun setData(items: List<ProductWithQuantity>) {
+        addItems(items)
+        if (productWithQuantities.size != CartViewModel.PAGE_SIZE) {
+            notifyItemRangeRemoved(productWithQuantities.size + OFFSET, CartViewModel.PAGE_SIZE - productWithQuantities.size)
         }
-        notifyItemRangeChanged(DEFAULT_POSITION, cart.size)
+        notifyItemRangeChanged(DEFAULT_POSITION, productWithQuantities.size)
     }
 
-    private fun addItems(carts: List<Cart>) {
-        cart.apply {
+    private fun addItems(items: List<ProductWithQuantity>) {
+        productWithQuantities.apply {
             clear()
-            addAll(carts)
+            addAll(items)
         }
     }
 

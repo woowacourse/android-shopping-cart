@@ -36,8 +36,24 @@ object ProductWithQuantitiesImpl : ProductWithQuantityDao {
     override fun getProducts(): List<ProductWithQuantity> {
         val fromIndex = currentOffset
         currentOffset = min(currentOffset + LOAD_LIMIT, productWithQuantities.size)
-
         return productWithQuantities.values.toList().subList(fromIndex, currentOffset)
+    }
+
+    override fun getLastProducts(): List<ProductWithQuantity> {
+        return productWithQuantities.values.toList().subList(0, currentOffset)
+    }
+
+    override fun plusCartCount(productWithQuantityId: Long) {
+        productWithQuantities[productWithQuantityId]?.let {
+            productWithQuantities[productWithQuantityId] =
+                it.inc()
+        }
+    }
+
+    override fun minusCartCount(productWithQuantityId: Long) {
+        productWithQuantities[productWithQuantityId]?.let {
+            productWithQuantities[productWithQuantityId] = it.dec()
+        }
     }
 
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)

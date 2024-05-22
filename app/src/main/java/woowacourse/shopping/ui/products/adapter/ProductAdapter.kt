@@ -36,7 +36,7 @@ class ProductAdapter(
     }
 
     fun setData(newProducts: List<ProductWithQuantity>) {
-        if (newProducts.none { product -> products.contains(product) }) {
+        if (isLoadMore(newProducts)) {
             val positionStart = products.size
             val itemCount = newProducts.size - products.size
             products.addAll(newProducts.subList(positionStart, newProducts.size))
@@ -53,4 +53,6 @@ class ProductAdapter(
             notifyItemChanged(it.product.id.toInt())
         }
     }
+
+    private fun isLoadMore(newProducts: List<ProductWithQuantity>) = newProducts.none { product -> products.contains(product) }
 }
