@@ -12,7 +12,9 @@ import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.model.Product.Companion.DEFAULT_PRODUCT_ID
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.ShoppingCartRepository
+import woowacourse.shopping.utils.MutableSingleLiveData
 import woowacourse.shopping.utils.NoSuchDataException
+import woowacourse.shopping.utils.SingleLiveData
 import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 
 class ProductDetailViewModel(
@@ -23,9 +25,9 @@ class ProductDetailViewModel(
     val product: LiveData<Product> get() = _product
     private var cartItemId: Long = DEFAULT_CART_ITEM_ID
 
-    private val _errorEvent: MutableLiveData<ProductDetailEvent.ErrorEvent> =
-        MutableLiveData()
-    val errorEvent: LiveData<ProductDetailEvent.ErrorEvent> get() = _errorEvent
+    private val _errorEvent: MutableSingleLiveData<ProductDetailEvent.ErrorEvent> =
+        MutableSingleLiveData()
+    val errorEvent: SingleLiveData<ProductDetailEvent.ErrorEvent> get() = _errorEvent
 
     private val _productDetailEvent = MutableLiveData<ProductDetailEvent.SuccessEvent>()
     val productDetailEvent: LiveData<ProductDetailEvent.SuccessEvent> = _productDetailEvent
@@ -50,10 +52,13 @@ class ProductDetailViewModel(
             )
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.value =
+                is NoSuchDataException -> _errorEvent.postValue(
                     ProductDetailEvent.AddShoppingCart.Fail
+                )
 
-                else -> _errorEvent.value = ProductDetailEvent.ErrorEvent.NotKnownError
+                else -> _errorEvent.postValue(
+                    ProductDetailEvent.ErrorEvent.NotKnownError
+                )
             }
         }
     }
@@ -67,10 +72,13 @@ class ProductDetailViewModel(
             _product.value = product
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.value =
+                is NoSuchDataException -> _errorEvent.postValue(
                     ProductDetailEvent.LoadProductItem.Fail
+                )
 
-                else -> _errorEvent.value = ProductDetailEvent.ErrorEvent.NotKnownError
+                else -> _errorEvent.postValue(
+                    ProductDetailEvent.ErrorEvent.NotKnownError
+                )
             }
         }
     }
@@ -88,10 +96,13 @@ class ProductDetailViewModel(
             }
         } catch (e: Exception) {
             when (e) {
-                is NoSuchDataException -> _errorEvent.value =
+                is NoSuchDataException -> _errorEvent.postValue(
                     ProductDetailEvent.LoadProductItem.Fail
+                )
 
-                else -> _errorEvent.value = ProductDetailEvent.ErrorEvent.NotKnownError
+                else -> _errorEvent.postValue(
+                    ProductDetailEvent.ErrorEvent.NotKnownError
+                )
             }
             CartItemCounter()
         }

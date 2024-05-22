@@ -2,6 +2,7 @@ package woowacourse.shopping.view.cart
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,12 +11,12 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repository.ShoppingCartRepositoryImpl.Companion.CART_ITEM_LOAD_PAGING_SIZE
 import woowacourse.shopping.databinding.FragmentShoppingCartBinding
+import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.utils.ShoppingUtils.makeToast
 import woowacourse.shopping.view.MainFragmentListener
 import woowacourse.shopping.view.ViewModelFactory
 import woowacourse.shopping.view.cart.adapter.ShoppingCartAdapter
-import woowacourse.shopping.view.cartcounter.ChangeCartItemResultState
 import woowacourse.shopping.view.cartcounter.OnClickCartItemCounter
 import woowacourse.shopping.view.detail.ProductDetailFragment
 
@@ -76,23 +77,48 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
         shoppingCartViewModel.shoppingCart.cartItems.observe(viewLifecycleOwner) {
             updateRecyclerView()
         }
-        shoppingCartViewModel.errorState.observe(viewLifecycleOwner) { errorState ->
+        shoppingCartViewModel.shoppingCartEvent.observe(viewLifecycleOwner) { cartState ->
+            when (cartState) {
+                is ShoppingCartEvent.UpdateProductEvent.Success -> {
+                    adapter.updateCartItem(cartState.productId)
+
+                    mainFragmentListener?.saveUpdateProduct(
+                        cartState.productId,
+                        cartState.count,
+                    )
+                }
+                ShoppingCartEvent.DeleteShoppingCart.Success -> {
+                    requireContext().makeToast(
+                        getString(
+                            R.string.delete_cart_item,
+                        ),
+                    )
+                }
+            }
+        }
+
+        shoppingCartViewModel.errorEvent.observe(viewLifecycleOwner) { errorState ->
             when (errorState) {
-                ShoppingCartState.DeleteShoppingCart.Fail ->
+                ShoppingCartEvent.DeleteShoppingCart.Fail ->
                     requireContext().makeToast(
                         getString(
                             R.string.error_delete_data,
                         ),
                     )
 
-                ShoppingCartState.LoadCartItemList.Fail ->
+                ShoppingCartEvent.LoadCartItemList.Fail ->
                     requireContext().makeToast(
                         getString(R.string.max_paging_data),
                     )
 
-                ShoppingCartState.ErrorState.NotKnownError ->
+                ShoppingCartEvent.ErrorState.NotKnownError ->
                     requireContext().makeToast(
                         getString(R.string.error_default),
+                    )
+
+                ShoppingCartEvent.UpdateProductEvent.Fail ->
+                    requireContext().makeToast(
+                        getString(R.string.error_update_cart_item),
                     )
             }
         }
@@ -116,8 +142,12 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
         mainFragmentListener?.changeFragment(productFragment)
     }
 
-    override fun clickRemoveCartItem(cartItemId: Long) {
-        shoppingCartViewModel.deleteShoppingCartItem(cartItemId)
+    override fun clickRemoveCartItem(cartItem: CartItem) {
+        shoppingCartViewModel.deleteShoppingCartItem(
+            cartItemId = cartItem.id,
+            itemCounter = cartItem.product.cartItemCounter,
+            productId = cartItem.product.id,
+        )
     }
 
     override fun clickPrevPage() {
@@ -151,25 +181,10 @@ class ShoppingCartFragment : Fragment(), OnClickShoppingCart, OnClickCartItemCou
     }
 
     override fun clickIncrease(product: Product) {
-        product.cartItemCounter.selectItem()
-        val resultState =  product.cartItemCounter.increase()
-        when(resultState){
-            ChangeCartItemResultState.Success -> {
-                adapter.updateCartItem(product.id)
-            }
-            ChangeCartItemResultState.Fail -> {}
-        }
+        shoppingCartViewModel.increaseCartItem(product)
     }
 
     override fun clickDecrease(product: Product) {
-        val resultState = product.cartItemCounter.decrease()
-        when(resultState){
-            ChangeCartItemResultState.Success -> {
-                adapter.updateCartItem(product.id)
-            }
-            ChangeCartItemResultState.Fail -> {
-
-            }
-        }
+        shoppingCartViewModel.decreaseCartItem(product)
     }
 }

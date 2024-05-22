@@ -50,7 +50,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
             android:background="@android:color/transparent"
-            android:onClick="@{()->onClickShoppingCart.clickRemoveCartItem(cartItem.id)}"
+            android:onClick="@{()->onClickShoppingCart.clickRemoveCartItem(cartItem)}"
             android:src="@drawable/ic_close_24"
             app:layout_constraintBottom_toBottomOf="@id/tv_cart_item_name"
             app:layout_constraintEnd_toEndOf="parent"

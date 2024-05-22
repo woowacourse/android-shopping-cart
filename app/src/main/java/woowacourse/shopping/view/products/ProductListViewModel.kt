@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.CartItemEntity.Companion.DEFAULT_CART_ITEM_COUNT
 import woowacourse.shopping.data.repository.ProductRepositoryImpl.Companion.DEFAULT_ITEM_SIZE
 import woowacourse.shopping.domain.model.CartItemCounter
+import woowacourse.shopping.domain.model.CartItemCounter.Companion.DEFAULT_ITEM_COUNT
 import woowacourse.shopping.domain.model.CartItemResult
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.domain.repository.ProductRepository
@@ -139,35 +140,20 @@ class ProductListViewModel(
         }
     }
 
-    private fun updateTotalCount(){
+    private fun updateTotalCount() {
         _cartItemCount.value = shoppingCartRepository.getTotalCartItemCount()
     }
 
     fun updateProducts(items: Map<Long, Int>) {
-        _products.value = products.value?.map { product ->
-            val count = items[product.id]
-            if (count != null) {
-                getUpdatedProduct(product, count)
-            } else {
-                product
+        products.value?.forEach {
+            val count = items[it.id]
+            if (count != null){
+                if (count == DEFAULT_ITEM_COUNT) it.cartItemCounter.unSelectItem()
+                it.cartItemCounter.updateCount(count)
+                _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(it.id))
             }
         }
-        items.keys.forEach { productId ->
-            _productListEvent.postValue(ProductListEvent.UpdateProductEvent.Success(productId))
-        }
         updateTotalCount()
-    }
-
-    private fun getUpdatedProduct(
-        product: Product,
-        count: Int,
-    ): Product {
-        return product.copy(
-            id = product.id,
-            name = product.name,
-            price = product.price,
-            cartItemCounter = CartItemCounter(count)
-        )
     }
 
     private fun getCartItemResult(productId: Long): CartItemResult {

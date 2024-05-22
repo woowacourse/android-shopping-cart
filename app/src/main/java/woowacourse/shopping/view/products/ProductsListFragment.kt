@@ -60,8 +60,6 @@ class ProductsListFragment : Fragment(), OnClickProducts, OnClickCartItemCounter
         observeData()
     }
 
-
-
     private fun initView() {
         loadPagingData()
         binding.vm = productListViewModel
