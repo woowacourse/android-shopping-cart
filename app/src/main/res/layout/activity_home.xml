@@ -46,22 +46,23 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:src="@drawable/ic_mint_round"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:text="@{String.valueOf(viewModel.totalCartCount)}"
-                    android:gravity="center_horizontal"
                     android:background="@drawable/ic_mint_round"
+                    android:gravity="center_horizontal"
+                    android:src="@drawable/ic_mint_round"
+                    android:text="@{String.valueOf(viewModel.totalCartCount)}"
                     android:textColor="@color/white"
-                    android:layout_height="wrap_content"/>
+                    android:visibility="@{viewModel.totalCartCount > 0 ? View.VISIBLE : View.GONE}" />
 
                 <ImageView
                     android:id="@+id/iv_shopping_cart"
-                    android:onClick="@{() -> homeClickListener.moveToCart()}"
-                    android:src="@drawable/ic_shopping_cart"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_height="wrap_content"/>
+                    android:onClick="@{() -> homeClickListener.moveToCart()}"
+                    android:src="@drawable/ic_shopping_cart" />
 
             </androidx.appcompat.widget.Toolbar>
 
