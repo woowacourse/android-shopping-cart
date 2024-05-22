@@ -11,18 +11,24 @@ import woowacourse.shopping.util.Event
 class DetailViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    productId: Long,
 ) : ViewModel() {
     private val _productInformation: MutableLiveData<Product> = MutableLiveData()
     val productInformation: LiveData<Product>
         get() = _productInformation
 
+    private val _quantity = MutableLiveData(1)
+    val quantity: LiveData<Int>
+        get() = _quantity
+
     private val _addComplete = MutableLiveData<Event<Boolean>>()
     val addComplete: LiveData<Event<Boolean>>
         get() = _addComplete
 
-    private val _quantity = MutableLiveData(1)
-    val quantity: LiveData<Int>
-        get() = _quantity
+    init {
+        loadProductInformation(productId)
+        loadCartItem(productId)
+    }
 
     fun loadCartItem(id: Long) {
         _quantity.value = cartRepository.fetchCartItem(id)?.quantity ?: 1

@@ -21,31 +21,49 @@ class DetailActivity : AppCompatActivity() {
     private val binding: ActivityDetailBinding by lazy {
         ActivityDetailBinding.inflate(layoutInflater)
     }
-    private val viewModel: DetailViewModel by lazy {
-        ViewModelProvider(
-            this,
-            DetailViewModelFactory(ProductRepositoryImpl(DefaultProducts), CartRepositoryImpl(DefaultCart)),
-        )[DetailViewModel::class.java]
-    }
+    private lateinit var viewModel: DetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, DEFAULT_PRODUCT_ID)
+        initViewModel(productId)
+        initObserver()
+        initBinding()
+        initToolBar()
+    }
 
-        viewModel.loadProductInformation(productId)
-        viewModel.loadCartItem(productId)
+    private fun initViewModel(productId: Long) {
+        viewModel =
+            ViewModelProvider(
+                this,
+                DetailViewModelFactory(
+                    ProductRepositoryImpl(DefaultProducts),
+                    CartRepositoryImpl(DefaultCart),
+                    productId,
+                ),
+            )[DetailViewModel::class.java]
+    }
 
+    private fun initObserver() {
         viewModel.addComplete.observe(this) {
             it.getContentIfNotHandled()?.let {
-                Toast.makeText(this, getString(R.string.message_add_to_cart_complete), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.message_add_to_cart_complete),
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
         }
+    }
 
+    private fun initBinding() {
         binding.detailViewModel = viewModel
         binding.lifecycleOwner = this
+    }
 
+    private fun initToolBar() {
         setSupportActionBar(binding.toolbarDetail)
         supportActionBar?.setDisplayShowTitleEnabled(false)
     }

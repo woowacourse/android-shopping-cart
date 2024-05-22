@@ -19,7 +19,7 @@ class DetailViewModelTest {
     @BeforeEach
     fun setUp() {
         detailViewModel =
-            DetailViewModel(FakeProductRepository(DummyProducts().products), FakeCartRepository(mutableListOf()))
+            DetailViewModel(FakeProductRepository(DummyProducts().products), FakeCartRepository(mutableListOf()), 1)
     }
 
     @Test
