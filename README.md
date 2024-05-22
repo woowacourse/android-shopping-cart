@@ -1,21 +1,23 @@
 # android-shopping-cart
 
 ## Step1
+
 - [x]: git hook 설정
 
 ## Domain
-- 상품 
-  - id
-  - 가격
-  - 이름
-  - 이미지 URL
+
+- 상품
+    - id
+    - 가격
+    - 이름
+    - 이미지 URL
 - 장바구니
-  - 상품들(Map, List)
-  - [x]: 상품 추가
-  - [x]: 상품 삭제
-  - [x]: 상품이 없으면 삭제가 안됨
-  - [x]: 특정 상품에 대한 가격 계산
-  - [x]: 모든 상품에 대한 가격 계산
+    - 상품들(Map, List)
+      - [x]: 상품 추가
+      - [x]: 상품 삭제
+      - [x]: 상품이 없으면 삭제가 안됨
+      - [x]: 특정 상품에 대한 가격 계산
+      - [x]: 모든 상품에 대한 가격 계산
 
 ## UI
 
@@ -23,6 +25,7 @@
 - Glide BindingAdapter 구현
 
 ### ProductList
+
 - Appbar 커스터 마이징
   - [x]: 장바구니 icon 클릭시 카트 화면으로 이동
 - [x] ProductList 화면 에서 item 클릭시 ProductDetail 화면으로 이동
@@ -33,10 +36,10 @@
 - [ ] ui test
 
 ### ProductDetail
+
 - [x] 
 
 ### ShoppingCart
-
 
 ## Data
 
@@ -46,20 +49,24 @@
 # 고민 & 공부할 내용
 
 ## Domain
+
 삭제할 상품이 없을 때 상품을 삭제하면 에러?? Result? 아무 일도 없어, Boolean 반환?
 
 ## Data
 
 현재 Cart 에서 상품들을 불러오는 과정이 매우 비효율적이다.
 
-- 1) Cart 에서 다음 데이터를 불러옴
+-
+    1) Cart 에서 다음 데이터를 불러옴
 - 2-2) 불러온 데이터가 Empty 이면 false
 - 2-2) 불러온 데이터가 있으면 true
 
 추후 개선하자! 💪
+
 ```kotlin
 fun canLoadMoreCartProducts(currentPage: Int): Boolean
 ```
+
 ## UI
 
 ### Fragment vs Activity
@@ -75,9 +82,10 @@ Fragment 가 Activity에 비해 가볍다고 생각했기 때문이다. (지세�
 
 둘 중 뭐가 좋을까?
 2번의 경우 네트워크 시간 때문에 VIew에 바로 적용 안됨
-따라서, 우리는 사용자 에게 더 좋은 경험을 시켜주기 위해 1 번 방법 선택 
+따라서, 우리는 사용자 에게 더 좋은 경험을 시켜주기 위해 1 번 방법 선택
 
 ### BindingAdapter 의 패키지 위치
+
 BindingAdapter 마다 다르겠지만
 
 아래의 BindingAdapter 는 이미지를 사용하는 곳에서 공통적으로 사용하는 녀석이다.
@@ -99,3 +107,11 @@ fun ImageView.setImage(imgUrl: String?) {
 
 actionBar: Activity 또는 FragmentActivity 에 있음..
 supportActionBar: AppCompatActivity 에만 있네
+
+## STEP 3
+
+- 상품 목록에서 장바구니에 담을 상품의 수를 선택 할 수 있다. (B마트 UX 참고)
+- 더하기 버튼을 누르면 장바구니에 상품이 추가됨과 동시에 수량 선택 버튼이 노출된다.
+    - 상품 목록의 상품 수가 변화하면 장바구니에도 반영되어야 한다.
+    - 장바구니의 상품 수가 변화하면 상품 목록에도 반영되어야 한다.
+- 상품 상세에서 장바구니에 담을 상품의 수를 선택할 수 있다.
