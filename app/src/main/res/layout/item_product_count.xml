@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="product"
+            type="woowacourse.shopping.presentation.shopping.product.ShoppingUiModel.Product" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/btn_product_add"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/shape_oval"
+            android:src="@drawable/ic_add_24"
+            isVisible = "@{!product.visible}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_count"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageButton
+            android:id="@+id/btn_minus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/white"
+            android:padding="11dp"
+            android:src="@drawable/ic_minus_24"
+            tools:visibility="visible"
+            android:visibility="@{product.visible ? View.VISIBLE: View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_count"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:visibility="@{product.visible ? View.VISIBLE: View.GONE}"
+            tools:visibility="visible"
+            android:padding="11dp"
+            android:textAppearance="@style/B1"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toStartOf="@id/btn_plus"
+            app:layout_constraintStart_toEndOf="@id/btn_minus"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
+
+        <ImageButton
+            android:id="@+id/btn_plus"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/white"
+            android:padding="11dp"
+            android:src="@drawable/ic_add_24"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_count"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</layout>
