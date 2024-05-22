@@ -33,6 +33,18 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/img_dummy_product_thumbnail" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_thumbnail"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_thumbnail"
+            app:backgroundTint="@color/white"
+            android:src=""
+            app:fabCustomSize="48dp"
+            />
+
         <TextView
             android:id="@+id/tv_product_name"
             android:layout_width="0dp"

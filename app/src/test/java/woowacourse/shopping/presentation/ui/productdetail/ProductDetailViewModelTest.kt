@@ -46,13 +46,13 @@ class ProductDetailViewModelTest {
     @Test
     fun `선택한 상품을 장바구니에 추가한다`() {
         // given
-        every { shoppingCartRepository.addOrder(any()) } just runs
+        every { shoppingCartRepository.plusOrder(any()) } just runs
 
         // when
         viewModel.onAddToCartButtonClick()
 
         // then
         val product = DummyProductList.findProductById(1).getOrThrow()
-        verify { shoppingCartRepository.addOrder(product) }
+        verify { shoppingCartRepository.plusOrder(product) }
     }
 }

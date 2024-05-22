@@ -37,7 +37,7 @@ class ProductDetailViewModel(
 
     fun onAddToCartButtonClick() {
         product.value?.let { product ->
-            shoppingCartRepository.addOrder(product)
+            shoppingCartRepository.plusOrder(product)
             showMessage(ProductDetailMessage.AddToCartSuccessMessage)
         }
     }
