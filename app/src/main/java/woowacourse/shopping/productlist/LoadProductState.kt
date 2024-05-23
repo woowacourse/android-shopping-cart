@@ -11,19 +11,19 @@ sealed class LoadProductState() : UiState {
         override val result: ProductUiModels,
         override val currentProducts: ProductUiModels,
     ) : LoadProductState(),
-        UiState.Complete<ProductUiModels>
+        UiState.CompleteWithResult<ProductUiModels>
 
     data class ChangeItemCount(
         override val result: ProductUiModel,
         override val currentProducts: ProductUiModels,
     ) : LoadProductState(),
-        UiState.Complete<ProductUiModel>
+        UiState.CompleteWithResult<ProductUiModel>
 
     data class DeleteProductFromCart(
         override val currentProducts: ProductUiModels,
         override val result: ProductUiModel,
     ) : LoadProductState(),
-        UiState.Complete<ProductUiModel>
+        UiState.CompleteWithResult<ProductUiModel>
 
     data class PlusFail(override val currentProducts: ProductUiModels) :
         LoadProductState(),
