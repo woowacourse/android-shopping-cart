@@ -43,8 +43,9 @@ class ProductDetailViewModelTest {
 
     @Test
     fun `saveCartItem으로 상품을 장바구니에 저장한다`() {
-        every { cartRepository.addData(any()) } returns Result.success(1)
-        viewModel.saveCartItem(product)
-        verify(exactly = 1) { cartRepository.addData(any()) }
+        val quantityDelta = 1
+        every { cartRepository.updateQuantity(any(), quantityDelta) } returns Result.success(1)
+        viewModel.saveCartItem(product, quantityDelta)
+        verify(exactly = 1) { cartRepository.updateQuantity(any(), quantityDelta) }
     }
 }

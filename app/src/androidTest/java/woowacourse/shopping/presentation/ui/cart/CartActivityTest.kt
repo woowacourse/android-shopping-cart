@@ -24,7 +24,7 @@ class CartActivityTest {
     @Test
     fun `상품이_5개_이하면_페이지를_이동하는_버튼이_안보인다`() {
         repeat(5) { index ->
-            DummyCartRepository.addData(dummyProduct.copy(id = index.toLong()))
+            DummyCartRepository.updateQuantity(dummyProduct.copy(id = index.toLong()))
         }
         ActivityScenario.launch(CartActivity::class.java)
         onView(ViewMatchers.withId(R.id.layout_page))
@@ -34,7 +34,7 @@ class CartActivityTest {
     @Test
     fun `상품이_5개_초과면_페이지를_이동하는_버튼이_보여진다`() {
         repeat(6) { index ->
-            DummyCartRepository.addData(dummyProduct.copy(id = index.toLong()))
+            DummyCartRepository.updateQuantity(dummyProduct.copy(id = index.toLong()))
         }
         ActivityScenario.launch(CartActivity::class.java)
         onView(ViewMatchers.withId(R.id.layout_page))
