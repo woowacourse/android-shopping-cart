@@ -7,6 +7,7 @@ import androidx.room.Transaction
 import androidx.room.Upsert
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
+import woowacourse.shopping.data.model.CartedProduct
 
 @Dao
 interface CartDao {
@@ -36,13 +37,10 @@ interface CartDao {
 
     @Transaction
     @Query("""
-        SELECT product.*, cart_item.*
-        FROM product
-        INNER JOIN cart_item ON product.id = cart_item.productId
-        LIMIT :pageSize OFFSET :page * :pageSize
+        SELECT * FROM cart_item LIMIT :pageSize OFFSET :page * :pageSize
     """)
     fun getCartedProducts(
         page: Int,
         pageSize: Int,
-    ): List<CartableProduct>
+    ): List<CartedProduct>
 }
