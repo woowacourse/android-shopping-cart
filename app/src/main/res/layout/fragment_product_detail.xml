@@ -101,13 +101,13 @@
                     android:paddingVertical="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/counter">
+                    app:layout_constraintTop_toBottomOf="@id/counter">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingBottom="8dp"
-                        android:text="마지막으로 본 상품"
+                        android:text="@string/recent_product_title"
                         android:textColor="@color/mint"
                         android:textSize="12sp"
                         android:theme="@style/B1" />

@@ -5,4 +5,10 @@
     <string name="price_title">가격</string>
     <string name="recent_product_header">최근에 본 상품</string>
     <string name="cart_empty">텅텅 비어있습니다.</string>
+    <string name="cart_prev_page"><![CDATA[<]]></string>
+    <string name="cart_next_page"><![CDATA[>]]></string>
+    <string name="recent_product_title">마지막으로 본 상품</string>
+    <string name="decrease_cart_count">-</string>
+    <string name="increase_cart_part">+</string>
+    <string name="load_more_products">더보기</string>
 </resources>

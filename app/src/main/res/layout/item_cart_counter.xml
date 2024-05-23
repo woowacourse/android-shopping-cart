@@ -41,7 +41,7 @@
                 android:layout_height="42dp"
                 android:gravity="center"
                 android:onClick="@{()->counterListener.decreaseProductCount(id)}"
-                android:text="-"
+                android:text="@string/decrease_cart_count"
                 android:textColor="@color/gray500"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -61,7 +61,7 @@
                 android:layout_height="42dp"
                 android:gravity="center"
                 android:onClick="@{()->counterListener.increaseProductCount(id)}"
-                android:text="+"
+                android:text="@string/increase_cart_part"
                 android:textColor="@color/gray500"
                 android:textSize="22sp"
                 android:textStyle="bold" />
