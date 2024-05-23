@@ -14,7 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.data.repsoitory.remote.DummyData
+import woowacourse.shopping.data.api.DummyData
 import woowacourse.shopping.data.repsoitory.remote.ProductRepositoryImpl
 import woowacourse.shopping.domain.repository.ProductRepository
 

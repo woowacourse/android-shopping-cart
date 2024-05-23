@@ -9,4 +9,6 @@ interface ProductRepository {
         page: Int,
         pageSize: Int,
     ): Result<List<Product>>
+
+    fun shutdown(): Result<Unit>
 }

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.repsoitory.remote.DummyData.CART_PRODUCTS
+import woowacourse.shopping.data.api.DummyData.CART_PRODUCTS
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
 import woowacourse.shopping.getOrAwaitValue
 import java.util.concurrent.CountDownLatch

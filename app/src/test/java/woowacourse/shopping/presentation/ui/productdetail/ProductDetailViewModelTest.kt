@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
-import woowacourse.shopping.data.repsoitory.remote.DummyData.STUB_PRODUCT_A
+import woowacourse.shopping.data.api.DummyData.STUB_PRODUCT_A
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
 import woowacourse.shopping.getOrAwaitValue
