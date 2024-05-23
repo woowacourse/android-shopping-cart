@@ -39,8 +39,10 @@ class ProductDetailFragment : Fragment() {
     }
 
     private fun setupDataBinding() {
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = productDetailViewModel
         binding.detailActionHandler = productDetailViewModel
+        binding.countActionHandler = productDetailViewModel
     }
 
     private fun observeData() {
