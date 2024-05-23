@@ -5,11 +5,10 @@ import io.kotest.matchers.shouldBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
-import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.fixtures.dateTime
 import woowacourse.shopping.fixtures.recentProductEntities
 import woowacourse.shopping.fixtures.recentProductEntity
-import woowacourse.shopping.local.dao.RecentProductDao
+import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.util.testApplicationContext
 
 class RecentProductDaoTest {
@@ -38,7 +37,7 @@ class RecentProductDaoTest {
     }
 
     @Test
-    @DisplayName("최근 본 상품을 3개 저장 하고, 최근 상품 본 상품을 불러올 때, 저장된 시간 순으로 정렬 된다.")
+    @DisplayName("최근 본 상품을 3개 저장 하고, 최근 상품 본 상품을 불러올 때, 최신 시간 순으로 정렬 된다.")
     fun `test2`() {
         // given & when
         dao.saveProduct(recentProductEntity(1L, dateTime().plusDays(1)))
@@ -46,11 +45,27 @@ class RecentProductDaoTest {
         dao.saveProduct(recentProductEntity(3L, dateTime().plusDays(2)))
         val expect =
             recentProductEntities(
-                recentProductEntity(2L, dateTime()),
-                recentProductEntity(1L, dateTime().plusDays(1)),
                 recentProductEntity(3L, dateTime().plusDays(2)),
+                recentProductEntity(1L, dateTime().plusDays(1)),
+                recentProductEntity(2L, dateTime()),
             )
         val actual = dao.loadProducts(3)
+        // then
+        actual shouldBe expect
+    }
+
+    @Test
+    @DisplayName("중복되는 id를 저장하면, 제일 나중에 저장한 값으로 덮어씌워진다")
+    fun `save_duplicate`() {
+        // given & when
+        dao.saveProduct(recentProductEntity(1L, dateTime().plusDays(1)))
+        dao.saveProduct(recentProductEntity(1L, dateTime()))
+        dao.saveProduct(recentProductEntity(1L, dateTime().plusDays(2)))
+        val expect =
+            recentProductEntities(
+                recentProductEntity(1L, dateTime().plusDays(2)),
+            )
+        val actual = dao.loadProducts(1)
         // then
         actual shouldBe expect
     }

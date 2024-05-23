@@ -8,3 +8,8 @@ interface ProductItemListener : CartItemListener {
 
     fun loadProducts()
 }
+
+fun interface RecentProductItemListener {
+
+    fun navigateToDetail(id: Long)
+}

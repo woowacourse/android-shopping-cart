@@ -1,6 +1,5 @@
 package woowacourse.shopping.data.cart
 
-import android.util.Log
 import woowacourse.shopping.data.shopping.product.ProductDataSource
 import woowacourse.shopping.domain.entity.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
@@ -22,7 +21,7 @@ class DefaultCartRepository(
         }
     }
 
-    override fun filterCarProducts(ids: List<Long>): Result<List<CartProduct>> {
+    override fun filterCartProducts(ids: List<Long>): Result<List<CartProduct>> {
         val result = cartDataSource.filterCartProducts(ids)
         return result.mapCatching {
             it.map { cartData ->

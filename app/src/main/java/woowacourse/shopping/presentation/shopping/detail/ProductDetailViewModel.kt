@@ -44,7 +44,8 @@ class ProductDetailViewModel(
     }
 
     fun loadCartProduct(id: Long) {
-        cartRepository.filterCarProducts(listOf(id)).onSuccess {
+        shoppingRepository.saveRecentProduct(id)
+        cartRepository.filterCartProducts(listOf(id)).onSuccess {
             if (it.isEmpty()) return loadProduct(id)
             _cartProduct.value = it.first().toUiModel()
         }.onFailure {
@@ -81,7 +82,7 @@ class ProductDetailViewModel(
         }
     }
 
-    fun loadRecentProduct() {
+    fun navigateToRecentProduct() {
         val recentId = _recentProduct.value?.id ?: return
         _recentProductEvent.setValue(recentId)
     }

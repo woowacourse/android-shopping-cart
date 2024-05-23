@@ -12,7 +12,9 @@ import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.base.BaseViewModelFactory
 import woowacourse.shopping.presentation.common.MutableSingleLiveData
 import woowacourse.shopping.presentation.common.SingleLiveData
+import woowacourse.shopping.presentation.shopping.detail.ProductUi
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
+import woowacourse.shopping.presentation.shopping.toUiModel
 
 class ProductListViewModel(
     private val shoppingRepository: ShoppingRepository,
@@ -20,14 +22,16 @@ class ProductListViewModel(
 ) : ViewModel(), ProductItemListener {
     private val _products = MutableLiveData<List<ShoppingUiModel>>(emptyList())
     val products: LiveData<List<ShoppingUiModel>> = _products
-    private var currentPage = 1
-
+    private val _recentProducts = MutableLiveData<List<ProductUi>>(emptyList())
+    val recentProducts: LiveData<List<ProductUi>> get() = _recentProducts
     private val _navigateToDetailEvent = MutableSingleLiveData<Long>()
     val navigateToDetailEvent: SingleLiveData<Long> = _navigateToDetailEvent
+    private var currentPage = 1
 
     init {
         loadProducts()
         loadCartProducts()
+        loadRecentProducts()
     }
 
     override fun loadProducts() {
@@ -46,7 +50,7 @@ class ProductListViewModel(
         val loadMore = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.LoadMore>()
         val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
         val ids = currentProducts.map { it.id }
-        cartRepository.filterCarProducts(ids)
+        cartRepository.filterCartProducts(ids)
             .onSuccess { newCartProducts ->
                 val newProducts = newCartProducts.map(CartProduct::toShoppingUiModel)
                 _products.value = currentProducts.map {
@@ -71,7 +75,6 @@ class ProductListViewModel(
                 else it
             }
             _products.value = updatedProducts + loadMore
-
         }.onFailure {
             // TODO : Handle error
         }
@@ -98,8 +101,13 @@ class ProductListViewModel(
     }
 
     override fun navigateToDetail(id: Long) {
-        shoppingRepository.saveRecentProduct(id)
         _navigateToDetailEvent.setValue(id)
+    }
+
+    fun loadRecentProducts() {
+        shoppingRepository.recentProducts(RECENT_PRODUCT_COUNT).onSuccess {
+            _recentProducts.value = it.map(Product::toUiModel)
+        }
     }
 
     private fun getLoadMore(page: Int): List<ShoppingUiModel.LoadMore> {
@@ -111,6 +119,7 @@ class ProductListViewModel(
     }
 
     companion object {
+        private const val RECENT_PRODUCT_COUNT = 10
         private const val PAGE_SIZE = 20
 
         fun factory(

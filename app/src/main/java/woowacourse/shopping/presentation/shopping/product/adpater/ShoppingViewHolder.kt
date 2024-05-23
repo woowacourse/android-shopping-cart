@@ -24,6 +24,7 @@ sealed class ShoppingViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     ) : ShoppingViewHolder(binding.root) {
         fun bind() {
             binding.listener = loadMoreListener
+            binding.executePendingBindings()
         }
     }
 }

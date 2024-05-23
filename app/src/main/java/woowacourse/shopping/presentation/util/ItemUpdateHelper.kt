@@ -62,11 +62,15 @@ class ItemUpdateHelper<T>(
 
         // case 3) NewList 가 더 큰 경우
         // 기존 리스트 아이템을 업데이트하고, 새로운 아이템을 추가
-        oldList.forEachIndexed { index, oldItem ->
+        newList.forEachIndexed { index, oldItem ->
             // 새로운 아이템 추가
-            if (index >= newSize) return@forEachIndexed adapter.notifyItemInserted(index)
+            if (index >= originalSize) {
+                return@forEachIndexed adapter.notifyItemInserted(index)
+            }
             // 변경된 아이템 업데이트
-            if (shouldUpdate(oldItem, newList[index])) adapter.notifyItemChanged(index)
+            if (shouldUpdate(oldItem, newList[index])) {
+                adapter.notifyItemChanged(index)
+            }
         }
     }
 
