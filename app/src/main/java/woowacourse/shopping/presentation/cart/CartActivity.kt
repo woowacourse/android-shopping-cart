@@ -23,7 +23,7 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
     }
     private lateinit var viewModel: CartViewModel
     private val adapter: CartAdapter by lazy {
-        CartAdapter(emptyList(), this, viewModel)
+        CartAdapter(this, viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +38,10 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
 
     private fun initObserver() {
         viewModel.orders.observe(this, adapter::replaceOrders)
+
+        viewModel.updateOrder.observe(this) {
+            adapter.updateOrder(it.product.id, it)
+        }
     }
 
     private fun initViewModel() {

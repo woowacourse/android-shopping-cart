@@ -8,10 +8,12 @@ import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.uistate.Order
 
 class CartAdapter(
-    private var orders: List<Order>,
     private val cartItemClickListener: CartItemClickListener,
     private val cartItemCountHandler: CartItemCountHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var orders: MutableList<Order> = mutableListOf()
+    private val ordersPosition: HashMap<Long, Int> = hashMapOf()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -27,7 +29,11 @@ class CartAdapter(
         position: Int,
     ) {
         when (holder) {
-            is CartViewHolder -> holder.bind(orders[position])
+            is CartViewHolder -> {
+                val order = orders[position]
+                holder.bind(order)
+                ordersPosition[order.product.id] = position
+            }
             else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)
         }
     }
@@ -36,9 +42,26 @@ class CartAdapter(
 
     fun replaceOrders(orders: List<Order>) {
         val currentSize = this.orders.size
-        this.orders = orders
+        this.orders = orders.toMutableList()
         notifyItemRangeRemoved(0, currentSize)
         notifyItemRangeInserted(0, this.orders.size)
+    }
+
+    fun updateOrder(
+        productId: Long,
+        order: Order,
+    ) {
+        val position = ordersPosition[productId]
+        position?.let {
+            orders[position.toInt()] = order
+            notifyItemChanged(position.toInt())
+        }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recyclerView.itemAnimator = null
+        recyclerView.setHasFixedSize(true)
     }
 
     companion object {
