@@ -9,6 +9,7 @@ import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.home.QuantityListener
+import woowacourse.shopping.presentation.util.Event
 import kotlin.concurrent.thread
 
 class CartViewModel(
@@ -93,7 +94,7 @@ class CartViewModel(
     }
 
     override fun onQuantityChange(productId: Long, quantity: Int) {
-        Log.i("TAG", "onQuantityChange: $productId, quantity: $quantity")
+        if (quantity < 0) return
     }
 }
 

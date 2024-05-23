@@ -40,11 +40,27 @@ class DetailViewModel(
         }
     }
 
-    fun addToCart(id: Long) {
+    fun addToCart(productId: Long) {
         thread {
-            cartRepository.addCartItem(CartItem(productId = id, quantity = 1))
+            val targetProduct = productRepository.fetchProduct(productId)
+            if (productInformation.value?.quantity == 0 && targetProduct.cartItem?.id != null) {
+                cartRepository.removeCartItem(targetProduct.cartItem)
+            } else {
+                if (targetProduct.cartItem?.id != null) {
+                    cartRepository.updateQuantity(targetProduct.cartItem.id, productInformation.value?.quantity ?: return@thread)
+                } else {
+                    cartRepository.addCartItem(CartItem(productId = productId))
+                }
+            }
             _message.postValue(Event(StringResource(R.string.message_add_to_cart_complete)))
         }
+    }
+
+    override fun onQuantityChange(productId: Long, quantity: Int) {
+        if (quantity < 0) return
+        _productInformation.value = productInformation.value?.copy(
+            cartItem = CartItem(productId = productId, quantity = quantity)
+        )
     }
 
     private fun loadProductInformation(id: Long) {
@@ -55,29 +71,5 @@ class DetailViewModel(
 
     companion object {
         private const val KEY_PRODUCT_ID = "key_product_id"
-    }
-
-    override fun onQuantityChange(productId: Long, quantity: Int) {
-        Log.i("TAG", "onQuantityChange: $productId $quantity")
-
-        if (quantity < 0) return
-//        thread {
-//            val cartId = if (cartItemId == null) {
-//                cartRepository.addCartItem(CartItem(productId = productId, quantity = 1))
-//            } else if (quantity == 0) {
-//                // TODO delete item
-////                cartRepository
-//                cartItemId
-//            } else {
-//                cartRepository.updateQuantity(cartItemId, quantity)
-//                cartItemId
-//            }
-//            val newItem = cartRepository.fetchCartItem(cartId)
-//            _productInformation.postValue(
-//                productInformation.value?.copy(
-//                    cartItem = newItem
-//                )
-//            )
-//        }
     }
 }
