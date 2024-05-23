@@ -16,7 +16,6 @@ import woowacourse.shopping.presentation.base.MessageProvider
 import woowacourse.shopping.presentation.base.emit
 import woowacourse.shopping.presentation.common.ProductCountHandler
 import woowacourse.shopping.presentation.ui.productdetail.ProductDetailActivity.Companion.PUT_EXTRA_PRODUCT_ID
-import woowacourse.shopping.presentation.ui.shoppingcart.UpdatedProducts
 import kotlin.concurrent.thread
 
 class ProductDetailViewModel(
@@ -45,7 +44,14 @@ class ProductDetailViewModel(
                 val carProduct = shoppingCartRepository.findCartProduct(id).getOrNull()
                 carProduct ?: product
             }.onSuccess { product ->
-                getProductHistory(product)
+                _uiState.value?.let { state ->
+                    if (state.isLastProductPage) {
+                        _uiState.postValue(state.copy(product = product, isAddToCart = false))
+                        insertProductHistory(product)
+                    } else {
+                        getProductHistory(product)
+                    }
+                }
             }
         }
     }
@@ -62,6 +68,7 @@ class ProductDetailViewModel(
                         imageUrl = product.imageUrl,
                     ).onSuccess {
                         _uiState.postValue(state.copy(isAddToCart = true))
+                        state.updatedProducts.addProduct(product.copy(quantity = product.quantity))
                         showMessage(ProductDetailMessage.AddToCartSuccessMessage)
                     }.onFailure {
                         showMessage(MessageProvider.DefaultErrorMessage)
@@ -97,10 +104,9 @@ class ProductDetailViewModel(
         _uiState.value?.let { state ->
             state.product?.let { product ->
                 if (state.isAddToCart) {
-                    val updatedProducts = UpdatedProducts(mutableMapOf(product.id to product))
                     _navigateAction.emit(
                         ProductDetailNavigateAction.NavigateToProductList(
-                            updatedProducts,
+                            state.updatedProducts,
                         ),
                     )
                 } else {
@@ -114,14 +120,18 @@ class ProductDetailViewModel(
         productHistoryRepository.getProductHistory(2).onSuccess { productHistorys ->
             if (product.id == productHistorys.first().productId) {
                 _uiState.postValue(
-                    uiState.value?.copy(product = product, productHistory = productHistorys[1]),
+                    uiState.value?.copy(
+                        product = product,
+                        productHistory = productHistorys[1],
+                        isAddToCart = false,
+                    ),
                 )
-                deleteProductHistory(product.id)
             } else {
                 _uiState.postValue(
                     uiState.value?.copy(
                         product = product,
                         productHistory = productHistorys.first(),
+                        isAddToCart = false,
                     ),
                 )
                 insertProductHistory(product)
@@ -140,15 +150,11 @@ class ProductDetailViewModel(
         }
     }
 
-    private fun deleteProductHistory(productId: Long) {
-        thread {
-            productHistoryRepository.deleteProductHistory(productId = productId)
-                .onFailure { showMessage(MessageProvider.DefaultErrorMessage) }
+    fun refresh(productId: Long) {
+        _uiState.value?.let { state ->
+            _uiState.value = state.copy(isLastProductPage = true)
+            getProduct(productId)
         }
-    }
-
-    fun navigateToProductDetail(productId: Long) {
-        _navigateAction.emit(ProductDetailNavigateAction.NavigateToProductDetail(productId))
     }
 
     companion object {

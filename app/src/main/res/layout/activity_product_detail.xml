@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="vm"
             type="woowacourse.shopping.presentation.ui.productdetail.ProductDetailViewModel" />
@@ -80,13 +82,14 @@
             app:product="@{vm.uiState.product}" />
 
         <LinearLayout
+            android:visibility="@{vm.uiState.lastProductPage == true ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="29dp"
             android:background="@drawable/bg_transparent_rounded_gray6"
             android:gravity="center_vertical"
-            android:onClick="@{() -> vm.navigateToProductDetail(vm.uiState.productHistory.productId)}"
+            android:onClick="@{() -> vm.refresh(vm.uiState.productHistory.productId)}"
             android:orientation="vertical"
             android:paddingVertical="16dp"
             android:paddingStart="18dp"

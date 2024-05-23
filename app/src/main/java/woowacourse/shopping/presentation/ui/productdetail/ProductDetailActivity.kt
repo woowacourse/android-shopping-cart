@@ -53,14 +53,6 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
                     finish()
                 }
 
-                is ProductDetailNavigateAction.NavigateToProductDetail -> {
-                    val intent =
-                        getIntent(this, navigateAction.productId).apply {
-                            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        }
-                    startActivity(intent)
-                }
-
                 is ProductDetailNavigateAction.NavigateToPrevious -> finish()
             }
         }
