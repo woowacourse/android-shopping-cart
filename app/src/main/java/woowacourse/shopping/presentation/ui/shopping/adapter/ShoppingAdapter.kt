@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.shopping
+package woowacourse.shopping.presentation.ui.shopping.adapter
 
 import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.view.LayoutInflater
@@ -8,6 +8,11 @@ import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.presentation.ui.CartQuantityActionHandler
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
+import woowacourse.shopping.presentation.ui.shopping.ShoppingViewModel
+import woowacourse.shopping.presentation.ui.shopping.viewholder.LoadMoreViewHolder
+import woowacourse.shopping.presentation.ui.shopping.viewholder.ShoppingItem
+import woowacourse.shopping.presentation.ui.shopping.viewholder.ShoppingViewHolder
 
 class ShoppingAdapter(
     private val viewModel: ShoppingViewModel,

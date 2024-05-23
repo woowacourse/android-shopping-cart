@@ -1,30 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
-            name="actionHandler"
+            name="shoppingActionHandler"
             type="woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler" />
 
         <variable
-            name="product"
-            type="woowacourse.shopping.domain.model.Product" />
+            name="cartQuantityActionHandler"
+            type="woowacourse.shopping.presentation.ui.CartQuantityActionHandler" />
+
+        <variable
+            name="productWithQuantity"
+            type="woowacourse.shopping.domain.model.ProductWithQuantity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="166dp"
         android:layout_height="wrap_content"
-        android:onClick="@{() -> actionHandler.onProductClick(product.id)}"
+        android:onClick="@{() -> shoppingActionHandler.onProductClick(productWithQuantity.product.id)}"
         android:padding="6dp">
 
         <ImageView
             android:id="@+id/iv_product"
             android:layout_width="154dp"
             android:layout_height="154dp"
-            app:imageUrl="@{product.imageUrl}"
+            app:imageUrl="@{productWithQuantity.product.imageUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.25"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,16 +44,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:visibility="gone"
+            android:visibility="@{productWithQuantity.quantity > 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_product"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            bind:actionHandler="@{cartQuantityActionHandler}"
+            bind:productWithQuantity="@{productWithQuantity}" />
 
         <ImageView
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:id="@+id/iv_plus"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="8dp"
             android:src="@drawable/ic_plus"
-            android:layout_margin="8dp"
+            android:onClick="@{() -> shoppingActionHandler.onAddToCartButtonClick(productWithQuantity.product.id)}"
+            android:visibility="@{productWithQuantity.quantity == 0 ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_product"
             app:layout_constraintEnd_toEndOf="@+id/iv_product" />
 
@@ -57,7 +70,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="6dp"
-            android:text="@{product.name}"
+            android:text="@{productWithQuantity.product.name}"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -73,10 +86,10 @@
             android:layout_margin="6dp"
             android:ellipsize="end"
             android:maxLines="1"
-            app:price="@{product.price}"
             android:textSize="16dp"
             app:layout_constraintStart_toStartOf="@+id/tv_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_name"
+            app:price="@{productWithQuantity.product.price}"
             tools:text="10,000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

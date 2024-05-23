@@ -1,9 +1,10 @@
-package woowacourse.shopping.presentation.ui.shopping
+package woowacourse.shopping.presentation.ui.shopping.viewholder
 
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.presentation.ui.CartQuantityActionHandler
+import woowacourse.shopping.presentation.ui.shopping.ShoppingActionHandler
 
 class ShoppingViewHolder(
     private val binding: ItemProductBinding,

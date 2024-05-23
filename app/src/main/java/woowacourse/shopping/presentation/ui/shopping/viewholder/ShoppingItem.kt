@@ -1,4 +1,4 @@
-package woowacourse.shopping.presentation.ui.shopping
+package woowacourse.shopping.presentation.ui.shopping.viewholder
 
 import woowacourse.shopping.domain.model.ProductWithQuantity
 
