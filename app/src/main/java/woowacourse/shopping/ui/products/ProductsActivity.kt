@@ -38,7 +38,7 @@ class ProductsActivity : AppCompatActivity() {
                 val changedProductId =
                     result.data?.getLongExtra(
                         PRODUCT_ID_KEY,
-                        PRODUCT_ID_DEFAULT_VALUE
+                        PRODUCT_ID_DEFAULT_VALUE,
                     ) ?: return@registerForActivityResult
                 viewModel.loadProductUiModel(changedProductId)
             }

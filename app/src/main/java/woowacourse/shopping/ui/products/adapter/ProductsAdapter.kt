@@ -8,9 +8,9 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.databinding.ItemRecentProductsBinding
 import woowacourse.shopping.ui.products.ProductUiModel
 import woowacourse.shopping.ui.products.ProductsView
-import woowacourse.shopping.ui.products.recent.RecentProductUiModel
 import woowacourse.shopping.ui.products.RecentProductsUiModel
 import woowacourse.shopping.ui.products.recent.OnClickRecentProductItem
+import woowacourse.shopping.ui.products.recent.RecentProductUiModel
 import woowacourse.shopping.ui.products.recent.RecentProductsViewHolder
 import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
 import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
@@ -48,15 +48,17 @@ class ProductsAdapter(
         position: Int,
     ) {
         when (productsViews[position].viewType) {
-            ProductsViewType.RECENT_PRODUCTS -> (holder as RecentProductsViewHolder).bind(
-                (productsViews[position] as RecentProductsUiModel).recentProductUiModels,
-            )
-            ProductsViewType.PRODUCTS_UI_MODEL -> (holder as ProductsViewHolder).bind(
-                productsViews[position] as ProductUiModel,
-                onClickProductItem,
-                onIncreaseProductQuantity,
-                onDecreaseProductQuantity,
-            )
+            ProductsViewType.RECENT_PRODUCTS ->
+                (holder as RecentProductsViewHolder).bind(
+                    (productsViews[position] as RecentProductsUiModel).recentProductUiModels,
+                )
+            ProductsViewType.PRODUCTS_UI_MODEL ->
+                (holder as ProductsViewHolder).bind(
+                    productsViews[position] as ProductUiModel,
+                    onClickProductItem,
+                    onIncreaseProductQuantity,
+                    onDecreaseProductQuantity,
+                )
         }
     }
 

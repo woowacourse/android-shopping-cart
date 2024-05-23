@@ -1,7 +1,6 @@
 package woowacourse.shopping.ui.cart
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +8,6 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.ui.cart.adapter.CartAdapter
-import woowacourse.shopping.ui.products.ProductsActivity
 
 class CartActivity : AppCompatActivity() {
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }

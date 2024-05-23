@@ -5,10 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 
-class RecentProductsAdapter(private val onClickRecentProductItem: OnClickRecentProductItem) : RecyclerView.Adapter<RecentProductViewHolder>() {
+class RecentProductsAdapter(private val onClickRecentProductItem: OnClickRecentProductItem) :
+    RecyclerView.Adapter<RecentProductViewHolder>() {
     private var recentProductUiModels: MutableList<RecentProductUiModel> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): RecentProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemRecentProductBinding.inflate(inflater, parent, false)
         return RecentProductViewHolder(binding)
@@ -16,7 +20,10 @@ class RecentProductsAdapter(private val onClickRecentProductItem: OnClickRecentP
 
     override fun getItemCount(): Int = recentProductUiModels.size
 
-    override fun onBindViewHolder(holder: RecentProductViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecentProductViewHolder,
+        position: Int,
+    ) {
         holder.bind(recentProductUiModels[position], onClickRecentProductItem)
     }
 
@@ -34,7 +41,8 @@ class RecentProductsAdapter(private val onClickRecentProductItem: OnClickRecentP
         newRecentProducts: List<RecentProductUiModel>,
         startPosition: Int,
     ) {
-        recentProductUiModels.addAll(newRecentProducts.subList(startPosition, newRecentProducts.size))
+        val insertedRecentProduct = newRecentProducts.subList(startPosition, newRecentProducts.size)
+        recentProductUiModels.addAll(insertedRecentProduct)
         notifyItemRangeInserted(startPosition, newRecentProducts.size - recentProductUiModels.size)
     }
 
