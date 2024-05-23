@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.recent.DummyRecentProductRepository
 import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
@@ -23,6 +24,7 @@ class ProductsActivity : AppCompatActivity() {
     private val viewModel by viewModels<ProductsViewModel> {
         ProductsViewModelFactory(
             ProductRepository.getInstance(),
+            DummyRecentProductRepository,
             CartRepository.getInstance(),
         )
     }
@@ -84,12 +86,14 @@ class ProductsActivity : AppCompatActivity() {
                 spanSizeLookup = ProductsSpanSizeLookUp(adapter)
             }
         binding.rvProducts.adapter = adapter
-        adapter.addRecentProducts()
         viewModel.productUiModels.observe(this) {
             adapter.insertProducts(it)
         }
         viewModel.changedProductQuantity.observe(this) {
             adapter.replaceProduct(it)
+        }
+        viewModel.recentProducts.observe(this) {
+            adapter.addRecentProducts(it ?: return@observe)
         }
     }
 

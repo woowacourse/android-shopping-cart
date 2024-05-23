@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 
 class RecentProductsAdapter : RecyclerView.Adapter<RecentProductViewHolder>() {
-    private val recentProductUiModels = mutableListOf<RecentProductUiModel>()
+    private var recentProductUiModels: List<RecentProductUiModel> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,7 +21,7 @@ class RecentProductsAdapter : RecyclerView.Adapter<RecentProductViewHolder>() {
     }
 
     fun insertRecentProduct(recentProducts: List<RecentProductUiModel>) {
-        recentProductUiModels.addAll(recentProducts)
+        recentProductUiModels = recentProducts
         notifyDataSetChanged()
     }
 }

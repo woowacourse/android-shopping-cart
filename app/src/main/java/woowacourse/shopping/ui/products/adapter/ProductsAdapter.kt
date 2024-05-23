@@ -74,34 +74,14 @@ class ProductsAdapter(
 //        notifyItemRangeChanged(positionStart, itemCount)
     }
 
-    fun addRecentProducts() {
-        productsViews.add(
-            0, RecentProductsUiModel(
-                listOf(
-                    RecentProductUiModel(
-                        "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/27/41/8412707034127_1.png",
-                        "마리오 그린올리브 300g"
-                    ),
-                    RecentProductUiModel(
-                        "https://images.emarteveryday.co.kr/images/product/8801392067167/vSYMPCA3qqbLJjhv.png",
-                        "비비고 통새우 만두 200g"
-                    ),
-                    RecentProductUiModel(
-                        "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/97/12/2500000351297_1.png",
-                        "스테비아 방울토마토 500g"
-                    ),
-                    RecentProductUiModel(
-                        "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/27/41/8412707034127_1.png",
-                        "마리오 그린올리브 300g"
-                    ),
-                    RecentProductUiModel(
-                        "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/27/41/8412707034127_1.png",
-                        "마리오 그린올리브 300g"
-                    ),
-                )
-            )
-        )
-        notifyItemInserted(0)
+    fun addRecentProducts(recentProductUiModels: List<RecentProductUiModel>) {
+        if (ProductsViewType.from(getItemViewType(RECENT_PRODUCTS_INDEX)) == ProductsViewType.RECENT_PRODUCTS) {
+            productsViews[RECENT_PRODUCTS_INDEX] = RecentProductsUiModel(recentProductUiModels)
+            notifyItemChanged(RECENT_PRODUCTS_INDEX)
+            return
+        }
+        productsViews.add(RECENT_PRODUCTS_INDEX, RecentProductsUiModel(recentProductUiModels))
+        notifyItemInserted(RECENT_PRODUCTS_INDEX)
     }
 
     fun replaceProduct(replacedProductUiModel: ProductUiModel) {
@@ -112,5 +92,9 @@ class ProductsAdapter(
             }
         productsViews[replacedProductPosition] = replacedProductUiModel
         notifyItemChanged(replacedProductPosition)
+    }
+
+    companion object {
+        private const val RECENT_PRODUCTS_INDEX = 0
     }
 }

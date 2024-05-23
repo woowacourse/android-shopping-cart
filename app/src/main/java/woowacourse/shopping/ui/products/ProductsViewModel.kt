@@ -1,16 +1,21 @@
 package woowacourse.shopping.ui.products
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.data.recent.RecentProductRepository
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.RecentProduct
+import woowacourse.shopping.ui.products.recent.RecentProductUiModel
 import kotlin.math.ceil
 
 class ProductsViewModel(
     private val productRepository: ProductRepository,
+    private val recentProductRepository: RecentProductRepository,
     private val cartRepository: CartRepository,
 ) : ViewModel() {
     private val _productUiModels = MutableLiveData<MutableList<ProductUiModel>>(mutableListOf())
@@ -27,6 +32,11 @@ class ProductsViewModel(
 
     val cartTotalCount: LiveData<Int> =
         _productUiModels.map { it.fold(0) { acc, productUiModel -> acc + productUiModel.quantity.count } }
+
+    val recentProducts: LiveData<List<RecentProductUiModel>?> =
+        _productUiModels.map {
+            recentProductRepository.findRecentProducts().toRecentProductUiModels().ifEmpty { return@map null }
+        }
 
     init {
         loadPage()
@@ -51,6 +61,13 @@ class ProductsViewModel(
             runCatching { cartRepository.find(product.id) }
                 .map { ProductUiModel.from(product, it.quantity) }
                 .getOrElse { ProductUiModel.from(product) }
+        }
+    }
+
+    private fun List<RecentProduct>.toRecentProductUiModels(): List<RecentProductUiModel> {
+        return map {
+            val product = productRepository.find(it.productId)
+            RecentProductUiModel(product.imageUrl, product.title)
         }
     }
 
