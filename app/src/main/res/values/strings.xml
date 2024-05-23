@@ -12,4 +12,5 @@
     <string name="minus">−</string>
     <string name="plus">+</string>
     <string name="recent_product_comment">최근 본 상품</string>
+    <string name="last_seen_product_comment">마지막으로 본 상품</string>
 </resources>
