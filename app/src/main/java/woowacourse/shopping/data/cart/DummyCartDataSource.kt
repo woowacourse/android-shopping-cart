@@ -1,19 +1,22 @@
 package woowacourse.shopping.data.cart
 
 import android.content.Context
-import woowacourse.shopping.data.shopping.DummyShoppingDataSource
-import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.CartProduct
 import woowacourse.shopping.domain.Product
 
 class DummyCartDataSource(context: Context) : CartDataSource {
     private val cartDao = CartDatabase.getInstance(context).dao()
     private val PRODUCT_AMOUNT = 5
-    private var cart =
-        Cart(
-            DummyShoppingDataSource.products.take(30),
-        )
-    private val products: List<CartProduct> get() = cart.cartProducts()
+    private lateinit var cart: List<CartEntity>
+    private val products: List<CartProduct> get() = cart.map { it.toCartItem() }
+
+    init {
+        val thread = Thread {
+            cart = cartDao.findAllCartItem()
+        }
+        thread.start()
+        thread.join()
+    }
 
     override fun loadCartProducts(currentPage: Int): List<CartProduct> {
         if ((currentPage - 1) * PRODUCT_AMOUNT >= products.size) return emptyList()
@@ -22,13 +25,25 @@ class DummyCartDataSource(context: Context) : CartDataSource {
         return products.subList(startIndex, endIndex)
     }
 
-    override fun addCartProduct(product: Product): Long? {
-        cart = cart.add(product)
+    override fun addCartProduct(product: Product, count: Int): Long? {
+        val thread = Thread {
+            val entity = CartEntity.makeCartEntity(product, count)
+            cartDao.saveItemCart(entity)
+            cart = cartDao.findAllCartItem()
+        }
+        thread.start()
+        thread.join()
         return product.id
     }
 
     override fun deleteCartProduct(product: Product): Long? {
-        cart = cart.remove(product)
+        val thread = Thread {
+            cartDao.clearCartItemById(product.id)
+            cart = cartDao.findAllCartItem()
+        }
+        thread.start()
+        thread.join()
+
         return product.id
     }
 

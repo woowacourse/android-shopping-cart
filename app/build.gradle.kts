@@ -61,6 +61,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.squareup.leakcanary:leakcanary-android:2.7")
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation ("com.google.code.gson:gson:2.8.6")
     kapt("androidx.room:room-compiler:2.6.1")
     // third-party
     implementation("com.github.bumptech.glide:glide:4.14.2")

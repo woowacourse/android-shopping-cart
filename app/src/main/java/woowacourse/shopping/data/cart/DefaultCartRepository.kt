@@ -14,9 +14,9 @@ class DefaultCartRepository(
         return cartDataSource.loadCartProducts(currentPage)
     }
 
-    override fun addCartProduct(productId: Long): Long? {
+    override fun addCartProduct(productId: Long, count: Int): Long? {
         val product = shoppingDataSource.productById(productId) ?: return null
-        return cartDataSource.addCartProduct(product)
+        return cartDataSource.addCartProduct(product, count)
     }
 
     override fun deleteCartProduct(productId: Long): Long? {

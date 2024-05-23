@@ -15,8 +15,8 @@ interface CarDao {
     @Query("DELETE FROM cart")
     fun clearAllCartItems()
 
-    @Query("DELETE FROM cart WHERE id =:id")
-    fun clearCartItemById(id: Long)
+    @Query("DELETE FROM cart WHERE productId =:productId")
+    fun clearCartItemById(productId: Long)
 
     @Query("SELECT * FROM cart WHERE productId = :productId")
     fun findCartItemById(productId: Long): CartEntity?

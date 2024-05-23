@@ -6,7 +6,7 @@ import woowacourse.shopping.domain.Product
 interface CartDataSource {
     fun loadCartProducts(currentPage: Int): List<CartProduct>
 
-    fun addCartProduct(product: Product): Long?
+    fun addCartProduct(product: Product, count: Int): Long?
 
     fun deleteCartProduct(product: Product): Long?
 
