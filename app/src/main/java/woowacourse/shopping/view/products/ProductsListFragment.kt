@@ -56,6 +56,7 @@ class ProductsListFragment : Fragment() {
                 productListActionHandler = productListViewModel,
                 countActionHandler = productListViewModel,
             )
+        binding.rvProducts.itemAnimator?.changeDuration = 0
         binding.rvProducts.adapter = adapter
         val layoutManager = GridLayoutManager(context, 2)
         layoutManager.spanSizeLookup =

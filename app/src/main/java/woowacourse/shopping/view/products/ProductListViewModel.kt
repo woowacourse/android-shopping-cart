@@ -1,14 +1,15 @@
 package woowacourse.shopping.view.products
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.ProductWithQuantity
+import woowacourse.shopping.domain.model.decrementQuantity
 import woowacourse.shopping.domain.model.incrementQuantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.Event
 
@@ -42,7 +43,7 @@ class ProductListViewModel(
 
         val newProductsWithQuantity =
             pagingProducts.map { product ->
-                val quantity = cartMap[product.id]?.quantity ?: 0
+                val quantity = cartMap[product.id]?.quantity ?: DEFAULT_QUANTITY
                 ProductWithQuantity(product, quantity)
             }
 
@@ -67,20 +68,26 @@ class ProductListViewModel(
         val updatedCartItem: CartItem
         if (cartItem == null) {
             val product = productRepository.getProduct(id)
-            val newId = cartRepository.addCartItem(product, 1)
-            updatedCartItem = CartItem(newId, product, 1)
+            val newId = cartRepository.addCartItem(product, INCREMENT_VALUE)
+            updatedCartItem = CartItem(newId, product, INCREMENT_VALUE)
         } else {
-            updatedCartItem = cartItem.incrementQuantity(1)
+            updatedCartItem = cartItem.incrementQuantity(INCREMENT_VALUE)
             cartRepository.updateCartItem(updatedCartItem)
         }
         _updatedCountInfo.value = ProductWithQuantity(updatedCartItem.product, updatedCartItem.quantity)
     }
 
     override fun onDecreaseQuantityButtonClicked(id: Long) {
-        Log.d("yenny", "id: $id -")
+        val cartItem = cartRepository.findCartItemWithProductId(id) ?: throw NoSuchDataException()
+        val updatedCartItem = cartItem.decrementQuantity(DECREMENT_VALUE)
+        cartRepository.updateCartItem(updatedCartItem)
+        _updatedCountInfo.value = ProductWithQuantity(updatedCartItem.product, updatedCartItem.quantity)
     }
 
     companion object {
         const val PRODUCT_LOAD_PAGING_SIZE = 20
+        const val DEFAULT_QUANTITY = 0
+        const val INCREMENT_VALUE = 1
+        const val DECREMENT_VALUE = 1
     }
 }
