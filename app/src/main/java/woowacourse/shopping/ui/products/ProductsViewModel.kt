@@ -27,15 +27,13 @@ class ProductsViewModel(
     private var page: Int = INITIALIZE_PAGE
     private var maxPage: Int = INITIALIZE_PAGE
 
-    private val _changedProductQuantity = MutableLiveData<ProductUiModel>()
-    val changedProductQuantity: LiveData<ProductUiModel> get() = _changedProductQuantity
-
     val cartTotalCount: LiveData<Int> =
         _productUiModels.map { it.fold(0) { acc, productUiModel -> acc + productUiModel.quantity.count } }
 
     val recentProducts: LiveData<List<RecentProductUiModel>?> =
         _productUiModels.map {
-            recentProductRepository.findRecentProducts().toRecentProductUiModels().ifEmpty { return@map null }
+            recentProductRepository.findRecentProducts().toRecentProductUiModels()
+                .ifEmpty { return@map null }
         }
 
     init {
@@ -52,7 +50,8 @@ class ProductsViewModel(
     }
 
     fun updateProducts() {
-        val products = _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
+        val products =
+            _productUiModels.value?.map { productRepository.find(it.productId) } ?: return
         _productUiModels.value = products.toProductsUiModel().toMutableList()
     }
 
@@ -86,7 +85,6 @@ class ProductsViewModel(
         cartRepository.decreaseQuantity(productId)
         var changedQuantity = productUiModel.quantity
         val new = productUiModel.copy(quantity = --changedQuantity)
-        _changedProductQuantity.value = new
         _productUiModels.value =
             _productUiModels.value?.apply {
                 val index = indexOfFirst { it.productId == productId }
@@ -99,7 +97,6 @@ class ProductsViewModel(
         cartRepository.increaseQuantity(productId)
         var changedQuantity = productUiModel.quantity
         val newProductUiModel = productUiModel.copy(quantity = ++changedQuantity)
-        _changedProductQuantity.value = newProductUiModel
         _productUiModels.value =
             _productUiModels.value?.apply {
                 val index = indexOfFirst { it.productId == productId }
@@ -108,6 +105,7 @@ class ProductsViewModel(
     }
 
     fun loadProductUiModel(productId: Long) {
+        Log.e("TEST", "$productId")
         val product = productRepository.find(productId)
         val productUiModel =
             runCatching { cartRepository.find(product.id) }

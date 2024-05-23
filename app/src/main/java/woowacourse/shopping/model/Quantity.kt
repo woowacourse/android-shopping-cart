@@ -1,6 +1,6 @@
 package woowacourse.shopping.model
 
-class Quantity(val count: Int = DEFAULT_VALUE) {
+data class Quantity(val count: Int = DEFAULT_VALUE) {
     operator fun inc(): Quantity {
         if (count == MAX_VALUE) return this
         return Quantity(count + 1)

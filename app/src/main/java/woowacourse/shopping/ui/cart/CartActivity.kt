@@ -53,8 +53,7 @@ class CartActivity : AppCompatActivity() {
 
         viewModel.productUiModels.observe(this) {
             adapter.changeCartItems(it)
-            val resultIntent = Intent().putExtra(ProductsActivity.IS_CHANGED_CART_KEY, true)
-            setResult(Activity.RESULT_OK, resultIntent)
+            setResult(Activity.RESULT_OK)
         }
     }
 }

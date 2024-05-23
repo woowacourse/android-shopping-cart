@@ -50,10 +50,6 @@ class ProductsActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult(),
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val isChangedCart =
-                    result.data?.getBooleanExtra(IS_CHANGED_CART_KEY, IS_CHANGED_CART_BOOLEAN)
-                        ?: return@registerForActivityResult
-                if (!isChangedCart) return@registerForActivityResult
                 viewModel.updateProducts()
             }
         }
@@ -87,10 +83,7 @@ class ProductsActivity : AppCompatActivity() {
             }
         binding.rvProducts.adapter = adapter
         viewModel.productUiModels.observe(this) {
-            adapter.insertProducts(it)
-        }
-        viewModel.changedProductQuantity.observe(this) {
-            adapter.replaceProduct(it)
+            adapter.updateProductUiModels(it)
         }
         viewModel.recentProducts.observe(this) {
             adapter.addRecentProducts(it ?: return@observe)
@@ -134,8 +127,5 @@ class ProductsActivity : AppCompatActivity() {
 
         const val CHANGED_PRODUCT_ID_KEY = "changed_product_id_key"
         private const val CHANGED_PRODUCT_ID_DEFAULT_VALUE = -1L
-
-        const val IS_CHANGED_CART_KEY = "is_changed_cart_key"
-        private const val IS_CHANGED_CART_BOOLEAN = false
     }
 }

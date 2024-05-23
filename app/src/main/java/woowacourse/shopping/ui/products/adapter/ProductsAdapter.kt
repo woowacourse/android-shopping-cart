@@ -64,14 +64,29 @@ class ProductsAdapter(
 
     override fun getItemViewType(position: Int): Int = productsViews[position].viewType.type
 
-    fun insertProducts(insertedProductUiModel: List<ProductUiModel>) {
-        productsViews.addAll(insertedProductUiModel)
-        notifyDataSetChanged()
-//        val positionStart = insertedProductUiModel.size
-//        val itemCount = insertedProductUiModel.size - productUiModels.size
-//
-//        productUiModels.addAll(insertedProductUiModel.subList(productUiModels.size, insertedProductUiModel.size))
-//        notifyItemRangeChanged(positionStart, itemCount)
+    fun updateProductUiModels(updatedProductUiModel: List<ProductUiModel>) {
+        val productUiModels = productsViews.filterIsInstance<ProductUiModel>()
+        val newProductUiModels = updatedProductUiModel.subtract(productUiModels.toSet())
+
+        if (productUiModels.size < updatedProductUiModel.size) {
+            insertRangeProductUiModels(newProductUiModels)
+            return
+        }
+
+        if (productUiModels.size == updatedProductUiModel.size) {
+            newProductUiModels.forEach { changeProductUiModel(it) }
+        }
+    }
+
+    private fun insertRangeProductUiModels(newProductUiModels: Set<ProductUiModel>) {
+        productsViews.addAll(newProductUiModels)
+        notifyItemRangeInserted(productsViews.size, newProductUiModels.size)
+    }
+
+    private fun changeProductUiModel(newProductUiModel: ProductUiModel) {
+        val position = productsViews.indexOfFirst { it is ProductUiModel && it.productId == newProductUiModel.productId }
+        productsViews[position] = newProductUiModel
+        notifyItemChanged(position)
     }
 
     fun addRecentProducts(recentProductUiModels: List<RecentProductUiModel>) {
@@ -82,16 +97,6 @@ class ProductsAdapter(
         }
         productsViews.add(RECENT_PRODUCTS_INDEX, RecentProductsUiModel(recentProductUiModels))
         notifyItemInserted(RECENT_PRODUCTS_INDEX)
-    }
-
-    fun replaceProduct(replacedProductUiModel: ProductUiModel) {
-        val replacedProductPosition =
-            productsViews.indexOfFirst {
-                if (it !is ProductUiModel) return@indexOfFirst false
-                it.productId == replacedProductUiModel.productId
-            }
-        productsViews[replacedProductPosition] = replacedProductUiModel
-        notifyItemChanged(replacedProductPosition)
     }
 
     companion object {
