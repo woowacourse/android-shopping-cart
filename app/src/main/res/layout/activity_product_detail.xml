@@ -8,6 +8,10 @@
         <variable
             name="viewModel"
             type="woowacourse.shopping.ui.detail.ProductDetailViewModel" />
+
+        <variable
+            name="onClickLastRecentProductListener"
+            type="woowacourse.shopping.ui.detail.OnClickLastRecentProductListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,10 +94,12 @@
             android:layout_marginHorizontal="18dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape_border_4"
+            android:onClick="@{() -> onClickLastRecentProductListener.onClick(viewModel.lastRecentProduct.productId)}"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_add_cart_quantity"
-            app:visibility="@{viewModel.lastRecentProduct.productId != viewModel.productUiModel.productId}">
+            app:visibility="@{viewModel.isVisibleLastRecentProduct}">
 
             <TextView
                 android:id="@+id/iv_product_detail_last_recent_product"

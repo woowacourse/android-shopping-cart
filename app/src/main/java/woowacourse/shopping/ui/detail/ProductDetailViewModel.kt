@@ -41,7 +41,10 @@ class ProductDetailViewModel(
     private lateinit var product: Product
 
     private val _lastRecentProduct = MutableLiveData<LastRecentProductUiModel>()
-     val lastRecentProduct: LiveData<LastRecentProductUiModel> get() = _lastRecentProduct
+    val lastRecentProduct: LiveData<LastRecentProductUiModel> get() = _lastRecentProduct
+
+    val isVisibleLastRecentProduct: LiveData<Boolean> =
+        _lastRecentProduct.map { it.productId != _productUiModel.value?.productId }
 
     init {
         loadProduct()

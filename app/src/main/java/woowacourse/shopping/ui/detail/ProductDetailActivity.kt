@@ -34,6 +34,12 @@ class ProductDetailActivity : AppCompatActivity() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.onClickLastRecentProductListener =
+            OnClickLastRecentProductListener { productId ->
+                val intent = newIntent(this@ProductDetailActivity, productId)
+                startActivity(intent)
+                finish()
+            }
         initializeView()
         setRequireActivityResult()
     }
