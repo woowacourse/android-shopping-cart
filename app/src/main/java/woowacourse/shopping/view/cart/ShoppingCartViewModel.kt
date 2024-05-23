@@ -4,8 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.domain.model.decrementQuantity
+import woowacourse.shopping.domain.model.incrementQuantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.utils.NoSuchDataException
 import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.Event
 import kotlin.concurrent.thread
@@ -33,6 +36,9 @@ class ShoppingCartViewModel(
 
     private val _navigateToDetail = MutableLiveData<Event<Long>>()
     val navigateToDetail: LiveData<Event<Long>> get() = _navigateToDetail
+
+    private val _updatedCountInfo: MutableLiveData<CartItem> = MutableLiveData()
+    val updatedCountInfo: LiveData<CartItem> get() = _updatedCountInfo
 
     init {
         loadCartItems()
@@ -100,11 +106,19 @@ class ShoppingCartViewModel(
     }
 
     override fun onIncreaseQuantityButtonClicked(id: Long) {
-        TODO("Not yet implemented")
+        val cartItem = cartRepository.findCartItemWithCartItemId(id) ?: throw NoSuchDataException()
+        val updatedCartItem = cartItem.incrementQuantity(INCREMENT_VALUE)
+        cartRepository.updateCartItem(updatedCartItem)
+        _updatedCountInfo.value = updatedCartItem
     }
 
     override fun onDecreaseQuantityButtonClicked(id: Long) {
-        TODO("Not yet implemented")
+        val cartItem = cartRepository.findCartItemWithCartItemId(id) ?: throw NoSuchDataException()
+        if (cartItem.quantity > 1) {
+            val updatedCartItem = cartItem.decrementQuantity(DECREMENT_VALUE)
+            cartRepository.updateCartItem(updatedCartItem)
+            _updatedCountInfo.value = updatedCartItem
+        }
     }
 
     companion object {
@@ -112,5 +126,7 @@ class ShoppingCartViewModel(
         private const val CART_ITEM_LOAD_PAGING_SIZE = 5
         const val CART_ITEM_PAGE_SIZE = 3
         private const val MIN_PAGE_COUNT = 1
+        const val INCREMENT_VALUE = 1
+        const val DECREMENT_VALUE = 1
     }
 }

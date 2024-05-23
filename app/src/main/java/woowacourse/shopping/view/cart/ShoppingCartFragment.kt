@@ -51,8 +51,10 @@ class ShoppingCartFragment : Fragment() {
         adapter =
             ShoppingCartAdapter(
                 shoppingCartActionHandler = shoppingCartViewModel,
+                countActionHandler = shoppingCartViewModel,
             )
         binding.rvShoppingCart.adapter = adapter
+        binding.rvShoppingCart.itemAnimator?.changeDuration = 0
     }
 
     private fun observeData() {
@@ -66,6 +68,10 @@ class ShoppingCartFragment : Fragment() {
 
         shoppingCartViewModel.navigateToDetail.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { navigateToDetail(it) }
+        }
+
+        shoppingCartViewModel.updatedCountInfo.observe(viewLifecycleOwner) {
+            adapter.updateCartItem(it)
         }
     }
 
@@ -83,9 +89,5 @@ class ShoppingCartFragment : Fragment() {
             .add(R.id.fragment_container, nextFragment)
             .addToBackStack(null)
             .commit()
-    }
-
-    companion object {
-        const val DEFAULT_ITEM_SIZE = 0
     }
 }

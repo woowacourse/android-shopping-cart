@@ -6,12 +6,16 @@
     <data>
 
         <variable
+            name="cartItem"
+            type="woowacourse.shopping.domain.model.CartItem" />
+
+        <variable
             name="shoppingCartActionHandler"
             type="woowacourse.shopping.view.cart.ShoppingCartActionHandler" />
 
         <variable
-            name="cartItem"
-            type="woowacourse.shopping.domain.model.CartItem" />
+            name="countActionHandler"
+            type="woowacourse.shopping.view.CountActionHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,23 +59,39 @@
         <ImageView
             android:id="@+id/iv_cart_item_image"
             imageUrl="@{cartItem.product.imageUrl}"
-            android:layout_width="136dp"
-            android:layout_height="72dp"
+            android:layout_width="140dp"
+            android:layout_height="80dp"
             android:layout_marginVertical="20dp"
             android:layout_marginStart="12dp"
+            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_cart_item_name" />
+            app:layout_constraintTop_toBottomOf="@id/tv_cart_item_name"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <include
+            android:id="@+id/count_view"
+            layout="@layout/count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            app:id="@{cartItem.id}"
+            app:count="@{cartItem.quantity}"
+            app:countActionHandler="@{countActionHandler}"
+            app:layout_constraintBottom_toTopOf="@id/tv_cart_item_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_cart_item_image"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
 
         <TextView
             android:id="@+id/tv_cart_item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:text="@{@string/formatted_price(cartItem.product.price)}"
+            android:text="@{@string/formatted_price(cartItem.price)}"
             android:textColor="@color/gray_5"
             app:layout_constraintBottom_toBottomOf="@id/iv_cart_item_image"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/count_view"
+            app:layout_constraintTop_toBottomOf="@id/count_view"
             tools:text="10,000원" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

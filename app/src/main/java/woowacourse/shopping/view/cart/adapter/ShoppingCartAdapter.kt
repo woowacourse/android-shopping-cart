@@ -5,12 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemShoppingCartBinding
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.cart.ShoppingCartActionHandler
 import woowacourse.shopping.view.cart.ShoppingCartViewModel
 import woowacourse.shopping.view.cart.adapter.viewholder.ShoppingCartViewHolder
 
 class ShoppingCartAdapter(
     private val shoppingCartActionHandler: ShoppingCartActionHandler,
+    private val countActionHandler: CountActionHandler,
 ) : RecyclerView.Adapter<ShoppingCartViewHolder>() {
     private var cartItems: List<CartItem> = emptyList()
 
@@ -20,7 +22,7 @@ class ShoppingCartAdapter(
     ): ShoppingCartViewHolder {
         val view =
             ItemShoppingCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShoppingCartViewHolder(view, shoppingCartActionHandler)
+        return ShoppingCartViewHolder(view, shoppingCartActionHandler, countActionHandler)
     }
 
     override fun getItemCount(): Int {
@@ -45,5 +47,16 @@ class ShoppingCartAdapter(
             )
         }
         notifyItemRangeChanged(0, cartItems.size)
+    }
+
+    fun updateCartItem(cartItem: CartItem) {
+        val index = cartItems.indexOfFirst { it.id == cartItem.id }
+        if (index != -1) {
+            cartItems =
+                cartItems.toMutableList().apply {
+                    set(index, cartItem)
+                }
+            notifyItemChanged(index)
+        }
     }
 }

@@ -64,6 +64,13 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         return cartItems
     }
 
+    override fun findCartItemWithCartItemId(cartItemId: Long): CartItem? {
+        var cartItem: CartItem? = null
+        thread { cartItem = cartItemDao.findCartItemById(cartItemId)?.toCartItem() }.join()
+
+        return cartItem
+    }
+
     companion object {
         const val ERROR_SAVE_DATA_ID = -1L
     }

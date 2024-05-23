@@ -26,4 +26,6 @@ interface CartRepository {
     fun updateCartItem(updatedItem: CartItem)
 
     fun loadAllCartItems(): List<CartItem>
+
+    fun findCartItemWithCartItemId(cartItemId: Long): CartItem?
 }
