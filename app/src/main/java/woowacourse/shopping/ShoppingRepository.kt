@@ -31,4 +31,6 @@ interface ShoppingRepository {
     fun increasedCartItem(productId: Long): QuantityUpdate
 
     fun decreasedCartItem(productId: Long): QuantityUpdate
+
+    fun addCartItem(shoppingCartItem: ShoppingCartItem)
 }

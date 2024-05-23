@@ -81,4 +81,12 @@ object DummyShoppingRepository : ShoppingRepository {
         if (updateResult is QuantityUpdate.Success) updateCartItem(updateResult.value)
         return updateResult
     }
+
+    override fun addCartItem(shoppingCartItem: ShoppingCartItem) {
+        val updatedShoppingCart = users.first().shoppingCart.addItem(shoppingCartItem)
+        this.users =
+            users.map {
+                if (it.id == users.first().id) it.copy(shoppingCart = updatedShoppingCart) else it
+            }
+    }
 }

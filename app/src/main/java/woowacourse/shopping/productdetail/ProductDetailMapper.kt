@@ -1,12 +1,5 @@
 package woowacourse.shopping.productdetail
 
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ShoppingCartItem
 
-fun Product.toProductUiModel(cartItemCount: Int): ProductUiModel =
-    ProductUiModel(
-        id,
-        name,
-        price.value,
-        imageUrl.url,
-        cartItemCount,
-    )
+fun ShoppingCartItem.toCountResult(): CountResultUiModel = CountResultUiModel(this.totalQuantity, this.product.price)

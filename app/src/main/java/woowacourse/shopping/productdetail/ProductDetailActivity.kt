@@ -9,11 +9,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.shoppingcart.ShoppingCartActivity
+import woowacourse.shopping.domain.Product
+import woowacourse.shopping.productlist.ProductListActivity
 import woowacourse.shopping.util.ViewModelFactory
 import woowacourse.shopping.util.imageUrlToSrc
+import woowacourse.shopping.util.showToastMessage
 
-class ProductDetailActivity : AppCompatActivity() {
+class ProductDetailActivity : AppCompatActivity(), ProductDetailClickAction {
     private lateinit var binding: ActivityProductDetailBinding
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
@@ -21,20 +23,23 @@ class ProductDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.lifecycleOwner = this
-
         val productId = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
-
+        binding.lifecycleOwner = this
+        binding.onClick = this
+        binding.productId = productId
         showProductDetail(productId)
 
         supportActionBar?.setDisplayShowTitleEnabled(false)
-        binding.btnProductDetailAddCart.setOnClickListener {
-            viewModel.addProductToCart(productId)
-        }
 
-        viewModel.isAddSuccess.observe(this) {
-            if (it) {
-                startActivity(ShoppingCartActivity.newInstance(this))
+        navigateToProductList(productId)
+    }
+
+    private fun navigateToProductList(productId: Long) {
+        viewModel.isAddSuccess.observe(this) { isSuccess ->
+            if (isSuccess) {
+                val intent = ProductListActivity.newInstance(this, productId)
+                this.setResult(RESULT_OK, intent)
+                this.finish()
             }
         }
     }
@@ -44,13 +49,22 @@ class ProductDetailActivity : AppCompatActivity() {
         viewModel.product.observe(this) {
             showProductDetailView(it)
         }
+        viewModel.countState.observe(this) { countState ->
+            when (countState) {
+                is CountState.ChangeItemCount -> binding.countResult = countState.countResult
+                is CountState.MinusFail -> showToastMessage(R.string.min_cart_item_message)
+                is CountState.PlusFail -> showToastMessage(R.string.max_cart_item_message)
+                is CountState.ShowCount -> binding.countResult = countState.countResult
+            }
+        }
     }
 
-    private fun showProductDetailView(productUi: ProductUiModel) {
+    private fun showProductDetailView(product: Product) {
         with(binding) {
-            imageUrlToSrc(productUi.imageUrl, ivProductDetailProduct)
-            tvProductDetailName.text = productUi.name
-            tvProductDetailPrice.text = getString(R.string.product_price_format, productUi.price)
+            imageUrlToSrc(product.imageUrl.url, ivProductDetailProduct)
+            tvProductDetailName.text = product.name
+            tvProductDetailPrice.text =
+                getString(R.string.product_price_format, product.price.value)
         }
     }
 
@@ -65,6 +79,18 @@ class ProductDetailActivity : AppCompatActivity() {
             else -> {}
         }
         return true
+    }
+
+    override fun onAddCartClickAction() {
+        viewModel.addProductToCart()
+    }
+
+    override fun onPlusCountClicked(id: Long) {
+        viewModel.plusProductCount()
+    }
+
+    override fun onMinusCountClicked(id: Long) {
+        viewModel.minusProductCount()
     }
 
     companion object {
