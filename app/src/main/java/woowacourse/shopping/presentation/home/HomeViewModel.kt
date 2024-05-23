@@ -4,11 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.local.PRODUCT_DATA
-import woowacourse.shopping.data.local.ShoppingDatabase
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
-import woowacourse.shopping.data.model.Product
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.util.Event
@@ -77,34 +74,43 @@ class HomeViewModel(
     }
 
     override fun onQuantityChange(productId: Long, quantity: Int) {
-        Log.i("TAG", "onQuantityChange: $productId, quantity: $quantity")
-//        thread {
-//            if (quantity <= -1) return@thread
-//            val id = if (cartItemId == null) {
-//                cartRepository.addCartItem(
-//                    CartItem(
-//                        productId = productId,
-//                        quantity = quantity,
-//                    )
-//                )
-//            } else {
-//                cartRepository.updateQuantity(cartItemId, quantity)
-//                cartItemId
-//            }
-//            Log.i("TAG", "onQuantityChange: $id")
-//            val cartItem = cartRepository.fetchCartItem(id)
-//            val target = products.value?.map {
-//                if (it.cartItem?.id == id) {
-//                    val item = it.copy(cartItem = cartItem)
-//                    Log.i("TAG", "onQuantityChange: $item")
-//                    item
-//                } else it
-//            }
-//            _products.postValue(target)
-//            _changedPosition.postValue(Event(products.value?.indexOfFirst { it.cartItem?.id == cartItem.id } ?: return@thread))
-//            _totalQuantity.postValue(
-//                cartRepository.fetchTotalCount()
-//            )
-//        }
+        if (quantity < 0) return
+        thread {
+            val targetProduct = productRepository.fetchProduct(productId)
+            if (quantity == 0 && targetProduct.cartItem?.id != null) {
+                cartRepository.removeCartItem(targetProduct.cartItem)
+                val target = products.value?.map {
+                    if (it.product.id == targetProduct.product.id) {
+                        val item = it.copy(cartItem = null)
+                        item
+                    } else it
+                }
+                _products.postValue(target)
+                _changedPosition.postValue(Event(products.value?.indexOfFirst { it.product.id == targetProduct.product.id }
+                    ?: return@thread))
+                _totalQuantity.postValue(
+                    cartRepository.fetchTotalCount()
+                )
+            } else {
+                if (targetProduct.cartItem?.id != null) {
+                    cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
+                    targetProduct.cartItem.id
+                } else {
+                    cartRepository.addCartItem(CartItem(productId = productId))
+                }
+                val target = products.value?.map {
+                    if (it.product.id == productId) {
+                        val item = it.copy(cartItem = productRepository.fetchProduct(productId).cartItem)
+                        item
+                    } else it
+                }
+                _products.postValue(target)
+                _changedPosition.postValue(Event(products.value?.indexOfFirst { it.product.id == productId }
+                    ?: return@thread))
+                _totalQuantity.postValue(
+                    cartRepository.fetchTotalCount()
+                )
+            }
+        }
     }
 }
