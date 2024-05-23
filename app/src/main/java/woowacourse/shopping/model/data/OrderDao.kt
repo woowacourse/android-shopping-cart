@@ -15,7 +15,7 @@ interface OrderDao {
     fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(vararg orders: OrderEntity)
+    fun insert(order: OrderEntity)
 
     @Delete
     fun delete(order: OrderEntity)

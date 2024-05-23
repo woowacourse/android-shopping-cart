@@ -76,7 +76,8 @@
                 android:gravity="center"
                 android:text="-"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="@{() -> viewModel.decreaseItemCount(product.id)}"/>
 
             <TextView
                 android:layout_width="42dp"
@@ -92,7 +93,8 @@
                 android:gravity="center"
                 android:text="+"
                 android:textSize="22sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:onClick="@{() -> viewModel.increaseItemCount(product.id)}"/>
 
         </LinearLayout>
 

@@ -64,6 +64,20 @@ class CartViewModel(
         renewCart()
     }
 
+    fun increaseItemCount(id: Long) {
+        _orderCounts.value!![id] = _orderCounts.value!![id]!! + 1
+        _orderCounts.value = _orderCounts.value
+    }
+
+    fun decreaseItemCount(id: Long) {
+        if (_orderCounts.value!![id]!! == 1) {
+            removeCartItem(id)
+            return
+        }
+        _orderCounts.value!![id] = _orderCounts.value!![id]!! - 1
+        _orderCounts.value = _orderCounts.value
+    }
+
     private fun getProducts(): List<Product> {
         val fromIndex = (cartPage.value!!.number - OFFSET) * PAGE_SIZE
         val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
@@ -94,7 +108,8 @@ class CartViewModel(
         val productsQuantities = getProductsQuantities()
         val productsTotalPrices: MutableMap<Long, Int> = mutableMapOf()
         allOrders.forEach {
-            productsTotalPrices[it.productId] = productsPrices[it.productId]!! * productsQuantities[it.productId]!!
+            productsTotalPrices[it.productId] =
+                productsPrices[it.productId]!! * productsQuantities[it.productId]!!
         }
         return productsTotalPrices
     }

@@ -85,7 +85,7 @@ class ProductContentsViewModel(
         return productsInRange
     }
 
-    fun renewCurrentOffset()  {
+    fun renewCurrentOffset() {
         val endRange = min(currentOffset + LOAD_LIMIT, items.size)
         currentOffset = endRange
     }
