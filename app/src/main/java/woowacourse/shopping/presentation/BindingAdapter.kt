@@ -1,5 +1,7 @@
 package woowacourse.shopping.presentation
 
+import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -12,4 +14,10 @@ fun ImageView.setImage(imgUrl: String?) {
         .placeholder(R.drawable.img_odooong)
         .error(R.drawable.ic_error_24)
         .into(this)
+}
+
+
+@BindingAdapter("isVisible")
+fun View.setVisible(isVisible: Boolean) {
+    visibility = if (isVisible) View.VISIBLE else View.GONE
 }

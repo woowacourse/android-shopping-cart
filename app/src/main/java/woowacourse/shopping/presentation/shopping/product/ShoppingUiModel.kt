@@ -8,8 +8,7 @@ sealed class ShoppingUiModel(val viewType: Int) {
         val imageUrl: String,
         val count: Int = 0,
     ) : ShoppingUiModel(ITEM_VIEW_TYPE_PRODUCT) {
-        val isVisible: Boolean
-            get() = count > 0
+        val isVisible get() = count > 0
     }
 
     data object LoadMore : ShoppingUiModel(ITEM_VIEW_TYPE_PLUS)

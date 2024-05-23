@@ -12,6 +12,7 @@ class ProductAdapter(
     private val onClickItem: (id: Long) -> Unit,
     private val onPlusItem: () -> Unit,
     private val onClickAddBtn: (id: Long) -> Unit,
+    private val onClickMinusBtn: (id: Long) -> Unit,
 ) :
     RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<ShoppingUiModel> = emptyList()
@@ -46,7 +47,12 @@ class ProductAdapter(
                         parent,
                         false,
                     )
-                ShoppingViewHolder.ProductViewHolder(view, onClickItem, onClickAddBtn)
+                ShoppingViewHolder.ProductViewHolder(
+                    view,
+                    onClickItem,
+                    onClickAddBtn,
+                    onClickMinusBtn,
+                )
             }
 
             ShoppingUiModel.ITEM_VIEW_TYPE_PLUS -> {
