@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.shopping.product
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,6 +26,18 @@ class ProductListViewModel(
             _products.value = currentProducts + loadProducts + ShoppingUiModel.LoadMore
         } else {
             _products.value = currentProducts + loadProducts
+        }
+    }
+
+    fun increaseCount(id: Long) {
+        val newProducts = _products.value?.filterIsInstance<ShoppingUiModel.Product>()?.map {
+            if (it.id == id) it.copy(count = it.count + 1)
+            else it
+        } ?: return
+        if (shoppingRepository.canLoadMoreProducts(currentPage, PRODUCT_AMOUNT)) {
+            _products.value = newProducts + ShoppingUiModel.LoadMore
+        } else {
+            _products.value = newProducts
         }
     }
 

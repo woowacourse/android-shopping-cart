@@ -22,7 +22,7 @@ class ProductDetailFragment :
     override val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModel.factory(
             DefaultShoppingRepository(),
-            DefaultCartRepository(),
+            DefaultCartRepository(requireContext()),
             productId,
         )
     }

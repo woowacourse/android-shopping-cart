@@ -71,6 +71,7 @@ class ProductListFragment :
                 ProductAdapter(
                     onClickItem = { navigateToDetailView(it) },
                     onPlusItem = { viewModel.loadProducts() },
+                    onClickAddBtn = { viewModel.increaseCount(it) },
                 )
             rvProductList.adapter = productAdapter
             rvProductList.layoutManager =

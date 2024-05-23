@@ -11,6 +11,7 @@ import woowacourse.shopping.presentation.util.ItemUpdateHelper
 class ProductAdapter(
     private val onClickItem: (id: Long) -> Unit,
     private val onPlusItem: () -> Unit,
+    private val onClickAddBtn: (id: Long) -> Unit,
 ) :
     RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<ShoppingUiModel> = emptyList()
@@ -45,7 +46,7 @@ class ProductAdapter(
                         parent,
                         false,
                     )
-                ShoppingViewHolder.ProductViewHolder(view, onClickItem)
+                ShoppingViewHolder.ProductViewHolder(view, onClickItem, onClickAddBtn)
             }
 
             ShoppingUiModel.ITEM_VIEW_TYPE_PLUS -> {
