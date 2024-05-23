@@ -40,9 +40,14 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_home, menu)
-        val item = menu?.findItem(R.id.tv_badge_quantity)
-        val binding = LayoutCartCountBinding.inflate(layoutInflater)
-        binding.viewModel = viewModel
+        val layoutCartCountBinding = LayoutCartCountBinding.inflate(layoutInflater)
+        layoutCartCountBinding.viewModel = viewModel
+        val menuItem = menu?.findItem(R.id.menu_shopping_cart)
+        menuItem?.setActionView(layoutCartCountBinding.root)
+        viewModel.totalQuantity.observe(this) {
+            layoutCartCountBinding.tvBadgeQuantity.text = it.toString()
+        }
+        super.onCreateOptionsMenu(menu)
         return true
     }
 

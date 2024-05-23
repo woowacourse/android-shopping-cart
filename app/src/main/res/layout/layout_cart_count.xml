@@ -29,10 +29,10 @@
             android:background="@drawable/badge_count"
             android:gravity="center"
             android:padding="2dp"
-            android:text="@{viewModel.totalQuantity}"
+            android:text="@{String.valueOf(viewModel.totalQuantity)}"
             android:maxLength="2"
             android:textColor="@color/white"
-            android:textSize="10sp"
+            android:textSize="12sp"
             tools:text="0" />
 
     </LinearLayout>
