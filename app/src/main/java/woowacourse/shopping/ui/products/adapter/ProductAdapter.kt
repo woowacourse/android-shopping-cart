@@ -38,9 +38,8 @@ class ProductAdapter(
     fun setData(newProducts: List<ProductWithQuantity>) {
         if (isLoadMore(newProducts)) {
             val positionStart = productWithQuantities.size
-            val itemCount = newProducts.size - productWithQuantities.size
-            productWithQuantities.addAll(newProducts.subList(positionStart, newProducts.size))
-            notifyItemRangeInserted(positionStart, itemCount)
+            productWithQuantities.addAll(newProducts)
+            notifyItemRangeInserted(positionStart, newProducts.size)
             return
         }
         val uniqueNewProducts =
