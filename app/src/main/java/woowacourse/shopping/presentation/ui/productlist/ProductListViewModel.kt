@@ -40,8 +40,7 @@ class ProductListViewModel(
         )
 
     init {
-        loadProductList()
-        getProductHistory()
+        initLoad()
     }
 
     override fun navigateToProductDetail(productId: Long) {
@@ -50,6 +49,30 @@ class ProductListViewModel(
 
     fun navigateToShoppingCart() {
         _navigateAction.emit(ProductListNavigateAction.NavigateToShoppingCart)
+    }
+
+    private fun initLoad() {
+        thread {
+            productListPagingSource.load().mapCatching { pagingProduct ->
+                val productHistorys =
+                    productHistoryRepository.getProductHistory(10).getOrDefault(emptyList())
+                val cartCount = pagingProduct.productList.sumOf { it.quantity }
+
+                ProductListUiState(
+                    pagingProduct = pagingProduct,
+                    productHistorys = productHistorys,
+                    cartCount = cartCount,
+                )
+            }.onSuccess { productHistoryRepository ->
+                _uiState.postValue(productHistoryRepository)
+            }.onFailure { e ->
+                _uiState.value?.let { state ->
+                    val newPagingProduct = state.pagingProduct.copy(last = true)
+                    _uiState.postValue(state.copy(pagingProduct = newPagingProduct))
+                }
+                showMessage(MessageProvider.DefaultErrorMessage)
+            }
+        }
     }
 
     private fun loadProductList() {
