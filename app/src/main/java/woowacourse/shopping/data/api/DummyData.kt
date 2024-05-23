@@ -83,5 +83,10 @@ object DummyData {
             STUB_PRODUCT_C,
             STUB_PRODUCT_B,
             STUB_PRODUCT_C,
-        ).mapIndexed { index, product -> product.copy(id = (index + 1).toLong()) }.toMutableList()
+        ).mapIndexed { index, product ->
+            product.copy(
+                id = (index + 1).toLong(),
+                name = "$index ${product.name}",
+            )
+        }.toMutableList()
 }
