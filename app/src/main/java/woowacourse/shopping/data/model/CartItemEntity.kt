@@ -10,6 +10,7 @@ import woowacourse.shopping.domain.model.Product
 data class CartItemEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
+    val productId: Long,
     val product: Product,
     val quantity: Int,
 ) {
@@ -26,7 +27,16 @@ data class CartItemEntity(
             product: Product,
             quantity: Int,
         ): CartItemEntity {
-            return CartItemEntity(product = product, quantity = quantity)
+            return CartItemEntity(productId = product.id, product = product, quantity = quantity)
+        }
+
+        fun toCartItemEntity(cartItem: CartItem): CartItemEntity {
+            return CartItemEntity(
+                id = cartItem.id,
+                productId = cartItem.product.id,
+                product = cartItem.product,
+                quantity = cartItem.quantity,
+            )
         }
     }
 }

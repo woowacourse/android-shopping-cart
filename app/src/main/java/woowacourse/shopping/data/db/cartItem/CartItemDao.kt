@@ -3,6 +3,7 @@ package woowacourse.shopping.data.db.cartItem
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import woowacourse.shopping.data.db.cartItem.CartItemDatabase.Companion.CART_ITEMS_DB_NAME
 import woowacourse.shopping.data.model.CartItemEntity
 
@@ -28,4 +29,10 @@ interface CartItemDao {
 
     @Query("SELECT COUNT(*) FROM $CART_ITEMS_DB_NAME")
     fun getItemCount(): Int
+
+    @Query("SELECT * FROM $CART_ITEMS_DB_NAME WHERE productId = :productId")
+    fun getCartItemByProductId(productId: Long): CartItemEntity?
+
+    @Update
+    fun updateCartItem(cartItemEntity: CartItemEntity)
 }

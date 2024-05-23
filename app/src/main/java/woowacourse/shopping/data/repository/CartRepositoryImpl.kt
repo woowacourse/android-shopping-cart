@@ -46,6 +46,24 @@ class CartRepositoryImpl(context: Context) : CartRepository {
         return currentPage < totalPageCount
     }
 
+    override fun findCartItemWithProductId(productId: Long): CartItem? {
+        var cartItem: CartItem? = null
+        thread { cartItem = cartItemDao.getCartItemByProductId(productId)?.toCartItem() }.join()
+
+        return cartItem
+    }
+
+    override fun updateCartItem(updatedItem: CartItem) {
+        val cartEntity = CartItemEntity.toCartItemEntity(updatedItem)
+        thread { cartItemDao.updateCartItem(cartEntity) }
+    }
+
+    override fun loadAllCartItems(): List<CartItem> {
+        var cartItems: List<CartItem> = emptyList()
+        thread { cartItems = cartItemDao.findAll().map { it.toCartItem() } }.join()
+        return cartItems
+    }
+
     companion object {
         const val ERROR_SAVE_DATA_ID = -1L
     }

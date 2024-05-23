@@ -20,4 +20,10 @@ interface CartRepository {
         currentPage: Int,
         itemsPerPage: Int,
     ): Boolean
+
+    fun findCartItemWithProductId(productId: Long): CartItem?
+
+    fun updateCartItem(updatedItem: CartItem)
+
+    fun loadAllCartItems(): List<CartItem>
 }
