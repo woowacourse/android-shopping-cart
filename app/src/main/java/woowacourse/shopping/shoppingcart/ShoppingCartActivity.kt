@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityShoppingCartBinding
 import woowacourse.shopping.util.ViewModelFactory
+import woowacourse.shopping.util.showToastMessage
 
 class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
     private lateinit var binding: ActivityShoppingCartBinding
@@ -41,7 +43,10 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
         viewModel.loadState.observe(this) { state ->
             when (state) {
                 is LoadCartItemState.AddNextPageOfItem -> adapter.addItem(state.result)
-                is LoadCartItemState.InitView -> adapter.replaceItems(state.result)
+                is LoadCartItemState.InitView -> adapter.replaceItems(state.currentCartItems.items)
+                is LoadCartItemState.DeleteCartItem -> adapter.deleteItemByProductId(state.result)
+                is LoadCartItemState.ChangeItemCount -> adapter.changeProductInfo(state.result)
+                is LoadCartItemState.MinusFail -> showToastMessage(R.string.min_cart_item_message)
             }
         }
     }
@@ -55,7 +60,14 @@ class ShoppingCartActivity : AppCompatActivity(), ShoppingCartClickAction {
 
     override fun onItemRemoveBtnClicked(id: Long) {
         viewModel.deleteCartItem(id)
-        adapter.deleteItemByProductId(id)
+    }
+
+    override fun onPlusCountClicked(id: Long) {
+        viewModel.plusCartItemCount(id)
+    }
+
+    override fun onMinusCountClicked(id: Long) {
+        viewModel.minusCartItemCount(id)
     }
 
     companion object {

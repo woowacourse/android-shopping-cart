@@ -1,5 +1,7 @@
 package woowacourse.shopping.shoppingcart
 
-interface ShoppingCartClickAction {
+import woowacourse.shopping.util.CartItemCountClickAction
+
+interface ShoppingCartClickAction : CartItemCountClickAction {
     fun onItemRemoveBtnClicked(id: Long)
 }

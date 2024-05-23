@@ -1,14 +1,29 @@
 package woowacourse.shopping.shoppingcart
 
-import woowacourse.shopping.productlist.ProductUiModel
 import woowacourse.shopping.util.UiState
 
-sealed interface LoadCartItemState : UiState {
-    data class InitView(override val result: List<ProductUiModel>) :
-        LoadCartItemState,
-        UiState.CompleteWithResult<List<ProductUiModel>>
+sealed class LoadCartItemState : UiState {
+    abstract val currentCartItems: CartItemUiModels
 
-    data class AddNextPageOfItem(override val result: ProductUiModel) :
-        LoadCartItemState,
-        UiState.CompleteWithResult<ProductUiModel>
+    data class InitView(
+        override val currentCartItems: CartItemUiModels,
+    ) : LoadCartItemState(), UiState.Complete
+
+    data class DeleteCartItem(
+        override val result: Long,
+        override val currentCartItems: CartItemUiModels,
+    ) :
+        LoadCartItemState(), UiState.CompleteWithResult<Long>
+
+    data class AddNextPageOfItem(
+        override val result: CartItemUiModel,
+        override val currentCartItems: CartItemUiModels,
+    ) : LoadCartItemState(), UiState.CompleteWithResult<CartItemUiModel>
+
+    data class ChangeItemCount(
+        override val currentCartItems: CartItemUiModels,
+        override val result: CartItemUiModel,
+    ) : LoadCartItemState(), UiState.CompleteWithResult<CartItemUiModel>
+
+    data class MinusFail(override val currentCartItems: CartItemUiModels) : LoadCartItemState(), UiState.Fail
 }

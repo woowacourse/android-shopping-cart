@@ -6,7 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.ShoppingRepository
-import woowacourse.shopping.productlist.toProductUiModel
+import woowacourse.shopping.domain.QuantityUpdate
 import kotlin.math.ceil
 
 class ShoppingCartViewModel(
@@ -32,6 +32,8 @@ class ShoppingCartViewModel(
             addSource(totalPage) { value = checkIsRightBtnEnable() }
         }
 
+    private fun currentCartItems(): CartItemUiModels = _loadState?.value?.currentCartItems ?: error("초기화 이후에 메서드를 실행해주세요")
+
     private fun checkIsLeftBtnEnable() = _currentPage.value?.equals(DEFAULT_CURRENT_PAGE)?.not() ?: false
 
     private fun checkIsRightBtnEnable(): Boolean {
@@ -52,7 +54,10 @@ class ShoppingCartViewModel(
             repository.shoppingCartItems(currentPage - DEFAULT_CURRENT_PAGE, PAGE_SIZE)
         }.onSuccess { shoppingCartItems ->
             _loadState.value =
-                LoadCartItemState.InitView(shoppingCartItems.map { it.product.toProductUiModel(1) })
+                LoadCartItemState.InitView(
+                    shoppingCartItems.map { it.toShoppingCartUiModel() }
+                        .let(::CartItemUiModels),
+                )
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -62,9 +67,14 @@ class ShoppingCartViewModel(
         runCatching {
             repository.deleteShoppingCartItem(productId)
         }.onSuccess {
-            if (_currentPage.value != totalPage.value && totalPage.value != 0) {
+            if (checkIsRightBtnEnable()) {
                 loadCartItemOfNextPage()
             }
+            _loadState.value =
+                LoadCartItemState.DeleteCartItem(
+                    productId,
+                    currentCartItems().deleteCartItem(productId),
+                )
             updatePageCount()
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
@@ -76,8 +86,12 @@ class ShoppingCartViewModel(
             val currentPage = _currentPage?.value ?: DEFAULT_CURRENT_PAGE
             repository.shoppingCartItemByPosition(currentPage - 1, PAGE_SIZE, MAX_POSITION_OF_ITEM)
         }.onSuccess { shoppingCartItem ->
+            val cartItem = shoppingCartItem.toShoppingCartUiModel()
             _loadState.value =
-                LoadCartItemState.AddNextPageOfItem(shoppingCartItem.product.toProductUiModel(1))
+                LoadCartItemState.AddNextPageOfItem(
+                    cartItem,
+                    currentCartItems().updateCartItem(cartItem),
+                )
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -86,6 +100,50 @@ class ShoppingCartViewModel(
     fun nextPage() {
         _currentPage.value = _currentPage.value?.inc()
         loadCartItems()
+    }
+
+    fun plusCartItemCount(productId: Long) {
+        runCatching {
+            repository.increasedCartItem(productId)
+        }.onSuccess { result ->
+            when (result) {
+                is QuantityUpdate.Success -> {
+                    val updatedUiModel = result.value.toShoppingCartUiModel()
+                    _loadState.value =
+                        LoadCartItemState.ChangeItemCount(
+                            currentCartItems().updateCartItem(updatedUiModel),
+                            updatedUiModel,
+                        )
+                }
+
+                QuantityUpdate.Failure -> {
+                    error(" 장바구니 수량 변경에 실패했습니다. ")
+                }
+            }
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
+    }
+
+    fun minusCartItemCount(productId: Long) {
+        runCatching {
+            repository.decreasedCartItem(productId)
+        }.onSuccess { result ->
+            when (result) {
+                is QuantityUpdate.Success -> {
+                    val updatedUiModel = result.value.toShoppingCartUiModel()
+                    _loadState.value =
+                        LoadCartItemState.ChangeItemCount(
+                            currentCartItems().updateCartItem(updatedUiModel),
+                            updatedUiModel,
+                        )
+                }
+
+                QuantityUpdate.Failure -> LoadCartItemState.MinusFail(currentCartItems())
+            }
+        }.onFailure {
+            Log.d(this::class.java.simpleName, "$it")
+        }
     }
 
     fun previousPage() {
