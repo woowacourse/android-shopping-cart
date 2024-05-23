@@ -28,6 +28,7 @@ class CartActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         initializeView()
+        setResult(Activity.RESULT_OK)
     }
 
     private fun initializeView() {
@@ -53,7 +54,6 @@ class CartActivity : AppCompatActivity() {
 
         viewModel.productUiModels.observe(this) {
             adapter.changeCartItems(it)
-            setResult(Activity.RESULT_OK)
         }
     }
 }

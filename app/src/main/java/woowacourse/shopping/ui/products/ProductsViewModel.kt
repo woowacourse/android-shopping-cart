@@ -1,6 +1,5 @@
 package woowacourse.shopping.ui.products
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -105,7 +104,6 @@ class ProductsViewModel(
     }
 
     fun loadProductUiModel(productId: Long) {
-        Log.e("TEST", "$productId")
         val product = productRepository.find(productId)
         val productUiModel =
             runCatching { cartRepository.find(product.id) }

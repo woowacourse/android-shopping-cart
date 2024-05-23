@@ -37,10 +37,9 @@ class ProductsActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 val changedProductId =
                     result.data?.getLongExtra(
-                        CHANGED_PRODUCT_ID_KEY,
-                        CHANGED_PRODUCT_ID_DEFAULT_VALUE
-                    )
-                        ?: return@registerForActivityResult
+                        PRODUCT_ID_KEY,
+                        PRODUCT_ID_DEFAULT_VALUE
+                    ) ?: return@registerForActivityResult
                 viewModel.loadProductUiModel(changedProductId)
             }
         }
@@ -125,7 +124,7 @@ class ProductsActivity : AppCompatActivity() {
     companion object {
         private const val PRODUCT_LIST_SPAN_SIZE = 2
 
-        const val CHANGED_PRODUCT_ID_KEY = "changed_product_id_key"
-        private const val CHANGED_PRODUCT_ID_DEFAULT_VALUE = -1L
+        const val PRODUCT_ID_KEY = "changed_product_id_key"
+        private const val PRODUCT_ID_DEFAULT_VALUE = -1L
     }
 }

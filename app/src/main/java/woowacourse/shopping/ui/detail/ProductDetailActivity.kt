@@ -15,7 +15,7 @@ import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.data.recent.DummyRecentProductRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
-import woowacourse.shopping.ui.products.ProductsActivity.Companion.CHANGED_PRODUCT_ID_KEY
+import woowacourse.shopping.ui.products.ProductsActivity
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
@@ -35,6 +35,7 @@ class ProductDetailActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         initializeView()
+        setRequireActivityResult()
     }
 
     private fun initializeView() {
@@ -61,8 +62,6 @@ class ProductDetailActivity : AppCompatActivity() {
             val isSuccess = isSuccessEvent.getContentIfNotHandled() ?: return@observe
             if (isSuccess) {
                 showAddCartSuccessDialog()
-                val resultIntent = Intent().putExtra(CHANGED_PRODUCT_ID_KEY, productId())
-                setResult(Activity.RESULT_OK, resultIntent)
             } else {
                 showAddCartFailureToast()
             }
@@ -108,6 +107,11 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
+
+    private fun setRequireActivityResult() {
+        val resultIntent = Intent().putExtra(ProductsActivity.PRODUCT_ID_KEY, productId())
+        setResult(Activity.RESULT_OK, resultIntent)
+    }
 
     companion object {
         private const val PRODUCT_ID_KEY = "product_id_key"
