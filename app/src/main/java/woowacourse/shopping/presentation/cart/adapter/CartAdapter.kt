@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
+import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.uistate.Order
 
 class CartAdapter(
     private var orders: List<Order>,
     private val cartItemClickListener: CartItemClickListener,
+    private val cartItemCountHandler: CartItemCountHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -17,7 +19,7 @@ class CartAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ItemCartBinding =
             ItemCartBinding.inflate(layoutInflater, parent, false)
-        return CartViewHolder(binding, cartItemClickListener)
+        return CartViewHolder(binding, cartItemClickListener, cartItemCountHandler)
     }
 
     override fun onBindViewHolder(

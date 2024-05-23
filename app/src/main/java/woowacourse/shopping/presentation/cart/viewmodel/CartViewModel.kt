@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.uistate.Order
 import woowacourse.shopping.presentation.uistate.PageInformation
 
 class CartViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-) : ViewModel() {
+) : ViewModel(), CartItemCountHandler {
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int>
         get() = _currentPage
@@ -39,24 +40,6 @@ class CartViewModel(
 
     fun loadNextPageCartItems() {
         _currentPage.value = currentPage.value?.plus(1)
-
-        loadCurrentPageCartItems()
-    }
-
-    fun addCartITem(
-        productId: Long,
-        quantity: Int,
-    ) {
-        cartRepository.plusCartItem(productId, quantity)
-
-        loadCurrentPageCartItems()
-    }
-
-    fun minusCartItem(
-        productId: Long,
-        quantity: Int,
-    ) {
-        cartRepository.minusCartItem(productId, quantity)
 
         loadCurrentPageCartItems()
     }
@@ -95,5 +78,17 @@ class CartViewModel(
 
     companion object {
         private const val PAGE_SIZE = 5
+    }
+
+    override fun onCartItemAdd(id: Long) {
+        cartRepository.plusCartItem(id, 1)
+
+        loadCurrentPageCartItems()
+    }
+
+    override fun onCartItemMinus(id: Long) {
+        cartRepository.minusCartItem(id, 1)
+
+        loadCurrentPageCartItems()
     }
 }

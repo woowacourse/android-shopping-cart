@@ -23,7 +23,7 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
     }
     private lateinit var viewModel: CartViewModel
     private val adapter: CartAdapter by lazy {
-        CartAdapter(emptyList(), this)
+        CartAdapter(emptyList(), this, viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,14 +69,6 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
             android.R.id.home -> finish()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun onCartItemAdd(productId: Long) {
-        viewModel.addCartITem(productId, 1)
-    }
-
-    override fun onCartItemRemove(productId: Long) {
-        viewModel.minusCartItem(productId, 1)
     }
 
     override fun onCartItemDelete(cartItemId: Long) {

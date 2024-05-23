@@ -11,6 +11,10 @@
             type="woowacourse.shopping.presentation.cart.adapter.CartItemClickListener" />
 
         <variable
+            name="cartItemCountHandler"
+            type="woowacourse.shopping.presentation.action.CartItemCountHandler" />
+
+        <variable
             name="order"
             type="woowacourse.shopping.presentation.uistate.Order" />
     </data>
@@ -73,42 +77,15 @@
                 shopping:productThumbnail="@{order.product.imageSource}"
                 tools:src="@drawable/ic_launcher_background" />
 
-            <ImageView
-                android:id="@+id/iv_minus"
+            <include layout="@layout/layout_plus_minus_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> cartItemClickListener.onCartItemRemove(order.product.id)}"
-                android:padding="12dp"
-                android:src="@drawable/ic_minus"
-                app:layout_constraintBottom_toBottomOf="@id/iv_plus"
-                app:layout_constraintEnd_toStartOf="@id/tv_cart_count"
-                app:layout_constraintTop_toTopOf="@id/iv_plus" />
-
-            <TextView
-                android:id="@+id/tv_cart_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="12dp"
-                android:text="@{String.valueOf(order.quantity)}"
-                android:textColor="@color/gray_500"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@id/iv_plus"
-                app:layout_constraintEnd_toStartOf="@id/iv_plus"
-                app:layout_constraintTop_toTopOf="@id/iv_plus"
-                tools:text="1" />
-
-            <ImageView
-                android:id="@+id/iv_plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginBottom="18dp"
-                android:onClick="@{() -> cartItemClickListener.onCartItemAdd(order.product.id)}"
-                android:padding="12dp"
-                android:src="@drawable/ic_plus"
+                app:cartItemCountHandler="@{cartItemCountHandler}"
                 app:layout_constraintBottom_toTopOf="@id/tv_price"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:order="@{order}"
+                android:padding="12dp"
+                />
 
             <TextView
                 android:id="@+id/tv_price"
