@@ -33,7 +33,7 @@ class HomeActivity : AppCompatActivity() {
                     } else {
                         result.data?.getParcelableExtra(EXTRA_CART_ITEM)
                     }
-                viewModel.updateOrder(cartItem)
+                viewModel.updateOrder(cartItem?.productId ?: -1)
             }
         }
 
@@ -82,6 +82,10 @@ class HomeActivity : AppCompatActivity() {
     private fun initObserver() {
         viewModel.orders.observe(this) {
             adapter.addProducts(it)
+        }
+
+        viewModel.updateOrder.observe(this) {
+            adapter.updateProduct(it.product.id, it)
         }
 
         viewModel.loadStatus.observe(this) {

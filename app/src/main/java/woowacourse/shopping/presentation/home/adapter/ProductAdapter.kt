@@ -20,7 +20,7 @@ class ProductAdapter(
     private val homeActionHandler: HomeActionHandler,
     private val cartItemCountHandler: CartItemCountHandler,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var orders: List<Order> = emptyList()
+    private val orders: MutableList<Order> = mutableListOf()
     private var loadStatus: LoadStatus = LoadStatus()
 
     override fun onCreateViewHolder(
@@ -67,8 +67,17 @@ class ProductAdapter(
     }
 
     fun addProducts(insertedProducts: List<Order>) {
-        orders = insertedProducts
-        notifyDataSetChanged()
+        val previousSize = orders.size
+        orders.addAll(insertedProducts.subList(previousSize, insertedProducts.size))
+        notifyItemRangeInserted(previousSize, insertedProducts.size - previousSize)
+    }
+
+    fun updateProduct(
+        productId: Long,
+        order: Order,
+    ) {
+        orders[productId.toInt() - 1] = order
+        notifyItemChanged(productId.toInt() - 1)
     }
 
     fun updateLoadStatus(loadStatus: LoadStatus) {

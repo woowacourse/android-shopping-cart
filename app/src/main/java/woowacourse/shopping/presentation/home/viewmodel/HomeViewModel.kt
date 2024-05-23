@@ -3,7 +3,6 @@ package woowacourse.shopping.presentation.home.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.action.CartItemCountHandler
@@ -39,6 +38,10 @@ class HomeViewModel(
     val onCartClicked: LiveData<Event<Unit>>
         get() = _onCartClicked
 
+    private val _updateOrder = MutableLiveData<Order>()
+    val updateOrder: LiveData<Order>
+        get() = _updateOrder
+
     init {
         loadProducts()
     }
@@ -50,40 +53,34 @@ class HomeViewModel(
     fun plusCartItem(productId: Long) {
         cartRepository.plusCartItem(productId, 1)
 
-        val cartItem = cartRepository.fetchCartItem(productId)
-
-        updateOrder(cartItem)
+        updateOrder(productId)
     }
 
     fun minusCartItem(productId: Long) {
         cartRepository.minusCartItem(productId, 1)
 
-        val cartItem = cartRepository.fetchCartItem(productId)
-
-        updateOrder(cartItem)
+        updateOrder(productId)
     }
 
     fun addCartItem(productId: Long) {
         cartRepository.addCartItem(productId, 1)
 
-        val cartItem = cartRepository.fetchCartItem(productId)
-
-        updateOrder(cartItem)
+        updateOrder(productId)
         loadTotalCartCount()
     }
 
-    fun updateOrder(cartItem: CartItem?) {
-        _orders.value =
-            orders.value?.map {
-                if (it.product.id == cartItem?.productId) {
-                    it.copy(
-                        cartItemId = cartItem.id,
-                        quantity = cartItem.quantity,
-                    )
-                } else {
-                    it
-                }
-            }
+    fun updateOrder(productId: Long) {
+        val cartItem = cartRepository.fetchCartItem(productId)
+
+        cartItem?.let {
+            _updateOrder.value =
+                orders.value?.find {
+                    it.product.id == cartItem.productId
+                }?.copy(
+                    cartItemId = cartItem.id,
+                    quantity = cartItem.quantity,
+                )
+        }
     }
 
     fun loadProducts() {
