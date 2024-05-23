@@ -8,13 +8,13 @@ import androidx.room.Query
 
 @Dao
 interface OrderDao {
-    @Query("SELECT * FROM `order`")
+    @Query("SELECT * FROM `orders`")
     fun getAll(): List<OrderEntity>
 
-    @Query("SELECT * FROM `order` WHERE productId = :id")
+    @Query("SELECT * FROM `orders` WHERE productId = :id")
     fun getById(id: Long): OrderEntity?
 
-    @Query("DELETE FROM `order`")
+    @Query("DELETE FROM `orders`")
     fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -23,6 +23,6 @@ interface OrderDao {
     @Delete
     fun delete(order: OrderEntity)
 
-    @Query("DELETE FROM `order` WHERE productId = :id")
+    @Query("DELETE FROM `orders` WHERE productId = :id")
     fun deleteById(id: Long)
 }

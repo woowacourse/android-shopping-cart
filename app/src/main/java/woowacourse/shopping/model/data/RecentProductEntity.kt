@@ -4,9 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
+import java.time.LocalDateTime
 
-@Entity(tableName = "orders")
-data class OrderEntity(
+@Entity(tableName = "recentProducts")
+data class RecentProductEntity(
     @PrimaryKey val productId: Long,
-    @ColumnInfo(name = "quantity") val quantity: Int,
+    @ColumnInfo(name = "createdTime") val createdTime: LocalDateTime,
 ) : Serializable
