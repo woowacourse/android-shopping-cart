@@ -50,6 +50,7 @@ class ProductsListFragment : Fragment() {
     }
 
     private fun setUpDataBinding() {
+        binding.viewModel = productListViewModel
         binding.productListActionHandler = productListViewModel
         adapter =
             ProductAdapter(

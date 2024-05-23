@@ -1,5 +1,6 @@
 package woowacourse.shopping.view.products
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,6 +30,9 @@ class ProductListViewModel(
     private val _updatedCountInfo: MutableLiveData<ProductWithQuantity> = MutableLiveData()
     val updatedCountInfo: LiveData<ProductWithQuantity> get() = _updatedCountInfo
 
+    private val _totalCount = MutableLiveData<Int>(1)
+    val totalCount: LiveData<Int> get() = _totalCount
+
     init {
         loadPagingProductData()
     }
@@ -49,6 +53,8 @@ class ProductListViewModel(
 
         val updatedProductList = loadedItems + newProductsWithQuantity
         _products.value = PagingResult(updatedProductList, hasNextPage)
+        _totalCount.value = updatedProductList.sumOf { it.quantity }
+        Log.d("yenny", "${totalCount.value}")
     }
 
     override fun onProductItemClicked(productId: Long) {
@@ -75,6 +81,8 @@ class ProductListViewModel(
             cartRepository.updateCartItem(updatedCartItem)
         }
         _updatedCountInfo.value = ProductWithQuantity(updatedCartItem.product, updatedCartItem.quantity)
+        _totalCount.value = _totalCount.value?.plus(INCREMENT_VALUE)
+        Log.d("yenny", "${totalCount.value}")
     }
 
     override fun onDecreaseQuantityButtonClicked(id: Long) {
@@ -82,6 +90,7 @@ class ProductListViewModel(
         val updatedCartItem = cartItem.decrementQuantity(DECREMENT_VALUE)
         cartRepository.updateCartItem(updatedCartItem)
         _updatedCountInfo.value = ProductWithQuantity(updatedCartItem.product, updatedCartItem.quantity)
+        _totalCount.value = _totalCount.value?.minus(INCREMENT_VALUE)
     }
 
     companion object {

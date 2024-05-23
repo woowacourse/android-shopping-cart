@@ -1,6 +1,5 @@
-package woowacourse.shopping.view.products
+package woowacourse.shopping.view.products.adapter
 
-import android.util.Log
 import android.view.View
 import androidx.databinding.BindingAdapter
 
@@ -9,6 +8,5 @@ fun setVisibility(
     view: View,
     count: Int,
 ) {
-    Log.d("yenny", "count : $count")
     view.visibility = if (count < 1) View.GONE else View.VISIBLE
 }
