@@ -19,7 +19,7 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
-            cartRepository = CartRepositoryImpl((application as ShoppingApplication).database),
+            cartRepository = CartRepositoryImpl(ShoppingApplication.getInstance().database),
             shoppingRepository = ShoppingItemsRepositoryImpl(),
             productId = productId,
         )
