@@ -10,7 +10,7 @@ fun CartData.toEntity(product: Product): CartProduct {
 }
 
 fun CartProduct.toEntity(): CartEntity {
-    return CartEntity(product.id, 1)
+    return CartEntity(product.id, count)
 }
 
 fun CartEntity.toData(): CartData {

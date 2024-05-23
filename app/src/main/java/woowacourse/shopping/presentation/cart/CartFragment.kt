@@ -8,19 +8,23 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.databinding.FragmentCartBinding
 import woowacourse.shopping.presentation.base.BindingFragment
+import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
 
 class CartFragment :
     BindingFragment<FragmentCartBinding>(R.layout.fragment_cart) {
     private lateinit var adapter: CartAdapter
     private val viewModel by viewModels<CartViewModel> {
-        val cartRepository = CartRepositoryInjector.cartRepository(requireContext().applicationContext)
+        val cartRepository =
+            CartRepositoryInjector.cartRepository(requireContext().applicationContext)
         CartViewModel.factory(cartRepository)
     }
+    private val eventBusViewModel by activityViewModels<ShoppingEventBusViewModel>()
 
     override fun onViewCreated(
         view: View,
@@ -63,7 +67,10 @@ class CartFragment :
     }
 
     private fun initViews() {
-        adapter = CartAdapter(onDeletedProduct = viewModel::deleteProduct)
+        adapter = CartAdapter(onDeletedProduct = {
+            viewModel.deleteProduct(it)
+            eventBusViewModel.sendUpdateCartEvent()
+        })
         binding?.apply {
             rvShoppingCart.adapter = adapter.apply { setHasStableIds(true) }
         }

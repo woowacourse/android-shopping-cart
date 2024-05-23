@@ -1,6 +1,7 @@
 package woowacourse.shopping.presentation.shopping.product
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -8,13 +9,16 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import woowacourse.shopping.R
+import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
 import woowacourse.shopping.presentation.navigation.ShoppingNavigator
+import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
 import woowacourse.shopping.presentation.shopping.product.adpater.ProductAdapter
 import woowacourse.shopping.presentation.util.dp
 
@@ -23,8 +27,13 @@ class ProductListFragment :
     private val viewModel by viewModels<ProductListViewModel> {
         val shoppingRepository =
             ShoppingRepositoryInjector.shoppingRepository(requireContext().applicationContext)
-        ProductListViewModel.factory(shoppingRepository)
+        val cartRepository =
+            CartRepositoryInjector.cartRepository(requireContext().applicationContext)
+        ProductListViewModel.factory(shoppingRepository, cartRepository)
     }
+
+    private val eventBusViewModel by activityViewModels<ShoppingEventBusViewModel>()
+
     private lateinit var productAdapter: ProductAdapter
 
     override fun onViewCreated(
@@ -71,10 +80,7 @@ class ProductListFragment :
     private fun initViews() {
         binding?.apply {
             productAdapter =
-                ProductAdapter(
-                    onClickProduct = ::navigateToDetailView,
-                    onClickLoadMore = viewModel::loadProducts,
-                )
+                ProductAdapter(listener = viewModel)
             rvProductList.adapter = productAdapter
             rvProductList.layoutManager =
                 GridLayoutManager(requireContext(), SPAN_COUNT).apply {
@@ -87,6 +93,14 @@ class ProductListFragment :
     private fun initObservers() {
         viewModel.products.observe(viewLifecycleOwner) {
             productAdapter.updateProducts(it)
+        }
+
+        viewModel.navigateToDetailEvent.observe(viewLifecycleOwner) {
+            navigateToDetailView(it)
+        }
+
+        eventBusViewModel.updateCartEvent.observe(viewLifecycleOwner) {
+            viewModel.loadCartProducts()
         }
     }
 

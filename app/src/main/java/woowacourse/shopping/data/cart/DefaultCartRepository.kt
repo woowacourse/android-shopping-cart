@@ -1,5 +1,6 @@
 package woowacourse.shopping.data.cart
 
+import android.util.Log
 import woowacourse.shopping.data.shopping.product.ProductDataSource
 import woowacourse.shopping.domain.entity.CartProduct
 import woowacourse.shopping.domain.repository.CartRepository
@@ -21,21 +22,32 @@ class DefaultCartRepository(
         }
     }
 
+    override fun filterCarProducts(ids: List<Long>): Result<List<CartProduct>> {
+        val result = cartDataSource.filterCartProducts(ids)
+        return result.mapCatching {
+            it.map { cartData ->
+                val productResult = productDataSource.productById(cartData.id)
+                if (productResult.isFailure) error("Product(id=${cartData.id}) not found")
+                CartProduct(productResult.getOrThrow(), cartData.count)
+            }
+        }
+    }
+
     override fun addCartProduct(
         productId: Long,
         count: Int,
     ): Result<Long> {
-        productDataSource.productById(productId).onSuccess {
-            return cartDataSource.addCartProduct(CartProduct(it, count))
+        if (count < 1) return Result.failure(IllegalArgumentException("Count(=$count) 는 0이상 이여야 합니다."))
+        val productResult = productDataSource.productById(productId)
+        if (productResult.isSuccess) {
+            val r = cartDataSource.addCartProduct(CartProduct(productResult.getOrThrow(), count))
+            return r
         }
         return Result.failure(IllegalArgumentException("Product(id=$productId) not found."))
     }
 
     override fun deleteCartProduct(productId: Long): Result<Long> {
-        productDataSource.productById(productId).onSuccess {
-            return cartDataSource.deleteCartProduct(productId)
-        }
-        return Result.failure(IllegalArgumentException("Product(id=$productId) not found."))
+        return cartDataSource.deleteCartProduct(productId)
     }
 
     override fun canLoadMoreCartProducts(

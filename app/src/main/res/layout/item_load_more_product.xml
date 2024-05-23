@@ -5,14 +5,14 @@
 
         <variable
             name="listener"
-            type="woowacourse.shopping.presentation.shopping.product.adpater.ShoppingViewHolder.LoadMore.LoadMoreListener" />
+            type="woowacourse.shopping.presentation.shopping.product.ProductItemListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/mint"
-        android:onClick="@{() -> listener.onClickLoadMore()}">
+        android:onClick="@{() -> listener.loadProducts()}">
 
         <TextView
             android:layout_width="match_parent"

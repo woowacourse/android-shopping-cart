@@ -2,7 +2,6 @@ package woowacourse.shopping.data.shopping
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import woowacourse.shopping.data.cart.CartDataSourceInjector
 import woowacourse.shopping.data.shopping.product.ProductDataSourceInjector
 import woowacourse.shopping.data.shopping.recent.RecentProductDataSourceInjector
 import woowacourse.shopping.domain.repository.ShoppingRepository
@@ -15,7 +14,6 @@ object ShoppingRepositoryInjector {
         instance ?: synchronized(this) {
             instance ?: DefaultShoppingRepository(
                 ProductDataSourceInjector.productDataSource(),
-                CartDataSourceInjector.cartDataSource(context),
                 RecentProductDataSourceInjector.recentProductDataSource(context)
             ).also { instance = it }
         }

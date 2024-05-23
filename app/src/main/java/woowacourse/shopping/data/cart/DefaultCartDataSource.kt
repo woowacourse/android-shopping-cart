@@ -19,7 +19,8 @@ class DefaultCartDataSource(
         return runCatching {
             executors.submit(
                 Callable {
-                    cartDao.loadCart(currentPage, productSize).map(CartEntity::toData)
+                    cartDao.loadCart((currentPage - 1) * productSize, productSize)
+                        .map(CartEntity::toData)
                 },
             )[TIME_OUT, TimeUnit.SECONDS]
         }

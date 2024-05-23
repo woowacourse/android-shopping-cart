@@ -1,17 +1,14 @@
 package woowacourse.shopping.data.shopping
 
-import woowacourse.shopping.data.cart.CartDataSource
 import woowacourse.shopping.data.shopping.product.ProductDataSource
 import woowacourse.shopping.data.shopping.product.ProductPageData
 import woowacourse.shopping.data.shopping.recent.RecentProductDataSource
 import woowacourse.shopping.data.shopping.recent.toRecentProductData
-import woowacourse.shopping.domain.entity.CartProduct
 import woowacourse.shopping.domain.entity.Product
 import woowacourse.shopping.domain.repository.ShoppingRepository
 
 class DefaultShoppingRepository(
     private val productDataSource: ProductDataSource,
-    private val cartDataSource: CartDataSource,
     private val recentProductDataSource: RecentProductDataSource,
 ) : ShoppingRepository {
     private val cachedProducts = mutableMapOf<Int, List<Product>>()
@@ -29,17 +26,6 @@ class DefaultShoppingRepository(
                 cachedProducts[currentPage] = it.content
                 it.content
             }
-    }
-
-    override fun filterCarProducts(ids: List<Long>): Result<List<CartProduct>> {
-        val result = cartDataSource.filterCartProducts(ids)
-        return result.mapCatching {
-            it.map { cartData ->
-                val productResult = productDataSource.productById(cartData.id)
-                if (productResult.isFailure) error("Product(id=${cartData.id}) not found")
-                CartProduct(productResult.getOrThrow(), cartData.count)
-            }
-        }
     }
 
     override fun productById(id: Long): Result<Product> {

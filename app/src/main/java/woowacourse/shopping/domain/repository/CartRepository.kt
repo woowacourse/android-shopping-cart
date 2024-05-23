@@ -8,6 +8,11 @@ interface CartRepository {
         pageSize: Int,
     ): Result<List<CartProduct>>
 
+    fun filterCarProducts(
+        ids: List<Long>,
+    ): Result<List<CartProduct>>
+
+
     fun addCartProduct(
         productId: Long,
         count: Int,
