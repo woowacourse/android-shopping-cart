@@ -16,11 +16,13 @@ interface CartDao {
         pageSize: Int,
     ): List<Cart>
 
-    fun minusQuantityByProductWithQuantityId(productWithQuantityId: Long)
-
     fun delete(id: Long)
 
-    fun deleteByProductWithQuantityId(productWithQuantityId: Long)
+    fun deleteByProductId(productId: Long)
+
+    fun plusQuantityByProductId(productId: Long)
+
+    fun minusQuantityByProductId(productId: Long)
 
     fun deleteAll()
 }

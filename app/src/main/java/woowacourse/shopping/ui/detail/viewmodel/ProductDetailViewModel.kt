@@ -5,12 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.model.ProductWithQuantity
-import woowacourse.shopping.model.Quantity
-import woowacourse.shopping.model.data.ProductWithQuantityDao
+import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.model.data.ProductDao
 import woowacourse.shopping.ui.utils.Event
 
 class ProductDetailViewModel(
-    private val productWithQuantityDao: ProductWithQuantityDao,
+    private val productDao: ProductDao,
 ) : ViewModel() {
     private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
     val error: LiveData<Boolean> get() = _error
@@ -26,12 +26,12 @@ class ProductDetailViewModel(
             it.quantity.value == 0
         }
 
-    fun loadProduct(productWithQuantityId: Long) {
+    fun loadProduct(productId: Long) {
         runCatching {
-            productWithQuantityDao.find(productWithQuantityId)
+            productDao.find(productId)
         }.onSuccess {
             _error.value = false
-            _productWithQuantity.value = it.copy(quantity = Quantity())
+            _productWithQuantity.value = ProductWithQuantity(product = it)
         }.onFailure {
             _error.value = true
             _errorMsg.setErrorHandled(it.message.toString())
@@ -41,9 +41,9 @@ class ProductDetailViewModel(
     fun addProductToCart() {
         _productWithQuantity.value?.let { productWithQuantity ->
             repeat(productWithQuantity.quantity.value) {
-                productWithQuantityDao.plusCartCount(productWithQuantity.id)
+                CartsImpl.plusQuantityByProductId(productWithQuantity.product.id)
             }
-            loadProduct(productWithQuantity.id)
+            loadProduct(productWithQuantity.product.id)
         }
     }
 

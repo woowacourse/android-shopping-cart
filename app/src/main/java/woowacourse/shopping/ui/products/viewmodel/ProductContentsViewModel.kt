@@ -1,26 +1,27 @@
 package woowacourse.shopping.ui.products.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
 import woowacourse.shopping.model.Cart
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
+import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.data.CartDao
-import woowacourse.shopping.model.data.CartsImpl.findProductWithQuantity
-import woowacourse.shopping.model.data.ProductWithQuantityDao
+import woowacourse.shopping.model.data.ProductDao
 
 class ProductContentsViewModel(
-    private val productWithQuantityDao: ProductWithQuantityDao,
+    private val productDao: ProductDao,
     private val cartDao: CartDao,
 ) :
     ViewModel() {
-    private val items = mutableListOf<ProductWithQuantity>()
-
-    private var _productWithQuantity: MutableLiveData<List<ProductWithQuantity>> = MutableLiveData()
-    val productWithQuantity: LiveData<List<ProductWithQuantity>> get() = _productWithQuantity
+    private val products: MutableLiveData<List<Product>> = MutableLiveData()
 
     private val cart: MutableLiveData<List<Cart>> = MutableLiveData()
+
+    val productWithQuantity: MediatorLiveData<List<ProductWithQuantity>> = MediatorLiveData()
 
     val isCartEmpty: LiveData<Boolean> =
         cart.map {
@@ -32,23 +33,18 @@ class ProductContentsViewModel(
             if (it.isEmpty()) {
                 DEFAULT_CART_ITEMS_COUNT
             } else {
-                it.sumOf { cartItem -> cartItem.findProductWithQuantity().quantity.value }
+                it.sumOf { cartItem -> cartItem.quantity.value }
             }
         }
 
     init {
+        productWithQuantity.addSource(products) { updateProductWithQuantity() }
+        productWithQuantity.addSource(cart) { updateProductWithQuantity() }
         loadProducts()
     }
 
     fun loadProducts() {
-        items.addAll(productWithQuantityDao.getProducts())
-        _productWithQuantity.value = items
-    }
-
-    fun refreshProducts() {
-        items.clear()
-        items.addAll(productWithQuantityDao.getLastProducts())
-        _productWithQuantity.value = items
+        products.value = productDao.getProducts()
     }
 
     fun loadCartItems() {
@@ -56,26 +52,34 @@ class ProductContentsViewModel(
     }
 
     fun plusCount(productId: Long) {
-        val productWithQuantityIndex = items.indexOfFirst { it.product.id == productId }
-        val newProduct = items[productWithQuantityIndex].inc()
-
-        productWithQuantityDao.plusCartCount(newProduct.id)
-        cartDao.save(Cart(productWithQuantityId = newProduct.id))
-
-        items[productWithQuantityIndex] = newProduct
-        _productWithQuantity.value = items
+        cartDao.plusQuantityByProductId(productId)
         loadCartItems()
     }
 
     fun minusCount(productId: Long) {
-        val productWithQuantityIndex = items.indexOfFirst { it.product.id == productId }
-        val newProduct = items[productWithQuantityIndex].dec()
-
-        productWithQuantityDao.minusCartCount(newProduct.id)
-
-        items[productWithQuantityIndex] = newProduct
-        _productWithQuantity.value = items
+        cartDao.minusQuantityByProductId(productId)
         loadCartItems()
+    }
+
+    private fun updateProductWithQuantity() {
+        val currentProducts = products.value ?: emptyList()
+        val updatedList =
+            currentProducts.map { product ->
+                ProductWithQuantity(product = product, quantity = getQuantity(product.id))
+            }
+        productWithQuantity.value = updatedList
+    }
+
+    private fun getQuantity(productId: Long): Quantity {
+        val cart = findCartContainProduct(productId) ?: return Quantity()
+        return cart.quantity
+    }
+
+    private fun findCartContainProduct(productId: Long): Cart? {
+        cart.value?.let { items ->
+            return items.find { it.productId == productId }
+        }
+        return null
     }
 
     companion object {

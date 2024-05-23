@@ -10,4 +10,8 @@ interface ProductDao {
     fun findAll(): List<Product>
 
     fun deleteAll()
+
+    fun getProducts(): List<Product>
+
+    fun getLastProducts(): List<Product>
 }

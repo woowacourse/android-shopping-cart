@@ -1,7 +1,6 @@
 package woowacourse.shopping.model
 
 data class ProductWithQuantity(
-    val id: Long = 0,
     val product: Product,
     val quantity: Quantity = Quantity(),
 ) {

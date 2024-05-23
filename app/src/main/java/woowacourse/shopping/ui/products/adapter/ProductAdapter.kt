@@ -11,7 +11,7 @@ class ProductAdapter(
     private val plusCountClickListener: (Long) -> Unit,
     private val minusCountClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
-    private val products: MutableList<ProductWithQuantity> = mutableListOf()
+    private val productWithQuantities: MutableList<ProductWithQuantity> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -26,33 +26,33 @@ class ProductAdapter(
         )
     }
 
-    override fun getItemCount(): Int = products.size
+    override fun getItemCount(): Int = productWithQuantities.size
 
     override fun onBindViewHolder(
         holder: ProductViewHolder,
         position: Int,
     ) {
-        holder.bind(products[position])
+        holder.bind(productWithQuantities[position])
     }
 
     fun setData(newProducts: List<ProductWithQuantity>) {
         if (isLoadMore(newProducts)) {
-            val positionStart = products.size
-            val itemCount = newProducts.size - products.size
-            products.addAll(newProducts.subList(positionStart, newProducts.size))
+            val positionStart = productWithQuantities.size
+            val itemCount = newProducts.size - productWithQuantities.size
+            productWithQuantities.addAll(newProducts.subList(positionStart, newProducts.size))
             notifyItemRangeInserted(positionStart, itemCount)
             return
         }
         val uniqueNewProducts =
             newProducts.filter { newProduct ->
-                !products.contains(newProduct)
+                !productWithQuantities.contains(newProduct)
             }
-        products.clear()
-        products.addAll(newProducts)
+        productWithQuantities.clear()
+        productWithQuantities.addAll(newProducts)
         uniqueNewProducts.forEach {
             notifyItemChanged(it.product.id.toInt())
         }
     }
 
-    private fun isLoadMore(newProducts: List<ProductWithQuantity>) = newProducts.none { product -> products.contains(product) }
+    private fun isLoadMore(newProducts: List<ProductWithQuantity>) = newProducts.none { product -> productWithQuantities.contains(product) }
 }

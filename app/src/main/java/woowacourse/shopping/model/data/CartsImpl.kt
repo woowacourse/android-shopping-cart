@@ -12,18 +12,12 @@ object CartsImpl : CartDao {
     override fun itemSize() = carts.size
 
     override fun save(cart: Cart): Long {
-        val oldCart = carts.values.find { it.productWithQuantityId == cart.productWithQuantityId }
+        val oldCart = carts.values.find { it.productId == cart.productId }
         if (oldCart == null) { // 장바구니에 없는 상품인 경우
             carts[id] = cart.copy(id = id)
             return id++
         }
         return oldCart.id
-    }
-
-    override fun minusQuantityByProductWithQuantityId(productWithQuantityId: Long) {
-        val oldCart =
-            carts.values.find { it.productWithQuantityId == productWithQuantityId } ?: return
-        minusCartCount(oldCart.id)
     }
 
     override fun deleteAll() {
@@ -34,8 +28,8 @@ object CartsImpl : CartDao {
         carts.remove(id)
     }
 
-    override fun deleteByProductWithQuantityId(productWithQuantityId: Long) {
-        carts.values.find { it.productWithQuantityId == productWithQuantityId }?.let {
+    override fun deleteByProductId(productId: Long) {
+        carts.values.find { it.productId == productId }?.let {
             delete(it.id)
         }
     }
@@ -57,14 +51,23 @@ object CartsImpl : CartDao {
         return carts.values.toList().subList(fromIndex, toIndex)
     }
 
-    private fun minusCartCount(cartId: Long) {
-        carts[cartId]?.let {
-            if (it.findProductWithQuantity().quantity.value == 1) delete(cartId)
-            ProductWithQuantitiesImpl.minusCartCount(it.productWithQuantityId)
+    override fun plusQuantityByProductId(productId: Long) {
+        val oldProduct = carts.values.find { it.productId == productId }
+        if (oldProduct == null) {
+            save(Cart(productId = productId).inc())
+            return
         }
+        carts[oldProduct.id] = oldProduct.inc()
     }
 
-    fun Cart.findProductWithQuantity() = ProductWithQuantitiesImpl.find(this.productWithQuantityId)
+    override fun minusQuantityByProductId(productId: Long) {
+        val oldCart = carts.values.find { it.productId == productId } ?: return
+        if (oldCart.quantity.value == 1) {
+            delete(oldCart.id)
+            return
+        }
+        carts[oldCart.id] = oldCart.dec()
+    }
 
     private fun invalidIdMessage(id: Long) = EXCEPTION_INVALID_ID.format(id)
 }

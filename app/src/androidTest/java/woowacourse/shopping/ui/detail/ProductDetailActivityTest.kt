@@ -16,20 +16,19 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
-import woowacourse.shopping.model.Quantity
-import woowacourse.shopping.model.data.ProductWithQuantitiesImpl
+import woowacourse.shopping.model.data.ProductsImpl
 
 @RunWith(AndroidJUnit4::class)
 class ProductDetailActivityTest {
     private val productWithQuantity: ProductWithQuantity =
-        ProductWithQuantitiesImpl.find(productQuantityId)
+        ProductWithQuantity(ProductsImpl.find(productId))
 
     private val intent =
         Intent(
             ApplicationProvider.getApplicationContext(),
             ProductDetailActivity::class.java,
         ).run {
-            putExtra(ProductDetailKey.EXTRA_PRODUCT_WITH_QUANTITY_KEY, productQuantityId)
+            putExtra(ProductDetailKey.EXTRA_PRODUCT_WITH_QUANTITY_KEY, productId)
         }
 
     @get:Rule
@@ -46,7 +45,7 @@ class ProductDetailActivityTest {
     fun `화면이_띄워지면_상품_가격이_보인다`() {
         onView(withId(R.id.tv_product_price))
             .check(matches(isDisplayed()))
-            .check(matches(withText("9,000원")))
+            .check(matches(withText("0원")))
     }
 
     @Test
@@ -58,18 +57,12 @@ class ProductDetailActivityTest {
 
     companion object {
         private val MAC_BOOK = Product(imageUrl = "", name = "맥북1", price = 9000)
-        private var productQuantityId = -1L
+        private var productId = -1L
 
         @JvmStatic
         @BeforeClass
         fun setUp() {
-            productQuantityId =
-                ProductWithQuantitiesImpl.save(
-                    ProductWithQuantity(
-                        product = MAC_BOOK,
-                        quantity = Quantity(1),
-                    ),
-                )
+            productId = ProductsImpl.save(MAC_BOOK)
         }
     }
 }

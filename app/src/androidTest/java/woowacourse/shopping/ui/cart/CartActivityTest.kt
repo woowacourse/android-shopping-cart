@@ -18,9 +18,9 @@ import org.junit.runner.RunWith
 import woowacourse.shopping.R
 import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.data.CartsImpl
+import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 
 @RunWith(AndroidJUnit4::class)
@@ -136,24 +136,17 @@ class CartActivityTest {
         @BeforeClass
         fun setUp() {
             repeat(5) {
+                ProductsImpl.save(MAC_BOOK)
+            }
+            ProductsImpl.save(IPHONE)
+
+            repeat(5) {
                 CartsImpl.save(
-                    Cart(
-                        productWithQuantityId =
-                            ProductWithQuantity(
-                                product = MAC_BOOK.copy(id = it.toLong()),
-                                quantity = Quantity(1),
-                            ),
-                    ),
+                    Cart(productId = it.toLong(), quantity = Quantity(1)),
                 )
             }
             CartsImpl.save(
-                Cart(
-                    productWithQuantityId =
-                        ProductWithQuantity(
-                            product = IPHONE,
-                            quantity = Quantity(1),
-                        ),
-                ),
+                Cart(productId = 5L, quantity = Quantity(1)),
             )
         }
     }

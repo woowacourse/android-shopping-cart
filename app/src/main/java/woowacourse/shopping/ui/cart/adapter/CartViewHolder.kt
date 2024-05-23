@@ -15,7 +15,7 @@ class CartViewHolder(
     fun bind(productWithQuantity: ProductWithQuantity) {
         binding.productWithQuantity = productWithQuantity
         binding.ivRemove.setOnClickListener {
-            itemRemoveClickListener(productWithQuantity.id)
+            itemRemoveClickListener(productWithQuantity.product.id)
         }
         binding.countButtonClickListener = countButtonClickListener(productWithQuantity)
     }
@@ -23,11 +23,11 @@ class CartViewHolder(
     private fun countButtonClickListener(productWithQuantity: ProductWithQuantity) =
         object : CountButtonClickListener {
             override fun plusCount() {
-                plusCountClickListener(productWithQuantity.id)
+                plusCountClickListener(productWithQuantity.product.id)
             }
 
             override fun minusCount() {
-                minusCountClickListener(productWithQuantity.id)
+                minusCountClickListener(productWithQuantity.product.id)
             }
         }
 }

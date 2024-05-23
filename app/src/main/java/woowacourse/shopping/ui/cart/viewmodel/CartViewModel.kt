@@ -8,11 +8,10 @@ import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.data.CartDao
-import woowacourse.shopping.model.data.CartsImpl.findProductWithQuantity
-import woowacourse.shopping.model.data.ProductWithQuantityDao
+import woowacourse.shopping.model.data.ProductDao
 
 class CartViewModel(
-    private val productWithQuantityDao: ProductWithQuantityDao,
+    private val productDao: ProductDao,
     private val cartDao: CartDao,
 ) : ViewModel() {
     private val cartPageManager by lazy { CartPageManager(PAGE_SIZE) }
@@ -30,7 +29,9 @@ class CartViewModel(
 
     val productWithQuantity: LiveData<List<ProductWithQuantity>> =
         cart.map { carts ->
-            carts.map { it.findProductWithQuantity() }
+            carts.map { cart ->
+                ProductWithQuantity(productDao.find(cart.productId), cart.quantity)
+            }
         }
 
     init {
@@ -38,10 +39,11 @@ class CartViewModel(
         updatePageState()
     }
 
-    fun removeCartItem(productWithQuantityId: Long) {
-        cartDao.deleteByProductWithQuantityId(productWithQuantityId)
+    fun removeCartItem(productId: Long) {
+        cartDao.deleteByProductId(productId)
         _canMoveNextPage.value = cartPageManager.canMoveNextPage(cartDao.itemSize())
         cart.value = cartDao.getProducts(cartPageManager.pageNum, PAGE_SIZE)
+        loadCartItems()
     }
 
     fun plusPageNum() {
@@ -56,13 +58,13 @@ class CartViewModel(
         updatePageState()
     }
 
-    fun plusCount(productWithQuantityId: Long) {
-        productWithQuantityDao.plusCartCount(productWithQuantityId)
+    fun plusCount(productId: Long) {
+        cartDao.plusQuantityByProductId(productId)
         loadCartItems()
     }
 
-    fun minusCount(productWithQuantityId: Long) {
-        cartDao.minusQuantityByProductWithQuantityId(productWithQuantityId)
+    fun minusCount(productId: Long) {
+        cartDao.minusQuantityByProductId(productId)
         loadCartItems()
     }
 

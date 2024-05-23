@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
 import woowacourse.shopping.model.data.CartsImpl
-import woowacourse.shopping.model.data.ProductWithQuantitiesImpl
+import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductAdapter
@@ -24,7 +24,7 @@ class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
     private lateinit var adapter: ProductAdapter
     private val viewModel: ProductContentsViewModel by viewModels {
-        ProductContentsViewModelFactory(ProductWithQuantitiesImpl, CartsImpl)
+        ProductContentsViewModelFactory(ProductsImpl, CartsImpl)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +39,6 @@ class ProductContentsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.refreshProducts()
         viewModel.loadCartItems()
     }
 
