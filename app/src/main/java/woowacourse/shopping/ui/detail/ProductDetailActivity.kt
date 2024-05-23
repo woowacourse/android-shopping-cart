@@ -1,5 +1,6 @@
 package woowacourse.shopping.ui.detail
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,12 +14,13 @@ import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
 import woowacourse.shopping.ui.cart.CartActivity
+import woowacourse.shopping.ui.products.ProductsActivity.Companion.CHANGED_PRODUCT_ID_KEY
 
 class ProductDetailActivity : AppCompatActivity() {
     private val binding by lazy { ActivityProductDetailBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<ProductDetailViewModel> {
         ProductDetailViewModelFactory(
-            intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE),
+            productId(),
             ProductRepository.getInstance(),
             CartRepository.getInstance(),
         )
@@ -57,6 +59,8 @@ class ProductDetailActivity : AppCompatActivity() {
             val isSuccess = isSuccessEvent.getContentIfNotHandled() ?: return@observe
             if (isSuccess) {
                 showAddCartSuccessDialog()
+                val resultIntent = Intent().putExtra(CHANGED_PRODUCT_ID_KEY, productId())
+                setResult(Activity.RESULT_OK, resultIntent)
             } else {
                 showAddCartFailureToast()
             }
@@ -100,6 +104,8 @@ class ProductDetailActivity : AppCompatActivity() {
             .setAction(getString(R.string.common_confirm)) { finish() }
             .show()
     }
+
+    private fun productId(): Long = intent.getLongExtra(PRODUCT_ID_KEY, PRODUCT_ID_DEFAULT_VALUE)
 
     companion object {
         private const val PRODUCT_ID_KEY = "product_id_key"

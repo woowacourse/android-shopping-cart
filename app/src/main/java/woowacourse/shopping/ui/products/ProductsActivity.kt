@@ -1,7 +1,9 @@
 package woowacourse.shopping.ui.products
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -24,6 +26,17 @@ class ProductsActivity : AppCompatActivity() {
         )
     }
     private lateinit var adapter: ProductsAdapter
+
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val changedProductId =
+                result.data?.getLongExtra(CHANGED_PRODUCT_ID_KEY, CHANGED_PRODUCT_ID_DEFAULT_VALUE)
+                    ?: return@registerForActivityResult
+            viewModel.loadProductUiModel(changedProductId)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +70,8 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     private fun navigateToProductDetailView(productId: Long) {
-        ProductDetailActivity.newIntent(this, productId)
-            .also { startActivity(it) }
+        val intent = ProductDetailActivity.newIntent(this, productId)
+        activityResultLauncher.launch(intent)
     }
 
     private fun initializeToolbar() {
@@ -80,10 +93,16 @@ class ProductsActivity : AppCompatActivity() {
                     dy: Int,
                 ) {
                     super.onScrolled(recyclerView, dx, dy)
-                    val lastPosition = (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
+                    val lastPosition =
+                        (recyclerView.layoutManager as GridLayoutManager).findLastCompletelyVisibleItemPosition()
                     viewModel.changeSeeMoreVisibility(lastPosition)
                 }
             }
         binding.rvProducts.addOnScrollListener(onScrollListener)
+    }
+
+    companion object {
+        const val CHANGED_PRODUCT_ID_KEY = "changed_product_id_key"
+        const val CHANGED_PRODUCT_ID_DEFAULT_VALUE = -1L
     }
 }

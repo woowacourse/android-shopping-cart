@@ -42,11 +42,14 @@ class ProductsAdapter(
     }
 
     fun insertProducts(insertedProductUiModel: List<ProductUiModel>) {
-        val positionStart = insertedProductUiModel.size
-        val itemCount = insertedProductUiModel.size - productUiModels.size
-
-        productUiModels.addAll(insertedProductUiModel.subList(productUiModels.size, insertedProductUiModel.size))
-        notifyItemRangeChanged(positionStart, itemCount)
+        productUiModels.clear()
+        productUiModels.addAll(insertedProductUiModel)
+        notifyDataSetChanged()
+//        val positionStart = insertedProductUiModel.size
+//        val itemCount = insertedProductUiModel.size - productUiModels.size
+//
+//        productUiModels.addAll(insertedProductUiModel.subList(productUiModels.size, insertedProductUiModel.size))
+//        notifyItemRangeChanged(positionStart, itemCount)
     }
 
     fun replaceProduct(replacedProductUiModel: ProductUiModel) {

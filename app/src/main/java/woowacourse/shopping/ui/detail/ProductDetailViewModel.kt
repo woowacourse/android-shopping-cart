@@ -7,6 +7,7 @@ import androidx.lifecycle.map
 import woowacourse.shopping.common.Event
 import woowacourse.shopping.data.cart.CartRepository
 import woowacourse.shopping.data.product.ProductRepository
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.ui.products.ProductUiModel
 import woowacourse.shopping.ui.utils.AddCartQuantityBundle
@@ -35,12 +36,14 @@ class ProductDetailViewModel(
             )
         }
 
+    private lateinit var product: Product
+
     init {
         loadProduct()
     }
 
     private fun loadProduct() {
-        val product: Product =
+        product =
             runCatching {
                 productRepository.find(productId)
             }.onSuccess {
@@ -55,10 +58,17 @@ class ProductDetailViewModel(
                 .getOrElse { ProductUiModel.from(product) }
     }
 
+    private fun CartItem.toProductUiModel(): ProductUiModel {
+        return runCatching { cartRepository.find(product.id) }
+            .map { ProductUiModel.from(product, it.quantity) }
+            .getOrElse { ProductUiModel.from(product) }
+    }
+
     fun addCartProduct() {
         runCatching {
-            val product = _productUiModel.value ?: return
-            cartRepository.changeQuantity(product.productId, product.quantity)
+            val productUiModel = _productUiModel.value ?: return
+            cartRepository.changeQuantity(productUiModel.productId, productUiModel.quantity)
+            cartRepository.find(productUiModel.productId).toProductUiModel()
         }.onSuccess {
             _isSuccessAddCart.value = Event(true)
         }.onFailure {

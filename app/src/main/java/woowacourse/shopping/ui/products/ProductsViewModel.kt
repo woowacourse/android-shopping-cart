@@ -87,6 +87,23 @@ class ProductsViewModel(
             }
     }
 
+    fun loadProductUiModel(productId: Long) {
+        val product = productRepository.find(productId)
+        val productUiModel =
+            runCatching { cartRepository.find(product.id) }
+                .map {
+                    ProductUiModel.from(product, it.quantity)
+                }
+                .getOrElse {
+                    ProductUiModel.from(product)
+                }
+
+        val productUiModels = _productUiModels.value ?: return
+        val index = productUiModels.indexOfFirst { it.productId == productId }
+        _productUiModels.value = productUiModels.apply { this[index] = productUiModel }
+        _cartTotalCount.value = (_cartTotalCount.value ?: return) - productUiModels[index].quantity.count + productUiModel.quantity.count
+    }
+
     companion object {
         private const val INITIALIZE_PAGE = 0
         private const val PAGE_SIZE = 20
