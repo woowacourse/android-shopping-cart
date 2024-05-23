@@ -3,9 +3,11 @@ package woowacourse.shopping.util
 interface UiState {
     interface Loading : UiState
 
-    interface Complete<T : Any?> : UiState {
+    interface CompleteWithResult<T : Any?> : UiState {
         val result: T
     }
+
+    interface Complete : UiState
 
     interface Fail
 
