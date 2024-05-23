@@ -10,6 +10,7 @@ import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.data.RecentProductsImpl
 import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -20,7 +21,7 @@ class ProductDetailViewModelTest {
     fun setUp() {
         ProductsImpl.deleteAll()
         CartsImpl.deleteAll()
-        viewModel = ProductDetailViewModel(ProductsImpl)
+        viewModel = ProductDetailViewModel(ProductsImpl, RecentProductsImpl)
     }
 
     @Test

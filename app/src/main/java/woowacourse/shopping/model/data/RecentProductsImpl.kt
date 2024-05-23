@@ -31,8 +31,10 @@ object RecentProductsImpl : RecentProductDao {
     }
 
     override fun findMostRecentProduct(): RecentProduct? {
-        if (recentProducts.size == 1) return null
-        return recentProducts.values.sortedByDescending { it.recentTime }[1]
+        if (recentProducts.size == 0) {
+            return null
+        }
+        return recentProducts.values.maxBy { it.recentTime }
     }
 
     override fun findAll(): List<RecentProduct> {

@@ -9,6 +9,7 @@ import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.data.RecentProductsImpl
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -29,7 +30,7 @@ class ProductContentsViewModelTest {
         }
 
         // when
-        viewModel = ProductContentsViewModel(ProductsImpl, CartsImpl)
+        viewModel = ProductContentsViewModel(ProductsImpl, RecentProductsImpl, CartsImpl)
 
         // then
         assertThat(viewModel.productWithQuantity.getOrAwaitValue().size).isEqualTo(20)
@@ -41,7 +42,7 @@ class ProductContentsViewModelTest {
         ProductsImpl.save(product)
 
         // when
-        viewModel = ProductContentsViewModel(ProductsImpl, CartsImpl)
+        viewModel = ProductContentsViewModel(ProductsImpl, RecentProductsImpl, CartsImpl)
 
         // then
         assertThat(viewModel.productWithQuantity.getOrAwaitValue()[0].product.name).isEqualTo("맥북")

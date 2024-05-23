@@ -35,10 +35,6 @@ class ProductDetailViewModel(
     private val _mostRecentProductVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
     val mostRecentProductVisibility: MutableLiveData<Boolean> get() = _mostRecentProductVisibility
 
-    init {
-        loadMostRecentProduct()
-    }
-
     fun loadProduct(productId: Long) {
         runCatching {
             productDao.find(productId)
@@ -60,6 +56,14 @@ class ProductDetailViewModel(
         }
     }
 
+    fun addToRecentProduct(
+        productId: Long,
+        lastSeenProductState: Boolean,
+    ) {
+        loadMostRecentProduct(productId, lastSeenProductState)
+        recentProductDao.save(productId)
+    }
+
     fun plusCount() {
         _productWithQuantity.value?.let {
             _productWithQuantity.value = it.inc()
@@ -72,14 +76,18 @@ class ProductDetailViewModel(
         }
     }
 
-    private fun loadMostRecentProduct() {
+    private fun loadMostRecentProduct(
+        productId: Long,
+        lastSeenProductState: Boolean,
+    ) {
         recentProductDao.findMostRecentProduct()?.let {
             runCatching {
                 productDao.find(it.productId)
             }.onSuccess {
                 _error.value = false
                 _mostRecentProduct.value = it
-                setMostRecentVisibility(it)
+                if (!lastSeenProductState) return
+                setMostRecentVisibility(it.id, productId)
             }.onFailure {
                 _error.value = true
                 _mostRecentProductVisibility.value = false
@@ -88,9 +96,13 @@ class ProductDetailViewModel(
         }
     }
 
-    private fun setMostRecentVisibility(it: Product) {
-        if (it.id == _mostRecentProduct.value?.id) {
+    private fun setMostRecentVisibility(
+        mostRecentProductId: Long,
+        currentProductId: Long,
+    ) {
+        if (mostRecentProductId == currentProductId) {
             _mostRecentProductVisibility.value = false
+            return
         }
         _mostRecentProductVisibility.value = true
     }

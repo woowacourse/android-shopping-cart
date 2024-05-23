@@ -42,6 +42,7 @@ class ProductContentsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         viewModel.loadCartItems()
+        viewModel.loadRecentProducts()
     }
 
     private fun initToolbar() {
@@ -60,8 +61,7 @@ class ProductContentsActivity : AppCompatActivity() {
         binding.rvProducts.itemAnimator = null
         productAdapter =
             ProductAdapter(
-                { ProductDetailActivity.startActivity(this, it) },
-                { viewModel.addToRecentProduct(it) },
+                { ProductDetailActivity.startActivity(this, it, true) },
                 { viewModel.plusCount(it) },
                 { viewModel.minusCount(it) },
             )
@@ -72,7 +72,7 @@ class ProductContentsActivity : AppCompatActivity() {
         binding.rvRecentProducts.itemAnimator = null
         recentProductAdapter =
             RecentProductAdapter {
-                ProductDetailActivity.startActivity(this, it)
+                ProductDetailActivity.startActivity(this, it, true)
             }
         binding.rvRecentProducts.adapter = recentProductAdapter
     }

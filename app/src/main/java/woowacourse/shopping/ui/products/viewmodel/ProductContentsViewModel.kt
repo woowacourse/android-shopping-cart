@@ -52,7 +52,6 @@ class ProductContentsViewModel(
         productWithQuantity.addSource(products) { updateProductWithQuantity() }
         productWithQuantity.addSource(cart) { updateProductWithQuantity() }
         loadProducts()
-        loadRecentProducts()
     }
 
     fun loadProducts() {
@@ -62,11 +61,6 @@ class ProductContentsViewModel(
 
     fun loadCartItems() {
         cart.value = cartDao.findAll()
-    }
-
-    fun addToRecentProduct(productId: Long) {
-        recentProductDao.save(productId)
-        loadRecentProducts()
     }
 
     fun plusCount(productId: Long) {
@@ -79,7 +73,7 @@ class ProductContentsViewModel(
         loadCartItems()
     }
 
-    private fun loadRecentProducts() {
+    fun loadRecentProducts() {
         _recentProducts.value = recentProductDao.findAll()
     }
 

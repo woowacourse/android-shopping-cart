@@ -136,18 +136,11 @@ class CartActivityTest {
         @BeforeClass
         fun setUp() {
             repeat(5) {
-                ProductsImpl.save(MAC_BOOK)
+                val id = ProductsImpl.save(MAC_BOOK)
+                CartsImpl.save(Cart(productId = id, quantity = Quantity(1)))
             }
-            ProductsImpl.save(IPHONE)
-
-            repeat(5) {
-                CartsImpl.save(
-                    Cart(productId = it.toLong(), quantity = Quantity(1)),
-                )
-            }
-            CartsImpl.save(
-                Cart(productId = 5L, quantity = Quantity(1)),
-            )
+            val id = ProductsImpl.save(IPHONE)
+            CartsImpl.save(Cart(productId = id, quantity = Quantity(1)))
         }
     }
 }

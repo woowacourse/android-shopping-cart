@@ -27,6 +27,7 @@ class ProductDetailActivity :
         ProductDetailViewModelFactory(ProductsImpl, RecentProductsImpl)
     }
     private val productId by lazy { productId() }
+    private val lastSeenProductState by lazy { lastSeenProductState() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +37,7 @@ class ProductDetailActivity :
         showProductDetail()
         setOnListener()
         observeErrorMessage()
+        viewModel.addToRecentProduct(productId, lastSeenProductState)
     }
 
     override fun onClickAddCartButton() {
@@ -47,7 +49,7 @@ class ProductDetailActivity :
 
     override fun onClickMostRecentProduct() {
         viewModel.mostRecentProduct.observe(this) {
-            moveToMostRecentProductPage(this, it.id)
+            moveToMostRecentProductDetail(this, it.id, false)
         }
     }
 
@@ -101,22 +103,32 @@ class ProductDetailActivity :
             EXTRA_DEFAULT_VALUE,
         )
 
+    private fun lastSeenProductState() =
+        intent.getBooleanExtra(
+            "last_seen_product_State",
+            false,
+        )
+
     companion object {
         private const val EXTRA_DEFAULT_VALUE = -1L
 
         fun startActivity(
             context: Context,
             productId: Long,
+            lastSeenProductState: Boolean,
         ) = Intent(context, ProductDetailActivity::class.java).run {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
+            putExtra("last_seen_product_State", lastSeenProductState)
             context.startActivity(this)
         }
 
-        fun moveToMostRecentProductPage(
+        fun moveToMostRecentProductDetail(
             context: Context,
             productId: Long,
+            lastSeenProductState: Boolean,
         ) = Intent(context, ProductDetailActivity::class.java).run {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
+            putExtra("last_seen_product_State", lastSeenProductState)
             setFlags(FLAG_ACTIVITY_CLEAR_TOP)
             context.startActivity(this)
         }
