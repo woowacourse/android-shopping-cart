@@ -1,11 +1,9 @@
 package woowacourse.shopping.productlist
 
-interface ProductListClickAction {
+import woowacourse.shopping.util.CartItemCountClickAction
+
+interface ProductListClickAction : CartItemCountClickAction {
     fun onProductClicked(id: Long)
 
     fun onIntoCartClicked(id: Long)
-
-    fun onPlusCountClicked(id: Long)
-
-    fun onMinusCountClicked(id: Long)
 }
