@@ -2,9 +2,11 @@ package woowacourse.shopping.cart
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderCartBinding
+import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 
 class CartItemRecyclerViewAdapter(
@@ -30,7 +32,12 @@ class CartItemRecyclerViewAdapter(
         position: Int,
     ) {
         val item = values[position]
-        holder.bind(item)
+        holder.bind(item, cartItem = CartItem(item.id, 1))
+        holder.binding.cartQuantityButton.productDetailProductCount.visibility =
+            View.VISIBLE
+        holder.binding.cartQuantityButton.productDetailPlus.visibility = View.VISIBLE
+        holder.binding.cartQuantityButton.productDetailMinus.visibility =
+            View.VISIBLE
     }
 
     override fun getItemCount(): Int = values.size.coerceAtMost(5)
@@ -42,12 +49,13 @@ class CartItemRecyclerViewAdapter(
     }
 
     inner class ViewHolder(
-        private val binding: HolderCartBinding,
+        val binding: HolderCartBinding,
         private val onClick: (id: Int) -> Unit,
     ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(product: Product) {
+        fun bind(product: Product, cartItem: CartItem) {
             binding.product = product
+            binding.cartItem = cartItem
             binding.cartProductDelete.setOnClickListener { onClick(product.id) }
         }
     }
