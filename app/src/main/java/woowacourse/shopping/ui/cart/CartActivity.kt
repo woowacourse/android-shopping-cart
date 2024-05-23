@@ -7,11 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityCartBinding
 
+
 class CartActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityCartBinding.inflate(layoutInflater) }
 
-    private val viewModel: CartViewModel by viewModels()
+    private val viewModel: CartViewModel by lazy {
+        CartViewModelFactory().create(CartViewModel::class.java)
+    }
 
     private lateinit var dateFormatter: DateFormatter
 
@@ -63,7 +66,6 @@ class CartActivity : AppCompatActivity() {
             binding.rvCartProducts.adapter = adapter
         }
         viewModel.onCartProductDeleted.observe(this) {
-            if (!it) return@observe
             Toast.makeText(this, getString(R.string.cart_deleted), Toast.LENGTH_SHORT).show()
         }
     }

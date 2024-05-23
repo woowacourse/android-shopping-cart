@@ -16,7 +16,9 @@ class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +62,9 @@ class MainActivity : AppCompatActivity() {
             addProducts(it)
         }
         viewModel.onProductAdded.observe(this) {
-            if (!it) return@observe
-            Toast.makeText(this, getString(R.string.cart_added), Toast.LENGTH_SHORT).show()
+            it.getContentIfNotHandled()?.let {
+                Toast.makeText(this, getString(R.string.cart_added), Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
