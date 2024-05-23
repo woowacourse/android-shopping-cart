@@ -76,4 +76,12 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
+
+    // okhttp
+    implementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
+    testImplementation("io.projectreactor:reactor-test")
+
+    // gson
+    implementation("com.google.code.gson:gson:2.10.1")
 }
