@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -8,12 +9,20 @@
             type="woowacourse.shopping.domain.model.Product" />
 
         <variable
+            name="quantity"
+            type="Integer" />
+
+        <variable
             name="productListActionHandler"
             type="woowacourse.shopping.view.products.ProductListActionHandler" />
+
+        <variable
+            name="countActionHandler"
+            type="woowacourse.shopping.view.CountActionHandler" />
     </data>
 
-    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
         android:onClick="@{()->productListActionHandler.onProductItemClicked(product.id)}"
@@ -22,35 +31,72 @@
         <ImageView
             android:id="@+id/iv_product_image"
             imageUrl="@{product.imageUrl}"
-            android:layout_width="match_parent"
-            android:layout_height="154dp"
-            android:layout_gravity="center" />
-
-        <Space
             android:layout_width="0dp"
-            android:layout_height="8dp" />
+            android:layout_height="154dp"
+            android:layout_marginBottom="4dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/tv_product_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            tools:src="@drawable/ic_launcher_background" />
+
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_product_name"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="9dp"
+            android:layout_marginBottom="4dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{product.name}"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="상품상품상품상품상품상품상품상품상품상품" />
+            app:layout_constraintBottom_toTopOf="@id/tv_product_price"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image"
+            app:layout_constraintStart_toStartOf="@id/iv_product_image"
+            app:layout_constraintTop_toBottomOf="@id/iv_product_image"
+            tools:text="상품 이름" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_product_price"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_marginEnd="9dp"
             android:ellipsize="end"
             android:text="@{@string/formatted_price(product.price)}"
             android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv_product_name"
+            app:layout_constraintStart_toStartOf="@id/tv_product_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_product_name"
             tools:text="10,000원" />
-    </LinearLayout>
+
+        <Space
+            android:id="@+id/spacer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/count_view"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"/>
+
+        <include
+            android:id="@+id/count_view"
+            layout="@layout/count_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:count="@{quantity}"
+            app:id="@{product.id}"
+            app:countActionHandler="@{countActionHandler}"
+            app:layout_constraintStart_toEndOf="@id/spacer"
+            app:layout_constraintBottom_toBottomOf="@id/iv_product_image"
+            app:layout_constraintEnd_toEndOf="@id/iv_product_image" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

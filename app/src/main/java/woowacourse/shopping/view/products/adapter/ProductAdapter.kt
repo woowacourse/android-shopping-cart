@@ -5,7 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemMoreLoadBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductWithQuantity
+import woowacourse.shopping.view.CountActionHandler
 import woowacourse.shopping.view.products.ProductListActionHandler
 import woowacourse.shopping.view.products.adapter.ProductItemType.Companion.PRODUCT_VIEW_TYPE
 import woowacourse.shopping.view.products.adapter.viewholder.ProductListViewHolder
@@ -14,6 +15,7 @@ import woowacourse.shopping.view.products.adapter.viewholder.ProductListViewHold
 
 class ProductAdapter(
     private val productListActionHandler: ProductListActionHandler,
+    private val countActionHandler: CountActionHandler,
 ) : RecyclerView.Adapter<ProductListViewHolder>() {
     private var productItems: List<ProductItemType> = emptyList()
 
@@ -30,6 +32,7 @@ class ProductAdapter(
                 ProductViewHolder(
                     ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false),
                     productListActionHandler,
+                    countActionHandler,
                 )
             else ->
                 LoadMoreViewHolder(
@@ -48,25 +51,48 @@ class ProductAdapter(
         position: Int,
     ) {
         when (val content = productItems[position]) {
-            is ProductItemType.ProductItem -> (holder as ProductViewHolder).bind(content.product)
+            is ProductItemType.ProductItem -> (holder as ProductViewHolder).bind(content.item)
             is ProductItemType.LoadMore -> (holder as LoadMoreViewHolder).bind()
         }
     }
 
     fun updateProducts(
-        newProducts: List<Product>,
+        updatedProducts: List<ProductWithQuantity>,
         hasNextPage: Boolean,
     ) {
         val startPosition = productItems.size
+        val newProducts = updatedProducts.drop((startPosition - 1).coerceAtLeast(0))
         val productTypes = newProducts.map { ProductItemType.ProductItem(it) }
+
+        val beforeProductItems = productItems.dropLast(1)
         val insertedItems =
             if (hasNextPage) {
-                productTypes + ProductItemType.LoadMore()
+                beforeProductItems + productTypes + ProductItemType.LoadMore()
             } else {
-                productTypes
+                beforeProductItems + productTypes
             }
-        val newItemsSize = insertedItems.size - startPosition
         this.productItems = insertedItems
-        notifyItemRangeInserted(startPosition, newItemsSize)
+        notifyItemRangeInserted(startPosition, newProducts.size)
+    }
+
+    fun updateProduct(updatedItem: ProductWithQuantity) {
+        val index = findIndexOfProduct(updatedItem.product.id)
+        if (index != -1) {
+            productItems =
+                productItems.toMutableList().apply {
+                    set(index, ProductItemType.ProductItem(updatedItem))
+                }
+            notifyItemChanged(index)
+        }
+    }
+
+    private fun findIndexOfProduct(productId: Long): Int {
+        return productItems.indexOfFirst {
+            if (it is ProductItemType.ProductItem) {
+                it.item.product.id == productId
+            } else {
+                false
+            }
+        }
     }
 }

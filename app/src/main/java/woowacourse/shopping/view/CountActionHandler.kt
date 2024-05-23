@@ -1,7 +1,7 @@
 package woowacourse.shopping.view
 
 interface CountActionHandler {
-    fun onIncreaseQuantityButtonClicked()
+    fun onIncreaseQuantityButtonClicked(id: Long)
 
-    fun onDecreaseQuantityButtonClicked()
+    fun onDecreaseQuantityButtonClicked(id: Long)
 }

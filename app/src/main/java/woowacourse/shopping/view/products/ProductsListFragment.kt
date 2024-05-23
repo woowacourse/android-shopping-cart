@@ -51,7 +51,11 @@ class ProductsListFragment : Fragment() {
 
     private fun setUpDataBinding() {
         binding.productListActionHandler = productListViewModel
-        adapter = ProductAdapter(productListActionHandler = productListViewModel)
+        adapter =
+            ProductAdapter(
+                productListActionHandler = productListViewModel,
+                countActionHandler = productListViewModel,
+            )
         binding.rvProducts.adapter = adapter
         val layoutManager = GridLayoutManager(context, 2)
         layoutManager.spanSizeLookup =
@@ -66,7 +70,11 @@ class ProductsListFragment : Fragment() {
 
     private fun observeData() {
         productListViewModel.products.observe(viewLifecycleOwner) { products ->
-            adapter.updateProducts(newProducts = products.items, products.hasNextPage)
+            adapter.updateProducts(products.items, products.hasNextPage)
+        }
+
+        productListViewModel.updatedCountInfo.observe(viewLifecycleOwner) { updatedInfo ->
+            adapter.updateProduct(updatedInfo)
         }
 
         productListViewModel.navigateToCart.observe(viewLifecycleOwner) {
