@@ -1,18 +1,21 @@
 package woowacourse.shopping.presentation.ui.shopping
 
+import android.nfc.tech.MifareUltralight.PAGE_SIZE
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductWithQuantity
+import woowacourse.shopping.presentation.ui.CartQuantityActionHandler
 
 class ShoppingAdapter(
-    private val actionHandler: ShoppingActionHandler,
+    private val viewModel: ShoppingViewModel,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var items: MutableList<ShoppingItem> = mutableListOf()
+    private val productPosition: HashMap<Long, Int> = hashMapOf()
 
-    fun submitList(newItems: List<Product>) {
+    fun submitList(newItems: List<ProductWithQuantity>) {
         val currentSize = items.size
         val insertedItems = newItems.map { ShoppingItem.ProductType(it) }
 
@@ -22,9 +25,27 @@ class ShoppingAdapter(
             if (newItems.size >= PAGE_SIZE) {
                 items.add(ShoppingItem.LoadMoreType)
             }
+            items.forEachIndexed { index, item ->
+                if (item is ShoppingItem.ProductType) {
+                    productPosition[item.productWithQuantity.product.id] = index
+                }
+            }
             notifyItemRangeInserted(currentSize, insertedItems.size + 1)
         } else {
+            items.forEachIndexed { index, item ->
+                if (item is ShoppingItem.ProductType) {
+                    productPosition[item.productWithQuantity.product.id] = index
+                }
+            }
             notifyItemRangeInserted(currentSize, insertedItems.size)
+        }
+    }
+
+    fun updateItem(newItem: ProductWithQuantity) {
+        val index: Int? = productPosition[newItem.product.id]
+        if (index != null) {
+            items[index] = ShoppingItem.ProductType(newItem)
+            notifyItemChanged(index)
         }
     }
 
@@ -43,13 +64,17 @@ class ShoppingAdapter(
             VIEW_TYPE_PRODUCT -> {
                 val binding =
                     ItemProductBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                ShoppingViewHolder(binding)
+                ShoppingViewHolder(
+                    binding,
+                    viewModel as ShoppingActionHandler,
+                    viewModel as CartQuantityActionHandler,
+                )
             }
 
             VIEW_TYPE_LOAD_MORE -> {
                 val binding =
                     ItemLoadMoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                LoadMoreViewHolder(binding, actionHandler)
+                LoadMoreViewHolder(binding, viewModel as ShoppingActionHandler)
             }
 
             else -> throw IllegalArgumentException("Unknown view type")
@@ -62,9 +87,28 @@ class ShoppingAdapter(
     ) {
         when (holder) {
             is ShoppingViewHolder -> {
-                val product = (items[position] as ShoppingItem.ProductType).product
-                holder.bind(product, actionHandler)
+                val productWithQuantity =
+                    (items[position] as ShoppingItem.ProductType).productWithQuantity
+                holder.bind(productWithQuantity)
             }
+        }
+    }
+
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>,
+    ) {
+        if (payloads.isNotEmpty()) {
+            when (holder) {
+                is ShoppingViewHolder -> {
+                    val productWithQuantity =
+                        (items[position] as ShoppingItem.ProductType).productWithQuantity
+                    holder.bindPartial(productWithQuantity)
+                }
+            }
+        } else {
+            onBindViewHolder(holder, position)
         }
     }
 
@@ -75,6 +119,5 @@ class ShoppingAdapter(
     companion object {
         const val VIEW_TYPE_PRODUCT = 0
         const val VIEW_TYPE_LOAD_MORE = 1
-        private const val PAGE_SIZE = 20
     }
 }
