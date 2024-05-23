@@ -93,10 +93,10 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         quantityDelta: Int,
     ) {
         val productIndex = cartProducts.indexOfFirst { it.product.id == productId }
-        val originalQuantity = cartProducts[productIndex].count
+        val originalQuantity = cartProducts[productIndex].quantity
         val updatedItem =
             cartProducts[productIndex].copy(
-                count =
+                quantity =
                     (originalQuantity + quantityDelta).coerceAtLeast(
                         0,
                     ),

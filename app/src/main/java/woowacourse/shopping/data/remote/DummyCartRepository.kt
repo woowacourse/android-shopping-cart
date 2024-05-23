@@ -39,7 +39,7 @@ object DummyCartRepository : CartRepository {
             cartMap[product]?.let {
                 Cart(
                     product = product,
-                    count = it,
+                    quantity = it,
                 )
             } ?: throw NoSuchElementException()
         }

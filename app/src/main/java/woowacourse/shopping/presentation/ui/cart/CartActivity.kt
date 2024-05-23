@@ -107,7 +107,7 @@ class CartActivity : BindingActivity<ActivityCartBinding>(), CartHandler {
             carts?.let {
                 Intent(applicationContext, ShoppingActivity::class.java).apply {
                     putExtra(EXTRA_CHANGED_PRODUCT_IDS, it.map { it.product.id }.toLongArray())
-                    putExtra(EXTRA_NEW_PRODUCT_QUANTITIES, it.map { it.count }.toIntArray())
+                    putExtra(EXTRA_NEW_PRODUCT_QUANTITIES, it.map { it.quantity }.toIntArray())
                     setResult(RESULT_OK, this)
                 }
             }

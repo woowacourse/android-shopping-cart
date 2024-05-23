@@ -15,7 +15,7 @@ sealed interface ProductListItem {
         fun toCart() =
             Cart(
                 product = toProduct(),
-                count = quantity,
+                quantity = quantity,
             )
 
         fun toProduct() =
@@ -37,7 +37,7 @@ sealed interface ProductListItem {
                         product.name,
                         product.imgUrl,
                         product.price,
-                        carts.firstOrNull { product == it.product }?.count ?: 0,
+                        carts.firstOrNull { product == it.product }?.quantity ?: 0,
                     )
                 }
             }
@@ -51,7 +51,7 @@ sealed interface ProductListItem {
                     product.name,
                     product.imgUrl,
                     product.price,
-                    cart.count,
+                    cart.quantity,
                 )
         }
     }

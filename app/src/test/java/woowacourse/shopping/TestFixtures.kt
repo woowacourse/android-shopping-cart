@@ -33,7 +33,7 @@ val dummyCartProducts: List<Cart> =
     List(3) {
         Cart(
             product = dummyProducts[it],
-            count = 1,
+            quantity = 1,
         )
     }
 
