@@ -4,12 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
+import woowacourse.shopping.presentation.common.ItemUpdateHelper
 import woowacourse.shopping.presentation.shopping.detail.ProductUi
 import woowacourse.shopping.presentation.shopping.product.RecentProductItemListener
-import woowacourse.shopping.presentation.util.ItemUpdateHelper
 
 class RecentProductAdapter(
-    private val listener: RecentProductItemListener
+    private val listener: RecentProductItemListener,
 ) :
     RecyclerView.Adapter<RecentProductAdapter.RecentProductViewHolder>() {
     private var products: List<ProductUi> = emptyList()
@@ -31,7 +31,7 @@ class RecentProductAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         return RecentProductViewHolder(
             ItemRecentProductBinding.inflate(layoutInflater, parent, false),
-            listener
+            listener,
         )
     }
 
@@ -58,6 +58,3 @@ class RecentProductAdapter(
         }
     }
 }
-
-
-

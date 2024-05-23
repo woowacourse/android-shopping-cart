@@ -17,6 +17,7 @@ import woowacourse.shopping.data.cart.CartRepositoryInjector
 import woowacourse.shopping.data.shopping.ShoppingRepositoryInjector
 import woowacourse.shopping.databinding.FragmentProductListBinding
 import woowacourse.shopping.presentation.base.BindingFragment
+import woowacourse.shopping.presentation.common.showToast
 import woowacourse.shopping.presentation.navigation.ShoppingNavigator
 import woowacourse.shopping.presentation.shopping.ShoppingEventBusViewModel
 import woowacourse.shopping.presentation.shopping.product.adpater.ProductAdapter
@@ -51,6 +52,7 @@ class ProductListFragment :
         initAppBar()
         initViews()
         initObservers()
+        initErrorEvent()
     }
 
     private fun initAppBar() {
@@ -116,6 +118,32 @@ class ProductListFragment :
         }
     }
 
+    private fun initErrorEvent() {
+        viewModel.errorEvent.observe(viewLifecycleOwner) {
+            when (it) {
+                ProductListErrorEvent.LoadRecentProducts -> {
+                    showToast("최근 본 상품을 불러오는데 실패했습니다.")
+                }
+
+                ProductListErrorEvent.LoadProducts -> {
+                    showToast("상품을 불러오는데 실패했습니다.")
+                }
+
+                ProductListErrorEvent.IncreaseCartCount -> {
+                    showToast("상품 개수를 증가하는데 실패했습니다.")
+                }
+
+                ProductListErrorEvent.DecreaseCartCount -> {
+                    showToast("상품 개수를 감소하는데 실패했습니다.")
+                }
+
+                ProductListErrorEvent.LoadCartProducts -> {
+                    showToast("장바구니를 불러오는데 실패했습니다.")
+                }
+            }
+        }
+    }
+
     private fun spanSizeLookUp() =
         object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
@@ -124,12 +152,14 @@ class ProductListFragment :
                     is ProductAdapter -> {
                         if (productAdapter.getItemViewType(
                                 concatAdapter.getWrappedAdapterAndPosition(
-                                    position
-                                ).second
+                                    position,
+                                ).second,
                             ) == ShoppingUiModel.ITEM_VIEW_TYPE_PLUS
                         ) {
                             SPAN_COUNT
-                        } else 1
+                        } else {
+                            1
+                        }
                     }
 
                     else -> SPAN_COUNT

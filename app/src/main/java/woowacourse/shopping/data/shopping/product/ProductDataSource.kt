@@ -15,5 +15,3 @@ interface ProductDataSource {
         size: Int,
     ): Result<Boolean>
 }
-
-

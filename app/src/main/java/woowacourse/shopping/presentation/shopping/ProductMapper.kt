@@ -6,7 +6,6 @@ import woowacourse.shopping.presentation.cart.CartProductUi
 import woowacourse.shopping.presentation.shopping.detail.ProductUi
 import woowacourse.shopping.presentation.shopping.product.ShoppingUiModel
 
-
 fun CartProduct.toShoppingUiModel(): ShoppingUiModel.Product {
     return product.toShoppingUiModel().copy(count = count)
 }
@@ -19,6 +18,6 @@ fun Product.toUiModel(): ProductUi {
     return ProductUi(id, name, price, imageUrl)
 }
 
-fun Product.toCartUiModel() : CartProductUi {
+fun Product.toCartUiModel(): CartProductUi {
     return CartProductUi(toUiModel(), 1)
 }

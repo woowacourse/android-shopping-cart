@@ -27,7 +27,8 @@ class ProductDetailFragment :
         val shoppingRepository =
             ShoppingRepositoryInjector.shoppingRepository(requireContext().applicationContext)
         ProductDetailViewModel.factory(
-            cartRepository, shoppingRepository
+            cartRepository,
+            shoppingRepository,
         )
     }
 

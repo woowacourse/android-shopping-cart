@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.domain.product
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingRepository
 import woowacourse.shopping.presentation.shopping.toShoppingUiModel
 import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension
@@ -18,6 +19,9 @@ import woowacourse.shopping.presentation.util.getOrAwaitValue
 class ProductListViewModelTest {
     @RelaxedMockK
     private lateinit var shoppingRepository: ShoppingRepository
+
+    @RelaxedMockK
+    private lateinit var cartRepository: CartRepository
 
     private lateinit var productListViewModel: ProductListViewModel
 
@@ -30,11 +34,15 @@ class ProductListViewModelTest {
             Result.success(
                 listOf(product()),
             )
+        every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
+        every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())
         // when
-        productListViewModel = ProductListViewModel(shoppingRepository)
+        productListViewModel = ProductListViewModel(shoppingRepository, cartRepository)
         // when
         verify(exactly = 1) { shoppingRepository.products(currentPage = 1, size = 20) }
         verify(exactly = 1) { shoppingRepository.canLoadMore(page = 2, size = 20) }
+        verify(exactly = 1) { cartRepository.filterCartProducts(listOf(1)) }
+        verify(exactly = 1) { shoppingRepository.recentProducts(10) }
         productListViewModel.products.getOrAwaitValue() shouldBe expectProducts
     }
 
@@ -50,8 +58,10 @@ class ProductListViewModelTest {
         every {
             shoppingRepository.canLoadMore(page = 2, size = 20)
         } returns Result.success(true)
+        every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
+        every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())
         // when
-        productListViewModel = ProductListViewModel(shoppingRepository)
+        productListViewModel = ProductListViewModel(shoppingRepository, cartRepository)
         // when
         verify(exactly = 1) { shoppingRepository.products(currentPage = 1, size = 20) }
         verify(exactly = 1) { shoppingRepository.canLoadMore(page = 2, size = 20) }
@@ -68,8 +78,10 @@ class ProductListViewModelTest {
                 listOf(product()),
             )
         every { shoppingRepository.canLoadMore(page = 2, size = 20) } returns Result.success(false)
+        every { cartRepository.filterCartProducts(listOf(1)) } returns Result.success(emptyList())
+        every { shoppingRepository.recentProducts(10) } returns Result.success(emptyList())
         // when
-        productListViewModel = ProductListViewModel(shoppingRepository)
+        productListViewModel = ProductListViewModel(shoppingRepository, cartRepository)
         // then
         verify(exactly = 1) { shoppingRepository.products(currentPage = 1, size = 20) }
         verify(exactly = 1) { shoppingRepository.canLoadMore(page = 2, size = 20) }

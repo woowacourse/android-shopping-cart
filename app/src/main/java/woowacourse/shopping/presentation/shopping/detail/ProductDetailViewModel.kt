@@ -17,7 +17,7 @@ import woowacourse.shopping.presentation.shopping.toCartUiModel
 
 class ProductDetailViewModel(
     private val cartRepository: CartRepository,
-    private val shoppingRepository: ShoppingRepository
+    private val shoppingRepository: ShoppingRepository,
 ) : ViewModel() {
     private val _cartProduct = MutableLiveData<CartProductUi>()
     val cartProduct: LiveData<CartProductUi> get() = _cartProduct
@@ -32,9 +32,10 @@ class ProductDetailViewModel(
     val recentProduct: LiveData<Product> get() = _recentProduct
 
     val isRecentProductVisible: LiveData<Boolean>
-        get() = _cartProduct.map {
-            it.product.id != _recentProduct.value?.id
-        }
+        get() =
+            _cartProduct.map {
+                it.product.id != _recentProduct.value?.id
+            }
 
     init {
         val recentProduct = shoppingRepository.recentProducts(1).getOrDefault(emptyList())
@@ -90,12 +91,12 @@ class ProductDetailViewModel(
     companion object {
         fun factory(
             cartRepository: CartRepository,
-            shoppingRepository: ShoppingRepository
+            shoppingRepository: ShoppingRepository,
         ): ViewModelProvider.Factory {
             return BaseViewModelFactory {
                 ProductDetailViewModel(
                     cartRepository,
-                    shoppingRepository
+                    shoppingRepository,
                 )
             }
         }

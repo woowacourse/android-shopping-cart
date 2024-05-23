@@ -6,6 +6,6 @@ import woowacourse.shopping.databinding.ItemRecentWrapperBinding
 class RecentProductViewHolderWrapper(private val binding: ItemRecentWrapperBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(adapter: RecentProductAdapter) {
-        binding.rvProductList.adapter = adapter
+        binding.rvRecentProductList.adapter = adapter
     }
 }

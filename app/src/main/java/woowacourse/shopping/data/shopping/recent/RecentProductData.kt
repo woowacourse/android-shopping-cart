@@ -4,5 +4,5 @@ import java.time.LocalDateTime
 
 data class RecentProductData(
     val productId: Long,
-    val createdTime: LocalDateTime
+    val createdTime: LocalDateTime,
 )

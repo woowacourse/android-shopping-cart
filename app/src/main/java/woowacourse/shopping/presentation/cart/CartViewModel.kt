@@ -66,10 +66,14 @@ class CartViewModel(
         val product = currentProducts.find { it.product.id == productId } ?: return
         val newProduct = product.copy(count = product.count + 1)
         cartRepository.updateCartProduct(productId, newProduct.count).onSuccess {
-            val updatedProducts = currentProducts.map {
-                if (it.product.id == productId) newProduct
-                else it
-            }
+            val updatedProducts =
+                currentProducts.map {
+                    if (it.product.id == productId) {
+                        newProduct
+                    } else {
+                        it
+                    }
+                }
             _products.value = updatedProducts
         }.onFailure {
             // TODO : Handle error
@@ -82,10 +86,14 @@ class CartViewModel(
         val newProduct = product.copy(count = product.count - 1)
         if (newProduct.count <= 0) return // TODO : Handle error
         cartRepository.updateCartProduct(productId, newProduct.count).onSuccess {
-            val updatedProducts = currentProducts.map {
-                if (it.product.id == productId) newProduct
-                else it
-            }
+            val updatedProducts =
+                currentProducts.map {
+                    if (it.product.id == productId) {
+                        newProduct
+                    } else {
+                        it
+                    }
+                }
             _products.value = updatedProducts
         }.onFailure {
             // TODO : Handle error

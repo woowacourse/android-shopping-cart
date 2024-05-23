@@ -1,8 +1,8 @@
 package woowacourse.shopping.data.cart
 
 import android.content.Context
-import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.ioExecutor
+import woowacourse.shopping.local.ShoppingDatabase
 
 object CartDataSourceInjector {
     private var instance: CartDataSource? = null

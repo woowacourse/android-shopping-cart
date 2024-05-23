@@ -1,13 +1,11 @@
 package woowacourse.shopping.presentation
 
 import android.app.Application
+import woowacourse.shopping.remote.service.DefaultShoppingProductService
 
 class ShoppingApplication : Application() {
-//    val shoppingRepository: ShoppingRepository by lazy {
-//        ShoppingRepositoryInjector.shoppingRepository()
-//    }
-//
-//    val cartRepository: CartRepository by lazy {
-//        CartRepositoryInjector.cartRepository()
-//    }
+    override fun onTerminate() {
+        super.onTerminate()
+        DefaultShoppingProductService.shutdown()
+    }
 }

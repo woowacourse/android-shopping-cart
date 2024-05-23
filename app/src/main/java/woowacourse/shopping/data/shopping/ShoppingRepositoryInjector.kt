@@ -14,7 +14,7 @@ object ShoppingRepositoryInjector {
         instance ?: synchronized(this) {
             instance ?: DefaultShoppingRepository(
                 ProductDataSourceInjector.productDataSource(),
-                RecentProductDataSourceInjector.recentProductDataSource(context)
+                RecentProductDataSourceInjector.recentProductDataSource(context),
             ).also { instance = it }
         }
 

@@ -5,9 +5,9 @@ import kotlinx.serialization.json.Json
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okio.IOException
+import woowacourse.shopping.ioExecutor
 import woowacourse.shopping.remote.model.ProductPageResponse
 import woowacourse.shopping.remote.model.ProductResponse
-import woowacourse.shopping.ioExecutor
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.Callable
@@ -24,11 +24,6 @@ class DefaultShoppingProductService(
 
     init {
         executor.submit { server.start() }[TIME_OUT, TimeUnit.SECONDS]
-    }
-
-    // TODO : App 종료시 server.shutdown()
-    fun shutdown() {
-        server.shutdown()
     }
 
     override fun fetchProducts(
@@ -139,6 +134,10 @@ class DefaultShoppingProductService(
         return json.decodeFromString<ProductPageResponse>(this)
     }
 
+    private fun shutdown() {
+        server.shutdown()
+    }
+
     companion object {
         private const val TIME_OUT = 3L
 
@@ -151,5 +150,13 @@ class DefaultShoppingProductService(
                     DefaultShoppingProductService().also { instance = it }
                 }
             }
+
+        fun shutdown() {
+            instance?.let {
+                if (it is DefaultShoppingProductService) {
+                    it.shutdown()
+                }
+            }
+        }
     }
 }

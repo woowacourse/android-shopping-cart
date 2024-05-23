@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.shopping.product
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,6 +25,9 @@ class ProductListViewModel(
     val recentProducts: LiveData<List<ProductUi>> get() = _recentProducts
     private val _navigateToDetailEvent = MutableSingleLiveData<Long>()
     val navigateToDetailEvent: SingleLiveData<Long> = _navigateToDetailEvent
+    private val _errorEvent = MutableSingleLiveData<ProductListErrorEvent>()
+    val errorEvent: SingleLiveData<ProductListErrorEvent> = _errorEvent
+
     private var currentPage = 1
 
     init {
@@ -36,13 +38,12 @@ class ProductListViewModel(
 
     override fun loadProducts() {
         val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
-        // TODO : 현재 Executor cancel 처리가 되지 않음
         shoppingRepository.products(currentPage, PAGE_SIZE)
             .onSuccess {
                 val newProducts = it.map(Product::toShoppingUiModel)
                 _products.value = currentProducts + newProducts + getLoadMore(++currentPage)
             }.onFailure {
-                // TODO : Handle error
+                _errorEvent.setValue(ProductListErrorEvent.LoadProducts)
             }
     }
 
@@ -54,13 +55,13 @@ class ProductListViewModel(
             .onSuccess { newCartProducts ->
                 val newProducts = newCartProducts.map(CartProduct::toShoppingUiModel)
                 _products.value = currentProducts.map {
-                    val newProduct = newProducts.find { newProduct -> newProduct.id == it.id }
-                        ?: return@map it.copy(count = 0)
+                    val newProduct =
+                        newProducts.find { newProduct -> newProduct.id == it.id }
+                            ?: return@map it.copy(count = 0)
                     it.copy(count = newProduct.count)
                 } + loadMore
-                Log.e("로그", "loadCartProducts: ${_products.value}")
             }.onFailure {
-                // TODO : Handle error
+                _errorEvent.setValue(ProductListErrorEvent.LoadCartProducts)
             }
     }
 
@@ -70,13 +71,17 @@ class ProductListViewModel(
         val product = currentProducts.find { it.id == id } ?: return
         val newProduct = product.copy(count = product.count + 1)
         cartRepository.updateCartProduct(id, newProduct.count).onSuccess {
-            val updatedProducts = currentProducts.map {
-                if (it.id == id) newProduct
-                else it
-            }
+            val updatedProducts =
+                currentProducts.map {
+                    if (it.id == id) {
+                        newProduct
+                    } else {
+                        it
+                    }
+                }
             _products.value = updatedProducts + loadMore
         }.onFailure {
-            // TODO : Handle error
+            _errorEvent.setValue(ProductListErrorEvent.IncreaseCartCount)
         }
     }
 
@@ -85,10 +90,14 @@ class ProductListViewModel(
         val currentProducts = _products.value.orEmpty().filterIsInstance<ShoppingUiModel.Product>()
         val product = currentProducts.find { it.id == id } ?: return
         val newProduct = product.copy(count = product.count - 1)
-        val updatedProducts = currentProducts.map {
-            if (it.id == id) newProduct
-            else it
-        }
+        val updatedProducts =
+            currentProducts.map {
+                if (it.id == id) {
+                    newProduct
+                } else {
+                    it
+                }
+            }
         if (newProduct.count == 0) {
             cartRepository.deleteCartProduct(id).onSuccess {
                 _products.value = updatedProducts + loadMore
@@ -97,6 +106,8 @@ class ProductListViewModel(
         }
         cartRepository.updateCartProduct(id, newProduct.count).onSuccess {
             _products.value = updatedProducts + loadMore
+        }.onFailure {
+            _errorEvent.setValue(ProductListErrorEvent.DecreaseCartCount)
         }
     }
 
@@ -107,6 +118,8 @@ class ProductListViewModel(
     fun loadRecentProducts() {
         shoppingRepository.recentProducts(RECENT_PRODUCT_COUNT).onSuccess {
             _recentProducts.value = it.map(Product::toUiModel)
+        }.onFailure {
+            _errorEvent.setValue(ProductListErrorEvent.LoadRecentProducts)
         }
     }
 
@@ -124,9 +137,21 @@ class ProductListViewModel(
 
         fun factory(
             shoppingRepository: ShoppingRepository,
-            cartRepository: CartRepository
+            cartRepository: CartRepository,
         ): ViewModelProvider.Factory {
             return BaseViewModelFactory { ProductListViewModel(shoppingRepository, cartRepository) }
         }
     }
+}
+
+sealed interface ProductListErrorEvent {
+    data object IncreaseCartCount : ProductListErrorEvent
+
+    data object LoadCartProducts : ProductListErrorEvent
+
+    data object DecreaseCartCount : ProductListErrorEvent
+
+    data object LoadRecentProducts : ProductListErrorEvent
+
+    data object LoadProducts : ProductListErrorEvent
 }

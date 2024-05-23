@@ -15,8 +15,8 @@ class RecentProductWrapperAdapter(private val adapter: RecentProductAdapter) :
             ItemRecentWrapperBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
-            )
+                false,
+            ),
         )
     }
 

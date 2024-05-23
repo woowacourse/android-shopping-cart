@@ -7,21 +7,25 @@ import java.util.concurrent.TimeUnit
 
 class DefaultRecentProductDataSource(
     private val executors: ExecutorService,
-    private val recentProductDao: RecentProductDao
+    private val recentProductDao: RecentProductDao,
 ) : RecentProductDataSource {
     override fun recentProducts(size: Int): Result<List<RecentProductData>> {
         return runCatching {
-            executors.submit(Callable {
-                recentProductDao.loadProducts(size)
-            })[TIME_OUT, TimeUnit.SECONDS].map { it.toData() }
+            executors.submit(
+                Callable {
+                    recentProductDao.loadProducts(size)
+                },
+            )[TIME_OUT, TimeUnit.SECONDS].map { it.toData() }
         }
     }
 
     override fun saveRecentProduct(product: RecentProductData): Result<Long> {
         return runCatching {
-            executors.submit(Callable {
-                recentProductDao.saveProduct(product.toEntity())
-            })[TIME_OUT, TimeUnit.SECONDS]
+            executors.submit(
+                Callable {
+                    recentProductDao.saveProduct(product.toEntity())
+                },
+            )[TIME_OUT, TimeUnit.SECONDS]
         }
     }
 

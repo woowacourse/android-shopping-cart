@@ -7,10 +7,9 @@ import io.kotest.matchers.shouldBe
 import org.junit.Before
 import org.junit.Test
 import org.junit.jupiter.api.DisplayName
-import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.fixtures.cartEntities
 import woowacourse.shopping.fixtures.cartEntity
-import woowacourse.shopping.local.dao.CartDao
+import woowacourse.shopping.local.ShoppingDatabase
 import woowacourse.shopping.util.testApplicationContext
 
 class CartDaoTest {

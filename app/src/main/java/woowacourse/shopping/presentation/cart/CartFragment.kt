@@ -95,7 +95,6 @@ class CartFragment :
                 viewModel.decreaseCartProduct(id)
                 eventBusViewModel.sendUpdateCartEvent()
             }
-
         }
     }
 

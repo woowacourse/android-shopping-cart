@@ -7,11 +7,12 @@ import woowacourse.shopping.local.ShoppingDatabase
 object RecentProductDataSourceInjector {
     @Volatile
     private var instance: RecentProductDataSource? = null
+
     fun recentProductDataSource(context: Context): RecentProductDataSource =
         instance ?: synchronized(this) {
             instance ?: DefaultRecentProductDataSource(
                 ioExecutor,
-                ShoppingDatabase.instance(context).recentProductDao()
+                ShoppingDatabase.instance(context).recentProductDao(),
             ).also { instance = it }
         }
 }
