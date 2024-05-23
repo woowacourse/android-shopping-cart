@@ -11,6 +11,9 @@ interface OrderDao {
     @Query("SELECT * FROM `order`")
     fun getAll(): List<OrderEntity>
 
+    @Query("SELECT * FROM `order` WHERE productId = :id")
+    fun getById(id: Long): OrderEntity?
+
     @Query("DELETE FROM `order`")
     fun deleteAll()
 

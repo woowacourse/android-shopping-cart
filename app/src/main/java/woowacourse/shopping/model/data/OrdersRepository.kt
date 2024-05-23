@@ -15,6 +15,14 @@ class OrdersRepository(application: Context) {
         return orders
     }
 
+    fun getById(id: Long): OrderEntity {
+        var order = OrderEntity(productId = id, quantity = 0)
+        thread {
+            order = orderDao.getById(id) ?: OrderEntity(productId = id, quantity = 0)
+        }.join()
+        return order
+    }
+
     fun insert(entity: OrderEntity) {
         thread {
             orderDao.insert(entity)

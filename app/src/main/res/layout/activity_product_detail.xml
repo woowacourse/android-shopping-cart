@@ -12,6 +12,10 @@
         <variable
             name="cartButtonClickListener"
             type="woowacourse.shopping.ui.detail.CartButtonClickListener" />
+
+        <variable
+            name="viewModel"
+            type="woowacourse.shopping.ui.detail.ProductDetailViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,30 +56,58 @@
             android:background="@color/gray6"
             app:layout_constraintTop_toBottomOf="@id/tv_product_name" />
 
-        <TextView
-            android:id="@+id/tv_product_price_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="18dp"
-            android:text="@string/product_price_comment"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/split_line" />
 
         <TextView
             android:id="@+id/tv_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="18dp"
-            android:layout_marginEnd="18dp"
+            android:layout_marginStart="18dp"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/split_line"
             android:text="@{@string/product_price(product.price)}"
             tools:text="99,800원" />
+
+        <LinearLayout
+            android:layout_width="126dp"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginBottom="68dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/split_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="14dp"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="-"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:onClick="@{()->viewModel.decreaseItemCount()}"/>
+
+            <TextView
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@{Integer.toString(viewModel.itemCount)}"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="42dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="+"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:onClick="@{()->viewModel.increaseItemCount()}"/>
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_add_product"

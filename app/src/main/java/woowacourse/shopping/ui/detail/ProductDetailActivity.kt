@@ -17,7 +17,7 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
     private val viewModel by lazy {
-        ViewModelProvider(this, ProductDetailViewModelFactory(ProductsImpl, CartsImpl))
+        ViewModelProvider(this, ProductDetailViewModelFactory(ProductsImpl, CartsImpl, this.applicationContext))
             .get(ProductDetailViewModel::class.java)
     }
     private val productId by lazy { productId() }
@@ -26,6 +26,7 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.viewModel = viewModel
         showProductDetail()
         setOnCartButtonClickListener()
     }
@@ -40,6 +41,7 @@ class ProductDetailActivity : AppCompatActivity(), CartButtonClickListener {
         }.onSuccess {
             viewModel.product.observe(this) {
                 binding.product = it
+                binding.lifecycleOwner = this
             }
         }.onFailure {
             toast = Toast.makeText(this, it.message, Toast.LENGTH_SHORT)
