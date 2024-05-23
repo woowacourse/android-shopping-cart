@@ -9,8 +9,11 @@ import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.Quantity
+import woowacourse.shopping.model.RecentProduct
 import woowacourse.shopping.model.data.CartDao
 import woowacourse.shopping.model.data.ProductDao
+import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.data.RecentProductsImpl
 
 class ProductContentsViewModel(
     private val productDao: ProductDao,
@@ -38,6 +41,12 @@ class ProductContentsViewModel(
             }
         }
 
+    private val _recentProducts: MutableLiveData<List<RecentProduct>> = MutableLiveData()
+    val recentProducts: LiveData<List<Product>> =
+        _recentProducts.map {
+            it.map { ProductsImpl.find(it.productId) }
+        }
+
     init {
         productWithQuantity.addSource(products) { updateProductWithQuantity() }
         productWithQuantity.addSource(cart) { updateProductWithQuantity() }
@@ -47,6 +56,7 @@ class ProductContentsViewModel(
     fun loadProducts() {
         items.addAll(productDao.getProducts())
         products.value = items
+        _recentProducts.value = RecentProductsImpl.findAll()
     }
 
     fun loadCartItems() {

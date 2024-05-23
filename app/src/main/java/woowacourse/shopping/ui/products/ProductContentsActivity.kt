@@ -16,13 +16,15 @@ import woowacourse.shopping.model.data.ProductsImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductAdapter
+import woowacourse.shopping.ui.products.adapter.RecentProductAdapter
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModel
 import woowacourse.shopping.ui.products.viewmodel.ProductContentsViewModelFactory
 import woowacourse.shopping.ui.utils.urlToImage
 
 class ProductContentsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProductContentsBinding
-    private lateinit var adapter: ProductAdapter
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentProductAdapter: RecentProductAdapter
     private val viewModel: ProductContentsViewModel by viewModels {
         ProductContentsViewModelFactory(ProductsImpl, CartsImpl)
     }
@@ -32,8 +34,10 @@ class ProductContentsActivity : AppCompatActivity() {
 
         initBinding()
         setProductAdapter()
+        setRecentProductAdapter()
         initToolbar()
         observeProductItems()
+        observeRecentProductItems()
         setOnRecyclerViewScrollListener()
     }
 
@@ -56,18 +60,33 @@ class ProductContentsActivity : AppCompatActivity() {
 
     private fun setProductAdapter() {
         binding.rvProducts.itemAnimator = null
-        adapter =
+        productAdapter =
             ProductAdapter(
                 { ProductDetailActivity.startActivity(this, it) },
                 { viewModel.plusCount(it) },
                 { viewModel.minusCount(it) },
             )
-        binding.rvProducts.adapter = adapter
+        binding.rvProducts.adapter = productAdapter
+    }
+
+    private fun setRecentProductAdapter() {
+        binding.rvRecentProducts.itemAnimator = null
+        recentProductAdapter =
+            RecentProductAdapter {
+                ProductDetailActivity.startActivity(this, it)
+            }
+        binding.rvRecentProducts.adapter = recentProductAdapter
     }
 
     private fun observeProductItems() {
         viewModel.productWithQuantity.observe(this) {
-            adapter.setData(it)
+            productAdapter.setData(it)
+        }
+    }
+
+    private fun observeRecentProductItems() {
+        viewModel.recentProducts.observe(this) {
+            recentProductAdapter.setRecentProducts(it)
         }
     }
 
@@ -94,7 +113,7 @@ class ProductContentsActivity : AppCompatActivity() {
         (recyclerView.layoutManager as GridLayoutManager)
             .findLastCompletelyVisibleItemPosition() == adapterItemSize()
 
-    private fun adapterItemSize() = adapter.itemCount - OFFSET
+    private fun adapterItemSize() = recentProductAdapter.itemCount - OFFSET
 
     companion object {
         private const val OFFSET = 1
