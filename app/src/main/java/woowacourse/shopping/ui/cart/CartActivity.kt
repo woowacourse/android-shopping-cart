@@ -39,7 +39,7 @@ class CartActivity : AppCompatActivity() {
 
     private fun observeCartItems() {
         viewModel.cart.observe(this) {
-            adapter.setData(it)
+            adapter.setData(it.values.toList())
         }
     }
 

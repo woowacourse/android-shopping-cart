@@ -21,18 +21,20 @@ class CartViewModel(
     private val _cartPage: MutableLiveData<CartPage> = MutableLiveData()
     val cartPage: LiveData<CartPage> get() = _cartPage
 
-    private val _cart: MutableLiveData<List<Product>> = MutableLiveData()
-    val cart: LiveData<List<Product>> get() = _cart
+    private val _cart: MutableLiveData<MutableMap<Long, Product>> = MutableLiveData(mutableMapOf())
+    val cart: LiveData<MutableMap<Long, Product>> get() = _cart
 
     private val allProducts = productDao.findAll()
 
     private val allOrders get() = ordersRepository.getAllData()
 
-    private val _orderCounts: MutableLiveData<List<Int>> = MutableLiveData()
-    val orderCounts: LiveData<List<Int>> get() = _orderCounts
+    private val _orderCounts: MutableLiveData<MutableMap<Long, Int>> =
+        MutableLiveData(mutableMapOf())
+    val orderCounts: LiveData<MutableMap<Long, Int>> get() = _orderCounts
 
-    private val _orderPrices: MutableLiveData<List<Int>> = MutableLiveData()
-    val orderPrices: LiveData<List<Int>> get() = _orderPrices
+    private val _orderPrices: MutableLiveData<MutableMap<Long, Int>> =
+        MutableLiveData(mutableMapOf())
+    val orderPrices: LiveData<MutableMap<Long, Int>> get() = _orderPrices
 
     val cartItems
         get() =
@@ -42,26 +44,38 @@ class CartViewModel(
 
     fun loadCartItems() {
         _cartPage.value = CartPage()
-        _cart.value = getProducts()
-        _orderCounts.value = getProductsCount()
+        getProducts().forEach {
+            _cart.value!![it.id] = it
+        }
+        _cart.value = _cart.value
+        _orderCounts.value = getProductsQuantities()
         _orderPrices.value = getProductsTotalPrices()
     }
 
     fun removeCartItem(productId: Long) {
         cartDao.delete(productId)
-        _cart.value = getProducts()
+        getProducts().forEach {
+            _cart.value!![it.id] = it
+        }
+        _cart.value = _cart.value
         val currentPage = _cartPage.value?.number
         _cartPage.value = CartPage(currentPage ?: -1)
     }
 
     fun plusPageNum() {
         _cartPage.value = _cartPage.value?.plus()
-        _cart.value = getProducts()
+        getProducts().forEach {
+            _cart.value!![it.id] = it
+        }
+        _cart.value = _cart.value
     }
 
     fun minusPageNum() {
         _cartPage.value = _cartPage.value?.minus()
-        _cart.value = getProducts()
+        getProducts().forEach {
+            _cart.value!![it.id] = it
+        }
+        _cart.value = _cart.value
     }
 
     private fun getProducts(): List<Product> {
@@ -70,16 +84,25 @@ class CartViewModel(
         return cartItems.toList().subList(fromIndex, toIndex)
     }
 
-    private fun getProductsCount(): List<Int> {
-        val fromIndex = (cartPage.value!!.number - OFFSET) * PAGE_SIZE
-        val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
-        return allOrders.map { it.quantity }.subList(fromIndex, toIndex)
+    private fun getProductsQuantities(): MutableMap<Long, Int> {
+        val productsQuantities: MutableMap<Long, Int> = mutableMapOf()
+        cartItems.forEach { product ->
+            productsQuantities[product.id] = allOrders.first { it.productId == product.id }.quantity
+        }
+        return productsQuantities
     }
 
-    private fun getProductsTotalPrices(): List<Int> {
-        val productsPrice = getProducts().map { it.price }
-        val productsCount = getProductsCount()
-        return productsPrice.zip(productsCount) { first, second -> first * second }
+    private fun getProductsTotalPrices(): MutableMap<Long, Int> {
+        val productsPrices: MutableMap<Long, Int> = mutableMapOf()
+        allProducts.forEach {
+            productsPrices[it.id] = it.price
+        }
+        val productsQuantities = getProductsQuantities()
+        val productsTotalPrices: MutableMap<Long, Int> = mutableMapOf()
+        allOrders.forEach {
+            productsTotalPrices[it.productId] = productsPrices[it.productId]!! * productsQuantities[it.productId]!!
+        }
+        return productsTotalPrices
     }
 
     companion object {
