@@ -1,7 +1,7 @@
 package woowacourse.shopping.presentation.ui.productlist.adapter
 
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.remote.ProductRepository
 import woowacourse.shopping.presentation.ui.productlist.PagingProduct
 
 class ProductListPagingSource(

@@ -3,7 +3,7 @@ package woowacourse.shopping.data.repsoitory.remote
 import woowacourse.shopping.data.api.ApiService
 import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.model.Product
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.domain.repository.remote.ProductRepository
 
 class ProductRepositoryImpl(private val apiService: ApiService) : ProductRepository {
     override fun findProductById(id: Long): Result<Product> = apiService.findProductById(id).mapCatching { it.toDomain() }

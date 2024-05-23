@@ -7,9 +7,9 @@ import woowacourse.shopping.data.db.ShoppingCartDatabase
 import woowacourse.shopping.data.repsoitory.local.ProductHistoryRepositoryImpl
 import woowacourse.shopping.data.repsoitory.local.ShoppingCartRepositoryImpl
 import woowacourse.shopping.data.repsoitory.remote.ProductRepositoryImpl
-import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.remote.ProductRepository
 
 class ShoppingApplication : Application() {
     val shoppingCartRepository: ShoppingCartRepository by lazy {

@@ -12,8 +12,10 @@ import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.api.DummyData.STUB_PRODUCT_A
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.data.mapper.toDomain
+import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.remote.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(InstantTaskExecutorExtension::class, MockKExtension::class)
@@ -28,11 +30,14 @@ class ProductDetailViewModelTest {
     @MockK
     private lateinit var productRepository: ProductRepository
 
+    @MockK
+    private lateinit var productHistoryRepository: ProductHistoryRepository
+
     private val productId = 1L
 
     @BeforeEach
     fun setUp() {
-        every { productRepository.findProductById(productId) } returns Result.success(STUB_PRODUCT_A)
+        every { productRepository.findProductById(productId) } returns Result.success(STUB_PRODUCT_A.toDomain())
 
         val initialState = mapOf(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to productId)
         savedStateHandle = SavedStateHandle(initialState)
@@ -41,14 +46,15 @@ class ProductDetailViewModelTest {
                 savedStateHandle,
                 productRepository,
                 shoppingCartRepository,
+                productHistoryRepository,
             )
     }
 
     @Test
     fun `선택한 상품의 상세 정보를 불러온다`() {
         // then
-        val actual = viewModel.product.getOrAwaitValue()
-        assertThat(actual).isEqualTo(STUB_PRODUCT_A)
+        val actual = viewModel.uiState.getOrAwaitValue()
+        assertThat(actual.product).isEqualTo(STUB_PRODUCT_A)
     }
 
     @Test

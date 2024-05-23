@@ -9,7 +9,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.api.DummyData.PRODUCT_LIST
-import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.data.mapper.toDomain
+import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
+import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
+import woowacourse.shopping.domain.repository.remote.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
 
 @ExtendWith(MockKExtension::class, InstantTaskExecutorExtension::class)
@@ -17,16 +20,27 @@ class ProductListViewModelTest {
     private lateinit var viewModel: ProductListViewModel
 
     @MockK
-    private lateinit var repository: ProductRepository
+    private lateinit var shoppingCartRepository: ShoppingCartRepository
+
+    @MockK
+    private lateinit var productRepository: ProductRepository
+
+    @MockK
+    private lateinit var productHistoryRepository: ProductHistoryRepository
 
     @BeforeEach
     fun setUp() {
-        every { repository.getPagingProduct(0, 20) } returns
-            Result.success(PRODUCT_LIST.subList(0, 20))
-        every { repository.getPagingProduct(1, 20) } returns
-            Result.success(PRODUCT_LIST.subList(20, 40))
+        every { productRepository.getPagingProduct(0, 20) } returns
+            Result.success(PRODUCT_LIST.subList(0, 20).map { it.toDomain() })
+        every { productRepository.getPagingProduct(1, 20) } returns
+            Result.success(PRODUCT_LIST.subList(20, 40).map { it.toDomain() })
 
-        viewModel = ProductListViewModel(repository)
+        viewModel =
+            ProductListViewModel(
+                productRepository,
+                shoppingCartRepository,
+                productHistoryRepository,
+            )
     }
 
     @Test
