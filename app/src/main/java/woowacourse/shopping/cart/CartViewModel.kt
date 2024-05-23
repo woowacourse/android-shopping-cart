@@ -3,8 +3,9 @@ package woowacourse.shopping.cart
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.model.Product
 import woowacourse.shopping.db.ShoppingCart
+import woowacourse.shopping.model.CartItem
+import woowacourse.shopping.model.Product
 import woowacourse.shopping.repository.DummyProductStore
 import kotlin.math.min
 
@@ -18,6 +19,9 @@ class CartViewModel : ViewModel() {
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(1)
     val currentPage: LiveData<Int> get() = _currentPage
     private var _itemsInShoppingCartPage: MutableLiveData<MutableList<Product>> = MutableLiveData()
+
+    private val _cartItems = MutableLiveData(ShoppingCart.cartItems)
+    val cartItem: LiveData<List<CartItem>> get() = _cartItems
 
     init {
         updateItemsInShoppingCart()
@@ -56,11 +60,13 @@ class CartViewModel : ViewModel() {
 
     fun increaseQuantity(productId: Int) {
         ShoppingCart.addProductCount(productId)
+        _cartItems.value = ShoppingCart.cartItems
         updateItemsInShoppingCart()
     }
 
     fun decreaseQuantity(productId: Int) {
         ShoppingCart.subtractProductCount(productId)
+        _cartItems.value = ShoppingCart.cartItems
         updateItemsInShoppingCart()
     }
 

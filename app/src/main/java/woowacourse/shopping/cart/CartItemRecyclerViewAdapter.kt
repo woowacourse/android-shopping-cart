@@ -11,7 +11,8 @@ import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 
 class CartItemRecyclerViewAdapter(
-    private var values: List<Product>,
+    private var products: List<Product> = emptyList(),
+    private var cartItems: List<CartItem> = emptyList(),
     private val onClickCartItemCounter: OnClickCartItemCounter,
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<CartItemRecyclerViewAdapter.ViewHolder>() {
@@ -33,8 +34,9 @@ class CartItemRecyclerViewAdapter(
         holder: ViewHolder,
         position: Int,
     ) {
-        val item = values[position]
-        holder.bind(item, cartItem = CartItem(item.id, 1))
+        val product = products[position]
+        val item = cartItems[position]
+        holder.bind(product, cartItem = item)
         holder.binding.listener = onClickCartItemCounter
         holder.binding.cartQuantityButton.productDetailProductCount.visibility =
             View.VISIBLE
@@ -43,11 +45,16 @@ class CartItemRecyclerViewAdapter(
             View.VISIBLE
     }
 
-    override fun getItemCount(): Int = values.size.coerceAtMost(5)
+    override fun getItemCount(): Int = products.size.coerceAtMost(5)
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateData(newData: List<Product>) {
-        this.values = newData
+        this.products = newData
+        notifyDataSetChanged()
+    }
+
+    fun updateCartItems(newData: List<CartItem>) {
+        this.cartItems = newData
         notifyDataSetChanged()
     }
 

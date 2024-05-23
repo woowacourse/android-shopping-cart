@@ -51,6 +51,10 @@ class CartFragment : Fragment(), OnClickCartItemCounter {
         viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) {
             adapter.updateData(it)
         }
+
+        viewModel.cartItem.observe(viewLifecycleOwner) {
+            adapter.updateCartItems(it)
+        }
     }
 
     override fun increaseQuantity(cartItem: CartItem) {

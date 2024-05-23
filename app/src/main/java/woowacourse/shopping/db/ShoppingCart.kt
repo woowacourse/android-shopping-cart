@@ -1,6 +1,5 @@
 package woowacourse.shopping.db
 
-import android.util.Log
 import woowacourse.shopping.model.CartItem
 
 object ShoppingCart {
@@ -21,18 +20,16 @@ object ShoppingCart {
     }
 
     fun addProductCount(productId: Int) {
-        _cartItems.find { it.productId == productId }?.quantity?.plus(1)
-        Log.d("quantity", _cartItems.find { it.productId == productId }?.quantity.toString())
+        val position = _cartItems.indexOfFirst { it.productId == productId }
+        val item = _cartItems.find { it.productId == productId } ?: return
+        val newItem = item.copy(quantity = item.quantity + 1)
+        _cartItems[position] = newItem
     }
 
     fun subtractProductCount(productId: Int) {
-        val item = _cartItems.find { it.productId == productId }
-        if (item != null) {
-            if (item.quantity > 1) {
-                item.quantity--
-            } else {
-                _cartItems.remove(item)
-            }
-        }
+        val position = _cartItems.indexOfFirst { it.productId == productId }
+        val item = _cartItems.find { it.productId == productId } ?: return
+        val newItem = item.copy(quantity = item.quantity - 1)
+        _cartItems[position] = newItem
     }
 }
