@@ -76,10 +76,6 @@ class CartViewModel(
         _orders.value = orders
     }
 
-    companion object {
-        private const val PAGE_SIZE = 5
-    }
-
     override fun onCartItemAdd(id: Long) {
         cartRepository.plusCartItem(id, 1)
 
@@ -90,5 +86,9 @@ class CartViewModel(
         cartRepository.minusCartItem(id, 1)
 
         loadCurrentPageCartItems()
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 5
     }
 }
