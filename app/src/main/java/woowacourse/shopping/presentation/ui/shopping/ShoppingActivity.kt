@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.CartRepositoryImpl
-import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
+import woowacourse.shopping.data.repository.CartRepositoryImpl
+import woowacourse.shopping.data.repository.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.presentation.base.BaseActivity

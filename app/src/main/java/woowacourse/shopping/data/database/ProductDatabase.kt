@@ -1,9 +1,10 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import woowacourse.shopping.data.dao.ProductDao
 import woowacourse.shopping.data.model.ProductEntity
 
 @Database(

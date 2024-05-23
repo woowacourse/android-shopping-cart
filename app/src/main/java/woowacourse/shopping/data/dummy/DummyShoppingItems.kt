@@ -1,4 +1,4 @@
-package woowacourse.shopping.data
+package woowacourse.shopping.data.dummy
 
 import woowacourse.shopping.data.model.ProductEntity
 

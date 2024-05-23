@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
-import woowacourse.shopping.data.CartRepositoryImpl
+import woowacourse.shopping.data.repository.CartRepositoryImpl
 import woowacourse.shopping.databinding.ActivityCartBinding
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.base.BaseActivity
