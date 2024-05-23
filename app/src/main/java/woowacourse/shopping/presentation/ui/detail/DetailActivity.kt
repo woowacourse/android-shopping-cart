@@ -3,6 +3,7 @@ package woowacourse.shopping.presentation.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.ShoppingApplication
@@ -53,9 +54,14 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun navigateToCart() {
+        popUpToast()
         startActivity(
             CartActivity.createIntent(context = this),
         )
+    }
+
+    private fun popUpToast() {
+        Toast.makeText(this, "상품이 장바구니에 담겼습니다.", Toast.LENGTH_SHORT).show()
     }
 
     companion object {
