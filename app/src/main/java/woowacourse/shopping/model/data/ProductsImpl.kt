@@ -12,10 +12,10 @@ object ProductsImpl : ProductDao {
 
     init {
         repeat(100) {
-            save(MAC_BOOK)
-            save(IPHONE)
-            save(GALAXY_BOOK)
-            save(GRAM)
+            save(MAC_BOOK.copy(name = "맥북$it"))
+            save(IPHONE.copy(name = "아이폰$it"))
+            save(GALAXY_BOOK.copy(name = "갤럭시북$it"))
+            save(GRAM.copy(name = "그램$it"))
         }
     }
 
