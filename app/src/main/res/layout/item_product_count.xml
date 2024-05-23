@@ -11,12 +11,16 @@
             type="Boolean" />
         
         <variable
-            name="product"
-            type="woowacourse.shopping.productlist.ProductUiModel" />
+            name="productId"
+            type="Long" />
+
+        <variable
+            name="cartItemCount"
+            type="Integer" />
 
         <variable
             name="onClick"
-            type="woowacourse.shopping.productlist.ProductListClickAction" />
+            type="woowacourse.shopping.util.CartItemCountClickAction" />
 
     </data>
 
@@ -32,7 +36,7 @@
             android:background="@android:color/transparent"
             android:layout_weight="1"
             android:text="-"
-            android:onClick="@{() -> onClick.onMinusCountClicked(product.id)}"
+            android:onClick="@{() -> onClick.onMinusCountClicked(productId)}"
             android:fontFamily="@font/roboto_bold"
             android:textColor="@color/gray_700"
             android:textSize="22dp" />
@@ -43,7 +47,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/roboto_bold"
             android:gravity="center"
-            android:text="@{Integer.toString(product.cartItemCount)}"
+            android:text="@{Integer.toString(cartItemCount)}"
             android:textColor="@color/gray_700"
             android:textSize="22dp"
             tools:text="2" />
@@ -55,7 +59,7 @@
             android:background="@android:color/transparent"
             android:fontFamily="@font/roboto_bold"
             android:text="+"
-            android:onClick="@{() -> onClick.onPlusCountClicked(product.id)}"
+            android:onClick="@{() -> onClick.onPlusCountClicked(productId)}"
             android:textColor="@color/gray_700"
             android:textSize="22dp" />
 

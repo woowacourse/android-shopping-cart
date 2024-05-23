@@ -53,12 +53,13 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="14dp"
             android:layout_marginBottom="8dp"
-            android:layout="@layout/item_viewstub_product_count"
+            android:layout="@layout/item_product_count"
             android:visibility="@{product.cartItemCount!=0 ? View.VISIBLE : View.GONE}"
             app:inflatedVisibility="@{product.cartItemCount!=0}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_item"
             app:onClick="@{onClick}"
-            app:product="@{product}" />
+            app:productId="@{product.id}"
+            app:cartItemCount="@{product.cartItemCount}"/>
 
         <TextView
             android:id="@+id/tv_product_list_name"
