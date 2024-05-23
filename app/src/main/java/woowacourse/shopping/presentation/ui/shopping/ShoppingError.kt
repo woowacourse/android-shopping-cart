@@ -1,6 +1,6 @@
-package woowacourse.shopping.presentation.ui
+package woowacourse.shopping.presentation.ui.shopping
 
-enum class Error(
+enum class ShoppingError(
     val message: String,
 ) {
     AllProductsLoaded("상품을 모두 불러왔습니다."),

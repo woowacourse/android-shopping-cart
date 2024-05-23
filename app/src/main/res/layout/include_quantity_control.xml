@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -9,12 +10,8 @@
             type="woowacourse.shopping.domain.ProductListItem.ShoppingProductItem" />
 
         <variable
-            name="quantity"
-            type="java.lang.Integer" />
-
-        <variable
-            name="shoppingHandler"
-            type="woowacourse.shopping.presentation.ui.shopping.ShoppingHandler" />
+            name="quantityHandler"
+            type="woowacourse.shopping.presentation.ui.QuantityHandler" />
 
     </data>
 
@@ -30,7 +27,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:onClick="@{()->shoppingHandler.onQuantityControlClick(product,-1)}"
+            android:onClick="@{()->quantityHandler.onQuantityControlClick(product,-1)}"
             android:text="-"
             android:textSize="22sp"
             android:textStyle="bold"
@@ -43,13 +40,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@{quantity.toString()}"
+            android:text="@{String.valueOf(product.quantity)}"
             android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="0" />
 
 
         <TextView
@@ -57,7 +55,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:onClick="@{()->shoppingHandler.onQuantityControlClick(product,1)}"
+            android:onClick="@{()->quantityHandler.onQuantityControlClick(product,1)}"
             android:text="+"
             android:textSize="22sp"
             android:textStyle="bold"

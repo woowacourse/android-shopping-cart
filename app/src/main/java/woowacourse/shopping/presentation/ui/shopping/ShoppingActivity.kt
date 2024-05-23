@@ -41,8 +41,10 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
     private fun updateCartItemQuantity(activityResult: ActivityResult) {
         val modifiedProductId =
             activityResult.data!!.getLongExtra(ProductDetailActivity.EXTRA_PRODUCT_ID, -1L)
+        val newQuantity =
+            activityResult.data!!.getIntExtra(ProductDetailActivity.EXTRA_NEW_PRODUCT_QUANTITY, -1)
         if (modifiedProductId != -1L) {
-            viewModel.modifyShoppingProductQuantity(modifiedProductId, 1)
+            viewModel.updateProductQuantity(modifiedProductId, newQuantity)
         }
     }
 

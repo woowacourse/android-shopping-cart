@@ -9,24 +9,28 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductDetailBinding
-import woowacourse.shopping.domain.Product
+import woowacourse.shopping.domain.ProductListItem
 import woowacourse.shopping.presentation.base.BindingActivity
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.ViewModelFactory
 import woowacourse.shopping.presentation.ui.shopping.ShoppingActivity
 import woowacourse.shopping.presentation.util.EventObserver
+import kotlin.properties.Delegates
 
-class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
+class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), DetailHandler {
     override val layoutResourceId: Int
         get() = R.layout.activity_product_detail
 
     private val viewModel: ProductDetailViewModel by viewModels { ViewModelFactory() }
 
+    private var id by Delegates.notNull<Long>()
+
     override fun initStartView(savedInstanceState: Bundle?) {
         initActionBarTitle()
-        val id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
+        id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (id == -1L) finish()
-        viewModel.loadById(id)
+        binding.detailHandler = this
+        viewModel.loadProductById(id)
         observeErrorEventUpdates()
         observeProductsUpdates()
         observeCartEventUpdates()
@@ -41,7 +45,8 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
             this,
             EventObserver {
                 Intent(applicationContext, ShoppingActivity::class.java).apply {
-                    putExtra(EXTRA_PRODUCT_ID, it)
+                    putExtra(EXTRA_PRODUCT_ID, id)
+                    putExtra(EXTRA_NEW_PRODUCT_QUANTITY, it)
                     setResult(RESULT_OK, this)
                 }
                 finish()
@@ -50,16 +55,14 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
     }
 
     private fun observeErrorEventUpdates() {
-        viewModel.error.observe(this) {
-            when (it) {
-                true -> showToast(getString(R.string.product_not_found))
-                false -> {}
-            }
-        }
+        viewModel.error.observe(
+            this,
+            EventObserver { showToast(it.message) },
+        )
     }
 
     private fun observeProductsUpdates() {
-        viewModel.products.observe(this) { state ->
+        viewModel.shoppingProduct.observe(this) { state ->
             when (state) {
                 is UiState.None -> {}
                 is UiState.Success -> handleProductSuccessState(state.data)
@@ -67,11 +70,12 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         }
     }
 
-    private fun handleProductSuccessState(product: Product) {
+    private fun handleProductSuccessState(product: ProductListItem.ShoppingProductItem) {
         binding.product = product
-        binding.tvAddCart.setOnClickListener {
-            viewModel.saveCartItem(product, 1)
-        }
+    }
+
+    override fun onAddCartClick() {
+        viewModel.saveCartItem()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,8 +88,20 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>() {
         return true
     }
 
+    override fun onQuantityControlClick(
+        item: ProductListItem.ShoppingProductItem?,
+        quantityDelta: Int,
+    ) {
+        item?.let {
+            viewModel.updateCartItemQuantity(
+                quantityDelta,
+            )
+        }
+    }
+
     companion object {
         const val EXTRA_PRODUCT_ID = "productId"
+        const val EXTRA_NEW_PRODUCT_QUANTITY = "productQuantity"
 
         fun startWithResult(
             context: Context,

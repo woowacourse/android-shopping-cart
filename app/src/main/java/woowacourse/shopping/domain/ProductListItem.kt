@@ -35,6 +35,18 @@ sealed interface ProductListItem {
                     )
                 }
             }
+
+            fun joinProductAndCart(
+                product: Product,
+                cart: Cart,
+            ): ShoppingProductItem =
+                ShoppingProductItem(
+                    product.id,
+                    product.name,
+                    product.imgUrl,
+                    product.price,
+                    cart.count,
+                )
         }
     }
 }

@@ -18,10 +18,30 @@ object DummyCartRepository : CartRepository {
             product.id
         }
 
+    override fun setQuantity(
+        product: Product,
+        newQuantityValue: Int,
+    ): Result<Long> =
+        runCatching {
+            cartMap[product] = newQuantityValue.coerceAtLeast(0)
+            if (cartMap[product] == 0) cartMap.remove(product)
+            product.id
+        }
+
     override fun deleteProduct(product: Product): Result<Long> =
         runCatching {
             cartMap.remove(product) ?: throw NoSuchElementException()
             product.id
+        }
+
+    override fun find(product: Product): Result<Cart> =
+        runCatching {
+            cartMap[product]?.let {
+                Cart(
+                    product = product,
+                    count = it,
+                )
+            } ?: throw NoSuchElementException()
         }
 
     override fun load(

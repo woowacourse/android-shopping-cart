@@ -61,7 +61,7 @@
             tools:text="상품 가격" />
 
         <include
-            android:id="@+id/layout_title_top"
+            android:id="@+id/layout_shopping_quantity_control"
             bindSetVisibility="@{product.quantity>0}"
             layout="@layout/include_quantity_control"
             android:layout_width="126dp"
@@ -71,8 +71,7 @@
             app:layout_constraintEnd_toEndOf="@id/img_item"
             app:layout_constraintStart_toStartOf="@id/img_item"
             app:product="@{product}"
-            app:quantity="@{product.quantity}"
-            app:shoppingHandler="@{shoppingHandler}" />
+            app:quantityHandler="@{shoppingHandler}" />
 
         <ImageView
             android:id="@+id/btn_plus"

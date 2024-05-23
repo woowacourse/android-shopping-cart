@@ -1,14 +1,9 @@
 package woowacourse.shopping.presentation.ui.shopping
 
-import woowacourse.shopping.domain.ProductListItem
+import woowacourse.shopping.presentation.ui.QuantityHandler
 
-interface ShoppingHandler {
+interface ShoppingHandler : QuantityHandler {
     fun onProductItemClick(productId: Long)
 
     fun onLoadMoreClick()
-
-    fun onQuantityControlClick(
-        item: ProductListItem.ShoppingProductItem?,
-        quantityDelta: Int,
-    )
 }

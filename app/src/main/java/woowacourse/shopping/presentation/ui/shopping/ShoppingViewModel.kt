@@ -14,7 +14,6 @@ import woowacourse.shopping.domain.ProductListItem.ShoppingProductItem.Companion
 import woowacourse.shopping.domain.ProductRepository
 import woowacourse.shopping.domain.RecentProductItem
 import woowacourse.shopping.domain.RecentRepository
-import woowacourse.shopping.presentation.ui.Error
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.util.Event
 
@@ -41,9 +40,9 @@ class ShoppingViewModel(
 
     private val shoppingProductItems = mutableListOf<ProductListItem.ShoppingProductItem>()
 
-    private val _error = MutableLiveData<Event<Error>>()
+    private val _error = MutableLiveData<Event<ShoppingError>>()
 
-    val error: LiveData<Event<Error>> get() = _error
+    val error: LiveData<Event<ShoppingError>> get() = _error
 
     fun loadInitialShoppingItems() {
         if (shoppingProducts.value !is UiState.Success<List<ProductListItem.ShoppingProductItem>>) {
@@ -56,7 +55,7 @@ class ShoppingViewModel(
         recentRepository.load().onSuccess {
             _recentProducts.value = UiState.Success(it)
         }.onFailure {
-            _error.value = Event(Error.RecentProductItemsNotFound)
+            _error.value = Event(ShoppingError.RecentProductItemsNotFound)
         }
     }
 
@@ -65,7 +64,7 @@ class ShoppingViewModel(
             _cartProducts.value = UiState.Success(it)
             fetchInitialProducts(it)
         }.onFailure {
-            _error.value = Event(Error.CartItemsNotFound)
+            _error.value = Event(ShoppingError.CartItemsNotFound)
         }
     }
 
@@ -74,7 +73,7 @@ class ShoppingViewModel(
             currentPage++
             addShoppingProducts(products, carts)
         }.onFailure {
-            _error.value = Event(Error.ProductItemsNotFound)
+            _error.value = Event(ShoppingError.ProductItemsNotFound)
         }
     }
 
@@ -86,7 +85,7 @@ class ShoppingViewModel(
                 addShoppingProducts(products, carts)
             }
         }.onFailure {
-            _error.value = Event(Error.AllProductsLoaded)
+            _error.value = Event(ShoppingError.AllProductsLoaded)
         }
     }
 
@@ -116,6 +115,17 @@ class ShoppingViewModel(
         val originalQuantity = shoppingProductItems[productIndex].quantity
         val updatedProduct =
             shoppingProductItems[productIndex].copy(quantity = originalQuantity + quantityDelta)
+        shoppingProductItems[productIndex] = updatedProduct
+        _shoppingProducts.value = UiState.Success(shoppingProductItems)
+    }
+
+    fun updateProductQuantity(
+        productId: Long,
+        newQuantity: Int,
+    ) {
+        val productIndex = shoppingProductItems.indexOfFirst { it.id == productId }
+        val updatedProduct =
+            shoppingProductItems[productIndex].copy(quantity = newQuantity)
         shoppingProductItems[productIndex] = updatedProduct
         _shoppingProducts.value = UiState.Success(shoppingProductItems)
     }
