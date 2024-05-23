@@ -17,7 +17,6 @@ import woowacourse.shopping.dummyProducts
 import woowacourse.shopping.dummyRecentProducts
 import woowacourse.shopping.dummyShoppingProducts
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.ui.Error
 import woowacourse.shopping.presentation.ui.UiState
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -73,7 +72,7 @@ class ShoppingViewModelTest {
         // then
         Assertions.assertThat(
             viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
-        ).isEqualTo(Error.RecentProductItemsNotFound)
+        ).isEqualTo(ShoppingError.RecentProductItemsNotFound)
     }
 
     @Test
@@ -89,7 +88,7 @@ class ShoppingViewModelTest {
         // then
         Assertions.assertThat(
             viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
-        ).isEqualTo(Error.CartItemsNotFound)
+        ).isEqualTo(ShoppingError.CartItemsNotFound)
     }
 
     @Test
@@ -105,7 +104,7 @@ class ShoppingViewModelTest {
         // then
         Assertions.assertThat(
             viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
-        ).isEqualTo(Error.ProductItemsNotFound)
+        ).isEqualTo(ShoppingError.ProductItemsNotFound)
     }
 
     @Test
@@ -133,7 +132,7 @@ class ShoppingViewModelTest {
         viewModel.fetchProductForNewPage()
         assertEquals(
             viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
-            Error.AllProductsLoaded,
+            ShoppingError.AllProductsLoaded,
         )
     }
 }

@@ -11,8 +11,8 @@ import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.dummyCartProducts
 import woowacourse.shopping.getOrAwaitValue
-import woowacourse.shopping.presentation.ui.Error
 import woowacourse.shopping.presentation.ui.UiState
+import woowacourse.shopping.presentation.ui.shopping.ShoppingError
 import woowacourse.shopping.product
 
 @ExtendWith(InstantTaskExecutorExtension::class)
@@ -42,7 +42,7 @@ class CartViewModelTest {
         viewModel.loadProductByPage()
         assertThat(
             viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
-        ).isEqualTo(Error.CartItemsNotFound)
+        ).isEqualTo(ShoppingError.CartItemsNotFound)
     }
 
     @Test
@@ -60,6 +60,6 @@ class CartViewModelTest {
         viewModel.deleteProduct(product)
         assertThat(
             viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
-        ).isEqualTo(Error.CartItemNotDeleted)
+        ).isEqualTo(ShoppingError.CartItemNotDeleted)
     }
 }

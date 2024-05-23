@@ -3,6 +3,7 @@ package woowacourse.shopping
 import woowacourse.shopping.domain.Cart
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.domain.ProductListItem
+import woowacourse.shopping.domain.ProductListItem.ShoppingProductItem.Companion.joinProductAndCart
 import woowacourse.shopping.domain.RecentProductItem
 import java.time.LocalDateTime
 
@@ -36,8 +37,12 @@ val dummyCartProducts: List<Cart> =
         )
     }
 
+val cart: Cart = dummyCartProducts.first()
+
 val dummyShoppingProducts =
     ProductListItem.ShoppingProductItem.fromProductsAndCarts(
         dummyProducts,
         dummyCartProducts,
     )
+
+val shoppingProduct: ProductListItem.ShoppingProductItem = joinProductAndCart(product, cart)
