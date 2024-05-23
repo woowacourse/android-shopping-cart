@@ -1,20 +1,20 @@
 package woowacourse.shopping.presentation.ui.shopping
 
 import android.os.Bundle
-import android.view.Menu
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.appbar.MaterialToolbar
 import woowacourse.shopping.R
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityShoppingBinding
+import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
+class ShoppingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingBinding
     private lateinit var adapter: ShoppingAdapter
     private val viewModel: ShoppingViewModel by viewModels {
@@ -27,22 +27,11 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setUpToolbar()
         setUpRecyclerView()
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.clickListener = this
-    }
-
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarMain
-        setSupportActionBar(toolbar)
-
-        toolbar.setOnMenuItemClickListener {
-            navigateToShoppingCart()
-            true
-        }
+        observeViewModel()
     }
 
     private fun setUpRecyclerView() {
@@ -52,7 +41,7 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
     }
 
     private fun setUpRecyclerViewAdapter() {
-        adapter = ShoppingAdapter(this)
+        adapter = ShoppingAdapter(viewModel)
         binding.rvProductList.adapter = adapter
 
         try {
@@ -63,6 +52,31 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
             }
         } catch (exception: Exception) {
             Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.shoppingUiState.observe(this) { state ->
+            when (state) {
+                is UIState.Success -> showData(state.data)
+                is UIState.Empty -> showData(emptyList())
+                is UIState.Error ->
+                    showError(
+                        state.exception.message ?: getString(R.string.unknown_error),
+                    )
+            }
+        }
+
+        viewModel.navigateToDetail.observe(this) {
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
+            }
+        }
+
+        viewModel.navigateToCart.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                navigateToCart()
+            }
         }
     }
 
@@ -84,16 +98,19 @@ class ShoppingActivity : AppCompatActivity(), ShoppingClickListener {
         )
     }
 
-    private fun navigateToShoppingCart() {
+    private fun showData(data: List<Product>) {
+        adapter.loadData(data)
+    }
+
+    private fun showError(errorMessage: String) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+    }
+
+    private fun navigateToCart() {
         startActivity(CartActivity.createIntent(context = this))
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onProductClick(productId: Long) {
+    private fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
     }
 }

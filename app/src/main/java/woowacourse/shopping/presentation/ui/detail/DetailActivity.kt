@@ -3,18 +3,15 @@ package woowacourse.shopping.presentation.ui.detail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.appbar.MaterialToolbar
-import woowacourse.shopping.R
 import woowacourse.shopping.ShoppingApplication
 import woowacourse.shopping.data.CartRepositoryImpl
 import woowacourse.shopping.data.ShoppingItemsRepositoryImpl
 import woowacourse.shopping.databinding.ActivityDetailBinding
 import woowacourse.shopping.presentation.ui.cart.CartActivity
 
-class DetailActivity : AppCompatActivity(), DetailClickListener {
+class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private val productId: Long by lazy { intent.getLongExtra(PRODUCT_ID, INVALID_PRODUCT_ID) }
     private val viewModel: DetailViewModel by viewModels {
@@ -29,38 +26,33 @@ class DetailActivity : AppCompatActivity(), DetailClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setUpToolbar()
         setUpViewModel()
 
         binding.lifecycleOwner = this
-        binding.clickListener = this
+
+        observeViewModel()
     }
 
     private fun setUpViewModel() {
         binding.viewModel = viewModel
     }
 
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarDetail
-        setSupportActionBar(toolbar)
+    private fun observeViewModel() {
+        viewModel.addCartItem.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                viewModel.createShoppingCartItem()
+                navigateToCart()
+            }
+        }
 
-        toolbar.setOnMenuItemClickListener {
-            finish()
-            true
+        viewModel.moveBack.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                finish()
+            }
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.detail_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onAddToCartClick(productId: Long) {
-        viewModel.createShoppingCartItem()
-        navigate()
-    }
-
-    private fun navigate() {
+    private fun navigateToCart() {
         startActivity(
             CartActivity.createIntent(context = this),
         )

@@ -6,10 +6,6 @@
     <data>
 
         <variable
-            name="clickListener"
-            type="woowacourse.shopping.presentation.ui.detail.DetailClickListener" />
-
-        <variable
             name="viewModel"
             type="woowacourse.shopping.presentation.ui.detail.DetailViewModel" />
     </data>
@@ -21,17 +17,28 @@
         tools:context=".presentation.shopping.ShoppingActivity">
 
 
-        <com.google.android.material.appbar.MaterialToolbar
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/toolbar_detail"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/gray_500"
-            android:textSize="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/detail_menu"
-            app:titleTextColor="@color/white" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_menu_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:onClick="@{() -> viewModel.moveBack()}"
+                android:src="@drawable/ic_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <ImageView

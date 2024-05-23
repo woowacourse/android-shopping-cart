@@ -7,7 +7,7 @@ import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 
 class ShoppingAdapter(
-    private val clickListener: ShoppingClickListener,
+    private val shoppingEventHandler: ShoppingEventHandler,
 ) : RecyclerView.Adapter<ShoppingViewHolder>() {
     private var products: List<Product> = emptyList()
 
@@ -24,7 +24,7 @@ class ShoppingAdapter(
         position: Int,
     ) {
         val product = products[position]
-        return holder.bind(product, clickListener)
+        return holder.bind(product, shoppingEventHandler)
     }
 
     override fun getItemCount(): Int {
@@ -35,13 +35,4 @@ class ShoppingAdapter(
         this.products = products
         notifyDataSetChanged()
     }
-
-    /*fun updateProducts(
-        newProducts: List<Product>,
-        positiionStart: Int,
-        itemCount: Int,
-    ) {
-        products.addAll(newProducts)
-        notifyItemRangeChanged(positiionStart, itemCount)
-    }*/
 }

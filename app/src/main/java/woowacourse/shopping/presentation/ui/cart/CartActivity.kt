@@ -14,7 +14,7 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.presentation.state.UIState
 import woowacourse.shopping.presentation.ui.detail.DetailActivity
 
-class CartActivity : AppCompatActivity(), CartClickListener {
+class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
     private val viewModel: CartViewModel by viewModels {
         CartViewModelFactory(
@@ -30,15 +30,16 @@ class CartActivity : AppCompatActivity(), CartClickListener {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        observeViewModel()
     }
 
     private fun setUpViews() {
-        setUpToolbar()
         setUpUIState()
     }
 
     private fun setUpRecyclerViewAdapter(): CartAdapter {
-        val adapter = CartAdapter(this)
+        val adapter = CartAdapter(viewModel)
         binding.recyclerView.adapter = adapter
         return adapter
     }
@@ -68,20 +69,25 @@ class CartActivity : AppCompatActivity(), CartClickListener {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
 
-    private fun setUpToolbar() {
-        val toolbar: MaterialToolbar = binding.toolbarCart
-        setSupportActionBar(toolbar)
+    private fun observeViewModel() {
+        viewModel.navigateToDetail.observe(this) {
+            it.getContentIfNotHandled()?.let { productId ->
+                navigateToDetail(productId)
+            }
+        }
 
-        toolbar.setNavigationOnClickListener {
-            finish()
+        viewModel.navigateToShopping.observe(this) {
+            it.getContentIfNotHandled()?.let {
+                finish()
+            }
         }
     }
 
-    override fun onItemClick(productId: Long) {
+    fun navigateToDetail(productId: Long) {
         startActivity(DetailActivity.createIntent(this, productId))
     }
 
-    override fun onDeleteItemClick(itemId: Long) {
+    fun onDeleteItemClick(itemId: Long) {
         viewModel.deleteItem(itemId)
     }
 

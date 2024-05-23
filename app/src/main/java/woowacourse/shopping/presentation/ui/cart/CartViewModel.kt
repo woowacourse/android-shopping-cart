@@ -7,9 +7,10 @@ import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.presentation.event.Event
 import woowacourse.shopping.presentation.state.UIState
 
-class CartViewModel(private val repository: CartRepository) : ViewModel() {
+class CartViewModel(private val repository: CartRepository) : ViewModel(), CartEventHandler {
     private val pageSize = PAGE_SIZE
 
     private val _currentPage = MutableLiveData(DEFAULT_PAGE)
@@ -44,6 +45,18 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
                     }
             }
         }
+
+    private val _navigateToShopping = MutableLiveData<Event<Boolean>>()
+    val navigateToShopping: LiveData<Event<Boolean>>
+        get() = _navigateToShopping
+
+    private val _navigateToDetail = MutableLiveData<Event<Long>>()
+    val navigateToDetail: LiveData<Event<Long>>
+        get() = _navigateToDetail
+
+    private val _deleteCartItem = MutableLiveData<Event<Long>>()
+    val deleteCartItem: LiveData<Event<Long>>
+        get() = _deleteCartItem
 
     private fun setUpUIState(page: @JvmSuppressWildcards Int): UIState<List<CartItem>> {
         val items = repository.findAllPagedItems(page, pageSize).items
@@ -87,6 +100,18 @@ class CartViewModel(private val repository: CartRepository) : ViewModel() {
     }
 
     fun isCartEmpty(): Boolean = cartItemsState.value == UIState.Empty
+
+    override fun navigateToShopping() {
+        _navigateToShopping.postValue(Event(true))
+    }
+
+    override fun navigateToDetail(productId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteCartItem(itemId: Long) {
+        TODO("Not yet implemented")
+    }
 
     companion object {
         private const val PAGE_SIZE = 5
