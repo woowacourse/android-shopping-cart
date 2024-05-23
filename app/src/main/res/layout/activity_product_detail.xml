@@ -18,6 +18,10 @@
             name="countButtonClickListener"
             type="woowacourse.shopping.ui.CountButtonClickListener" />
 
+        <variable
+            name="mostRecentProductClickListener"
+            type="woowacourse.shopping.ui.detail.MostRecentProductClickListener" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -106,6 +110,7 @@
             android:layout_marginBottom="35dp"
             android:background="@drawable/last_seen_product_border"
             android:orientation="vertical"
+            android:onClick="@{() -> mostRecentProductClickListener.onClickMostRecentProduct()}"
             android:paddingHorizontal="18dp"
             android:paddingVertical="13dp"
             app:layout_constraintBottom_toTopOf="@id/btn_add_product"
@@ -137,7 +142,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/selector_add_product_button"
             android:enabled="@{!vm.error &amp;&amp; !vm.isInvalidCount}"
-            android:onClick="@{()->cartButtonClickListener.onClick()}"
+            android:onClick="@{()->cartButtonClickListener.onClickAddCartButton()}"
             android:text="@string/add_product_to_cart"
             android:textColor="@color/white"
             android:textSize="20sp"

@@ -88,10 +88,6 @@ class ProductContentsActivity : AppCompatActivity() {
             recentProductAdapter.setRecentProducts(it)
         }
     }
-
-    companion object {
-        private const val OFFSET = 1
-    }
 }
 
 @BindingAdapter("imageUrl")

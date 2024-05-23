@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.detail
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -18,7 +19,8 @@ import woowacourse.shopping.ui.detail.viewmodel.ProductDetailViewModelFactory
 class ProductDetailActivity :
     AppCompatActivity(),
     CartButtonClickListener,
-    CountButtonClickListener {
+    CountButtonClickListener,
+    MostRecentProductClickListener {
     private lateinit var binding: ActivityProductDetailBinding
     private var toast: Toast? = null
     private val viewModel: ProductDetailViewModel by viewModels {
@@ -36,11 +38,17 @@ class ProductDetailActivity :
         observeErrorMessage()
     }
 
-    override fun onClick() {
+    override fun onClickAddCartButton() {
         viewModel.addProductToCart()
         toast?.cancel()
         toast = Toast.makeText(this, getString(R.string.add_cart_complete), Toast.LENGTH_SHORT)
         toast?.show()
+    }
+
+    override fun onClickMostRecentProduct() {
+        viewModel.mostRecentProduct.observe(this) {
+            moveToMostRecentProductPage(this, it.id)
+        }
     }
 
     override fun plusCount() {
@@ -73,6 +81,7 @@ class ProductDetailActivity :
     private fun setOnListener() {
         binding.cartButtonClickListener = this
         binding.countButtonClickListener = this
+        binding.mostRecentProductClickListener = this
     }
 
     private fun observeErrorMessage() {
@@ -100,6 +109,15 @@ class ProductDetailActivity :
             productId: Long,
         ) = Intent(context, ProductDetailActivity::class.java).run {
             putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
+            context.startActivity(this)
+        }
+
+        fun moveToMostRecentProductPage(
+            context: Context,
+            productId: Long,
+        ) = Intent(context, ProductDetailActivity::class.java).run {
+            putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
+            setFlags(FLAG_ACTIVITY_CLEAR_TOP)
             context.startActivity(this)
         }
     }
