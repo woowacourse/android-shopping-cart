@@ -47,11 +47,8 @@ class CartAdapter(
         notifyItemRangeInserted(0, this.orders.size)
     }
 
-    fun updateOrder(
-        productId: Long,
-        order: Order,
-    ) {
-        val position = ordersPosition[productId]
+    fun updateOrder(order: Order) {
+        val position = ordersPosition[order.product.id]
         position?.let {
             orders[position.toInt()] = order
             notifyItemChanged(position.toInt())

@@ -85,7 +85,7 @@ class HomeActivity : AppCompatActivity() {
         }
 
         viewModel.updateOrder.observe(this) {
-            adapter.updateProduct(it.product.id, it)
+            adapter.updateProduct(it)
         }
 
         viewModel.loadStatus.observe(this) {

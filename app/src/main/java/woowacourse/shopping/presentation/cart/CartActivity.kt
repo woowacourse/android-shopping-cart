@@ -40,7 +40,7 @@ class CartActivity : AppCompatActivity(), CartItemClickListener {
         viewModel.orders.observe(this, adapter::replaceOrders)
 
         viewModel.updateOrder.observe(this) {
-            adapter.updateOrder(it.product.id, it)
+            adapter.updateOrder(it)
         }
     }
 

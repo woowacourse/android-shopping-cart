@@ -78,11 +78,8 @@ class ProductAdapter(
         notifyItemRangeInserted(previousSize, insertedProducts.size - previousSize)
     }
 
-    fun updateProduct(
-        productId: Long,
-        order: Order,
-    ) {
-        val position = ordersPosition[productId]
+    fun updateProduct(order: Order) {
+        val position = ordersPosition[order.product.id]
         position?.let {
             orders[it] = order
             notifyItemChanged(it)
