@@ -10,12 +10,15 @@ import woowacourse.shopping.data.api.ApiClient.BASE_PORT
 import woowacourse.shopping.data.api.ApiClient.GET_FIND_PRODUCT
 import woowacourse.shopping.data.api.ApiClient.GET_PAGING_PRODUCT
 import woowacourse.shopping.data.model.remote.ProductEntity
+import kotlin.concurrent.thread
 
 class NetworkModule : ApiService {
     private val server =
         MockWebServer().apply {
-            dispatcher = NetworkDispatcher
-            start(BASE_PORT)
+            thread {
+                dispatcher = NetworkDispatcher
+                start(BASE_PORT)
+            }
         }
     private val client: OkHttpClient = OkHttpClient.Builder().build()
     private val gson = Gson()
