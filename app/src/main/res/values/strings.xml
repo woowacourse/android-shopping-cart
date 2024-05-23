@@ -18,4 +18,6 @@
 
     <string name="previous_page">&lt;</string>
     <string name="next_page">&gt;</string>
+    <string name="quantity_decrease">-</string>
+    <string name="quantity_increase">+</string>
 </resources>
