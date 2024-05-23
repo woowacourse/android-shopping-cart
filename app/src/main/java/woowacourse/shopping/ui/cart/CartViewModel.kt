@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.CartPage
 import woowacourse.shopping.model.Product
+import woowacourse.shopping.model.data.OrderEntity
 import woowacourse.shopping.model.data.OrdersRepository
 import woowacourse.shopping.model.data.ProductDao
 import kotlin.math.min
@@ -67,6 +68,7 @@ class CartViewModel(
     fun increaseItemCount(id: Long) {
         _orderCounts.value!![id] = _orderCounts.value!![id]!! + 1
         _orderCounts.value = _orderCounts.value
+        ordersRepository.insert(OrderEntity(id, _orderCounts.value!![id]!!))
     }
 
     fun decreaseItemCount(id: Long) {
@@ -76,6 +78,7 @@ class CartViewModel(
         }
         _orderCounts.value!![id] = _orderCounts.value!![id]!! - 1
         _orderCounts.value = _orderCounts.value
+        ordersRepository.insert(OrderEntity(id, _orderCounts.value!![id]!!))
     }
 
     private fun getProducts(): List<Product> {

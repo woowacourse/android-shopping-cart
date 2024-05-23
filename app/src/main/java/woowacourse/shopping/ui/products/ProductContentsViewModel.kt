@@ -29,6 +29,22 @@ class ProductContentsViewModel(
     private val _itemCount: MutableLiveData<MutableMap<Long, Int>> = MutableLiveData(mutableMapOf())
     val itemCount: LiveData<MutableMap<Long, Int>> get() = _itemCount
 
+    fun loadProducts() {
+        items.clear()
+        val allProducts = productDao.findAll()
+        items.addAll(allProducts)
+        _products.value = getProducts()
+        allProducts.forEach {
+            _itemCount.value!![it.id] = 0
+        }
+        val allOrders = ordersRepository.getAllData()
+        allOrders.forEach {
+            _itemCount.value!![it.productId] = it.quantity
+        }
+        _itemCount.value = _itemCount.value
+        setItemPlusButtonVisible()
+    }
+
     private fun setItemPlusButtonVisible() {
         val allProducts = productDao.findAll()
         allProducts.forEach {
@@ -61,21 +77,6 @@ class ProductContentsViewModel(
             setItemPlusButtonVisible()
             ordersRepository.deleteById(id)
         }
-    }
-
-    fun loadProducts() {
-        items.clear()
-        val allProducts = productDao.findAll()
-        items.addAll(allProducts)
-        _products.value = getProducts()
-        allProducts.forEach {
-            _itemCount.value!![it.id] = 0
-        }
-        val allOrders = ordersRepository.getAllData()
-        allOrders.forEach {
-            _itemCount.value!![it.productId] = it.quantity
-        }
-        setItemPlusButtonVisible()
     }
 
     private fun getProducts(): List<Product> {

@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.products
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -35,6 +36,7 @@ class ProductContentsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Log.d("alsong", "onResume")
         viewModel.loadProducts()
     }
 
