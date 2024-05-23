@@ -11,13 +11,15 @@ import woowacourse.shopping.databinding.ActivityShoppingBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.cart.CartActivity
 import woowacourse.shopping.view.detail.DetailActivity
-import woowacourse.shopping.view.shopping.adapter.ShoppingAdapter
-import woowacourse.shopping.view.shopping.adapter.ShoppingType.Companion.LOAD_MORE_BUTTON_VIEW_TYPE
+import woowacourse.shopping.view.shopping.adapter.product.ProductAdapter
+import woowacourse.shopping.view.shopping.adapter.product.ShoppingType.Companion.LOAD_MORE_BUTTON_VIEW_TYPE
+import woowacourse.shopping.view.shopping.adapter.recent.RecentAdapter
 import woowacourse.shopping.view.state.UIState
 
 class ShoppingActivity : AppCompatActivity() {
     private lateinit var binding: ActivityShoppingBinding
-    private lateinit var adapter: ShoppingAdapter
+    private lateinit var productAdapter: ProductAdapter
+    private lateinit var recentAdapter: RecentAdapter
     private val viewModel: ShoppingViewModel by viewModels {
         ShoppingViewModelFactory(ShoppingRepositoryImpl())
     }
@@ -37,17 +39,20 @@ class ShoppingActivity : AppCompatActivity() {
     }
 
     private fun setUpAdapter() {
-        adapter = ShoppingAdapter(viewModel)
-        binding.rvProductList.adapter = adapter
+        productAdapter = ProductAdapter(viewModel)
+        binding.rvProductList.adapter = productAdapter
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup =
             object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    if (adapter.getItemViewType(position) == LOAD_MORE_BUTTON_VIEW_TYPE) return 2
+                    if (productAdapter.getItemViewType(position) == LOAD_MORE_BUTTON_VIEW_TYPE) return 2
                     return 1
                 }
             }
         binding.rvProductList.layoutManager = layoutManager
+
+        recentAdapter = RecentAdapter(viewModel)
+        binding.rvRecentViewedProducts.adapter = recentAdapter
     }
 
     private fun observeViewModel() {
@@ -76,7 +81,7 @@ class ShoppingActivity : AppCompatActivity() {
     }
 
     private fun showData(data: List<Product>) {
-        adapter.loadData(data, viewModel.canLoadMore.value ?: false)
+        productAdapter.loadData(data, viewModel.canLoadMore.value ?: false)
     }
 
     private fun showError(errorMessage: String) {

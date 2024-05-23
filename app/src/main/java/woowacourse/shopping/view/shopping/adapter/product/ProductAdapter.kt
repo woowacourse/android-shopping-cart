@@ -1,4 +1,4 @@
-package woowacourse.shopping.view.shopping.adapter
+package woowacourse.shopping.view.shopping.adapter.product
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,9 +7,9 @@ import woowacourse.shopping.databinding.ItemLoadMoreButtonBinding
 import woowacourse.shopping.databinding.ItemProductBinding
 import woowacourse.shopping.domain.model.Product
 import woowacourse.shopping.view.shopping.ShoppingClickListener
-import woowacourse.shopping.view.shopping.adapter.ShoppingType.Companion.PRODUCT_VIEW_TYPE
+import woowacourse.shopping.view.shopping.adapter.product.ShoppingType.Companion.PRODUCT_VIEW_TYPE
 
-class ShoppingAdapter(
+class ProductAdapter(
     val clickListener: ShoppingClickListener,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val shoppingTypes: MutableList<ShoppingType> = mutableListOf()
