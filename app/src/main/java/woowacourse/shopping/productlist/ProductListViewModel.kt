@@ -124,6 +124,15 @@ class ProductListViewModel(
         }
     }
 
+    fun reloadProductOfInfo(productId: Long)  {
+        runCatching {
+            shoppingRepository.cartItemByProductId(productId)
+        }.onSuccess { cartItem ->
+            val updatedProduct = cartItem.toProductUiModel()
+            _loadState.value = LoadProductState.ChangeItemCount(updatedProduct, currentLoadState().updateProduct(updatedProduct))
+        }
+    }
+
     companion object {
         private const val PRODUCTS_OFFSET_SIZE = 20
         private const val NO_PRODUCT_OF_CART_ITEM = 0

@@ -1,6 +1,9 @@
 package woowacourse.shopping.productlist
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
@@ -14,10 +17,13 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     private lateinit var adapter: ProductListAdapter
     private val viewModel: ProductListViewModel by viewModels { ViewModelFactory() }
 
+    private val activityResultLauncher = activityResultLauncher()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProductListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        activityResultLauncher()
         binding.lifecycleOwner = this
         binding.vm = viewModel
 
@@ -25,6 +31,16 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         showProducts()
         supportActionBar?.hide()
     }
+
+    private fun activityResultLauncher() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val changedProductId =
+                    result.data?.getLongExtra(CHANGED_PRODUCT_ID, INVALID_PRODUCT_ID)
+                        ?: INVALID_PRODUCT_ID
+                viewModel.reloadProductOfInfo(changedProductId)
+            }
+        }
 
     private fun attachAdapter() {
         adapter = ProductListAdapter(this)
@@ -45,7 +61,7 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
     }
 
     override fun onProductClicked(id: Long) {
-        startActivity(ProductDetailActivity.newInstance(this, id))
+        activityResultLauncher.launch(ProductDetailActivity.newInstance(this, id))
     }
 
     override fun onIntoCartClicked(id: Long) {
@@ -58,5 +74,17 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     override fun onMinusCountClicked(id: Long) {
         viewModel.minusProductCount(id)
+    }
+
+    companion object {
+        private const val CHANGED_PRODUCT_ID = "productId"
+        private const val INVALID_PRODUCT_ID = -1L
+
+        fun newInstance(
+            context: Context,
+            changedProductId: Long,
+        ) = Intent(context, ProductListActivity::class.java).apply {
+            putExtra(CHANGED_PRODUCT_ID, changedProductId)
+        }
     }
 }
