@@ -124,12 +124,16 @@ class ProductListViewModel(
         }
     }
 
-    fun reloadProductOfInfo(productId: Long)  {
+    fun reloadProductOfInfo(productId: Long) {
         runCatching {
             shoppingRepository.cartItemByProductId(productId)
         }.onSuccess { cartItem ->
             val updatedProduct = cartItem.toProductUiModel()
-            _loadState.value = LoadProductState.ChangeItemCount(updatedProduct, currentLoadState().updateProduct(updatedProduct))
+            _loadState.value =
+                LoadProductState.ChangeItemCount(
+                    updatedProduct,
+                    currentLoadState().updateProduct(updatedProduct),
+                )
         }
     }
 

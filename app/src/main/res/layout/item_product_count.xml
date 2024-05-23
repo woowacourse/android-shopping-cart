@@ -9,7 +9,7 @@
         <variable
             name="inflatedVisibility"
             type="Boolean" />
-        
+
         <variable
             name="productId"
             type="Long" />
@@ -33,11 +33,11 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
             android:layout_weight="1"
-            android:text="-"
-            android:onClick="@{() -> onClick.onMinusCountClicked(productId)}"
+            android:background="@android:color/transparent"
             android:fontFamily="@font/roboto_bold"
+            android:onClick="@{() -> onClick.onMinusCountClicked(productId)}"
+            android:text="-"
             android:textColor="@color/gray_700"
             android:textSize="22dp" />
 
@@ -58,8 +58,8 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:fontFamily="@font/roboto_bold"
-            android:text="+"
             android:onClick="@{() -> onClick.onPlusCountClicked(productId)}"
+            android:text="+"
             android:textColor="@color/gray_700"
             android:textSize="22dp" />
 

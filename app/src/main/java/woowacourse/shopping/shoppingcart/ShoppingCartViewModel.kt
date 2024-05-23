@@ -51,7 +51,8 @@ class ShoppingCartViewModel(
             val currentPage = _currentPage?.value ?: DEFAULT_CURRENT_PAGE
             repository.shoppingCartItems(currentPage - DEFAULT_CURRENT_PAGE, PAGE_SIZE)
         }.onSuccess { shoppingCartItems ->
-            _loadState.value = LoadCartItemState.InitView(shoppingCartItems.map { it.product.toProductUiModel(1) })
+            _loadState.value =
+                LoadCartItemState.InitView(shoppingCartItems.map { it.product.toProductUiModel(1) })
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
@@ -75,7 +76,8 @@ class ShoppingCartViewModel(
             val currentPage = _currentPage?.value ?: DEFAULT_CURRENT_PAGE
             repository.shoppingCartItemByPosition(currentPage - 1, PAGE_SIZE, MAX_POSITION_OF_ITEM)
         }.onSuccess { shoppingCartItem ->
-            _loadState.value = LoadCartItemState.AddNextPageOfItem(shoppingCartItem.product.toProductUiModel(1))
+            _loadState.value =
+                LoadCartItemState.AddNextPageOfItem(shoppingCartItem.product.toProductUiModel(1))
         }.onFailure {
             Log.d(this::class.java.simpleName, "$it")
         }
