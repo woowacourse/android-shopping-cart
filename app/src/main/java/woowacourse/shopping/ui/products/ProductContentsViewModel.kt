@@ -34,8 +34,7 @@ class ProductContentsViewModel(
         allProducts.forEach {
             _isItemPlusButtonVisible.value!![it.id] = (_itemCount.value!![it.id] == 0)
         }
-        val temp = _isItemPlusButtonVisible.value
-        _isItemPlusButtonVisible.value = temp
+        _isItemPlusButtonVisible.value = _isItemPlusButtonVisible.value
     }
 
     fun onItemPlusButtonClick(id: Long) {
