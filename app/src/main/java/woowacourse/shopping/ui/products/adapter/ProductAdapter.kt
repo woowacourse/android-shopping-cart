@@ -8,6 +8,7 @@ import woowacourse.shopping.model.ProductWithQuantity
 
 class ProductAdapter(
     private val itemClickListener: (Long) -> Unit,
+    private val addRecentProductClickListener: (Long) -> Unit,
     private val plusCountClickListener: (Long) -> Unit,
     private val minusCountClickListener: (Long) -> Unit,
 ) : RecyclerView.Adapter<ProductViewHolder>() {
@@ -21,6 +22,7 @@ class ProductAdapter(
         return ProductViewHolder(
             binding,
             itemClickListener,
+            addRecentProductClickListener,
             plusCountClickListener,
             minusCountClickListener,
         )

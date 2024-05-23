@@ -3,7 +3,7 @@ package woowacourse.shopping.model.data
 import woowacourse.shopping.model.RecentProduct
 
 interface RecentProductDao {
-    fun save(recentProduct: RecentProduct): Long
+    fun save(productId: Long): Long
 
     fun find(id: Long): RecentProduct
 

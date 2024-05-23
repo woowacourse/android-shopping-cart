@@ -43,24 +43,29 @@ class ProductContentsViewModel(
 
     private val _recentProducts: MutableLiveData<List<RecentProduct>> = MutableLiveData()
     val recentProducts: LiveData<List<Product>> =
-        _recentProducts.map {
-            it.map { ProductsImpl.find(it.productId) }
+        _recentProducts.map { recentProducts ->
+            recentProducts.map { ProductsImpl.find(it.productId) }
         }
 
     init {
         productWithQuantity.addSource(products) { updateProductWithQuantity() }
         productWithQuantity.addSource(cart) { updateProductWithQuantity() }
         loadProducts()
+        loadRecentProducts()
     }
 
     fun loadProducts() {
         items.addAll(productDao.getProducts())
         products.value = items
-        _recentProducts.value = RecentProductsImpl.findAll()
     }
 
     fun loadCartItems() {
         cart.value = cartDao.findAll()
+    }
+
+    fun addToRecentProduct(productId: Long) {
+        RecentProductsImpl.save(productId)
+        loadRecentProducts()
     }
 
     fun plusCount(productId: Long) {
@@ -71,6 +76,10 @@ class ProductContentsViewModel(
     fun minusCount(productId: Long) {
         cartDao.minusQuantityByProductId(productId)
         loadCartItems()
+    }
+
+    private fun loadRecentProducts() {
+        _recentProducts.value = RecentProductsImpl.findAll()
     }
 
     private fun updateProductWithQuantity() {

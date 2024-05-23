@@ -63,6 +63,7 @@ class ProductContentsActivity : AppCompatActivity() {
         productAdapter =
             ProductAdapter(
                 { ProductDetailActivity.startActivity(this, it) },
+                { viewModel.addToRecentProduct(it) },
                 { viewModel.plusCount(it) },
                 { viewModel.minusCount(it) },
             )
@@ -105,7 +106,11 @@ class ProductContentsActivity : AppCompatActivity() {
             ) {
                 super.onScrolled(recyclerView, dx, dy)
                 binding.btnLoadMore.visibility =
-                    if (isLastItemVisible(recyclerView)) View.VISIBLE else View.GONE
+                    if (isLastItemVisible(recyclerView)) {
+                        View.VISIBLE
+                    } else {
+                        View.GONE
+                    }
             }
         }
 

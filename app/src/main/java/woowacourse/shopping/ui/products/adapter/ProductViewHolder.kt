@@ -9,6 +9,7 @@ import woowacourse.shopping.ui.StartAddProductClickListener
 class ProductViewHolder(
     private val binding: ItemProductBinding,
     private val itemClickListener: (Long) -> Unit,
+    private val addRecentProductClickListener: (Long) -> Unit,
     private val plusCountClickListener: (Long) -> Unit,
     private val minusCountClickListener: (Long) -> Unit,
 ) :
@@ -17,6 +18,7 @@ class ProductViewHolder(
         binding.productWithQuantity = productWithQuantity
         binding.itemLayout.setOnClickListener {
             itemClickListener(productWithQuantity.product.id)
+            addRecentProductClickListener(productWithQuantity.product.id)
         }
         binding.startAddProductClickListener =
             object : StartAddProductClickListener {
