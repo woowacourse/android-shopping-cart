@@ -16,11 +16,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import woowacourse.shopping.R
-import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
+import woowacourse.shopping.model.db.Cart
 import woowacourse.shopping.ui.cart.adapter.CartViewHolder
 
 @RunWith(AndroidJUnit4::class)

@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.CartPageManager
 import woowacourse.shopping.model.ProductWithQuantity
-import woowacourse.shopping.model.data.CartDao
 import woowacourse.shopping.model.data.ProductDao
+import woowacourse.shopping.model.db.Cart
+import woowacourse.shopping.model.db.CartDao
 
 class CartViewModel(
     private val productDao: ProductDao,

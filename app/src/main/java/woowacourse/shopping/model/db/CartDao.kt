@@ -1,6 +1,4 @@
-package woowacourse.shopping.model.data
-
-import woowacourse.shopping.model.Cart
+package woowacourse.shopping.model.db
 
 interface CartDao {
     fun itemSize(): Int

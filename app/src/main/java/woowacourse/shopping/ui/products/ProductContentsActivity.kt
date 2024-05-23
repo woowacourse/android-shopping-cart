@@ -11,7 +11,8 @@ import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.data.RecentProductsImpl
+import woowacourse.shopping.model.db.recentproduct.RecentProductDatabase
+import woowacourse.shopping.model.db.recentproduct.RecentProductRepositoryImpl
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductAdapter
@@ -25,7 +26,11 @@ class ProductContentsActivity : AppCompatActivity() {
     private lateinit var productAdapter: ProductAdapter
     private lateinit var recentProductAdapter: RecentProductAdapter
     private val viewModel: ProductContentsViewModel by viewModels {
-        ProductContentsViewModelFactory(ProductsImpl, RecentProductsImpl, CartsImpl)
+        ProductContentsViewModelFactory(
+            ProductsImpl,
+            RecentProductRepositoryImpl.get(RecentProductDatabase.database().recentProductDao()),
+            CartsImpl,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -8,12 +8,12 @@ import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.data.CartsImpl
 import woowacourse.shopping.model.data.ProductDao
-import woowacourse.shopping.model.data.RecentProductDao
+import woowacourse.shopping.model.db.recentproduct.RecentProductRepository
 import woowacourse.shopping.ui.utils.Event
 
 class ProductDetailViewModel(
     private val productDao: ProductDao,
-    private val recentProductDao: RecentProductDao,
+    private val recentProductRepository: RecentProductRepository,
 ) : ViewModel() {
     private val _error: MutableLiveData<Boolean> = MutableLiveData(false)
     val error: LiveData<Boolean> get() = _error
@@ -61,7 +61,9 @@ class ProductDetailViewModel(
         lastSeenProductState: Boolean,
     ) {
         loadMostRecentProduct(productId, lastSeenProductState)
-        recentProductDao.save(productId)
+        Thread {
+            recentProductRepository.insert(productId)
+        }.start()
     }
 
     fun plusCount() {
@@ -80,20 +82,22 @@ class ProductDetailViewModel(
         productId: Long,
         lastSeenProductState: Boolean,
     ) {
-        recentProductDao.findMostRecentProduct()?.let {
-            runCatching {
-                productDao.find(it.productId)
-            }.onSuccess {
-                _error.value = false
-                _mostRecentProduct.value = it
-                if (!lastSeenProductState) return
-                setMostRecentVisibility(it.id, productId)
-            }.onFailure {
-                _error.value = true
-                _mostRecentProductVisibility.value = false
-                _errorMsg.setErrorHandled(it.message.toString())
+        Thread {
+            recentProductRepository.findMostRecentProduct()?.let {
+                runCatching {
+                    productDao.find(it.productId)
+                }.onSuccess {
+                    _error.postValue(false)
+                    _mostRecentProduct.postValue(it)
+                    if (!lastSeenProductState) return@Thread
+                    setMostRecentVisibility(it.id, productId)
+                }.onFailure {
+                    _error.postValue(true)
+                    _mostRecentProductVisibility.postValue(false)
+                    _errorMsg.setErrorHandled(it.message.toString())
+                }
             }
-        }
+        }.start()
     }
 
     private fun setMostRecentVisibility(
@@ -101,15 +105,15 @@ class ProductDetailViewModel(
         currentProductId: Long,
     ) {
         if (mostRecentProductId == currentProductId) {
-            _mostRecentProductVisibility.value = false
+            _mostRecentProductVisibility.postValue(false)
             return
         }
-        _mostRecentProductVisibility.value = true
+        _mostRecentProductVisibility.postValue(true)
     }
 
     private fun <T> MutableLiveData<Event<T>>.setErrorHandled(value: T?) {
         if (this.value?.hasBeenHandled == false) {
-            value?.let { this.value = Event(it) }
+            value?.let { this.postValue(Event(it)) }
         }
     }
 }

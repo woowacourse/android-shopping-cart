@@ -5,19 +5,19 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import woowacourse.shopping.model.Cart
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.ProductWithQuantity
 import woowacourse.shopping.model.Quantity
-import woowacourse.shopping.model.RecentProduct
-import woowacourse.shopping.model.data.CartDao
 import woowacourse.shopping.model.data.ProductDao
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.data.RecentProductDao
+import woowacourse.shopping.model.db.Cart
+import woowacourse.shopping.model.db.CartDao
+import woowacourse.shopping.model.db.recentproduct.RecentProduct
+import woowacourse.shopping.model.db.recentproduct.RecentProductRepository
 
 class ProductContentsViewModel(
     private val productDao: ProductDao,
-    private val recentProductDao: RecentProductDao,
+    private val recentProductRepository: RecentProductRepository,
     private val cartDao: CartDao,
 ) :
     ViewModel() {
@@ -74,7 +74,9 @@ class ProductContentsViewModel(
     }
 
     fun loadRecentProducts() {
-        _recentProducts.value = recentProductDao.findAll()
+        Thread {
+            _recentProducts.postValue(recentProductRepository.findAll())
+        }.start()
     }
 
     private fun updateProductWithQuantity() {

@@ -1,7 +1,12 @@
-package woowacourse.shopping.model
+package woowacourse.shopping.model.db
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import woowacourse.shopping.model.Quantity
+
+@Entity(tableName = "carts")
 data class Cart(
-    val id: Long = 0,
+    @PrimaryKey(autoGenerate = true) var id: Long = 0,
     val productId: Long,
     val quantity: Quantity = Quantity(),
 ) {
