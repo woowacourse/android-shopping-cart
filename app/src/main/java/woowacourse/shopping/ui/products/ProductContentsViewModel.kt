@@ -80,10 +80,14 @@ class ProductContentsViewModel(
 
     private fun getProducts(): List<Product> {
         val endRange = min(currentOffset + LOAD_LIMIT, items.size)
-        val productsInRange = items.toList().subList(currentOffset, endRange)
-        currentOffset = endRange
+        val productsInRange = items.toList().subList(DEFAULT_OFFSET, endRange)
 
         return productsInRange
+    }
+
+    fun renewCurrentOffset()  {
+        val endRange = min(currentOffset + LOAD_LIMIT, items.size)
+        currentOffset = endRange
     }
 
     companion object {

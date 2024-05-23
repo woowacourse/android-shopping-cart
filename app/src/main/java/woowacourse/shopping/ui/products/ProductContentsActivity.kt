@@ -35,7 +35,7 @@ class ProductContentsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadItems()
+        viewModel.loadProducts()
     }
 
     private fun setProductAdapter() {
@@ -46,10 +46,6 @@ class ProductContentsActivity : AppCompatActivity() {
         binding.rvProducts.adapter = adapter
     }
 
-    private fun loadItems() {
-        viewModel.loadProducts()
-    }
-
     private fun observeProductItems() {
         viewModel.products.observe(this) {
             adapter.setData(it)
@@ -58,7 +54,9 @@ class ProductContentsActivity : AppCompatActivity() {
 
     private fun setOnLoadMoreButtonClickListener() {
         binding.btnLoadMore.setOnClickListener {
+            viewModel.renewCurrentOffset()
             viewModel.loadProducts()
+            binding.btnLoadMore.visibility = View.INVISIBLE
         }
     }
 

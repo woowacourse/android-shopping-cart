@@ -33,6 +33,7 @@ class ProductAdapter(
 
     fun setData(newProducts: List<Product>) {
         val currentProductsSize = products.size
+        products.clear()
         products.addAll(newProducts)
         notifyItemRangeInserted(currentProductsSize, newProducts.size)
     }
