@@ -12,10 +12,13 @@ import kotlin.concurrent.thread
 class CartRepositoryImpl(context: Context) : CartRepository {
     private val cartItemDao = CartItemDatabase.getInstance(context).cartItemDao()
 
-    override fun addCartItem(product: Product): Long {
+    override fun addCartItem(
+        product: Product,
+        quantity: Int,
+    ): Long {
         var addedCartItemId = ERROR_SAVE_DATA_ID
         thread {
-            addedCartItemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product))
+            addedCartItemId = cartItemDao.saveCartItem(CartItemEntity.makeCartItemEntity(product, quantity))
         }.join()
         if (addedCartItemId == ERROR_SAVE_DATA_ID) throw NoSuchDataException()
         return addedCartItemId

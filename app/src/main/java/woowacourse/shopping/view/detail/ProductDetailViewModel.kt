@@ -45,7 +45,7 @@ class ProductDetailViewModel(
     fun addShoppingCartItem() {
         runCatching {
             val selected = product.value ?: throw NoSuchDataException()
-            cartRepository.addCartItem(selected)
+            cartRepository.addCartItem(selected, quantity.value ?: 1)
         }.onSuccess {
             _cartItemSavedState.value = ProductDetailState.Success
         }.onFailure {
@@ -66,6 +66,6 @@ class ProductDetailViewModel(
     }
 
     override fun onDecreaseQuantityButtonClicked(id: Long) {
-        _quantity.value = _quantity.value?.minus(1)
+        _quantity.value = _quantity.value?.minus(1)?.coerceAtLeast(1)
     }
 }

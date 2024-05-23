@@ -4,7 +4,10 @@ import woowacourse.shopping.domain.model.CartItem
 import woowacourse.shopping.domain.model.Product
 
 interface CartRepository {
-    fun addCartItem(product: Product): Long
+    fun addCartItem(
+        product: Product,
+        quantity: Int,
+    ): Long
 
     fun loadPagingCartItems(
         offset: Int,
