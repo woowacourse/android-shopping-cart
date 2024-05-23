@@ -14,6 +14,7 @@ import woowacourse.shopping.databinding.ActivityProductsBinding
 import woowacourse.shopping.ui.cart.CartActivity
 import woowacourse.shopping.ui.detail.ProductDetailActivity
 import woowacourse.shopping.ui.products.adapter.ProductsAdapter
+import woowacourse.shopping.ui.products.adapter.ProductsSpanSizeLookUp
 
 class ProductsActivity : AppCompatActivity() {
     private val binding: ActivityProductsBinding by lazy {
@@ -33,7 +34,10 @@ class ProductsActivity : AppCompatActivity() {
         ) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val changedProductId =
-                    result.data?.getLongExtra(CHANGED_PRODUCT_ID_KEY, CHANGED_PRODUCT_ID_DEFAULT_VALUE)
+                    result.data?.getLongExtra(
+                        CHANGED_PRODUCT_ID_KEY,
+                        CHANGED_PRODUCT_ID_DEFAULT_VALUE
+                    )
                         ?: return@registerForActivityResult
                 viewModel.loadProductUiModel(changedProductId)
             }
@@ -75,7 +79,12 @@ class ProductsActivity : AppCompatActivity() {
                 onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
             )
         binding.rvProducts.itemAnimator = null
+        binding.rvProducts.layoutManager =
+            GridLayoutManager(this, PRODUCT_LIST_SPAN_SIZE).apply {
+                spanSizeLookup = ProductsSpanSizeLookUp(adapter)
+            }
         binding.rvProducts.adapter = adapter
+        adapter.addRecentProducts()
         viewModel.productUiModels.observe(this) {
             adapter.insertProducts(it)
         }
@@ -117,10 +126,12 @@ class ProductsActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val PRODUCT_LIST_SPAN_SIZE = 2
+
         const val CHANGED_PRODUCT_ID_KEY = "changed_product_id_key"
-        const val CHANGED_PRODUCT_ID_DEFAULT_VALUE = -1L
+        private const val CHANGED_PRODUCT_ID_DEFAULT_VALUE = -1L
 
         const val IS_CHANGED_CART_KEY = "is_changed_cart_key"
-        const val IS_CHANGED_CART_BOOLEAN = false
+        private const val IS_CHANGED_CART_BOOLEAN = false
     }
 }

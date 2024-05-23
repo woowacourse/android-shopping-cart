@@ -2,6 +2,7 @@ package woowacourse.shopping.ui.products
 
 import woowacourse.shopping.model.Product
 import woowacourse.shopping.model.Quantity
+import woowacourse.shopping.ui.products.adapter.ProductsViewType
 
 data class ProductUiModel(
     val productId: Long,
@@ -9,7 +10,9 @@ data class ProductUiModel(
     val title: String,
     val price: Int,
     val quantity: Quantity,
-) {
+) : ProductsView {
+    override val viewType: ProductsViewType = ProductsViewType.PRODUCTS_UI_MODEL
+
     fun totalPrice() = price * quantity.count
 
     companion object {
