@@ -34,6 +34,7 @@ class ProductDetailViewModel(
     val isRecentProductVisible: LiveData<Boolean>
         get() =
             _cartProduct.map {
+                recentProduct.value != null &&
                 it.product.id != _recentProduct.value?.id
             }
 
