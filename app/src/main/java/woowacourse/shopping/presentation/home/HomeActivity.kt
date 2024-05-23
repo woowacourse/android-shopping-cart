@@ -51,7 +51,7 @@ class HomeActivity : AppCompatActivity() {
         )[HomeViewModel::class.java]
     }
     private val adapter: ProductAdapter by lazy {
-        ProductAdapter(viewModel)
+        ProductAdapter(viewModel, viewModel)
     }
 
     override fun onResume() {

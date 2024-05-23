@@ -8,8 +8,4 @@ interface HomeActionHandler {
     fun onProductItemClick(id: Long)
 
     fun onAddCartItem(id: Long)
-
-    fun onCartItemAdd(id: Long)
-
-    fun onCartItemRemove(id: Long)
 }

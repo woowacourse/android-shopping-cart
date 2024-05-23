@@ -15,6 +15,10 @@
         <variable
             name="homeActionHandler"
             type="woowacourse.shopping.presentation.home.HomeActionHandler" />
+
+        <variable
+            name="cartItemCountHandler"
+            type="woowacourse.shopping.presentation.action.CartItemCountHandler" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -49,46 +53,18 @@
             app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
             app:layout_constraintEnd_toEndOf="@id/iv_product_detail" />
 
-        <LinearLayout
+        <include
+            layout="@layout/layout_plus_minus_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginBottom="18dp"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
             android:padding="12dp"
             android:visibility="@{order.quantity > 0 ? View.VISIBLE : View.GONE}"
+            app:cartItemCountHandler="@{cartItemCountHandler}"
             app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <ImageView
-                android:id="@+id/iv_minus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> homeActionHandler.onCartItemRemove(order.product.id)}"
-                android:padding="12dp"
-                android:src="@drawable/ic_minus"
-                />
-
-            <TextView
-                android:id="@+id/tv_cart_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@{String.valueOf(order.quantity)}"
-                android:textColor="@color/gray_500"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                tools:text="1" />
-
-            <ImageView
-                android:id="@+id/iv_plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> homeActionHandler.onCartItemAdd(order.product.id)}"
-                android:padding="12dp"
-                android:src="@drawable/ic_plus"/>
-        </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:order="@{order}" />
 
         <TextView
             android:id="@+id/tv_product_title_detail"

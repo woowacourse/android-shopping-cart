@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.action.CartItemCountHandler
 import woowacourse.shopping.presentation.home.HomeActionHandler
 import woowacourse.shopping.presentation.uistate.LoadStatus
 import woowacourse.shopping.presentation.uistate.Order
@@ -14,7 +15,7 @@ import woowacourse.shopping.util.Event
 class HomeViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
-) : ViewModel(), HomeActionHandler {
+) : ViewModel(), HomeActionHandler, CartItemCountHandler {
     private var page: Int = 0
 
     private val _totalCartCount: MutableLiveData<Int> = MutableLiveData(0)
@@ -124,7 +125,7 @@ class HomeViewModel(
         plusCartItem(id)
     }
 
-    override fun onCartItemRemove(id: Long) {
+    override fun onCartItemMinus(id: Long) {
         minusCartItem(id)
     }
 
