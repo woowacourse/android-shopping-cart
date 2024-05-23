@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.domain.CartRepository
 import woowacourse.shopping.dummyCartProducts
+import woowacourse.shopping.dummyShoppingProducts
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.presentation.ui.UiState
 import woowacourse.shopping.presentation.ui.shopping.ShoppingError
@@ -33,7 +34,11 @@ class CartViewModelTest {
     fun `카트 아이템을 pageCount개씩 불러온다`() {
         every { cartRepository.load(any(), any()) } returns Result.success(dummyCartProducts)
         viewModel.loadProductByPage()
-        assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Success(dummyCartProducts))
+        assertThat(viewModel.shoppingProducts.getOrAwaitValue(3)).isEqualTo(
+            UiState.Success(
+                dummyShoppingProducts,
+            ),
+        )
     }
 
     @Test
@@ -51,7 +56,11 @@ class CartViewModelTest {
         every { cartRepository.getMaxPage(any()) } returns Result.success(0)
         every { cartRepository.load(any(), any()) } returns Result.success(dummyCartProducts)
         viewModel.deleteProduct(product)
-        assertThat(viewModel.carts.getOrAwaitValue(3)).isEqualTo(UiState.Success(dummyCartProducts))
+        assertThat(viewModel.shoppingProducts.getOrAwaitValue(3)).isEqualTo(
+            UiState.Success(
+                dummyShoppingProducts,
+            ),
+        )
     }
 
     @Test

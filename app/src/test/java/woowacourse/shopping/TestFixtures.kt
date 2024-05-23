@@ -8,10 +8,10 @@ import woowacourse.shopping.domain.RecentProductItem
 import java.time.LocalDateTime
 
 val dummyProducts =
-    List(51) { id ->
+    List(3) { id ->
         Product(
             id = id.toLong(),
-            imgUrl = "https://image.utoimage.com/preview/cp872722/2022/12/202212008462_500.jpg",
+            imgUrl = "",
             name = "$id",
             price = 10000,
         )
@@ -24,15 +24,15 @@ val dummyRecentProducts =
         RecentProductItem(
             productId = 0,
             name = "0",
-            imgUrl = "https://images.emarteveryday.co.kr/images/app/webapps/evd_web2/share/SKU/mall/27/41/8412707034127_1.png",
-            dateTime = LocalDateTime.now(),
+            imgUrl = "",
+            dateTime = LocalDateTime.of(2023, 5, 23, 11, 42),
         ),
     )
 
 val dummyCartProducts: List<Cart> =
     List(3) {
         Cart(
-            product = product,
+            product = dummyProducts[it],
             count = 1,
         )
     }
