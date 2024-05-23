@@ -7,8 +7,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductContentsBinding
 import woowacourse.shopping.model.data.CartsImpl
@@ -38,7 +36,6 @@ class ProductContentsActivity : AppCompatActivity() {
         initToolbar()
         observeProductItems()
         observeRecentProductItems()
-        setOnRecyclerViewScrollListener()
     }
 
     override fun onResume() {
@@ -90,35 +87,6 @@ class ProductContentsActivity : AppCompatActivity() {
             recentProductAdapter.setRecentProducts(it)
         }
     }
-
-    private fun setOnRecyclerViewScrollListener() {
-        binding.rvProducts.addOnScrollListener(
-            onScrollListener(),
-        )
-    }
-
-    private fun onScrollListener() =
-        object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(
-                recyclerView: RecyclerView,
-                dx: Int,
-                dy: Int,
-            ) {
-                super.onScrolled(recyclerView, dx, dy)
-                binding.btnLoadMore.visibility =
-                    if (isLastItemVisible(recyclerView)) {
-                        View.VISIBLE
-                    } else {
-                        View.GONE
-                    }
-            }
-        }
-
-    private fun isLastItemVisible(recyclerView: RecyclerView) =
-        (recyclerView.layoutManager as GridLayoutManager)
-            .findLastCompletelyVisibleItemPosition() == adapterItemSize()
-
-    private fun adapterItemSize() = recentProductAdapter.itemCount - OFFSET
 
     companion object {
         private const val OFFSET = 1
