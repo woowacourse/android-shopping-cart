@@ -81,42 +81,18 @@
             app:layout_constraintTop_toBottomOf="@id/div_detail"
             tools:text="10,000원" />
 
-        <ImageView
-            android:id="@+id/iv_minus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:onClick="@{() -> detailViewModel.minusQuantity()}"
-            android:src="@drawable/ic_minus"
-            app:layout_constraintBottom_toBottomOf="@id/iv_plus"
-            app:layout_constraintEnd_toStartOf="@id/tv_cart_count"
-            app:layout_constraintTop_toTopOf="@id/iv_plus" />
-
-        <TextView
-            android:id="@+id/tv_cart_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@{String.valueOf(detailViewModel.quantity)}"
-            android:textColor="@color/gray_500"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/iv_plus"
-            app:layout_constraintEnd_toStartOf="@id/iv_plus"
-            app:layout_constraintTop_toTopOf="@id/iv_plus"
-            tools:text="1" />
-
-        <ImageView
-            android:id="@+id/iv_plus"
+        <include
+            layout="@layout/layout_plus_minus_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:layout_marginBottom="18dp"
             android:padding="12dp"
-            android:onClick="@{() -> detailViewModel.addQuantity()}"
-            android:src="@drawable/ic_plus"
+            app:cartItemCountHandler="@{detailViewModel}"
+            app:layout_constraintBottom_toBottomOf="@id/tv_price_value_detail"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_price_value_detail"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:productId="@{detailViewModel.productInformation.id}"
+            app:quantity="@{detailViewModel.quantity}" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_to_cart_detail"
