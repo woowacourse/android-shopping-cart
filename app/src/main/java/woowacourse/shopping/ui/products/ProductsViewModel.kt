@@ -65,7 +65,7 @@ class ProductsViewModel(
     private fun List<RecentProduct>.toRecentProductUiModels(): List<RecentProductUiModel> {
         return map {
             val product = productRepository.find(it.productId)
-            RecentProductUiModel(product.imageUrl, product.title)
+            RecentProductUiModel(product.id, product.imageUrl, product.title)
         }
     }
 

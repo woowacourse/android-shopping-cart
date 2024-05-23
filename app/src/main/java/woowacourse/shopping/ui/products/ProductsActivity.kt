@@ -72,6 +72,7 @@ class ProductsActivity : AppCompatActivity() {
         adapter =
             ProductsAdapter(
                 onClickProductItem = { navigateToProductDetailView(it) },
+                onClickRecentProductItem = { navigateToProductDetailView(it) },
                 onIncreaseProductQuantity = { viewModel.increaseQuantity(it) },
                 onDecreaseProductQuantity = { viewModel.decreaseQuantity(it) },
             )

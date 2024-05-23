@@ -10,12 +10,14 @@ import woowacourse.shopping.ui.products.ProductUiModel
 import woowacourse.shopping.ui.products.ProductsView
 import woowacourse.shopping.ui.products.recent.RecentProductUiModel
 import woowacourse.shopping.ui.products.RecentProductsUiModel
+import woowacourse.shopping.ui.products.recent.OnClickRecentProductItem
 import woowacourse.shopping.ui.products.recent.RecentProductsViewHolder
 import woowacourse.shopping.ui.utils.OnDecreaseProductQuantity
 import woowacourse.shopping.ui.utils.OnIncreaseProductQuantity
 
 class ProductsAdapter(
     private val onClickProductItem: OnClickProductItem,
+    private val onClickRecentProductItem: OnClickRecentProductItem,
     private val onIncreaseProductQuantity: OnIncreaseProductQuantity,
     private val onDecreaseProductQuantity: OnDecreaseProductQuantity,
 ) :
@@ -31,7 +33,7 @@ class ProductsAdapter(
         return when (productsViewType) {
             ProductsViewType.RECENT_PRODUCTS -> {
                 val binding = ItemRecentProductsBinding.inflate(inflater, parent, false)
-                RecentProductsViewHolder(binding)
+                RecentProductsViewHolder(binding, onClickRecentProductItem)
             }
 
             ProductsViewType.PRODUCTS_UI_MODEL -> {
@@ -84,7 +86,8 @@ class ProductsAdapter(
     }
 
     private fun changeProduct(newProduct: ProductUiModel) {
-        val position = productsViews.indexOfFirst { it is ProductUiModel && it.productId == newProduct.productId }
+        val position =
+            productsViews.indexOfFirst { it is ProductUiModel && it.productId == newProduct.productId }
         productsViews[position] = newProduct
         notifyItemChanged(position)
     }
@@ -99,7 +102,7 @@ class ProductsAdapter(
         notifyItemInserted(RECENT_PRODUCTS_INDEX)
     }
 
-    private fun isExistedRecentProducts():Boolean {
+    private fun isExistedRecentProducts(): Boolean {
         return ProductsViewType.from(getItemViewType(RECENT_PRODUCTS_INDEX)) == ProductsViewType.RECENT_PRODUCTS
     }
 

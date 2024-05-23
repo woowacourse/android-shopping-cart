@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemRecentProductBinding
 
-class RecentProductsAdapter : RecyclerView.Adapter<RecentProductViewHolder>() {
+class RecentProductsAdapter(private val onClickRecentProductItem: OnClickRecentProductItem) : RecyclerView.Adapter<RecentProductViewHolder>() {
     private var recentProductUiModels: MutableList<RecentProductUiModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecentProductViewHolder {
@@ -17,7 +17,7 @@ class RecentProductsAdapter : RecyclerView.Adapter<RecentProductViewHolder>() {
     override fun getItemCount(): Int = recentProductUiModels.size
 
     override fun onBindViewHolder(holder: RecentProductViewHolder, position: Int) {
-        holder.bind(recentProductUiModels[position])
+        holder.bind(recentProductUiModels[position], onClickRecentProductItem)
     }
 
     fun updateRecentProduct(recentProducts: List<RecentProductUiModel>) {

@@ -30,6 +30,7 @@
             android:id="@+id/rv_recent_product"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
             android:layout_marginHorizontal="16dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
