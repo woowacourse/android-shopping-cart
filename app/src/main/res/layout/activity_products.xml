@@ -42,17 +42,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:src="@drawable/ic_cart"
-                    app:layout_goneMarginEnd="16dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/tv_products_cart_count"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_goneMarginEnd="16dp" />
 
                 <TextView
                     android:id="@+id/tv_products_cart_count"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="22dp"
-                    app:visibility="@{viewModel.cartTotalCount > 0}"
                     android:background="@drawable/shape_cart_count_text"
                     android:gravity="center"
                     android:text="@{String.valueOf(viewModel.cartTotalCount)}"
@@ -64,6 +63,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintLeft_toRightOf="@id/iv_products_cart"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:visibility="@{viewModel.cartTotalCount > 0}"
                     tools:text="1" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -79,12 +79,10 @@
             android:paddingHorizontal="14dp"
             android:paddingTop="14dp"
             android:paddingBottom="50dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar_products"
-            app:spanCount="2"
             tools:listitem="@layout/item_product" />
 
         <Button
