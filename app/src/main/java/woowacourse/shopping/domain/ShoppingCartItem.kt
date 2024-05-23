@@ -2,17 +2,17 @@ package woowacourse.shopping.domain
 
 data class ShoppingCartItem(
     val product: Product,
-    val totalQuantity: Int = MIN_QUANTITY,
+    val quantity: Int = MIN_QUANTITY,
 ) {
-    val totalPrice: Price = product.price.times(totalQuantity)
+    val totalPrice: Price = product.price.times(quantity)
 
-    fun increaseQuantity(): QuantityUpdate = QuantityUpdate.Success(value = copy(totalQuantity = totalQuantity + COUNT_INTERVAL))
+    fun increaseQuantity(): QuantityUpdate = QuantityUpdate.Success(value = copy(quantity = quantity + COUNT_INTERVAL))
 
     fun decreaseQuantity(): QuantityUpdate {
-        if (totalQuantity <= MIN_QUANTITY) {
+        if (quantity <= MIN_QUANTITY) {
             return QuantityUpdate.Failure
         }
-        return QuantityUpdate.Success(value = copy(totalQuantity = totalQuantity - COUNT_INTERVAL))
+        return QuantityUpdate.Success(value = copy(quantity = quantity - COUNT_INTERVAL))
     }
 
     companion object {
