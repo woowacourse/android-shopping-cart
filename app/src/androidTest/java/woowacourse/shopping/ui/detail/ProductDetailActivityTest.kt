@@ -28,7 +28,7 @@ class ProductDetailActivityTest {
             ApplicationProvider.getApplicationContext(),
             ProductDetailActivity::class.java,
         ).run {
-            putExtra(ProductDetailKey.EXTRA_PRODUCT_WITH_QUANTITY_KEY, productId)
+            putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
         }
 
     @get:Rule

@@ -23,7 +23,7 @@ class ProductDetailActivity :
     private val viewModel: ProductDetailViewModel by viewModels {
         ProductDetailViewModelFactory(ProductsImpl)
     }
-    private val productWithQuantityId by lazy { productWithQuantityId() }
+    private val productId by lazy { productId() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +66,7 @@ class ProductDetailActivity :
     }
 
     private fun showProductDetail() {
-        viewModel.loadProduct(productWithQuantityId)
+        viewModel.loadProduct(productId)
     }
 
     private fun setOnListener() {
@@ -85,9 +85,9 @@ class ProductDetailActivity :
         }
     }
 
-    private fun productWithQuantityId() =
+    private fun productId() =
         intent.getLongExtra(
-            ProductDetailKey.EXTRA_PRODUCT_WITH_QUANTITY_KEY,
+            ProductDetailKey.EXTRA_PRODUCT_KEY,
             EXTRA_DEFAULT_VALUE,
         )
 
@@ -98,7 +98,7 @@ class ProductDetailActivity :
             context: Context,
             productId: Long,
         ) = Intent(context, ProductDetailActivity::class.java).run {
-            putExtra(ProductDetailKey.EXTRA_PRODUCT_WITH_QUANTITY_KEY, productId)
+            putExtra(ProductDetailKey.EXTRA_PRODUCT_KEY, productId)
             context.startActivity(this)
         }
     }
