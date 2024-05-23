@@ -24,6 +24,11 @@ class ProductAdapter(
     private var products: List<CartableProduct> = emptyList()
     private var loadStatus: LoadStatus = LoadStatus()
 
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        recyclerView.itemAnimator = null
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
