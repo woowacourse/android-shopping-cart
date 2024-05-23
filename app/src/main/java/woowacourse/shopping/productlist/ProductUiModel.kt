@@ -6,6 +6,4 @@ data class ProductUiModel(
     val price: Int,
     val imageUrl: String,
     val cartItemCount: Int = 0,
-) {
-    val totalPrice = price * cartItemCount
-}
+)
