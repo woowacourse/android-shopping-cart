@@ -1,7 +1,6 @@
 package woowacourse.shopping.presentation.ui.productdetail
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.Menu
@@ -50,8 +49,16 @@ class ProductDetailActivity : BaseActivity<ActivityProductDetailBinding>() {
             when (navigateAction) {
                 is ProductDetailNavigateAction.NavigateToProductList -> {
                     val intent = ProductListActivity.getIntent(this, navigateAction.updatedProducts)
-                    setResult(Activity.RESULT_OK, intent)
+                    setResult(RESULT_OK, intent)
                     finish()
+                }
+
+                is ProductDetailNavigateAction.NavigateToProductDetail -> {
+                    val intent =
+                        getIntent(this, navigateAction.productId).apply {
+                            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        }
+                    startActivity(intent)
                 }
 
                 is ProductDetailNavigateAction.NavigateToPrevious -> finish()

@@ -23,7 +23,7 @@
 
         <ImageView
             android:id="@+id/iv_product_detail"
-            urlToImage="@{vm.product.imageUrl}"
+            urlToImage="@{vm.uiState.product.imageUrl}"
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:scaleType="centerCrop"
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="16dp"
-            android:text="@{vm.product.name}"
+            android:text="@{vm.uiState.product.name}"
             android:textColor="@color/black"
             android:textSize="24dp"
             android:textStyle="bold"
@@ -56,7 +56,7 @@
 
         <TextView
             android:id="@+id/tv_product_price"
-            priceToCurrency="@{vm.product.price}"
+            priceToCurrency="@{vm.uiState.product.price}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
@@ -77,7 +77,42 @@
             app:actionHandler="@{productCountHandler}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line"
-            app:product="@{vm.product}" />
+            app:product="@{vm.uiState.product}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="29dp"
+            android:background="@drawable/bg_transparent_rounded_gray6"
+            android:gravity="center_vertical"
+            android:onClick="@{() -> vm.navigateToProductDetail(vm.uiState.productHistory.productId)}"
+            android:orientation="vertical"
+            android:paddingVertical="16dp"
+            android:paddingStart="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_price">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="마지막으로 본 상품"
+                android:textColor="@color/green"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{vm.uiState.productHistory.name}"
+                android:textColor="@color/gray5"
+                android:textSize="18dp"
+                tools:text="PET보틀-정사각형(500ml)" />
+
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/tv_add_to_cart"

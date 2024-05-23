@@ -25,11 +25,9 @@ class ProductDetailViewModel(
     private val shoppingCartRepository: ShoppingCartRepository,
     private val productHistoryRepository: ProductHistoryRepository,
 ) : BaseViewModel(), ProductCountHandler {
-    private val _product: MutableLiveData<Product> = MutableLiveData()
-    val product: LiveData<Product> get() = _product
-
-    private val _isAddToCart: MutableLiveData<Boolean> = MutableLiveData()
-    val isAddToCart: LiveData<Boolean> get() = _isAddToCart
+    private val _uiState: MutableLiveData<ProductDetailUiState> =
+        MutableLiveData(ProductDetailUiState())
+    val uiState: LiveData<ProductDetailUiState> get() = _uiState
 
     private val _navigateAction: MutableLiveData<Event<ProductDetailNavigateAction>> =
         MutableLiveData(null)
@@ -37,50 +35,37 @@ class ProductDetailViewModel(
 
     init {
         savedStateHandle.get<Long>(PUT_EXTRA_PRODUCT_ID)?.let { productId ->
-            findByProductId(productId)
+            getProduct(productId)
         }
     }
 
-    private fun findByProductId(id: Long) {
-        productRepository.findProductById(id).onSuccess { productValue ->
-            _product.value = productValue
-            insertProductHistory(productValue)
-            findProduct(id)
-        }.onFailure { e ->
-            when (e) {
-                is NoSuchElementException -> showMessage(ProductDetailMessage.NoSuchElementErrorMessage)
-                else -> showMessage(MessageProvider.DefaultErrorMessage)
+    private fun getProduct(id: Long) {
+        thread {
+            productRepository.findProductById(id).mapCatching { product ->
+                val carProduct = shoppingCartRepository.findCartProduct(id).getOrNull()
+                carProduct ?: product
+            }.onSuccess { product ->
+                getProductHistory(product)
             }
         }
     }
 
-    private fun findProduct(productId: Long) {
-        thread {
-            shoppingCartRepository.findCartProduct(productId = productId)
-                .onSuccess { productValue ->
-                    _product.value?.let { value ->
-                        _product.postValue(value.copy(quantity = productValue.quantity))
-                    }
-                }.onFailure {
-                    // TODO 예외 처리
-                }
-        }
-    }
-
     fun addToCart() {
-        product.value?.let { product ->
-            thread {
-                shoppingCartRepository.insertCartProduct(
-                    productId = product.id,
-                    name = product.name,
-                    price = product.price,
-                    quantity = product.quantity,
-                    imageUrl = product.imageUrl,
-                ).onSuccess {
-                    _isAddToCart.postValue(true)
-                    showMessage(ProductDetailMessage.AddToCartSuccessMessage)
-                }.onFailure {
-                    showMessage(MessageProvider.DefaultErrorMessage)
+        _uiState.value?.let { state ->
+            state.product?.let { product ->
+                thread {
+                    shoppingCartRepository.insertCartProduct(
+                        productId = product.id,
+                        name = product.name,
+                        price = product.price,
+                        quantity = product.quantity,
+                        imageUrl = product.imageUrl,
+                    ).onSuccess {
+                        _uiState.postValue(state.copy(isAddToCart = true))
+                        showMessage(ProductDetailMessage.AddToCartSuccessMessage)
+                    }.onFailure {
+                        showMessage(MessageProvider.DefaultErrorMessage)
+                    }
                 }
             }
         }
@@ -90,8 +75,10 @@ class ProductDetailViewModel(
         productId: Long,
         position: Int,
     ) {
-        _product.value?.let { value ->
-            _product.value = value.copy(quantity = value.quantity + 1)
+        _uiState.value?.let { state ->
+            state.product?.let { product ->
+                _uiState.value = state.copy(product = product.copy(quantity = product.quantity + 1))
+            }
         }
     }
 
@@ -99,24 +86,47 @@ class ProductDetailViewModel(
         productId: Long,
         position: Int,
     ) {
-        _product.value?.let { value ->
-            _product.value = value.copy(quantity = value.quantity - 1)
+        _uiState.value?.let { state ->
+            state.product?.let { product ->
+                _uiState.value = state.copy(product = product.copy(quantity = product.quantity - 1))
+            }
         }
     }
 
     fun navigateToProductList() {
-        _product.value?.let { value ->
-            if (isAddToCart.value == true) {
-                val updatedProducts = UpdatedProducts(mutableMapOf(value.id to value))
-                _navigateAction.emit(
-                    ProductDetailNavigateAction.NavigateToProductList(
-                        updatedProducts,
-                    ),
-                )
-            } else {
-                _navigateAction.emit(ProductDetailNavigateAction.NavigateToPrevious)
+        _uiState.value?.let { state ->
+            state.product?.let { product ->
+                if (state.isAddToCart) {
+                    val updatedProducts = UpdatedProducts(mutableMapOf(product.id to product))
+                    _navigateAction.emit(
+                        ProductDetailNavigateAction.NavigateToProductList(
+                            updatedProducts,
+                        ),
+                    )
+                } else {
+                    _navigateAction.emit(ProductDetailNavigateAction.NavigateToPrevious)
+                }
             }
         }
+    }
+
+    private fun getProductHistory(product: Product) {
+        productHistoryRepository.getProductHistory(2).onSuccess { productHistorys ->
+            if (product.id == productHistorys.first().productId) {
+                _uiState.postValue(
+                    uiState.value?.copy(product = product, productHistory = productHistorys[1]),
+                )
+                deleteProductHistory(product.id)
+            } else {
+                _uiState.postValue(
+                    uiState.value?.copy(
+                        product = product,
+                        productHistory = productHistorys.first(),
+                    ),
+                )
+                insertProductHistory(product)
+            }
+        }.onFailure { showMessage(MessageProvider.DefaultErrorMessage) }
     }
 
     private fun insertProductHistory(productValue: Product) {
@@ -128,6 +138,17 @@ class ProductDetailViewModel(
                 imageUrl = productValue.imageUrl,
             ).onFailure { showMessage(MessageProvider.DefaultErrorMessage) }
         }
+    }
+
+    private fun deleteProductHistory(productId: Long) {
+        thread {
+            productHistoryRepository.deleteProductHistory(productId = productId)
+                .onFailure { showMessage(MessageProvider.DefaultErrorMessage) }
+        }
+    }
+
+    fun navigateToProductDetail(productId: Long) {
+        _navigateAction.emit(ProductDetailNavigateAction.NavigateToProductDetail(productId))
     }
 
     companion object {
