@@ -14,6 +14,8 @@ import woowacourse.shopping.domain.repository.local.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
 import woowacourse.shopping.domain.repository.remote.ProductRepository
 import woowacourse.shopping.getOrAwaitValue
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 @ExtendWith(MockKExtension::class, InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
@@ -34,6 +36,8 @@ class ProductListViewModelTest {
             Result.success(PRODUCT_LIST.subList(0, 20).map { it.toDomain() })
         every { productRepository.getPagingProduct(1, 20) } returns
             Result.success(PRODUCT_LIST.subList(20, 40).map { it.toDomain() })
+        every { productHistoryRepository.getProductHistory(any()) } returns Result.success(emptyList())
+        every { shoppingCartRepository.getAllCartProducts() } returns Result.success(emptyList())
 
         viewModel =
             ProductListViewModel(
@@ -41,23 +45,32 @@ class ProductListViewModelTest {
                 shoppingCartRepository,
                 productHistoryRepository,
             )
+
+        val latch = CountDownLatch(1)
+        latch.await(1, TimeUnit.SECONDS)
     }
 
     @Test
     fun `상품을 불러온다`() {
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
-        assertThat(actual.pagingProduct.productList).isEqualTo(PRODUCT_LIST.subList(0, 20))
+
+        assertThat(actual.pagingProduct.productList).isEqualTo(
+            PRODUCT_LIST.subList(0, 20).map { it.toDomain() },
+        )
     }
 
     @Test
     fun `더보기 버튼을 눌렀을 때 상품을 더 불러온다`() {
         // when
+        every { shoppingCartRepository.getAllCartProducts() } returns Result.success(emptyList())
         viewModel.loadMoreProducts()
 
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
-        assertThat(actual.pagingProduct.productList).isEqualTo(PRODUCT_LIST.subList(0, 40))
+        assertThat(actual.pagingProduct.productList).isEqualTo(
+            PRODUCT_LIST.subList(0, 40).map { it.toDomain() },
+        )
     }
 
     @Test

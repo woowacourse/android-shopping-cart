@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.data.api.DummyData.CART_PRODUCTS
+import woowacourse.shopping.data.mapper.toDomain
 import woowacourse.shopping.domain.repository.local.ShoppingCartRepository
 import woowacourse.shopping.getOrAwaitValue
 import java.util.concurrent.CountDownLatch
@@ -25,8 +26,8 @@ class ShoppingCartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { repository.getCartProductsPaged(0, 5) } returns Result.success(CART_PRODUCTS.subList(0, 5))
-        every { repository.getCartProductsPaged(1, 5) } returns Result.success(CART_PRODUCTS.subList(5, 10))
+        every { repository.getCartProductsPaged(0, 5) } returns Result.success(CART_PRODUCTS.subList(0, 5).map { it.toDomain() })
+        every { repository.getCartProductsPaged(1, 5) } returns Result.success(CART_PRODUCTS.subList(5, 10).map { it.toDomain() })
         every { repository.getCartProductsTotal() } returns Result.success(60)
 
         viewModel = ShoppingCartViewModel(repository)
@@ -38,7 +39,7 @@ class ShoppingCartViewModelTest {
     fun `첫 번째 페이지에 장바구니를 불러온다`() {
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
-        assertThat(actual.pagingCartProduct.products).isEqualTo(CART_PRODUCTS.subList(0, 5))
+        assertThat(actual.pagingCartProduct.products).isEqualTo(CART_PRODUCTS.subList(0, 5).map { it.toDomain() })
     }
 
     @Test
@@ -46,7 +47,7 @@ class ShoppingCartViewModelTest {
         // given
         val productIdSlot = slot<Long>()
         every { repository.deleteCartProduct(capture(productIdSlot)) } returns Result.success(Unit)
-        every { repository.getCartProductsPaged(0, 5) } returns Result.success(CART_PRODUCTS.subList(1, 5))
+        every { repository.getCartProductsPaged(0, 5) } returns Result.success(CART_PRODUCTS.subList(1, 5).map { it.toDomain() })
 
         // when
         viewModel.deleteCartProduct(CART_PRODUCTS.first().id)
@@ -59,7 +60,7 @@ class ShoppingCartViewModelTest {
         assertThat(productIdSlot.captured).isEqualTo(CART_PRODUCTS.first().id)
 
         val actual = viewModel.uiState.getOrAwaitValue()
-        assertThat(actual.pagingCartProduct.products).isEqualTo(CART_PRODUCTS.subList(1, 5))
+        assertThat(actual.pagingCartProduct.products).isEqualTo(CART_PRODUCTS.subList(1, 5).map { it.toDomain() })
     }
 
     @Test
@@ -70,7 +71,7 @@ class ShoppingCartViewModelTest {
         Thread.sleep(3000)
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
-        assertThat(actual.pagingCartProduct.products).isEqualTo(CART_PRODUCTS.subList(5, 10))
+        assertThat(actual.pagingCartProduct.products).isEqualTo(CART_PRODUCTS.subList(5, 10).map { it.toDomain() })
     }
 
     @Test
@@ -83,6 +84,6 @@ class ShoppingCartViewModelTest {
 
         // then
         val actual = viewModel.uiState.getOrAwaitValue()
-        assertThat(actual.pagingCartProduct.products).isEqualTo(CART_PRODUCTS.subList(0, 5))
+        assertThat(actual.pagingCartProduct.products).isEqualTo(CART_PRODUCTS.subList(0, 5).map { it.toDomain() })
     }
 }

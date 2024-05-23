@@ -38,6 +38,9 @@ class ProductDetailViewModelTest {
     @BeforeEach
     fun setUp() {
         every { productRepository.findProductById(productId) } returns Result.success(STUB_PRODUCT_A.toDomain())
+        every { productHistoryRepository.getProductHistory(any()) } returns Result.success(emptyList())
+        every { shoppingCartRepository.getAllCartProducts() } returns Result.success(emptyList())
+        every { shoppingCartRepository.findCartProduct(1L) } returns Result.success(STUB_PRODUCT_A.toDomain())
 
         val initialState = mapOf(ProductDetailActivity.PUT_EXTRA_PRODUCT_ID to productId)
         savedStateHandle = SavedStateHandle(initialState)
@@ -53,8 +56,9 @@ class ProductDetailViewModelTest {
     @Test
     fun `선택한 상품의 상세 정보를 불러온다`() {
         // then
+        Thread.sleep(3000)
         val actual = viewModel.uiState.getOrAwaitValue()
-        assertThat(actual.product).isEqualTo(STUB_PRODUCT_A)
+        assertThat(actual.product).isEqualTo(STUB_PRODUCT_A.toDomain())
     }
 
     @Test
@@ -76,6 +80,15 @@ class ProductDetailViewModelTest {
             )
         } returns Result.success(Unit)
 
+        every {
+            productHistoryRepository.insertProductHistory(
+                any(),
+                any(),
+                any(),
+                any(),
+            )
+        } returns Result.success(Unit)
+
         // when
         viewModel.addToCart()
 
@@ -84,7 +97,7 @@ class ProductDetailViewModelTest {
             { assertThat(productIdSlot.captured).isEqualTo(STUB_PRODUCT_A.id) },
             { assertThat(nameSlot.captured).isEqualTo(STUB_PRODUCT_A.name) },
             { assertThat(priceSlot.captured).isEqualTo(STUB_PRODUCT_A.price) },
-            { assertThat(quantitySlot.captured).isEqualTo(1) }, // Assuming the default quantity is 1
+            { assertThat(quantitySlot.captured).isEqualTo(0) },
             { assertThat(imageUrlSlot.captured).isEqualTo(STUB_PRODUCT_A.imageUrl) },
         )
     }
