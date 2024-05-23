@@ -1,10 +1,12 @@
-package woowacourse.shopping.presentation.ui.cart
+package woowacourse.shopping.presentation.ui.cart.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.domain.model.CartItem
+import woowacourse.shopping.presentation.ui.cart.CartActionHandler
+import woowacourse.shopping.presentation.ui.cart.viewholder.CartViewHolder
 
 class CartAdapter(
     private val actionHandler: CartActionHandler,
@@ -31,6 +33,7 @@ class CartAdapter(
         return cartItems.size
     }
 
+    @Suppress("notifyDataSetChanged")
     fun loadData(cartItems: List<CartItem>) {
         this.cartItems = cartItems
         notifyDataSetChanged()

@@ -38,7 +38,7 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartA
             MutableLiveData<UIState<List<CartItem>>>().apply {
                 value =
                     try {
-                        val items = repository.findAllPagedItems(page, pageSize).items
+                        val items = repository.findCartItemsByPage(page, pageSize).items
                         if (items.isEmpty()) {
                             UIState.Empty
                         } else {
@@ -83,6 +83,16 @@ class CartViewModel(private val repository: CartRepository) : ViewModel(), CartA
 
     override fun onDeleteItemClick(cartItemId: Long) {
         repository.delete(cartItemId)
+        loadPage(_currentPage.value ?: DEFAULT_PAGE)
+    }
+
+    override fun onPlusButtonClicked(productId: Long) {
+        repository.plusQuantity(productId)
+        loadPage(_currentPage.value ?: DEFAULT_PAGE)
+    }
+
+    override fun onMinusButtonClicked(productId: Long) {
+        repository.minusQuantity(productId)
         loadPage(_currentPage.value ?: DEFAULT_PAGE)
     }
 

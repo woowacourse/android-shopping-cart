@@ -4,4 +4,8 @@ interface CartActionHandler {
     fun onProductClick(productId: Long)
 
     fun onDeleteItemClick(cartItemId: Long)
+
+    fun onPlusButtonClicked(productId: Long)
+
+    fun onMinusButtonClicked(productId: Long)
 }
