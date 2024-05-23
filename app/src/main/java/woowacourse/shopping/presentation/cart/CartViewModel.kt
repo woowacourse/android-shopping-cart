@@ -1,6 +1,5 @@
 package woowacourse.shopping.presentation.cart
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,7 +19,8 @@ class CartViewModel(
     val currentPage: LiveData<Int>
         get() = _currentPage
 
-    private val _cartableProducts: MutableLiveData<List<CartableProduct>> = MutableLiveData(emptyList())
+    private val _cartableProducts: MutableLiveData<List<CartableProduct>> =
+        MutableLiveData(emptyList())
     val cartableProducts: LiveData<List<CartableProduct>>
         get() = _cartableProducts
 
@@ -53,6 +53,7 @@ class CartViewModel(
 
     fun loadCurrentPageCartItems() {
         val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
+        println(cartItems)
         hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
         setPageInformation()
         _cartableProducts.postValue(cartItems)
@@ -95,6 +96,17 @@ class CartViewModel(
 
     override fun onQuantityChange(productId: Long, quantity: Int) {
         if (quantity < 0) return
+        thread {
+            val targetItem = productRepository.fetchProduct(productId)
+            if (targetItem.cartItem?.id != null) {
+                if (quantity == 0) {
+                    cartRepository.removeCartItem(targetItem.cartItem)
+                } else {
+                    cartRepository.updateQuantity(targetItem.cartItem.id, quantity)
+                }
+            }
+            loadCurrentPageCartItems()
+        }
     }
 }
 

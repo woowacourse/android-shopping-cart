@@ -62,7 +62,8 @@
             app:layout_constraintBottom_toBottomOf="@id/iv_product_detail"
             app:layout_constraintEnd_toEndOf="@id/iv_product_detail"
             android:visibility="@{cartableProduct.quantity > 0 ? View.VISIBLE : View.GONE}"
-            shopping:cartableProduct="@{cartableProduct}"
+            shopping:productId="@{cartableProduct.product.id}"
+            shopping:quantity="@{cartableProduct.quantity}"
             shopping:quantityListener="@{quantityListener}" />
 
         <TextView

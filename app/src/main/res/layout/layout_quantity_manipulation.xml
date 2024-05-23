@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="cartableProduct"
-            type="woowacourse.shopping.data.model.CartableProduct" />
+            name="productId"
+            type="long" />
+
+        <variable
+            name="quantity"
+            type="int" />
 
         <variable
             name="quantityListener"
@@ -23,7 +27,7 @@
             android:id="@+id/btn_subtraction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> quantityListener.onQuantityChange(cartableProduct.product.id, cartableProduct.quantity - 1)}"
+            android:onClick="@{() -> quantityListener.onQuantityChange(productId, quantity - 1)}"
             android:paddingHorizontal="20dp"
             android:paddingBottom="4dp"
             android:text="@string/button_minus"
@@ -39,7 +43,7 @@
             android:maxLength="2"
             android:maxLines="1"
             android:paddingHorizontal="12dp"
-            android:text="@{String.valueOf(cartableProduct.quantity)}"
+            android:text="@{String.valueOf(quantity)}"
             android:textSize="32sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_subtraction"
@@ -50,7 +54,7 @@
             android:id="@+id/btn_addition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{() -> quantityListener.onQuantityChange(cartableProduct.product.id, cartableProduct.quantity + 1)}"
+            android:onClick="@{() -> quantityListener.onQuantityChange(productId, quantity + 1)}"
             android:paddingHorizontal="20dp"
             android:paddingBottom="4dp"
             android:text="@string/button_plus"

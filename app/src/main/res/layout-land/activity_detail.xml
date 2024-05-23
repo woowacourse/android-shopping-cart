@@ -92,7 +92,8 @@
             android:layout_margin="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/div_detail"
-            shopping:cartableProduct="@{detailViewModel.productInformation}"
+            shopping:productId="@{detailViewModel.productInformation.product.id}"
+            shopping:quantity="@{detailViewModel.productInformation.quantity}"
             shopping:quantityListener="@{quantityListener}" />
 
         <androidx.appcompat.widget.AppCompatButton

@@ -51,14 +51,14 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_shopping_cart -> {
-                startActivity(CartActivity.newIntent(this))
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when (item.itemId) {
+//            R.id.menu_shopping_cart -> {
+//                startActivity(CartActivity.newIntent(this))
+//            }
+//        }
+//        return super.onOptionsItemSelected(item)
+//    }
 
     private fun initializeProductListLayout() {
         val layoutManager = GridLayoutManager(this, 2)
@@ -85,6 +85,10 @@ class HomeActivity : AppCompatActivity() {
                     event.getContentIfNotHandled() ?: return@observe,
                 ),
             )
+        }
+        viewModel.navigateToCartEvent.observe(this) { event ->
+            event.getContentIfNotHandled()
+            startActivity(CartActivity.newIntent(this))
         }
         viewModel.products.observe(this) {
             adapter.setData(it)

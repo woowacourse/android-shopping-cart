@@ -81,11 +81,11 @@
                 layout="@layout/layout_quantity_manipulation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp
-"
+                android:layout_marginBottom="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/tv_price"
-                shopping:cartableProduct="@{cartableProduct}"
+                shopping:productId="@{cartableProduct.product.id}"
+                shopping:quantity="@{cartableProduct.quantity}"
                 shopping:quantityListener="@{quantityListener}" />
 
             <TextView

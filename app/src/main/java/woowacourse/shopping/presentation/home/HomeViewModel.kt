@@ -30,6 +30,10 @@ class HomeViewModel(
     val navigateToDetailEvent: LiveData<Event<Long>>
         get() = _navigateToDetailEvent
 
+    private val _navigateToCartEvent: MutableLiveData<Event<Unit>> = MutableLiveData()
+    val navigateToCartEvent: LiveData<Event<Unit>>
+        get() = _navigateToCartEvent
+
     private val _changedPosition: MutableLiveData<Event<Int>> = MutableLiveData()
     val changedPosition: LiveData<Event<Int>>
         get() = _changedPosition
@@ -65,6 +69,10 @@ class HomeViewModel(
         }
     }
 
+    fun navigateToCart() {
+        _navigateToCartEvent.value = Event(Unit)
+    }
+
     override fun navigateToProductDetail(id: Long) {
         _navigateToDetailEvent.value = Event(id)
     }
@@ -88,9 +96,6 @@ class HomeViewModel(
                 _products.postValue(target)
                 _changedPosition.postValue(Event(products.value?.indexOfFirst { it.product.id == targetProduct.product.id }
                     ?: return@thread))
-                _totalQuantity.postValue(
-                    cartRepository.fetchTotalCount()
-                )
             } else {
                 if (targetProduct.cartItem?.id != null) {
                     cartRepository.updateQuantity(targetProduct.cartItem.id, quantity)
@@ -100,17 +105,18 @@ class HomeViewModel(
                 }
                 val target = products.value?.map {
                     if (it.product.id == productId) {
-                        val item = it.copy(cartItem = productRepository.fetchProduct(productId).cartItem)
+                        val item =
+                            it.copy(cartItem = productRepository.fetchProduct(productId).cartItem)
                         item
                     } else it
                 }
                 _products.postValue(target)
                 _changedPosition.postValue(Event(products.value?.indexOfFirst { it.product.id == productId }
                     ?: return@thread))
-                _totalQuantity.postValue(
-                    cartRepository.fetchTotalCount()
-                )
             }
+            _totalQuantity.postValue(
+                cartRepository.fetchTotalCount()
+            )
         }
     }
 }
