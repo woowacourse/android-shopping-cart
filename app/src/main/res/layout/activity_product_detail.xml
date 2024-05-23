@@ -84,6 +84,46 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/divider_product_detail" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_border_4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_add_cart_quantity"
+            app:visibility="@{viewModel.lastRecentProduct.productId != viewModel.productUiModel.productId}">
+
+            <TextView
+                android:id="@+id/iv_product_detail_last_recent_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/last_recent_product"
+                android:textColor="@color/teal_500"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/tv_product_detail_last_recent_product_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_product_detail_last_recent_product_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:text="@{viewModel.lastRecentProduct.title}"
+                android:textColor="@color/gray_500"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/iv_product_detail_last_recent_product"
+                app:layout_constraintTop_toBottomOf="@id/iv_product_detail_last_recent_product"
+                tools:text="PET보틀-정사각형(500ml)" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
         <Button
             android:id="@+id/btn_product_detail_add_cart"
             android:layout_width="0dp"

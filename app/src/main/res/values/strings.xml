@@ -15,6 +15,7 @@
     <string name="add_cart_success">상품을 장바구니에 담았습니다.\n장바구니로 이동하시겠습니까?</string>
     <string name="add_cart_failure">예기치 못한 오류로 상품을 장바구니에 담지 못했습니다. 다시 시도해 주세요.</string>
     <string name="common_error">예기치 못한 오류가 발생했습니다.\n이전 화면으로 돌아가시겠습니까?</string>
+    <string name="last_recent_product">마지막으로 본 상품</string>
     <string name="common_confirm">확인</string>
     <string name="common_move">이동</string>
     <string name="common_cancel">취소</string>
