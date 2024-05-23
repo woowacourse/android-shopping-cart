@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.ActivityProductListBinding
 import woowacourse.shopping.productdetail.ProductDetailActivity
+import woowacourse.shopping.shoppingcart.ShoppingCartActivity
 import woowacourse.shopping.util.ViewModelFactory
 import woowacourse.shopping.util.showToastMessage
 
@@ -30,6 +31,8 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
         attachAdapter()
         showProducts()
         supportActionBar?.hide()
+
+        navigateToShoppingCart()
     }
 
     private fun activityResultLauncher() =
@@ -74,6 +77,12 @@ class ProductListActivity : AppCompatActivity(), ProductListClickAction {
 
     override fun onMinusCountClicked(id: Long) {
         viewModel.minusProductCount(id)
+    }
+
+    private fun navigateToShoppingCart() {
+        binding.ibProductListCart.setOnClickListener {
+            startActivity(ShoppingCartActivity.newInstance(this))
+        }
     }
 
     companion object {
