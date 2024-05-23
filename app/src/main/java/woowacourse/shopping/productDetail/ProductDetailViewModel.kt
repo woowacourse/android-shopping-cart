@@ -13,6 +13,9 @@ class ProductDetailViewModel : ViewModel() {
     val product: Product
         get() = productStore.findById(productId)
 
+
+    val cartItem = ShoppingCart.cartItems.find { it.productId == productId }
+
     fun addProductToCart() {
         if (ShoppingCart.cartItems.any { it.productId == productId }) {
             addProductCount()

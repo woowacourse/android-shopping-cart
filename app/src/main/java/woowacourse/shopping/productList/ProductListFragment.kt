@@ -12,6 +12,7 @@ import woowacourse.shopping.R
 import woowacourse.shopping.base.FragmentReplacer.replaceFragment
 import woowacourse.shopping.cart.CartFragment
 import woowacourse.shopping.databinding.FragmentProductListBinding
+import woowacourse.shopping.listener.OnClickCartItemCounter
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.productDetail.ProductDetailFragment
 

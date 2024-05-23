@@ -7,6 +7,10 @@
     <data>
 
         <variable
+            name="listener"
+            type="woowacourse.shopping.listener.OnClickCartItemCounter" />
+
+        <variable
             name="product"
             type="woowacourse.shopping.model.Product" />
 
@@ -67,6 +71,7 @@
             app:layout_constraintBottom_toTopOf="@id/cart_product_price"
             app:layout_constraintEnd_toEndOf="parent"
             bind:cartItem="@{cartItem}"
+            bind:listener="@{listener}"
             tools:visibility="visible" />
 
         <TextView

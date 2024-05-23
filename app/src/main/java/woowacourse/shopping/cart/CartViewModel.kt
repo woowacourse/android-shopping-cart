@@ -54,6 +54,16 @@ class CartViewModel : ViewModel() {
         }
     }
 
+    fun increaseQuantity(productId: Int) {
+        ShoppingCart.addProductCount(productId)
+        updateItemsInShoppingCart()
+    }
+
+    fun decreaseQuantity(productId: Int) {
+        ShoppingCart.subtractProductCount(productId)
+        updateItemsInShoppingCart()
+    }
+
     companion object {
         private const val COUNT_PER_LOAD = 5
     }

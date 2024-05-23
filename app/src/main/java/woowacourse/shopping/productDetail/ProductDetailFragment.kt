@@ -1,6 +1,7 @@
 package woowacourse.shopping.productDetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -9,8 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.R
 import woowacourse.shopping.databinding.FragmentProductDetailBinding
+import woowacourse.shopping.listener.OnClickCartItemCounter
+import woowacourse.shopping.model.CartItem
 
-class ProductDetailFragment : Fragment() {
+class ProductDetailFragment : Fragment(), OnClickCartItemCounter {
     private val viewModel: ProductDetailViewModel by viewModels()
 
     private var _binding: FragmentProductDetailBinding? = null
@@ -25,7 +28,7 @@ class ProductDetailFragment : Fragment() {
 
         binding.vm = viewModel
         binding.lifecycleOwner = this
-
+        binding.listener = this
         arguments?.let {
             viewModel.productId = it.getInt("productId")
         }
@@ -41,10 +44,12 @@ class ProductDetailFragment : Fragment() {
         binding.productDetailQuantityButton.productDetailPlus.visibility = View.VISIBLE
         binding.productDetailQuantityButton.productDetailMinus.visibility = View.VISIBLE
         binding.productDetailQuantityButton.productDetailProductCount.visibility = View.VISIBLE
+        binding.productDetailToolbar.setOnMenuItemClickListener { clickXButton(it) }
+    }
 
-        binding.productDetailToolbar.setOnMenuItemClickListener {
-            clickXButton(it)
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun clickXButton(it: MenuItem) =
@@ -57,8 +62,13 @@ class ProductDetailFragment : Fragment() {
             else -> false
         }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun increaseQuantity(cartItem: CartItem) {
+        viewModel.addProductToCart()
+        Log.d("ProductDetailFragment", "increaseQuantity")
+    }
+
+    override fun decreaseQuantity(cartItem: CartItem) {
+        viewModel.subtractProductCount()
+        Log.d("ProductDetailFragment", "increaseQuantity")
     }
 }

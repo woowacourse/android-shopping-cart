@@ -7,12 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import woowacourse.shopping.databinding.FragmentCartListBinding
+import woowacourse.shopping.listener.OnClickCartItemCounter
+import woowacourse.shopping.model.CartItem
 
-class CartFragment : Fragment() {
+class CartFragment : Fragment(), OnClickCartItemCounter {
     private val viewModel: CartViewModel by viewModels()
     private val adapter: CartItemRecyclerViewAdapter by lazy {
         CartItemRecyclerViewAdapter(
             viewModel.itemsInShoppingCartPage.value ?: emptyList(),
+            onClickCartItemCounter = this,
             onClick = { deleteItemId ->
                 viewModel.deleteItem(deleteItemId)
             },
@@ -48,5 +51,13 @@ class CartFragment : Fragment() {
         viewModel.itemsInShoppingCartPage.observe(viewLifecycleOwner) {
             adapter.updateData(it)
         }
+    }
+
+    override fun increaseQuantity(cartItem: CartItem) {
+        viewModel.increaseQuantity(cartItem.productId)
+    }
+
+    override fun decreaseQuantity(cartItem: CartItem) {
+        viewModel.decreaseQuantity(cartItem.productId)
     }
 }

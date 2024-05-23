@@ -1,5 +1,6 @@
 package woowacourse.shopping.db
 
+import android.util.Log
 import woowacourse.shopping.model.CartItem
 
 object ShoppingCart {
@@ -21,6 +22,7 @@ object ShoppingCart {
 
     fun addProductCount(productId: Int) {
         _cartItems.find { it.productId == productId }?.quantity?.plus(1)
+        Log.d("quantity", _cartItems.find { it.productId == productId }?.quantity.toString())
     }
 
     fun subtractProductCount(productId: Int) {

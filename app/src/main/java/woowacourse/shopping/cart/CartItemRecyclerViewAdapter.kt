@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import woowacourse.shopping.databinding.HolderCartBinding
+import woowacourse.shopping.listener.OnClickCartItemCounter
 import woowacourse.shopping.model.CartItem
 import woowacourse.shopping.model.Product
 
 class CartItemRecyclerViewAdapter(
     private var values: List<Product>,
+    private val onClickCartItemCounter: OnClickCartItemCounter,
     private val onClick: (id: Int) -> Unit,
 ) : RecyclerView.Adapter<CartItemRecyclerViewAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
@@ -33,6 +35,7 @@ class CartItemRecyclerViewAdapter(
     ) {
         val item = values[position]
         holder.bind(item, cartItem = CartItem(item.id, 1))
+        holder.binding.listener = onClickCartItemCounter
         holder.binding.cartQuantityButton.productDetailProductCount.visibility =
             View.VISIBLE
         holder.binding.cartQuantityButton.productDetailPlus.visibility = View.VISIBLE

@@ -1,4 +1,4 @@
-package woowacourse.shopping.productList
+package woowacourse.shopping.listener
 
 import woowacourse.shopping.model.CartItem
 

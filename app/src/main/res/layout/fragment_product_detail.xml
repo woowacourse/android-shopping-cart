@@ -13,7 +13,7 @@
 
         <variable
             name="listener"
-            type="woowacourse.shopping.productList.OnClickCartItemCounter" />
+            type="woowacourse.shopping.listener.OnClickCartItemCounter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,9 +73,9 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
-            tools:text="상품 개수"
-            bind:listener="@{listener}">
-        </include>
+            bind:cartItem="@{vm.cartItem}"
+            bind:listener="@{listener}"
+            tools:text="상품 개수" />
 
         <Button
             android:layout_width="0dp"
