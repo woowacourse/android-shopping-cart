@@ -7,6 +7,7 @@ import woowacourse.shopping.MutableSingleLiveData
 import woowacourse.shopping.SingleLiveData
 import woowacourse.shopping.currentPageIsNullException
 import woowacourse.shopping.data.Product
+import woowacourse.shopping.domain.model.ProductCountEvent
 import woowacourse.shopping.domain.model.ProductIdsCount
 import woowacourse.shopping.repository.DefaultProductIdsCountRepository
 import woowacourse.shopping.repository.ProductIdsCountRepository
@@ -28,13 +29,15 @@ class ProductListViewModel(
         MutableLiveData(
             productsRepository.loadPagedItems(currentPage.value ?: currentPageIsNullException()),
         )
-
     val loadedProducts: LiveData<List<Product>>
         get() = _loadedProducts
 
     private val _productIdsCountInCart: MutableLiveData<List<ProductIdsCount>> =
         MutableLiveData(productIdsCountRepository.loadAllProductIdsCounts())
     val productIdsCount: LiveData<List<ProductIdsCount>> get() = _productIdsCountInCart
+
+    private val _productsEvent: MutableLiveData<ProductCountEvent> = MutableLiveData()
+    val productsEvent: LiveData<ProductCountEvent> = _productsEvent
 
     private var _isLastPage: MutableLiveData<Boolean> =
         MutableLiveData(
@@ -44,12 +47,6 @@ class ProductListViewModel(
 
     private var _detailProductDestinationId: MutableSingleLiveData<Int> = MutableSingleLiveData()
     val detailProductDestinationId: SingleLiveData<Int> get() = _detailProductDestinationId
-
-    fun loadProductIdsCount() {
-        _productIdsCountInCart.value = productIdsCountRepository.loadAllProductIdsCounts()
-    }
-
-    // TODO: productIdsCount 를 추가하거나 삭제할 수 있음
 
     fun loadNextPageProducts() {
         if (isLastPage.value == true) return
@@ -64,8 +61,40 @@ class ProductListViewModel(
             }
     }
 
+    fun loadProductIdsCount() {
+        _productIdsCountInCart.value = productIdsCountRepository.loadAllProductIdsCounts()
+    }
+
     override fun onClick(productId: Int) {
         _detailProductDestinationId.setValue(productId)
+    }
+
+    override fun onIncrease(productId: Int) {
+        // TODO: 이거 레포지토리에서 nullable 값을 리턴해야 겠는데
+        try {
+            productIdsCountRepository.plusProductsIdCount(productId)
+            val product = productIdsCountRepository.findByProductId(productId)
+            _productsEvent.value = ProductCountEvent.ProductCountCountChanged(product.productId, product.quantity)
+        } catch (e: NoSuchElementException) {
+            productIdsCountRepository.addedProductsId(ProductIdsCount(productId, 1))
+            _productsEvent.value = ProductCountEvent.ProductCountCountChanged(productId, 1)
+        }
+    }
+
+    override fun onDecrease(productId: Int) {
+        // TODO: 이거 레포지토리에서 nullable 값을 리턴해야 겠는데
+        try {
+            productIdsCountRepository.minusProductsIdCount(productId)
+        } catch (e: NoSuchElementException) {
+            return
+        }
+
+        try {
+            val product = productIdsCountRepository.findByProductId(productId)
+            _productsEvent.value = ProductCountEvent.ProductCountCountChanged(product.productId, product.quantity)
+        } catch (e: NoSuchElementException) {
+            _productsEvent.value = ProductCountEvent.ProductCountCleared(productId)
+        }
     }
 
     companion object {

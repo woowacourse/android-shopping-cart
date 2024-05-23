@@ -37,5 +37,9 @@ class ProductRecyclerViewAdapter(
 
     interface OnProductItemClickListener {
         fun onClick(productId: Int)
+
+        fun onIncrease(productId: Int)
+
+        fun onDecrease(productId: Int)
     }
 }
