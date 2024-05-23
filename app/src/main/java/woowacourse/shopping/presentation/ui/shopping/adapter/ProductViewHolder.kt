@@ -34,9 +34,7 @@ sealed class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val shoppingHandler: ShoppingHandler,
     ) : ProductViewHolder(binding.root) {
         fun bind() {
-            binding.btnShowMore.setOnClickListener {
-                shoppingHandler.onLoadMoreClick()
-            }
+            binding.handler = shoppingHandler
         }
     }
 }

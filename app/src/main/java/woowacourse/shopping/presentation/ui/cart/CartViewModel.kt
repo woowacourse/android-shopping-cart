@@ -13,11 +13,19 @@ import woowacourse.shopping.presentation.ui.shopping.ShoppingError
 import woowacourse.shopping.presentation.util.Event
 
 class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
-    var maxPage: Int = 0
-        private set
-    var currentPage: Int = 0
-        private set
-        get() = field.coerceAtMost(maxPage)
+    private val _isRightButtonEnabled = MutableLiveData<Boolean>()
+    val isRightButtonEnabled: LiveData<Boolean> get() = _isRightButtonEnabled
+
+    private val _isLeftButtonEnabled = MutableLiveData<Boolean>()
+    val isLeftButtonEnabled: LiveData<Boolean> get() = _isLeftButtonEnabled
+
+    private val _pageControllerIsVisible = MutableLiveData<Boolean>()
+    val pageControllerIsVisible: LiveData<Boolean> get() = _pageControllerIsVisible
+
+    private var maxPage: Int = 0
+
+    private val _currentPage = MutableLiveData(0)
+    val currentPage: LiveData<Int> get() = _currentPage
 
     private val _error = MutableLiveData<Event<ShoppingError>>()
 
@@ -34,28 +42,38 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     val changedCartProducts: LiveData<List<Cart>> get() = _changedCartProducts
 
     init {
-        updateMaxPage()
+        fetchMaxPage()
+    }
+
+    private fun fetchMaxPage() {
+        cartRepository.getMaxPage(PAGE_SIZE).onSuccess {
+            maxPage = it
+        }
     }
 
     fun deleteProduct(product: Product) {
         cartRepository.deleteProduct(product).onSuccess {
             val originalChangedCartProducts = changedCartProducts.value ?: emptyList()
             _changedCartProducts.value = originalChangedCartProducts.plus(Cart(product, 0))
-            updateMaxPage()
+            fetchMaxPage()
+            updatePageController()
             loadProductByPage()
         }.onFailure {
             _error.value = Event(ShoppingError.CartItemNotDeleted)
         }
     }
 
-    private fun updateMaxPage() {
-        cartRepository.getMaxPage(PAGE_SIZE).onSuccess {
-            maxPage = it
+    fun updatePageController() {
+        if (currentPage.value != null) {
+            _currentPage.value = currentPage.value!!.coerceIn(0, maxPage)
+            _isLeftButtonEnabled.value = currentPage.value!! > 0
+            _isRightButtonEnabled.value = currentPage.value!! < maxPage
         }
+        _pageControllerIsVisible.value = maxPage > 0
     }
 
     fun loadProductByPage() {
-        cartRepository.load(currentPage, PAGE_SIZE).onSuccess {
+        cartRepository.load(currentPage.value ?: 0, PAGE_SIZE).onSuccess {
             cartProducts.apply {
                 clear()
                 addAll(it)
@@ -68,14 +86,14 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
     }
 
     fun plus() {
-        if (currentPage == maxPage) return
-        currentPage++
+        if (currentPage.value == maxPage) return
+        _currentPage.value = ((currentPage.value ?: 0) + 1).coerceAtMost(maxPage)
         loadProductByPage()
     }
 
     fun minus() {
-        if (currentPage == 0) return
-        currentPage--
+        if (currentPage.value == 0) return
+        _currentPage.value = (currentPage.value ?: 0) - 1
         loadProductByPage()
     }
 

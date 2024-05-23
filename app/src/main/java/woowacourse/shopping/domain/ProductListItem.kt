@@ -12,12 +12,6 @@ sealed interface ProductListItem {
         val price: Long,
         var quantity: Int = 0,
     ) : ProductListItem {
-        fun toCart() =
-            Cart(
-                product = toProduct(),
-                quantity = quantity,
-            )
-
         fun toProduct() =
             Product(
                 this.id,
