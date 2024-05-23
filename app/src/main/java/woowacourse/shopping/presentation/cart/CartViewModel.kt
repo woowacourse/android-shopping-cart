@@ -54,26 +54,19 @@ class CartViewModel(
 
     fun loadCurrentPageCartItems() {
         val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
-        println(cartItems)
         hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
         setPageInformation()
+        println(cartItems)
         _cartableProducts.postValue(cartItems)
     }
 
     override fun onCartItemDelete(cartedProduct: CartedProduct) {
-        cartedProduct.cartItem.let {
-            val cartItem = CartItem(
-                it.id,
-                cartedProduct.product.id,
-                it.quantity
-            )
-            thread {
-                cartRepository.removeCartItem(cartItem)
-                if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
-                    _currentPage.postValue(currentPage.value?.minus(1))
-                }
-                loadCurrentPageCartItems()
+        thread {
+            cartRepository.removeCartItem(cartedProduct.cartItem)
+            if (cartableProducts.value?.size == 1 && currentPage.value != 0) {
+                _currentPage.postValue(currentPage.value?.minus(1))
             }
+            loadCurrentPageCartItems()
         }
     }
 

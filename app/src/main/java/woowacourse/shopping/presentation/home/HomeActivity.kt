@@ -1,8 +1,11 @@
 package woowacourse.shopping.presentation.home
 
+import android.app.Activity
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
@@ -29,6 +32,20 @@ class HomeActivity : AppCompatActivity() {
         )
     }
     private val adapter: ProductAdapter by lazy { ProductAdapter(viewModel, viewModel) }
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val quantities = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                result.data?.getParcelableArrayListExtra("quantities", ProductQuantity::class.java)
+            } else {
+                result.data?.getParcelableArrayListExtra("quantities")
+            }
+            quantities?.forEach {
+                viewModel.onQuantityChange(it.productId, it.quantity)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,15 +68,6 @@ class HomeActivity : AppCompatActivity() {
         return true
     }
 
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when (item.itemId) {
-//            R.id.menu_shopping_cart -> {
-//                startActivity(CartActivity.newIntent(this))
-//            }
-//        }
-//        return super.onOptionsItemSelected(item)
-//    }
-
     private fun initializeProductListLayout() {
         val layoutManager = GridLayoutManager(this, 2)
         layoutManager.spanSizeLookup = ProductItemSpanSizeLookup(adapter)
@@ -79,7 +87,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun observeEvents() {
         viewModel.navigateToDetailEvent.observe(this) { event ->
-            startActivity(
+            activityResultLauncher.launch(
                 DetailActivity.newIntent(
                     this,
                     event.getContentIfNotHandled() ?: return@observe,
@@ -88,7 +96,7 @@ class HomeActivity : AppCompatActivity() {
         }
         viewModel.navigateToCartEvent.observe(this) { event ->
             event.getContentIfNotHandled()
-            startActivity(CartActivity.newIntent(this))
+            activityResultLauncher.launch(CartActivity.newIntent(this))
         }
         viewModel.products.observe(this) {
             adapter.setData(it)
