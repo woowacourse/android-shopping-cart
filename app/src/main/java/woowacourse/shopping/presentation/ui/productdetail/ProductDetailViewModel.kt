@@ -118,11 +118,30 @@ class ProductDetailViewModel(
 
     private fun getProductHistory(product: Product) {
         productHistoryRepository.getProductHistory(2).onSuccess { productHistorys ->
-            if (product.id == productHistorys.first().productId) {
+            if (productHistorys.isEmpty()) {
                 _uiState.postValue(
                     uiState.value?.copy(
                         product = product,
-                        productHistory = productHistorys[1],
+                        isAddToCart = false,
+                        isLastProductPage = true,
+                    ),
+                )
+                insertProductHistory(product)
+                return@onSuccess
+            }
+
+            if (product.id == productHistorys.first().productId) {
+                val productHistory =
+                    if (productHistorys.size >= 2) {
+                        productHistorys[1]
+                    } else {
+                        null
+                    }
+
+                _uiState.postValue(
+                    uiState.value?.copy(
+                        product = product,
+                        productHistory = productHistory,
                         isAddToCart = false,
                     ),
                 )

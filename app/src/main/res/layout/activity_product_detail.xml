@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="android.view.View"/>
+        <import type="android.view.View" />
 
         <variable
             name="vm"
@@ -81,8 +81,21 @@
             app:layout_constraintTop_toBottomOf="@id/product_detail_divide_line"
             app:product="@{vm.uiState.product}" />
 
+        <TextView
+            android:id="@+id/tv_product_history_empty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:text="@string/empty_finally_product"
+            android:visibility="@{vm.uiState.productHistory == null ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_product_price" />
+
+
         <LinearLayout
-            android:visibility="@{vm.uiState.lastProductPage == true ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="18dp"
@@ -93,6 +106,7 @@
             android:orientation="vertical"
             android:paddingVertical="16dp"
             android:paddingStart="18dp"
+            android:visibility="@{vm.uiState.lastProductPage == true ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_product_price">
