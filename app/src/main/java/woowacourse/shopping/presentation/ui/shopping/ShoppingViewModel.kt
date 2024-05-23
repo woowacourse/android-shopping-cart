@@ -51,7 +51,7 @@ class ShoppingViewModel(
         }
     }
 
-    private fun fetchInitialRecentProducts() {
+    fun fetchInitialRecentProducts() {
         recentRepository.load().onSuccess {
             _recentProducts.value = UiState.Success(it)
         }.onFailure {

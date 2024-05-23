@@ -61,9 +61,9 @@ class ProductListAdapter(
         }
     }
 
-    fun insertRecentProductItems(newRecentProducts: ProductListItem) {
+    fun updateRecentProductItems(newRecentProducts: ProductListItem) {
         items[RECENT_PRODUCT_POSITION] = newRecentProducts
-        notifyItemRangeInserted(RECENT_PRODUCT_POSITION, 1)
+        notifyItemChanged(RECENT_PRODUCT_POSITION)
     }
 
     fun updateProductItems(newProductItems: List<ProductListItem.ShoppingProductItem>) {

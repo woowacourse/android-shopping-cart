@@ -32,7 +32,7 @@ class ProductDetailViewModelTest {
     fun `loadById로 특정 상품의 데이터를 가져온다`() {
         every { productRepository.loadById(any()) } returns Result.success(product)
         every { cartRepository.find(any()) } returns Result.success(cart)
-        viewModel.loadProductById(0)
+        viewModel.fetchInitialData(0)
         Assertions.assertEquals(
             viewModel.shoppingProduct.getOrAwaitValue(1),
             UiState.Success(shoppingProduct),
@@ -42,7 +42,7 @@ class ProductDetailViewModelTest {
     @Test
     fun `loadById로 특정 상품의 데이터를 가져오기 실패하면 해당하는 Error 상태로 전환한다`() {
         every { productRepository.loadById(any()) } returns Result.failure(Throwable())
-        viewModel.loadProductById(0)
+        viewModel.fetchInitialData(0)
         Assertions.assertEquals(
             viewModel.error.getOrAwaitValue(1).getContentIfNotHandled(),
             DetailError.ProductItemsNotFound,
@@ -59,7 +59,7 @@ class ProductDetailViewModelTest {
         } returns Result.success(shoppingProduct.id)
 
         // when
-        viewModel.loadProductById(0)
+        viewModel.fetchInitialData(0)
         viewModel.saveCartItem()
 
         // then

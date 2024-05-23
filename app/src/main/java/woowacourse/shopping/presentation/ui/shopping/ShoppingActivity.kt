@@ -90,7 +90,7 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
         viewModel.recentProducts.observe(this) { state ->
             when (state) {
                 is UiState.Success ->
-                    adapter.insertRecentProductItems(
+                    adapter.updateRecentProductItems(
                         ProductListItem.RecentProductItems(state.data),
                     )
 
@@ -145,6 +145,11 @@ class ShoppingActivity : BindingActivity<ActivityShoppingBinding>(), ShoppingHan
                 quantityDelta,
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchInitialRecentProducts()
     }
 
     companion object {

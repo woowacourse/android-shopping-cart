@@ -30,7 +30,7 @@ class ProductDetailActivity : BindingActivity<ActivityProductDetailBinding>(), D
         id = intent.getLongExtra(EXTRA_PRODUCT_ID, -1L)
         if (id == -1L) finish()
         binding.detailHandler = this
-        viewModel.loadProductById(id)
+        viewModel.fetchInitialData(id)
         observeErrorEventUpdates()
         observeProductsUpdates()
         observeCartEventUpdates()
