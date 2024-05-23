@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -44,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="360dp"
                     android:scaleType="fitXY"
-                    app:imageUrl="@{viewModel.product.imageUrl}"
+                    app:imageUrl="@{viewModel.productWithQuantity.product.imageUrl}"
                     app:layout_constraintTop_toBottomOf="@id/toolbar_detail"
                     tools:layout_editor_absoluteX="-157dp"
                     tools:src="@drawable/ic_launcher_background" />
@@ -56,7 +57,7 @@
                     android:layout_margin="18dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{viewModel.product.name}"
+                    android:text="@{viewModel.productWithQuantity.product.name}"
                     android:textColor="@color/black"
                     android:textSize="24dp"
                     android:textStyle="bold"
@@ -81,7 +82,7 @@
                     android:textSize="20dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider"
-                    app:price="@{viewModel.product.price}"
+                    app:price="@{viewModel.productWithQuantity.totalPrice}"
                     tools:text="99,800원" />
 
                 <include
@@ -91,6 +92,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="14dp"
+                    bind:actionHandler="@{viewModel}"
+                    bind:productWithQuantity="@{viewModel.productWithQuantity}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/divider" />
 
@@ -153,11 +156,10 @@
             android:clickable="true"
             android:focusable="true"
             android:gravity="center"
-            android:onClick="@{() -> viewModel.onAddToCartClicked(viewModel.product.id)}"
+            android:onClick="@{() -> viewModel.onAddToCartClicked(viewModel.productWithQuantity.product.id)}"
             android:text="장바구니 담기"
             android:textColor="@color/white"
             android:textSize="20dp"
             android:textStyle="bold" />
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -18,7 +18,11 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(R.layout.activity_det
     private val viewModel: DetailViewModel by viewModels {
         DetailViewModelFactory(
             cartRepository = CartRepositoryImpl((application as ShoppingApplication).cartDatabase),
-            shoppingRepository = ShoppingItemsRepositoryImpl((application as ShoppingApplication).shoppingDataSource),
+            shoppingRepository =
+                ShoppingItemsRepositoryImpl(
+                    (application as ShoppingApplication).shoppingDatabase,
+                    (application as ShoppingApplication).cartDatabase,
+                ),
             productId = productId,
         )
     }

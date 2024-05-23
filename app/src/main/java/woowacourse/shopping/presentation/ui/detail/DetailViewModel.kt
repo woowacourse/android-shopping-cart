@@ -3,17 +3,18 @@ package woowacourse.shopping.presentation.ui.detail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ShoppingItemsRepository
+import woowacourse.shopping.presentation.ui.CartQuantityActionHandler
 
 class DetailViewModel(
     val cartRepository: CartRepository,
     val shoppingRepository: ShoppingItemsRepository,
     val productId: Long,
-) : ViewModel() {
-    private val _product = MutableLiveData<Product>()
-    val product: LiveData<Product> get() = _product
+) : ViewModel(), CartQuantityActionHandler {
+    private val _productWithQuantity = MutableLiveData<ProductWithQuantity>()
+    val productWithQuantity: LiveData<ProductWithQuantity> get() = _productWithQuantity
 
     private val _navigateToShoppingCart = MutableLiveData<Long>()
     val navigateToShoppingCart: LiveData<Long> get() = _navigateToShoppingCart
@@ -23,7 +24,7 @@ class DetailViewModel(
     }
 
     private fun loadProductData() {
-        _product.postValue(shoppingRepository.findProductItem(productId))
+        _productWithQuantity.postValue(shoppingRepository.productWithQuantityItem(productId))
     }
 
     fun onAddToCartClicked(productId: Long) {
@@ -31,12 +32,25 @@ class DetailViewModel(
         _navigateToShoppingCart.postValue(productId)
     }
 
-    fun createShoppingCartItem() {
-        product.value?.let {
+    private fun createShoppingCartItem() {
+        productWithQuantity.value?.let {
             cartRepository.insert(
-                product = it,
-                quantity = 1,
+                productWithQuantity = it,
             )
+        }
+    }
+
+    override fun onPlusButtonClicked(productId: Long) {
+        productWithQuantity.value?.let {
+            it.quantity.takeIf { quantity -> quantity < 100 } ?: return
+            _productWithQuantity.postValue(it.copy(quantity = it.quantity + 1))
+        }
+    }
+
+    override fun onMinusButtonClicked(productId: Long) {
+        productWithQuantity.value?.let {
+            it.quantity.takeIf { quantity -> quantity > 1 } ?: return
+            _productWithQuantity.postValue(it.copy(quantity = it.quantity - 1))
         }
     }
 }
