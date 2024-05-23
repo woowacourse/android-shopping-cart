@@ -7,19 +7,23 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.data.model.ProductHistory
 import kotlin.concurrent.thread
 
 @Database(
     entities = [
         Product::class,
         CartItem::class,
+        ProductHistory::class,
     ],
-    version = 3,
+    version = 4,
 )
 abstract class ShoppingDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
 
     abstract fun cartDao(): CartDao
+
+    abstract fun productHistoryDao(): ProductHistoryDao
 
     companion object {
         @Volatile

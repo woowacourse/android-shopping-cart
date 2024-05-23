@@ -1,12 +1,14 @@
 package woowacourse.shopping.presentation.home
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
+import woowacourse.shopping.data.model.ProductHistory
+import woowacourse.shopping.data.model.RecentProduct
 import woowacourse.shopping.domain.repository.CartRepository
+import woowacourse.shopping.domain.repository.ProductHistoryRepository
 import woowacourse.shopping.domain.repository.ProductRepository
 import woowacourse.shopping.presentation.util.Event
 import kotlin.concurrent.thread
@@ -14,6 +16,7 @@ import kotlin.concurrent.thread
 class HomeViewModel(
     private val productRepository: ProductRepository,
     private val cartRepository: CartRepository,
+    private val productHistoryRepository: ProductHistoryRepository,
 ) : ViewModel(), HomeItemEventListener, QuantityListener {
     private var page: Int = 0
 
@@ -42,8 +45,14 @@ class HomeViewModel(
     val totalQuantity: LiveData<Int>
         get() = _totalQuantity
 
+    private val _productHistory: MutableLiveData<List<RecentProduct>> =
+        MutableLiveData(emptyList())
+    val productHistory: LiveData<List<RecentProduct>>
+        get() = _productHistory
+
     init {
         loadProducts()
+//        loadHistory()
     }
 
     private fun loadProducts() {
@@ -69,12 +78,24 @@ class HomeViewModel(
         }
     }
 
+    private fun loadHistory() {
+        thread {
+            _productHistory.postValue(
+                productHistoryRepository.fetchProductHistory(10)
+            )
+        }
+    }
+
     fun navigateToCart() {
         _navigateToCartEvent.value = Event(Unit)
     }
 
     override fun navigateToProductDetail(id: Long) {
-        _navigateToDetailEvent.value = Event(id)
+        thread {
+            productHistoryRepository.addProductHistory(ProductHistory(productId = id))
+//            loadHistory()
+            _navigateToDetailEvent.postValue(Event(id))
+        }
     }
 
     override fun loadNextPage() {

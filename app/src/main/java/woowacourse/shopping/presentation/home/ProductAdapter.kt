@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import woowacourse.shopping.R
 import woowacourse.shopping.data.model.CartableProduct
-import woowacourse.shopping.data.model.Product
+import woowacourse.shopping.data.model.RecentProduct
 import woowacourse.shopping.databinding.ItemLoadMoreBinding
 import woowacourse.shopping.databinding.ItemProductBinding
+import woowacourse.shopping.databinding.ItemProductHistoryBinding
+import woowacourse.shopping.databinding.ItemProductHistoryListBinding
 import woowacourse.shopping.presentation.BindableAdapter
 import java.lang.IllegalArgumentException
 
@@ -23,6 +25,8 @@ class ProductAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), BindableAdapter<CartableProduct> {
     private var products: List<CartableProduct> = emptyList()
     private var loadStatus: LoadStatus = LoadStatus()
+//    private var homeItems: List<CartableProduct> = emptyList()
+    private var historyProducts: List<RecentProduct> = emptyList()
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
@@ -35,6 +39,12 @@ class ProductAdapter(
     ): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
+            TYPE_HISTORY -> {
+                val binding: ItemProductHistoryListBinding =
+                    DataBindingUtil.inflate(layoutInflater, R.layout.item_product_history_list, parent, false)
+                HistoryViewHolder(binding, historyProducts, homeItemClickListener)
+            }
+
             TYPE_PRODUCT -> {
                 val binding: ItemProductBinding =
                     DataBindingUtil.inflate(layoutInflater, R.layout.item_product, parent, false)
@@ -56,16 +66,19 @@ class ProductAdapter(
         position: Int,
     ) {
         when (holder) {
-            is ProductViewHolder -> holder.bind(products[position])
+            is HistoryViewHolder -> Unit
+            is ProductViewHolder -> holder.bind(products[position - 1])
             is LoadingViewHolder -> holder.bind(loadStatus)
             else -> throw IllegalArgumentException(EXCEPTION_ILLEGAL_VIEW_TYPE)
         }
     }
 
-    override fun getItemCount(): Int = products.size + 1
+    override fun getItemCount(): Int = products.size + 2
 
     override fun getItemViewType(position: Int): Int {
-        return if (position < products.size) {
+        return if (position == 0) {
+            TYPE_HISTORY
+        } else if (position - 1 < products.size) {
             TYPE_PRODUCT
         } else {
             TYPE_LOAD
@@ -73,9 +86,10 @@ class ProductAdapter(
     }
 
     override fun setData(data: List<CartableProduct>) {
-        val previousSize = products.size
+//        val previousSize = products.size
         products = data
-        notifyItemRangeInserted(previousSize, data.size - previousSize)
+        notifyDataSetChanged()
+//        notifyItemRangeInserted(previousSize, data.size - previousSize)
     }
 
     fun updateLoadStatus(loadStatus: LoadStatus) {
@@ -111,10 +125,54 @@ class ProductAdapter(
         }
     }
 
+    class HistoryViewHolder(
+        binding: ItemProductHistoryListBinding,
+        historyProducts: List<RecentProduct>,
+        homeItemClickListener: HomeItemEventListener,
+    ) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.adapter = HistoryAdapter(historyProducts, homeItemClickListener)
+            binding.executePendingBindings()
+        }
+    }
+
     companion object {
         const val TYPE_PRODUCT = 1000
         const val TYPE_LOAD = 1001
+        const val TYPE_HISTORY = 1002
         private const val EXCEPTION_ILLEGAL_VIEW_TYPE = "유효하지 않은 뷰 타입입니다."
+    }
+}
+
+class HistoryAdapter(
+    private val historyItems: List<RecentProduct>,
+    private val homeItemClickListener: HomeItemEventListener,
+) : RecyclerView.Adapter<HistoryAdapter.HistoryItemViewHolder>() {
+//    private var historyItems: List<RecentProduct> = emptyList()
+
+    override fun onCreateViewHolder(parent: ViewGroup, position: Int): HistoryItemViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+        val binding: ItemProductHistoryBinding = DataBindingUtil.inflate(layoutInflater, R.layout.item_product_history, parent, false)
+        return HistoryItemViewHolder(binding, homeItemClickListener)
+    }
+
+    override fun getItemCount(): Int = historyItems.size
+
+    override fun onBindViewHolder(holder: HistoryItemViewHolder, position: Int) {
+        holder.bind(historyItems[position])
+    }
+
+    class HistoryItemViewHolder(
+        private val binding: ItemProductHistoryBinding,
+        homeItemClickListener: HomeItemEventListener,
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.homeItemClickListener = homeItemClickListener
+        }
+        fun bind(historyItem: RecentProduct) {
+            binding.recentProduct = historyItem
+        }
     }
 }
 

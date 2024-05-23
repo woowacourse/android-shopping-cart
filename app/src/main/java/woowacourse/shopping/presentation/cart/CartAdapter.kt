@@ -39,8 +39,9 @@ class CartAdapter(
     override fun setData(data: List<CartedProduct>) {
         val currentSize = this.orders.size
         this.orders = data
-        notifyItemRangeRemoved(0, currentSize)
-        notifyItemRangeInserted(0, this.orders.size)
+        notifyDataSetChanged()
+//        notifyItemRangeRemoved(0, currentSize)
+//        notifyItemRangeInserted(0, this.orders.size)
     }
 
     class CartViewHolder(

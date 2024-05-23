@@ -29,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
         HomeViewModelFactory(
             application.productRepository,
             application.cartRepository,
+            application.productHistoryRepository,
         )
     }
     private val adapter: ProductAdapter by lazy { ProductAdapter(viewModel, viewModel) }

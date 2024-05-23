@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:shopping="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="recentProduct"
+            type="woowacourse.shopping.data.model.RecentProduct" />
+
+        <variable
+            name="homeItemClickListener"
+            type="woowacourse.shopping.presentation.home.HomeItemEventListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:onClick="@{() -> homeItemClickListener.navigateToProductDetail(recentProduct.product.id)}">
+
+        <ImageView
+            android:id="@+id/iv_product_detail"
+            android:layout_width="98dp"
+            android:layout_height="98dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/description_thumbnail"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            shopping:productThumbnail="@{recentProduct.product.imageSource}"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:id="@+id/tv_history_product_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_product_detail"
+            android:text="@{recentProduct.product.name}"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginTop="6dp"
+            tools:text="Pet보틀 정사각형입니다"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
