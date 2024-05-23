@@ -35,7 +35,7 @@ class ProductDetailViewModel(
         get() =
             _cartProduct.map {
                 recentProduct.value != null &&
-                it.product.id != _recentProduct.value?.id
+                    it.product.id != _recentProduct.value?.id
             }
 
     init {
@@ -77,7 +77,7 @@ class ProductDetailViewModel(
     fun addCartProduct() {
         val cartProduct = _cartProduct.value ?: return
         // TODO CHANGE COUNT
-        cartRepository.updateCartProduct(cartProduct.product.id, 1).onSuccess {
+        cartRepository.updateCartProduct(cartProduct.product.id, cartProduct.count).onSuccess {
             _addCartEvent.setValue(Unit)
         }.onFailure {
             // TODO Error handling

@@ -65,10 +65,10 @@ class ProductDetailFragment :
 
     private fun initObservers() {
         viewModel.addCartEvent.observe(viewLifecycleOwner) { isAdded ->
-            navigateToShoppingCart()
+            (requireActivity() as? ShoppingNavigator)?.navigateToCart()
         }
-        viewModel.recentProductEvent.observe(viewLifecycleOwner) {
-            navigateToDetail(it)
+        viewModel.recentProductEvent.observe(viewLifecycleOwner) { id ->
+            (requireActivity() as? ShoppingNavigator)?.navigateToProductDetail(id)
         }
     }
 
@@ -89,22 +89,17 @@ class ProductDetailFragment :
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                     if (menuItem.itemId == R.id.menu_item_close) {
-                        requireActivity().onBackPressedDispatcher.onBackPressed()
-                        return true
+                        if (viewModel.isRecentProductVisible.value == false) {
+                            (requireActivity() as? ShoppingNavigator)?.navigateToProductList(1)
+                        } else {
+                            (requireActivity() as? ShoppingNavigator)?.popBackStack()
+                        }
                     }
                     return false
                 }
             },
             viewLifecycleOwner,
         )
-    }
-
-    private fun navigateToShoppingCart() {
-        (requireActivity() as? ShoppingNavigator)?.navigateToCart()
-    }
-
-    private fun navigateToDetail(id: Long) {
-        (requireActivity() as? ShoppingNavigator)?.navigateToProductDetail(id)
     }
 
     private fun detailItemClickListener(): DetailProductListener {

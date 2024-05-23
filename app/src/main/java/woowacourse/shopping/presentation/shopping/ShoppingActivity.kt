@@ -45,4 +45,12 @@ class ShoppingActivity :
             addToBackStack(ProductListFragment.TAG)
         }
     }
+
+    override fun navigateToProductList(flag: Int) {
+        supportFragmentManager.popBackStack(ProductListFragment.TAG, flag)
+    }
+
+    override fun popBackStack() {
+        onBackPressedDispatcher.onBackPressed()
+    }
 }
