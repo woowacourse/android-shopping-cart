@@ -12,6 +12,6 @@ class CartViewModelFactory(
     private val applicationContext: Context,
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CartViewModel(cartDao, productDao, applicationContext) as T
+        return CartViewModel(productDao, applicationContext) as T
     }
 }

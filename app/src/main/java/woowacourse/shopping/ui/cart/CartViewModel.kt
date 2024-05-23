@@ -6,13 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import woowacourse.shopping.model.CartPage
 import woowacourse.shopping.model.Product
-import woowacourse.shopping.model.data.CartDao
 import woowacourse.shopping.model.data.OrdersRepository
 import woowacourse.shopping.model.data.ProductDao
 import kotlin.math.min
 
 class CartViewModel(
-    private val cartDao: CartDao,
     private val productDao: ProductDao,
     applicationContext: Context,
 ) : ViewModel() {
@@ -50,7 +48,7 @@ class CartViewModel(
     }
 
     fun removeCartItem(productId: Long) {
-        cartDao.delete(productId)
+        ordersRepository.deleteById(productId)
         renewCart()
         val currentPage = _cartPage.value?.number
         _cartPage.value = CartPage(currentPage ?: -1)

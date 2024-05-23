@@ -28,10 +28,14 @@ class ProductContentsActivity : AppCompatActivity() {
         setContentView(binding.root)
         setProductAdapter()
         observeProductItems()
-        loadItems()
 
         setOnLoadMoreButtonClickListener()
         setOnRecyclerViewScrollListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadItems()
     }
 
     private fun setProductAdapter() {
