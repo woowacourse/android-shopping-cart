@@ -98,6 +98,7 @@ class ProductListViewModel(
     }
 
     override fun navigateToDetail(id: Long) {
+        shoppingRepository.saveRecentProduct(id)
         _navigateToDetailEvent.setValue(id)
     }
 

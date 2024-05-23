@@ -62,8 +62,11 @@ class ProductDetailFragment :
     }
 
     private fun initObservers() {
-        viewModel.isAddedCart.observe(viewLifecycleOwner) { isAdded ->
-            if (isAdded) navigateToShoppingCart()
+        viewModel.addCartEvent.observe(viewLifecycleOwner) { isAdded ->
+            navigateToShoppingCart()
+        }
+        viewModel.recentProductEvent.observe(viewLifecycleOwner) {
+            navigateToDetail(it)
         }
     }
 
@@ -98,6 +101,10 @@ class ProductDetailFragment :
         (requireActivity() as? ShoppingNavigator)?.navigateToCart()
     }
 
+    private fun navigateToDetail(id: Long) {
+        (requireActivity() as? ShoppingNavigator)?.navigateToProductDetail(id)
+    }
+
     private fun detailItemClickListener(): DetailProductListener {
         return object : DetailProductListener {
             override fun addCartProduct() {
@@ -107,12 +114,10 @@ class ProductDetailFragment :
 
             override fun increaseProductCount(id: Long) {
                 viewModel.increaseProductCount()
-                eventBusViewModel.sendUpdateCartEvent()
             }
 
             override fun decreaseProductCount(id: Long) {
                 viewModel.decreaseProductCount()
-                eventBusViewModel.sendUpdateCartEvent()
             }
         }
     }

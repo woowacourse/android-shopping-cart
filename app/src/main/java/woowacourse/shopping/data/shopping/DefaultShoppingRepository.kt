@@ -2,10 +2,11 @@ package woowacourse.shopping.data.shopping
 
 import woowacourse.shopping.data.shopping.product.ProductDataSource
 import woowacourse.shopping.data.shopping.product.ProductPageData
+import woowacourse.shopping.data.shopping.recent.RecentProductData
 import woowacourse.shopping.data.shopping.recent.RecentProductDataSource
-import woowacourse.shopping.data.shopping.recent.toRecentProductData
 import woowacourse.shopping.domain.entity.Product
 import woowacourse.shopping.domain.repository.ShoppingRepository
+import java.time.LocalDateTime
 
 class DefaultShoppingRepository(
     private val productDataSource: ProductDataSource,
@@ -59,7 +60,7 @@ class DefaultShoppingRepository(
         }
     }
 
-    override fun saveRecentProduct(product: Product): Result<Long> {
-        return recentProductDataSource.saveRecentProduct(product.toRecentProductData())
+    override fun saveRecentProduct(id: Long): Result<Long> {
+        return recentProductDataSource.saveRecentProduct(RecentProductData(id, LocalDateTime.now()))
     }
 }

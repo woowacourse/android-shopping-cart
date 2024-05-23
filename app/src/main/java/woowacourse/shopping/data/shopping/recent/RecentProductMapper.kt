@@ -12,7 +12,3 @@ fun RecentProductEntity.toData(): RecentProductData {
 fun RecentProductData.toEntity(): RecentProductEntity {
     return RecentProductEntity(productId, createdTime)
 }
-
-fun Product.toRecentProductData(): RecentProductData {
-    return RecentProductData(id, LocalDateTime.now())
-}
