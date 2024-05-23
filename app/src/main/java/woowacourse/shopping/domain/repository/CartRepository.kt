@@ -6,14 +6,17 @@ interface CartRepository {
     fun cartProducts(
         currentPage: Int,
         pageSize: Int,
-    ): List<CartProduct>
+    ): Result<List<CartProduct>>
 
-    fun addCartProduct(productId: Long): Long?
+    fun addCartProduct(
+        productId: Long,
+        count: Int,
+    ): Result<Long>
 
-    fun deleteCartProduct(productId: Long): Long?
+    fun deleteCartProduct(productId: Long): Result<Long>
 
     fun canLoadMoreCartProducts(
         currentPage: Int,
         pageSize: Int,
-    ): Boolean
+    ): Result<Boolean>
 }

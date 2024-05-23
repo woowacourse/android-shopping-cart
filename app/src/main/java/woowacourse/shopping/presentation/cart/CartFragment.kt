@@ -18,7 +18,7 @@ class CartFragment :
     BindingFragment<FragmentCartBinding>(R.layout.fragment_cart) {
     private lateinit var adapter: CartAdapter
     private val viewModel by viewModels<CartViewModel> {
-        val cartRepository = CartRepositoryInjector.cartRepository()
+        val cartRepository = CartRepositoryInjector.cartRepository(requireContext().applicationContext)
         CartViewModel.factory(cartRepository)
     }
 

@@ -1,6 +1,6 @@
 package woowacourse.shopping.fixtures
 
-import woowacourse.shopping.data.db.entity.RecentProductEntity
+import woowacourse.shopping.local.entity.RecentProductEntity
 import java.time.LocalDateTime
 
 private const val DEFAULT_ID = 1L
@@ -13,8 +13,6 @@ fun recentProductEntity(
     return RecentProductEntity(id, createdTime)
 }
 
-fun recentProductEntities(
-    vararg products: RecentProductEntity,
-): List<RecentProductEntity> {
+fun recentProductEntities(vararg products: RecentProductEntity): List<RecentProductEntity> {
     return products.toList()
 }

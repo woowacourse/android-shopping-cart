@@ -21,17 +21,11 @@ import woowacourse.shopping.presentation.util.dp
 class ProductListFragment :
     BindingFragment<FragmentProductListBinding>(R.layout.fragment_product_list) {
     private val viewModel by viewModels<ProductListViewModel> {
-        val shoppingRepository = ShoppingRepositoryInjector.shoppingRepository()
+        val shoppingRepository =
+            ShoppingRepositoryInjector.shoppingRepository(requireContext().applicationContext)
         ProductListViewModel.factory(shoppingRepository)
     }
     private lateinit var productAdapter: ProductAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            viewModel.loadProducts()
-        }
-    }
 
     override fun onViewCreated(
         view: View,

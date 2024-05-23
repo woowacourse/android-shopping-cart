@@ -45,19 +45,31 @@ class CartViewModel(
     }
 
     private fun loadCartProducts(page: Int) {
-        _products.value =
-            cartRepository.cartProducts(page, PAGE_SIZE).map { it.toUiModel() }
+        cartRepository.cartProducts(page, PAGE_SIZE).onSuccess { carts ->
+            _products.value = carts.map { it.toUiModel() }
+        }.onFailure {
+            // TODO Error handling
+        }
     }
 
     private fun canLoadMoreCartProducts(page: Int): Boolean {
-        return cartRepository.canLoadMoreCartProducts(page, PAGE_SIZE)
+        cartRepository.canLoadMoreCartProducts(page, PAGE_SIZE).onSuccess {
+            return it
+        }.onFailure {
+            // TODO Error handling
+        }
+        return false
     }
 
     fun deleteProduct(product: CartProductUi) {
-        _products.value = _products.value?.minus(product)
-        cartRepository.deleteCartProduct(product.product.id) ?: return
-        val currentPage = currentPage.value ?: return
-        loadCartProducts(currentPage)
+        // TODO: Plus Loading
+        cartRepository.deleteCartProduct(product.product.id).onSuccess {
+            _products.value = _products.value?.minus(product)
+            val currentPage = currentPage.value ?: return
+            loadCartProducts(currentPage)
+        }.onFailure {
+            // TODO Error handling
+        }
     }
 
     fun plusPage() {

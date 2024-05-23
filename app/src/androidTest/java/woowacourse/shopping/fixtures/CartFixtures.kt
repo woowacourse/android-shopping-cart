@@ -1,6 +1,6 @@
 package woowacourse.shopping.fixtures
 
-import woowacourse.shopping.data.db.entity.CartEntity
+import woowacourse.shopping.local.entity.CartEntity
 
 private const val DEFAULT_ID = 1L
 private const val DEFAULT_COUNT = 0
@@ -12,8 +12,6 @@ fun cartEntity(
     return CartEntity(id, count)
 }
 
-fun cartEntities(
-    vararg ids: Long
-): List<CartEntity> {
+fun cartEntities(vararg ids: Long): List<CartEntity> {
     return ids.map { cartEntity(it) }
 }

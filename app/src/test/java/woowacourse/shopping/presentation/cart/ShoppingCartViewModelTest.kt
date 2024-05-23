@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.cartProduct
+import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.presentation.util.InstantTaskExecutorExtension
 import woowacourse.shopping.presentation.util.getOrAwaitValue
 
@@ -23,9 +23,14 @@ class ShoppingCartViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        every { cartRepository.cartProducts(1, PAGE_SIZE) } returns listOf(cartProduct())
-        every { cartRepository.canLoadMoreCartProducts(2, PAGE_SIZE) } returns true
-        every { cartRepository.canLoadMoreCartProducts(0, PAGE_SIZE) } returns false
+        every { cartRepository.cartProducts(1, PAGE_SIZE) } returns
+            Result.success(
+                listOf(
+                    cartProduct(),
+                ),
+            )
+        every { cartRepository.canLoadMoreCartProducts(2, PAGE_SIZE) } returns Result.success(true)
+        every { cartRepository.canLoadMoreCartProducts(0, PAGE_SIZE) } returns Result.success(false)
         cartViewModel = CartViewModel(cartRepository)
     }
 
@@ -43,7 +48,12 @@ class ShoppingCartViewModelTest {
     fun test1() {
         val nextPage = 2
         // given
-        every { cartRepository.cartProducts(nextPage, PAGE_SIZE) } returns listOf(cartProduct())
+        every { cartRepository.cartProducts(nextPage, PAGE_SIZE) } returns
+            Result.success(
+                listOf(
+                    cartProduct(),
+                ),
+            )
         // when
         cartViewModel.plusPage()
         // then

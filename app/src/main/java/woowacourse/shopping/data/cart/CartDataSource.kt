@@ -1,20 +1,19 @@
 package woowacourse.shopping.data.cart
 
+import woowacourse.shopping.data.cart.model.CartData
 import woowacourse.shopping.domain.entity.CartProduct
-import woowacourse.shopping.domain.entity.Product
 
 interface CartDataSource {
-    fun loadCartProducts(
+    fun loadCarts(
         currentPage: Int,
         productSize: Int,
-    ): List<CartProduct>
+    ): Result<List<CartData>>
 
-    fun addCartProduct(product: Product): Long
+    fun filterCartProducts(ids: List<Long>): Result<List<CartData>>
 
-    fun deleteCartProduct(product: Product): Long
+    fun addCartProduct(product: CartProduct): Result<Long>
 
-    fun canLoadMoreCartProducts(
-        currentPage: Int,
-        pageSize: Int,
-    ): Boolean
+    fun deleteCartProduct(productId: Long): Result<Long>
+
+    fun canLoadMoreCart(size: Int): Result<Boolean>
 }

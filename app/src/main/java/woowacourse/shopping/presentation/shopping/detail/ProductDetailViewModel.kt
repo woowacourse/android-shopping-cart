@@ -22,14 +22,21 @@ class ProductDetailViewModel(
     val isAddedCart: SingleLiveData<Boolean> get() = _isAddedCart
 
     fun loadProduct(id: Long) {
-        val product = shoppingRepository.productById(id) ?: return
-        _product.value = product.toUiModel()
+        shoppingRepository.productById(id).onSuccess {
+            _product.value = it.toUiModel()
+        }.onFailure {
+            // TODO Error handling
+        }
     }
 
     fun addCartProduct() {
         val product = _product.value ?: return
-        cartRepository.addCartProduct(product.id)
-        _isAddedCart.setValue(true)
+        // TODO CHANGE COUNT
+        cartRepository.addCartProduct(product.id, 1).onSuccess {
+            _isAddedCart.setValue(true)
+        }.onFailure {
+            // TODO Error handling
+        }
     }
 
     companion object {

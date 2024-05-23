@@ -32,7 +32,7 @@ Product Api 는 MockServer 를 활용해서 만들어서 실제 서버랑 비슷
 - : Product List 서버 만둘기
   - [x]: MockServer 를 활용해서 상품 목록 내려주는 Service 만들기
 - [x]: Service Test
-
+- [x]: Injector 만들기
 ## Domain
 
 
