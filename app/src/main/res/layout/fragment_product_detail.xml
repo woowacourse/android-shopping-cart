@@ -73,8 +73,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/product_detail_product_name"
+            tools:text="상품 개수"
             bind:listener="@{listener}">
-
         </include>
 
         <Button

@@ -38,6 +38,10 @@ class ProductDetailFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.productDetailQuantityButton.productDetailPlus.visibility = View.VISIBLE
+        binding.productDetailQuantityButton.productDetailMinus.visibility = View.VISIBLE
+        binding.productDetailQuantityButton.productDetailProductCount.visibility = View.VISIBLE
+
         binding.productDetailToolbar.setOnMenuItemClickListener {
             clickXButton(it)
         }
