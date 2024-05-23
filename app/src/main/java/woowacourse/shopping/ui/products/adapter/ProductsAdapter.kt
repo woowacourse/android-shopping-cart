@@ -64,39 +64,43 @@ class ProductsAdapter(
 
     override fun getItemViewType(position: Int): Int = productsViews[position].viewType.type
 
-    fun updateProductUiModels(updatedProductUiModel: List<ProductUiModel>) {
-        val productUiModels = productsViews.filterIsInstance<ProductUiModel>()
-        val newProductUiModels = updatedProductUiModel.subtract(productUiModels.toSet())
+    fun updateProducts(updatedProducts: List<ProductUiModel>) {
+        val products = productsViews.filterIsInstance<ProductUiModel>()
+        val newProducts = updatedProducts.subtract(products.toSet())
 
-        if (productUiModels.size < updatedProductUiModel.size) {
-            insertRangeProductUiModels(newProductUiModels)
+        if (products.size < updatedProducts.size) {
+            insertRangeProducts(newProducts)
             return
         }
 
-        if (productUiModels.size == updatedProductUiModel.size) {
-            newProductUiModels.forEach { changeProductUiModel(it) }
+        if (products.size == updatedProducts.size) {
+            newProducts.forEach { changeProduct(it) }
         }
     }
 
-    private fun insertRangeProductUiModels(newProductUiModels: Set<ProductUiModel>) {
-        productsViews.addAll(newProductUiModels)
-        notifyItemRangeInserted(productsViews.size, newProductUiModels.size)
+    private fun insertRangeProducts(newProducts: Set<ProductUiModel>) {
+        productsViews.addAll(newProducts)
+        notifyItemRangeInserted(productsViews.size, newProducts.size)
     }
 
-    private fun changeProductUiModel(newProductUiModel: ProductUiModel) {
-        val position = productsViews.indexOfFirst { it is ProductUiModel && it.productId == newProductUiModel.productId }
-        productsViews[position] = newProductUiModel
+    private fun changeProduct(newProduct: ProductUiModel) {
+        val position = productsViews.indexOfFirst { it is ProductUiModel && it.productId == newProduct.productId }
+        productsViews[position] = newProduct
         notifyItemChanged(position)
     }
 
-    fun addRecentProducts(recentProductUiModels: List<RecentProductUiModel>) {
-        if (ProductsViewType.from(getItemViewType(RECENT_PRODUCTS_INDEX)) == ProductsViewType.RECENT_PRODUCTS) {
-            productsViews[RECENT_PRODUCTS_INDEX] = RecentProductsUiModel(recentProductUiModels)
+    fun updateRecentProducts(recentProducts: List<RecentProductUiModel>) {
+        if (isExistedRecentProducts()) {
+            productsViews[RECENT_PRODUCTS_INDEX] = RecentProductsUiModel(recentProducts)
             notifyItemChanged(RECENT_PRODUCTS_INDEX)
             return
         }
-        productsViews.add(RECENT_PRODUCTS_INDEX, RecentProductsUiModel(recentProductUiModels))
+        productsViews.add(RECENT_PRODUCTS_INDEX, RecentProductsUiModel(recentProducts))
         notifyItemInserted(RECENT_PRODUCTS_INDEX)
+    }
+
+    private fun isExistedRecentProducts():Boolean {
+        return ProductsViewType.from(getItemViewType(RECENT_PRODUCTS_INDEX)) == ProductsViewType.RECENT_PRODUCTS
     }
 
     companion object {

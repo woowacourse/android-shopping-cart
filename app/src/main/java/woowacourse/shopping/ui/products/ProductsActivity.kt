@@ -82,10 +82,10 @@ class ProductsActivity : AppCompatActivity() {
             }
         binding.rvProducts.adapter = adapter
         viewModel.productUiModels.observe(this) {
-            adapter.updateProductUiModels(it)
+            adapter.updateProducts(it)
         }
         viewModel.recentProducts.observe(this) {
-            adapter.addRecentProducts(it ?: return@observe)
+            adapter.updateRecentProducts(it ?: return@observe)
         }
     }
 

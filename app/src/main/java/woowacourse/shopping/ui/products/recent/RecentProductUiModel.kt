@@ -1,6 +1,6 @@
 package woowacourse.shopping.ui.products.recent
 
-class RecentProductUiModel(
+data class RecentProductUiModel(
     val imageUrl: String,
     val title: String,
 )
