@@ -7,7 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith
 import woowacourse.shopping.InstantTaskExecutorExtension
 import woowacourse.shopping.getOrAwaitValue
 import woowacourse.shopping.productsTestFixture
+import woowacourse.shopping.repository.DefaultProductIdsCountRepository
+import woowacourse.shopping.repository.FakeProductIdsCountDataSource
 import woowacourse.shopping.repository.FakeShoppingProductsRepository
+import woowacourse.shopping.testfixture.productsIdCountDataTestFixture
+import woowacourse.shopping.testfixture.productsIdCountTestFixture
 
 @ExtendWith(InstantTaskExecutorExtension::class)
 class ProductListViewModelTest {
@@ -133,5 +137,25 @@ class ProductListViewModelTest {
 
         // then
         assertThat(viewModel.isLastPage.getOrAwaitValue()).isTrue
+    }
+
+    @Test
+    fun `장바구니에 담긴 상품들을 로드한다`() {
+        // given
+        viewModel =
+            ProductListViewModel(
+                productsRepository = FakeShoppingProductsRepository(productsTestFixture(20)),
+                productIdsCountRepository =
+                    DefaultProductIdsCountRepository(
+                        FakeProductIdsCountDataSource(productsIdCountDataTestFixture(10).toMutableList()),
+                    ),
+                _currentPage = MutableLiveData(1),
+            )
+
+        // when
+        viewModel.loadProductIdsCount()
+
+        // then
+        assertThat(viewModel.productIdsCount.getOrAwaitValue()).isEqualTo(productsIdCountTestFixture(10))
     }
 }
