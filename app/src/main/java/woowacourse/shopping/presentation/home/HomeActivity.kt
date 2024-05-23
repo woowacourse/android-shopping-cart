@@ -28,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
         ) { result ->
             if (result.resultCode == DETAIL_RESULT_OK) {
                 val cartItem: CartItem? =
-                    if (VERSION.SDK_INT >= 33) {
+                    if (VERSION.SDK_INT >= TIRAMISU_SDK_VERSION) {
                         result.data?.getParcelableExtra(EXTRA_CART_ITEM, CartItem::class.java)
                     } else {
                         result.data?.getParcelableExtra(EXTRA_CART_ITEM)
@@ -104,5 +104,9 @@ class HomeActivity : AppCompatActivity() {
     private fun initToolBar() {
         setSupportActionBar(binding.toolbarHome)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    companion object {
+        private const val TIRAMISU_SDK_VERSION = 33
     }
 }
