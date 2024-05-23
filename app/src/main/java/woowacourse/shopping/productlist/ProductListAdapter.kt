@@ -24,7 +24,6 @@ class ProductListAdapter(
                 itemView.context.imageUrlToSrc(item.imageUrl, ivProductItem)
                 binding.product = item
                 binding.onClick = onClickHandler
-                binding.executePendingBindings()
             }
         }
     }
