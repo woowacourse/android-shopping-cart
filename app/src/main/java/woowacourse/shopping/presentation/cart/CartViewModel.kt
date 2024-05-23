@@ -1,5 +1,6 @@
 package woowacourse.shopping.presentation.cart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,12 +8,13 @@ import woowacourse.shopping.data.model.CartItem
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import woowacourse.shopping.domain.repository.ProductRepository
+import woowacourse.shopping.presentation.home.QuantityListener
 import kotlin.concurrent.thread
 
 class CartViewModel(
     private val cartRepository: CartRepository,
     private val productRepository: ProductRepository,
-) : ViewModel(), CartItemEventListener {
+) : ViewModel(), CartItemEventListener, QuantityListener {
     private var _currentPage: MutableLiveData<Int> = MutableLiveData(0)
     val currentPage: LiveData<Int>
         get() = _currentPage
@@ -49,8 +51,8 @@ class CartViewModel(
     }
 
     fun loadCurrentPageCartItems() {
-        val cartItems = productRepository.fetchSinglePage(currentPage.value ?: return)
-        hasNext = productRepository.fetchSinglePage(currentPage.value?.plus(1) ?: return).isNotEmpty()
+        val cartItems = cartRepository.fetchCartItems(currentPage.value ?: return)
+        hasNext = cartRepository.fetchCartItems(currentPage.value?.plus(1) ?: return).isNotEmpty()
         setPageInformation()
         _cartableProducts.postValue(cartItems)
     }
@@ -88,6 +90,10 @@ class CartViewModel(
                 )
             )
         }
+    }
+
+    override fun onQuantityChange(productId: Long, quantity: Int) {
+        Log.i("TAG", "onQuantityChange: $productId, quantity: $quantity")
     }
 }
 

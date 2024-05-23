@@ -8,9 +8,11 @@ import woowacourse.shopping.R
 import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.databinding.ItemCartBinding
 import woowacourse.shopping.presentation.BindableAdapter
+import woowacourse.shopping.presentation.home.QuantityListener
 
 class CartAdapter(
     private val cartItemEventListener: CartItemEventListener,
+    private val quantityListener: QuantityListener,
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>(), BindableAdapter<CartableProduct> {
     private var orders: List<CartableProduct> = emptyList()
 
@@ -21,7 +23,7 @@ class CartAdapter(
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding: ItemCartBinding =
             DataBindingUtil.inflate(layoutInflater, R.layout.item_cart, parent, false)
-        return CartViewHolder(binding, cartItemEventListener)
+        return CartViewHolder(binding, cartItemEventListener, quantityListener)
     }
 
     override fun getItemCount(): Int = orders.size
@@ -43,10 +45,12 @@ class CartAdapter(
     class CartViewHolder(
         private val binding: ItemCartBinding,
         cartItemEventListener: CartItemEventListener,
+        quantityListener: QuantityListener,
     ) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.cartItemDeleteClickListener = cartItemEventListener
+            binding.quantityListener = quantityListener
         }
 
         fun bind(cartableProduct: CartableProduct) {

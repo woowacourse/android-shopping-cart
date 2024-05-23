@@ -2,18 +2,15 @@ package woowacourse.shopping.data.repository
 
 import woowacourse.shopping.data.local.CartDao
 import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.data.model.CartableProduct
 import woowacourse.shopping.domain.repository.CartRepository
 import kotlin.concurrent.thread
 
 class CartRepositoryImpl(
     private val cartDao: CartDao,
 ) : CartRepository {
-    override fun fetchCartItems(page: Int): List<CartItem> {
-        return cartDao.getCartItems(page, PAGE_SIZE)
-    }
-
-    override fun fetchCartItem(cartItemId: Long): CartItem {
-        return cartDao.getCartItem(cartItemId)
+    override fun fetchCartItems(page: Int): List<CartableProduct> {
+        return cartDao.getCartedProducts(page, PAGE_SIZE)
     }
 
     override fun addCartItem(

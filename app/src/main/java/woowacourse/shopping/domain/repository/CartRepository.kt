@@ -1,11 +1,10 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.data.model.CartableProduct
 
 interface CartRepository {
-    fun fetchCartItems(page: Int): List<CartItem>
-
-    fun fetchCartItem(cartItemId: Long): CartItem
+    fun fetchCartItems(page: Int): List<CartableProduct>
 
     fun addCartItem(cartItem: CartItem): Long
 

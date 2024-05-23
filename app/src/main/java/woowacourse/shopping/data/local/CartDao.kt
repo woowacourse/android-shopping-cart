@@ -3,8 +3,10 @@ package woowacourse.shopping.data.local
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import woowacourse.shopping.data.model.CartItem
+import woowacourse.shopping.data.model.CartableProduct
 
 @Dao
 interface CartDao {
@@ -31,4 +33,16 @@ interface CartDao {
 
     @Query("DELETE FROM cart_item")
     fun deleteAll()
+
+    @Transaction
+    @Query("""
+        SELECT product.*, cart_item.*
+        FROM product
+        INNER JOIN cart_item ON product.id = cart_item.productId
+        LIMIT :pageSize OFFSET :page * :pageSize
+    """)
+    fun getCartedProducts(
+        page: Int,
+        pageSize: Int,
+    ): List<CartableProduct>
 }

@@ -23,7 +23,7 @@ class CartActivity : AppCompatActivity() {
         )
     }
     private val adapter: CartAdapter by lazy {
-        CartAdapter(viewModel)
+        CartAdapter(viewModel, viewModel)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
