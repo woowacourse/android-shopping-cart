@@ -4,13 +4,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import woowacourse.shopping.ShoppingRepository
+import woowacourse.shopping.ShoppingCartRepository
+import woowacourse.shopping.ProductRepository
 import woowacourse.shopping.domain.Product
 import woowacourse.shopping.uimodel.ProductUiModel
 import woowacourse.shopping.uimodel.toProductUiModel
 
 class ProductListViewModel(
-    private val repository: ShoppingRepository,
+    private val productRepository: ProductRepository,
+    private val shoppingCartRepository: ShoppingCartRepository,
 ) : ViewModel() {
     private val _products: MutableLiveData<List<Product>> = MutableLiveData()
     val products: LiveData<List<Product>> get() = _products
@@ -21,7 +23,7 @@ class ProductListViewModel(
     private val _currentSize: MutableLiveData<Int> = MutableLiveData()
     val currentSize: LiveData<Int> get() = _currentSize
 
-    val totalSize: Int = repository.productsTotalSize()
+    val totalSize: Int = productRepository.productsTotalSize()
 
     init {
         loadProducts(PRODUCTS_START_POSITION)
@@ -29,7 +31,7 @@ class ProductListViewModel(
 
     fun loadProducts(startPosition: Int) {
         runCatching {
-            repository.products(startPosition, PRODUCTS_OFFSET_SIZE)
+            productRepository.products(startPosition, PRODUCTS_OFFSET_SIZE)
         }.onSuccess { loadedProducts ->
             val currentItems = products.value ?: emptyList()
             val currentUiItems = productUiModels.value ?: emptyList()

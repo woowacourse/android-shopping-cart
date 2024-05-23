@@ -5,7 +5,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import woowacourse.shopping.DummyShoppingRepository
+import woowacourse.shopping.DummyProductRepository
+import woowacourse.shopping.UserShoppingCartRepository
 import woowacourse.shopping.productlist.ProductListViewModel
 import woowacourse.shopping.viewmodel.fixtures.InstantTaskExecutorExtension
 import woowacourse.shopping.viewmodel.fixtures.getOrAwaitValue
@@ -16,7 +17,7 @@ class ProductListViewModelTest {
 
     @BeforeEach
     fun setUp() {
-        viewModel = ProductListViewModel(DummyShoppingRepository)
+        viewModel = ProductListViewModel(DummyProductRepository, UserShoppingCartRepository)
     }
 
     @Test
@@ -25,8 +26,8 @@ class ProductListViewModelTest {
         val actual = viewModel.products.getOrAwaitValue()
 
         // then
-        assertThat(actual).containsAll(DummyShoppingRepository.products(0, 20))
-        assertThat(actual.last()).isEqualTo(DummyShoppingRepository.productById(19))
+        assertThat(actual).containsAll(DummyProductRepository.products(0, 20))
+        assertThat(actual.last()).isEqualTo(DummyProductRepository.productById(19))
     }
 
     @Test

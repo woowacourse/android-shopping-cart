@@ -1,10 +1,8 @@
 package woowacourse.shopping
 
 import woowacourse.shopping.domain.Product
-import woowacourse.shopping.domain.ShoppingCart
-import woowacourse.shopping.domain.ShoppingCartItem
 
-interface ShoppingRepository {
+interface ProductRepository {
     fun products(): List<Product>
 
     fun products(
