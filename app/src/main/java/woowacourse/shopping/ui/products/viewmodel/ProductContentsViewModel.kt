@@ -13,10 +13,11 @@ import woowacourse.shopping.model.RecentProduct
 import woowacourse.shopping.model.data.CartDao
 import woowacourse.shopping.model.data.ProductDao
 import woowacourse.shopping.model.data.ProductsImpl
-import woowacourse.shopping.model.data.RecentProductsImpl
+import woowacourse.shopping.model.data.RecentProductDao
 
 class ProductContentsViewModel(
     private val productDao: ProductDao,
+    private val recentProductDao: RecentProductDao,
     private val cartDao: CartDao,
 ) :
     ViewModel() {
@@ -64,7 +65,7 @@ class ProductContentsViewModel(
     }
 
     fun addToRecentProduct(productId: Long) {
-        RecentProductsImpl.save(productId)
+        recentProductDao.save(productId)
         loadRecentProducts()
     }
 
@@ -79,7 +80,7 @@ class ProductContentsViewModel(
     }
 
     private fun loadRecentProducts() {
-        _recentProducts.value = RecentProductsImpl.findAll()
+        _recentProducts.value = recentProductDao.findAll()
     }
 
     private fun updateProductWithQuantity() {
