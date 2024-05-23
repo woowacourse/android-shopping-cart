@@ -1,6 +1,7 @@
 package woowacourse.shopping.ui.cart
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -44,6 +45,7 @@ class CartViewModel(
 
     fun loadCartItems() {
         _cartPage.value = CartPage()
+        _cart.value!!.clear()
         getProducts().forEach {
             _cart.value!![it.id] = it
         }
@@ -54,6 +56,7 @@ class CartViewModel(
 
     fun removeCartItem(productId: Long) {
         cartDao.delete(productId)
+        _cart.value!!.clear()
         getProducts().forEach {
             _cart.value!![it.id] = it
         }
@@ -64,14 +67,18 @@ class CartViewModel(
 
     fun plusPageNum() {
         _cartPage.value = _cartPage.value?.plus()
+        Log.d("alsong", "${getProducts()}")
+        _cart.value!!.clear()
         getProducts().forEach {
             _cart.value!![it.id] = it
         }
+        Log.d("alsong", "plusPageNum: ${_cart.value}")
         _cart.value = _cart.value
     }
 
     fun minusPageNum() {
         _cartPage.value = _cartPage.value?.minus()
+        _cart.value!!.clear()
         getProducts().forEach {
             _cart.value!![it.id] = it
         }
@@ -81,7 +88,7 @@ class CartViewModel(
     private fun getProducts(): List<Product> {
         val fromIndex = (cartPage.value!!.number - OFFSET) * PAGE_SIZE
         val toIndex = min(fromIndex + PAGE_SIZE, cartItems.size)
-        return cartItems.toList().subList(fromIndex, toIndex)
+        return cartItems.subList(fromIndex, toIndex)
     }
 
     private fun getProductsQuantities(): MutableMap<Long, Int> {
