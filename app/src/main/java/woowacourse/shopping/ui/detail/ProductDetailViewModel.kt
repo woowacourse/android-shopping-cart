@@ -40,8 +40,12 @@ class ProductDetailViewModel(
 
     private lateinit var product: Product
 
+    private val _lastRecentProduct = MutableLiveData<LastRecentProductUiModel>()
+     val lastRecentProduct: LiveData<LastRecentProductUiModel> get() = _lastRecentProduct
+
     init {
         loadProduct()
+        loadLastRecentProduct()
         saveRecentProduct()
     }
 
@@ -59,6 +63,12 @@ class ProductDetailViewModel(
             runCatching { cartRepository.find(product.id) }
                 .map { ProductUiModel.from(product, it.quantity) }
                 .getOrElse { ProductUiModel.from(product) }
+    }
+
+    private fun loadLastRecentProduct() {
+        val lastRecentProduct = recentProductRepository.findLastOrNull() ?: return
+        val product = productRepository.find(lastRecentProduct.productId)
+        _lastRecentProduct.value = LastRecentProductUiModel(product.id, product.title)
     }
 
     private fun saveRecentProduct() {

@@ -8,6 +8,11 @@ object DummyRecentProductRepository : RecentProductRepository {
 
     private const val FIND_RECENT_PRODUCTS_COUNT = 10
 
+    override fun findLastOrNull(): RecentProduct? {
+        if (recentProducts.isEmpty()) return null
+        return recentProducts.entries.last().value
+    }
+
     override fun findRecentProducts(): List<RecentProduct> {
         return recentProducts.asSequence()
             .map { it.value }
