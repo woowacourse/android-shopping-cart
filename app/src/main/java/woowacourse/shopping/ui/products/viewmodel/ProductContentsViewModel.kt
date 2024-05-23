@@ -17,6 +17,7 @@ class ProductContentsViewModel(
     private val cartDao: CartDao,
 ) :
     ViewModel() {
+    private val items = mutableListOf<Product>()
     private val products: MutableLiveData<List<Product>> = MutableLiveData()
 
     private val cart: MutableLiveData<List<Cart>> = MutableLiveData()
@@ -44,7 +45,8 @@ class ProductContentsViewModel(
     }
 
     fun loadProducts() {
-        products.value = productDao.getProducts()
+        items.addAll(productDao.getProducts())
+        products.value = items
     }
 
     fun loadCartItems() {

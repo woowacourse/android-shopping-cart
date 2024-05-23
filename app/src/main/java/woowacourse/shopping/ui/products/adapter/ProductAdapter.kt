@@ -35,20 +35,25 @@ class ProductAdapter(
         holder.bind(productWithQuantities[position])
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     fun setData(newProducts: List<ProductWithQuantity>) {
         if (isLoadMore(newProducts)) {
             val positionStart = productWithQuantities.size
-            productWithQuantities.addAll(newProducts)
-            notifyItemRangeInserted(positionStart, newProducts.size)
+            val itemCount = newProducts.size - productWithQuantities.size
+            productWithQuantities.addAll(newProducts.subList(positionStart, newProducts.size))
+            notifyItemRangeInserted(positionStart, itemCount)
             return
         }
         val uniqueNewProducts =
-            newProducts.filter { newProduct ->
+            newProducts.find { newProduct ->
                 !productWithQuantities.contains(newProduct)
             }
         productWithQuantities.clear()
         productWithQuantities.addAll(newProducts)
-        uniqueNewProducts.forEach {
+        uniqueNewProducts?.let {
             notifyItemChanged(it.product.id.toInt())
         }
     }
