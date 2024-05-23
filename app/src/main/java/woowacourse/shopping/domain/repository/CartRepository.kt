@@ -1,29 +1,31 @@
 package woowacourse.shopping.domain.repository
 
 import woowacourse.shopping.domain.model.CartItem
-import woowacourse.shopping.domain.model.Product
+import woowacourse.shopping.domain.model.ProductWithQuantity
 import woowacourse.shopping.domain.model.ShoppingCart
 
 interface CartRepository {
-    fun insert(
-        product: Product,
-        quantity: Int,
+    fun insert(productWithQuantity: ProductWithQuantity)
+
+    fun getQuantityByProductId(productId: Long): Int?
+
+    fun plusQuantity(
+        productId: Long,
+        quantity: Int = 1,
     )
 
-    fun update(
+    fun minusQuantity(
         productId: Long,
-        quantity: Int,
+        quantity: Int = 1,
     )
 
     fun size(): Int
 
     fun findOrNullWithProductId(productId: Long): CartItem?
 
-    fun find(cartItemId: Long): CartItem
+    fun sumQuantity(): Int
 
-    fun findAll(): ShoppingCart
-
-    fun findAllPagedItems(
+    fun findCartItemsByPage(
         page: Int,
         pageSize: Int,
     ): ShoppingCart

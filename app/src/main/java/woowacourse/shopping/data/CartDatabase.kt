@@ -23,7 +23,7 @@ abstract class CartDatabase : RoomDatabase() {
                 Room.databaseBuilder(
                     context.applicationContext,
                     CartDatabase::class.java,
-                    "cart_database",
+                    "cart_items",
                 ).build().also { instance = it }
             }
         }

@@ -11,7 +11,7 @@ interface CartDao {
     fun save(cartItemEntity: CartItemEntity)
 
     @Query("UPDATE cart_items SET quantity = :quantity WHERE productId = :productId")
-    fun update(
+    fun updateQuantity(
         productId: Long,
         quantity: Int,
     )
@@ -28,8 +28,11 @@ interface CartDao {
     @Query("SELECT * FROM cart_items")
     fun findAll(): List<CartItemEntity>
 
+    @Query("SELECT SUM(quantity) FROM cart_items")
+    fun sumQuantity(): Int
+
     @Query("SELECT * FROM cart_items LIMIT :limit OFFSET :offset")
-    fun findAllPaged(
+    fun findByPaged(
         offset: Int,
         limit: Int,
     ): List<CartItemEntity>
@@ -39,4 +42,7 @@ interface CartDao {
 
     @Query("DELETE FROM cart_items")
     fun deleteAll()
+
+    @Query("SELECT quantity FROM cart_items WHERE productId = :productId")
+    fun getQuantityByProductId(productId: Long): Int?
 }
